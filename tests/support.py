@@ -21,6 +21,16 @@ def sealed_example_plan() -> dict[str, Any]:
     return seal_plan(example_plan())
 
 
+def preflight_plan(profile: str = "proceed") -> dict[str, Any]:
+    filename = {
+        "proceed": "plan-proceed.json",
+        "stop-escalation": "plan-stop-escalation.json",
+        "abort": "plan-abort.json",
+    }[profile]
+    with (ROOT / "examples" / "preflight" / filename).open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
 def artifact(
     *,
     suite_passed: bool = True,

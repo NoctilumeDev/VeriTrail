@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.2",
+  "plan_id": "m1-preflight-stop-escalation",
+  "version": 1,
+  "subject": {
+    "id": "veritrail-resource-preflight-fixture",
+    "version": "1.0.0",
+    "source_ref": "examples/preflight"
+  },
+  "question": "Does a deliberately conservative soft line stop escalation without creating a hard abort?",
+  "baseline": {
+    "id": "m1-preflight-baseline-v1",
+    "status": "VALID",
+    "fingerprint": "eb083da4adfe16d136f2ba8ff2e88ee0d7b327a32806c30080c071260eb5cd53",
+    "tolerances": {
+      "runtime_versions": "record-as-nuisance"
+    }
+  },
+  "experiment_type": "SINGLE_VARIABLE",
+  "variables": [
+    {
+      "name": "resource_threshold_profile",
+      "role": "PRIMARY",
+      "value": "stop-escalation",
+      "source": "experiment plan"
+    },
+    {
+      "name": "operating_system",
+      "role": "NUISANCE",
+      "value": "observed-at-runtime",
+      "source": "resource preflight"
+    },
+    {
+      "name": "python_major_minor",
+      "role": "NUISANCE",
+      "value": "observed-at-runtime",
+      "source": "resource preflight"
+    },
+    {
+      "name": "cpu_logical_count",
+      "role": "NUISANCE",
+      "value": "observed-at-runtime",
+      "source": "resource preflight"
+    }
+  ],
+  "required_evidence": [
+    "runtime.preflight"
+  ],
+  "assertions": [
+    {
+      "id": "collector-version-is-present",
+      "severity": "HARD",
+      "evidence_type": "runtime.preflight",
+      "path": "/facts/collector_version",
+      "operator": "exists",
+      "expected": true
+    },
+    {
+      "id": "snapshot-is-complete",
+      "severity": "OBJECTIVE",
+      "evidence_type": "runtime.preflight",
+      "path": "/facts/snapshot_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "collection-has-no-errors",
+      "severity": "OBJECTIVE",
+      "evidence_type": "runtime.preflight",
+      "path": "/facts/collection_errors",
+      "operator": "eq",
+      "expected": []
+    }
+  ],
+  "random_seed": 2026080902,
+  "resource_budget": {
+    "max_artifact_bytes": 1048576
+  },
+  "preflight": {
+    "sample_count": 3,
+    "sampling_interval_ms": 50,
+    "hard_breach_grace_samples": 2,
+    "available_memory_soft_min_mb": 1000000,
+    "available_memory_hard_min_mb": 1,
+    "disk_free_hard_min_mb": 1,
+    "collector_rss_hard_max_mb": 512,
+    "observer_rss_delta_soft_max_mb": 64,
+    "ports": [],
+    "require_clean_staging": true
+  },
+  "load_model": {
+    "total_requests": 0,
+    "duration_seconds": 0
+  },
+  "change_scope": {
+    "level": "L2_CONTRACT",
+    "owner": "VeriTrail Core",
+    "expected_blast_radius": "Plan 0.2 resource policy, preflight CLI, and runtime.preflight evidence",
+    "consumers": [
+      "plan validator",
+      "CLI",
+      "evidence importer",
+      "JSON report exporter",
+      "Markdown report exporter"
+    ]
+  },
+  "reproduction_steps": [
+    "Install VeriTrail in an isolated Python environment.",
+    "Run the preflight command with this plan and a new Run ID.",
+    "Verify that the soft threshold produces STOP_ESCALATION without ABORT."
+  ],
+  "cleanup_steps": [
+    "Confirm there are no VeriTrail staging directories or test listeners.",
+    "Remove only the newly created ignored Run directory after reviewing its manifest."
+  ]
+}

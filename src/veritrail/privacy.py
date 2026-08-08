@@ -17,6 +17,13 @@ SENSITIVE_KEYS = {
     "refresh-token",
     "private-key",
     "connection-string",
+    "username",
+    "user-name",
+    "account",
+    "account-name",
+    "hostname",
+    "host-name",
+    "computer-name",
 }
 KEY_NORMALIZER = re.compile(r"[_\s]+")
 BEARER_PATTERN = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._~+/=-]+")

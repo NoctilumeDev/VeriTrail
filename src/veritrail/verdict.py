@@ -167,6 +167,43 @@ def _detect_variable_contamination(
     return contamination
 
 
+def _detect_preflight_contamination(
+    plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
+) -> list[dict[str, Any]]:
+    if plan.get("schema_version") != "0.2":
+        return []
+    preflight = [
+        artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.preflight"
+    ]
+    contamination: list[dict[str, Any]] = []
+    if len(preflight) > 1:
+        contamination.append(
+            {
+                "code": "MULTIPLE_PREFLIGHT_EVIDENCE",
+                "message": "A single Run must contain exactly one runtime.preflight artifact.",
+            }
+        )
+    for artifact in preflight:
+        facts = artifact.document["facts"]
+        if not _same_value(facts["policy"], plan["preflight"]):
+            contamination.append(
+                {
+                    "code": "PREFLIGHT_POLICY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The observed preflight policy differs from the sealed Plan 0.2 policy.",
+                }
+            )
+        if facts["decision"] == "ABORT" and execution_status != "ABORTED":
+            contamination.append(
+                {
+                    "code": "PREFLIGHT_STATUS_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Preflight decided ABORT but the Run execution status is not ABORTED.",
+                }
+            )
+    return contamination
+
+
 def evaluate(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> dict[str, Any]:
@@ -174,6 +211,7 @@ def evaluate(
     missing_evidence = sorted(set(plan["required_evidence"]) - set(evidence_types))
     assertion_results = _evaluate_assertions(plan, evidence)
     contamination = _detect_variable_contamination(plan, evidence)
+    contamination.extend(_detect_preflight_contamination(plan, evidence, execution_status))
     if plan["baseline"]["status"] == "EXPIRED":
         contamination.append(
             {

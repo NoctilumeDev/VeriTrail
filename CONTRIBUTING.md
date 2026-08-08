@@ -1,7 +1,7 @@
 # Contributing to VeriTrail
 
-VeriTrail is in early v0 implementation. M0 establishes the sealed-plan-to-verdict-bundle contract;
-later milestones remain gated. Contributions should close the active milestone or strengthen its product,
+VeriTrail is in early v0 implementation. M0 freezes the sealed-plan-to-verdict-bundle contract and M1
+adds a bounded resource preflight; later milestones remain gated. Contributions should close the active milestone or strengthen its product,
 experimental-integrity, evidence, security, and acceptance boundaries before broadening scope.
 
 ## Before proposing code

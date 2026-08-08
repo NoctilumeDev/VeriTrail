@@ -139,6 +139,9 @@ VeriTrail/
 
 `web/`、`adapters/` 和 SQLite 元数据将在各自前置里程碑冻结后再创建。
 
+M1 在 Core 内增加低开销资源采样和 `preflight` CLI，但不建立执行器：采样器只访问标准库
+系统 API、输出卷、显式回环端口和输出父目录，不通过 Shell 枚举或控制机器。
+
 ## 9. 实现顺序
 
 1. 计划/基线/变量/裁决模型与 JSON schema；

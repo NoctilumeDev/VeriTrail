@@ -10,7 +10,7 @@ from typing import Any
 
 from veritrail.canonical import canonical_json_bytes, sha256_bytes
 from veritrail.errors import SafetyError, ValidationError
-from veritrail.evidence import ImportedEvidence, import_evidence_files
+from veritrail.evidence import ImportedEvidence, import_evidence_files, verify_imported_evidence
 from veritrail.plan import verify_sealed_plan
 from veritrail.verdict import evaluate
 
@@ -66,9 +66,15 @@ def render_markdown(report: dict[str, Any]) -> str:
     lines.extend(["", "## Evidence", ""])
     if report["evidence"]:
         for artifact in report["evidence"]:
+            summary = artifact.get("summary", {})
+            decision = (
+                f", decision: {summary['resource_decision']}"
+                if summary.get("resource_decision")
+                else ""
+            )
             lines.append(
                 f"- `{artifact['evidence_type']}` — `{artifact['sha256']}` "
-                f"({artifact['size']} bytes, redactions: {artifact['redacted_fields']})"
+                f"({artifact['size']} bytes, redactions: {artifact['redacted_fields']}{decision})"
             )
     else:
         lines.append("- No evidence was imported.")
@@ -79,7 +85,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         for item in report["contamination"]:
             lines.append(f"- `{item['code']}` — {_markdown_value(item['message'])}")
     if not report["missing_evidence"] and not report["contamination"]:
-        lines.append("- None detected by the M0 rule set.")
+        lines.append("- None detected by the active deterministic rule set.")
     lines.extend(
         [
             "",
@@ -115,22 +121,26 @@ def _artifact_manifest(
         filename = f"{index:03d}-{evidence_type}-{artifact.sha256[:12]}.json"
         relative_path = Path("evidence") / filename
         (stage / relative_path).write_bytes(canonical_json_bytes(artifact.document))
-        entries.append(
-            {
-                "evidence_type": evidence_type,
-                "path": relative_path.as_posix(),
-                "sha256": artifact.sha256,
-                "size": artifact.size,
-                "redacted_fields": artifact.redacted_fields,
-                "redacted": artifact.redacted_fields > 0,
-                "redaction_rule_version": "privacy/0.1",
-                "parser_version": "evidence-json/0.1",
-                "captured_at": artifact.document["captured_at"],
-                "source": artifact.document["source"],
-                "retention": "local-default",
-                "source_name": artifact.input_name,
+        entry = {
+            "evidence_type": evidence_type,
+            "path": relative_path.as_posix(),
+            "sha256": artifact.sha256,
+            "size": artifact.size,
+            "redacted_fields": artifact.redacted_fields,
+            "redacted": artifact.redacted_fields > 0,
+            "redaction_rule_version": "privacy/0.1",
+            "parser_version": "evidence-json/0.1",
+            "captured_at": artifact.document["captured_at"],
+            "source": artifact.document["source"],
+            "retention": "local-default",
+            "source_name": artifact.input_name,
+        }
+        if evidence_type == "runtime.preflight":
+            entry["summary"] = {
+                "resource_decision": artifact.document["facts"].get("decision"),
+                "snapshot_complete": artifact.document["facts"].get("snapshot_complete"),
             }
-        )
+        entries.append(entry)
     manifest = {
         "schema_version": "0.1",
         "run_id": run_id,
@@ -148,6 +158,7 @@ def create_bundle(
     output: Path,
     run_id: str,
     execution_status: str,
+    generated_evidence: list[ImportedEvidence] | None = None,
 ) -> dict[str, Any]:
     verify_sealed_plan(plan)
     if not RUN_ID_PATTERN.fullmatch(run_id):
@@ -157,6 +168,18 @@ def create_bundle(
     output.parent.mkdir(parents=True, exist_ok=True)
     max_bytes = plan["resource_budget"]["max_artifact_bytes"]
     imported, duplicates = import_evidence_files(evidence_paths, max_bytes)
+    seen_hashes = {artifact.sha256 for artifact in imported}
+    for artifact in generated_evidence or []:
+        verify_imported_evidence(artifact)
+        if artifact.size > max_bytes:
+            raise ValidationError(
+                [f"generated evidence {artifact.input_name} is {artifact.size} bytes; limit is {max_bytes} bytes"]
+            )
+        if artifact.sha256 in seen_hashes:
+            duplicates.append(artifact.input_name)
+            continue
+        seen_hashes.add(artifact.sha256)
+        imported.append(artifact)
     stage = Path(tempfile.mkdtemp(prefix=".veritrail-", dir=output.parent))
     try:
         _write_json(stage / "sealed-plan.json", plan)

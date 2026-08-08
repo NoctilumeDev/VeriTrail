@@ -10,7 +10,7 @@ from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object as load_strict_json_object
 from veritrail.privacy import redact_value
 
-SCHEMA_VERSION = "0.1"
+SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2"}
 PLAN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 VARIABLE_ROLES = {"PRIMARY", "CONTROLLED", "NUISANCE"}
 ASSERTION_SEVERITIES = {
@@ -50,7 +50,20 @@ TOP_LEVEL_FIELDS = {
     "change_scope",
     "reproduction_steps",
     "cleanup_steps",
+    "preflight",
     "seal",
+}
+PREFLIGHT_FIELDS = {
+    "sample_count",
+    "sampling_interval_ms",
+    "hard_breach_grace_samples",
+    "available_memory_soft_min_mb",
+    "available_memory_hard_min_mb",
+    "disk_free_hard_min_mb",
+    "collector_rss_hard_max_mb",
+    "observer_rss_delta_soft_max_mb",
+    "ports",
+    "require_clean_staging",
 }
 
 
@@ -103,14 +116,119 @@ def _validate_load_model(value: Any, errors: list[str]) -> None:
                     errors.append(f"load_model.ramp_steps[{index}] must be a non-empty object")
 
 
+def _is_integer(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _validate_resource_budget(value: Any, schema_version: Any, errors: list[str]) -> None:
+    if not isinstance(value, dict):
+        errors.append("resource_budget must be an object")
+        return
+    if schema_version == "0.1":
+        _reject_unknown_fields(
+            value,
+            {"memory_soft_mb", "memory_hard_mb", "max_artifact_bytes"},
+            "resource_budget",
+            errors,
+        )
+        soft = value.get("memory_soft_mb")
+        hard = value.get("memory_hard_mb")
+        if not _is_integer(soft) or soft <= 0:
+            errors.append("resource_budget.memory_soft_mb must be a positive integer")
+        if not _is_integer(hard) or hard <= 0:
+            errors.append("resource_budget.memory_hard_mb must be a positive integer")
+        if _is_integer(soft) and _is_integer(hard) and hard < soft:
+            errors.append("resource_budget.memory_hard_mb must be >= memory_soft_mb")
+    elif schema_version == "0.2":
+        _reject_unknown_fields(
+            value,
+            {"max_artifact_bytes"},
+            "resource_budget",
+            errors,
+        )
+    maximum = value.get("max_artifact_bytes")
+    if not _is_integer(maximum) or maximum <= 0:
+        errors.append("resource_budget.max_artifact_bytes must be a positive integer")
+
+
+def _validate_preflight(value: Any, errors: list[str]) -> None:
+    if not isinstance(value, dict):
+        errors.append("preflight must be an object for schema_version '0.2'")
+        return
+    _reject_unknown_fields(value, PREFLIGHT_FIELDS, "preflight", errors)
+
+    ranges = {
+        "sample_count": (1, 20),
+        "sampling_interval_ms": (0, 5000),
+        "available_memory_soft_min_mb": (1, None),
+        "available_memory_hard_min_mb": (1, None),
+        "disk_free_hard_min_mb": (1, None),
+        "collector_rss_hard_max_mb": (1, None),
+        "observer_rss_delta_soft_max_mb": (0, None),
+    }
+    for field, (minimum, maximum) in ranges.items():
+        item = value.get(field)
+        if not _is_integer(item) or item < minimum or (maximum is not None and item > maximum):
+            upper = f" and <= {maximum}" if maximum is not None else ""
+            errors.append(f"preflight.{field} must be an integer >= {minimum}{upper}")
+
+    sample_count = value.get("sample_count")
+    interval = value.get("sampling_interval_ms")
+    grace = value.get("hard_breach_grace_samples")
+    if not _is_integer(grace) or grace < 1:
+        errors.append("preflight.hard_breach_grace_samples must be a positive integer")
+    elif _is_integer(sample_count) and grace > sample_count:
+        errors.append("preflight.hard_breach_grace_samples must be <= sample_count")
+    if _is_integer(sample_count) and _is_integer(interval) and (sample_count - 1) * interval > 60_000:
+        errors.append("preflight sampling window must not exceed 60000 ms")
+
+    soft = value.get("available_memory_soft_min_mb")
+    hard = value.get("available_memory_hard_min_mb")
+    if _is_integer(soft) and _is_integer(hard) and soft < hard:
+        errors.append(
+            "preflight.available_memory_soft_min_mb must be >= available_memory_hard_min_mb"
+        )
+    observer_soft = value.get("observer_rss_delta_soft_max_mb")
+    collector_hard = value.get("collector_rss_hard_max_mb")
+    if _is_integer(observer_soft) and _is_integer(collector_hard) and observer_soft > collector_hard:
+        errors.append(
+            "preflight.observer_rss_delta_soft_max_mb must be <= collector_rss_hard_max_mb"
+        )
+
+    ports = value.get("ports")
+    seen_ports: set[int] = set()
+    if not isinstance(ports, list) or len(ports) > 32:
+        errors.append("preflight.ports must be a list with at most 32 entries")
+    else:
+        for index, port_rule in enumerate(ports):
+            prefix = f"preflight.ports[{index}]"
+            if not isinstance(port_rule, dict):
+                errors.append(f"{prefix} must be an object")
+                continue
+            _reject_unknown_fields(port_rule, {"port", "expected"}, prefix, errors)
+            port = port_rule.get("port")
+            if not _is_integer(port) or not 1 <= port <= 65535:
+                errors.append(f"{prefix}.port must be an integer from 1 to 65535")
+            elif port in seen_ports:
+                errors.append(f"{prefix}.port duplicates {port}")
+            else:
+                seen_ports.add(port)
+            if port_rule.get("expected") not in {"FREE", "LISTENING"}:
+                errors.append(f"{prefix}.expected must be FREE or LISTENING")
+
+    if not isinstance(value.get("require_clean_staging"), bool):
+        errors.append("preflight.require_clean_staging must be a boolean")
+
+
 def validate_plan(plan: dict[str, Any]) -> None:
     errors: list[str] = []
     unknown_fields = sorted(set(plan) - TOP_LEVEL_FIELDS)
     if unknown_fields:
         errors.append(f"plan has unsupported fields: {', '.join(unknown_fields)}")
 
-    if plan.get("schema_version") != SCHEMA_VERSION:
-        errors.append(f"schema_version must be {SCHEMA_VERSION!r}")
+    schema_version = plan.get("schema_version")
+    if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
+        errors.append("schema_version must be '0.1' or '0.2'")
     plan_id = plan.get("plan_id")
     if not isinstance(plan_id, str) or not PLAN_ID_PATTERN.fullmatch(plan_id):
         errors.append("plan_id must be a 2-64 character lowercase identifier")
@@ -142,7 +260,7 @@ def validate_plan(plan: dict[str, Any]) -> None:
             errors.append("baseline.fingerprint must be a lowercase SHA-256 digest")
 
     if plan.get("experiment_type") != "SINGLE_VARIABLE":
-        errors.append("experiment_type must be SINGLE_VARIABLE in the M0 contract")
+        errors.append("experiment_type must be SINGLE_VARIABLE in the current contract")
 
     variables = plan.get("variables")
     variable_names: set[str] = set()
@@ -179,6 +297,10 @@ def validate_plan(plan: dict[str, Any]) -> None:
     _validate_string_list(required_evidence, "required_evidence", errors, non_empty=True)
     if isinstance(required_evidence, list) and len(required_evidence) != len(set(required_evidence)):
         errors.append("required_evidence must not contain duplicates")
+    if schema_version == "0.2" and (
+        not isinstance(required_evidence, list) or "runtime.preflight" not in required_evidence
+    ):
+        errors.append("schema_version '0.2' must require runtime.preflight evidence")
 
     assertions = plan.get("assertions")
     assertion_ids: set[str] = set()
@@ -220,38 +342,23 @@ def validate_plan(plan: dict[str, Any]) -> None:
                 errors.append(f"{prefix}.expected is required")
         if decisive_count < 1:
             errors.append("at least one HARD or DEGRADATION_BOUNDARY assertion is required")
+        if schema_version == "0.2" and not any(
+            isinstance(assertion, dict) and assertion.get("evidence_type") == "runtime.preflight"
+            for assertion in assertions
+        ):
+            errors.append("schema_version '0.2' must define an assertion over runtime.preflight")
 
     random_seed = plan.get("random_seed")
     if not isinstance(random_seed, int) or isinstance(random_seed, bool) or random_seed < 0:
         errors.append("random_seed must be a non-negative integer")
 
-    budget = plan.get("resource_budget")
-    if not isinstance(budget, dict):
-        errors.append("resource_budget must be an object")
-    else:
-        _reject_unknown_fields(
-            budget,
-            {"memory_soft_mb", "memory_hard_mb", "max_artifact_bytes"},
-            "resource_budget",
-            errors,
-        )
-        soft = budget.get("memory_soft_mb")
-        hard = budget.get("memory_hard_mb")
-        maximum = budget.get("max_artifact_bytes")
-        if not isinstance(soft, int) or isinstance(soft, bool) or soft <= 0:
-            errors.append("resource_budget.memory_soft_mb must be a positive integer")
-        if not isinstance(hard, int) or isinstance(hard, bool) or hard <= 0:
-            errors.append("resource_budget.memory_hard_mb must be a positive integer")
-        if (
-            isinstance(soft, int)
-            and isinstance(hard, int)
-            and not isinstance(soft, bool)
-            and not isinstance(hard, bool)
-            and hard < soft
-        ):
-            errors.append("resource_budget.memory_hard_mb must be >= memory_soft_mb")
-        if not isinstance(maximum, int) or isinstance(maximum, bool) or maximum <= 0:
-            errors.append("resource_budget.max_artifact_bytes must be a positive integer")
+    _validate_resource_budget(plan.get("resource_budget"), schema_version, errors)
+
+    if schema_version == "0.1":
+        if "preflight" in plan:
+            errors.append("preflight requires schema_version '0.2'")
+    elif schema_version == "0.2":
+        _validate_preflight(plan.get("preflight"), errors)
 
     _validate_load_model(plan.get("load_model"), errors)
 

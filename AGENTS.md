@@ -3,8 +3,8 @@
 ## 当前阶段
 
 - 当前阶段是 `v0 Implementation`。M0 已在提交 `64497779add1351014d802b38d46f73a4ce394ac`
-  上通过自动化、真实 CLI、证据包哈希和残留检查并标记 `FROZEN`；M1 已有验收合同但仍是
-  `PLANNED`，M2 及以后不得实现。
+  上通过自动化、真实 CLI、证据包哈希和残留检查并标记 `FROZEN`；M1 已有实现、自动化和
+  候选运行证据，当前是 `AUTOMATED`，提交后复验与冻结尚未完成；M2 及以后不得实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

@@ -6,9 +6,10 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0 FROZEN，M1 PLANNED。** M0 已建立并冻结计划封存、
-结构化证据导入、确定性裁决和 JSON/Markdown 证据包的最小闭环；M1 已冻结资源预检的验收
-合同但尚未实现。真实浏览器、SQLite 和 Vue 仍是后续里程碑，不得从路线图文字推断为已实现能力。
+**当前状态：v0 Implementation，M0 FROZEN，M1 AUTOMATED。** M0 已建立并冻结计划封存、
+结构化证据导入、确定性裁决和 JSON/Markdown 证据包的最小闭环；M1 的资源预检已有实现、
+自动化与候选运行证据，但尚待提交后的干净工作区复验才能冻结。真实浏览器、SQLite 和 Vue
+仍是后续里程碑，不得从路线图文字推断为已实现能力。
 
 ## 为什么需要验迹
 
@@ -73,6 +74,28 @@ M0 使用 Python 3.10+ 标准库实现，不依赖数据库、Docker 或云服�
 M0 暂时只接受 `SINGLE_VARIABLE` 和结构化 JSON 导入，不采集浏览器、资源或项目命令。
 完整边界见 [M0 纵向切片](docs/04-m0-vertical-slice.md)。
 
+## M1 资源预检
+
+`ExperimentPlan 0.2` 新增封存的预检策略，`preflight` 子命令会在启动工作负载前只读采集
+可用内存、输出卷空间、采集器 RSS、显式回环端口和 VeriTrail 临时目录残留，并生成
+`runtime.preflight` 证据包：
+
+```powershell
+.\.venv\Scripts\veritrail.exe preflight `
+  --plan examples\preflight\plan-proceed.json `
+  --run-id my-preflight-run `
+  --output artifacts\my-preflight-run
+```
+
+资源决策与最终 Verdict 分开：
+
+- `PROCEED`：当前起点允许进入下一阶段；
+- `STOP_ESCALATION`：停止增加负载或并行度；
+- `ABORT`：输出 `ABORTED`，没有独立业务失败证据时 Verdict 保持 `PENDING`。
+
+M1 不执行项目命令，不启动/停止服务或容器，不枚举全部进程/端口，也不修改代理、防火墙和
+系统参数。Plan 0.1 的 M0 行为保持兼容；只有 Plan 0.2 可以运行 `preflight`。
+
 ### 本地运行
 
 ```powershell
@@ -99,7 +122,8 @@ py -3.10 -m venv .venv
 
 ## 计划架构
 
-- **Python Core**：CLI、本地 API、实验编排、导入器、资源预检与确定性裁决。
+- **Python Core**：CLI、计划/证据、确定性裁决，以及已实现的启动前资源预检；本地 API 与
+  执行编排仍是计划能力。
 - **SQLite**：本地元数据、运行关系和结论索引。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
 - **Vue Workbench**：实验矩阵、时间线、证据浏览、差异比较和报告导出。
