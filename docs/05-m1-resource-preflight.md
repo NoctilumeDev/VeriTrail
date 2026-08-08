@@ -2,8 +2,8 @@
 
 ## 状态
 
-`AUTOMATED`。M1 的代码、自动化与候选主机运行证据已经存在；提交后的干净工作区复验、
-冻结记录和远端标签尚未完成，因此不能标记 `FROZEN`。
+`FROZEN`。M1 已在可寻址提交上完成两套 Python 自动化、M0 兼容回归、三类真实主机预检、
+证据包逐字节核验、敏感扫描和残留检查。M2 可以开始规划，但不得跳过自己的验收合同。
 
 ## 目标问题
 
@@ -138,3 +138,25 @@ samples + port checks + staging check
 
 只有以上全部成立，M1 才能从 `PLANNED` 依次推进到 `FROZEN`。M2 在此之前只允许规划，
 不得实现。
+
+## 冻结记录
+
+验收日期：2026-08-09（Asia/Shanghai）。
+
+- 代码基线：`21d555cf1a8d5b4f3bc9430b4241c3f70ff0d48f`；
+- 版本：`0.2.0.dev1`；
+- Python 3.10.6：42 项测试通过；
+- Python 3.13.13：42 项测试通过；
+- M0 兼容：Plan 0.1 哈希保持
+  `90235a18c59e9f30cd2aa519d281a4fdb18f04e83bdf2fcc5ff98770dba8a2b8`，真实 Run 为 `PASS`；
+- `PROCEED` Plan 哈希：`df1966bbab8e1f6c0288525747ff96bd5c7d3e26120dbfafea8f27367324f41b`；
+- `STOP_ESCALATION` Plan 哈希：`e2ef3c20c6f278d8535c3210a10b0f0edd738452fdd1dedd42b480b5e231ad84`；
+- `ABORT` Plan 哈希：`314c4590de0a58debf27dceba7deddedcb744cd307126c40ffb3150e7f38318a`，
+  输出为 `ABORTED + PENDING`；
+- 三个真实 M1 Run 各采集 3 个样本，最低可用内存约 8275.922 MiB，采集器 RSS 峰值不超过
+  18.398 MiB，观测增量不超过 0.117 MiB，单次采集不超过 172 ms；
+- M1 证据包 15 个文件、M0 兼容包 5 个文件逐字节 SHA-256 核验通过；
+- 持久化敏感信息扫描 0 命中，`.veritrail-*` 残留 0，复验后 Git 工作区干净。
+
+本地运行包位于 Git 忽略的 `artifacts/`，不进入仓库。以上性能数字只描述本次 16 GB Windows
+主机上的采集器开销，不构成其他机器或后续工作负载的容量结论。
