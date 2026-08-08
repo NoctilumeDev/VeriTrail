@@ -2,8 +2,8 @@
 
 ## 状态
 
-`AUTOMATED`。实现与自动化证据已经存在；提交后的干净工作区尚需再次完成真实 CLI 运行、
-证据包核验和残留检查，之后才能更新为 `RUNTIME_VALIDATED` 或 `FROZEN`。
+`FROZEN`。M0 已在可寻址提交上完成自动化、真实 CLI 运行、证据包核验和残留检查。
+M1 可以开始规划；若 M0 的代码、Schema 或规则发生语义变化，必须创建新版本并重新冻结。
 
 ## 影响层级
 
@@ -67,3 +67,19 @@ veritrail evaluate --plan PLAN --evidence EVIDENCE --run-id RUN --output NEW_DIR
 - JSON 与 Markdown 报告 Verdict 一致；
 - 已有输出不会被覆盖，重复证据不会生成重复副本；
 - 使用仓库样例完成一次真实 CLI 运行，并确认输出目录可安全清理。
+
+## 冻结记录
+
+验收日期：2026-08-09（Asia/Shanghai）。
+
+- 代码基线：`64497779add1351014d802b38d46f73a4ce394ac`；
+- 计划哈希：`90235a18c59e9f30cd2aa519d281a4fdb18f04e83bdf2fcc5ff98770dba8a2b8`；
+- Python 3.10.6：21 项测试通过；
+- Python 3.13.13：21 项测试通过；
+- 真实 CLI：`PASS`、`FAIL`、`INCONCLUSIVE`、证据缺失 `PENDING`、`ABORTED + PENDING`
+  共 5 个独立 Run；
+- 证据包：24 个被清单覆盖的文件逐字节 SHA-256 核验通过；
+- 安全与清理：持久化敏感信息扫描 0 命中，临时组装目录残留 0，复验后 Git 工作区干净。
+
+本地证据位于 Git 忽略的 `artifacts/`，遵循默认不提交运行证据的安全策略。冻结记录只保存
+非敏感摘要和可寻址代码版本，不把本机路径写入仓库。
