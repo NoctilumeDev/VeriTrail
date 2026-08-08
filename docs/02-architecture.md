@@ -142,6 +142,10 @@ VeriTrail/
 M1 在 Core 内增加低开销资源采样和 `preflight` CLI，但不建立执行器：采样器只访问标准库
 系统 API、输出卷、显式回环端口和输出父目录，不通过 Shell 枚举或控制机器。
 
+M2 在 Python Core 内增加可选 Playwright Browser Adapter：它只接受 Plan 0.3 的回环 origin、
+结构化步骤和串行视口，截图以二进制附件进入 Artifact Store。它不是通用命令执行器，也不会
+管理被测站点生命周期、浏览器 Profile、远程认证或并行 Context。
+
 ## 9. 实现顺序
 
 1. 计划/基线/变量/裁决模型与 JSON schema；

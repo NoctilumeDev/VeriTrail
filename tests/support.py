@@ -31,6 +31,11 @@ def preflight_plan(profile: str = "proceed") -> dict[str, Any]:
         return json.load(handle)
 
 
+def browser_plan() -> dict[str, Any]:
+    with (ROOT / "examples" / "browser" / "plan.json").open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
 def artifact(
     *,
     suite_passed: bool = True,

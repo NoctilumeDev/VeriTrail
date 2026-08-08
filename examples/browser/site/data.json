@@ -1,0 +1,8 @@
+{
+  "layers": [
+    "Console",
+    "Network",
+    "Screenshot",
+    "Viewport"
+  ]
+}

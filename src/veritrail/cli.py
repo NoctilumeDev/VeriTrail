@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from veritrail import __version__
+from veritrail.browser import collect_browser_evidence
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.plan import load_and_seal_plan, write_sealed_plan
@@ -45,9 +46,23 @@ def build_parser() -> argparse.ArgumentParser:
     preflight = subparsers.add_parser(
         "preflight", help="collect a bounded local resource preflight and create a verdict bundle"
     )
-    preflight.add_argument("--plan", type=Path, required=True, help="unsealed or sealed Plan 0.2 JSON")
+    preflight.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.2/0.3 JSON"
+    )
     preflight.add_argument("--output", type=Path, required=True, help="new output directory")
     preflight.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")
+
+    browser_capture = subparsers.add_parser(
+        "browser-capture",
+        help="run Plan 0.3 preflight and collect bounded Chromium evidence",
+    )
+    browser_capture.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.3 JSON"
+    )
+    browser_capture.add_argument("--output", type=Path, required=True, help="new output directory")
+    browser_capture.add_argument(
+        "--run-id", required=True, help="stable caller-supplied run identifier"
+    )
     return parser
 
 
@@ -91,9 +106,12 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "preflight":
             plan = load_and_seal_plan(args.plan)
-            if plan["schema_version"] != "0.2":
+            if plan["schema_version"] not in {"0.2", "0.3"}:
                 raise ValidationError(
-                    ["preflight requires ExperimentPlan schema_version '0.2'; Plan 0.1 remains read-only compatible"]
+                    [
+                        "preflight requires ExperimentPlan schema_version '0.2' or '0.3'; "
+                        "Plan 0.1 remains read-only compatible"
+                    ]
                 )
             if args.output.exists():
                 raise SafetyError(
@@ -117,6 +135,53 @@ def main(argv: list[str] | None = None) -> int:
                     "output": str(args.output),
                     "run_id": report["run_id"],
                     "resource_decision": decision,
+                    "execution_status": report["execution_status"],
+                    "verdict": report["verdict"],
+                }
+            )
+            return 0
+        if args.command == "browser-capture":
+            plan = load_and_seal_plan(args.plan)
+            if plan["schema_version"] != "0.3":
+                raise ValidationError(
+                    ["browser-capture requires ExperimentPlan schema_version '0.3'"]
+                )
+            if args.output.exists():
+                raise SafetyError(
+                    f"refusing to overwrite existing output directory: {args.output.name}"
+                )
+            preflight_document = collect_preflight_evidence(plan, args.output.parent)
+            preflight_artifact = import_evidence_document(
+                preflight_document, "generated-preflight.json"
+            )
+            decision = preflight_artifact.document["facts"]["decision"]
+            browser_started = decision == "PROCEED"
+            generated = [preflight_artifact]
+            if browser_started:
+                browser_artifact = collect_browser_evidence(plan)
+                generated.append(browser_artifact)
+                execution_status = (
+                    "COMPLETED"
+                    if browser_artifact.document["facts"]["capture_complete"]
+                    else "ERROR"
+                )
+            else:
+                execution_status = "ABORTED" if decision == "ABORT" else "COMPLETED"
+            report = create_bundle(
+                plan=plan,
+                evidence_paths=[],
+                output=args.output,
+                run_id=args.run_id,
+                execution_status=execution_status,
+                generated_evidence=generated,
+            )
+            _success(
+                {
+                    "command": "browser-capture",
+                    "output": str(args.output),
+                    "run_id": report["run_id"],
+                    "resource_decision": decision,
+                    "browser_started": browser_started,
                     "execution_status": report["execution_status"],
                     "verdict": report["verdict"],
                 }

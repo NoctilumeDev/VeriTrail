@@ -1,0 +1,177 @@
+{
+  "schema_version": "0.3",
+  "plan_id": "m2-browser-negative",
+  "version": 1,
+  "subject": {
+    "id": "veritrail-browser-fixture",
+    "version": "negative-1",
+    "source_ref": "examples/browser/site"
+  },
+  "question": "Does VeriTrail preserve and reject a local fixture with Console, page, and HTTP failures?",
+  "baseline": {
+    "id": "m2-browser-negative-baseline",
+    "status": "VALID",
+    "fingerprint": "4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "experiment_type": "SINGLE_VARIABLE",
+  "variables": [
+    {
+      "name": "fixture_variant",
+      "role": "PRIMARY",
+      "value": "negative",
+      "source": "sealed-plan"
+    },
+    {
+      "name": "browser_engine",
+      "role": "CONTROLLED",
+      "value": "chromium",
+      "source": "browser-adapter"
+    },
+    {
+      "name": "browser_headless",
+      "role": "CONTROLLED",
+      "value": true,
+      "source": "sealed-plan"
+    },
+    {
+      "name": "viewport_profile_count",
+      "role": "CONTROLLED",
+      "value": 2,
+      "unit": "profiles",
+      "source": "sealed-plan"
+    }
+  ],
+  "required_evidence": [
+    "runtime.preflight",
+    "browser.session"
+  ],
+  "assertions": [
+    {
+      "id": "preflight-complete",
+      "severity": "HARD",
+      "evidence_type": "runtime.preflight",
+      "path": "/facts/snapshot_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "browser-capture-complete",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/capture_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "console-errors-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/unexpected_console_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "page-errors-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/page_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "http-errors-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/unexpected_http_error_count",
+      "operator": "eq",
+      "expected": 0
+    }
+  ],
+  "random_seed": 20260809,
+  "resource_budget": {
+    "max_artifact_bytes": 5242880
+  },
+  "preflight": {
+    "sample_count": 3,
+    "sampling_interval_ms": 50,
+    "hard_breach_grace_samples": 2,
+    "available_memory_soft_min_mb": 4096,
+    "available_memory_hard_min_mb": 2048,
+    "disk_free_hard_min_mb": 1024,
+    "collector_rss_hard_max_mb": 128,
+    "observer_rss_delta_soft_max_mb": 32,
+    "ports": [
+      {
+        "port": 18765,
+        "expected": "LISTENING"
+      }
+    ],
+    "require_clean_staging": true
+  },
+  "browser": {
+    "engine": "chromium",
+    "headless": true,
+    "start_url": "http://localhost:18765/negative.html",
+    "allowed_origins": [
+      "http://localhost:18765"
+    ],
+    "timeout_ms": 10000,
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720,
+        "is_mobile": false
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "is_mobile": true
+      }
+    ],
+    "steps": [
+      {
+        "id": "trigger-failures",
+        "action": "click",
+        "selector": "[data-testid='load-evidence']"
+      },
+      {
+        "id": "wait-for-negative-result",
+        "action": "expect_text",
+        "selector": "[data-testid='status']",
+        "value": "failed as designed: 404"
+      },
+      {
+        "id": "capture-negative",
+        "action": "screenshot",
+        "name": "negative"
+      }
+    ]
+  },
+  "load_model": {
+    "virtual_users": 1,
+    "in_flight_requests": 1
+  },
+  "change_scope": {
+    "level": "L2_CONTRACT",
+    "owner": "VeriTrail Core / Browser Adapter",
+    "expected_blast_radius": "Plan 0.3 browser negative-path evidence and deterministic verdict",
+    "consumers": [
+      "browser-adapter",
+      "verdict-engine",
+      "json-report",
+      "markdown-report"
+    ]
+  },
+  "reproduction_steps": [
+    "Serve examples/browser/site on loopback port 18765.",
+    "Run browser-capture with this negative plan and a unique Run ID.",
+    "Confirm Console, page, and HTTP failures are present and Verdict is FAIL."
+  ],
+  "cleanup_steps": [
+    "Close the Playwright browser and every context.",
+    "Stop the loopback fixture server and verify port 18765 is released.",
+    "Verify no .veritrail-* staging directory remains."
+  ]
+}

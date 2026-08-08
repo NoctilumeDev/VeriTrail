@@ -6,9 +6,10 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0/M1 FROZEN。** M0 已冻结计划封存、结构化证据导入、
-确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检。运行中执行编排、真实浏览器、
-SQLite 和 Vue 仍是后续里程碑，不得从路线图文字推断为已实现能力。
+**当前状态：v0 Implementation，M0/M1 FROZEN，M2 IMPLEMENTED。** M0 已冻结计划封存、
+结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已实现
+有界真实 Chromium 采集，正在形成冻结基线。SQLite 和 Vue 仍是后续里程碑，不得从路线图
+文字推断为已实现能力。
 
 ## 为什么需要验迹
 
@@ -95,6 +96,41 @@ M0 暂时只接受 `SINGLE_VARIABLE` 和结构化 JSON 导入，不采集浏览�
 M1 不执行项目命令，不启动/停止服务或容器，不枚举全部进程/端口，也不修改代理、防火墙和
 系统参数。Plan 0.1 的 M0 行为保持兼容；只有 Plan 0.2 可以运行 `preflight`。
 
+## M2 真实浏览器证据
+
+`ExperimentPlan 0.3` 在 Plan 0.2 预检之后增加有界的 `browser-capture`：只允许显式回环
+HTTP origin 和结构化步骤，按视口串行创建一个 Chromium Context 与 Page，并采集 Console、
+页面异常、Network、步骤时间线、横向溢出和 PNG 截图。
+
+浏览器能力作为可选依赖安装：
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install --editable ".[browser]"
+.\.venv\Scripts\python.exe -m playwright install chromium
+```
+
+在一个终端启动仓库内的非秘密夹具：
+
+```powershell
+.\.venv\Scripts\python.exe -m http.server 18765 `
+  --bind 127.0.0.1 `
+  --directory examples\browser\site
+```
+
+在第二个终端运行正向计划：
+
+```powershell
+.\.venv\Scripts\veritrail.exe browser-capture `
+  --plan examples\browser\plan.json `
+  --run-id my-browser-run `
+  --output artifacts\my-browser-run
+```
+
+适配器不会持久化请求/响应头、Cookie、正文或 URL 查询值，也不会启动被测站点、读取浏览器
+Profile 或执行任意 Shell。截图作为二进制附件进入 Evidence 清单与 Bundle 清单。Console、
+页面错误、请求失败、4xx/5xx、重复写请求和横向溢出仍由封存断言裁决，不由适配器直接写
+`PASS/FAIL`。完整边界见 [M2 真实浏览器证据](docs/06-m2-browser-evidence.md)。
+
 ### 本地运行
 
 ```powershell
@@ -121,12 +157,13 @@ py -3.10 -m venv .venv
 
 ## 计划架构
 
-- **Python Core**：CLI、计划/证据、确定性裁决，以及已实现的启动前资源预检；本地 API 与
-  执行编排仍是计划能力。
+- **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检和有界浏览器采集；本地 API
+  与通用执行编排仍是计划能力。
 - **SQLite**：本地元数据、运行关系和结论索引。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
 - **Vue Workbench**：实验矩阵、时间线、证据浏览、差异比较和报告导出。
-- **Browser Adapter**：基于 Playwright/CDP 的真实浏览器证据采集。
+- **Browser Adapter**：已实现基于 Playwright/Chromium 的回环站点证据采集；远程站点、认证、
+  多角色与并行 Context 仍不在 M2 范围。
 
 v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字符串，也不让 AI 决定
 `PASS/FAIL`。未来 AI 可以解释异常或建议下一步，但裁决权始终属于确定性规则。
@@ -139,7 +176,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [验收标准](docs/03-acceptance.md)
 - [M0 纵向切片](docs/04-m0-vertical-slice.md)
 - [M1 资源与环境预检](docs/05-m1-resource-preflight.md)
-- [M2 真实浏览器证据（PLANNED）](docs/06-m2-browser-evidence.md)
+- [M2 真实浏览器证据（IMPLEMENTED）](docs/06-m2-browser-evidence.md)
 
 ## 项目来源
 

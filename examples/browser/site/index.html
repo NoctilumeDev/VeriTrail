@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <title>VeriTrail M2 browser fixture</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: system-ui, sans-serif;
+        background: #eef3f1;
+        color: #17352d;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+      main { width: min(100%, 720px); background: white; border: 1px solid #c8d8d2; border-radius: 18px; padding: clamp(20px, 5vw, 48px); box-shadow: 0 18px 50px rgb(22 61 49 / 12%); }
+      p { line-height: 1.6; }
+      form { display: grid; gap: 12px; margin-block: 24px; }
+      label { font-weight: 650; }
+      input, button { width: 100%; min-height: 44px; border-radius: 10px; font: inherit; }
+      input { border: 1px solid #91aaa1; padding: 10px 12px; }
+      button { border: 0; background: #176b52; color: white; cursor: pointer; font-weight: 700; }
+      button:focus-visible, input:focus-visible { outline: 3px solid #f4b942; outline-offset: 2px; }
+      [data-testid="status"] { min-height: 28px; font-weight: 700; }
+      ul { padding-left: 22px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Controlled browser fixture</p>
+      <h1>One plan, one observable change</h1>
+      <p>This local page gives VeriTrail a deterministic desktop and mobile path.</p>
+      <form data-testid="fixture-form">
+        <label for="label">Run label</label>
+        <input id="label" data-testid="run-label" autocomplete="off" value="demo">
+        <button data-testid="load-evidence" type="submit">Load evidence</button>
+      </form>
+      <p data-testid="status" aria-live="polite">idle</p>
+      <ul data-testid="evidence-list" hidden></ul>
+    </main>
+    <script>
+      const form = document.querySelector('[data-testid="fixture-form"]');
+      const status = document.querySelector('[data-testid="status"]');
+      const list = document.querySelector('[data-testid="evidence-list"]');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        status.textContent = 'loading';
+        const response = await fetch('/data.json?run=fixture');
+        if (!response.ok) throw new Error(`fixture request failed: ${response.status}`);
+        const payload = await response.json();
+        list.replaceChildren(...payload.layers.map((layer) => {
+          const item = document.createElement('li');
+          item.textContent = layer;
+          return item;
+        }));
+        list.hidden = false;
+        status.textContent = `evidence ready: ${document.querySelector('[data-testid="run-label"]').value}`;
+        console.info('fixture evidence loaded');
+      });
+    </script>
+  </body>
+</html>

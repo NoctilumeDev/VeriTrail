@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/experiment-plan-0.3.schema.json",
+  "title": "VeriTrail M2 ExperimentPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "version",
+    "subject",
+    "question",
+    "baseline",
+    "experiment_type",
+    "variables",
+    "required_evidence",
+    "assertions",
+    "random_seed",
+    "resource_budget",
+    "preflight",
+    "browser",
+    "load_model",
+    "change_scope",
+    "reproduction_steps",
+    "cleanup_steps"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.3" },
+    "plan_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "source_ref": { "type": "string", "minLength": 1 }
+      }
+    },
+    "question": { "type": "string", "minLength": 1 },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "fingerprint"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["VALID", "EXPIRED"] },
+        "fingerprint": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "tolerances": { "type": "object" }
+      }
+    },
+    "experiment_type": { "const": "SINGLE_VARIABLE" },
+    "variables": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "role", "value", "source"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "role": { "enum": ["PRIMARY", "CONTROLLED", "NUISANCE"] },
+          "value": {},
+          "unit": { "type": "string" },
+          "source": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "required_evidence": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "assertions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "severity", "evidence_type", "path", "operator", "expected"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "severity": {
+            "enum": ["HARD", "DEGRADATION_BOUNDARY", "OBJECTIVE", "OBSERVATION"]
+          },
+          "evidence_type": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "pattern": "^(?:$|/)" },
+          "operator": { "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "contains", "exists"] },
+          "expected": {}
+        }
+      }
+    },
+    "random_seed": { "type": "integer", "minimum": 0 },
+    "resource_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_artifact_bytes"],
+      "properties": {
+        "max_artifact_bytes": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_count",
+        "sampling_interval_ms",
+        "hard_breach_grace_samples",
+        "available_memory_soft_min_mb",
+        "available_memory_hard_min_mb",
+        "disk_free_hard_min_mb",
+        "collector_rss_hard_max_mb",
+        "observer_rss_delta_soft_max_mb",
+        "ports",
+        "require_clean_staging"
+      ],
+      "properties": {
+        "sample_count": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "sampling_interval_ms": { "type": "integer", "minimum": 0, "maximum": 5000 },
+        "hard_breach_grace_samples": { "type": "integer", "minimum": 1 },
+        "available_memory_soft_min_mb": { "type": "integer", "minimum": 1 },
+        "available_memory_hard_min_mb": { "type": "integer", "minimum": 1 },
+        "disk_free_hard_min_mb": { "type": "integer", "minimum": 1 },
+        "collector_rss_hard_max_mb": { "type": "integer", "minimum": 1 },
+        "observer_rss_delta_soft_max_mb": { "type": "integer", "minimum": 0 },
+        "ports": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["port", "expected"],
+            "properties": {
+              "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+              "expected": { "enum": ["FREE", "LISTENING"] }
+            }
+          }
+        },
+        "require_clean_staging": { "type": "boolean" }
+      }
+    },
+    "browser": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine",
+        "headless",
+        "start_url",
+        "allowed_origins",
+        "timeout_ms",
+        "viewports",
+        "steps"
+      ],
+      "properties": {
+        "engine": { "const": "chromium" },
+        "headless": { "type": "boolean" },
+        "start_url": { "type": "string", "minLength": 1 },
+        "allowed_origins": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "timeout_ms": { "type": "integer", "minimum": 1000, "maximum": 30000 },
+        "viewports": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "width", "height", "is_mobile"],
+            "properties": {
+              "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+              "width": { "type": "integer", "minimum": 240, "maximum": 3840 },
+              "height": { "type": "integer", "minimum": 240, "maximum": 2160 },
+              "is_mobile": { "type": "boolean" }
+            }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "action"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+              "action": {
+                "enum": ["goto", "click", "fill", "press", "expect_visible", "expect_text", "screenshot"]
+              },
+              "url": { "type": "string" },
+              "selector": { "type": "string", "minLength": 1, "maxLength": 512 },
+              "value": { "type": "string", "maxLength": 4096 },
+              "name": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" }
+            }
+          }
+        }
+      }
+    },
+    "load_model": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "virtual_users": { "type": "number", "minimum": 0 },
+        "in_flight_requests": { "type": "number", "minimum": 0 },
+        "total_requests": { "type": "number", "minimum": 0 },
+        "target_rps": { "type": "number", "minimum": 0 },
+        "hotspot_contenders": { "type": "number", "minimum": 0 },
+        "connections": { "type": "number", "minimum": 0 },
+        "message_rate": { "type": "number", "minimum": 0 },
+        "duration_seconds": { "type": "number", "minimum": 0 },
+        "think_time_ms": { "type": "number", "minimum": 0 },
+        "ramp_steps": { "type": "array", "minItems": 1, "items": { "type": "object" } }
+      }
+    },
+    "change_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level", "owner", "expected_blast_radius", "consumers"],
+      "properties": {
+        "level": { "enum": ["L0_PRESENTATION", "L1_COMPONENT", "L2_CONTRACT", "L3_SYSTEM"] },
+        "owner": { "type": "string", "minLength": 1 },
+        "expected_blast_radius": { "type": "string", "minLength": 1 },
+        "consumers": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "reproduction_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "cleanup_steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "seal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "digest"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

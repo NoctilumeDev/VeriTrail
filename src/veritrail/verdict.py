@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from veritrail.canonical import canonical_json_bytes
+from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.evidence import ImportedEvidence
 
 MISSING = object()
@@ -170,7 +170,7 @@ def _detect_variable_contamination(
 def _detect_preflight_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") != "0.2":
+    if plan.get("schema_version") not in {"0.2", "0.3"}:
         return []
     preflight = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.preflight"
@@ -204,6 +204,43 @@ def _detect_preflight_contamination(
     return contamination
 
 
+def _detect_browser_contamination(
+    plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
+) -> list[dict[str, Any]]:
+    if plan.get("schema_version") != "0.3":
+        return []
+    sessions = [
+        artifact for artifact in evidence if artifact.document["evidence_type"] == "browser.session"
+    ]
+    contamination: list[dict[str, Any]] = []
+    if len(sessions) > 1:
+        contamination.append(
+            {
+                "code": "MULTIPLE_BROWSER_EVIDENCE",
+                "message": "A Plan 0.3 Run must contain exactly one browser.session artifact.",
+            }
+        )
+    for artifact in sessions:
+        facts = artifact.document["facts"]
+        if facts["policy_sha256"] != sha256_json(plan["browser"]):
+            contamination.append(
+                {
+                    "code": "BROWSER_POLICY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The browser session policy differs from the sealed Plan 0.3 policy.",
+                }
+            )
+        if facts["capture_complete"] is False and execution_status == "COMPLETED":
+            contamination.append(
+                {
+                    "code": "BROWSER_STATUS_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Browser capture is incomplete but the Run execution status is COMPLETED.",
+                }
+            )
+    return contamination
+
+
 def evaluate(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> dict[str, Any]:
@@ -212,6 +249,7 @@ def evaluate(
     assertion_results = _evaluate_assertions(plan, evidence)
     contamination = _detect_variable_contamination(plan, evidence)
     contamination.extend(_detect_preflight_contamination(plan, evidence, execution_status))
+    contamination.extend(_detect_browser_contamination(plan, evidence, execution_status))
     if plan["baseline"]["status"] == "EXPIRED":
         contamination.append(
             {

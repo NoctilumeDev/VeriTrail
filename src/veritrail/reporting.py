@@ -72,9 +72,15 @@ def render_markdown(report: dict[str, Any]) -> str:
                 if summary.get("resource_decision")
                 else ""
             )
+            attachment_note = (
+                f", attachments: {len(artifact['attachments'])}"
+                if artifact.get("attachments")
+                else ""
+            )
             lines.append(
                 f"- `{artifact['evidence_type']}` — `{artifact['sha256']}` "
-                f"({artifact['size']} bytes, redactions: {artifact['redacted_fields']}{decision})"
+                f"({artifact['size']} bytes, redactions: {artifact['redacted_fields']}"
+                f"{attachment_note}{decision})"
             )
     else:
         lines.append("- No evidence was imported.")
@@ -121,6 +127,21 @@ def _artifact_manifest(
         filename = f"{index:03d}-{evidence_type}-{artifact.sha256[:12]}.json"
         relative_path = Path("evidence") / filename
         (stage / relative_path).write_bytes(canonical_json_bytes(artifact.document))
+        attachment_entries: list[dict[str, Any]] = []
+        for attachment in artifact.attachments:
+            attachment_path = Path(*attachment.path.split("/"))
+            target = stage / attachment_path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(attachment.content)
+            attachment_entries.append(
+                {
+                    "path": attachment.path,
+                    "sha256": attachment.sha256,
+                    "size": attachment.size,
+                    "media_type": attachment.media_type,
+                    "logical_name": attachment.logical_name,
+                }
+            )
         entry = {
             "evidence_type": evidence_type,
             "path": relative_path.as_posix(),
@@ -134,6 +155,7 @@ def _artifact_manifest(
             "source": artifact.document["source"],
             "retention": "local-default",
             "source_name": artifact.input_name,
+            "attachments": attachment_entries,
         }
         if evidence_type == "runtime.preflight":
             entry["summary"] = {
@@ -178,8 +200,21 @@ def create_bundle(
         if artifact.sha256 in seen_hashes:
             duplicates.append(artifact.input_name)
             continue
+        for attachment in artifact.attachments:
+            if attachment.size > max_bytes:
+                raise ValidationError(
+                    [
+                        f"generated attachment {attachment.logical_name} is {attachment.size} bytes; "
+                        f"limit is {max_bytes} bytes"
+                    ]
+                )
         seen_hashes.add(artifact.sha256)
         imported.append(artifact)
+    attachment_paths = [
+        attachment.path for artifact in imported for attachment in artifact.attachments
+    ]
+    if len(attachment_paths) != len(set(attachment_paths)):
+        raise ValidationError(["generated evidence contains duplicate attachment paths"])
     stage = Path(tempfile.mkdtemp(prefix=".veritrail-", dir=output.parent))
     try:
         _write_json(stage / "sealed-plan.json", plan)

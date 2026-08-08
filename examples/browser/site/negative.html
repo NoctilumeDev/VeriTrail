@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <title>VeriTrail M2 negative fixture</title>
+  </head>
+  <body>
+    <main>
+      <h1>Negative browser fixture</h1>
+      <button data-testid="load-evidence" type="button">Trigger failures</button>
+      <p data-testid="status">idle</p>
+    </main>
+    <script>
+      document.querySelector('[data-testid="load-evidence"]').addEventListener('click', async () => {
+        console.error('synthetic console failure');
+        const response = await fetch('/missing.json');
+        document.querySelector('[data-testid="status"]').textContent = `failed as designed: ${response.status}`;
+        queueMicrotask(() => { throw new Error('synthetic page failure'); });
+      });
+    </script>
+  </body>
+</html>
