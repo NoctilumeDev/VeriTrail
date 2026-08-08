@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1",
+  "plan_id": "m0-fixture-pass",
+  "version": 1,
+  "subject": {
+    "id": "veritrail-m0-fixture",
+    "version": "1.0.0",
+    "source_ref": "examples/minimal"
+  },
+  "question": "Does the M0 fixture satisfy its declared hard invariants?",
+  "baseline": {
+    "id": "m0-fixture-baseline-v1",
+    "status": "VALID",
+    "fingerprint": "3a435078d567dca461c95534e307fa30b1e7ae9ca033b6d70154b2d9cc864571",
+    "tolerances": {
+      "python_major_minor": "exact"
+    }
+  },
+  "experiment_type": "SINGLE_VARIABLE",
+  "variables": [
+    {
+      "name": "fixture_mode",
+      "role": "PRIMARY",
+      "value": "passing",
+      "source": "experiment plan"
+    },
+    {
+      "name": "python_major_minor",
+      "role": "CONTROLLED",
+      "value": "3.10",
+      "source": "test runtime"
+    }
+  ],
+  "required_evidence": [
+    "automated.test-summary"
+  ],
+  "assertions": [
+    {
+      "id": "suite-completed-successfully",
+      "severity": "HARD",
+      "evidence_type": "automated.test-summary",
+      "path": "/facts/suite_passed",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "suite-has-zero-failures",
+      "severity": "HARD",
+      "evidence_type": "automated.test-summary",
+      "path": "/facts/failures",
+      "operator": "eq",
+      "expected": 0
+    }
+  ],
+  "random_seed": 20260809,
+  "resource_budget": {
+    "memory_soft_mb": 512,
+    "memory_hard_mb": 1024,
+    "max_artifact_bytes": 1048576
+  },
+  "load_model": {
+    "total_requests": 1,
+    "duration_seconds": 1
+  },
+  "change_scope": {
+    "level": "L2_CONTRACT",
+    "owner": "VeriTrail Core",
+    "expected_blast_radius": "M0 plan, evidence, verdict, and report contracts",
+    "consumers": [
+      "CLI",
+      "JSON report exporter",
+      "Markdown report exporter"
+    ]
+  },
+  "reproduction_steps": [
+    "Install VeriTrail from the repository in an isolated Python environment.",
+    "Evaluate this plan with examples/minimal/evidence-pass.json and a new run ID.",
+    "Verify report.json, report.md, and bundle-manifest.json agree on the result."
+  ],
+  "cleanup_steps": [
+    "Remove only the newly created ignored run directory after reviewing its manifest."
+  ]
+}

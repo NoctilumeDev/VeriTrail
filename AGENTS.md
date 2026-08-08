@@ -2,7 +2,8 @@
 
 ## 当前阶段
 
-- 当前证据状态是 `Planning`。在出现可运行代码、测试与真实运行证据前，不得把路线图写成已实现能力。
+- 当前阶段是 `v0 Implementation`。M0 已有可运行代码与自动化证据，但只有提交后的真实 CLI
+  复验和证据冻结完成后才能标记 `FROZEN`；M1 及以后仍是 `PLANNED`。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

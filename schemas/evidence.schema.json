@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/evidence.schema.json",
+  "title": "VeriTrail M0 Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_type", "source", "captured_at", "facts"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "evidence_type": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "source": { "type": "string", "minLength": 1 },
+    "captured_at": { "type": "string", "format": "date-time" },
+    "facts": { "type": "object" },
+    "observed_variables": { "type": "object" },
+    "metadata": { "type": "object" }
+  }
+}

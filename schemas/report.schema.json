@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/report.schema.json",
+  "title": "VeriTrail M0 Verdict Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "created_at",
+    "plan",
+    "execution_status",
+    "verdict",
+    "reasons",
+    "evidence",
+    "assertions",
+    "missing_evidence",
+    "contamination"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "run_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "plan": {
+      "type": "object",
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "integer" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "execution_status": { "enum": ["PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"] },
+    "verdict": { "enum": ["PASS", "FAIL", "INCONCLUSIVE", "PENDING"] },
+    "reasons": { "type": "array", "minItems": 1, "items": { "type": "object" } },
+    "evidence": { "type": "array", "items": { "type": "object" } },
+    "assertions": { "type": "array", "items": { "type": "object" } },
+    "missing_evidence": { "type": "array", "items": { "type": "string" } },
+    "contamination": { "type": "array", "items": { "type": "object" } },
+    "subject": { "type": "object" },
+    "baseline": { "type": "object" },
+    "random_seed": { "type": "integer" },
+    "primary_variable": { "type": "object" },
+    "load_model": { "type": "object" },
+    "resource_budget": { "type": "object" },
+    "change_scope": { "type": "object" },
+    "reproduction_steps": { "type": "array", "items": { "type": "string" } },
+    "cleanup_steps": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -6,8 +6,9 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：Planning。实现尚未开始。** 本仓库的首个里程碑只冻结产品边界、证据模型、
-架构约束和验收标准，不把规划描述成已经完成的能力。
+**当前状态：v0 Implementation。** M0 已建立计划封存、结构化证据导入、确定性裁决和
+JSON/Markdown 证据包的最小闭环；资源预检、真实浏览器、SQLite 和 Vue 仍是后续里程碑，
+不得从路线图文字推断为已实现能力。
 
 ## 为什么需要验迹
 
@@ -58,6 +59,44 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 - 导出可读 Markdown 与机器可读 JSON 证据包；
 - 先用一个轻量前端项目完成自举验收，再扩展真实后端和多实例适配器。
 
+## M0 可运行切片
+
+M0 使用 Python 3.10+ 标准库实现，不依赖数据库、Docker 或云服务。当前可以：
+
+- 校验单变量实验计划，并用规范化 JSON 和 SHA-256 在首次运行前封存；
+- 导入受大小限制的结构化 JSON 证据，落盘前脱敏认证字段、令牌、用户目录、邮箱和 IP；
+- 检测未知变量、受控变量漂移、证据冲突、过期基线和证据缺口；
+- 确定性计算 `PASS / FAIL / INCONCLUSIVE / PENDING`，并与 ExecutionStatus 分开保存；
+- 导出 `report.json`、`report.md`、脱敏证据和两层哈希清单；
+- 拒绝覆盖已有计划文件或 Run 目录。
+
+M0 暂时只接受 `SINGLE_VARIABLE` 和结构化 JSON 导入，不采集浏览器、资源或项目命令。
+完整边界见 [M0 纵向切片](docs/04-m0-vertical-slice.md)。
+
+### 本地运行
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip setuptools wheel
+.\.venv\Scripts\python.exe -m pip install --editable .
+
+.\.venv\Scripts\veritrail.exe seal `
+  --plan examples\minimal\plan.json `
+  --output artifacts\m0-sealed-plan.json
+
+.\.venv\Scripts\veritrail.exe evaluate `
+  --plan artifacts\m0-sealed-plan.json `
+  --evidence examples\minimal\evidence-pass.json `
+  --run-id my-first-run `
+  --output artifacts\my-first-run
+```
+
+每个 Run ID 应唯一；已有输出不会被覆盖。运行测试：
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
 ## 计划架构
 
 - **Python Core**：CLI、本地 API、实验编排、导入器、资源预检与确定性裁决。
@@ -75,6 +114,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [证据与实验模型](docs/01-evidence-model.md)
 - [架构与安全边界](docs/02-architecture.md)
 - [验收标准](docs/03-acceptance.md)
+- [M0 纵向切片](docs/04-m0-vertical-slice.md)
 
 ## 项目来源
 

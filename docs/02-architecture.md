@@ -125,18 +125,19 @@ v0 不接受自由文本 Shell 命令。优先采用：
 
 ## 8. 计划目录结构
 
-以下是第二阶段候选结构，首个规划提交不创建空代码目录：
+M0 已建立以下目录；尚未实现的目录不以空占位符进入仓库：
 
 ```text
 VeriTrail/
-  core/          # Python package, CLI and local API
-  web/           # Vue workbench
-  schemas/       # versioned plan and evidence schemas
-  adapters/      # bounded generic and optional project adapters
+  src/veritrail/ # Python package and CLI core
+  schemas/       # versioned plan, evidence and report schemas
   examples/      # redacted deterministic examples
-  docs/          # product, model, architecture, acceptance and ADRs
+  tests/         # standard-library automated verification
+  docs/          # product, model, architecture and acceptance
   artifacts/     # local runtime evidence, ignored by Git
 ```
+
+`web/`、`adapters/` 和 SQLite 元数据将在各自前置里程碑冻结后再创建。
 
 ## 9. 实现顺序
 

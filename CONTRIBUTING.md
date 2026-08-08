@@ -1,7 +1,8 @@
 # Contributing to VeriTrail
 
-VeriTrail is currently in the planning stage. Contributions should strengthen the product boundary,
-experimental integrity, evidence model, security model, or acceptance criteria before broadening scope.
+VeriTrail is in early v0 implementation. M0 establishes the sealed-plan-to-verdict-bundle contract;
+later milestones remain gated. Contributions should close the active milestone or strengthen its product,
+experimental-integrity, evidence, security, and acceptance boundaries before broadening scope.
 
 ## Before proposing code
 

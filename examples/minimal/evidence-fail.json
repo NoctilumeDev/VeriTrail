@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "evidence_type": "automated.test-summary",
+  "source": "VeriTrail deterministic failure fixture",
+  "captured_at": "2026-08-09T00:00:00+08:00",
+  "facts": {
+    "suite_passed": false,
+    "failures": 1,
+    "tests": 1
+  },
+  "observed_variables": {
+    "fixture_mode": "passing",
+    "python_major_minor": "3.10"
+  }
+}
