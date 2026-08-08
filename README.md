@@ -139,6 +139,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [验收标准](docs/03-acceptance.md)
 - [M0 纵向切片](docs/04-m0-vertical-slice.md)
 - [M1 资源与环境预检](docs/05-m1-resource-preflight.md)
+- [M2 真实浏览器证据（PLANNED）](docs/06-m2-browser-evidence.md)
 
 ## 项目来源
 

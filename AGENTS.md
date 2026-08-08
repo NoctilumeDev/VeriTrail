@@ -4,8 +4,8 @@
 
 - 当前阶段是 `v0 Implementation`。M0 已在提交 `64497779add1351014d802b38d46f73a4ce394ac`
   上冻结；M1 已在提交 `21d555cf1a8d5b4f3bc9430b4241c3f70ff0d48f` 上通过两套 Python、
-  M0 兼容、三类真实预检、证据包哈希、敏感扫描和残留检查并标记 `FROZEN`。M2 可以规划，
-  但在自己的验收合同冻结前不得实现。
+  M0 兼容、三类真实预检、证据包哈希、敏感扫描和残留检查并标记 `FROZEN`。M2 的验收合同见
+  `docs/06-m2-browser-evidence.md`；只有该合同形成独立提交后，M2 才能进入实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
