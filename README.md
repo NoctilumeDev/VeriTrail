@@ -6,10 +6,9 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0/M1 FROZEN，M2 IMPLEMENTED。** M0 已冻结计划封存、
-结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已实现
-有界真实 Chromium 采集，正在形成冻结基线。SQLite 和 Vue 仍是后续里程碑，不得从路线图
-文字推断为已实现能力。
+**当前状态：v0 Implementation，M0/M1/M2 FROZEN。** M0 已冻结计划封存、结构化证据导入、
+确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结有界真实 Chromium
+采集。SQLite 和 Vue 仍是后续里程碑，不得从路线图文字推断为已实现能力。
 
 ## 为什么需要验迹
 
@@ -176,7 +175,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [验收标准](docs/03-acceptance.md)
 - [M0 纵向切片](docs/04-m0-vertical-slice.md)
 - [M1 资源与环境预检](docs/05-m1-resource-preflight.md)
-- [M2 真实浏览器证据（IMPLEMENTED）](docs/06-m2-browser-evidence.md)
+- [M2 真实浏览器证据（FROZEN）](docs/06-m2-browser-evidence.md)
 
 ## 项目来源
 

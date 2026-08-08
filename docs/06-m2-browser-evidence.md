@@ -2,10 +2,10 @@
 
 ## 状态
 
-`IMPLEMENTED`。验收合同已在提交 `de62ae043c8b7ec604eecfb4113bf0ccc11a9712` 独立冻结，
-代码、自动化和真实运行证据已形成；在干净实现提交上完成最终复验并写入冻结记录之前，M2
-仍不能标记为 `FROZEN`。M2 只建立有界的 Chromium 证据纵向闭环，不加入 Vue、SQLite、
-项目命令执行、多角色并行或远程站点自动化。
+`FROZEN`。验收合同已在提交 `de62ae043c8b7ec604eecfb4113bf0ccc11a9712` 独立冻结，M2
+实现已在可寻址提交上完成两套 Python 自动化、真实 Chromium 正/负链路、Codex 内置浏览器、
+附件与证据包哈希、敏感扫描和残留检查。M3 可以开始规划；若 Plan 0.3、`browser.session`、
+附件或浏览器裁决语义发生变化，必须创建新版本并重新冻结。
 
 ## 目标问题
 
@@ -156,3 +156,30 @@ userinfo 被拒绝；查询参数只保留键并把值替换为固定占位符�
 
 只有以上全部成立，M2 才能依次推进到 `FROZEN`。任何一项无法执行时，状态保持其真实阶段，
 不得以“适配器已写完”替代最终验收。
+
+## 冻结记录
+
+验收日期：2026-08-09（Asia/Shanghai）。
+
+- 验收合同：`de62ae043c8b7ec604eecfb4113bf0ccc11a9712`；
+- 代码基线：`3db07aa284e16db2afe3b84136371f35ec2091fc`；
+- 版本：`0.3.0.dev1`，Playwright `1.62.0`，Chrome for Testing `151.0.7922.34`；
+- Python 3.10.6：56 项测试通过；Python 3.13.13：56 项测试通过；依赖检查无冲突；
+- M0/M1 兼容：Plan 0.1 哈希保持
+  `90235a18c59e9f30cd2aa519d281a4fdb18f04e83bdf2fcc5ff98770dba8a2b8`，Plan 0.2
+  `PROCEED` 哈希保持 `df1966bbab8e1f6c0288525747ff96bd5c7d3e26120dbfafea8f27367324f41b`；
+- 正向 Plan 哈希：`2a16769446e4eb617ab4fdd51b7b1eda9c7266654d5a991106416c9488c91fd7`；
+  真实 Run 为 `COMPLETED + PASS`，桌面/移动两视口、两张截图、全部步骤和清理通过，Console、
+  页面异常、请求失败、4xx/5xx、重复写请求组和横向溢出均为 0；
+- 负向 Plan 哈希：`2c4c2d27347b86eefc25f892f633fb73a89a2633d13c8339b29fe0f753ce246f`；
+  真实 Run 为 `COMPLETED + FAIL`，捕获 4 条 Console 错误、2 个页面异常和 2 个 HTTP 404，
+  同时保留完整步骤、两视口、两张截图和清理事实；
+- Codex 内置浏览器在 1280×720 与 390×844 视口真实完成输入、点击、异步 fetch 和结果检查；
+  DevTools Console 无未解释错误，Network 观察到声明的 `data.json` fetch，两视口横向溢出为 0；
+- 两个最终 Run 各有 8 个 Bundle 清单文件和 2 个 PNG 附件，逐字节 SHA-256 核验 0 失败；
+  持久化敏感信息扫描 0 命中；
+- 两次预检最低可用内存分别约 8303.879 MiB 与 8311.273 MiB，采集器 RSS 峰值不超过
+  20.023 MiB；验收后端口 18765、Playwright 浏览器进程与 `.veritrail-*` 残留均为 0。
+
+本地运行包位于 Git 忽略的 `artifacts/`，不进入仓库。资源与延迟数字只描述本次 16 GB
+Windows 主机，不构成其他环境的容量结论。
