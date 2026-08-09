@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
+import ComparisonView from './components/ComparisonView.vue'
 import RunCatalog from './components/RunCatalog.vue'
 import SectionFrame from './components/SectionFrame.vue'
 import StatusBadge from './components/StatusBadge.vue'
@@ -17,14 +18,22 @@ import {
   CatalogLoadError,
   fetchCatalog,
 } from './domain/catalog'
-import type { CatalogResponse, CatalogRunSummary, LoadedBundle, ReportAssertion } from './domain/types'
+import { ComparisonLoadError, loadLocalComparison } from './domain/comparison'
+import type {
+  CatalogResponse,
+  CatalogRunSummary,
+  LoadedBundle,
+  LoadedComparison,
+  ReportAssertion,
+} from './domain/types'
 
 type AssertionFilter = 'ALL' | 'PASS' | 'FAIL' | 'OTHER'
 
 const bundle = shallowRef<LoadedBundle | null>(null)
+const comparison = shallowRef<LoadedComparison | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
-const activeSource = ref<DemoBundleId | 'local' | 'catalog'>('positive')
+const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison'>('positive')
 const assertionFilter = ref<AssertionFilter>('ALL')
 const liveMessage = ref('正在读取正向证据包。')
 const catalog = shallowRef<CatalogResponse | null>(null)
@@ -54,9 +63,11 @@ const assertionCounts = computed(() => {
   }
 })
 
-function fixtureFromLocation(): DemoBundleId | 'local' {
+function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' {
   const value = new URLSearchParams(window.location.search).get('fixture')
-  return value === 'negative' || value === 'invalid' || value === 'local' ? value : 'positive'
+  return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison'
+    ? value
+    : 'positive'
 }
 
 function releaseCurrentBundle() {
@@ -74,6 +85,11 @@ function describeCatalogError(cause: unknown) {
     return { code: cause.code, message: cause.message }
   }
   return { code: 'CATALOG_UNEXPECTED', message: '本地 Run 目录暂时无法读取。' }
+}
+
+function describeComparisonError(cause: unknown) {
+  if (cause instanceof ComparisonLoadError) return { code: cause.code, message: cause.message }
+  return { code: 'COMPARISON_UNEXPECTED', message: '工作台无法核验该复跑比较包。' }
 }
 
 async function refreshCatalog() {
@@ -96,6 +112,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   assertionFilter.value = 'ALL'
   activeSource.value = id
   selectedCatalogRunId.value = null
+  comparison.value = null
   liveMessage.value = `正在读取${sourceLabel(id)}。`
   if (pushHistory) {
     const url = new URL(window.location.href)
@@ -130,6 +147,7 @@ async function importLocal(event: Event) {
   assertionFilter.value = 'ALL'
   activeSource.value = 'local'
   selectedCatalogRunId.value = null
+  comparison.value = null
   liveMessage.value = '正在本地内存中核验所选证据包。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -154,6 +172,36 @@ async function importLocal(event: Event) {
   }
 }
 
+async function importComparison(event: Event) {
+  const input = event.currentTarget as HTMLInputElement
+  if (!input.files?.length) return
+  const sequence = ++loadSequence
+  loading.value = true
+  error.value = null
+  activeSource.value = 'comparison'
+  selectedCatalogRunId.value = null
+  comparison.value = null
+  liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
+  const url = new URL(window.location.href)
+  url.searchParams.delete('run')
+  url.searchParams.set('fixture', 'comparison')
+  window.history.pushState({ fixture: 'comparison' }, '', url)
+  releaseCurrentBundle()
+  try {
+    const loaded = await loadLocalComparison(input.files)
+    if (sequence !== loadSequence) return
+    comparison.value = loaded
+    liveMessage.value = `复跑比较 ${loaded.comparison.comparison_status} 已加载；文件未上传。`
+  } catch (cause) {
+    if (sequence !== loadSequence) return
+    error.value = describeComparisonError(cause)
+    liveMessage.value = `复跑比较包读取失败：${error.value.message}`
+  } finally {
+    input.value = ''
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
 async function selectCatalogRun(
   run: CatalogRunSummary,
   trigger?: HTMLElement,
@@ -166,6 +214,7 @@ async function selectCatalogRun(
   assertionFilter.value = 'ALL'
   activeSource.value = 'catalog'
   selectedCatalogRunId.value = run.catalog_run_id
+  comparison.value = null
   lastCatalogTriggerId = trigger ? run.catalog_run_id : lastCatalogTriggerId
   liveMessage.value = `正在从只读目录核验 ${run.run_id}。`
   if (pushHistory) {
@@ -175,6 +224,7 @@ async function selectCatalogRun(
     window.history.pushState({ run: run.catalog_run_id }, '', url)
   }
   releaseCurrentBundle()
+  comparison.value = null
   try {
     const loaded = await loadSameOriginBundle(run.bundle.base_url, `本地目录 · ${run.run_id}`)
     if (
@@ -217,6 +267,7 @@ async function retryCatalog() {
 function returnToCatalog() {
   ++loadSequence
   releaseCurrentBundle()
+  comparison.value = null
   loading.value = false
   error.value = null
   activeSource.value = 'catalog'
@@ -249,6 +300,7 @@ function onHistoryChange() {
     }
     ++loadSequence
     releaseCurrentBundle()
+    comparison.value = null
     activeSource.value = 'catalog'
     selectedCatalogRunId.value = catalogRunId
     loading.value = false
@@ -263,6 +315,7 @@ function onHistoryChange() {
   if (catalog.value && !new URLSearchParams(window.location.search).has('fixture')) {
     ++loadSequence
     releaseCurrentBundle()
+    comparison.value = null
     activeSource.value = 'catalog'
     selectedCatalogRunId.value = null
     loading.value = false
@@ -271,9 +324,23 @@ function onHistoryChange() {
     return
   }
   const fixture = fixtureFromLocation()
+  if (fixture === 'comparison') {
+    ++loadSequence
+    releaseCurrentBundle()
+    comparison.value = null
+    activeSource.value = 'comparison'
+    loading.value = false
+    error.value = {
+      code: 'COMPARISON_RESELECT_REQUIRED',
+      message: '为保护隐私，本地比较包不会持久化；请重新选择 Comparison 目录。',
+    }
+    liveMessage.value = error.value.message
+    return
+  }
   if (fixture === 'local') {
     ++loadSequence
     releaseCurrentBundle()
+    comparison.value = null
     activeSource.value = 'local'
     loading.value = false
     error.value = {
@@ -373,6 +440,17 @@ onBeforeUnmount(() => {
               @change="importLocal"
             />
           </label>
+          <label class="local-import" :class="{ 'is-active': activeSource === 'comparison' }">
+            <span>选择复跑比较包</span>
+            <input
+              type="file"
+              multiple
+              webkitdirectory
+              aria-label="选择本地 VeriTrail Comparison 目录"
+              data-testid="local-comparison-input"
+              @change="importComparison"
+            />
+          </label>
         </nav>
 
         <div v-if="report" class="status-gate" data-testid="status-gate">
@@ -422,6 +500,8 @@ onBeforeUnmount(() => {
           {{ activeSource === 'catalog' ? '重新读取目录 Run' : '返回正向证据重试' }}
         </button>
       </section>
+
+      <ComparisonView v-else-if="comparison" :loaded="comparison" />
 
       <template v-else-if="report && bundle">
         <div class="run-plaque" data-testid="run-summary">

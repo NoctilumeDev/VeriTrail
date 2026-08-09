@@ -84,3 +84,79 @@ export function installFetchForBundles(bundles: Record<string, Map<string, Blob>
       : { ok: false, status: 404, blob: async () => new Blob(['missing']) }) as Response
   })
 }
+
+function canonicalJson(value: unknown): string {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value)
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`
+  const source = value as Record<string, unknown>
+  return `{${Object.keys(source)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${canonicalJson(source[key])}`)
+    .join(',')}}`
+}
+
+export async function createComparisonBundle(
+  status: 'MATCH' | 'DRIFT' | 'INCONCLUSIVE' = 'MATCH',
+): Promise<Map<string, Blob>> {
+  const baselineBundle = 'b'.repeat(64)
+  const repeatBundle = 'c'.repeat(64)
+  const comparisonId = `cmp_${(
+    await sha256Hex(
+      new Blob([
+        canonicalJson({
+          schema_version: '0.1',
+          rule_version: 'rerun-semantic/0.1',
+          baseline_bundle_sha256: baselineBundle,
+          repeat_bundle_sha256: repeatBundle,
+        }),
+      ]),
+    )
+  ).slice(0, 24)}`
+  const source = (role: 'BASELINE' | 'REPEAT') => ({
+    role,
+    run_id: role === 'BASELINE' ? 'unit-baseline' : 'unit-repeat',
+    created_at: '2026-08-09T00:00:00Z',
+    execution_status: status === 'INCONCLUSIVE' && role === 'REPEAT' ? 'ABORTED' : 'COMPLETED',
+    verdict: status === 'DRIFT' && role === 'REPEAT' ? 'FAIL' : status === 'INCONCLUSIVE' && role === 'REPEAT' ? 'PENDING' : 'PASS',
+    plan: { id: 'unit-plan', version: 1, sha256: 'a'.repeat(64) },
+    random_seed: 20260809,
+    bundle_sha256: role === 'BASELINE' ? baselineBundle : repeatBundle,
+    semantic_sha256: role === 'BASELINE' ? 'd'.repeat(64) : status === 'MATCH' ? 'd'.repeat(64) : 'e'.repeat(64),
+  })
+  const differences = status === 'MATCH' ? [] : [{
+    path: '/verdict',
+    baseline_present: true,
+    repeat_present: true,
+    baseline: 'PASS',
+    repeat: status === 'DRIFT' ? 'FAIL' : 'PENDING',
+  }]
+  const comparison = {
+    schema_version: '0.1',
+    comparison_id: comparisonId,
+    comparison_type: 'SAME_PLAN_RERUN',
+    rule_version: 'rerun-semantic/0.1',
+    comparison_status: status,
+    comparable: status !== 'INCONCLUSIVE',
+    reasons: [{
+      code: status === 'MATCH' ? 'RERUN_SEMANTICS_MATCH' : status === 'DRIFT' ? 'RERUN_SEMANTIC_DRIFT' : 'RUN_NOT_COMPLETED',
+      message: 'Deterministic comparison fixture.',
+    }],
+    sources: { baseline: source('BASELINE'), repeat: source('REPEAT') },
+    differences,
+    limits: ['MATCH 不等于任一来源 Run 的 Verdict 为 PASS。'],
+  }
+  const comparisonBlob = new Blob([JSON.stringify(comparison)])
+  const markdownBlob = new Blob(['# Unit Comparison\n'])
+  const files = [
+    { path: 'comparison.json', sha256: await sha256Hex(comparisonBlob), size: comparisonBlob.size },
+    { path: 'comparison.md', sha256: await sha256Hex(markdownBlob), size: markdownBlob.size },
+  ]
+  const manifestBlob = new Blob([
+    JSON.stringify({ schema_version: '0.1', comparison_id: comparisonId, files }),
+  ])
+  return new Map([
+    ['comparison-manifest.json', manifestBlob],
+    ['comparison.json', comparisonBlob],
+    ['comparison.md', markdownBlob],
+  ])
+}

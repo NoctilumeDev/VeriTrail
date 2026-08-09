@@ -8,6 +8,7 @@ from pathlib import Path
 from veritrail import __version__
 from veritrail.browser import collect_browser_evidence
 from veritrail.catalog import CatalogError, build_catalog
+from veritrail.comparison import ComparisonError, create_comparison_bundle
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.local_api import create_catalog_server
@@ -102,6 +103,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--web-root", type=Path, required=True, help="Vue production build directory"
     )
     catalog_serve.add_argument("--port", type=int, required=True, help="loopback TCP port")
+
+    compare = subparsers.add_parser(
+        "compare",
+        help="compare two immutable Runs produced by the same sealed Plan",
+    )
+    compare.add_argument("--baseline", type=Path, required=True, help="baseline Run Bundle")
+    compare.add_argument("--repeat", type=Path, required=True, help="independent repeat Run Bundle")
+    compare.add_argument("--output", type=Path, required=True, help="new Comparison Bundle")
     return parser
 
 
@@ -365,6 +374,51 @@ def main(argv: list[str] | None = None) -> int:
                 pass
             finally:
                 server.server_close()
+            return 0
+        if args.command == "compare":
+            try:
+                result = create_comparison_bundle(
+                    baseline=args.baseline,
+                    repeat=args.repeat,
+                    output=args.output,
+                )
+            except ComparisonError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "COMPARISON_INTERNAL_ERROR",
+                                "message": "Comparison 构建发生未预期内部错误。",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(
+                {
+                    "command": "compare",
+                    "comparison_id": result.comparison_id,
+                    "comparison_status": result.comparison_status,
+                    "comparable": result.comparable,
+                    "difference_count": result.difference_count,
+                    "baseline_run_id": result.baseline_run_id,
+                    "repeat_run_id": result.repeat_run_id,
+                    "output": args.output.name,
+                }
+            )
             return 0
     except VeriTrailError as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False, sort_keys=True), file=sys.stderr)

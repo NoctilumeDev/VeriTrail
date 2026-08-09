@@ -176,9 +176,9 @@ M5 把“外部手工启动轻量站点”设为控制组，并已冻结内置�
 静态目标适配器。合同、失败反例、运行证据和资源边界见
 `docs/09-m5-bounded-run-orchestrator.md`。
 
-M6 候选架构使用独立 Comparison Bundle 派生比较两个同 sealed Plan 的 Run，不修改来源
-Bundle/Verdict，也不改变 M4 Run-only Catalog。合同已预注册但尚无实现事实，见
-`docs/10-m6-deterministic-rerun-comparison.md`。
+M6 架构已实现独立 Comparison Bundle，用于派生比较两个同 sealed Plan 的 Run；它不修改来源
+Bundle/Verdict，也不改变 M4 Run-only Catalog。当前只取得双 Python 与前端自动化事实，真实
+终验仍待执行，见 `docs/10-m6-deterministic-rerun-comparison.md`。
 
 ## 9. 实现顺序
 

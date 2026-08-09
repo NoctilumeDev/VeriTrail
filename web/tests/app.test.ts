@@ -1,7 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../src/App.vue'
-import { createMinimalBundle, installFetchForBundles } from './support'
+import { createComparisonBundle, createMinimalBundle, installFetchForBundles } from './support'
 
 async function waitFor(wrapper: ReturnType<typeof mount>, selector: string) {
   for (let attempt = 0; attempt < 30; attempt += 1) {
@@ -77,6 +77,28 @@ describe('App', () => {
     await wrapper.get('[data-testid="retry-positive"]').trigger('click')
     await waitFor(wrapper, '[aria-label="验收结论：PASS"]')
     expect(wrapper.find('[aria-label="验收结论：PASS"]').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('imports a local Comparison only after manifest verification', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    const entries = await createComparisonBundle('MATCH')
+    const files = [...entries].map(([name, blob]) => {
+      const file = new File([blob], name, { type: blob.type })
+      Object.defineProperty(file, 'webkitRelativePath', {
+        value: `unit-comparison/${name}`,
+      })
+      return file
+    })
+    const input = wrapper.get('[data-testid="local-comparison-input"]')
+    Object.defineProperty(input.element, 'files', { configurable: true, value: files })
+    await input.trigger('change')
+    await waitFor(wrapper, '[data-testid="comparison-view"]')
+
+    expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('MATCH')
+    expect(window.location.search).toBe('?fixture=comparison')
+    expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
     wrapper.unmount()
   })
 })

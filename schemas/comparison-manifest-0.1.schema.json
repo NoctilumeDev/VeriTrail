@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/comparison-manifest-0.1.schema.json",
+  "title": "VeriTrail Comparison Manifest 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "comparison_id", "files"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "comparison_id": { "type": "string", "pattern": "^cmp_[0-9a-f]{24}$" },
+    "files": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "size"],
+        "properties": {
+          "path": { "enum": ["comparison.json", "comparison.md"] },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "size": { "type": "integer", "minimum": 0, "maximum": 10485760 }
+        }
+      }
+    }
+  }
+}

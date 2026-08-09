@@ -2,9 +2,10 @@
 
 ## 状态
 
-`PLANNED`。本文件是在实现前冻结的候选合同。定义、Schema、代码、自动化与真实运行不是同一
-层证据；只有本文件的正向、负向、浏览器、安全、资源和清理门槛均由实际结果满足后，M6 才能
-进入 `FROZEN`。
+`AUTOMATED`。本文件先作为候选合同独立提交，随后 Comparison Core/CLI、两个 Schema、
+Workbench Loader/View 与验收脚本已实现；Python 3.10/3.13 各 94 项测试、前端 39 项测试、
+lint/type-check/生产构建均通过。定义、自动化与真实运行不是同一层证据；M6 仍须取得本文件
+预注册的真实正/负 Run、Comparison、浏览器、安全、资源和清理事实后才能进入 `FROZEN`。
 
 前置基线是 M5 冻结提交 `d3b9cd72967aff02dc40d730640e30fea30de2d9` 与标签
 `m5-v0.6.0`。M5 已真实证明一个 sealed Plan 可以通过单一 `run` 入口生成不可变 Run Bundle；
@@ -180,5 +181,5 @@ Comparison Manifest 的文件集合、路径、大小与 SHA-256，再交叉核�
 - 前置基线：`m5-v0.6.0`；
 - 目标版本：Python Core `0.7.0.dev1`，Workbench `0.7.0-dev.1`；
 - 目标 CLI：`compare`；
-- 当前里程碑状态：`PLANNED`；
+- 当前里程碑状态：`AUTOMATED`，真实运行与最终冻结待执行；
 - 预期冻结标签：`m6-v0.7.0`。

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/comparison-0.1.schema.json",
+  "title": "VeriTrail Same-plan Rerun Comparison 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "comparison_id",
+    "comparison_type",
+    "rule_version",
+    "comparison_status",
+    "comparable",
+    "reasons",
+    "sources",
+    "differences",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "comparison_id": { "type": "string", "pattern": "^cmp_[0-9a-f]{24}$" },
+    "comparison_type": { "const": "SAME_PLAN_RERUN" },
+    "rule_version": { "const": "rerun-semantic/0.1" },
+    "comparison_status": { "enum": ["MATCH", "DRIFT", "INCONCLUSIVE"] },
+    "comparable": { "type": "boolean" },
+    "reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string", "minLength": 1 },
+          "message": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline", "repeat"],
+      "properties": {
+        "baseline": { "$ref": "#/$defs/source" },
+        "repeat": { "$ref": "#/$defs/source" }
+      }
+    },
+    "differences": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/difference" }
+    },
+    "limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "run_id",
+        "created_at",
+        "execution_status",
+        "verdict",
+        "plan",
+        "random_seed",
+        "bundle_sha256",
+        "semantic_sha256"
+      ],
+      "properties": {
+        "role": { "enum": ["BASELINE", "REPEAT"] },
+        "run_id": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "minLength": 1 },
+        "execution_status": { "enum": ["PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"] },
+        "verdict": { "enum": ["PASS", "FAIL", "INCONCLUSIVE", "PENDING"] },
+        "plan": { "$ref": "#/$defs/plan" },
+        "random_seed": { "type": "integer" },
+        "bundle_sha256": { "$ref": "#/$defs/sha256" },
+        "semantic_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "difference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "baseline_present", "repeat_present", "baseline", "repeat"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^/" },
+        "baseline_present": { "type": "boolean" },
+        "repeat_present": { "type": "boolean" },
+        "baseline": true,
+        "repeat": true
+      }
+    }
+  }
+}

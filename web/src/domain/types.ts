@@ -213,3 +213,53 @@ export interface CatalogResponse {
   issues: CatalogIssueSummary[]
   issues_truncated: boolean
 }
+
+export type ComparisonStatus = 'MATCH' | 'DRIFT' | 'INCONCLUSIVE'
+
+export interface ComparisonSource {
+  role: 'BASELINE' | 'REPEAT'
+  run_id: string
+  created_at: string
+  execution_status: ExecutionStatus
+  verdict: Verdict
+  plan: PlanReference
+  random_seed: number
+  bundle_sha256: string
+  semantic_sha256: string
+}
+
+export interface ComparisonDifference {
+  path: string
+  baseline_present: boolean
+  repeat_present: boolean
+  baseline: unknown
+  repeat: unknown
+}
+
+export interface RerunComparison {
+  schema_version: '0.1'
+  comparison_id: string
+  comparison_type: 'SAME_PLAN_RERUN'
+  rule_version: 'rerun-semantic/0.1'
+  comparison_status: ComparisonStatus
+  comparable: boolean
+  reasons: ReportReason[]
+  sources: {
+    baseline: ComparisonSource
+    repeat: ComparisonSource
+  }
+  differences: ComparisonDifference[]
+  limits: string[]
+}
+
+export interface ComparisonManifest {
+  schema_version: '0.1'
+  comparison_id: string
+  files: BundleFileEntry[]
+}
+
+export interface LoadedComparison {
+  comparison: RerunComparison
+  manifest: ComparisonManifest
+  integrity: BundleIntegrity
+}
