@@ -20,7 +20,7 @@ flowchart LR
     Imports --> Artifacts
     Facts --> Artifacts
     Artifacts --> Rules["Deterministic verdict engine"]
-    Rules --> SQLite[("SQLite derived catalog · M4 automated")]
+    Rules --> SQLite[("SQLite derived catalog · M4 frozen")]
     SQLite --> UI["Vue Workbench"]
     Artifacts --> UI
     UI --> Export["Markdown / JSON bundle"]
@@ -56,6 +56,9 @@ Evidence JSON 和受支持截图，在显示前核对路径、大小、引用与
 
 M4 在 M3 详情页之前增加了只读 Run 目录，但计划编辑、基线比较、批次矩阵、跨 Run 差异、
 执行时间线和报告发布仍是后续能力，不属于当前已实现范围。
+
+M5 只预注册一个更窄的编排切片：Core 内置的只读静态 HTTP 目标、Plan 0.4、编排证据和单一
+`run` 入口。它当前是 `PLANNED`，不能据此声称目标生命周期、异常清理或完整自举已经实现。
 
 ### 2.5 Browser Adapter
 
@@ -167,6 +170,9 @@ M3 不增加生产者或数据库：Vue Workbench 直接只读消费 M0–M2 的
 
 M4 已把离线 Catalog 构建、只读 SQLite 快照、同源回环 API 和 Workbench Run 目录冻结为一条
 纵向能力；Bundle 继续拥有事实权威。合同与运行证据见 `docs/08-m4-local-run-catalog.md`。
+
+M5 合同把“外部手工启动轻量站点”设为控制组，计划验证一个内置、固定回环、只读、无 Shell
+的静态目标适配器。合同见 `docs/09-m5-bounded-run-orchestrator.md`，当前没有实现事实。
 
 ## 9. 实现顺序
 

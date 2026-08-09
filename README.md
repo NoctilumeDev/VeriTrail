@@ -6,12 +6,13 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0/M1/M2/M3/M4 FROZEN。** M0 已冻结计划封存、
+**当前状态：v0 Implementation，M0/M1/M2/M3/M4 FROZEN，M5 PLANNED。** M0 已冻结计划封存、
 结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结
 有界真实 Chromium 采集；M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题。
 M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Workbench Run 门厅与两阶段
 轻量自举；Plan v1 的选择器歧义失败 Run 保留，Plan v2 已从干净实现提交完成双 Python、
-真实 Chromium、Codex 内置浏览器、敏感与残留复核。计划编辑、执行编排和完整自举仍是后续里程碑。
+真实 Chromium、Codex 内置浏览器、敏感与残留复核。M5 仅预注册“有界运行编排与静态目标
+生命周期”，尚无实现或运行结论；计划编辑、跨 Run 比较和完整自举仍是后续里程碑。
 
 ## 为什么需要验迹
 
@@ -188,6 +189,13 @@ M4 验证一条完整但窄的增量链路：离线校验多个不可变 Bundle�
 完整退出门槛、失败反例与冻结证据见
 [M4 本地 Run 目录与轻量自举](docs/08-m4-local-run-catalog.md)。
 
+## M5 有界运行编排（PLANNED）
+
+M5 计划用向后兼容的 Plan 0.4 和一个 `run` CLI，把预检、内置只读静态回环目标、真实
+Chromium、裁决、Bundle 与清理串成单一不可覆盖 Run。它不会执行任意 Shell、npm/Maven、
+Docker 或项目服务命令，也不管理外部中间件。定义不代表实现；完整证伪矩阵与退出门槛见
+[M5 有界运行编排与静态目标生命周期](docs/09-m5-bounded-run-orchestrator.md)。
+
 ### 本地运行
 
 ```powershell
@@ -238,6 +246,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M2 真实浏览器证据（FROZEN）](docs/06-m2-browser-evidence.md)
 - [M3 Vue 证据工作台（FROZEN）](docs/07-m3-vue-workbench.md)
 - [M4 本地 Run 目录与轻量自举（FROZEN）](docs/08-m4-local-run-catalog.md)
+- [M5 有界运行编排与静态目标生命周期（PLANNED）](docs/09-m5-bounded-run-orchestrator.md)
 
 ## 项目来源
 
