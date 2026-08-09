@@ -1,7 +1,12 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../src/App.vue'
-import { createComparisonBundle, createMinimalBundle, installFetchForBundles } from './support'
+import {
+  createComparisonBundle,
+  createMinimalBundle,
+  createPairedAnalysisBundle,
+  installFetchForBundles,
+} from './support'
 
 async function waitFor(wrapper: ReturnType<typeof mount>, selector: string) {
   for (let attempt = 0; attempt < 30; attempt += 1) {
@@ -98,6 +103,28 @@ describe('App', () => {
 
     expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('MATCH')
     expect(window.location.search).toBe('?fixture=comparison')
+    expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('imports a local PairedAnalysis only after plan seal and manifest verification', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    const entries = await createPairedAnalysisBundle('SUPPORTED')
+    const files = [...entries].map(([name, blob]) => {
+      const file = new File([blob], name, { type: blob.type })
+      Object.defineProperty(file, 'webkitRelativePath', {
+        value: `unit-pairing/${name}`,
+      })
+      return file
+    })
+    const input = wrapper.get('[data-testid="local-pairing-input"]')
+    Object.defineProperty(input.element, 'files', { configurable: true, value: files })
+    await input.trigger('change')
+    await waitFor(wrapper, '[data-testid="paired-analysis-view"]')
+
+    expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
+    expect(window.location.search).toBe('?fixture=pairing')
     expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
     wrapper.unmount()
   })

@@ -1,0 +1,83 @@
+{
+  "schema_version": "0.1",
+  "plan_id": "m7-paired-fixture",
+  "version": 1,
+  "subject": {
+    "id": "veritrail-m7-pairing-fixture",
+    "version": "1.0.0",
+    "source_ref": "examples/pairing"
+  },
+  "question": "Does the forced-failure condition change the declared suite outcomes, disappear after restoration, and remain absent under a negative control?",
+  "baseline": {
+    "id": "m7-pairing-baseline-v1",
+    "status": "VALID",
+    "fingerprint": "5d8f0c4441e9fbec34b7ac92a35276965619f8947e467db53f963750d6bccb66",
+    "tolerances": {
+      "python_major_minor": "exact"
+    }
+  },
+  "experiment_type": "SINGLE_VARIABLE",
+  "variables": [
+    {
+      "name": "experiment_condition",
+      "role": "PRIMARY",
+      "value": "nominal",
+      "source": "pairing-fixture"
+    },
+    {
+      "name": "python_major_minor",
+      "role": "CONTROLLED",
+      "value": "3.10",
+      "source": "test-runtime"
+    }
+  ],
+  "required_evidence": [
+    "automated.test-summary"
+  ],
+  "assertions": [
+    {
+      "id": "suite-completed-successfully",
+      "severity": "HARD",
+      "evidence_type": "automated.test-summary",
+      "path": "/facts/suite_passed",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "suite-has-zero-failures",
+      "severity": "HARD",
+      "evidence_type": "automated.test-summary",
+      "path": "/facts/failures",
+      "operator": "eq",
+      "expected": 0
+    }
+  ],
+  "random_seed": 20260809,
+  "resource_budget": {
+    "memory_soft_mb": 512,
+    "memory_hard_mb": 1024,
+    "max_artifact_bytes": 1048576
+  },
+  "load_model": {
+    "total_requests": 1,
+    "duration_seconds": 1
+  },
+  "change_scope": {
+    "level": "L2_CONTRACT",
+    "owner": "VeriTrail Pairing Fixture",
+    "expected_blast_radius": "PairingPlan and PairedAnalysis consumers",
+    "consumers": [
+      "pairing-core",
+      "pairing-cli",
+      "pairing-workbench"
+    ]
+  },
+  "reproduction_steps": [
+    "Evaluate each preregistered role plan in the fixed four-role order.",
+    "Create one immutable Run Bundle per role.",
+    "Analyze the four Bundles with the sealed PairingPlan."
+  ],
+  "cleanup_steps": [
+    "Remove only newly created ignored pairing artifacts after review."
+  ]
+}

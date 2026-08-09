@@ -263,3 +263,101 @@ export interface LoadedComparison {
   manifest: ComparisonManifest
   integrity: BundleIntegrity
 }
+
+export type PairingRole =
+  | 'BASELINE'
+  | 'TREATMENT'
+  | 'RESTORED_BASELINE'
+  | 'NEGATIVE_CONTROL'
+
+export type PairedAnalysisStatus = 'SUPPORTED' | 'CONTRADICTED' | 'INCONCLUSIVE'
+
+export interface PairingPrimaryDefinition {
+  name: string
+  source: string
+  unit?: string
+}
+
+export interface PairingRolePlan {
+  plan_sha256: string
+  primary_value: unknown
+}
+
+export interface PairingPlan {
+  schema_version: '0.1'
+  pairing_id: string
+  version: number
+  question: string
+  primary_variable: PairingPrimaryDefinition
+  roles: Record<PairingRole, PairingRolePlan>
+  sequence: PairingRole[]
+  warmup: { mode: 'NONE'; iterations: 0 }
+  outcomes: Array<{
+    assertion_id: string
+    expected_actual: Record<PairingRole, unknown>
+  }>
+  limits: string[]
+  reproduction_steps: string[]
+  cleanup_steps: string[]
+  seal: { algorithm: 'sha256'; digest: string }
+}
+
+export interface PairingSource {
+  role: PairingRole
+  run_id: string
+  created_at: string
+  execution_status: ExecutionStatus
+  verdict: Verdict
+  plan: PlanReference
+  random_seed: number
+  primary_variable: PairingPrimaryDefinition & { role: 'PRIMARY'; value: unknown }
+  bundle_sha256: string
+  control_projection_sha256: string
+}
+
+export interface PairedOutcomeObservation {
+  expected_actual: unknown
+  actual: unknown
+  matches: boolean
+}
+
+export interface PairedOutcome {
+  assertion_id: string
+  roles: Record<PairingRole, PairedOutcomeObservation>
+}
+
+export interface PairedAnalysis {
+  schema_version: '0.1'
+  analysis_id: string
+  analysis_type: 'FOUR_ROLE_PAIRED_COUNTERFACTUAL'
+  rule_version: 'paired-counterfactual/0.1'
+  analysis_status: PairedAnalysisStatus
+  attributable: boolean
+  pairing_plan: PlanReference
+  sequence: PairingRole[]
+  warmup: { mode: 'NONE'; iterations: 0 }
+  primary_variable: PairingPrimaryDefinition
+  reasons: ReportReason[]
+  sources: Record<PairingRole, PairingSource>
+  outcomes: PairedOutcome[]
+  unplanned_differences: Array<{
+    role: PairingRole
+    assertion_id: string
+    baseline: unknown
+    observed: unknown
+  }>
+  limits: string[]
+}
+
+export interface PairedAnalysisManifest {
+  schema_version: '0.1'
+  analysis_id: string
+  files: BundleFileEntry[]
+}
+
+export interface LoadedPairedAnalysis {
+  analysis: PairedAnalysis
+  pairingPlan: PairingPlan
+  manifest: PairedAnalysisManifest
+  integrity: BundleIntegrity
+}

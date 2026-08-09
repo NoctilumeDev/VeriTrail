@@ -160,3 +160,151 @@ export async function createComparisonBundle(
     ['comparison.md', markdownBlob],
   ])
 }
+
+export async function createPairedAnalysisBundle(
+  status: 'SUPPORTED' | 'CONTRADICTED' | 'INCONCLUSIVE' = 'SUPPORTED',
+): Promise<Map<string, Blob>> {
+  const roles = ['BASELINE', 'TREATMENT', 'RESTORED_BASELINE', 'NEGATIVE_CONTROL'] as const
+  const planDigests = {
+    BASELINE: 'a'.repeat(64),
+    TREATMENT: 'b'.repeat(64),
+    RESTORED_BASELINE: 'a'.repeat(64),
+    NEGATIVE_CONTROL: 'c'.repeat(64),
+  }
+  const primaryValues = {
+    BASELINE: 'nominal',
+    TREATMENT: 'forced_failure',
+    RESTORED_BASELINE: 'nominal',
+    NEGATIVE_CONTROL: 'negative_control',
+  }
+  const pairingUnsigned = {
+    schema_version: '0.1',
+    pairing_id: 'unit-paired-analysis',
+    version: 1,
+    question: 'Does the treatment effect appear, restore, and remain absent in the negative control?',
+    primary_variable: { name: 'experiment_condition', source: 'unit-fixture' },
+    roles: Object.fromEntries(
+      roles.map((role) => [
+        role,
+        { plan_sha256: planDigests[role], primary_value: primaryValues[role] },
+      ]),
+    ),
+    sequence: roles,
+    warmup: { mode: 'NONE', iterations: 0 },
+    outcomes: [
+      {
+        assertion_id: 'suite-completed-successfully',
+        expected_actual: {
+          BASELINE: true,
+          TREATMENT: false,
+          RESTORED_BASELINE: true,
+          NEGATIVE_CONTROL: true,
+        },
+      },
+    ],
+    limits: ['SUPPORTED 不等于来源 Run Verdict 为 PASS。'],
+    reproduction_steps: ['Run all four roles in order.'],
+    cleanup_steps: ['Remove only the unit fixture.'],
+  }
+  const pairingDigest = await sha256Hex(new Blob([canonicalJson(pairingUnsigned)]))
+  const pairingPlan = {
+    ...pairingUnsigned,
+    seal: { algorithm: 'sha256', digest: pairingDigest },
+  }
+  const bundleDigests = {
+    BASELINE: 'd'.repeat(64),
+    TREATMENT: 'e'.repeat(64),
+    RESTORED_BASELINE: 'f'.repeat(64),
+    NEGATIVE_CONTROL: '1'.repeat(64),
+  }
+  const actuals = {
+    BASELINE: true,
+    TREATMENT: status === 'CONTRADICTED',
+    RESTORED_BASELINE: true,
+    NEGATIVE_CONTROL: status !== 'INCONCLUSIVE',
+  }
+  const expected = pairingUnsigned.outcomes[0].expected_actual
+  const source = (role: typeof roles[number], index: number) => ({
+    role,
+    run_id: `unit-${role.toLowerCase()}`,
+    created_at: `2026-08-09T00:00:0${index}Z`,
+    execution_status: 'COMPLETED',
+    verdict: role === 'TREATMENT' && status !== 'CONTRADICTED' ? 'FAIL' : role === 'NEGATIVE_CONTROL' && status === 'INCONCLUSIVE' ? 'FAIL' : 'PASS',
+    plan: { id: 'unit-paired-plan', version: role === 'TREATMENT' ? 2 : role === 'NEGATIVE_CONTROL' ? 3 : 1, sha256: planDigests[role] },
+    random_seed: 20260809,
+    primary_variable: {
+      name: 'experiment_condition',
+      role: 'PRIMARY',
+      value: primaryValues[role],
+      source: 'unit-fixture',
+    },
+    bundle_sha256: bundleDigests[role],
+    control_projection_sha256: '2'.repeat(64),
+  })
+  const orderedBundles = roles.map((role) => bundleDigests[role])
+  const analysisId = `pair_${(
+    await sha256Hex(
+      new Blob([
+        canonicalJson({
+          schema_version: '0.1',
+          rule_version: 'paired-counterfactual/0.1',
+          pairing_plan_sha256: pairingDigest,
+          ordered_bundle_sha256: orderedBundles,
+        }),
+      ]),
+    )
+  ).slice(0, 24)}`
+  const analysis = {
+    schema_version: '0.1',
+    analysis_id: analysisId,
+    analysis_type: 'FOUR_ROLE_PAIRED_COUNTERFACTUAL',
+    rule_version: 'paired-counterfactual/0.1',
+    analysis_status: status,
+    attributable: status !== 'INCONCLUSIVE',
+    pairing_plan: { id: pairingUnsigned.pairing_id, version: 1, sha256: pairingDigest },
+    sequence: roles,
+    warmup: { mode: 'NONE', iterations: 0 },
+    primary_variable: pairingUnsigned.primary_variable,
+    reasons: [
+      {
+        code: status === 'SUPPORTED' ? 'PAIRED_EFFECT_SUPPORTED' : status === 'CONTRADICTED' ? 'TREATMENT_EFFECT_CONTRADICTED' : 'NEGATIVE_CONTROL_EFFECT',
+        message: 'Deterministic paired-analysis fixture.',
+      },
+    ],
+    sources: Object.fromEntries(roles.map((role, index) => [role, source(role, index)])),
+    outcomes: [
+      {
+        assertion_id: 'suite-completed-successfully',
+        roles: Object.fromEntries(
+          roles.map((role) => [
+            role,
+            {
+              expected_actual: expected[role],
+              actual: actuals[role],
+              matches: expected[role] === actuals[role],
+            },
+          ]),
+        ),
+      },
+    ],
+    unplanned_differences: [],
+    limits: pairingUnsigned.limits,
+  }
+  const pairingBlob = new Blob([JSON.stringify(pairingPlan)])
+  const analysisBlob = new Blob([JSON.stringify(analysis)])
+  const markdownBlob = new Blob(['# Unit Paired Analysis\n'])
+  const files = [
+    { path: 'sealed-pairing-plan.json', sha256: await sha256Hex(pairingBlob), size: pairingBlob.size },
+    { path: 'paired-analysis.json', sha256: await sha256Hex(analysisBlob), size: analysisBlob.size },
+    { path: 'paired-analysis.md', sha256: await sha256Hex(markdownBlob), size: markdownBlob.size },
+  ]
+  const manifestBlob = new Blob([
+    JSON.stringify({ schema_version: '0.1', analysis_id: analysisId, files }),
+  ])
+  return new Map([
+    ['paired-analysis-manifest.json', manifestBlob],
+    ['sealed-pairing-plan.json', pairingBlob],
+    ['paired-analysis.json', analysisBlob],
+    ['paired-analysis.md', markdownBlob],
+  ])
+}

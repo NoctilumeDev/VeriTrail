@@ -21,8 +21,8 @@
   `1a5eeaa6b5516c5b53248411e1284f6a2568e5e2` 上完成 Core/CLI、Comparison 0.1 与
   Workbench，并通过双 Python、真实三态 Comparison、逐字节复建、生产与 Codex 内置浏览器、
   资源、安全和清理终验，标记 `FROZEN`。损坏 Comparison 与预览端口残留反例必须继续保留。
-  M7“预注册四角色配对反事实分析”已进入 `PLANNED`，前置基线固定为 M6 冻结提交；计划编辑、
-  任意项目命令、跨变量因果配对实现和完整自举仍未实现。
+  M7“预注册四角色配对反事实分析”已有实现与自动化候选，但真实四角色、三态、内置浏览器和
+  清理终验尚未完成，当前不得标记 `FROZEN`。计划编辑、任意项目命令和完整自举仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

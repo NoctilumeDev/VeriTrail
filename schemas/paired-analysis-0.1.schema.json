@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/paired-analysis-0.1.schema.json",
+  "title": "VeriTrail Paired Counterfactual Analysis 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "analysis_type",
+    "rule_version",
+    "analysis_status",
+    "attributable",
+    "pairing_plan",
+    "sequence",
+    "warmup",
+    "primary_variable",
+    "reasons",
+    "sources",
+    "outcomes",
+    "unplanned_differences",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "analysis_id": { "type": "string", "pattern": "^pair_[0-9a-f]{24}$" },
+    "analysis_type": { "const": "FOUR_ROLE_PAIRED_COUNTERFACTUAL" },
+    "rule_version": { "const": "paired-counterfactual/0.1" },
+    "analysis_status": { "enum": ["SUPPORTED", "CONTRADICTED", "INCONCLUSIVE"] },
+    "attributable": { "type": "boolean" },
+    "pairing_plan": { "$ref": "#/$defs/reference" },
+    "sequence": {
+      "const": ["BASELINE", "TREATMENT", "RESTORED_BASELINE", "NEGATIVE_CONTROL"]
+    },
+    "warmup": { "const": { "mode": "NONE", "iterations": 0 } },
+    "primary_variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string", "minLength": 1 },
+          "message": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["BASELINE", "TREATMENT", "RESTORED_BASELINE", "NEGATIVE_CONTROL"],
+      "properties": {
+        "BASELINE": { "$ref": "#/$defs/source" },
+        "TREATMENT": { "$ref": "#/$defs/source" },
+        "RESTORED_BASELINE": { "$ref": "#/$defs/source" },
+        "NEGATIVE_CONTROL": { "$ref": "#/$defs/source" }
+      }
+    },
+    "outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assertion_id", "roles"],
+        "properties": {
+          "assertion_id": { "type": "string", "minLength": 1 },
+          "roles": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["BASELINE", "TREATMENT", "RESTORED_BASELINE", "NEGATIVE_CONTROL"],
+            "properties": {
+              "BASELINE": { "$ref": "#/$defs/observation" },
+              "TREATMENT": { "$ref": "#/$defs/observation" },
+              "RESTORED_BASELINE": { "$ref": "#/$defs/observation" },
+              "NEGATIVE_CONTROL": { "$ref": "#/$defs/observation" }
+            }
+          }
+        }
+      }
+    },
+    "unplanned_differences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "assertion_id", "baseline", "observed"],
+        "properties": {
+          "role": { "$ref": "#/$defs/role" },
+          "assertion_id": { "type": "string", "minLength": 1 },
+          "baseline": true,
+          "observed": true
+        }
+      }
+    },
+    "limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "role": {
+      "enum": ["BASELINE", "TREATMENT", "RESTORED_BASELINE", "NEGATIVE_CONTROL"]
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "planReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "primary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "role", "value", "source"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "role": { "const": "PRIMARY" },
+        "value": true,
+        "source": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "run_id",
+        "created_at",
+        "execution_status",
+        "verdict",
+        "plan",
+        "random_seed",
+        "primary_variable",
+        "bundle_sha256",
+        "control_projection_sha256"
+      ],
+      "properties": {
+        "role": { "$ref": "#/$defs/role" },
+        "run_id": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "minLength": 1 },
+        "execution_status": { "enum": ["PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"] },
+        "verdict": { "enum": ["PASS", "FAIL", "INCONCLUSIVE", "PENDING"] },
+        "plan": { "$ref": "#/$defs/planReference" },
+        "random_seed": { "type": "integer" },
+        "primary_variable": { "$ref": "#/$defs/primary" },
+        "bundle_sha256": { "$ref": "#/$defs/sha256" },
+        "control_projection_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_actual", "actual", "matches"],
+      "properties": {
+        "expected_actual": true,
+        "actual": true,
+        "matches": { "type": "boolean" }
+      }
+    }
+  }
+}

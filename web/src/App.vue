@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
 import ComparisonView from './components/ComparisonView.vue'
+import PairedAnalysisView from './components/PairedAnalysisView.vue'
 import RunCatalog from './components/RunCatalog.vue'
 import SectionFrame from './components/SectionFrame.vue'
 import StatusBadge from './components/StatusBadge.vue'
@@ -19,11 +20,13 @@ import {
   fetchCatalog,
 } from './domain/catalog'
 import { ComparisonLoadError, loadLocalComparison } from './domain/comparison'
+import { loadLocalPairedAnalysis, PairingLoadError } from './domain/pairing'
 import type {
   CatalogResponse,
   CatalogRunSummary,
   LoadedBundle,
   LoadedComparison,
+  LoadedPairedAnalysis,
   ReportAssertion,
 } from './domain/types'
 
@@ -31,9 +34,10 @@ type AssertionFilter = 'ALL' | 'PASS' | 'FAIL' | 'OTHER'
 
 const bundle = shallowRef<LoadedBundle | null>(null)
 const comparison = shallowRef<LoadedComparison | null>(null)
+const pairedAnalysis = shallowRef<LoadedPairedAnalysis | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
-const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison'>('positive')
+const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing'>('positive')
 const assertionFilter = ref<AssertionFilter>('ALL')
 const liveMessage = ref('正在读取正向证据包。')
 const catalog = shallowRef<CatalogResponse | null>(null)
@@ -63,9 +67,9 @@ const assertionCounts = computed(() => {
   }
 })
 
-function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' {
+function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' | 'pairing' {
   const value = new URLSearchParams(window.location.search).get('fixture')
-  return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison'
+  return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison' || value === 'pairing'
     ? value
     : 'positive'
 }
@@ -92,6 +96,11 @@ function describeComparisonError(cause: unknown) {
   return { code: 'COMPARISON_UNEXPECTED', message: '工作台无法核验该复跑比较包。' }
 }
 
+function describePairingError(cause: unknown) {
+  if (cause instanceof PairingLoadError) return { code: cause.code, message: cause.message }
+  return { code: 'PAIRING_UNEXPECTED', message: '工作台无法核验该四角色配对分析包。' }
+}
+
 async function refreshCatalog() {
   catalogLoading.value = true
   catalogError.value = null
@@ -113,6 +122,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   activeSource.value = id
   selectedCatalogRunId.value = null
   comparison.value = null
+  pairedAnalysis.value = null
   liveMessage.value = `正在读取${sourceLabel(id)}。`
   if (pushHistory) {
     const url = new URL(window.location.href)
@@ -148,6 +158,7 @@ async function importLocal(event: Event) {
   activeSource.value = 'local'
   selectedCatalogRunId.value = null
   comparison.value = null
+  pairedAnalysis.value = null
   liveMessage.value = '正在本地内存中核验所选证据包。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -181,6 +192,7 @@ async function importComparison(event: Event) {
   activeSource.value = 'comparison'
   selectedCatalogRunId.value = null
   comparison.value = null
+  pairedAnalysis.value = null
   liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -202,6 +214,37 @@ async function importComparison(event: Event) {
   }
 }
 
+async function importPairedAnalysis(event: Event) {
+  const input = event.currentTarget as HTMLInputElement
+  if (!input.files?.length) return
+  const sequence = ++loadSequence
+  loading.value = true
+  error.value = null
+  activeSource.value = 'pairing'
+  selectedCatalogRunId.value = null
+  comparison.value = null
+  pairedAnalysis.value = null
+  liveMessage.value = '正在本地内存中核验 PairedAnalysis Manifest 与 PairingPlan seal。'
+  const url = new URL(window.location.href)
+  url.searchParams.delete('run')
+  url.searchParams.set('fixture', 'pairing')
+  window.history.pushState({ fixture: 'pairing' }, '', url)
+  releaseCurrentBundle()
+  try {
+    const loaded = await loadLocalPairedAnalysis(input.files)
+    if (sequence !== loadSequence) return
+    pairedAnalysis.value = loaded
+    liveMessage.value = `配对分析 ${loaded.analysis.analysis_status} 已加载；文件未上传。`
+  } catch (cause) {
+    if (sequence !== loadSequence) return
+    error.value = describePairingError(cause)
+    liveMessage.value = `配对分析包读取失败：${error.value.message}`
+  } finally {
+    input.value = ''
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
 async function selectCatalogRun(
   run: CatalogRunSummary,
   trigger?: HTMLElement,
@@ -215,6 +258,7 @@ async function selectCatalogRun(
   activeSource.value = 'catalog'
   selectedCatalogRunId.value = run.catalog_run_id
   comparison.value = null
+  pairedAnalysis.value = null
   lastCatalogTriggerId = trigger ? run.catalog_run_id : lastCatalogTriggerId
   liveMessage.value = `正在从只读目录核验 ${run.run_id}。`
   if (pushHistory) {
@@ -225,6 +269,7 @@ async function selectCatalogRun(
   }
   releaseCurrentBundle()
   comparison.value = null
+  pairedAnalysis.value = null
   try {
     const loaded = await loadSameOriginBundle(run.bundle.base_url, `本地目录 · ${run.run_id}`)
     if (
@@ -268,6 +313,7 @@ function returnToCatalog() {
   ++loadSequence
   releaseCurrentBundle()
   comparison.value = null
+  pairedAnalysis.value = null
   loading.value = false
   error.value = null
   activeSource.value = 'catalog'
@@ -301,6 +347,7 @@ function onHistoryChange() {
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
+    pairedAnalysis.value = null
     activeSource.value = 'catalog'
     selectedCatalogRunId.value = catalogRunId
     loading.value = false
@@ -316,6 +363,7 @@ function onHistoryChange() {
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
+    pairedAnalysis.value = null
     activeSource.value = 'catalog'
     selectedCatalogRunId.value = null
     loading.value = false
@@ -328,6 +376,7 @@ function onHistoryChange() {
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
+    pairedAnalysis.value = null
     activeSource.value = 'comparison'
     loading.value = false
     error.value = {
@@ -337,10 +386,25 @@ function onHistoryChange() {
     liveMessage.value = error.value.message
     return
   }
+  if (fixture === 'pairing') {
+    ++loadSequence
+    releaseCurrentBundle()
+    comparison.value = null
+    pairedAnalysis.value = null
+    activeSource.value = 'pairing'
+    loading.value = false
+    error.value = {
+      code: 'PAIRING_RESELECT_REQUIRED',
+      message: '为保护隐私，本地配对包不会持久化；请重新选择 PairedAnalysis 目录。',
+    }
+    liveMessage.value = error.value.message
+    return
+  }
   if (fixture === 'local') {
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
+    pairedAnalysis.value = null
     activeSource.value = 'local'
     loading.value = false
     error.value = {
@@ -451,6 +515,17 @@ onBeforeUnmount(() => {
               @change="importComparison"
             />
           </label>
+          <label class="local-import" :class="{ 'is-active': activeSource === 'pairing' }">
+            <span>选择四角色配对包</span>
+            <input
+              type="file"
+              multiple
+              webkitdirectory
+              aria-label="选择本地 VeriTrail PairedAnalysis 目录"
+              data-testid="local-pairing-input"
+              @change="importPairedAnalysis"
+            />
+          </label>
         </nav>
 
         <div v-if="report" class="status-gate" data-testid="status-gate">
@@ -502,6 +577,8 @@ onBeforeUnmount(() => {
       </section>
 
       <ComparisonView v-else-if="comparison" :loaded="comparison" />
+
+      <PairedAnalysisView v-else-if="pairedAnalysis" :loaded="pairedAnalysis" />
 
       <template v-else-if="report && bundle">
         <div class="run-plaque" data-testid="run-summary">

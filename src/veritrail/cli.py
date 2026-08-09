@@ -13,6 +13,12 @@ from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.local_api import create_catalog_server
 from veritrail.orchestration import collect_orchestrated_evidence
+from veritrail.pairing import (
+    PairingError,
+    create_paired_analysis_bundle,
+    load_and_seal_pairing_plan,
+    write_sealed_pairing_plan,
+)
 from veritrail.plan import load_and_seal_plan, write_sealed_plan
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
@@ -111,6 +117,28 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("--baseline", type=Path, required=True, help="baseline Run Bundle")
     compare.add_argument("--repeat", type=Path, required=True, help="independent repeat Run Bundle")
     compare.add_argument("--output", type=Path, required=True, help="new Comparison Bundle")
+
+    seal_pairing = subparsers.add_parser(
+        "seal-pairing", help="validate and seal a four-role PairingPlan"
+    )
+    seal_pairing.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or already sealed PairingPlan JSON"
+    )
+    seal_pairing.add_argument("--output", type=Path, required=True, help="new sealed PairingPlan")
+
+    pair = subparsers.add_parser(
+        "pair", help="analyze a preregistered four-role counterfactual group"
+    )
+    pair.add_argument("--plan", type=Path, required=True, help="sealed PairingPlan 0.1")
+    pair.add_argument("--baseline", type=Path, required=True, help="BASELINE Run Bundle")
+    pair.add_argument("--treatment", type=Path, required=True, help="TREATMENT Run Bundle")
+    pair.add_argument(
+        "--restored-baseline", type=Path, required=True, help="RESTORED_BASELINE Run Bundle"
+    )
+    pair.add_argument(
+        "--negative-control", type=Path, required=True, help="NEGATIVE_CONTROL Run Bundle"
+    )
+    pair.add_argument("--output", type=Path, required=True, help="new PairedAnalysis Bundle")
     return parser
 
 
@@ -416,6 +444,75 @@ def main(argv: list[str] | None = None) -> int:
                     "difference_count": result.difference_count,
                     "baseline_run_id": result.baseline_run_id,
                     "repeat_run_id": result.repeat_run_id,
+                    "output": args.output.name,
+                }
+            )
+            return 0
+        if args.command == "seal-pairing":
+            try:
+                plan = load_and_seal_pairing_plan(args.plan)
+                write_sealed_pairing_plan(args.output, plan)
+            except PairingError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            _success(
+                {
+                    "command": "seal-pairing",
+                    "output": args.output.name,
+                    "pairing_plan_sha256": plan["seal"]["digest"],
+                }
+            )
+            return 0
+        if args.command == "pair":
+            try:
+                result = create_paired_analysis_bundle(
+                    pairing_plan_path=args.plan,
+                    baseline=args.baseline,
+                    treatment=args.treatment,
+                    restored_baseline=args.restored_baseline,
+                    negative_control=args.negative_control,
+                    output=args.output,
+                )
+            except PairingError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "PAIRING_INTERNAL_ERROR",
+                                "message": "PairedAnalysis 构建发生未预期内部错误。",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(
+                {
+                    "command": "pair",
+                    "analysis_id": result.analysis_id,
+                    "analysis_status": result.analysis_status,
+                    "attributable": result.attributable,
+                    "outcome_count": result.outcome_count,
+                    "run_ids": result.run_ids,
                     "output": args.output.name,
                 }
             )

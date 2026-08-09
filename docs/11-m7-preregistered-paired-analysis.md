@@ -2,7 +2,8 @@
 
 ## 状态
 
-`PLANNED`。本文件是实现前独立冻结的候选合同；定义、自动化与真实运行均不能代替彼此。
+`IMPLEMENTED / AUTOMATED；RUNTIME_VALIDATED PENDING`。本文件先作为实现前独立候选合同提交；
+当前 Core/CLI、Schema、Workbench 与自动化已形成候选，真实运行仍不能由定义或自动化代替。
 前置基线是 M6 冻结提交 `807ef1eafae6249c88c68ab90d0be1e0d1eccf99` 与标签
 `m6-v0.7.0`。只有本合同先成为可寻址提交，M7 才能进入实现。
 
@@ -199,4 +200,13 @@ Workbench 增加本地 Pairing 目录入口，只在浏览器内存中读取。�
 - 前置基线：`m6-v0.7.0`；
 - 目标版本：Python Core `0.8.0.dev1`，Workbench `0.8.0-dev.1`；
 - 目标 CLI：`seal-pairing`、`pair`；
-- 当前里程碑状态：`PLANNED`。
+- 当前里程碑状态：`IMPLEMENTED / AUTOMATED；RUNTIME_VALIDATED PENDING`。
+
+## 当前实现与自动化事实
+
+- 合同提交：`7daf3b4`；实现尚未形成冻结提交；
+- 新增 PairingPlan seal、四角色 PairedAnalysis Core、`seal-pairing` / `pair` CLI、三个 Schema、
+  脱敏示例、Workbench 本地 Loader/View 与测试；
+- Python 3.10 当前全回归 103/103；
+- Workbench 当前 lint、type-check、生产构建通过，Vitest 45/45；
+- 这些只支持 `IMPLEMENTED / AUTOMATED`，不支持 `RUNTIME_VALIDATED` 或 `FROZEN`。

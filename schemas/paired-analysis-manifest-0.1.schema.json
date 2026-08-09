@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/paired-analysis-manifest-0.1.schema.json",
+  "title": "VeriTrail PairedAnalysis Manifest 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "analysis_id", "files"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "analysis_id": { "type": "string", "pattern": "^pair_[0-9a-f]{24}$" },
+    "files": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "size"],
+        "properties": {
+          "path": {
+            "enum": [
+              "sealed-pairing-plan.json",
+              "paired-analysis.json",
+              "paired-analysis.md"
+            ]
+          },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "size": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}
