@@ -269,8 +269,8 @@ py -3.10 -m venv .venv
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
-- **Vue Workbench**：已实现 M3 只读证据包、断言和浏览器事实浏览；实验矩阵、计划编辑、
-  跨 Run 差异和报告发布仍是后续能力。
+- **Vue Workbench**：已实现 M3 只读证据包、断言和浏览器事实浏览，以及 M6 Comparison、
+  M7 PairedAnalysis 的本地验真；实验矩阵、计划编辑和报告发布仍是后续能力。
 - **Browser Adapter**：已实现基于 Playwright/Chromium 的回环站点证据采集；远程站点、认证、
   多角色与并行 Context 仍不在 M2 范围。
 

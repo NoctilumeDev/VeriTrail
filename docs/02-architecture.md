@@ -54,8 +54,8 @@ Evidence JSON 和受支持截图，在显示前核对路径、大小、引用与
 断言、证据索引及 Console/Network/视口/截图事实。UI 只展示生产者裁决，不在浏览器端另写规则；
 本地目录只在内存中读取，不上传、不写回。
 
-M4 在 M3 详情页之前增加了只读 Run 目录，但计划编辑、基线比较、批次矩阵、跨 Run 差异、
-执行时间线和报告发布仍是后续能力，不属于当前已实现范围。
+M4 在 M3 详情页之前增加了只读 Run 目录；M6/M7 后续补充了独立 Comparison 与
+PairedAnalysis 本地验真。计划编辑、批次矩阵、执行时间线和报告发布仍是后续能力。
 
 M5 已冻结一个更窄的编排切片：Core 内置的只读静态 HTTP 目标、Plan 0.4、编排证据和单一
 `run` 入口。它只管理离线冻结的静态文件集合，不执行 Shell、外部进程、项目命令或中间件；
@@ -181,8 +181,9 @@ Bundle/Verdict，也不改变 M4 Run-only Catalog。双 Python、真实三态、
 Codex 内置浏览器、安全、资源和清理终验见
 `docs/10-m6-deterministic-rerun-comparison.md`。
 
-M7 已有独立 PairingPlan 与 PairedAnalysis 候选实现：四角色固定顺序、跨 Plan 严格控制投影、
-outcome 预期与负对照边界；Core/CLI 与 Workbench 已取得自动化证据，但尚未真实终验。合同见
+M7 已冻结独立 PairingPlan 与 PairedAnalysis：四角色固定顺序、跨 Plan 严格控制投影、
+outcome 预期与负对照边界；Core/CLI 与 Workbench 已通过双 Python、真实三态、逐字节复建、
+损坏来源与输出拒绝、Catalog 隔离、生产及 Codex 内置浏览器终验。合同与证据见
 `docs/11-m7-preregistered-paired-analysis.md`。
 
 ## 9. 实现顺序
