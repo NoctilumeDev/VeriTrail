@@ -9,10 +9,10 @@
   Codex 内置浏览器、附件哈希、敏感扫描和残留检查并标记 `FROZEN`；M3 已在提交
   `ef2a8d64f781ba61bf7fbd9c1511a3419a6cfbaa` 上完成只读 Vue 工作台，并通过前端自动化、两套
   Python 兼容回归、真实 Chromium、Codex 内置浏览器、同源网络、依赖审计和残留检查，标记
-  `FROZEN`。M4“本地 Run 目录与轻量自举”已实现离线 Bundle 校验、SQLite 派生索引、固定
-  回环只读 API、Catalog UI 和两阶段轻量自举候选，自动化与候选真实运行已经通过，状态为
-  `AUTOMATED`；冻结 Plan v1 的选择器歧义失败 Run 必须继续保留。只有在干净实现提交上完成
-  双 Python、真实 Chromium、Codex 内置浏览器、敏感与残留复核后才能推进到 `FROZEN`。
+  `FROZEN`。M4“本地 Run 目录与轻量自举”已在实现提交
+  `ddcfa314b40bf9ba3332fec1e190e6335a4c1502` 上完成离线 Bundle 校验、SQLite 派生索引、固定
+  回环只读 API、Catalog UI 和两阶段轻量自举，并通过双 Python、真实 Chromium、Codex 内置
+  浏览器、敏感与残留复核，标记 `FROZEN`。Plan v1 的选择器歧义失败 Run 必须继续保留。
   计划编辑、执行编排和完整自举仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
@@ -30,12 +30,13 @@
 
 - 优先建立最小纵向闭环，再扩展适配器；不要先堆积导入器、仪表盘或中间件集成。
 - 16 GB Windows 主机默认串行或受限微并行。测试必须有启动前资源预检、软/硬停止线、现场保存和批次清理确认。
-- v0 架构规划使用 Python Core、SQLite、Vue Workbench 和 Playwright/CDP；当前冻结基线只包含
-  Python Core、Vue Workbench 与 Playwright/CDP，SQLite 尚未实现。不要求 Docker、MQ、搜索或外部云服务。
+- v0 架构规划使用 Python Core、SQLite、Vue Workbench 和 Playwright/CDP；当前冻结基线已包含
+  Python Core、可重建 SQLite Catalog、固定回环只读 API、Vue Workbench 与 Playwright/CDP。
+  不要求 Docker、MQ、搜索或外部云服务。
 - M3 Workbench 只读消费 Report/Evidence/Manifest 和浏览器附件，不在前端重新裁决，不修改
-  M0–M2 Schema；计划编辑、SQLite、本地 API 和自举闭环留给后续独立里程碑。后续里程碑必须
-  先独立冻结合同，不能把 M3 的只读 UI 当成执行编排已经完成。
-- M4 若进入实现，必须保持 Bundle 为权威事实、SQLite 为可重建派生索引、服务为固定回环只读
+  M0–M2 Schema；M3 本身不包含 SQLite、本地 API 或自举闭环，这些由 M4 独立合同交付。
+  不能把 M3/M4 的只读 UI 与轻量自举当成计划编辑或执行编排已经完成。
+- M4 必须保持 Bundle 为权威事实、SQLite 为可重建派生索引、服务为固定回环只读
   API；不得在该里程碑加入在线写、文件监视、跨 Run 差异、任意命令或被测对象生命周期管理。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。
 - 不记录或提交 `.env` 值、令牌、Cookie、Authorization 头、私钥、个人路径或原始敏感业务数据。采集器必须默认脱敏。

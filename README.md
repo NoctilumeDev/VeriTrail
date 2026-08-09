@@ -6,13 +6,12 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0/M1/M2/M3 FROZEN，M4 AUTOMATED。** M0 已冻结计划封存、
+**当前状态：v0 Implementation，M0/M1/M2/M3/M4 FROZEN。** M0 已冻结计划封存、
 结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结
 有界真实 Chromium 采集；M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题。
-M4 已实现并自动化验证离线 Bundle 目录、SQLite 派生快照、只读本地 API、Workbench Run
-门厅与两阶段轻量自举候选；冻结 Plan v1 的选择器歧义失败已保留，Plan v2 候选实跑通过。
-M4 仍需在干净实现提交上完成两套 Python、真实 Chromium、Codex 内置浏览器、敏感与残留复核
-后才能标记 `FROZEN`。计划编辑、执行编排和完整自举仍是后续里程碑。
+M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Workbench Run 门厅与两阶段
+轻量自举；Plan v1 的选择器歧义失败 Run 保留，Plan v2 已从干净实现提交完成双 Python、
+真实 Chromium、Codex 内置浏览器、敏感与残留复核。计划编辑、执行编排和完整自举仍是后续里程碑。
 
 ## 为什么需要验迹
 
@@ -158,7 +157,7 @@ npm run preview
 SQLite、本地 API、计划编辑或跨 Run 比较。完整边界与冻结证据见
 [M3 Vue 证据工作台](docs/07-m3-vue-workbench.md)。
 
-## M4 本地 Run 目录（候选已实现）
+## M4 本地 Run 目录（FROZEN）
 
 M4 验证一条完整但窄的增量链路：离线校验多个不可变 Bundle，生成可重建的 SQLite
 目录快照；由只读同源回环 API 供 Workbench 发现和选择 Run；最后把一份针对 VeriTrail
@@ -180,13 +179,13 @@ M4 验证一条完整但窄的增量链路：离线校验多个不可变 Bundle�
   --port 18767
 ```
 
-生产构建、真实 HTTP 与桌面/移动 Chromium 候选验收：
+生产构建、真实 HTTP 与桌面/移动 Chromium 验收：
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\m4_catalog_acceptance.py
 ```
 
-实现与自动化不等于冻结；完整退出门槛与当前候选证据见
+完整退出门槛、失败反例与冻结证据见
 [M4 本地 Run 目录与轻量自举](docs/08-m4-local-run-catalog.md)。
 
 ### 本地运行
@@ -238,7 +237,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M1 资源与环境预检](docs/05-m1-resource-preflight.md)
 - [M2 真实浏览器证据（FROZEN）](docs/06-m2-browser-evidence.md)
 - [M3 Vue 证据工作台（FROZEN）](docs/07-m3-vue-workbench.md)
-- [M4 本地 Run 目录与轻量自举（AUTOMATED）](docs/08-m4-local-run-catalog.md)
+- [M4 本地 Run 目录与轻量自举（FROZEN）](docs/08-m4-local-run-catalog.md)
 
 ## 项目来源
 
