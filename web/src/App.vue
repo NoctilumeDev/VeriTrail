@@ -516,12 +516,12 @@ onBeforeUnmount(() => {
             />
           </label>
           <label class="local-import" :class="{ 'is-active': activeSource === 'pairing' }">
-            <span>选择四角色配对包</span>
+            <span>选择四角色配对文件</span>
             <input
               type="file"
               multiple
-              webkitdirectory
-              aria-label="选择本地 VeriTrail PairedAnalysis 目录"
+              accept=".json,.md,application/json,text/markdown"
+              aria-label="选择本地 VeriTrail PairedAnalysis 四个文件"
               data-testid="local-pairing-input"
               @change="importPairedAnalysis"
             />
