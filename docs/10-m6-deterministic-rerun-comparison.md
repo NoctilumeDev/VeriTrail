@@ -2,10 +2,11 @@
 
 ## 状态
 
-`AUTOMATED`。本文件先作为候选合同独立提交，随后 Comparison Core/CLI、两个 Schema、
-Workbench Loader/View 与验收脚本已实现；Python 3.10/3.13 各 94 项测试、前端 39 项测试、
-lint/type-check/生产构建均通过。定义、自动化与真实运行不是同一层证据；M6 仍须取得本文件
-预注册的真实正/负 Run、Comparison、浏览器、安全、资源和清理事实后才能进入 `FROZEN`。
+`FROZEN（实现提交 1a5eeaa6b5516c5b53248411e1284f6a2568e5e2）`。本文件先作为候选
+合同独立提交，随后 Comparison Core/CLI、两个 Schema、Workbench Loader/View 与验收脚本
+实现；Python 3.10/3.13、前端自动化、真实正/负 Run、逐字节复建、生产浏览器、Codex 内置
+浏览器、安全、资源和清理门槛均由实际结果满足。定义、自动化与真实运行的证据仍在下文分层
+记录，没有用合同文字代替运行事实。
 
 前置基线是 M5 冻结提交 `d3b9cd72967aff02dc40d730640e30fea30de2d9` 与标签
 `m5-v0.6.0`。M5 已真实证明一个 sealed Plan 可以通过单一 `run` 入口生成不可变 Run Bundle；
@@ -181,5 +182,117 @@ Comparison Manifest 的文件集合、路径、大小与 SHA-256，再交叉核�
 - 前置基线：`m5-v0.6.0`；
 - 目标版本：Python Core `0.7.0.dev1`，Workbench `0.7.0-dev.1`；
 - 目标 CLI：`compare`；
-- 当前里程碑状态：`AUTOMATED`，真实运行与最终冻结待执行；
-- 预期冻结标签：`m6-v0.7.0`。
+- 当前里程碑状态：`FROZEN`；
+- 冻结标签：`m6-v0.7.0`。
+
+## 实际实现与自动化事实
+
+M6 合同提交为 `4b0fb76588e56fe0198ade2a95f09bfc5816af08`，实现提交为
+`1a5eeaa6b5516c5b53248411e1284f6a2568e5e2`。实际 diff 保持在预注册的 `L2_CONTRACT`
+范围：新增 `comparison.py`、`compare` CLI、Comparison/Manifest 0.1 Schema、Vue Loader/View、
+测试与有界浏览器验收脚本；没有修改 Plan/Evidence/Report/Bundle 0.1、Verdict、Catalog SQLite/API
+或 M5 编排语义。
+
+冻结实现的自动化结果：
+
+- Python 3.10.6：94/94；Python 3.13：94/94；
+- Workbench：lint、type-check、生产构建通过，Vitest 39/39；
+- M6 新增 Python 8 项，覆盖三态结果、Plan 不同、同 Run 复用、未完成 Run、损坏来源、
+  逐字节稳定、Manifest、不可覆盖与 CLI 脱敏错误；
+- 前端新增 Loader/View/App 测试，覆盖三态显示、来源角色、差异、完整性、额外/缺失/变化文件、
+  状态冲突和真实目录输入事件；
+- 首次 3.13/npm 批处理因 3.13 未安装 editable 包且 npm 工作目录错误，分别得到 import 与
+  `package.json` 入口错误；这不是 VeriTrail Run。修正为临时 `PYTHONPATH=src` 和 `web/` 工作目录
+  后完整复跑通过，原始失败没有被当作产品通过证据。
+
+## 真实 Run 与 Comparison 事实
+
+### MATCH：同 Plan 的两次完整 M5 Run
+
+在实时可用内存约 6.74 GiB、磁盘约 147 GiB、18769 无监听时，严格串行运行同一
+`examples/orchestration/plan.json`：
+
+- baseline：`m6-rerun-baseline-20260809`；
+- repeat：`m6-rerun-repeat-20260809`；
+- 两侧 Plan SHA-256：
+  `658955b08cd56902e376e4db7d5716572374b1cb0a21283b1cc55ac8a0efc10a`；
+- 两侧均为 `PROCEED`、目标已启动/READY、`COMPLETED/PASS`、`cleanup_complete=true`；
+- 两次之间与结束后 18769 监听数均为 0；
+- Bundle SHA-256 分别为
+  `7aadc6d13383c382c8c4d60c39f57573aba0ce29dffc0e4dd8340ae8e5637b78` 与
+  `fc6375061370574ebcf88ab6b3d60cab35534cd1864881b4c0714341a7dcef3c`，证明它们不是同一个
+  文件副本；两侧 semantic SHA-256 均为
+  `9ee206252c8f5b9cdcd82e7e805a7f3b602c652eef4b3e7331b86920655ce13b`。
+
+生成 Comparison `cmp_f3d21253b674318c1f0fee7d`，结果 `MATCH`、`comparable=true`、0 差异。
+来源 Run 的 `PASS` 仍作为左右事实展示，没有被 Comparison 改写。
+
+同一对来源第二次生成到新目录，三个文件逐字节相同：
+
+| 文件 | SHA-256 |
+| --- | --- |
+| `comparison.json` | `7b8a527d46cb273e3c901d9ec1abb0d82cac9bf54ecd9a4ca14a9eac05da0d9c` |
+| `comparison.md` | `f75b2609cd1885cd8721f1ad8d58c2041b54d9fddd0f7f09c99c8c3a916d2edd` |
+| `comparison-manifest.json` | `e2e65b4632e86131b0821576063d5b9761e8c9e06efcf7806c4dc0252c6fad9f` |
+
+### DRIFT 与 INCONCLUSIVE
+
+用同一 sealed M0 Plan 生成新的真实 Bundle：
+
+- `m6-minimal-pass-20260809`：`COMPLETED/PASS`；
+- `m6-minimal-fail-20260809`：`COMPLETED/FAIL`；
+- `m6-minimal-aborted-20260809`：`ABORTED/PENDING`。
+
+`PASS → FAIL` 生成 `cmp_b360d395a4e2a592761f22d4`：`DRIFT`、可比较、7 处差异；差异明确
+落在断言 actual/status、Evidence 形态、reason code 与 Verdict。`COMPLETED → ABORTED` 生成
+`cmp_8c546ae7b25cbeea72c42edb`：`INCONCLUSIVE`、不可比较、原因包含
+`RUN_NOT_COMPLETED`；已有 3 处投影差异仍被展示，但没有越过门禁写成 `DRIFT`。
+
+## 真实浏览器与用户链路
+
+生产构建的有界 Playwright 验收输出为 `m6-comparison-browser-20260809`：
+
+- 桌面真实导入 `MATCH / DRIFT / INCONCLUSIVE`；
+- 故意改变 `comparison.json` 后命中 `COMPARISON_SIZE_MISMATCH`，未展示部分 Comparison，
+  可显式返回正向 Run；
+- 刷新 `?fixture=comparison` 命中 `COMPARISON_RESELECT_REQUIRED`，history 返回正向入口；
+- 移动 390×844 的 `MATCH` 可读且横向溢出为 0；
+- 6 个检查全部完成，48 个请求、0 HTTP error、0 外部请求、0 写请求、0 Console/Page/Request
+  异常；
+- 桌面截图 SHA-256：
+  `f2da94036eedc26c5ab9606b112c206c1ea9c52e11c73af47e6e64e06e1ac285`；移动截图：
+  `b8dcd34ea4894367f0391fcbe8c54650fde299f56124b60d03e91b50dd1ff770`。
+
+Codex 内置浏览器再次独立验收：
+
+- 1280×720 导入真实 MATCH，显示两侧不同 Bundle digest、相同 semantic digest、0 差异与三条
+  边界；导入真实 DRIFT 后展示 7 条左右差异；
+- 改动 Comparison Markdown 一字节后命中 `COMPARISON_SIZE_MISMATCH`，Comparison View 数量为
+  0，返回正向入口后恢复 `COMPLETED/PASS`；
+- 刷新后要求重新选择目录，后退回 `?fixture=positive`；
+- 390×844 再次导入 MATCH，来源可读、横向溢出为 0；
+- Console warning/error 为 0；页面观察到 12 项资源，全部来自 `127.0.0.1:18769`。网络状态码
+  的完整断言由上一条生产 Playwright 证据给出，不用资源清单冒充状态码证据。
+
+## 安全、资源与清理事实
+
+- 两套 Python `pip check` 均无破损依赖；npm 官方 registry 的生产依赖审计为 0 vulnerabilities；
+- M6 Artifact 文本未命中个人绝对路径、GitHub 邮箱、私钥或 GitHub token 形态；11 个运行与
+  失败 Artifact 目录全部被 Git 忽略，Git 工作区在写冻结文档前为空；
+- 真实浏览器开始前可用内存约 6.65 GiB，终验后约 6.62 GiB，磁盘仍约 147 GiB；没有超过
+  Plan 的 4/2 GiB 软/硬停止线；
+- 生产验收脚本自行释放 18769。内置浏览器预览的终端父会话退出后，首次残留检查捕获到本轮
+  Vite Node 子进程仍占用 18769；按端口所有权和启动时间只停止该 PID 后重新检查为 0。这个
+  清理反例被保留在验收记录中，没有把“父会话已退出”冒充“端口已释放”；
+- 最终 18765–18770 监听数均为 0，Vite preview 进程为 0，`.veritrail-*` staging 为 0；临时
+  移动视口已复原，内置浏览器验收页已关闭。
+
+## 冻结结论与边界
+
+这些事实支持冻结 M6“同计划复跑确定性比较”：两个不同 Run ID、同 sealed Plan、完整执行的
+不可变 Bundle 可以产生确定性的 `MATCH/DRIFT`，不满足门禁的输入保留为 `INCONCLUSIVE`；输出
+可逐字节复建，Workbench 在展示前独立验真。
+
+它们不证明不同 Plan 的处理组因果、恢复基线/负对照配对、趋势统计、Comparison Catalog、计划
+编辑、任意项目命令、真实后端/中间件编排或完整 v0 自举。M4 Catalog 仍只扫描显式指定的 Run
+Artifact 根；本轮 Comparison 均保留在该根之外的忽略目录，没有改写 Run-only Catalog 语义。

@@ -14,9 +14,9 @@ M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Work
 真实 Chromium、Codex 内置浏览器、敏感与残留复核。M5 已冻结 Plan 0.4、内置只读
 `STATIC_HTTP` 目标、`runtime.orchestration` 和单一 `run` 入口；首个浏览器失败 Run 与修复后的
 正向 Run 均保留，ABORT/STOP、端口竞争、源变化、Catalog/Workbench 和清理边界已真实验证。
-M6“同计划复跑确定性比较”已达到 `AUTOMATED`：Core/CLI、Comparison 0.1 与 Workbench
-只读验真已实现并通过双 Python 和前端回归，但真实 Run、浏览器、资源和清理终验尚未完成。
-计划编辑、任意项目命令、跨变量因果配对和完整自举仍是后续里程碑。
+M6“同计划复跑确定性比较”已 `FROZEN`：Core/CLI、Comparison 0.1 与 Workbench 只读验真已
+通过双 Python、真实 `MATCH/DRIFT/INCONCLUSIVE`、逐字节复建、生产与 Codex 内置浏览器、
+资源、安全和清理终验。计划编辑、任意项目命令、跨变量因果配对和完整自举仍是后续里程碑。
 
 ## 为什么需要验迹
 
@@ -211,11 +211,12 @@ Docker 或项目服务命令，也不管理外部中间件。定义、自动化�
   --output .\artifacts\my-unique-m5-acceptance
 ```
 
-## M6 同计划复跑确定性比较（AUTOMATED）
+## M6 同计划复跑确定性比较（FROZEN）
 
 M6 把两个独立、不可变、同 sealed Plan 的 Run 生成独立 Comparison Bundle，并在 Workbench
 本地只读验真。它只判断已裁决语义的 `MATCH / DRIFT / INCONCLUSIVE`，不改写来源 Verdict，
-也不把不同变量的处理效果冒充为本里程碑能力。当前实现与自动化已完成，真实终验尚待执行：
+也不把不同变量的处理效果冒充为本里程碑能力。双 Python、真实 Run、三态比较、逐字节复建、
+生产与 Codex 内置浏览器、安全、资源和清理终验均已完成：
 
 ```powershell
 .\.venv\Scripts\veritrail.exe compare `
@@ -224,7 +225,7 @@ M6 把两个独立、不可变、同 sealed Plan 的 Run 生成独立 Comparison
   --output .\artifacts\comparison-baseline-repeat
 ```
 
-完整预注册门槛与当前证据层级见
+完整预注册门槛、失败反例与冻结事实见
 [M6 同计划复跑确定性比较](docs/10-m6-deterministic-rerun-comparison.md)。
 
 ### 本地运行
@@ -278,7 +279,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M3 Vue 证据工作台（FROZEN）](docs/07-m3-vue-workbench.md)
 - [M4 本地 Run 目录与轻量自举（FROZEN）](docs/08-m4-local-run-catalog.md)
 - [M5 有界运行编排与静态目标生命周期（FROZEN）](docs/09-m5-bounded-run-orchestrator.md)
-- [M6 同计划复跑确定性比较（AUTOMATED）](docs/10-m6-deterministic-rerun-comparison.md)
+- [M6 同计划复跑确定性比较（FROZEN）](docs/10-m6-deterministic-rerun-comparison.md)
 
 ## 项目来源
 
