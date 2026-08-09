@@ -1,0 +1,182 @@
+@layer base {
+  body {
+    color: var(--ink);
+    background:
+      linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(23, 63, 79, 0.08) 50%, transparent calc(50% + 0.5px)),
+      linear-gradient(var(--paper), var(--paper));
+  }
+
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(181, 138, 50, 0.045) 1px, transparent 1px) center / min(12vw, 8rem) 100%,
+      linear-gradient(rgba(36, 27, 23, 0.025) 1px, transparent 1px) center / 100% 5rem;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
+  }
+
+  ::selection {
+    color: var(--ink);
+    background: var(--glaze-gold-soft);
+  }
+
+  code,
+  pre {
+    font-family: var(--font-mono);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: var(--space-3);
+    left: var(--space-3);
+    z-index: 100;
+    padding: var(--space-3) var(--space-4);
+    color: var(--jade-white);
+    background: var(--dai-blue);
+    transform: translateY(-160%);
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .app-shell {
+    min-height: 100vh;
+  }
+
+  .masthead {
+    position: relative;
+    color: var(--jade-white);
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px) 0 0 / 4rem 100%,
+      var(--dai-blue);
+    border-bottom: 1px solid var(--glaze-gold);
+    box-shadow: 0 10px 30px rgba(23, 63, 79, 0.16);
+  }
+
+  .masthead__roofline {
+    height: 0.5rem;
+    background: var(--glaze-gold);
+  }
+
+  .masthead__roofline span {
+    display: block;
+    width: min(74%, 58rem);
+    height: 100%;
+    margin-inline: auto;
+    background: var(--ink);
+    clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%);
+  }
+
+  .masthead__inner,
+  .evidence-axis,
+  .site-footer {
+    width: min(calc(100% - 2rem), var(--content-width));
+    margin-inline: auto;
+  }
+
+  .masthead__inner {
+    display: grid;
+    gap: var(--space-5);
+    padding-block: var(--space-6) var(--space-7);
+  }
+
+  .evidence-axis {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    padding-block: var(--space-7) var(--space-8);
+  }
+
+  .evidence-axis > * {
+    min-width: 0;
+  }
+
+  .evidence-axis::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    z-index: -1;
+    width: 1px;
+    content: "";
+    background: linear-gradient(var(--glaze-gold), var(--hairline), transparent);
+  }
+
+  .site-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: var(--space-6);
+    color: var(--brick-gray);
+    border-top: 1px solid var(--hairline);
+  }
+
+  .site-footer span {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  .site-footer code {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 720px) {
+    body::before {
+      background: linear-gradient(rgba(36, 27, 23, 0.02) 1px, transparent 1px) center / 100% 4rem;
+    }
+
+    .masthead__inner,
+    .evidence-axis,
+    .site-footer {
+      width: min(calc(100% - 1.25rem), var(--content-width));
+    }
+
+    .masthead__inner {
+      padding-block: var(--space-5) var(--space-6);
+    }
+
+    .evidence-axis {
+      gap: var(--space-5);
+      padding-block: var(--space-5) var(--space-7);
+    }
+
+    .site-footer {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}

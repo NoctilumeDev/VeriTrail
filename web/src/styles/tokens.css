@@ -1,0 +1,48 @@
+@layer tokens {
+  :root {
+    color-scheme: light;
+    font-family:
+      "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+
+    --paper: #f5efe3;
+    --jade-white: #fffbf3;
+    --ink: #241b17;
+    --ink-soft: #514840;
+    --wall-red: #8d1b1b;
+    --wall-red-soft: #f4ded7;
+    --glaze-gold: #b58a32;
+    --glaze-gold-soft: #f3e7c3;
+    --dai-blue: #173f4f;
+    --dai-blue-soft: #dce8e9;
+    --brick-gray: #6b655d;
+    --brick-gray-soft: #e8e2d7;
+    --jade-green: #2f6b4f;
+    --jade-green-soft: #dfece3;
+    --stone-blue: #315c70;
+    --charcoal: #4a4641;
+    --hairline: #d8cbb6;
+    --hairline-strong: #b9a98f;
+    --shadow: rgba(36, 27, 23, 0.09);
+    --focus-ring: #8a641d;
+
+    --font-display: "STSong", "SimSun", "Noto Serif CJK SC", serif;
+    --font-mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4.5rem;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.875rem;
+    --content-width: 1180px;
+    --transition-fast: 150ms ease;
+  }
+}

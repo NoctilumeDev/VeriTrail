@@ -1,0 +1,82 @@
+import { flushPromises, mount } from '@vue/test-utils'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import App from '../src/App.vue'
+import { createMinimalBundle, installFetchForBundles } from './support'
+
+async function waitFor(wrapper: ReturnType<typeof mount>, selector: string) {
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    await flushPromises()
+    if (wrapper.find(selector).exists()) return
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  }
+  throw new Error(`Timed out waiting for ${selector}`)
+}
+
+describe('App', () => {
+  let bundles: Record<string, Map<string, Blob>>
+
+  beforeEach(async () => {
+    window.history.replaceState({}, '', '/?fixture=positive')
+    bundles = {
+      'm2-positive': await createMinimalBundle(),
+      'm2-negative': await createMinimalBundle({
+        run_id: 'unit-negative',
+        verdict: 'FAIL',
+        reasons: [{ code: 'NEGATIVE', message: 'Hard assertion failed.' }],
+        assertions: [
+          {
+            id: 'negative-assertion',
+            severity: 'HARD',
+            status: 'FAIL',
+            expected: 0,
+            actual: 1,
+          },
+        ],
+      }),
+      'm2-invalid': await createMinimalBundle(),
+    }
+    const invalid = bundles['m2-invalid']!
+    invalid.set('report.json', new Blob(['{}']))
+    installFetchForBundles(bundles)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('keeps ExecutionStatus and Verdict as separate labelled dimensions', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+
+    expect(wrapper.get('[aria-label="运行状态：COMPLETED"]').text()).toContain('COMPLETED')
+    expect(wrapper.get('[aria-label="验收结论：PASS"]').text()).toContain('PASS')
+    expect(wrapper.get('[data-testid="integrity-status"]').text()).toContain('已核验')
+    expect(wrapper.get('[data-testid="browser-empty"]').text()).toContain('不等于浏览器检查通过')
+    wrapper.unmount()
+  })
+
+  it('switches only the evidence bundle and exposes negative assertions', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="fixture-negative"]').trigger('click')
+    await waitFor(wrapper, '[aria-label="验收结论：FAIL"]')
+
+    expect(wrapper.get('[aria-label="验收结论：FAIL"]').text()).toContain('FAIL')
+    expect(wrapper.get('[data-testid="assertion-list"]').text()).toContain('negative-assertion')
+    expect(window.location.search).toBe('?fixture=negative')
+    wrapper.unmount()
+  })
+
+  it('contains an invalid bundle and recovers through the explicit retry', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="fixture-invalid"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="error-state"]')
+
+    expect(wrapper.get('[data-testid="error-state"]').text()).toContain('没有据此改写 Run 的 Verdict')
+    await wrapper.get('[data-testid="retry-positive"]').trigger('click')
+    await waitFor(wrapper, '[aria-label="验收结论：PASS"]')
+    expect(wrapper.find('[aria-label="验收结论：PASS"]').exists()).toBe(true)
+    wrapper.unmount()
+  })
+})
