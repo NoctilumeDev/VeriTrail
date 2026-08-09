@@ -50,7 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
         "preflight", help="collect a bounded local resource preflight and create a verdict bundle"
     )
     preflight.add_argument(
-        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.2/0.3 JSON"
+        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.2/0.3/0.4 JSON"
     )
     preflight.add_argument("--output", type=Path, required=True, help="new output directory")
     preflight.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")

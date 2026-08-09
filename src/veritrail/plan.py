@@ -188,7 +188,7 @@ def _validate_resource_budget(value: Any, schema_version: Any, errors: list[str]
 
 def _validate_preflight(value: Any, errors: list[str]) -> None:
     if not isinstance(value, dict):
-        errors.append("preflight must be an object for schema_version '0.2'")
+        errors.append("preflight must be an object for schema_version '0.2' or newer")
         return
     _reject_unknown_fields(value, PREFLIGHT_FIELDS, "preflight", errors)
 
@@ -277,7 +277,7 @@ def _loopback_origin(value: Any, path: str, errors: list[str]) -> str | None:
 
 def _validate_browser(value: Any, errors: list[str]) -> None:
     if not isinstance(value, dict):
-        errors.append("browser must be an object for schema_version '0.3'")
+        errors.append("browser must be an object for schema_version '0.3' or newer")
         return
     _reject_unknown_fields(value, BROWSER_FIELDS, "browser", errors)
     if value.get("engine") != "chromium":

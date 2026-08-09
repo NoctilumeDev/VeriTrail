@@ -190,7 +190,7 @@ def _detect_preflight_contamination(
                 {
                     "code": "PREFLIGHT_POLICY_DRIFT",
                     "evidence_sha256": artifact.sha256,
-                    "message": "The observed preflight policy differs from the sealed Plan 0.2 policy.",
+                    "message": "The observed preflight policy differs from the sealed preflight policy.",
                 }
             )
         if facts["decision"] == "ABORT" and execution_status != "ABORTED":
@@ -217,7 +217,7 @@ def _detect_browser_contamination(
         contamination.append(
             {
                 "code": "MULTIPLE_BROWSER_EVIDENCE",
-                "message": "A Plan 0.3 Run must contain exactly one browser.session artifact.",
+                "message": "A browser-enabled Run must contain exactly one browser.session artifact.",
             }
         )
     for artifact in sessions:
@@ -227,7 +227,7 @@ def _detect_browser_contamination(
                 {
                     "code": "BROWSER_POLICY_DRIFT",
                     "evidence_sha256": artifact.sha256,
-                    "message": "The browser session policy differs from the sealed Plan 0.3 policy.",
+                    "message": "The browser session policy differs from the sealed browser policy.",
                 }
             )
         if facts["capture_complete"] is False and execution_status == "COMPLETED":

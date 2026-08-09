@@ -13,9 +13,12 @@
   `ddcfa314b40bf9ba3332fec1e190e6335a4c1502` 上完成离线 Bundle 校验、SQLite 派生索引、固定
   回环只读 API、Catalog UI 和两阶段轻量自举，并通过双 Python、真实 Chromium、Codex 内置
   浏览器、敏感与残留复核，标记 `FROZEN`。Plan v1 的选择器歧义失败 Run 必须继续保留。
-  M5“有界运行编排与静态目标生命周期”当前仅为 `PLANNED`：目标是 Plan 0.4、
-  `runtime.orchestration` 与 `run` CLI；尚无实现、自动化或真实运行结论。计划编辑、跨 Run
-  比较和完整自举仍未实现。
+  M5“有界运行编排与静态目标生命周期”已在实现提交
+  `98d3b69798e278da7603ea0ce04c39607e3a6407` 上完成 Plan 0.4、内置只读 `STATIC_HTTP`、
+  `runtime.orchestration` 与 `run` CLI，并通过双 Python、真实正/负 Chromium、ABORT/STOP、
+  端口竞争、源变化、Catalog/Workbench、Codex 内置浏览器、敏感与残留复核，标记 `FROZEN`。
+  首个查询参数 400 失败 Run 必须继续保留。计划编辑、任意项目命令、跨 Run 比较和完整自举
+  仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
@@ -40,7 +43,7 @@
   不能把 M3/M4 的只读 UI 与轻量自举当成计划编辑或执行编排已经完成。
 - M4 必须保持 Bundle 为权威事实、SQLite 为可重建派生索引、服务为固定回环只读
   API；不得在该里程碑加入在线写、文件监视、跨 Run 差异、任意命令或被测对象生命周期管理。
-- M5 若进入实现，只允许 Core 内置的 `STATIC_HTTP` 目标适配器；不得扩大为任意 Shell、外部
+- M5 冻结基线只允许 Core 内置的 `STATIC_HTTP` 目标适配器；不得扩大为任意 Shell、外部
   可执行文件、npm/Maven、Docker、中间件或项目服务生命周期管理。Plan 0.4 必须向后兼容，
   所有异常路径先清理再形成证据，定义和自动化都不得冒充真实运行。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。
