@@ -26,6 +26,9 @@
   真实四角色三态、逐字节复建、来源损坏拒绝、Catalog 隔离、生产与 Codex 内置浏览器、资源、
   安全和清理终验，标记 `FROZEN`。目录选择器在内置浏览器中不触发导入的失败事实与改成显式
   四文件导入的修复必须继续保留。计划编辑、任意项目命令和完整自举仍未实现。
+  M8“预注册全因子批次矩阵与固定种子扰动”当前仅有 `PLANNED` 合同：先完整串行 coverage，
+  再用跨实现稳定的种子排序生成成员不变的 perturbation；实现、自动化和真实运行均未开始，
+  当前不得标记为已实现或冻结。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
@@ -53,12 +56,15 @@
 - M5 冻结基线只允许 Core 内置的 `STATIC_HTTP` 目标适配器；不得扩大为任意 Shell、外部
   可执行文件、npm/Maven、Docker、中间件或项目服务生命周期管理。Plan 0.4 必须向后兼容，
   所有异常路径先清理再形成证据，定义和自动化都不得冒充真实运行。
-- M6 候选合同只比较两个不同 Run ID、同 sealed Plan 的不可变 Bundle，生成独立 Comparison
+- M6 冻结合同只比较两个不同 Run ID、同 sealed Plan 的不可变 Bundle，生成独立 Comparison
   Bundle；不得修改来源 Verdict、自动挑选成功 Run、把 Comparison 写进 M4 Run-only Catalog，
   或把同计划复跑一致性扩张为处理组因果结论。
 - M7 冻结合同固定 `BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL` 四角色，
   新增独立 PairingPlan/PairedAnalysis；不得修改 M0–M6 契约、删减不利角色、把配对结果写成
   来源 `PASS/FAIL`，或扩大为统计显著性、组合变量与任意执行器。
+- M8 候选合同使用独立 BatchPlan/BatchAnalysis 表达 4–16 格全因子 Profile；确定性 coverage
+  必须先完成，seed 只能改变 perturbation 顺序，不能改变成员或补写缺格。M8 不执行来源 Run、
+  不证明真实并行，不把 Profile 信号写成组件级因果或来源 `PASS/FAIL`。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。
 - 不记录或提交 `.env` 值、令牌、Cookie、Authorization 头、私钥、个人路径或原始敏感业务数据。采集器必须默认脱敏。
 
