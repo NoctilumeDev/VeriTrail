@@ -20,7 +20,7 @@ flowchart LR
     Imports --> Artifacts
     Facts --> Artifacts
     Artifacts --> Rules["Deterministic verdict engine"]
-    Rules --> SQLite[("SQLite metadata")]
+    Rules --> SQLite[("SQLite metadata · planned M4")]
     SQLite --> UI["Vue Workbench"]
     Artifacts --> UI
     UI --> Export["Markdown / JSON bundle"]
@@ -37,8 +37,10 @@ Core 同时维护变更范围与里程碑门禁：计划声明影响层级后，
 
 ### 2.2 SQLite Metadata
 
-保存结构化计划、基线、运行、变量、断言、证据索引和审计事件。大文件不进入数据库。
-数据库是本地索引，不替代可导出的开放格式证据包。
+目标架构中 SQLite 保存结构化计划、基线、运行、变量、断言、证据索引和审计事件，大文件
+不进入数据库。M4 当前只预注册一个更窄的候选切片：把已验证 Bundle 的 Run 摘要保存为可重建
+目录快照，并通过只读本地 API 提供给工作台。该方案仍是 `PLANNED` 假设，数据库尚未实现；
+即使以后通过，数据库也只是本地派生索引，不替代可导出的开放格式证据包。
 
 ### 2.3 Artifact Store
 
@@ -150,7 +152,7 @@ VeriTrail/
   scripts/      # 有界 M3 生产构建浏览器验收脚本
 ```
 
-`adapters/` 和 SQLite 元数据将在各自前置里程碑冻结后再创建。
+`adapters/` 尚未创建；SQLite 元数据只有 M4 验收合同，必须经过实现和真实运行后才能写成事实。
 
 M1 在 Core 内增加低开销资源采样和 `preflight` CLI，但不建立执行器：采样器只访问标准库
 系统 API、输出卷、显式回环端口和输出父目录，不通过 Shell 枚举或控制机器。
@@ -162,6 +164,10 @@ M2 在 Python Core 内增加可选 Playwright Browser Adapter：它只接受 Pla
 M3 不增加生产者或数据库：Vue Workbench 直接只读消费 M0–M2 的开放证据包。演示请求和预览
 服务只绑定回环，生产构建无 CDN、远程字体、遥测和第三方图片；故宫主题结构由 CSS 实现，
 证据截图仍作为经过清单校验的数据展示。
+
+M4 候选架构把离线 Catalog 构建、只读 SQLite 快照、同源回环 API 和 Workbench Run 目录作为
+一条纵向能力验证；Bundle 继续拥有事实权威。合同见 `docs/08-m4-local-run-catalog.md`，合同
+冻结不表示该架构已经通过数据库、一致性、安全、资源或自举验收。
 
 ## 9. 实现顺序
 
