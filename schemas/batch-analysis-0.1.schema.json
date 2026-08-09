@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/batch-analysis-0.1.schema.json",
+  "title": "VeriTrail Preregistered Full-factorial BatchAnalysis 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "analysis_id",
+    "analysis_type",
+    "rule_version",
+    "coverage_status",
+    "hypothesis_status",
+    "runtime_overlap_claim",
+    "batch_plan",
+    "primary_variable",
+    "execution_policy",
+    "reasons",
+    "slots",
+    "profiles",
+    "unplanned_differences",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "analysis_id": { "type": "string", "pattern": "^batch_[0-9a-f]{24}$" },
+    "analysis_type": { "const": "PREREGISTERED_FULL_FACTORIAL_BATCH" },
+    "rule_version": { "const": "full-factorial-batch/0.1" },
+    "coverage_status": { "enum": ["COMPLETE", "INCOMPLETE", "INCONCLUSIVE"] },
+    "hypothesis_status": { "enum": ["SUPPORTED", "CONTRADICTED", "INCONCLUSIVE"] },
+    "runtime_overlap_claim": { "const": "NOT_PROVEN" },
+    "batch_plan": { "$ref": "#/$defs/reference" },
+    "primary_variable": { "$ref": "#/$defs/primaryVariable" },
+    "execution_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order_algorithm",
+        "seed",
+        "perturbation_repetitions",
+        "max_parallel",
+        "memory_budget_mb",
+        "preflight_between_waves",
+        "cleanup_between_waves"
+      ],
+      "properties": {
+        "order_algorithm": { "const": "SHA256_RANK_V1" },
+        "seed": { "type": "integer", "minimum": 0 },
+        "perturbation_repetitions": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "max_parallel": { "enum": [1, 2] },
+        "memory_budget_mb": { "type": "integer", "minimum": 1, "maximum": 16384 },
+        "preflight_between_waves": { "const": true },
+        "cleanup_between_waves": { "const": true }
+      }
+    },
+    "reasons": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/reason" }
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 80,
+      "items": { "$ref": "#/$defs/slot" }
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/profile" }
+    },
+    "unplanned_differences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot_id", "assertion_id", "baseline", "observed"],
+        "properties": {
+          "slot_id": { "$ref": "#/$defs/id" },
+          "assertion_id": { "type": "string", "minLength": 1 },
+          "baseline": true,
+          "observed": true
+        }
+      }
+    },
+    "limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "primaryVariable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sourcePrimaryVariable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "role", "value", "source"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "role": { "const": "PRIMARY" },
+        "value": true,
+        "source": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "planReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "created_at",
+        "execution_status",
+        "verdict",
+        "plan",
+        "random_seed",
+        "primary_variable",
+        "bundle_sha256",
+        "control_projection_sha256",
+        "preflight_complete",
+        "cleanup_complete",
+        "browser_complete",
+        "static_root_fingerprint"
+      ],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "minLength": 1 },
+        "execution_status": { "enum": ["PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"] },
+        "verdict": { "enum": ["PASS", "FAIL", "INCONCLUSIVE", "PENDING"] },
+        "plan": { "$ref": "#/$defs/planReference" },
+        "random_seed": { "type": "integer" },
+        "primary_variable": { "$ref": "#/$defs/sourcePrimaryVariable" },
+        "bundle_sha256": { "$ref": "#/$defs/sha256" },
+        "control_projection_sha256": { "$ref": "#/$defs/sha256" },
+        "preflight_complete": { "type": "boolean" },
+        "cleanup_complete": { "type": "boolean" },
+        "browser_complete": { "type": "boolean" },
+        "static_root_fingerprint": {
+          "anyOf": [
+            { "$ref": "#/$defs/sha256" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assertion_id", "expected_actual", "actual", "matches"],
+      "properties": {
+        "assertion_id": { "type": "string", "minLength": 1 },
+        "expected_actual": true,
+        "actual": true,
+        "matches": { "type": "boolean" }
+      }
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "phase", "repetition", "wave", "position", "profile_id", "source", "outcomes"],
+      "properties": {
+        "slot_id": { "$ref": "#/$defs/id" },
+        "phase": { "enum": ["COVERAGE", "PERTURBATION"] },
+        "repetition": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "wave": { "type": "integer", "minimum": 1 },
+        "position": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "profile_id": { "$ref": "#/$defs/id" },
+        "source": { "$ref": "#/$defs/source" },
+        "outcomes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/observation" } }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "cells", "occurrence_count", "completed_count", "mismatch_count"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "cells": { "type": "object" },
+        "occurrence_count": { "type": "integer", "minimum": 1 },
+        "completed_count": { "type": "integer", "minimum": 0 },
+        "mismatch_count": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/run-assignment-0.1.schema.json",
+  "title": "VeriTrail Batch RunAssignment 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "batch_plan_sha256", "assignments"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "batch_plan_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "assignments": {
+      "type": "array",
+      "maxItems": 80,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slot_id", "bundle"],
+        "properties": {
+          "slot_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+          "bundle": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$" }
+        }
+      }
+    }
+  }
+}

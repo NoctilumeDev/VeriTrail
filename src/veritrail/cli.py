@@ -6,6 +6,12 @@ import sys
 from pathlib import Path
 
 from veritrail import __version__
+from veritrail.batching import (
+    BatchError,
+    create_batch_analysis_bundle,
+    load_and_seal_batch_plan,
+    write_sealed_batch_plan,
+)
 from veritrail.browser import collect_browser_evidence
 from veritrail.catalog import CatalogError, build_catalog
 from veritrail.comparison import ComparisonError, create_comparison_bundle
@@ -139,6 +145,26 @@ def build_parser() -> argparse.ArgumentParser:
         "--negative-control", type=Path, required=True, help="NEGATIVE_CONTROL Run Bundle"
     )
     pair.add_argument("--output", type=Path, required=True, help="new PairedAnalysis Bundle")
+
+    seal_batch = subparsers.add_parser(
+        "seal-batch", help="validate and seal a preregistered full-factorial BatchPlan"
+    )
+    seal_batch.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or already sealed BatchPlan JSON"
+    )
+    seal_batch.add_argument("--output", type=Path, required=True, help="new sealed BatchPlan")
+
+    analyze_batch = subparsers.add_parser(
+        "analyze-batch", help="analyze assigned immutable Runs against a sealed BatchPlan"
+    )
+    analyze_batch.add_argument("--plan", type=Path, required=True, help="sealed BatchPlan 0.1")
+    analyze_batch.add_argument(
+        "--assignment", type=Path, required=True, help="strict RunAssignment 0.1 JSON"
+    )
+    analyze_batch.add_argument(
+        "--runs-root", type=Path, required=True, help="explicit root for relative Run Bundle paths"
+    )
+    analyze_batch.add_argument("--output", type=Path, required=True, help="new BatchAnalysis Bundle")
     return parser
 
 
@@ -513,6 +539,73 @@ def main(argv: list[str] | None = None) -> int:
                     "attributable": result.attributable,
                     "outcome_count": result.outcome_count,
                     "run_ids": result.run_ids,
+                    "output": args.output.name,
+                }
+            )
+            return 0
+        if args.command == "seal-batch":
+            try:
+                plan = load_and_seal_batch_plan(args.plan)
+                write_sealed_batch_plan(args.output, plan)
+            except BatchError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            _success(
+                {
+                    "command": "seal-batch",
+                    "output": args.output.name,
+                    "batch_plan_sha256": plan["seal"]["digest"],
+                }
+            )
+            return 0
+        if args.command == "analyze-batch":
+            try:
+                result = create_batch_analysis_bundle(
+                    batch_plan_path=args.plan,
+                    assignment_path=args.assignment,
+                    runs_root=args.runs_root,
+                    output=args.output,
+                )
+            except BatchError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "BATCH_INTERNAL_ERROR",
+                                "message": "BatchAnalysis 构建发生未预期内部错误。",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(
+                {
+                    "command": "analyze-batch",
+                    "analysis_id": result.analysis_id,
+                    "coverage_status": result.coverage_status,
+                    "hypothesis_status": result.hypothesis_status,
+                    "slot_count": result.slot_count,
+                    "source_count": result.source_count,
                     "output": args.output.name,
                 }
             )

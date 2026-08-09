@@ -1,0 +1,119 @@
+{
+  "schema_version": "0.1",
+  "batch_id": "m8-redacted-two-by-two",
+  "version": 1,
+  "question": "Do all four preregistered static Profiles preserve their expected browser outcome across canonical coverage and fixed-seed perturbation?",
+  "primary_variable": {
+    "name": "batch_profile",
+    "source": "sealed-batch-plan",
+    "unit": "profile"
+  },
+  "dimensions": [
+    {
+      "name": "cache-mode",
+      "levels": [
+        { "id": "off", "value": false },
+        { "id": "on", "value": true }
+      ]
+    },
+    {
+      "name": "queue-mode",
+      "levels": [
+        { "id": "off", "value": false },
+        { "id": "on", "value": true }
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "baseline",
+      "cells": { "cache-mode": "off", "queue-mode": "off" },
+      "plan_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "realization": {
+        "subject_version": "profile-baseline",
+        "subject_source_ref": "fixtures/profile-baseline",
+        "target_root": "fixtures/profile-baseline",
+        "static_root_fingerprint": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "estimated_memory_mb": 384
+    },
+    {
+      "id": "queue-only",
+      "cells": { "cache-mode": "off", "queue-mode": "on" },
+      "plan_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "realization": {
+        "subject_version": "profile-queue-only",
+        "subject_source_ref": "fixtures/profile-queue-only",
+        "target_root": "fixtures/profile-queue-only",
+        "static_root_fingerprint": "2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "estimated_memory_mb": 384
+    },
+    {
+      "id": "cache-only",
+      "cells": { "cache-mode": "on", "queue-mode": "off" },
+      "plan_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "realization": {
+        "subject_version": "profile-cache-only",
+        "subject_source_ref": "fixtures/profile-cache-only",
+        "target_root": "fixtures/profile-cache-only",
+        "static_root_fingerprint": "3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "estimated_memory_mb": 384
+    },
+    {
+      "id": "combined",
+      "cells": { "cache-mode": "on", "queue-mode": "on" },
+      "plan_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "realization": {
+        "subject_version": "profile-combined",
+        "subject_source_ref": "fixtures/profile-combined",
+        "target_root": "fixtures/profile-combined",
+        "static_root_fingerprint": "4444444444444444444444444444444444444444444444444444444444444444"
+      },
+      "estimated_memory_mb": 384
+    }
+  ],
+  "execution_policy": {
+    "order_algorithm": "SHA256_RANK_V1",
+    "seed": 20260809,
+    "perturbation_repetitions": 1,
+    "max_parallel": 2,
+    "memory_budget_mb": 768,
+    "preflight_between_waves": true,
+    "cleanup_between_waves": true
+  },
+  "schedule": [
+    { "slot_id": "coverage-01", "phase": "COVERAGE", "repetition": 0, "wave": 1, "position": 1, "profile_id": "baseline" },
+    { "slot_id": "coverage-02", "phase": "COVERAGE", "repetition": 0, "wave": 2, "position": 1, "profile_id": "queue-only" },
+    { "slot_id": "coverage-03", "phase": "COVERAGE", "repetition": 0, "wave": 3, "position": 1, "profile_id": "cache-only" },
+    { "slot_id": "coverage-04", "phase": "COVERAGE", "repetition": 0, "wave": 4, "position": 1, "profile_id": "combined" },
+    { "slot_id": "perturbation-01", "phase": "PERTURBATION", "repetition": 1, "wave": 1, "position": 1, "profile_id": "combined" },
+    { "slot_id": "perturbation-02", "phase": "PERTURBATION", "repetition": 1, "wave": 1, "position": 2, "profile_id": "baseline" },
+    { "slot_id": "perturbation-03", "phase": "PERTURBATION", "repetition": 1, "wave": 2, "position": 1, "profile_id": "queue-only" },
+    { "slot_id": "perturbation-04", "phase": "PERTURBATION", "repetition": 1, "wave": 2, "position": 2, "profile_id": "cache-only" }
+  ],
+  "outcomes": [
+    {
+      "assertion_id": "console-errors-zero",
+      "expected_actual": {
+        "baseline": 0,
+        "queue-only": 0,
+        "cache-only": 0,
+        "combined": 1
+      }
+    }
+  ],
+  "limits": [
+    "Profile-level observations do not prove component-level causality or statistical interaction.",
+    "A wave is a sealed resource envelope and does not prove real runtime overlap."
+  ],
+  "reproduction_steps": [
+    "Seal this BatchPlan before creating any assigned source Run.",
+    "Create one immutable Plan 0.4 Run for every slot in the sealed order."
+  ],
+  "cleanup_steps": [
+    "Verify every source Run records preflight, browser, orchestration, and cleanup facts.",
+    "Verify no preview process, listening port, or staging directory remains."
+  ]
+}

@@ -2,13 +2,14 @@
 
 ## 状态
 
-`PLANNED`。本文件是实现前独立合同，不代表 Schema、Core、CLI、Workbench、真实批次或
-浏览器链路已经完成。前置语义基线是 M7 冻结提交
+`CORE IMPLEMENTED / AUTOMATED`。实现前独立合同已经落地为四个公共 Schema、Python Core、
+`seal-batch` / `analyze-batch` CLI、脱敏 2×2 示例与自动化反例；Workbench、真实 M5 批次、
+真实浏览器链路和最终冻结仍为 `PENDING`，因此本里程碑不是 `FROZEN`。前置语义基线是 M7 冻结提交
 `e5c6e271423d4359fc63e542c95093b823404de8` 与标签 `m7-v0.8.0`；其后的
 `c616974` 只修正 M7 跨文档状态不一致，没有改变代码或公共契约。
 
-只有本合同先成为可寻址提交，M8 才能进入实现。实现结果若反驳合同假设，必须保留失败证据、
-修订合同并重新评审，不能倒改运行事实或放宽门槛制造通过。
+本合同已先成为可寻址提交 `b1ca45b`，随后才进入实现。实现结果若反驳合同假设，必须保留
+失败证据、修订合同并重新评审，不能倒改运行事实或放宽门槛制造通过。
 
 ## 目标问题
 
@@ -52,8 +53,8 @@ M7 回答固定四角色的单一处理效果是否出现、撤销并避开负�
 - M7 浏览器导入修复：`c726fe8`；
 - M7 冻结：`e5c6e27`（tag `m7-v0.8.0`）；
 - M7 状态一致性修复：`c616974`；
-- M7 冻结提交与标签已从远端读回；M8 规划前工作区干净，`c616974` 文档一致性提交将与本
-  合同一并推送，不回写或移动 `m7-v0.8.0` 标签。
+- M7 冻结提交与标签已从远端读回；M8 合同提交 `b1ca45b` 已推送，未回写或移动
+  `m7-v0.8.0` 标签。
 
 若 M8 实现必须改变 M0 Verdict 优先级、M4 Catalog 权威边界、M6 Comparison、M7 四角色语义、
 现有 Plan seal 或 Bundle 哈希，视为范围上浮；停止实现并重新评审全部消费者。
@@ -62,7 +63,7 @@ M7 回答固定四角色的单一处理效果是否出现、撤销并避开负�
 
 - 声明层级：`L2_CONTRACT`；
 - 所有者：Python Batch Matrix Core / CLI / Vue Workbench；
-- 新公共契约候选：BatchPlan 0.1、RunAssignment 0.1、BatchAnalysis 0.1、
+- 新公共契约：BatchPlan 0.1、RunAssignment 0.1、BatchAnalysis 0.1、
   BatchAnalysis Manifest 0.1；
 - 直接消费者：`seal-batch`、`analyze-batch`、Batch Loader/View、Python/TypeScript 契约测试；
 - 兼容消费者：M0–M7 Plan/Evidence/Report/Bundle/Comparison/PairedAnalysis/Catalog/API/CLI/
@@ -82,7 +83,7 @@ M7 回答固定四角色的单一处理效果是否出现、撤销并避开负�
 `analysis_design`：
 
 - 基线值：`four_role_paired_counterfactual`；
-- M8 候选值：`bounded_full_factorial_batch_matrix`。
+- M8 实现值：`bounded_full_factorial_batch_matrix`。
 
 ### 受控条件
 
@@ -110,10 +111,13 @@ BatchPlan 是独立封存契约，不扩展或放宽 ExperimentPlan 的 `SINGLE_
 获得多变量因果归因。
 
 Profile 不能只换标签。BatchPlan 必须预注册其固定实现映射，M8 0.1 只允许
-`subject.version`、`subject.source_ref`、`target.root` 随 Profile 变化，并要求每个 Profile
-声明预计 `static_root_fingerprint`。分析时必须用来源 `runtime.orchestration` 的实际 fingerprint
-核对；不匹配即为实现漂移。除这三个固定字段、Plan `version`、主要变量 `value` 与 seal 外，
-其余 Plan 投影必须逐项相同。M8 不提供用户自定义 JSON Pointer 白名单。
+`subject.version`、`subject.source_ref`、`target.root` 与 `baseline.fingerprint` 随 Profile
+变化，并要求每个 Profile 声明预计 `static_root_fingerprint`。第四个字段来自实现前合同与 M5
+真实裁决代码的交叉检查：静态内容改变后若 `baseline.fingerprint` 不同步，M5 必然产生
+`STATIC_ROOT_FINGERPRINT_DRIFT`。因此来源 Plan 的 `baseline.fingerprint`、Profile 预注册值与
+`runtime.orchestration` 实际 fingerprint 必须三方相等；不匹配即为实现漂移。除这四个固定字段、
+Plan `version`、主要变量 `value` 与 seal 外，其余 Plan 投影必须逐项相同。M8 不提供用户自定义
+JSON Pointer 白名单。
 
 ### 全因子覆盖
 
@@ -163,9 +167,10 @@ perturbation，来源 Run 的对应 actual 都必须保留：
   `browser.session`；wave 边界的 preflight 和 cleanup 事实不能由 Assignment 手工声明；
 - Run ID 必须唯一，禁止同一 Run 复用到多个 slot；
 - source Plan digest、Profile 主要变量值与 BatchPlan 三方一致；
-- 来源 `static_root_fingerprint` 必须等于 Profile 预注册值，不能只依赖 Plan 标签推断实际实现；
-- 除固定的 `subject.version`、`subject.source_ref`、`target.root` 实现映射，以及 Plan `version`、
-  Profile 主要变量 `value` 与 seal 外，控制投影必须相同；
+- 来源 Plan `baseline.fingerprint` 与实际 `static_root_fingerprint` 必须同时等于 Profile
+  预注册值，不能只依赖 Plan 标签推断实际实现；
+- 除固定的 `subject.version`、`subject.source_ref`、`target.root`、`baseline.fingerprint` 实现
+  映射，以及 Plan `version`、Profile 主要变量 `value` 与 seal 外，控制投影必须相同；
 - coverage 与 perturbation 的 phase/wave 先后关系必须与来源时间事实一致；同 wave 内不声明
   全序，也不从时间戳自动推断真实并行；
 - 缺少合法 slot 生成可审计的 `INCOMPLETE` 分析；损坏、不安全或超限来源直接拒绝，且不创建
@@ -213,7 +218,7 @@ ExecutionStatus/Verdict，不能自动选择成功 Run、平均掉失败或使�
 - 输出存在时拒绝覆盖；所有异常先清理 staging，再返回脱敏稳定错误；
 - 不持久化绝对路径、环境变量值、命令行、Cookie、令牌、公网/局域网地址或原始业务正文。
 
-## 候选 CLI
+## CLI
 
 ```powershell
 .\.venv\Scripts\veritrail.exe seal-batch `
@@ -249,7 +254,7 @@ Workbench 增加本地 BatchAnalysis 四文件入口。根据 M7 的真实目录
 
 1. 2×2、2×3、3×2 全因子矩阵接受，Profile 集合和 canonical coverage 顺序稳定；
 2. 缺格、重复格、隐藏额外 Profile、维度/level 重复、超过 16 格拒绝；
-3. source Plan digest、Profile ID、维度映射、固定实现映射和主要变量三方不一致拒绝；
+3. source Plan digest、Profile ID、维度映射、固定实现映射和主要变量三方不一致进入污染结论；
 4. 只改 Profile 标签但 target fingerprint 不变/不符，或试图放宽固定实现字段集合时拒绝；
 5. coverage 非串行、seed 顺序伪造、随机阶段漏格或随机替代 coverage 拒绝；
 6. wave 超过二路或预算、缺少 wave 间清理边界拒绝；
@@ -311,11 +316,27 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 生产容量、完整自举或跨项目通用性。组合 Profile 发现异常后，应回到单变量或 M7 四角色计划
 定位原因，而不是从矩阵相关性直接宣布根因。
 
+## 当前实现证据与剩余门禁
+
+- 已实现 BatchPlan 0.1、RunAssignment 0.1、BatchAnalysis 0.1 与 BatchAnalysis Manifest 0.1；
+- Python Core 已验证完整笛卡尔积、canonical coverage、`SHA256_RANK_V1`、一/二路 wave 预算、
+  seal、Assignment 安全相对目录、M5 Bundle 完整性、四字段固定实现映射、三方 fingerprint、
+  phase/wave 时间、来源 Run 不复用、控制投影与稳定/偶发 outcome；
+- CLI 已实现 `seal-batch` 与只读 `analyze-batch`，输出四文件、canonical JSON、Manifest、
+  不可覆盖和失败 staging 清理；
+- 脱敏 2×2 自动化覆盖 `COMPLETE/SUPPORTED`、`COMPLETE/CONTRADICTED`、
+  `INCOMPLETE/INCONCLUSIVE`、顺序污染 `INCONCLUSIVE/INCONCLUSIVE`、来源 `FAIL` 保留、
+  逐字节复建、损坏来源、路径拒绝和 Catalog Run-only 隔离；
+- 本切片没有实现 Workbench，也没有执行合同“真实运行退出条件”中的真实 Chromium 批次。
+  自动化结论不能提升为真实运行或冻结结论。
+
 ## 合同记录
 
 - 合同版本：M8 Preregistered Full-factorial Batch Matrix Contract 0.1；
 - 前置基线：`m7-v0.8.0` + 文档一致性提交 `c616974`；
-- 目标版本：Python Core `0.9.0.dev1`，Workbench `0.9.0-dev.1`；
-- 目标 Schema：BatchPlan / RunAssignment / BatchAnalysis / BatchAnalysis Manifest 0.1；
-- 目标 CLI：`seal-batch`、`analyze-batch`；
-- 当前里程碑状态：`PLANNED`。
+- 当前 Core 版本：Python Core `0.9.0.dev1`；Workbench 仍为 `0.8.0-dev.1`，待 M8 UI 实现后
+  才升级到 `0.9.0-dev.1`；
+- 已实现 Schema：BatchPlan / RunAssignment / BatchAnalysis / BatchAnalysis Manifest 0.1；
+- 已实现 CLI：`seal-batch`、`analyze-batch`；
+- 当前里程碑状态：`CORE IMPLEMENTED / AUTOMATED`，Workbench、真实批次、内置浏览器终验与
+  冻结均为 `PENDING`。

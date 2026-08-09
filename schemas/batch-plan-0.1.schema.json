@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://veritrail.local/schemas/batch-plan-0.1.schema.json",
+  "title": "VeriTrail Preregistered Full-factorial BatchPlan 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "batch_id",
+    "version",
+    "question",
+    "primary_variable",
+    "dimensions",
+    "profiles",
+    "execution_policy",
+    "schedule",
+    "outcomes",
+    "limits",
+    "reproduction_steps",
+    "cleanup_steps"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "batch_id": { "$ref": "#/$defs/id" },
+    "version": { "type": "integer", "minimum": 1 },
+    "question": { "type": "string", "minLength": 1 },
+    "primary_variable": { "$ref": "#/$defs/primaryVariable" },
+    "dimensions": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/dimension" }
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 16,
+      "items": { "$ref": "#/$defs/profile" }
+    },
+    "execution_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order_algorithm",
+        "seed",
+        "perturbation_repetitions",
+        "max_parallel",
+        "memory_budget_mb",
+        "preflight_between_waves",
+        "cleanup_between_waves"
+      ],
+      "properties": {
+        "order_algorithm": { "const": "SHA256_RANK_V1" },
+        "seed": { "type": "integer", "minimum": 0 },
+        "perturbation_repetitions": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "max_parallel": { "enum": [1, 2] },
+        "memory_budget_mb": { "type": "integer", "minimum": 1, "maximum": 16384 },
+        "preflight_between_waves": { "const": true },
+        "cleanup_between_waves": { "const": true }
+      }
+    },
+    "schedule": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 80,
+      "items": { "$ref": "#/$defs/slot" }
+    },
+    "outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["assertion_id", "expected_actual"],
+        "properties": {
+          "assertion_id": { "type": "string", "minLength": 1 },
+          "expected_actual": { "type": "object", "minProperties": 4, "maxProperties": 16 }
+        }
+      }
+    },
+    "limits": { "$ref": "#/$defs/nonEmptyStrings" },
+    "reproduction_steps": { "$ref": "#/$defs/nonEmptyStrings" },
+    "cleanup_steps": { "$ref": "#/$defs/nonEmptyStrings" },
+    "seal": { "$ref": "#/$defs/seal" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "safeRelative": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,255}$" },
+    "primaryVariable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "source"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "unit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "levels"],
+      "properties": {
+        "name": { "$ref": "#/$defs/id" },
+        "levels": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "value"],
+            "properties": { "id": { "$ref": "#/$defs/id" }, "value": true }
+          }
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "cells", "plan_sha256", "realization", "estimated_memory_mb"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "cells": { "type": "object", "minProperties": 2, "maxProperties": 4 },
+        "plan_sha256": { "$ref": "#/$defs/sha256" },
+        "realization": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["subject_version", "subject_source_ref", "target_root", "static_root_fingerprint"],
+          "properties": {
+            "subject_version": { "type": "string", "minLength": 1 },
+            "subject_source_ref": { "$ref": "#/$defs/safeRelative" },
+            "target_root": { "$ref": "#/$defs/safeRelative" },
+            "static_root_fingerprint": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "estimated_memory_mb": { "type": "integer", "minimum": 1, "maximum": 8192 }
+      }
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "phase", "repetition", "wave", "position", "profile_id"],
+      "properties": {
+        "slot_id": { "$ref": "#/$defs/id" },
+        "phase": { "enum": ["COVERAGE", "PERTURBATION"] },
+        "repetition": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "wave": { "type": "integer", "minimum": 1 },
+        "position": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "profile_id": { "$ref": "#/$defs/id" }
+      }
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "seal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "digest"],
+      "properties": { "algorithm": { "const": "sha256" }, "digest": { "$ref": "#/$defs/sha256" } }
+    }
+  }
+}

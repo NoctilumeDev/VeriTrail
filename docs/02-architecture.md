@@ -55,7 +55,8 @@ Evidence JSON 和受支持截图，在显示前核对路径、大小、引用与
 本地目录只在内存中读取，不上传、不写回。
 
 M4 在 M3 详情页之前增加了只读 Run 目录；M6/M7 后续补充了独立 Comparison 与
-PairedAnalysis 本地验真。计划编辑、批次矩阵、执行时间线和报告发布仍是后续能力。
+PairedAnalysis 本地验真。M8 已实现 BatchAnalysis Core，但 Workbench 尚未增加对应四文件
+入口；计划编辑、批次视图、执行时间线和报告发布仍是后续能力。
 
 M5 已冻结一个更窄的编排切片：Core 内置的只读静态 HTTP 目标、Plan 0.4、编排证据和单一
 `run` 入口。它只管理离线冻结的静态文件集合，不执行 Shell、外部进程、项目命令或中间件；
@@ -186,9 +187,10 @@ outcome 预期与负对照边界；Core/CLI 与 Workbench 已通过双 Python、
 损坏来源与输出拒绝、Catalog 隔离、生产及 Codex 内置浏览器终验。合同与证据见
 `docs/11-m7-preregistered-paired-analysis.md`。
 
-M8 规划独立 BatchPlan 与 BatchAnalysis：先串行完成 4–16 格全因子 Profile coverage，再用
-固定种子生成成员集合不变的 perturbation 顺序，并从不可变 Run 分开判断覆盖、预注册假设和
-来源 Verdict。它不修改 ExperimentPlan 的单变量语义，也不执行项目命令或真实并行。合同见
+M8 Core 已实现独立 BatchPlan、RunAssignment 与 BatchAnalysis：先串行完成 4–16 格全因子
+Profile coverage，再用固定种子生成成员集合不变的 perturbation 顺序，并从不可变 Run 分开
+判断覆盖、预注册假设和来源 Verdict。它不修改 ExperimentPlan 的单变量语义，也不执行项目
+命令或真实并行；Workbench、真实批次与浏览器终验仍待完成。合同见
 `docs/12-m8-preregistered-batch-matrix.md`。
 
 ## 9. 实现顺序
