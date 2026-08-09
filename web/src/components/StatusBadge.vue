@@ -4,6 +4,7 @@ import type { ExecutionStatus, Verdict } from '../domain/types'
 defineProps<{
   dimension: 'execution' | 'verdict'
   value: ExecutionStatus | Verdict
+  compact?: boolean
 }>()
 
 const icons: Record<string, string> = {
@@ -27,7 +28,7 @@ const dimensionLabels = {
 <template>
   <div
     class="status-badge"
-    :class="[`status-badge--${dimension}`, `status--${value.toLowerCase()}`]"
+    :class="[`status-badge--${dimension}`, `status--${value.toLowerCase()}`, { 'status-badge--compact': compact }]"
     :aria-label="`${dimensionLabels[dimension]}：${value}`"
   >
     <span class="status-badge__icon" aria-hidden="true">{{ icons[value] }}</span>

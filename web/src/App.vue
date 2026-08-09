@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
+import RunCatalog from './components/RunCatalog.vue'
 import SectionFrame from './components/SectionFrame.vue'
 import StatusBadge from './components/StatusBadge.vue'
 import {
@@ -8,18 +9,29 @@ import {
   BundleLoadError,
   loadDemoBundle,
   loadLocalBundle,
+  loadSameOriginBundle,
   type DemoBundleId,
 } from './domain/bundle'
-import type { LoadedBundle, ReportAssertion } from './domain/types'
+import {
+  catalogRunIdFromLocation,
+  CatalogLoadError,
+  fetchCatalog,
+} from './domain/catalog'
+import type { CatalogResponse, CatalogRunSummary, LoadedBundle, ReportAssertion } from './domain/types'
 
 type AssertionFilter = 'ALL' | 'PASS' | 'FAIL' | 'OTHER'
 
 const bundle = shallowRef<LoadedBundle | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
-const activeSource = ref<DemoBundleId | 'local'>('positive')
+const activeSource = ref<DemoBundleId | 'local' | 'catalog'>('positive')
 const assertionFilter = ref<AssertionFilter>('ALL')
 const liveMessage = ref('正在读取正向证据包。')
+const catalog = shallowRef<CatalogResponse | null>(null)
+const catalogLoading = ref(true)
+const catalogError = ref<{ code: string; message: string } | null>(null)
+const selectedCatalogRunId = ref<string | null>(null)
+let lastCatalogTriggerId: string | null = null
 let loadSequence = 0
 
 const report = computed(() => bundle.value?.report ?? null)
@@ -57,15 +69,37 @@ function describeError(cause: unknown) {
   return { code: 'UNEXPECTED', message: '工作台无法读取该证据包，请返回有效夹具重试。' }
 }
 
+function describeCatalogError(cause: unknown) {
+  if (cause instanceof CatalogLoadError || cause instanceof BundleLoadError) {
+    return { code: cause.code, message: cause.message }
+  }
+  return { code: 'CATALOG_UNEXPECTED', message: '本地 Run 目录暂时无法读取。' }
+}
+
+async function refreshCatalog() {
+  catalogLoading.value = true
+  catalogError.value = null
+  try {
+    catalog.value = await fetchCatalog()
+  } catch (cause) {
+    catalog.value = null
+    catalogError.value = describeCatalogError(cause)
+  } finally {
+    catalogLoading.value = false
+  }
+}
+
 async function selectDemo(id: DemoBundleId, pushHistory = true) {
   const sequence = ++loadSequence
   loading.value = true
   error.value = null
   assertionFilter.value = 'ALL'
   activeSource.value = id
+  selectedCatalogRunId.value = null
   liveMessage.value = `正在读取${sourceLabel(id)}。`
   if (pushHistory) {
     const url = new URL(window.location.href)
+    url.searchParams.delete('run')
     url.searchParams.set('fixture', id)
     window.history.pushState({ fixture: id }, '', url)
   }
@@ -95,8 +129,10 @@ async function importLocal(event: Event) {
   error.value = null
   assertionFilter.value = 'ALL'
   activeSource.value = 'local'
+  selectedCatalogRunId.value = null
   liveMessage.value = '正在本地内存中核验所选证据包。'
   const url = new URL(window.location.href)
+  url.searchParams.delete('run')
   url.searchParams.set('fixture', 'local')
   window.history.pushState({ fixture: 'local' }, '', url)
   releaseCurrentBundle()
@@ -118,6 +154,85 @@ async function importLocal(event: Event) {
   }
 }
 
+async function selectCatalogRun(
+  run: CatalogRunSummary,
+  trigger?: HTMLElement,
+  pushHistory = true,
+) {
+  const sequence = ++loadSequence
+  loading.value = true
+  error.value = null
+  catalogError.value = null
+  assertionFilter.value = 'ALL'
+  activeSource.value = 'catalog'
+  selectedCatalogRunId.value = run.catalog_run_id
+  lastCatalogTriggerId = trigger ? run.catalog_run_id : lastCatalogTriggerId
+  liveMessage.value = `正在从只读目录核验 ${run.run_id}。`
+  if (pushHistory) {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('fixture')
+    url.searchParams.set('run', run.catalog_run_id)
+    window.history.pushState({ run: run.catalog_run_id }, '', url)
+  }
+  releaseCurrentBundle()
+  try {
+    const loaded = await loadSameOriginBundle(run.bundle.base_url, `本地目录 · ${run.run_id}`)
+    if (
+      loaded.report.run_id !== run.run_id ||
+      loaded.report.execution_status !== run.execution_status ||
+      loaded.report.verdict !== run.verdict ||
+      loaded.report.plan.id !== run.plan.id ||
+      loaded.report.plan.version !== run.plan.version ||
+      loaded.report.plan.sha256 !== run.plan.sha256
+    ) {
+      loaded.release()
+      throw new BundleLoadError('CATALOG_SUMMARY_MISMATCH', '目录摘要与完整 Bundle 校验结果不一致。')
+    }
+    if (sequence !== loadSequence) {
+      loaded.release()
+      return
+    }
+    bundle.value = loaded
+    liveMessage.value = `${run.run_id} 已从目录加载，完整性核验通过。`
+  } catch (cause) {
+    if (sequence !== loadSequence) return
+    const described = describeCatalogError(cause)
+    catalogError.value = described
+    error.value = described
+    liveMessage.value = `目录 Run 读取失败：${described.message}`
+  } finally {
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
+async function retryCatalog() {
+  const selected = selectedCatalogRunId.value
+  await refreshCatalog()
+  if (selected && catalog.value) {
+    const run = catalog.value.runs.find((candidate) => candidate.catalog_run_id === selected)
+    if (run) await selectCatalogRun(run, undefined, false)
+  }
+}
+
+function returnToCatalog() {
+  ++loadSequence
+  releaseCurrentBundle()
+  loading.value = false
+  error.value = null
+  activeSource.value = 'catalog'
+  const runId = selectedCatalogRunId.value ?? lastCatalogTriggerId
+  selectedCatalogRunId.value = null
+  const url = new URL(window.location.href)
+  url.searchParams.delete('run')
+  url.searchParams.delete('fixture')
+  window.history.pushState({}, '', url)
+  liveMessage.value = '已返回本地 Run 目录。'
+  void nextTick(() => {
+    if (!runId) return
+    document.querySelector<HTMLElement>(`[data-catalog-run-id="${runId}"]`)?.focus()
+  })
+}
+
 function sourceLabel(id: DemoBundleId): string {
   if (id === 'positive') return '正向证据'
   if (id === 'negative') return '负向证据'
@@ -125,6 +240,36 @@ function sourceLabel(id: DemoBundleId): string {
 }
 
 function onHistoryChange() {
+  const catalogRunId = catalogRunIdFromLocation()
+  if (catalogRunId) {
+    const run = catalog.value?.runs.find((candidate) => candidate.catalog_run_id === catalogRunId)
+    if (run) {
+      void selectCatalogRun(run, undefined, false)
+      return
+    }
+    ++loadSequence
+    releaseCurrentBundle()
+    activeSource.value = 'catalog'
+    selectedCatalogRunId.value = catalogRunId
+    loading.value = false
+    error.value = {
+      code: 'RUN_NOT_FOUND',
+      message: 'URL 中的 Catalog Run 不存在，请返回目录重新选择。',
+    }
+    catalogError.value = error.value
+    liveMessage.value = error.value.message
+    return
+  }
+  if (catalog.value && !new URLSearchParams(window.location.search).has('fixture')) {
+    ++loadSequence
+    releaseCurrentBundle()
+    activeSource.value = 'catalog'
+    selectedCatalogRunId.value = null
+    loading.value = false
+    error.value = null
+    liveMessage.value = '本地 Run 目录已加载，请选择一项 Run。'
+    return
+  }
   const fixture = fixtureFromLocation()
   if (fixture === 'local') {
     ++loadSequence
@@ -166,9 +311,7 @@ function assertionStatusClass(assertion: ReportAssertion): string {
 
 onMounted(() => {
   window.addEventListener('popstate', onHistoryChange)
-  const initial = fixtureFromLocation()
-  if (initial === 'local') onHistoryChange()
-  else void selectDemo(initial, false)
+  void refreshCatalog().then(onHistoryChange)
 })
 
 onBeforeUnmount(() => {
@@ -249,6 +392,16 @@ onBeforeUnmount(() => {
     </header>
 
     <main id="main-content" class="evidence-axis">
+      <RunCatalog
+        v-if="catalogLoading || catalog || catalogError"
+        :catalog="catalog"
+        :loading="catalogLoading"
+        :error="catalogError"
+        :selected-run-id="selectedCatalogRunId"
+        @select="selectCatalogRun"
+        @retry="retryCatalog"
+      />
+
       <div v-if="loading" class="loading-court" role="status" data-testid="loading-state">
         <span class="loading-court__mark" aria-hidden="true"></span>
         <p>正在沿清单核验证据包</p>
@@ -261,8 +414,12 @@ onBeforeUnmount(() => {
         <h2 id="error-title">{{ error.message }}</h2>
         <code>{{ error.code }}</code>
         <p>工作台没有据此改写 Run 的 Verdict，也没有展示部分可信内容。</p>
-        <button type="button" data-testid="retry-positive" @click="selectDemo('positive')">
-          返回正向证据重试
+        <button
+          type="button"
+          :data-testid="activeSource === 'catalog' ? 'retry-catalog-run' : 'retry-positive'"
+          @click="activeSource === 'catalog' ? retryCatalog() : selectDemo('positive')"
+        >
+          {{ activeSource === 'catalog' ? '重新读取目录 Run' : '返回正向证据重试' }}
         </button>
       </section>
 
@@ -272,6 +429,15 @@ onBeforeUnmount(() => {
             <p>当前证据包</p>
             <strong>{{ report.run_id }}</strong>
             <span>{{ bundle.sourceLabel }}</span>
+            <button
+              v-if="activeSource === 'catalog'"
+              type="button"
+              class="catalog-return"
+              data-testid="catalog-return"
+              @click="returnToCatalog"
+            >
+              返回 Run 目录
+            </button>
           </div>
           <dl>
             <div>

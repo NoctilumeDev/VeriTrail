@@ -7,8 +7,10 @@ from pathlib import Path
 
 from veritrail import __version__
 from veritrail.browser import collect_browser_evidence
+from veritrail.catalog import CatalogError, build_catalog
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
+from veritrail.local_api import create_catalog_server
 from veritrail.plan import load_and_seal_plan, write_sealed_plan
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
@@ -63,11 +65,33 @@ def build_parser() -> argparse.ArgumentParser:
     browser_capture.add_argument(
         "--run-id", required=True, help="stable caller-supplied run identifier"
     )
+
+    catalog_build = subparsers.add_parser(
+        "catalog-build",
+        help="validate immutable bundles and create a read-only SQLite catalog snapshot",
+    )
+    catalog_build.add_argument(
+        "--artifacts", type=Path, required=True, help="explicit Artifact root directory"
+    )
+    catalog_build.add_argument("--output", type=Path, required=True, help="new Catalog directory")
+
+    catalog_serve = subparsers.add_parser(
+        "catalog-serve",
+        help="serve a frozen Catalog and production Workbench on fixed IPv4 loopback",
+    )
+    catalog_serve.add_argument("--catalog", type=Path, required=True, help="frozen Catalog directory")
+    catalog_serve.add_argument(
+        "--artifacts", type=Path, required=True, help="Artifact root bound to the Catalog"
+    )
+    catalog_serve.add_argument(
+        "--web-root", type=Path, required=True, help="Vue production build directory"
+    )
+    catalog_serve.add_argument("--port", type=int, required=True, help="loopback TCP port")
     return parser
 
 
 def _success(payload: dict[str, object]) -> None:
-    print(json.dumps(payload, ensure_ascii=False, sort_keys=True))
+    print(json.dumps(payload, ensure_ascii=False, sort_keys=True), flush=True)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -186,6 +210,95 @@ def main(argv: list[str] | None = None) -> int:
                     "verdict": report["verdict"],
                 }
             )
+            return 0
+        if args.command == "catalog-build":
+            try:
+                result = build_catalog(args.artifacts, args.output)
+            except CatalogError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "CATALOG_INTERNAL_ERROR",
+                                "message": "Catalog 构建发生未预期内部错误。",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(
+                {
+                    "command": "catalog-build",
+                    "status": result.status,
+                    "catalog_id": result.catalog_id,
+                    "run_count": result.run_count,
+                    "issue_count": result.issue_count,
+                    "duplicate_count": result.duplicate_count,
+                    "bundle_set_sha256": result.bundle_set_sha256,
+                }
+            )
+            return 0
+        if args.command == "catalog-serve":
+            try:
+                server = create_catalog_server(
+                    catalog_root=args.catalog,
+                    artifact_root=args.artifacts,
+                    web_root=args.web_root,
+                    port=args.port,
+                )
+            except CatalogError as exc:
+                print(
+                    json.dumps(
+                        {"error": {"code": exc.code, "message": exc.message}},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 2
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "CATALOG_INTERNAL_ERROR",
+                                "message": "Catalog 服务启动发生未预期内部错误。",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(
+                {
+                    "command": "catalog-serve",
+                    "status": "READY",
+                    "catalog_id": server.application.manifest["catalog_id"],
+                    "origin": f"http://127.0.0.1:{args.port}",
+                    "read_only": True,
+                }
+            )
+            try:
+                server.serve_forever(poll_interval=0.2)
+            except KeyboardInterrupt:
+                pass
+            finally:
+                server.server_close()
             return 0
     except VeriTrailError as exc:
         print(json.dumps({"error": str(exc)}, ensure_ascii=False, sort_keys=True), file=sys.stderr)

@@ -20,7 +20,7 @@ flowchart LR
     Imports --> Artifacts
     Facts --> Artifacts
     Artifacts --> Rules["Deterministic verdict engine"]
-    Rules --> SQLite[("SQLite metadata · planned M4")]
+    Rules --> SQLite[("SQLite derived catalog · M4 automated")]
     SQLite --> UI["Vue Workbench"]
     Artifacts --> UI
     UI --> Export["Markdown / JSON bundle"]
@@ -38,9 +38,9 @@ Core 同时维护变更范围与里程碑门禁：计划声明影响层级后，
 ### 2.2 SQLite Metadata
 
 目标架构中 SQLite 保存结构化计划、基线、运行、变量、断言、证据索引和审计事件，大文件
-不进入数据库。M4 当前只预注册一个更窄的候选切片：把已验证 Bundle 的 Run 摘要保存为可重建
-目录快照，并通过只读本地 API 提供给工作台。该方案仍是 `PLANNED` 假设，数据库尚未实现；
-即使以后通过，数据库也只是本地派生索引，不替代可导出的开放格式证据包。
+不进入数据库。M4 已实现一个更窄的候选切片：把已验证 Bundle 的 Run 摘要保存为可重建目录
+快照，并通过只读本地 API 提供给工作台。该方案当前达到 `AUTOMATED`，仍需干净提交上的最终
+复跑才能冻结；数据库始终只是本地派生索引，不替代可导出的开放格式证据包。
 
 ### 2.3 Artifact Store
 
@@ -54,8 +54,8 @@ Evidence JSON 和受支持截图，在显示前核对路径、大小、引用与
 断言、证据索引及 Console/Network/视口/截图事实。UI 只展示生产者裁决，不在浏览器端另写规则；
 本地目录只在内存中读取，不上传、不写回。
 
-计划编辑、基线比较、批次矩阵、跨 Run 差异、SQLite 索引、本地 API、执行时间线和报告发布仍是
-后续能力，不属于 M3 已完成范围。
+M4 在 M3 详情页之前增加了只读 Run 目录，但计划编辑、基线比较、批次矩阵、跨 Run 差异、
+执行时间线和报告发布仍是后续能力，不属于当前已实现范围。
 
 ### 2.5 Browser Adapter
 
@@ -152,7 +152,7 @@ VeriTrail/
   scripts/      # 有界 M3 生产构建浏览器验收脚本
 ```
 
-`adapters/` 尚未创建；SQLite 元数据只有 M4 验收合同，必须经过实现和真实运行后才能写成事实。
+`adapters/` 尚未创建；M4 只新增 Catalog 派生索引，不建立通用 SQLite 元数据写模型。
 
 M1 在 Core 内增加低开销资源采样和 `preflight` CLI，但不建立执行器：采样器只访问标准库
 系统 API、输出卷、显式回环端口和输出父目录，不通过 Shell 枚举或控制机器。
@@ -165,9 +165,9 @@ M3 不增加生产者或数据库：Vue Workbench 直接只读消费 M0–M2 的
 服务只绑定回环，生产构建无 CDN、远程字体、遥测和第三方图片；故宫主题结构由 CSS 实现，
 证据截图仍作为经过清单校验的数据展示。
 
-M4 候选架构把离线 Catalog 构建、只读 SQLite 快照、同源回环 API 和 Workbench Run 目录作为
-一条纵向能力验证；Bundle 继续拥有事实权威。合同见 `docs/08-m4-local-run-catalog.md`，合同
-冻结不表示该架构已经通过数据库、一致性、安全、资源或自举验收。
+M4 已把离线 Catalog 构建、只读 SQLite 快照、同源回环 API 和 Workbench Run 目录实现为一条
+纵向候选能力；Bundle 继续拥有事实权威。合同见 `docs/08-m4-local-run-catalog.md`。自动化与
+候选运行已经通过，但 `AUTOMATED` 不等于最终 `FROZEN`。
 
 ## 9. 实现顺序
 

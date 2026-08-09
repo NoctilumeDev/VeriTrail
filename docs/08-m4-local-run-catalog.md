@@ -2,11 +2,11 @@
 
 ## 状态与认识边界
 
-`PLANNED（验收合同已冻结，方案仍是待验证假设）`。M0–M3 已分别达到 `FROZEN`，因此 M4
-可以进入实现；但本文件只预注册问题、候选架构、控制变量、证伪条件和退出门槛，不证明 SQLite、
-本地 API、目录一致性或轻量自举已经成立。
+`AUTOMATED（实现、自动化与候选真实运行已通过；最终冻结待干净提交复跑）`。M0–M3 已分别达到
+`FROZEN`。本文件前半部分保留 M4 实现前预注册的问题、候选架构、控制变量、证伪条件和退出
+门槛；文末候选运行记录只报告已经取得的事实，不回写或降低原合同标准。
 
-真正判断只能来自实现后的自动化、真实数据库负路径、真实回环服务、真实浏览器、自举复跑、
+真正判断来自实现后的自动化、真实数据库负路径、真实回环服务、真实浏览器、自举复跑、
 资源与清理证据。如果运行事实反驳本合同中的候选设计，必须保留原合同与失败 Run，创建新的
 合同版本说明修正原因；不得修改旧标准、删除反例或把 `IMPLEMENTED` 写成 `FROZEN`。
 
@@ -285,6 +285,37 @@ M4 的“自举”只表示 VeriTrail 能读取自己产生的一份验收 Bundl
 `RUNTIME_VALIDATED` 和 `FROZEN`。若某个候选架构假设失败，报告真实结果并回到合同版本设计；
 不能因为页面可用、SQLite 有数据或自举脚本跑完就跳过一致性与安全反证。
 
+## 候选实现与运行记录（2026-08-09）
+
+- 实现版本：Python Core / Workbench `0.5.0.dev1` / `0.5.0-dev.1`；新增
+  `catalog-build`、`catalog-serve`、Catalog SQLite 0.1、Local Read-only API 0.1、
+  `schemas/catalog-api-0.1.schema.json` 与 Workbench Run 门厅；
+- 自动化候选：Python 73 项与前端 33 项通过；Catalog 覆盖空根、单/多 Run、确定性重建、
+  同摘要归并、冲突隔离、损坏/不安全路径/硬链接、只读 SQLite、数据库/Manifest 篡改、Host、
+  方法、分页、Range、路径穿越、源丢失/变化、安全头、无 CORS 与 staging/sidecar 清理；
+- Catalog A：两份冻结 M2 正/负 Bundle，2 Runs、0 issues、集合摘要
+  `f93386e3d4c962e471584af1eba4cd12a928206452bcd55046d3af81323abbbb`；
+- 自举 Plan v1：哈希 `c5a1cb7beab09cf573343dec690f33d572639c50b56d3f7d60f4a4d1fabade2e`；
+  真实浏览器链到达详情，但 PASS 选择器同时匹配目录卡片与详情状态门，严格模式失败。该失败
+  Run 保留，没有覆盖或改写为通过；
+- 自举 Plan v2：唯一变更为把 PASS 选择器收窄到详情状态门；哈希
+  `d3a8cd4e1d7405e91fd7b0cdac0eef94772b09617a19d3dffcd473d8a05e3a08`。真实 Chromium 返回
+  `COMPLETED / PASS`，2 视口、2 截图、26 个 GET 200、0 Console/Page/Network/HTTP/重复写/
+  横向溢出异常，并完成浏览器清理；
+- Catalog B：两份种子加自举 Bundle B，3 Runs、0 issues、集合摘要
+  `2c1f9fffd6b251953abcb04e9c548a22df3bd0199f0b5e85136201fa89ea0160`；Workbench 成功读回
+  Bundle B 的 Run 状态、Verdict、Plan v2 哈希与浏览器事实；
+- 控制组实跑：`empty` 为有效空目录；`duplicate_identical` 归并为 1 Run/1 重复；
+  `duplicate_conflicting + corrupt` 形成 2 个独立 Catalog issues 且 0 Run，不选择赢家；
+  `missing_after_index`/同尺寸内容变化由 API/UI 报 `BUNDLE_UNAVAILABLE`/`BUNDLE_CHANGED`，
+  清空旧状态，源恢复后显式重试成功；
+- 真实 Workbench 验收脚本完成 7 组检查、56 个只读同源请求、0 HTTP/外部/写请求，桌面与移动端
+  均无横向溢出，端口与 SQLite sidecar 清理完成；Codex 内置浏览器另行完成正/负 Run、空目录、
+  问题区、历史、焦点、API 中断/恢复和源变化/恢复链路，页面 Console 无未解释异常；
+- 当前认识边界：以上仍是工作树候选证据。只有实现提交后重新跑完双 Python、生产构建、真实
+  Chromium、内置浏览器、敏感扫描、端口/进程/staging/SQLite sidecar 与 Git 清洁检查，才能
+  把本节状态改为 `RUNTIME_VALIDATED / FROZEN` 并创建 `m4-v0.5.0`。
+
 ## 计划冻结记录
 
 - 前置冻结基线：M3 `e46f63308a95d3091492268b65020e1e052d70ff`（tag `m3-v0.4.0`）；
@@ -292,6 +323,7 @@ M4 的“自举”只表示 VeriTrail 能读取自己产生的一份验收 Bundl
 - 计划版本：M4 Local Run Catalog Contract 0.1；
 - 候选内部存储：Catalog SQLite 0.1；
 - 候选公共接口：Local Read-only API 0.1；
-- 当前里程碑状态：`PLANNED`；
+- 当前里程碑状态：`AUTOMATED`；
 - 合同提交：由首次将本文件与 M4 状态说明合并到 `main` 的独立提交固定；
-- 未产生的结论：实现正确性、数据库一致性、API 安全性、资源适用性和轻量自举均等待真实运行。
+- 合同冻结时未产生的结论：实现正确性、数据库一致性、API 安全性、资源适用性和轻量自举；
+  当前候选结果记录在上一节，但尚未成为冻结基线。

@@ -167,3 +167,49 @@ export interface BrowserScreenshot {
   viewport: string
   media_type: string
 }
+
+export interface CatalogRunSummary {
+  catalog_run_id: string
+  run_id: string
+  created_at: string
+  execution_status: ExecutionStatus
+  verdict: Verdict
+  plan: PlanReference
+  bundle: {
+    sha256: string
+    file_count: number
+    total_bytes: number
+    duplicate_count: number
+    base_url: string
+  }
+}
+
+export interface CatalogIssueSummary {
+  issue_id: string
+  code: string
+  candidate_id: string
+  run_id: string | null
+  bundle_digests: string[]
+  occurrence_count: number
+}
+
+export interface CatalogResponse {
+  schema_version: '0.1'
+  catalog: {
+    catalog_id: string
+    build_status: 'COMPLETED' | 'COMPLETED_WITH_ISSUES'
+    read_only: true
+    run_count: number
+    issue_count: number
+    duplicate_count: number
+  }
+  pagination: {
+    page: number
+    page_size: number
+    total_items: number
+    total_pages: number
+  }
+  runs: CatalogRunSummary[]
+  issues: CatalogIssueSummary[]
+  issues_truncated: boolean
+}

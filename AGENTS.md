@@ -9,9 +9,11 @@
   Codex 内置浏览器、附件哈希、敏感扫描和残留检查并标记 `FROZEN`；M3 已在提交
   `ef2a8d64f781ba61bf7fbd9c1511a3419a6cfbaa` 上完成只读 Vue 工作台，并通过前端自动化、两套
   Python 兼容回归、真实 Chromium、Codex 内置浏览器、同源网络、依赖审计和残留检查，标记
-  `FROZEN`。M4“本地 Run 目录与轻量自举”只有冻结的验收合同，仍是 `PLANNED`；其中 SQLite
-  派生索引、只读本地 API、Catalog UI 和轻量自举都是待真实运行证伪的候选方案，不是已完成
-  能力。计划编辑、执行编排和完整自举仍未实现。
+  `FROZEN`。M4“本地 Run 目录与轻量自举”已实现离线 Bundle 校验、SQLite 派生索引、固定
+  回环只读 API、Catalog UI 和两阶段轻量自举候选，自动化与候选真实运行已经通过，状态为
+  `AUTOMATED`；冻结 Plan v1 的选择器歧义失败 Run 必须继续保留。只有在干净实现提交上完成
+  双 Python、真实 Chromium、Codex 内置浏览器、敏感与残留复核后才能推进到 `FROZEN`。
+  计划编辑、执行编排和完整自举仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

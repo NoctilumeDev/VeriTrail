@@ -23,6 +23,13 @@ const EXECUTION_STATUSES = new Set<ExecutionStatus>([
 ])
 const VERDICTS = new Set<Verdict>(['PASS', 'FAIL', 'INCONCLUSIVE', 'PENDING'])
 const SAFE_IMAGE_TYPES = new Set(['image/png', 'image/jpeg'])
+const API_ERROR_MESSAGES: Record<string, string> = {
+  RUN_NOT_FOUND: 'Catalog Run 不存在。',
+  BUNDLE_FILE_NOT_FOUND: 'Bundle 文件未在清单中声明。',
+  BUNDLE_UNAVAILABLE: '源 Bundle 当前不可用。',
+  BUNDLE_CHANGED: '源 Bundle 已在索引后发生变化。',
+  UNSAFE_PATH: 'Bundle 路径不安全。',
+}
 
 export type DemoBundleId = 'positive' | 'negative' | 'invalid'
 
@@ -416,17 +423,40 @@ function safeSameOriginUrl(basePath: string, relativePath: string): URL {
 }
 
 async function fetchBlob(url: URL, label: string): Promise<Blob> {
-  const response = await fetch(url, {
-    credentials: 'same-origin',
-    cache: 'no-store',
-    headers: { Accept: 'application/json, image/png, image/jpeg, text/plain' },
-  })
-  if (!response.ok) fail('FETCH_FAILED', `${label} 读取失败。`)
+  let response: Response
+  try {
+    response = await fetch(url, {
+      credentials: 'same-origin',
+      cache: 'no-store',
+      headers: { Accept: 'application/json, image/png, image/jpeg, text/plain' },
+    })
+  } catch {
+    fail('FETCH_FAILED', `${label} 读取失败。`)
+  }
+  if (!response.ok) {
+    try {
+      const payload = JSON.parse(await response.blob().then((blob) => blob.text())) as unknown
+      if (isRecord(payload) && isRecord(payload.error) && typeof payload.error.code === 'string') {
+        const message = API_ERROR_MESSAGES[payload.error.code]
+        if (message) fail(payload.error.code, message)
+      }
+    } catch (cause) {
+      if (cause instanceof BundleLoadError) throw cause
+    }
+    fail('FETCH_FAILED', `${label} 读取失败。`)
+  }
   return response.blob()
 }
 
 export async function loadDemoBundle(id: DemoBundleId): Promise<LoadedBundle> {
   const base = DEMO_BUNDLE_BASES[id]
+  return loadSameOriginBundle(base, `内置脱敏夹具 · ${id}`)
+}
+
+export async function loadSameOriginBundle(
+  base: string,
+  sourceLabel: string,
+): Promise<LoadedBundle> {
   const entries = new Map<string, Blob>()
   const manifestUrl = safeSameOriginUrl(base, 'bundle-manifest.json')
   const manifestBlob = await fetchBlob(manifestUrl, 'Bundle Manifest')
@@ -435,7 +465,7 @@ export async function loadDemoBundle(id: DemoBundleId): Promise<LoadedBundle> {
   for (const file of manifest.files) {
     entries.set(file.path, await fetchBlob(safeSameOriginUrl(base, file.path), file.path))
   }
-  return loadBundleFromBlobs(entries, `内置脱敏夹具 · ${id}`)
+  return loadBundleFromBlobs(entries, sourceLabel)
 }
 
 function localRelativePaths(files: File[]): string[] {
