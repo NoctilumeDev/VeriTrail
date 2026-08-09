@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path, PurePosixPath
@@ -435,6 +436,263 @@ def _validate_browser_evidence(
         errors.append(f"{input_name} cannot mark an incomplete browser session as complete")
 
 
+def _validate_orchestration_evidence(
+    document: dict[str, Any], input_name: str, errors: list[str]
+) -> None:
+    facts = document.get("facts")
+    if not isinstance(facts, dict):
+        return
+    required = {
+        "collector_version",
+        "policy_sha256",
+        "static_root_fingerprint",
+        "file_count",
+        "total_bytes",
+        "origin",
+        "started_at",
+        "ended_at",
+        "server_started",
+        "ready",
+        "ready_probe_count",
+        "server_stopped",
+        "thread_stopped",
+        "port_released",
+        "cleanup_complete",
+        "browser_complete",
+        "lifecycle_complete",
+        "events",
+        "requests",
+        "request_count",
+        "method_counts",
+        "status_counts",
+        "rejected_request_count",
+        "collection_errors",
+        "observer_effect",
+        "collection_elapsed_ms",
+    }
+    missing = sorted(required - set(facts))
+    unknown = sorted(set(facts) - required)
+    if missing:
+        errors.append(f"{input_name}.facts is missing orchestration fields: {', '.join(missing)}")
+    if unknown:
+        errors.append(f"{input_name}.facts has unsupported orchestration fields: {', '.join(unknown)}")
+    if not isinstance(facts.get("collector_version"), str) or not facts.get(
+        "collector_version", ""
+    ).strip():
+        errors.append(f"{input_name}.facts.collector_version must be a non-empty string")
+    for field in ("policy_sha256", "static_root_fingerprint"):
+        value = facts.get(field)
+        if not isinstance(value, str) or not re.fullmatch(r"[0-9a-f]{64}", value):
+            errors.append(f"{input_name}.facts.{field} must be a SHA-256 digest")
+    if not _browser_url_is_sanitized(facts.get("origin"), origin_only=True):
+        errors.append(f"{input_name}.facts.origin must be a sanitized loopback origin")
+    for field in ("started_at", "ended_at"):
+        if not _validate_timestamp(facts.get(field)):
+            errors.append(f"{input_name}.facts.{field} must be an ISO-8601 timestamp with timezone")
+    for field in (
+        "server_started",
+        "ready",
+        "server_stopped",
+        "thread_stopped",
+        "port_released",
+        "cleanup_complete",
+        "browser_complete",
+        "lifecycle_complete",
+    ):
+        if not isinstance(facts.get(field), bool):
+            errors.append(f"{input_name}.facts.{field} must be a boolean")
+    for field in (
+        "file_count",
+        "total_bytes",
+        "ready_probe_count",
+        "request_count",
+        "rejected_request_count",
+    ):
+        value = facts.get(field)
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            errors.append(f"{input_name}.facts.{field} must be a non-negative integer")
+    if facts.get("file_count") == 0:
+        errors.append(f"{input_name}.facts.file_count must be positive")
+    for field in ("events", "requests", "collection_errors"):
+        if not isinstance(facts.get(field), list):
+            errors.append(f"{input_name}.facts.{field} must be a list")
+    for field in ("method_counts", "status_counts", "observer_effect"):
+        if not isinstance(facts.get(field), dict):
+            errors.append(f"{input_name}.facts.{field} must be an object")
+    _validate_exact_items(
+        facts.get("events"),
+        {"sequence", "stage", "status", "started_at", "ended_at", "elapsed_ms", "error_type"},
+        f"{input_name}.facts.events",
+        errors,
+    )
+    _validate_exact_items(
+        facts.get("requests"),
+        {"sequence", "method", "path", "status", "bytes"},
+        f"{input_name}.facts.requests",
+        errors,
+    )
+    _validate_exact_items(
+        facts.get("collection_errors"),
+        {"stage", "error_type"},
+        f"{input_name}.facts.collection_errors",
+        errors,
+    )
+    events = facts.get("events")
+    if isinstance(events, list):
+        expected_stages = ["target-start"]
+        if facts.get("server_started") is True:
+            expected_stages.append("target-ready")
+        if facts.get("ready") is True:
+            expected_stages.append("browser-capture")
+        expected_stages.append("target-cleanup")
+        actual_stages = [
+            event.get("stage") if isinstance(event, dict) else None for event in events
+        ]
+        if actual_stages != expected_stages:
+            errors.append(f"{input_name}.facts.events does not match the lifecycle state machine")
+        for index, event in enumerate(events):
+            if not isinstance(event, dict):
+                continue
+            prefix = f"{input_name}.facts.events[{index}]"
+            if event.get("sequence") != index + 1:
+                errors.append(f"{prefix}.sequence must be contiguous")
+            if event.get("status") not in {"PASSED", "FAILED"}:
+                errors.append(f"{prefix}.status is unsupported")
+            for field in ("started_at", "ended_at"):
+                if not _validate_timestamp(event.get(field)):
+                    errors.append(f"{prefix}.{field} must be an ISO-8601 timestamp")
+            elapsed = event.get("elapsed_ms")
+            if not isinstance(elapsed, (int, float)) or isinstance(elapsed, bool) or elapsed < 0:
+                errors.append(f"{prefix}.elapsed_ms must be a non-negative number")
+            error_type = event.get("error_type")
+            if event.get("status") == "FAILED" and not isinstance(error_type, str):
+                errors.append(f"{prefix}.error_type is required for a failed event")
+            if event.get("status") == "PASSED" and error_type is not None:
+                errors.append(f"{prefix}.error_type must be null for a passed event")
+    requests = facts.get("requests")
+    if isinstance(requests, list):
+        for index, request in enumerate(requests):
+            if not isinstance(request, dict):
+                continue
+            prefix = f"{input_name}.facts.requests[{index}]"
+            if request.get("sequence") != index + 1:
+                errors.append(f"{prefix}.sequence must be contiguous")
+            if request.get("method") not in {
+                "GET",
+                "HEAD",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "OPTIONS",
+                "TRACE",
+                "CONNECT",
+            }:
+                errors.append(f"{prefix}.method is unsupported")
+            path = request.get("path")
+            if (
+                not isinstance(path, str)
+                or len(path) > 2048
+                or not (path.startswith("/") or path == "[REJECTED]")
+                or any(character in path for character in ("?", "#", "\\", "\0"))
+                or any(ord(character) < 32 for character in path)
+            ):
+                errors.append(f"{prefix}.path must be a sanitized path")
+            status = request.get("status")
+            if not isinstance(status, int) or isinstance(status, bool) or not 100 <= status <= 599:
+                errors.append(f"{prefix}.status is invalid")
+            size = request.get("bytes")
+            if not isinstance(size, int) or isinstance(size, bool) or size < 0:
+                errors.append(f"{prefix}.bytes must be a non-negative integer")
+        if facts.get("request_count") != len(requests):
+            errors.append(f"{input_name}.facts.request_count does not match requests")
+        expected_rejected = sum(
+            1
+            for request in requests
+            if isinstance(request, dict)
+            and isinstance(request.get("status"), int)
+            and request["status"] >= 400
+        )
+        if facts.get("rejected_request_count") != expected_rejected:
+            errors.append(f"{input_name}.facts.rejected_request_count does not match requests")
+        expected_methods = Counter(
+            request["method"] for request in requests if isinstance(request, dict) and "method" in request
+        )
+        expected_statuses = Counter(
+            str(request["status"])
+            for request in requests
+            if isinstance(request, dict) and "status" in request
+        )
+        if facts.get("method_counts") != dict(sorted(expected_methods.items())):
+            errors.append(f"{input_name}.facts.method_counts does not match requests")
+        if facts.get("status_counts") != dict(sorted(expected_statuses.items())):
+            errors.append(f"{input_name}.facts.status_counts does not match requests")
+    observer = facts.get("observer_effect")
+    if isinstance(observer, dict):
+        expected_observer = {
+            "rss_start_mb",
+            "rss_peak_mb",
+            "rss_delta_mb",
+            "thread_start_count",
+            "max_active_thread_count",
+        }
+        if set(observer) != expected_observer:
+            errors.append(f"{input_name}.facts.observer_effect must contain exact supported fields")
+        for field in ("rss_start_mb", "rss_peak_mb", "rss_delta_mb"):
+            value = observer.get(field)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0:
+                errors.append(f"{input_name}.facts.observer_effect.{field} must be non-negative")
+        for field in ("thread_start_count", "max_active_thread_count"):
+            value = observer.get(field)
+            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                errors.append(f"{input_name}.facts.observer_effect.{field} must be a non-negative integer")
+    elapsed = facts.get("collection_elapsed_ms")
+    if not isinstance(elapsed, (int, float)) or isinstance(elapsed, bool) or elapsed < 0:
+        errors.append(f"{input_name}.facts.collection_elapsed_ms must be a non-negative number")
+    if facts.get("ready") is True and facts.get("server_started") is not True:
+        errors.append(f"{input_name} cannot be ready when the server did not start")
+    ready_probe_count = facts.get("ready_probe_count")
+    if facts.get("ready") is True and (
+        not isinstance(ready_probe_count, int)
+        or isinstance(ready_probe_count, bool)
+        or ready_probe_count < 1
+    ):
+        errors.append(f"{input_name} cannot be ready without a readiness probe")
+    if facts.get("browser_complete") is True and facts.get("ready") is not True:
+        errors.append(f"{input_name} cannot complete browser capture before readiness")
+    if facts.get("cleanup_complete") is True and not all(
+        facts.get(field) is True for field in ("server_stopped", "thread_stopped", "port_released")
+    ):
+        errors.append(f"{input_name} cannot mark incomplete cleanup as complete")
+    if facts.get("lifecycle_complete") is True and (
+        facts.get("server_started") is not True
+        or facts.get("ready") is not True
+        or facts.get("cleanup_complete") is not True
+        or facts.get("collection_errors")
+    ):
+        errors.append(f"{input_name} cannot mark an incomplete lifecycle as complete")
+    metadata = document.get("metadata")
+    required_metadata = {
+        "network_scope",
+        "shell_used",
+        "external_process_started",
+        "writes_allowed",
+        "request_headers_persisted",
+        "request_bodies_persisted",
+    }
+    if not isinstance(metadata, dict) or set(metadata) != required_metadata:
+        errors.append(f"{input_name}.metadata must contain exact orchestration safety fields")
+    elif (
+        metadata.get("network_scope") != "loopback-only"
+        or metadata.get("shell_used") is not False
+        or metadata.get("external_process_started") is not False
+        or metadata.get("writes_allowed") is not False
+        or metadata.get("request_headers_persisted") is not False
+        or metadata.get("request_bodies_persisted") is not False
+    ):
+        errors.append(f"{input_name}.metadata violates the orchestration safety contract")
+
+
 def validate_evidence(document: dict[str, Any], input_name: str) -> None:
     errors: list[str] = []
     allowed_fields = {
@@ -467,6 +725,8 @@ def validate_evidence(document: dict[str, Any], input_name: str) -> None:
         _validate_preflight_evidence(document, input_name, errors)
     if document.get("evidence_type") == "browser.session":
         _validate_browser_evidence(document, input_name, errors)
+    if document.get("evidence_type") == "runtime.orchestration":
+        _validate_orchestration_evidence(document, input_name, errors)
     try:
         canonical_json_bytes(document)
     except (TypeError, ValueError) as exc:

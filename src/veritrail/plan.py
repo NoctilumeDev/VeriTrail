@@ -11,7 +11,7 @@ from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object as load_strict_json_object
 from veritrail.privacy import redact_value
 
-SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3"}
+SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3", "0.4"}
 PLAN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 VARIABLE_ROLES = {"PRIMARY", "CONTROLLED", "NUISANCE"}
 ASSERTION_SEVERITIES = {
@@ -53,6 +53,7 @@ TOP_LEVEL_FIELDS = {
     "cleanup_steps",
     "preflight",
     "browser",
+    "target",
     "seal",
 }
 PREFLIGHT_FIELDS = {
@@ -87,6 +88,18 @@ BROWSER_ACTION_FIELDS = {
 }
 STEP_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 SCREENSHOT_NAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
+TARGET_FIELDS = {
+    "adapter",
+    "root",
+    "port",
+    "ready_path",
+    "startup_timeout_ms",
+    "shutdown_timeout_ms",
+    "max_files",
+    "max_file_bytes",
+    "max_total_bytes",
+}
+TARGET_PATH_SEGMENT_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
 
 
 def load_json_object(path: Path) -> dict[str, Any]:
@@ -161,7 +174,7 @@ def _validate_resource_budget(value: Any, schema_version: Any, errors: list[str]
             errors.append("resource_budget.memory_hard_mb must be a positive integer")
         if _is_integer(soft) and _is_integer(hard) and hard < soft:
             errors.append("resource_budget.memory_hard_mb must be >= memory_soft_mb")
-    elif schema_version in {"0.2", "0.3"}:
+    elif schema_version in {"0.2", "0.3", "0.4"}:
         _reject_unknown_fields(
             value,
             {"max_artifact_bytes"},
@@ -280,11 +293,15 @@ def _validate_browser(value: Any, errors: list[str]) -> None:
         for index, origin in enumerate(origins):
             normalized = _loopback_origin(origin, f"browser.allowed_origins[{index}]", errors)
             if isinstance(origin, str):
-                parsed = urlsplit(origin)
-                if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
-                    errors.append(
-                        f"browser.allowed_origins[{index}] must be an origin without path, query, or fragment"
-                    )
+                try:
+                    parsed = urlsplit(origin)
+                except ValueError:
+                    pass
+                else:
+                    if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
+                        errors.append(
+                            f"browser.allowed_origins[{index}] must be an origin without path, query, or fragment"
+                        )
             if normalized is not None:
                 if normalized in normalized_origins:
                     errors.append(f"browser.allowed_origins[{index}] duplicates {normalized}")
@@ -293,9 +310,13 @@ def _validate_browser(value: Any, errors: list[str]) -> None:
     start_url = value.get("start_url")
     start_origin = _loopback_origin(start_url, "browser.start_url", errors)
     if isinstance(start_url, str):
-        parsed_start = urlsplit(start_url)
-        if parsed_start.query or parsed_start.fragment:
-            errors.append("browser.start_url must not contain a query or fragment")
+        try:
+            parsed_start = urlsplit(start_url)
+        except ValueError:
+            pass
+        else:
+            if parsed_start.query or parsed_start.fragment:
+                errors.append("browser.start_url must not contain a query or fragment")
     if start_origin is not None and start_origin not in normalized_origins:
         errors.append("browser.start_url origin must be listed in browser.allowed_origins")
 
@@ -359,9 +380,13 @@ def _validate_browser(value: Any, errors: list[str]) -> None:
             if origin is not None and origin not in normalized_origins:
                 errors.append(f"{prefix}.url origin must be listed in browser.allowed_origins")
             if isinstance(step.get("url"), str):
-                parsed_step_url = urlsplit(step["url"])
-                if parsed_step_url.query or parsed_step_url.fragment:
-                    errors.append(f"{prefix}.url must not contain a query or fragment")
+                try:
+                    parsed_step_url = urlsplit(step["url"])
+                except ValueError:
+                    pass
+                else:
+                    if parsed_step_url.query or parsed_step_url.fragment:
+                        errors.append(f"{prefix}.url must not contain a query or fragment")
         if "selector" in allowed:
             selector = step.get("selector")
             if not _non_empty_string(selector) or len(selector) > 512:
@@ -379,6 +404,119 @@ def _validate_browser(value: Any, errors: list[str]) -> None:
         errors.append("browser.steps may contain at most 4 screenshot actions")
 
 
+def _validate_target(
+    value: Any,
+    preflight: Any,
+    browser: Any,
+    errors: list[str],
+) -> None:
+    if not isinstance(value, dict):
+        errors.append("target must be an object for schema_version '0.4'")
+        return
+    _reject_unknown_fields(value, TARGET_FIELDS, "target", errors)
+    if value.get("adapter") != "STATIC_HTTP":
+        errors.append("target.adapter must be STATIC_HTTP")
+
+    root = value.get("root")
+    if not isinstance(root, str) or "\\" in root or root.startswith("/"):
+        errors.append("target.root must be a relative POSIX path")
+    else:
+        parts = root.split("/")
+        if (
+            not 1 <= len(parts) <= 8
+            or any(part in {"", ".", ".."} for part in parts)
+            or any(not TARGET_PATH_SEGMENT_PATTERN.fullmatch(part) for part in parts)
+        ):
+            errors.append("target.root must contain 1-8 safe lowercase path segments")
+
+    port = value.get("port")
+    if not _is_integer(port) or not 1024 <= port <= 65535:
+        errors.append("target.port must be an integer from 1024 to 65535")
+
+    ready_path = value.get("ready_path")
+    if not isinstance(ready_path, str) or not ready_path.startswith("/") or len(ready_path) > 1024:
+        errors.append("target.ready_path must be an absolute URL path up to 1024 characters")
+    else:
+        try:
+            parsed_ready = urlsplit(ready_path)
+        except ValueError:
+            errors.append("target.ready_path must be a valid URL path")
+        else:
+            parts = parsed_ready.path.split("/")
+            if (
+                parsed_ready.scheme
+                or parsed_ready.netloc
+                or parsed_ready.query
+                or parsed_ready.fragment
+                or "\\" in ready_path
+                or "%" in ready_path
+                or "//" in ready_path
+                or any(ord(character) < 32 for character in ready_path)
+                or any(part in {".", ".."} for part in parts)
+            ):
+                errors.append(
+                    "target.ready_path must not contain an origin, query, fragment, "
+                    "escape, control character, empty segment, or dot segment"
+                )
+
+    for field in ("startup_timeout_ms", "shutdown_timeout_ms"):
+        item = value.get(field)
+        if not _is_integer(item) or not 100 <= item <= 30_000:
+            errors.append(f"target.{field} must be an integer from 100 to 30000")
+    limits = {
+        "max_files": (1, 1000),
+        "max_file_bytes": (1, 10 * 1024 * 1024),
+        "max_total_bytes": (1, 64 * 1024 * 1024),
+    }
+    for field, (minimum, maximum) in limits.items():
+        item = value.get(field)
+        if not _is_integer(item) or not minimum <= item <= maximum:
+            errors.append(f"target.{field} must be an integer from {minimum} to {maximum}")
+    max_file_bytes = value.get("max_file_bytes")
+    max_total_bytes = value.get("max_total_bytes")
+    if (
+        _is_integer(max_file_bytes)
+        and _is_integer(max_total_bytes)
+        and max_file_bytes > max_total_bytes
+    ):
+        errors.append("target.max_file_bytes must be <= target.max_total_bytes")
+
+    if _is_integer(port) and isinstance(preflight, dict):
+        preflight_ports = preflight.get("ports")
+        if not isinstance(preflight_ports, list):
+            preflight_ports = []
+        matching = [
+            item
+            for item in preflight_ports
+            if isinstance(item, dict) and item.get("port") == port and item.get("expected") == "FREE"
+        ]
+        if len(matching) != 1:
+            errors.append("target.port must appear exactly once as FREE in preflight.ports")
+
+    if _is_integer(port) and isinstance(browser, dict):
+        browser_origins = browser.get("allowed_origins")
+        if not isinstance(browser_origins, list):
+            browser_origins = []
+        browser_steps = browser.get("steps")
+        if not isinstance(browser_steps, list):
+            browser_steps = []
+        urls = [browser.get("start_url"), *browser_origins]
+        urls.extend(
+            step.get("url")
+            for step in browser_steps
+            if isinstance(step, dict) and step.get("action") == "goto"
+        )
+        for index, url in enumerate(urls):
+            if not isinstance(url, str):
+                continue
+            try:
+                url_port = urlsplit(url).port
+            except ValueError:
+                continue
+            if url_port != port:
+                errors.append(f"target.port must match every browser URL port (mismatch at item {index})")
+
+
 def validate_plan(plan: dict[str, Any]) -> None:
     errors: list[str] = []
     unknown_fields = sorted(set(plan) - TOP_LEVEL_FIELDS)
@@ -387,7 +525,7 @@ def validate_plan(plan: dict[str, Any]) -> None:
 
     schema_version = plan.get("schema_version")
     if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
-        errors.append("schema_version must be '0.1', '0.2', or '0.3'")
+        errors.append("schema_version must be '0.1', '0.2', '0.3', or '0.4'")
     plan_id = plan.get("plan_id")
     if not isinstance(plan_id, str) or not PLAN_ID_PATTERN.fullmatch(plan_id):
         errors.append("plan_id must be a 2-64 character lowercase identifier")
@@ -456,14 +594,19 @@ def validate_plan(plan: dict[str, Any]) -> None:
     _validate_string_list(required_evidence, "required_evidence", errors, non_empty=True)
     if isinstance(required_evidence, list) and len(required_evidence) != len(set(required_evidence)):
         errors.append("required_evidence must not contain duplicates")
-    if schema_version in {"0.2", "0.3"} and (
+    if schema_version in {"0.2", "0.3", "0.4"} and (
         not isinstance(required_evidence, list) or "runtime.preflight" not in required_evidence
     ):
         errors.append(f"schema_version {schema_version!r} must require runtime.preflight evidence")
-    if schema_version == "0.3" and (
+    if schema_version in {"0.3", "0.4"} and (
         not isinstance(required_evidence, list) or "browser.session" not in required_evidence
     ):
-        errors.append("schema_version '0.3' must require browser.session evidence")
+        errors.append(f"schema_version {schema_version!r} must require browser.session evidence")
+    if schema_version == "0.4" and (
+        not isinstance(required_evidence, list)
+        or "runtime.orchestration" not in required_evidence
+    ):
+        errors.append("schema_version '0.4' must require runtime.orchestration evidence")
 
     assertions = plan.get("assertions")
     assertion_ids: set[str] = set()
@@ -505,20 +648,31 @@ def validate_plan(plan: dict[str, Any]) -> None:
                 errors.append(f"{prefix}.expected is required")
         if decisive_count < 1:
             errors.append("at least one HARD or DEGRADATION_BOUNDARY assertion is required")
-        if schema_version in {"0.2", "0.3"} and not any(
+        if schema_version in {"0.2", "0.3", "0.4"} and not any(
             isinstance(assertion, dict) and assertion.get("evidence_type") == "runtime.preflight"
             for assertion in assertions
         ):
             errors.append(
                 f"schema_version {schema_version!r} must define an assertion over runtime.preflight"
             )
-        if schema_version == "0.3" and not any(
+        if schema_version in {"0.3", "0.4"} and not any(
             isinstance(assertion, dict)
             and assertion.get("evidence_type") == "browser.session"
             and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
             for assertion in assertions
         ):
-            errors.append("schema_version '0.3' must define a decisive assertion over browser.session")
+            errors.append(
+                f"schema_version {schema_version!r} must define a decisive assertion over browser.session"
+            )
+        if schema_version == "0.4" and not any(
+            isinstance(assertion, dict)
+            and assertion.get("evidence_type") == "runtime.orchestration"
+            and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
+            for assertion in assertions
+        ):
+            errors.append(
+                "schema_version '0.4' must define a decisive assertion over runtime.orchestration"
+            )
 
     random_seed = plan.get("random_seed")
     if not isinstance(random_seed, int) or isinstance(random_seed, bool) or random_seed < 0:
@@ -531,13 +685,28 @@ def validate_plan(plan: dict[str, Any]) -> None:
             errors.append("preflight requires schema_version '0.2'")
         if "browser" in plan:
             errors.append("browser requires schema_version '0.3'")
+        if "target" in plan:
+            errors.append("target requires schema_version '0.4'")
     elif schema_version == "0.2":
         _validate_preflight(plan.get("preflight"), errors)
         if "browser" in plan:
             errors.append("browser requires schema_version '0.3'")
+        if "target" in plan:
+            errors.append("target requires schema_version '0.4'")
     elif schema_version == "0.3":
         _validate_preflight(plan.get("preflight"), errors)
         _validate_browser(plan.get("browser"), errors)
+        if "target" in plan:
+            errors.append("target requires schema_version '0.4'")
+    elif schema_version == "0.4":
+        _validate_preflight(plan.get("preflight"), errors)
+        _validate_browser(plan.get("browser"), errors)
+        _validate_target(
+            plan.get("target"),
+            plan.get("preflight"),
+            plan.get("browser"),
+            errors,
+        )
 
     _validate_load_model(plan.get("load_model"), errors)
 

@@ -11,6 +11,7 @@ from veritrail.catalog import CatalogError, build_catalog
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.local_api import create_catalog_server
+from veritrail.orchestration import collect_orchestrated_evidence
 from veritrail.plan import load_and_seal_plan, write_sealed_plan
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
@@ -65,6 +66,20 @@ def build_parser() -> argparse.ArgumentParser:
     browser_capture.add_argument(
         "--run-id", required=True, help="stable caller-supplied run identifier"
     )
+
+    run = subparsers.add_parser(
+        "run",
+        help="run Plan 0.4 with the bounded built-in static HTTP target",
+    )
+    run.add_argument("--plan", type=Path, required=True, help="unsealed or sealed Plan 0.4 JSON")
+    run.add_argument(
+        "--subject-root",
+        type=Path,
+        required=True,
+        help="explicit local subject root; never persisted",
+    )
+    run.add_argument("--output", type=Path, required=True, help="new output directory")
+    run.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")
 
     catalog_build = subparsers.add_parser(
         "catalog-build",
@@ -130,10 +145,10 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "preflight":
             plan = load_and_seal_plan(args.plan)
-            if plan["schema_version"] not in {"0.2", "0.3"}:
+            if plan["schema_version"] not in {"0.2", "0.3", "0.4"}:
                 raise ValidationError(
                     [
-                        "preflight requires ExperimentPlan schema_version '0.2' or '0.3'; "
+                        "preflight requires ExperimentPlan schema_version '0.2', '0.3', or '0.4'; "
                         "Plan 0.1 remains read-only compatible"
                     ]
                 )
@@ -206,6 +221,57 @@ def main(argv: list[str] | None = None) -> int:
                     "run_id": report["run_id"],
                     "resource_decision": decision,
                     "browser_started": browser_started,
+                    "execution_status": report["execution_status"],
+                    "verdict": report["verdict"],
+                }
+            )
+            return 0
+        if args.command == "run":
+            plan = load_and_seal_plan(args.plan)
+            if plan["schema_version"] != "0.4":
+                raise ValidationError(["run requires ExperimentPlan schema_version '0.4'"])
+            if args.output.exists():
+                raise SafetyError(
+                    f"refusing to overwrite existing output directory: {args.output.name}"
+                )
+            preflight_document = collect_preflight_evidence(plan, args.output.parent)
+            preflight_artifact = import_evidence_document(
+                preflight_document, "generated-preflight.json"
+            )
+            decision = preflight_artifact.document["facts"]["decision"]
+            generated = [preflight_artifact]
+            target_started = False
+            target_ready = False
+            cleanup_complete: bool | None = None
+            if decision == "PROCEED":
+                orchestration = collect_orchestrated_evidence(plan, args.subject_root)
+                generated.append(orchestration.orchestration)
+                if orchestration.browser is not None:
+                    generated.append(orchestration.browser)
+                execution_status = orchestration.execution_status
+                orchestration_facts = orchestration.orchestration.document["facts"]
+                target_started = orchestration_facts["server_started"]
+                target_ready = orchestration_facts["ready"]
+                cleanup_complete = orchestration_facts["cleanup_complete"]
+            else:
+                execution_status = "ABORTED" if decision == "ABORT" else "COMPLETED"
+            report = create_bundle(
+                plan=plan,
+                evidence_paths=[],
+                output=args.output,
+                run_id=args.run_id,
+                execution_status=execution_status,
+                generated_evidence=generated,
+            )
+            _success(
+                {
+                    "command": "run",
+                    "output": args.output.name,
+                    "run_id": report["run_id"],
+                    "resource_decision": decision,
+                    "target_started": target_started,
+                    "target_ready": target_ready,
+                    "cleanup_complete": cleanup_complete,
                     "execution_status": report["execution_status"],
                     "verdict": report["verdict"],
                 }

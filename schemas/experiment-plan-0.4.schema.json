@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/experiment-plan-0.4.schema.json",
+  "title": "VeriTrail M5 ExperimentPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "version",
+    "subject",
+    "question",
+    "baseline",
+    "experiment_type",
+    "variables",
+    "required_evidence",
+    "assertions",
+    "random_seed",
+    "resource_budget",
+    "preflight",
+    "browser",
+    "target",
+    "load_model",
+    "change_scope",
+    "reproduction_steps",
+    "cleanup_steps"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.4" },
+    "plan_id": { "$ref": "experiment-plan-0.3.schema.json#/properties/plan_id" },
+    "version": { "$ref": "experiment-plan-0.3.schema.json#/properties/version" },
+    "subject": { "$ref": "experiment-plan-0.3.schema.json#/properties/subject" },
+    "question": { "$ref": "experiment-plan-0.3.schema.json#/properties/question" },
+    "baseline": { "$ref": "experiment-plan-0.3.schema.json#/properties/baseline" },
+    "experiment_type": { "$ref": "experiment-plan-0.3.schema.json#/properties/experiment_type" },
+    "variables": { "$ref": "experiment-plan-0.3.schema.json#/properties/variables" },
+    "required_evidence": {
+      "allOf": [
+        { "$ref": "experiment-plan-0.3.schema.json#/properties/required_evidence" },
+        {
+          "minItems": 3,
+          "contains": { "const": "runtime.preflight" },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": { "const": "runtime.orchestration" },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": { "const": "browser.session" },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "assertions": { "$ref": "experiment-plan-0.3.schema.json#/properties/assertions" },
+    "random_seed": { "$ref": "experiment-plan-0.3.schema.json#/properties/random_seed" },
+    "resource_budget": { "$ref": "experiment-plan-0.3.schema.json#/properties/resource_budget" },
+    "preflight": { "$ref": "experiment-plan-0.3.schema.json#/properties/preflight" },
+    "browser": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "root",
+        "port",
+        "ready_path",
+        "startup_timeout_ms",
+        "shutdown_timeout_ms",
+        "max_files",
+        "max_file_bytes",
+        "max_total_bytes"
+      ],
+      "properties": {
+        "adapter": { "const": "STATIC_HTTP" },
+        "root": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,63}(?:/[a-z0-9][a-z0-9._-]{0,63}){0,7}$"
+        },
+        "port": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "ready_path": {
+          "type": "string",
+          "pattern": "^(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))/[^?%#\\\\\\u0000-\\u001F]{0,1023}$"
+        },
+        "startup_timeout_ms": { "type": "integer", "minimum": 100, "maximum": 30000 },
+        "shutdown_timeout_ms": { "type": "integer", "minimum": 100, "maximum": 30000 },
+        "max_files": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "max_file_bytes": { "type": "integer", "minimum": 1, "maximum": 10485760 },
+        "max_total_bytes": { "type": "integer", "minimum": 1, "maximum": 67108864 }
+      }
+    },
+    "load_model": { "$ref": "experiment-plan-0.3.schema.json#/properties/load_model" },
+    "change_scope": { "$ref": "experiment-plan-0.3.schema.json#/properties/change_scope" },
+    "reproduction_steps": {
+      "$ref": "experiment-plan-0.3.schema.json#/properties/reproduction_steps"
+    },
+    "cleanup_steps": { "$ref": "experiment-plan-0.3.schema.json#/properties/cleanup_steps" },
+    "seal": { "$ref": "experiment-plan-0.3.schema.json#/properties/seal" }
+  }
+}

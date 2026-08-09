@@ -36,6 +36,13 @@ def browser_plan() -> dict[str, Any]:
         return json.load(handle)
 
 
+def orchestration_plan() -> dict[str, Any]:
+    with (ROOT / "examples" / "orchestration" / "plan.json").open(
+        "r", encoding="utf-8"
+    ) as handle:
+        return json.load(handle)
+
+
 def artifact(
     *,
     suite_passed: bool = True,

@@ -170,7 +170,7 @@ def _detect_variable_contamination(
 def _detect_preflight_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.2", "0.3"}:
+    if plan.get("schema_version") not in {"0.2", "0.3", "0.4"}:
         return []
     preflight = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.preflight"
@@ -207,7 +207,7 @@ def _detect_preflight_contamination(
 def _detect_browser_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") != "0.3":
+    if plan.get("schema_version") not in {"0.3", "0.4"}:
         return []
     sessions = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "browser.session"
@@ -241,6 +241,70 @@ def _detect_browser_contamination(
     return contamination
 
 
+def _detect_orchestration_contamination(
+    plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
+) -> list[dict[str, Any]]:
+    if plan.get("schema_version") != "0.4":
+        return []
+    sessions = [
+        artifact
+        for artifact in evidence
+        if artifact.document["evidence_type"] == "runtime.orchestration"
+    ]
+    contamination: list[dict[str, Any]] = []
+    if len(sessions) > 1:
+        contamination.append(
+            {
+                "code": "MULTIPLE_ORCHESTRATION_EVIDENCE",
+                "message": "A Plan 0.4 Run must contain exactly one runtime.orchestration artifact.",
+            }
+        )
+    for artifact in sessions:
+        facts = artifact.document["facts"]
+        if facts["policy_sha256"] != sha256_json(plan["target"]):
+            contamination.append(
+                {
+                    "code": "ORCHESTRATION_POLICY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The orchestration policy differs from the sealed Plan 0.4 policy.",
+                }
+            )
+        expected_origin = f"http://localhost:{plan['target']['port']}"
+        if facts["origin"] != expected_origin:
+            contamination.append(
+                {
+                    "code": "ORCHESTRATION_TARGET_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The orchestration origin differs from the sealed target port.",
+                }
+            )
+        if facts["static_root_fingerprint"] != plan["baseline"]["fingerprint"]:
+            contamination.append(
+                {
+                    "code": "STATIC_ROOT_FINGERPRINT_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The served static root differs from the sealed baseline fingerprint.",
+                }
+            )
+        if facts["cleanup_complete"] is False:
+            contamination.append(
+                {
+                    "code": "ORCHESTRATION_CLEANUP_INCOMPLETE",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The managed target did not complete its sealed cleanup boundary.",
+                }
+            )
+        if facts["lifecycle_complete"] is False and execution_status == "COMPLETED":
+            contamination.append(
+                {
+                    "code": "ORCHESTRATION_STATUS_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Target lifecycle is incomplete but the Run execution status is COMPLETED.",
+                }
+            )
+    return contamination
+
+
 def evaluate(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> dict[str, Any]:
@@ -250,6 +314,7 @@ def evaluate(
     contamination = _detect_variable_contamination(plan, evidence)
     contamination.extend(_detect_preflight_contamination(plan, evidence, execution_status))
     contamination.extend(_detect_browser_contamination(plan, evidence, execution_status))
+    contamination.extend(_detect_orchestration_contamination(plan, evidence, execution_status))
     if plan["baseline"]["status"] == "EXPIRED":
         contamination.append(
             {

@@ -1,0 +1,280 @@
+{
+  "schema_version": "0.4",
+  "plan_id": "m5-bounded-static-run",
+  "version": 1,
+  "subject": {
+    "id": "veritrail-browser-fixture",
+    "version": "healthy-1",
+    "source_ref": "examples/browser/site"
+  },
+  "question": "Can VeriTrail manage a bounded static loopback target, capture the healthy browser path, and clean every runtime resource?",
+  "baseline": {
+    "id": "m5-external-static-fixture",
+    "status": "VALID",
+    "fingerprint": "ea4893e1a2a8d3a6dd66b48471ceb0d05f4ea879e097640ad4e7eabbe8c98b68",
+    "tolerances": {
+      "viewport_count": 2,
+      "unexpected_browser_errors": 0,
+      "cleanup_failures": 0
+    }
+  },
+  "experiment_type": "SINGLE_VARIABLE",
+  "variables": [
+    {
+      "name": "target_lifecycle_mode",
+      "role": "PRIMARY",
+      "value": "veritrail_managed_static_http",
+      "source": "sealed-plan"
+    },
+    {
+      "name": "browser_engine",
+      "role": "CONTROLLED",
+      "value": "chromium",
+      "source": "browser-adapter"
+    },
+    {
+      "name": "browser_headless",
+      "role": "CONTROLLED",
+      "value": true,
+      "source": "sealed-plan"
+    },
+    {
+      "name": "viewport_profile_count",
+      "role": "CONTROLLED",
+      "value": 2,
+      "unit": "profiles",
+      "source": "sealed-plan"
+    }
+  ],
+  "required_evidence": [
+    "runtime.preflight",
+    "runtime.orchestration",
+    "browser.session"
+  ],
+  "assertions": [
+    {
+      "id": "preflight-complete",
+      "severity": "HARD",
+      "evidence_type": "runtime.preflight",
+      "path": "/facts/snapshot_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "lifecycle-complete",
+      "severity": "HARD",
+      "evidence_type": "runtime.orchestration",
+      "path": "/facts/lifecycle_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "target-ready",
+      "severity": "HARD",
+      "evidence_type": "runtime.orchestration",
+      "path": "/facts/ready",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "cleanup-complete",
+      "severity": "HARD",
+      "evidence_type": "runtime.orchestration",
+      "path": "/facts/cleanup_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "browser-capture-complete",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/capture_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "browser-steps-pass",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/all_steps_passed",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "console-errors-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/unexpected_console_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "page-errors-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/page_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "failed-requests-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/failed_request_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "http-errors-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/unexpected_http_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "duplicate-writes-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/duplicate_write_request_group_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "horizontal-overflow-zero",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/horizontal_overflow_viewport_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "viewport-coverage",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/viewport_count",
+      "operator": "eq",
+      "expected": 2
+    },
+    {
+      "id": "screenshot-coverage",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/screenshot_count",
+      "operator": "eq",
+      "expected": 2
+    }
+  ],
+  "random_seed": 20260809,
+  "resource_budget": {
+    "max_artifact_bytes": 5242880
+  },
+  "preflight": {
+    "sample_count": 3,
+    "sampling_interval_ms": 50,
+    "hard_breach_grace_samples": 2,
+    "available_memory_soft_min_mb": 4096,
+    "available_memory_hard_min_mb": 2048,
+    "disk_free_hard_min_mb": 1024,
+    "collector_rss_hard_max_mb": 256,
+    "observer_rss_delta_soft_max_mb": 64,
+    "ports": [
+      {
+        "port": 18769,
+        "expected": "FREE"
+      }
+    ],
+    "require_clean_staging": true
+  },
+  "browser": {
+    "engine": "chromium",
+    "headless": true,
+    "start_url": "http://localhost:18769/index.html",
+    "allowed_origins": [
+      "http://localhost:18769"
+    ],
+    "timeout_ms": 10000,
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1280,
+        "height": 720,
+        "is_mobile": false
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "is_mobile": true
+      }
+    ],
+    "steps": [
+      {
+        "id": "enter-run-label",
+        "action": "fill",
+        "selector": "[data-testid='run-label']",
+        "value": "m5-run"
+      },
+      {
+        "id": "load-evidence",
+        "action": "click",
+        "selector": "[data-testid='load-evidence']"
+      },
+      {
+        "id": "wait-until-ready",
+        "action": "expect_text",
+        "selector": "[data-testid='status']",
+        "value": "evidence ready: m5-run"
+      },
+      {
+        "id": "evidence-list-visible",
+        "action": "expect_visible",
+        "selector": "[data-testid='evidence-list']"
+      },
+      {
+        "id": "capture-ready",
+        "action": "screenshot",
+        "name": "ready"
+      }
+    ]
+  },
+  "target": {
+    "adapter": "STATIC_HTTP",
+    "root": "examples/browser/site",
+    "port": 18769,
+    "ready_path": "/index.html",
+    "startup_timeout_ms": 5000,
+    "shutdown_timeout_ms": 5000,
+    "max_files": 256,
+    "max_file_bytes": 10485760,
+    "max_total_bytes": 67108864
+  },
+  "load_model": {
+    "virtual_users": 1,
+    "in_flight_requests": 1
+  },
+  "change_scope": {
+    "level": "L2_CONTRACT",
+    "owner": "VeriTrail Core / Bounded Orchestrator",
+    "expected_blast_radius": "Plan 0.4, runtime.orchestration, run CLI, reports and compatible Bundle consumers",
+    "consumers": [
+      "plan-validator",
+      "bounded-orchestrator",
+      "browser-adapter",
+      "artifact-store",
+      "verdict-engine",
+      "catalog",
+      "workbench"
+    ]
+  },
+  "reproduction_steps": [
+    "Run the sealed Plan 0.4 with the repository root as subject-root and a unique Run ID.",
+    "Verify the target starts only after PROCEED and both Chromium viewports complete.",
+    "Index the resulting Bundle in a new Catalog and read it through the Workbench."
+  ],
+  "cleanup_steps": [
+    "Close Playwright contexts and Chromium.",
+    "Stop the built-in static target and verify its thread and port are released.",
+    "Verify no .veritrail-* staging directory remains."
+  ]
+}
