@@ -181,6 +181,10 @@ Bundle/Verdict，也不改变 M4 Run-only Catalog。双 Python、真实三态、
 Codex 内置浏览器、安全、资源和清理终验见
 `docs/10-m6-deterministic-rerun-comparison.md`。
 
+M7 当前仅预注册独立 PairingPlan 与 PairedAnalysis 候选契约：四角色固定顺序、跨 Plan 严格
+控制投影、outcome 预期与负对照边界。它尚未成为代码事实，合同见
+`docs/11-m7-preregistered-paired-analysis.md`。
+
 ## 9. 实现顺序
 
 1. 计划/基线/变量/裁决模型与 JSON schema；
