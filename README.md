@@ -6,10 +6,11 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0/M1/M2 FROZEN，M3 PLANNED。** M0 已冻结计划封存、
+**当前状态：v0 Implementation，M0/M1/M2/M3 FROZEN。** M0 已冻结计划封存、
 结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结
-有界真实 Chromium 采集。M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题的验收合同，
-但尚未实现。SQLite、本地 API 和完整自举仍是后续里程碑，不能从路线图文字推断为已完成能力。
+有界真实 Chromium 采集；M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题。
+SQLite、本地 API、计划编辑、执行编排和完整自举仍是后续里程碑，不能从路线图文字推断为
+已完成能力。
 
 ## 为什么需要验迹
 
@@ -131,6 +132,30 @@ Profile 或执行任意 Shell。截图作为二进制附件进入 Evidence 清�
 页面错误、请求失败、4xx/5xx、重复写请求和横向溢出仍由封存断言裁决，不由适配器直接写
 `PASS/FAIL`。完整边界见 [M2 真实浏览器证据](docs/06-m2-browser-evidence.md)。
 
+## M3 Vue 证据工作台
+
+M3 在 `web/` 中提供 Vue 3、TypeScript 与 Vite 的只读工作台。它会在显示前逐文件校验
+Bundle Manifest 的路径、大小和 SHA-256，分开呈现 ExecutionStatus 与 Verdict，并展示断言、
+Evidence 索引、浏览器步骤、Console、Network、视口和证据截图。仓库内置脱敏正/负/损坏包；
+也可选择本地证据目录，文件只在浏览器内存中读取，不上传、不持久化。
+
+“宫阙验迹 / Palace Evidence”使用纯 CSS 中轴、院落、格栅和状态令牌，不依赖装饰贴图、CDN、
+远程字体或统计脚本。宫墙朱只表达 `FAIL`、`ERROR` 和异常；状态同时具备文字、符号和可访问
+标签，不依赖颜色判断。
+
+```powershell
+Set-Location web
+npm ci
+npm run lint
+npm test
+npm run build
+npm run preview
+```
+
+默认开发与预览服务只绑定 `127.0.0.1`。M3 不重新裁决报告，不执行项目命令，也不提供
+SQLite、本地 API、计划编辑或跨 Run 比较。完整边界与冻结证据见
+[M3 Vue 证据工作台](docs/07-m3-vue-workbench.md)。
+
 ### 本地运行
 
 ```powershell
@@ -161,7 +186,8 @@ py -3.10 -m venv .venv
   与通用执行编排仍是计划能力。
 - **SQLite**：本地元数据、运行关系和结论索引。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
-- **Vue Workbench**：实验矩阵、时间线、证据浏览、差异比较和报告导出。
+- **Vue Workbench**：已实现 M3 只读证据包、断言和浏览器事实浏览；实验矩阵、计划编辑、
+  跨 Run 差异和报告发布仍是后续能力。
 - **Browser Adapter**：已实现基于 Playwright/Chromium 的回环站点证据采集；远程站点、认证、
   多角色与并行 Context 仍不在 M2 范围。
 
@@ -177,7 +203,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M0 纵向切片](docs/04-m0-vertical-slice.md)
 - [M1 资源与环境预检](docs/05-m1-resource-preflight.md)
 - [M2 真实浏览器证据（FROZEN）](docs/06-m2-browser-evidence.md)
-- [M3 Vue 证据工作台（PLANNED）](docs/07-m3-vue-workbench.md)
+- [M3 Vue 证据工作台（FROZEN）](docs/07-m3-vue-workbench.md)
 
 ## 项目来源
 

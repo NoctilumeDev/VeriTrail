@@ -47,8 +47,13 @@ Core 同时维护变更范围与里程碑门禁：计划声明影响层级后，
 
 ### 2.4 Vue Workbench
 
-提供计划编辑、基线比较、批次矩阵、运行时间线、证据缺口、变量漂移、资源停止、
-Console/Network 浏览、断言解释和报告导出。UI 只展示裁决结果，不在浏览器端另写一套规则。
+M3 已实现只读证据工作台：从同源脱敏夹具或本地目录读取 Report、Evidence/Bundle Manifest、
+Evidence JSON 和受支持截图，在显示前核对路径、大小、引用与 SHA-256，并呈现运行状态、裁决、
+断言、证据索引及 Console/Network/视口/截图事实。UI 只展示生产者裁决，不在浏览器端另写规则；
+本地目录只在内存中读取，不上传、不写回。
+
+计划编辑、基线比较、批次矩阵、跨 Run 差异、SQLite 索引、本地 API、执行时间线和报告发布仍是
+后续能力，不属于 M3 已完成范围。
 
 ### 2.5 Browser Adapter
 
@@ -137,7 +142,15 @@ VeriTrail/
   artifacts/     # local runtime evidence, ignored by Git
 ```
 
-`web/`、`adapters/` 和 SQLite 元数据将在各自前置里程碑冻结后再创建。
+M3 冻结后目录增加：
+
+```text
+VeriTrail/
+  web/          # Vue/TypeScript/Vite 只读证据工作台与脱敏前端夹具
+  scripts/      # 有界 M3 生产构建浏览器验收脚本
+```
+
+`adapters/` 和 SQLite 元数据将在各自前置里程碑冻结后再创建。
 
 M1 在 Core 内增加低开销资源采样和 `preflight` CLI，但不建立执行器：采样器只访问标准库
 系统 API、输出卷、显式回环端口和输出父目录，不通过 Shell 枚举或控制机器。
@@ -145,6 +158,10 @@ M1 在 Core 内增加低开销资源采样和 `preflight` CLI，但不建立执�
 M2 在 Python Core 内增加可选 Playwright Browser Adapter：它只接受 Plan 0.3 的回环 origin、
 结构化步骤和串行视口，截图以二进制附件进入 Artifact Store。它不是通用命令执行器，也不会
 管理被测站点生命周期、浏览器 Profile、远程认证或并行 Context。
+
+M3 不增加生产者或数据库：Vue Workbench 直接只读消费 M0–M2 的开放证据包。演示请求和预览
+服务只绑定回环，生产构建无 CDN、远程字体、遥测和第三方图片；故宫主题结构由 CSS 实现，
+证据截图仍作为经过清单校验的数据展示。
 
 ## 9. 实现顺序
 

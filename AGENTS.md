@@ -6,9 +6,10 @@
   上冻结；M1 已在提交 `21d555cf1a8d5b4f3bc9430b4241c3f70ff0d48f` 上通过两套 Python、
   M0 兼容、三类真实预检、证据包哈希、敏感扫描和残留检查并标记 `FROZEN`；M2 已在提交
   `3db07aa284e16db2afe3b84136371f35ec2091fc` 上通过两套 Python、真实 Chromium 正/负链路、
-  Codex 内置浏览器、附件哈希、敏感扫描和残留检查并标记 `FROZEN`。M3 的只读 Vue 工作台
-  验收合同与“宫阙验迹”主题已在 `docs/07-m3-vue-workbench.md` 独立冻结；M3 可以实现，但仍是
-  `PLANNED`，不得从合同文字推断为已实现能力。
+  Codex 内置浏览器、附件哈希、敏感扫描和残留检查并标记 `FROZEN`；M3 已在提交
+  `ef2a8d64f781ba61bf7fbd9c1511a3419a6cfbaa` 上完成只读 Vue 工作台，并通过前端自动化、两套
+  Python 兼容回归、真实 Chromium、Codex 内置浏览器、同源网络、依赖审计和残留检查，标记
+  `FROZEN`。SQLite、本地 API、计划编辑、执行编排和完整自举仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
@@ -25,9 +26,11 @@
 
 - 优先建立最小纵向闭环，再扩展适配器；不要先堆积导入器、仪表盘或中间件集成。
 - 16 GB Windows 主机默认串行或受限微并行。测试必须有启动前资源预检、软/硬停止线、现场保存和批次清理确认。
-- v0 使用 Python Core、SQLite、Vue Workbench 和 Playwright/CDP；不要求 Docker、MQ、搜索或外部云服务。
+- v0 架构规划使用 Python Core、SQLite、Vue Workbench 和 Playwright/CDP；当前冻结基线只包含
+  Python Core、Vue Workbench 与 Playwright/CDP，SQLite 尚未实现。不要求 Docker、MQ、搜索或外部云服务。
 - M3 Workbench 只读消费 Report/Evidence/Manifest 和浏览器附件，不在前端重新裁决，不修改
-  M0–M2 Schema；计划编辑、SQLite、本地 API 和自举闭环留给后续独立里程碑。
+  M0–M2 Schema；计划编辑、SQLite、本地 API 和自举闭环留给后续独立里程碑。后续里程碑必须
+  先独立冻结合同，不能把 M3 的只读 UI 当成执行编排已经完成。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。
 - 不记录或提交 `.env` 值、令牌、Cookie、Authorization 头、私钥、个人路径或原始敏感业务数据。采集器必须默认脱敏。
 
