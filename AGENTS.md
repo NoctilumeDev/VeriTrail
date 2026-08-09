@@ -21,8 +21,11 @@
   `1a5eeaa6b5516c5b53248411e1284f6a2568e5e2` 上完成 Core/CLI、Comparison 0.1 与
   Workbench，并通过双 Python、真实三态 Comparison、逐字节复建、生产与 Codex 内置浏览器、
   资源、安全和清理终验，标记 `FROZEN`。损坏 Comparison 与预览端口残留反例必须继续保留。
-  M7“预注册四角色配对反事实分析”已有实现与自动化候选，但真实四角色、三态、内置浏览器和
-  清理终验尚未完成，当前不得标记 `FROZEN`。计划编辑、任意项目命令和完整自举仍未实现。
+  M7“预注册四角色配对反事实分析”已在合同提交 `7daf3b4`、实现提交 `9046f25` 与本地文件
+  导入修复 `c726fe8` 上完成 PairingPlan/PairedAnalysis、CLI 与 Workbench，并通过双 Python、
+  真实四角色三态、逐字节复建、来源损坏拒绝、Catalog 隔离、生产与 Codex 内置浏览器、资源、
+  安全和清理终验，标记 `FROZEN`。目录选择器在内置浏览器中不触发导入的失败事实与改成显式
+  四文件导入的修复必须继续保留。计划编辑、任意项目命令和完整自举仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
@@ -53,7 +56,7 @@
 - M6 候选合同只比较两个不同 Run ID、同 sealed Plan 的不可变 Bundle，生成独立 Comparison
   Bundle；不得修改来源 Verdict、自动挑选成功 Run、把 Comparison 写进 M4 Run-only Catalog，
   或把同计划复跑一致性扩张为处理组因果结论。
-- M7 候选合同固定 `BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL` 四角色，
+- M7 冻结合同固定 `BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL` 四角色，
   新增独立 PairingPlan/PairedAnalysis；不得修改 M0–M6 契约、删减不利角色、把配对结果写成
   来源 `PASS/FAIL`，或扩大为统计显著性、组合变量与任意执行器。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。

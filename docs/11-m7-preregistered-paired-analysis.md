@@ -2,10 +2,10 @@
 
 ## 状态
 
-`IMPLEMENTED / AUTOMATED；RUNTIME_VALIDATED PENDING`。本文件先作为实现前独立候选合同提交；
-当前 Core/CLI、Schema、Workbench 与自动化已形成候选，真实运行仍不能由定义或自动化代替。
-前置基线是 M6 冻结提交 `807ef1eafae6249c88c68ab90d0be1e0d1eccf99` 与标签
-`m6-v0.7.0`。只有本合同先成为可寻址提交，M7 才能进入实现。
+`FROZEN`。本文件先在 `7daf3b4` 作为实现前独立合同提交，再由 `9046f25` 实现 Core/CLI、
+Schema 与 Workbench；`c726fe8` 根据真实内置浏览器失败事实把目录选择改为显式四文件导入。
+前置基线仍是 M6 冻结提交 `807ef1eafae6249c88c68ab90d0be1e0d1eccf99` 与标签
+`m6-v0.7.0`，M0–M6 契约未被回写。
 
 ## 目标问题
 
@@ -200,13 +200,103 @@ Workbench 增加本地 Pairing 目录入口，只在浏览器内存中读取。�
 - 前置基线：`m6-v0.7.0`；
 - 目标版本：Python Core `0.8.0.dev1`，Workbench `0.8.0-dev.1`；
 - 目标 CLI：`seal-pairing`、`pair`；
-- 当前里程碑状态：`IMPLEMENTED / AUTOMATED；RUNTIME_VALIDATED PENDING`。
+- 当前里程碑状态：`FROZEN`。
 
-## 当前实现与自动化事实
+## 实现与自动化事实
 
-- 合同提交：`7daf3b4`；实现尚未形成冻结提交；
+- 合同提交：`7daf3b4`；实现提交：`9046f25`；真实浏览器导入修复：`c726fe8`；
 - 新增 PairingPlan seal、四角色 PairedAnalysis Core、`seal-pairing` / `pair` CLI、三个 Schema、
   脱敏示例、Workbench 本地 Loader/View 与测试；
-- Python 3.10 当前全回归 103/103；
-- Workbench 当前 lint、type-check、生产构建通过，Vitest 45/45；
-- 这些只支持 `IMPLEMENTED / AUTOMATED`，不支持 `RUNTIME_VALIDATED` 或 `FROZEN`。
+- Python 3.10 与 3.13 全回归均为 104/104；
+- Workbench lint、type-check、生产构建通过，Vitest 45/45；
+- Python 两套环境 `pip check` 均无破损依赖；npm 镜像站不实现审计接口，显式改用 npm 官方
+  registry 后生产依赖审计为 0 vulnerabilities，未修改持久化 registry 配置。
+
+## 真实四角色与三态
+
+先封存 `m7-sealed-pairing-plan-20260809.json`，PairingPlan SHA-256 为
+`5ec3936f8c4448c9960b5bc078306ca627eaad1381a88ae8ae9e07fca8bcadf0`。随后严格按
+`BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL` 用现有 `evaluate` 生成新的
+不可变 Run，而不是手工拼 Report：
+
+- `m7-paired-baseline-20260809`：`COMPLETED/PASS`；
+- `m7-paired-treatment-20260809`：`COMPLETED/FAIL`；
+- `m7-paired-restored-20260809`：`COMPLETED/PASS`；
+- `m7-paired-negative-control-20260809`：`COMPLETED/PASS`；
+- 另生成处理不生效的 `m7-paired-treatment-no-effect-20260809` 与负对照复制效果的
+  `m7-paired-negative-effect-20260809`，分别为 `COMPLETED/PASS` 与 `COMPLETED/FAIL`。
+
+真实结果如下；PairedAnalysis 状态始终独立于四个来源 Verdict：
+
+| Artifact | Analysis ID | 状态 | 可归因 | 来源 Verdict / 事实 |
+| --- | --- | --- | --- | --- |
+| `m7-paired-supported-20260809` | `pair_a24d66ea58300514d61fe531` | `SUPPORTED` | 是 | `PASS/FAIL/PASS/PASS`，8 个角色结果全部匹配 |
+| `m7-paired-contradicted-20260809` | `pair_e9e03c2616e2343973831d5e` | `CONTRADICTED` | 是 | 处理 Run 为 `PASS`，2 个处理结果不匹配 |
+| `m7-paired-inconclusive-20260809` | `pair_3b9af9bafffa71cdac17ad1b` | `INCONCLUSIVE` | 否 | `NEGATIVE_CONTROL_EFFECT`，负对照 Run 为 `FAIL` |
+
+## 确定性、损坏输入与 Catalog 边界
+
+用同一 sealed PairingPlan 和同一有序四 Run 再次生成到
+`m7-paired-supported-repeatbuild-20260809`，四个文件逐字节一致：
+
+| 文件 | SHA-256 |
+| --- | --- |
+| `paired-analysis-manifest.json` | `d21835a2bc8cc40f267dfee43c2982db2fe0ce8ef84938daa9a7a8ef56cd9389` |
+| `paired-analysis.json` | `97a02f93fe4e744d9050131134a014681ee4c7f247c29f82dd9a18f3ff38278b` |
+| `paired-analysis.md` | `180aa8c840fbda20c0f8b2229b87e2f435cf62b1d34eca113f5adc37d7df65b6` |
+| `sealed-pairing-plan.json` | `ae9bbceaf404b6fdd7ee3581b1e9578b2653559178d46d5acce5808303e0842e` |
+
+- 缺少 `report.md` 的真实来源副本命中 `BUNDLE_FILE_SET_MISMATCH`，退出码 2，没有创建目标目录，
+  `.veritrail-*` 暂存数为 0；单元测试另覆盖来源/PairingPlan 改字节、角色复用、顺序错误、控制
+  投影漂移和输出覆盖拒绝；
+- 把完整 PairedAnalysis 作为唯一候选交给 M4 Catalog，结果
+  `cat_f4d17529a2deff6c2ba47e25` 为 `COMPLETED_WITH_ISSUES`、`run_count=0`、
+  `MISSING_BUNDLE_MANIFEST=1`，证明它没有被偷换成 Run；
+- Workbench 中改动 `paired-analysis.md` 一字节命中 `PAIRING_SIZE_MISMATCH`，配对视图数量为 0，
+  显式返回正向入口后恢复 `COMPLETED/PASS`。
+
+## 真实浏览器与用户链路
+
+第一版目录输入在普通 Playwright 可注入，但 Codex 内置浏览器点击目录选择后没有触发 change；
+这个真实反例促成 `c726fe8`：入口改为一次显式选择 Manifest、sealed PairingPlan、JSON 与 Markdown
+四个文件，Loader 的文件集合与哈希门禁不变。
+
+修复后的生产构建有界验收输出为 `m7-pairing-browser-v2-20260809`：
+
+- 桌面真实导入 `SUPPORTED / CONTRADICTED / INCONCLUSIVE`，损坏包拒绝与恢复、刷新要求重新选择、
+  history 返回均通过；移动 390×844 导入 `SUPPORTED`，横向溢出为 0；
+- 6 个检查全部完成，48 个请求、0 HTTP error、0 外部请求、0 写请求、0 Console/Page/Request
+  异常，验收进程自行释放 18770；
+- 桌面截图 SHA-256：
+  `2b0ddf7d2f0420ff12920204fc5ff773179d59a36277ac9ad3b16ec8981ed10a`；移动截图：
+  `b8f989f926ca15d06e716e3fdafb5079555cca3157caaf963813938c59924644`。
+
+Codex 内置浏览器再次独立验收：
+
+- 桌面依次导入真实三态，四角色顺序、唯一主要变量、来源 Verdict、两项 outcome 和“不提供统计
+  显著性/不替代 Verdict”边界均可读；处理不生效与负对照复制效果没有被正向结果遮蔽；
+- 损坏 Markdown 命中 `PAIRING_SIZE_MISMATCH`，刷新命中 `PAIRING_RESELECT_REQUIRED`，两条错误
+  均可返回正向入口；
+- 390×844 与 1280×720 均无横向溢出；Console warning/error 为 0；观察到 12 项页面资源，
+  全部来自 `127.0.0.1:18769`。完整状态码断言由生产 Playwright 证据给出；
+- 内置浏览器会话已关闭，预览的 Python 启动器 PID 与实际监听子进程按父子关系、命令摘要、
+  启动时间和端口所有权精确核验后停止，18769 监听恢复为 0。
+
+## 安全、资源与清理事实
+
+- 16 GB 主机始终串行验收；全回归前观测可用内存约 5.77 GiB、系统盘可用约 147.7 GiB，
+  没有启动 Docker 或无关中间件；
+- 受控端口 18765–18770 在回归前均无监听；生产与内置浏览器验收结束后对应预览进程均退出；
+- 追踪文件未命中个人绝对路径、GitHub 邮箱、私钥、GitHub token 或 OpenAI key 形态；全部真实
+  Run、PairedAnalysis、Catalog 和浏览器证据均由 Git 忽略；
+- 缺失来源拒绝后输出目录不存在且 staging 为 0；浏览器上传副本文件已移除，不保留证据内容。
+
+## 冻结结论与边界
+
+这些事实支持冻结 M7：在四角色、固定顺序、唯一主要变量、不可变来源与预注册 outcome 的边界
+内，VeriTrail 可以确定性地区分 `SUPPORTED / CONTRADICTED / INCONCLUSIVE`，保留每个 Run 的
+原始 Verdict，并在来源、输出或控制条件失真时拒绝或降为不可归因。
+
+它们不证明统计显著性、多个主要变量、任意 Run 自动配对、跨批次聚合、真实中间件因果、计划
+编辑、任意项目命令或完整 v0 自举；也不允许删除不利角色或把 PairedAnalysis 写入 Run-only
+Catalog。下一里程碑只有在本冻结提交和 `m7-v0.8.0` 标签可寻址后才能开始实现。

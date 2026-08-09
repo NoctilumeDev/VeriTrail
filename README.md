@@ -6,7 +6,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0–M6 FROZEN，M7 IMPLEMENTED/AUTOMATED。** M0 已冻结计划封存、
+**当前状态：v0 Implementation，M0–M7 FROZEN。** M0 已冻结计划封存、
 结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结
 有界真实 Chromium 采集；M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题。
 M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Workbench Run 门厅与两阶段
@@ -16,8 +16,10 @@ M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Work
 正向 Run 均保留，ABORT/STOP、端口竞争、源变化、Catalog/Workbench 和清理边界已真实验证。
 M6“同计划复跑确定性比较”已 `FROZEN`：Core/CLI、Comparison 0.1 与 Workbench 只读验真已
 通过双 Python、真实 `MATCH/DRIFT/INCONCLUSIVE`、逐字节复建、生产与 Codex 内置浏览器、
-资源、安全和清理终验。M7 已有固定四角色 PairingPlan/PairedAnalysis、CLI、Workbench 与
-自动化候选，但真实运行与终验尚未完成；计划编辑、任意项目命令和完整自举仍是后续里程碑。
+资源、安全和清理终验。M7“预注册四角色配对反事实分析”也已 `FROZEN`：固定四角色
+PairingPlan/PairedAnalysis、三态真实结果、来源损坏拒绝、逐字节复建、Catalog 隔离和故宫主题
+Workbench 均完成双 Python、生产与 Codex 内置浏览器终验；计划编辑、任意项目命令和完整自举
+仍是后续里程碑。
 
 ## 为什么需要验迹
 
@@ -229,11 +231,11 @@ M6 把两个独立、不可变、同 sealed Plan 的 Run 生成独立 Comparison
 完整预注册门槛、失败反例与冻结事实见
 [M6 同计划复跑确定性比较](docs/10-m6-deterministic-rerun-comparison.md)。
 
-## M7 预注册四角色配对反事实分析（IMPLEMENTED/AUTOMATED）
+## M7 预注册四角色配对反事实分析（FROZEN）
 
-M7 候选实现固定 `BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL`，只允许
+M7 冻结实现固定 `BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL`，只允许
 ExperimentPlan 的版本、唯一主要变量值和 seal 变化。它生成独立 PairedAnalysis，不改写来源
-Verdict；实现与自动化仍不代表真实验收，完整门槛见
+Verdict；真实三态、损坏输入、确定性复建、Catalog 隔离和浏览器验收事实见
 [M7 预注册四角色配对反事实分析](docs/11-m7-preregistered-paired-analysis.md)。
 
 ### 本地运行
@@ -288,7 +290,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M4 本地 Run 目录与轻量自举（FROZEN）](docs/08-m4-local-run-catalog.md)
 - [M5 有界运行编排与静态目标生命周期（FROZEN）](docs/09-m5-bounded-run-orchestrator.md)
 - [M6 同计划复跑确定性比较（FROZEN）](docs/10-m6-deterministic-rerun-comparison.md)
-- [M7 预注册四角色配对反事实分析（IMPLEMENTED/AUTOMATED）](docs/11-m7-preregistered-paired-analysis.md)
+- [M7 预注册四角色配对反事实分析（FROZEN）](docs/11-m7-preregistered-paired-analysis.md)
 
 ## 项目来源
 
