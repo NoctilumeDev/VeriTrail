@@ -15,7 +15,9 @@ def main() -> int:
         required=True,
         choices=(
             "argv",
+            "canary",
             "echo",
+            "exit-code",
             "marker",
             "sleep",
             "stdin-eof",
@@ -26,6 +28,7 @@ def main() -> int:
         ),
     )
     parser.add_argument("--marker")
+    parser.add_argument("--code", type=int, default=7)
     parser.add_argument("--seconds", type=float, default=5.0)
     parser.add_argument("values", nargs="*")
     args = parser.parse_args()
@@ -37,6 +40,12 @@ def main() -> int:
         print("stdout-ok")
         print("stderr-ok", file=sys.stderr)
         return 0
+    if args.mode == "canary":
+        print("ghp_12345678901234567890 C:\\private\\unit alice@example.test")
+        print("\\\\unit-server\\private\\trace", file=sys.stderr)
+        return 0
+    if args.mode == "exit-code":
+        return args.code
     if args.mode == "marker":
         if args.marker is None:
             return 2

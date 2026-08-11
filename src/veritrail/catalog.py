@@ -27,7 +27,11 @@ MAX_BUNDLE_BYTES = 64 * 1024 * 1024
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 EXECUTION_STATUSES = {"PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"}
 VERDICTS = {"PASS", "FAIL", "INCONCLUSIVE", "PENDING"}
-SAFE_ATTACHMENT_TYPES = {"image/png", "image/jpeg"}
+SAFE_ATTACHMENT_TYPES = {
+    "image/png",
+    "image/jpeg",
+    "text/plain; charset=utf-8",
+}
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
 
 
@@ -363,6 +367,14 @@ def _validate_report_and_evidence(
                 raise _CandidateRejected("UNSAFE_ATTACHMENT_TYPE")
             _required_string(attachment_raw.get("logical_name"))
             attachment_path = _safe_bundle_path(attachment_raw.get("path"))
+            suffix = Path(attachment_path).suffix.lower()
+            expected_suffixes = {
+                "image/png": {".png"},
+                "image/jpeg": {".jpg", ".jpeg"},
+                "text/plain; charset=utf-8": {".txt"},
+            }
+            if suffix not in expected_suffixes[media_type]:
+                raise _CandidateRejected("UNSAFE_ATTACHMENT_TYPE")
             if attachment_path in seen_attachments:
                 raise _CandidateRejected("DUPLICATE_ATTACHMENT_PATH")
             seen_attachments.add(attachment_path)

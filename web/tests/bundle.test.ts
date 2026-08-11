@@ -89,6 +89,75 @@ describe('Bundle Loader', () => {
     )
   })
 
+  it('accepts hashed UTF-8 command output without treating it as an image', async () => {
+    const outputBlob = new Blob(['sanitized command output\n'], {
+      type: 'text/plain; charset=utf-8',
+    })
+    const evidenceBlob = new Blob([
+      JSON.stringify({
+        schema_version: '0.1',
+        evidence_type: 'runtime.command',
+        source: 'unit',
+        captured_at: '2026-08-11T00:00:00Z',
+        facts: {},
+      }),
+    ])
+    const attachment = {
+      logical_name: 'command-stdout',
+      media_type: 'text/plain; charset=utf-8',
+      path: 'attachments/command/stdout.txt',
+      sha256: await sha256Hex(outputBlob),
+      size: outputBlob.size,
+    }
+    const artifact = {
+      evidence_type: 'runtime.command',
+      path: 'evidence/001-runtime.command.json',
+      sha256: await sha256Hex(evidenceBlob),
+      size: evidenceBlob.size,
+      redacted: true,
+      redacted_fields: 0,
+      redaction_rule_version: '0.1',
+      parser_version: '0.1',
+      captured_at: '2026-08-11T00:00:00Z',
+      source: 'unit',
+      source_name: 'generated-command.json',
+      retention: 'ephemeral',
+      attachments: [attachment],
+    }
+    const reportBlob = new Blob([JSON.stringify(minimalReport({ evidence: [artifact] }))])
+    const evidenceManifestBlob = new Blob([
+      JSON.stringify({
+        schema_version: '0.1',
+        run_id: 'unit-run',
+        artifacts: [artifact],
+        duplicate_inputs_ignored: [],
+      }),
+    ])
+    const entries = new Map<string, Blob>([
+      ['report.json', reportBlob],
+      ['evidence-manifest.json', evidenceManifestBlob],
+      ['evidence/001-runtime.command.json', evidenceBlob],
+      ['attachments/command/stdout.txt', outputBlob],
+    ])
+    const files = await Promise.all(
+      [...entries].map(async ([path, blob]) => ({
+        path,
+        sha256: await sha256Hex(blob),
+        size: blob.size,
+      })),
+    )
+    entries.set(
+      'bundle-manifest.json',
+      new Blob([JSON.stringify({ schema_version: '0.1', run_id: 'unit-run', files })]),
+    )
+
+    const loaded = await loadBundleFromBlobs(entries, 'unit')
+
+    expect(loaded.evidenceManifest.artifacts[0]?.attachments).toEqual([attachment])
+    expect(loaded.imageUrls).toEqual({})
+    loaded.release()
+  })
+
   it('revokes attachment object URLs when a later evidence document is invalid', async () => {
     const attachmentBlob = new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' })
     const firstEvidenceBlob = new Blob([

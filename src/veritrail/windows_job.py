@@ -230,9 +230,10 @@ def _validate_runtime_inputs(
 def _create_job(backend: _WindowsBackend, max_processes: int) -> tuple[Any, bool, bool]:
     job = backend.win32job.CreateJobObject(None, "")
     try:
-        parent_in_job = bool(
-            backend.win32job.IsProcessInJob(backend.win32api.GetCurrentProcess(), None)
-        )
+        current_process = backend.win32api.GetCurrentProcess()
+        parent_in_job = bool(backend.win32job.IsProcessInJob(current_process, None))
+        if backend.win32job.IsProcessInJob(current_process, job):
+            raise SafetyError("M9 ownership backend refused a Job that already contains the runner")
         information = backend.win32job.QueryInformationJobObject(
             job, backend.win32job.JobObjectExtendedLimitInformation
         )

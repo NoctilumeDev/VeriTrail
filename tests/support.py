@@ -46,13 +46,24 @@ def orchestration_plan() -> dict[str, Any]:
 def command_plan() -> dict[str, Any]:
     plan = orchestration_plan()
     plan["schema_version"] = "0.5"
+    for variable in plan["variables"]:
+        if variable["name"] == "target_lifecycle_mode":
+            variable["role"] = "CONTROLLED"
+    plan["variables"].append(
+        {
+            "name": "pre_target_command_mode",
+            "role": "PRIMARY",
+            "value": "veritrail_managed_trusted_process_oneshot",
+            "source": "sealed-plan",
+        }
+    )
     plan["required_evidence"].append("runtime.command")
     plan["assertions"].append(
         {
             "id": "command-exit-accepted",
             "severity": "HARD",
             "evidence_type": "runtime.command",
-            "path": "/exit_expected",
+            "path": "/facts/exit_expected",
             "operator": "eq",
             "expected": True,
         }

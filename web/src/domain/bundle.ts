@@ -22,7 +22,11 @@ const EXECUTION_STATUSES = new Set<ExecutionStatus>([
   'ERROR',
 ])
 const VERDICTS = new Set<Verdict>(['PASS', 'FAIL', 'INCONCLUSIVE', 'PENDING'])
-const SAFE_IMAGE_TYPES = new Set(['image/png', 'image/jpeg'])
+const SAFE_ATTACHMENT_TYPES = new Set([
+  'image/png',
+  'image/jpeg',
+  'text/plain; charset=utf-8',
+])
 const API_ERROR_MESSAGES: Record<string, string> = {
   RUN_NOT_FOUND: 'Catalog Run 不存在。',
   BUNDLE_FILE_NOT_FOUND: 'Bundle 文件未在清单中声明。',
@@ -149,13 +153,21 @@ function validateBundleManifest(value: unknown): BundleManifest {
 function validateAttachment(value: unknown, name: string) {
   const attachment = requireRecord(value, name)
   const mediaType = requireString(attachment.media_type, `${name}.media_type`)
-  if (!SAFE_IMAGE_TYPES.has(mediaType)) {
-    fail('UNSAFE_ATTACHMENT', 'M3 只允许展示清单内的 PNG/JPEG 附件。')
+  if (!SAFE_ATTACHMENT_TYPES.has(mediaType)) {
+    fail('UNSAFE_ATTACHMENT', '只允许读取清单内的 PNG、JPEG 或 UTF-8 文本附件。')
   }
+  const path = normalizeBundlePath(requireString(attachment.path, `${name}.path`))
+  const lowerPath = path.toLowerCase()
+  const suffixMatches =
+    (mediaType === 'image/png' && lowerPath.endsWith('.png')) ||
+    (mediaType === 'image/jpeg' &&
+      (lowerPath.endsWith('.jpg') || lowerPath.endsWith('.jpeg'))) ||
+    (mediaType === 'text/plain; charset=utf-8' && lowerPath.endsWith('.txt'))
+  if (!suffixMatches) fail('UNSAFE_ATTACHMENT', '附件类型与固定扩展名不一致。')
   return {
     logical_name: requireString(attachment.logical_name, `${name}.logical_name`),
     media_type: mediaType,
-    path: normalizeBundlePath(requireString(attachment.path, `${name}.path`)),
+    path,
     sha256: requireSha256(attachment.sha256, `${name}.sha256`),
     size: requireNumber(attachment.size, `${name}.size`),
   }
@@ -378,11 +390,13 @@ export async function loadBundleFromBlobs(
         ) {
           fail('REFERENCE_MISMATCH', '附件与清单索引不一致。')
         }
-        const objectUrl = URL.createObjectURL(
-          new Blob([attachmentBlob], { type: attachment.media_type }),
-        )
-        imageUrls[attachment.path] = objectUrl
-        createdUrls.push(objectUrl)
+        if (attachment.media_type === 'image/png' || attachment.media_type === 'image/jpeg') {
+          const objectUrl = URL.createObjectURL(
+            new Blob([attachmentBlob], { type: attachment.media_type }),
+          )
+          imageUrls[attachment.path] = objectUrl
+          createdUrls.push(objectUrl)
+        }
       }
     }
   } catch (error) {

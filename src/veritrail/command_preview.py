@@ -4,6 +4,8 @@ import hashlib
 import os
 import re
 import stat
+from copy import deepcopy
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -43,6 +45,17 @@ FORBIDDEN_EXECUTABLES = {
     "yarn.exe",
     "zsh.exe",
 }
+
+
+@dataclass(frozen=True)
+class ResolvedCommand:
+    preview: dict[str, Any]
+    subject_root: Path
+    working_directory: Path
+    executable: Path
+    executable_identity: dict[str, Any]
+    inherited_environment: dict[str, str]
+    explicit_environment: dict[str, str]
 
 
 def _reject_unknown_fields(
@@ -177,7 +190,7 @@ def _resolve_executable(raw_path: str) -> tuple[Path, dict[str, Any]]:
 
 def _environment_projection(
     command: dict[str, Any], environment: Mapping[str, str]
-) -> tuple[list[str], list[str], str]:
+) -> tuple[dict[str, str], dict[str, str], str]:
     available: dict[str, str] = {}
     for name, value in environment.items():
         normalized = name.upper()
@@ -203,7 +216,11 @@ def _environment_projection(
         "set": {name: explicit[name] for name in sorted(explicit)},
         "runner": {"TEMP": "<RUN_WORK>", "TMP": "<RUN_WORK>"},
     }
-    return sorted(inherit_names), sorted(explicit), sha256_json(projection)
+    return (
+        {name: inherited_values[name] for name in sorted(inherit_names)},
+        {name: explicit[name] for name in sorted(explicit)},
+        sha256_json(projection),
+    )
 
 
 def _preview_arguments(arguments: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -223,13 +240,13 @@ def _preview_arguments(arguments: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return preview
 
 
-def build_command_preview(
+def resolve_command(
     plan: dict[str, Any],
     *,
     subject_root: Path,
     tool_bindings_path: Path,
     environment: Mapping[str, str] | None = None,
-) -> dict[str, Any]:
+) -> ResolvedCommand:
     verify_sealed_plan(plan)
     if plan.get("schema_version") != "0.5":
         raise ValidationError(["command-preview requires ExperimentPlan schema_version '0.5'"])
@@ -252,7 +269,7 @@ def build_command_preview(
             resolved_subject, root, f"command.subject_watch_roots[{index}]"
         )
 
-    _, executable_identity = _resolve_executable(binding["executable"])
+    resolved_executable, executable_identity = _resolve_executable(binding["executable"])
     inherited, explicit, environment_sha256 = _environment_projection(
         command, os.environ if environment is None else environment
     )
@@ -278,8 +295,8 @@ def build_command_preview(
         "working_directory": working_directory,
         "working_directory_identity_sha256": working_identity,
         "environment": {
-            "inherit_names": inherited,
-            "set_names": explicit,
+            "inherit_names": sorted(inherited),
+            "set_names": sorted(explicit),
             "runner_names": ["TEMP", "TMP"],
             "projection_sha256": environment_sha256,
             "values_persisted": False,
@@ -310,4 +327,28 @@ def build_command_preview(
         },
     }
     preview["preview_sha256"] = sha256_json(preview)
-    return preview
+    return ResolvedCommand(
+        preview=preview,
+        subject_root=resolved_subject,
+        working_directory=resolved_working,
+        executable=resolved_executable,
+        executable_identity=executable_identity,
+        inherited_environment=inherited,
+        explicit_environment=explicit,
+    )
+
+
+def build_command_preview(
+    plan: dict[str, Any],
+    *,
+    subject_root: Path,
+    tool_bindings_path: Path,
+    environment: Mapping[str, str] | None = None,
+) -> dict[str, Any]:
+    resolved = resolve_command(
+        plan,
+        subject_root=subject_root,
+        tool_bindings_path=tool_bindings_path,
+        environment=environment,
+    )
+    return deepcopy(resolved.preview)

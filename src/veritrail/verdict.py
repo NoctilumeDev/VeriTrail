@@ -170,7 +170,7 @@ def _detect_variable_contamination(
 def _detect_preflight_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.2", "0.3", "0.4"}:
+    if plan.get("schema_version") not in {"0.2", "0.3", "0.4", "0.5"}:
         return []
     preflight = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.preflight"
@@ -207,7 +207,7 @@ def _detect_preflight_contamination(
 def _detect_browser_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.3", "0.4"}:
+    if plan.get("schema_version") not in {"0.3", "0.4", "0.5"}:
         return []
     sessions = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "browser.session"
@@ -244,7 +244,7 @@ def _detect_browser_contamination(
 def _detect_orchestration_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") != "0.4":
+    if plan.get("schema_version") not in {"0.4", "0.5"}:
         return []
     sessions = [
         artifact
@@ -305,6 +305,169 @@ def _detect_orchestration_contamination(
     return contamination
 
 
+def _detect_command_contamination(
+    plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
+) -> list[dict[str, Any]]:
+    if plan.get("schema_version") != "0.5":
+        return []
+    commands = [
+        artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.command"
+    ]
+    contamination: list[dict[str, Any]] = []
+    if len(commands) > 1:
+        contamination.append(
+            {
+                "code": "MULTIPLE_COMMAND_EVIDENCE",
+                "message": "A Plan 0.5 Run must contain exactly one runtime.command artifact.",
+            }
+        )
+    for artifact in commands:
+        facts = artifact.document["facts"]
+        if facts["plan_sha256"] != plan["seal"]["digest"]:
+            contamination.append(
+                {
+                    "code": "COMMAND_PLAN_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Command evidence references a different sealed Plan.",
+                }
+            )
+        if facts["command_policy_sha256"] != sha256_json(plan["command"]):
+            contamination.append(
+                {
+                    "code": "COMMAND_POLICY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Command evidence differs from the sealed command policy.",
+                }
+            )
+        expected_arguments = []
+        for argument in plan["command"]["arguments"]:
+            if "literal" in argument:
+                expected_arguments.append({"kind": "literal", "value": argument["literal"]})
+            else:
+                segments = list(argument["run_work_path"])
+                expected_arguments.append(
+                    {
+                        "kind": "run_work_path",
+                        "segments": segments,
+                        "value": "<RUN_WORK>/" + "/".join(segments),
+                    }
+                )
+        expected_kinds = [item["kind"] for item in expected_arguments]
+        environment = facts["environment"]
+        subject = facts["subject"]
+        if any(
+            (
+                facts["argument_count"] != len(expected_arguments),
+                facts["argument_kinds"] != expected_kinds,
+                facts["arguments_sha256"] != sha256_json(expected_arguments),
+                facts["working_directory"] != plan["command"]["working_directory"],
+                environment["inherit_names"]
+                != sorted(name.upper() for name in plan["command"]["environment"]["inherit"]),
+                environment["set_names"]
+                != sorted(name.upper() for name in plan["command"]["environment"]["set"]),
+                subject["policy"] != plan["command"]["write_policy"],
+                subject["watch_roots"] != plan["command"]["subject_watch_roots"],
+            )
+        ):
+            contamination.append(
+                {
+                    "code": "COMMAND_RUNTIME_POLICY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Command runtime facts differ from the sealed command policy.",
+                }
+            )
+        if facts["command_id"] != plan["command"]["command_id"] or facts[
+            "tool_binding_id"
+        ] != plan["command"]["tool_binding"]:
+            contamination.append(
+                {
+                    "code": "COMMAND_IDENTITY_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Command evidence identifies a different command or tool binding.",
+                }
+            )
+        ownership = facts["ownership"]
+        if ownership["active_process_limit"] != plan["command"]["max_processes"]:
+            contamination.append(
+                {
+                    "code": "COMMAND_PROCESS_LIMIT_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Observed command process limit differs from the sealed policy.",
+                }
+            )
+        if facts["cleanup_complete"] is False:
+            contamination.append(
+                {
+                    "code": "COMMAND_CLEANUP_INCOMPLETE",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The trusted command did not complete its owned cleanup boundary.",
+                }
+            )
+        if subject["snapshot_complete"] is False:
+            contamination.append(
+                {
+                    "code": "COMMAND_SUBJECT_SNAPSHOT_INCOMPLETE",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The monitored subject could not be compared after command execution.",
+                }
+            )
+        elif subject["final_state_drift_detected"] is True:
+            contamination.append(
+                {
+                    "code": "COMMAND_SUBJECT_FINAL_STATE_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The trusted command left changes inside the sealed subject watch roots.",
+                }
+            )
+        if facts["executable_identity_match"] is False:
+            contamination.append(
+                {
+                    "code": "COMMAND_EXECUTABLE_IDENTITY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The executable identity changed during command execution.",
+                }
+            )
+        if (
+            facts["stdout"]["persisted_bytes"] > plan["command"]["max_stdout_bytes"]
+            or facts["stderr"]["persisted_bytes"] > plan["command"]["max_stderr_bytes"]
+        ):
+            contamination.append(
+                {
+                    "code": "COMMAND_OUTPUT_LIMIT_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Persisted command output exceeds the sealed stream limit.",
+                }
+            )
+        if facts["collection_errors"]:
+            contamination.append(
+                {
+                    "code": "COMMAND_COLLECTION_ERROR",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The command collector recorded one or more bounded observation errors.",
+                }
+            )
+        reason = facts["termination_reason"]
+        allowed_statuses = (
+            {"ABORTED"}
+            if reason
+            in {"TIMEOUT", "CANCELLED", "STDOUT_LIMIT_EXCEEDED", "STDERR_LIMIT_EXCEEDED"}
+            else {"COMPLETED", "ERROR"}
+            if reason == "EXITED"
+            else {"COMPLETED"}
+            if reason == "DESCENDANT_GRACE_EXPIRED"
+            else {"ERROR"}
+        )
+        if execution_status not in allowed_statuses:
+            contamination.append(
+                {
+                    "code": "COMMAND_STATUS_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Command termination reason conflicts with the Run execution status.",
+                }
+            )
+    return contamination
+
+
 def evaluate(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> dict[str, Any]:
@@ -315,6 +478,7 @@ def evaluate(
     contamination.extend(_detect_preflight_contamination(plan, evidence, execution_status))
     contamination.extend(_detect_browser_contamination(plan, evidence, execution_status))
     contamination.extend(_detect_orchestration_contamination(plan, evidence, execution_status))
+    contamination.extend(_detect_command_contamination(plan, evidence, execution_status))
     if plan["baseline"]["status"] == "EXPIRED":
         contamination.append(
             {

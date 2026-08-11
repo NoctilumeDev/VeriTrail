@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -15,7 +16,8 @@ from veritrail.batching import (
 from veritrail.browser import collect_browser_evidence
 from veritrail.catalog import CatalogError, build_catalog
 from veritrail.comparison import ComparisonError, create_comparison_bundle
-from veritrail.command_preview import build_command_preview
+from veritrail.command_execution import collect_command_evidence
+from veritrail.command_preview import build_command_preview, resolve_command
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.local_api import create_catalog_server
@@ -83,9 +85,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     run = subparsers.add_parser(
         "run",
-        help="run Plan 0.4 with the bounded built-in static HTTP target",
+        help="run Plan 0.4 or an approved Plan 0.5 trusted ONESHOT before the static target",
     )
-    run.add_argument("--plan", type=Path, required=True, help="unsealed or sealed Plan 0.4 JSON")
+    run.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.4/0.5 JSON"
+    )
     run.add_argument(
         "--subject-root",
         type=Path,
@@ -94,6 +98,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run.add_argument("--output", type=Path, required=True, help="new output directory")
     run.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")
+    run.add_argument(
+        "--tool-bindings",
+        type=Path,
+        help="required local ToolBindings 0.1 JSON for Plan 0.5; never persisted",
+    )
+    run.add_argument(
+        "--approve-command",
+        help="required Plan 0.5 CommandPreview SHA-256 approval",
+    )
 
     command_preview = subparsers.add_parser(
         "command-preview",
@@ -339,8 +352,24 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "run":
             plan = load_and_seal_plan(args.plan)
-            if plan["schema_version"] != "0.4":
-                raise ValidationError(["run requires ExperimentPlan schema_version '0.4'"])
+            if plan["schema_version"] not in {"0.4", "0.5"}:
+                raise ValidationError(
+                    ["run requires ExperimentPlan schema_version '0.4' or '0.5'"]
+                )
+            is_command_run = plan["schema_version"] == "0.5"
+            if is_command_run:
+                if args.tool_bindings is None:
+                    raise ValidationError(["Plan 0.5 run requires --tool-bindings"])
+                if not isinstance(args.approve_command, str) or not re.fullmatch(
+                    r"[0-9a-f]{64}", args.approve_command
+                ):
+                    raise ValidationError(
+                        ["Plan 0.5 run requires a lowercase SHA-256 --approve-command"]
+                    )
+            elif args.tool_bindings is not None or args.approve_command is not None:
+                raise ValidationError(
+                    ["Plan 0.4 run does not accept command approval arguments"]
+                )
             if args.output.exists():
                 raise SafetyError(
                     f"refusing to overwrite existing output directory: {args.output.name}"
@@ -354,16 +383,68 @@ def main(argv: list[str] | None = None) -> int:
             target_started = False
             target_ready = False
             cleanup_complete: bool | None = None
+            command_started = False
+            command_cleanup_complete: bool | None = None
+            command_termination_reason: str | None = None
             if decision == "PROCEED":
-                orchestration = collect_orchestrated_evidence(plan, args.subject_root)
-                generated.append(orchestration.orchestration)
-                if orchestration.browser is not None:
-                    generated.append(orchestration.browser)
-                execution_status = orchestration.execution_status
-                orchestration_facts = orchestration.orchestration.document["facts"]
-                target_started = orchestration_facts["server_started"]
-                target_ready = orchestration_facts["ready"]
-                cleanup_complete = orchestration_facts["cleanup_complete"]
+                continue_pipeline = True
+                if is_command_run:
+                    try:
+                        resolved = resolve_command(
+                            plan,
+                            subject_root=args.subject_root,
+                            tool_bindings_path=args.tool_bindings,
+                        )
+                        if resolved.preview["preview_sha256"] != args.approve_command:
+                            raise SafetyError(
+                                "approved command digest does not match the live CommandPreview"
+                            )
+                        command_result = collect_command_evidence(
+                            plan,
+                            resolved,
+                            tool_bindings_path=args.tool_bindings,
+                            output_parent=args.output.parent,
+                        )
+                    except VeriTrailError:
+                        raise
+                    except Exception:
+                        print(
+                            json.dumps(
+                                {
+                                    "error": {
+                                        "code": "COMMAND_RUN_INTERNAL_ERROR",
+                                        "message": "Trusted command execution encountered an unexpected internal error.",
+                                    }
+                                },
+                                ensure_ascii=False,
+                                sort_keys=True,
+                            ),
+                            file=sys.stderr,
+                        )
+                        return 1
+                    generated.append(command_result.command)
+                    command_facts = command_result.command.document["facts"]
+                    command_started = command_facts["target_resumed"]
+                    command_cleanup_complete = command_facts["cleanup_complete"]
+                    command_termination_reason = command_facts["termination_reason"]
+                    cleanup_complete = command_cleanup_complete
+                    execution_status = command_result.execution_status
+                    continue_pipeline = command_result.continue_pipeline
+                if continue_pipeline:
+                    orchestration = collect_orchestrated_evidence(plan, args.subject_root)
+                    generated.append(orchestration.orchestration)
+                    if orchestration.browser is not None:
+                        generated.append(orchestration.browser)
+                    execution_status = orchestration.execution_status
+                    orchestration_facts = orchestration.orchestration.document["facts"]
+                    target_started = orchestration_facts["server_started"]
+                    target_ready = orchestration_facts["ready"]
+                    target_cleanup = orchestration_facts["cleanup_complete"]
+                    cleanup_complete = (
+                        target_cleanup
+                        if command_cleanup_complete is None
+                        else command_cleanup_complete and target_cleanup
+                    )
             else:
                 execution_status = "ABORTED" if decision == "ABORT" else "COMPLETED"
             report = create_bundle(
@@ -374,19 +455,26 @@ def main(argv: list[str] | None = None) -> int:
                 execution_status=execution_status,
                 generated_evidence=generated,
             )
-            _success(
-                {
-                    "command": "run",
-                    "output": args.output.name,
-                    "run_id": report["run_id"],
-                    "resource_decision": decision,
-                    "target_started": target_started,
-                    "target_ready": target_ready,
-                    "cleanup_complete": cleanup_complete,
-                    "execution_status": report["execution_status"],
-                    "verdict": report["verdict"],
-                }
-            )
+            payload = {
+                "command": "run",
+                "output": args.output.name,
+                "run_id": report["run_id"],
+                "resource_decision": decision,
+                "target_started": target_started,
+                "target_ready": target_ready,
+                "cleanup_complete": cleanup_complete,
+                "execution_status": report["execution_status"],
+                "verdict": report["verdict"],
+            }
+            if is_command_run:
+                payload.update(
+                    {
+                        "command_started": command_started,
+                        "command_cleanup_complete": command_cleanup_complete,
+                        "command_termination_reason": command_termination_reason,
+                    }
+                )
+            _success(payload)
             return 0
         if args.command == "catalog-build":
             try:
