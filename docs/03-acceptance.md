@@ -10,9 +10,8 @@
 Catalog/Workbench 和清理验收并独立冻结。M6 同计划复跑确定性比较也已通过双 Python、真实
 三态 Comparison、逐字节复建、生产与 Codex 内置浏览器、资源、安全和清理终验并独立冻结。
 M7 四角色配对/反事实分析也已通过双 Python、真实四角色三态、逐字节复建、损坏拒绝、
-Catalog 隔离、生产与 Codex 内置浏览器、资源、安全和清理终验并独立冻结。任意项目命令和
-完整自举仍是 v0 后续合同，不是已完成清单。每个里程碑只有代码、自动化和适用的真实运行
-证据齐全后，才能独立冻结。
+Catalog 隔离、生产与 Codex 内置浏览器、资源、安全和清理终验并独立冻结。每个里程碑只有代码、
+自动化和适用的真实运行证据齐全后，才能独立冻结。
 
 M8 全因子批次矩阵与固定种子扰动已 `FROZEN`：四个公共
 Schema、两个 CLI、脱敏 2×2 矩阵、三态/污染/确定性/安全反例，以及四文件只读 Loader、矩阵/
@@ -21,6 +20,15 @@ wave/来源状态视图已经完成；8 个独立 M5 Run 的真实 2×2 批次�
 和 Console/Network 已验证，真实 Chromium 补证自动化键盘顺序与同源只读网络，人工系统键盘
 最终在内置浏览器中证明焦点进入全因子矩阵；资源、安全、残留、提交与标签门禁均已完成。
 M8 仍不证明真实并行、任意项目命令或完整自举。
+
+M9 受控项目命令执行已 `FROZEN`：Plan 0.5、ToolBindings 0.1、CommandPreview 0.1、Windows Job
+Object trusted process runner 与 `runtime.command` 已通过双 Python、Python/Node 真实命令、重复
+Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
+与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
+
+M10 有界完整项目自举当前为 `CONTRACT_DRAFT`，M11–M14 为 `PLANNED`。草案、定义和设计引用不
+构成代码、自动化、真实运行或冻结事实；M10 的完整退出矩阵以
+[独立合同 0.1](15-m10-bounded-project-bootstrap.md) 为准。
 
 ## 2. v0 完整闭环
 

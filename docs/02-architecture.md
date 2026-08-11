@@ -63,6 +63,10 @@ M5 已冻结一个更窄的编排切片：Core 内置的只读静态 HTTP 目标
 `run` 入口。它只管理离线冻结的静态文件集合，不执行 Shell、外部进程、项目命令或中间件；
 目标生命周期和异常清理已验证，但计划编辑、跨 Run 比较与完整自举仍未实现。
 
+M9 已冻结 Plan 0.5 的单个可信 `ONESHOT`：ToolBindings 与只读 Preview 在本地解析普通 `.exe`，
+用户批准精确 digest 后由 Windows Job Object 在无 Shell、无 stdin/TTY 边界内执行，并生成严格
+`runtime.command`。M10 正在起草独立的 Windows 11/C1 长运行生命周期合同；草案不是实现事实。
+
 ### 2.5 Browser Adapter
 
 使用 Playwright/CDP 采集真实浏览器步骤、Console、Network、截图和视口事实。认证材料只在
@@ -99,8 +103,9 @@ v0 不接受自由文本 Shell 命令。优先采用：
 - 结构化可执行文件与参数数组；
 - 显式工作目录、超时、环境允许列表和资源上限。
 
-未来若允许项目命令，执行前必须展示完整程序、参数、目录、环境差异和预计副作用，并记录审计事实。
-拒绝 Shell 拼接、隐式变量展开和把凭据写入命令行。
+M9 已对一个可信 `ONESHOT` 实现完整程序、参数、目录、环境名称、限制与副作用边界的只读预览和
+精确 digest 审批。M10 若进入实现，长运行服务仍必须使用独立 Profile、Preview、Job 所有权、
+owned readiness 与逆序清理；拒绝 Shell 拼接、隐式变量展开和把凭据写入命令行。
 
 ## 5. 隐私与脱敏
 
@@ -195,6 +200,11 @@ Profile coverage，再用固定种子生成成员集合不变的 perturbation �
 人工键盘验收已经完成。合同与冻结证据见
 `docs/12-m8-preregistered-batch-matrix.md`。
 
+M9 已冻结 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1、Windows Job Object trusted process
+runner 与 `runtime.command`。M10 的候选架构使用独立 sealed ProjectProfile、Plan 0.6 和
+`runtime.bootstrap`，但仍为合同草案；准确边界见
+`docs/15-m10-bounded-project-bootstrap.md`。
+
 ## 9. 实现顺序
 
 1. 计划/基线/变量/裁决模型与 JSON schema；
@@ -202,8 +212,11 @@ Profile coverage，再用固定种子生成成员集合不变的 perturbation �
 3. 环境与资源预检、中止和污染检测；
 4. 浏览器适配器及 Console/Network 证据；
 5. Vue 工作台读取同一裁决结果；
-6. 轻量前端自举案例；
-7. 多 Context、真实后端与可选组件适配器；
-8. 界面视觉收尾和公开演示。
+6. M9 可信一次性命令；
+7. M10 Windows/C1 有界完整项目自举；
+8. M11 不同类型真实项目全链路；
+9. M12 故宫主题前端终稿；
+10. M13 系统思维与分层代码质量终审；
+11. M14 整改后终局复验与发布收束。
 
 不先堆适配器，不先做大屏，不先接 AI。

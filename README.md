@@ -20,13 +20,19 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
 | M9 | 受控项目命令执行 | `FROZEN` |
+| M10 | 有界完整项目自举 | `CONTRACT_DRAFT` |
+| M11 | 真实项目功能全链路 | `PLANNED` |
+| M12 | 故宫主题前端终稿 | `PLANNED` |
+| M13 | 系统思维与分层代码质量终审 | `PLANNED` |
+| M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
 并行、完整自举和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
 
-Post-M8 Plan v1 已冻结为**规划基线**；M10–M14 仍为 `PLANNED`。M9 0.2 独立合同已在
+Post-M8 Plan v1 已冻结为**规划基线**；M9 已冻结，M10 已进入独立合同 0.1 起草，M11–M14
+仍为 `PLANNED`。M9 0.2 独立合同已在
 `290b618` 冻结；`4d2bc84` 交付 Plan 0.5、ToolBindings 0.1 与只读 CommandPreview 0.1，
 `9f979c8` 交付锁定 `pywin32==312` 的 Windows Job Object 所有权后端与真实 helper 自动化。
 `fa27b51` 已把审批一致的单个可信命令接入 Plan 0.5 `run`，生成严格的 `runtime.command`、
@@ -36,6 +42,11 @@ Post-M8 Plan v1 已冻结为**规划基线**；M10–M14 仍为 `PLANNED`。M9 0
 跑通。Codex 内置浏览器的物理 `Tab/Enter` 已打开非零退出 Run 并读回 `COMPLETED/FAIL`，Console/
 Warning 为 0；验收服务、约定端口、M9 进程与临时目录也已完成最终清理复核。GitHub `main` 与
 `m9-v0.10.0` 标签均已读回冻结提交 `3181d69`，M9 在合同边界内标记 `FROZEN`。
+
+M10 当前只起草 Windows 11 / `C1 PROCESS_COLD` 的有界本地进程自举合同：一个 Run-owned
+dependency、一个 application、owned HTTP readiness、真实浏览器 exercise 与逆序清理。合同
+冻结前不新增 Plan 0.6、ProjectProfile、长运行服务执行器或实现代码；C2/C3、Docker、跨平台和
+真实项目证明继续留给后继独立合同。
 
 ## 为什么需要验迹
 
@@ -302,6 +313,14 @@ stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目�
 通过最多证明冻结合同对本次可信 Python module 与直接 Node script 成立；不证明文件系统/网络
 隔离、恶意代码 containment、通用包管理器、长运行服务、其他平台或完整自举。
 
+## M10 有界完整项目自举（CONTRACT_DRAFT）
+
+M10 在 M9 的可信进程所有权基础上，只增加 Windows 11/C1 的长运行生命周期：按依赖顺序启动
+两个本地可信进程，以回环 HTTP 与 Job process list 共同证明就绪，由现有 Browser Adapter 完成
+exercise，最后按应用、依赖的逆序强制回收并证明无残留。当前只有合同草案，不代表 Schema、
+代码、运行或平台支持已经存在。详见
+[M10 有界完整项目自举合同 0.1](docs/15-m10-bounded-project-bootstrap.md)。
+
 ### 本地运行
 
 ```powershell
@@ -328,8 +347,9 @@ py -3.10 -m venv .venv
 
 ## 计划架构
 
-- **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检、有界浏览器采集，以及 M4
-  离线 Catalog、固定回环只读 API 与 M8 全因子批次派生分析；通用项目执行编排仍是计划能力。
+- **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检、有界浏览器采集、M4 离线
+  Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 长运行项目自举
+  仍处于合同草案。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
@@ -359,6 +379,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M8 预注册全因子批次矩阵与固定种子扰动（FROZEN）](docs/12-m8-preregistered-batch-matrix.md)
 - [Post-M8 收束路线 Plan v1（FROZEN planning baseline）](docs/13-post-m8-roadmap.md)
 - [M9 受控项目命令执行合同 0.2（CONTRACT_FROZEN）](docs/14-m9-controlled-command-execution.md)
+- [M10 有界完整项目自举合同 0.1（CONTRACT_DRAFT）](docs/15-m10-bounded-project-bootstrap.md)
 
 ## 项目来源
 

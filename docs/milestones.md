@@ -2,13 +2,14 @@
 
 ## 1. 用途
 
-本文件承接 README 不再展开的 M0–M9 历史。它记录每个冻结基线回答的问题、真实取得的证据、
-明确没有证明的能力，以及必须继续保留的失败事实。
+本文件承接 README 不再展开的 M0–M9 冻结历史，并同步 M10–M14 当前路线状态。它记录每个冻结
+基线回答的问题、真实取得的证据、明确没有证明的能力，以及必须继续保留的失败事实；未冻结行
+只表示当前门禁，不构成能力事实。
 
 里程碑标签实际指向的 Git 提交是版本寻址权威；实现提交、合同提交、运行哈希和完整退出条件
 仍以对应的里程碑文档为准。下表中的标签与提交已于 2026-08-11 从 `origin` 核验。
 
-## 2. 冻结索引
+## 2. 冻结与当前路线索引
 
 | Milestone | Capability | Status | Frozen ref |
 | --- | --- | --- | --- |
@@ -22,6 +23,11 @@
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
+| M10 | Windows 11/C1 有界完整项目自举 | `CONTRACT_DRAFT` | — |
+| M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
+| M12 | 故宫主题前端终稿 | `PLANNED` | — |
+| M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
+| M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
 
 `FROZEN` 只对该行声明的能力和对应文档中的环境、输入、资源及安全边界成立。代码、依赖、
 Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须标记过期并重新验收。
@@ -92,7 +98,8 @@ Plan / Evidence / Verdict
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
-`post-m8-plan-v1` 冻结为规划基线；M10–M14 仍为 `PLANNED`。M9 受控项目命令执行合同 0.2 已在
+`post-m8-plan-v1` 冻结为规划基线；M10 已进入独立合同草案，M11–M14 仍为 `PLANNED`。M9 受控
+项目命令执行合同 0.2 已在
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
 自动化，`fa27b51` 完成 Plan 0.5 `run`、严格 `runtime.command`、最终状态漂移阻断、文本附件
@@ -100,6 +107,8 @@ Plan / Evidence / Verdict
 验收矩阵；Python module、直接 `node.exe` script、重复 Run、适用负向、桌面/移动 Chromium、
 Catalog/Workbench、Console/Network、双运行时回归、内置浏览器物理键盘和最终清理均已通过。
 冻结提交 `3181d69` 及 `m9-v0.10.0` 标签已从 GitHub 远端读回，M9 在合同边界内标记 `FROZEN`。
+M10 当前只允许对 Windows 11/C1、两个 Run-owned 本地可信进程、owned HTTP readiness、浏览器
+exercise 与逆序 Job 清理进行合同和设计验证；不得把草案写成实现事实。
 
 ## 6. 详细文档
 
@@ -113,3 +122,5 @@ Catalog/Workbench、Console/Network、双运行时回归、内置浏览器物理
 - [M7 预注册四角色配对反事实分析](11-m7-preregistered-paired-analysis.md)
 - [M8 预注册全因子批次矩阵与固定种子扰动](12-m8-preregistered-batch-matrix.md)
 - [M9 受控项目命令执行合同](14-m9-controlled-command-execution.md)
+- [M10 有界完整项目自举合同 0.1（草案）](15-m10-bounded-project-bootstrap.md)
+- M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
