@@ -332,6 +332,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M7 预注册四角色配对反事实分析（FROZEN）](docs/11-m7-preregistered-paired-analysis.md)
 - [M8 预注册全因子批次矩阵与固定种子扰动（FROZEN）](docs/12-m8-preregistered-batch-matrix.md)
 - [Post-M8 收束路线 Plan v1（FROZEN planning baseline）](docs/13-post-m8-roadmap.md)
+- [M9 受控项目命令执行合同（DRAFT）](docs/14-m9-controlled-command-execution.md)
 
 ## 项目来源
 

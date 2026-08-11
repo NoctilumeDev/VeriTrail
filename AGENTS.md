@@ -36,6 +36,10 @@
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
   规划基线。M9–M14 仍为 `PLANNED`；当前只允许起草和审查 M9 独立合同，M9 合同冻结前不得
   开始实现。规划冻结不代表任何后继能力已经实现或验收。
+- M9 独立合同草案位于 `docs/14-m9-controlled-command-execution.md`，当前为
+  `PLANNED / CONTRACT_DRAFT / UNFROZEN`。它只规划一个可信、直接启动、无 Shell、无 stdin/TTY
+  的 `ONESHOT` 进程；不允许实现代码，也不把结构化 runner 描述成文件系统、网络或恶意代码
+  沙箱。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
