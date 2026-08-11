@@ -34,12 +34,12 @@
   自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。计划编辑、任意项目命令、真实并行
   和完整自举仍未实现。
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
-  规划基线。M9–M14 仍为 `PLANNED`；当前只允许起草和审查 M9 独立合同，M9 合同冻结前不得
-  开始实现。规划冻结不代表任何后继能力已经实现或验收。
-- M9 独立合同草案位于 `docs/14-m9-controlled-command-execution.md`，当前为
-  `PLANNED / CONTRACT_DRAFT / UNFROZEN`。它只规划一个可信、直接启动、无 Shell、无 stdin/TTY
-  的 `ONESHOT` 进程；不允许实现代码，也不把结构化 runner 描述成文件系统、网络或恶意代码
-  沙箱。
+  规划基线。M9–M14 仍为 `PLANNED`；规划冻结不代表任何后继能力已经实现或验收。
+- M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
+  `PLANNED / CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`。现在只允许按该合同实现一个可信、
+  直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、自举、包管理器或前端
+  控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
+  `m9-v0.10.0` 只有在全部实现和真实验收完成后才能创建。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
@@ -77,6 +77,9 @@
   必须先完成，seed 只能改变 perturbation 顺序，不能改变成员或补写缺格。M8 不执行来源 Run、
   不证明真实并行，不把 Profile 信号写成组件级因果或来源 `PASS/FAIL`。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。
+- M9 Windows 进程后端锁定为项目虚拟环境内的 `pywin32==312` 可选依赖；只能在实施时显式安装到
+  Git 忽略的项目虚拟环境，不得自动安装、全局安装、运行 `pywin32_postinstall`，也不得在缺失时
+  降级为 `ctypes`、普通 `Popen` 或 PID/进程名轮询。
 - 不记录或提交 `.env` 值、令牌、Cookie、Authorization 头、私钥、个人路径或原始敏感业务数据。采集器必须默认脱敏。
 
 ## 分层审查与里程碑门禁

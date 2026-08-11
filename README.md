@@ -19,14 +19,15 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M6 | 同计划复跑确定性比较 | `FROZEN` |
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
+| M9 | 受控项目命令执行 | `PLANNED / CONTRACT_FROZEN` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
 并行、完整自举和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
 
-Post-M8 Plan v1 已冻结为**规划基线**；M9–M14 仍只是 `PLANNED`，当前只允许起草 M9 独立
-合同，不代表任何后继能力已经实现。
+Post-M8 Plan v1 已冻结为**规划基线**；M9–M14 仍为 `PLANNED`。M9 0.2 独立合同已在
+`290b618` 冻结，当前只允许按该合同开始实现；这不代表命令执行能力、依赖安装或真实运行已经完成。
 
 ## 为什么需要验迹
 
@@ -332,7 +333,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M7 预注册四角色配对反事实分析（FROZEN）](docs/11-m7-preregistered-paired-analysis.md)
 - [M8 预注册全因子批次矩阵与固定种子扰动（FROZEN）](docs/12-m8-preregistered-batch-matrix.md)
 - [Post-M8 收束路线 Plan v1（FROZEN planning baseline）](docs/13-post-m8-roadmap.md)
-- [M9 受控项目命令执行合同（DRAFT）](docs/14-m9-controlled-command-execution.md)
+- [M9 受控项目命令执行合同 0.2（CONTRACT_FROZEN）](docs/14-m9-controlled-command-execution.md)
 
 ## 项目来源
 
