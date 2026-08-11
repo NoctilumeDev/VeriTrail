@@ -25,6 +25,9 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 并行、完整自举和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
 
+Post-M8 Plan v1 已冻结为**规划基线**；M9–M14 仍只是 `PLANNED`，当前只允许起草 M9 独立
+合同，不代表任何后继能力已经实现。
+
 ## 为什么需要验迹
 
 工程项目很容易把局部通过误当成整体完成：单元测试是绿色的，但真实浏览器存在失败请求；
@@ -328,7 +331,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M6 同计划复跑确定性比较（FROZEN）](docs/10-m6-deterministic-rerun-comparison.md)
 - [M7 预注册四角色配对反事实分析（FROZEN）](docs/11-m7-preregistered-paired-analysis.md)
 - [M8 预注册全因子批次矩阵与固定种子扰动（FROZEN）](docs/12-m8-preregistered-batch-matrix.md)
-- [Post-M8 收束路线 Plan v1（DRAFT）](docs/13-post-m8-roadmap.md)
+- [Post-M8 收束路线 Plan v1（FROZEN planning baseline）](docs/13-post-m8-roadmap.md)
 
 ## 项目来源
 
