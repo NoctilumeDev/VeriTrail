@@ -14,9 +14,10 @@ Catalog 隔离、生产与 Codex 内置浏览器、资源、安全和清理终�
 完整自举仍是 v0 后续合同，不是已完成清单。每个里程碑只有代码、自动化和适用的真实运行
 证据齐全后，才能独立冻结。
 
-M8 全因子批次矩阵与固定种子扰动的 Python Core 已 `IMPLEMENTED / AUTOMATED`：四个公共
-Schema、两个 CLI、脱敏 2×2 矩阵和三态/污染/确定性/安全反例已经完成；Workbench、真实 M5
-批次、Codex 内置浏览器与最终清理终验仍为 `PENDING`，不得标记为 `FROZEN` 或写成完整闭环。
+M8 全因子批次矩阵与固定种子扰动的 Core / Workbench 已 `IMPLEMENTED / AUTOMATED`：四个公共
+Schema、两个 CLI、脱敏 2×2 矩阵、三态/污染/确定性/安全反例，以及四文件只读 Loader、矩阵/
+wave/来源状态视图已经完成；真实 M5 批次、Codex 内置浏览器与最终清理终验仍为 `PENDING`，
+不得标记为 `FROZEN` 或写成完整闭环。
 
 ## 2. v0 完整闭环
 

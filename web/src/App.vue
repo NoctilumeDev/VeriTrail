@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import BatchAnalysisView from './components/BatchAnalysisView.vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import PairedAnalysisView from './components/PairedAnalysisView.vue'
@@ -19,11 +20,13 @@ import {
   CatalogLoadError,
   fetchCatalog,
 } from './domain/catalog'
+import { BatchLoadError, loadLocalBatchAnalysis } from './domain/batch'
 import { ComparisonLoadError, loadLocalComparison } from './domain/comparison'
 import { loadLocalPairedAnalysis, PairingLoadError } from './domain/pairing'
 import type {
   CatalogResponse,
   CatalogRunSummary,
+  LoadedBatchAnalysis,
   LoadedBundle,
   LoadedComparison,
   LoadedPairedAnalysis,
@@ -35,9 +38,10 @@ type AssertionFilter = 'ALL' | 'PASS' | 'FAIL' | 'OTHER'
 const bundle = shallowRef<LoadedBundle | null>(null)
 const comparison = shallowRef<LoadedComparison | null>(null)
 const pairedAnalysis = shallowRef<LoadedPairedAnalysis | null>(null)
+const batchAnalysis = shallowRef<LoadedBatchAnalysis | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
-const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing'>('positive')
+const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing' | 'batch'>('positive')
 const assertionFilter = ref<AssertionFilter>('ALL')
 const liveMessage = ref('正在读取正向证据包。')
 const catalog = shallowRef<CatalogResponse | null>(null)
@@ -67,9 +71,9 @@ const assertionCounts = computed(() => {
   }
 })
 
-function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' | 'pairing' {
+function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' | 'pairing' | 'batch' {
   const value = new URLSearchParams(window.location.search).get('fixture')
-  return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison' || value === 'pairing'
+  return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison' || value === 'pairing' || value === 'batch'
     ? value
     : 'positive'
 }
@@ -101,6 +105,11 @@ function describePairingError(cause: unknown) {
   return { code: 'PAIRING_UNEXPECTED', message: '工作台无法核验该四角色配对分析包。' }
 }
 
+function describeBatchError(cause: unknown) {
+  if (cause instanceof BatchLoadError) return { code: cause.code, message: cause.message }
+  return { code: 'BATCH_UNEXPECTED', message: '工作台无法核验该全因子批次分析包。' }
+}
+
 async function refreshCatalog() {
   catalogLoading.value = true
   catalogError.value = null
@@ -123,6 +132,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   liveMessage.value = `正在读取${sourceLabel(id)}。`
   if (pushHistory) {
     const url = new URL(window.location.href)
@@ -159,6 +169,7 @@ async function importLocal(event: Event) {
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   liveMessage.value = '正在本地内存中核验所选证据包。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -193,6 +204,7 @@ async function importComparison(event: Event) {
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -224,6 +236,7 @@ async function importPairedAnalysis(event: Event) {
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   liveMessage.value = '正在本地内存中核验 PairedAnalysis Manifest 与 PairingPlan seal。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -245,6 +258,38 @@ async function importPairedAnalysis(event: Event) {
   }
 }
 
+async function importBatchAnalysis(event: Event) {
+  const input = event.currentTarget as HTMLInputElement
+  if (!input.files?.length) return
+  const sequence = ++loadSequence
+  loading.value = true
+  error.value = null
+  activeSource.value = 'batch'
+  selectedCatalogRunId.value = null
+  comparison.value = null
+  pairedAnalysis.value = null
+  batchAnalysis.value = null
+  liveMessage.value = '正在本地内存中核验 BatchAnalysis Manifest、BatchPlan seal 与完整矩阵。'
+  const url = new URL(window.location.href)
+  url.searchParams.delete('run')
+  url.searchParams.set('fixture', 'batch')
+  window.history.pushState({ fixture: 'batch' }, '', url)
+  releaseCurrentBundle()
+  try {
+    const loaded = await loadLocalBatchAnalysis(input.files)
+    if (sequence !== loadSequence) return
+    batchAnalysis.value = loaded
+    liveMessage.value = `批次分析 ${loaded.analysis.coverage_status} / ${loaded.analysis.hypothesis_status} 已加载；文件未上传。`
+  } catch (cause) {
+    if (sequence !== loadSequence) return
+    error.value = describeBatchError(cause)
+    liveMessage.value = `批次分析包读取失败：${error.value.message}`
+  } finally {
+    input.value = ''
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
 async function selectCatalogRun(
   run: CatalogRunSummary,
   trigger?: HTMLElement,
@@ -259,6 +304,7 @@ async function selectCatalogRun(
   selectedCatalogRunId.value = run.catalog_run_id
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   lastCatalogTriggerId = trigger ? run.catalog_run_id : lastCatalogTriggerId
   liveMessage.value = `正在从只读目录核验 ${run.run_id}。`
   if (pushHistory) {
@@ -270,6 +316,7 @@ async function selectCatalogRun(
   releaseCurrentBundle()
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   try {
     const loaded = await loadSameOriginBundle(run.bundle.base_url, `本地目录 · ${run.run_id}`)
     if (
@@ -314,6 +361,7 @@ function returnToCatalog() {
   releaseCurrentBundle()
   comparison.value = null
   pairedAnalysis.value = null
+  batchAnalysis.value = null
   loading.value = false
   error.value = null
   activeSource.value = 'catalog'
@@ -348,6 +396,7 @@ function onHistoryChange() {
     releaseCurrentBundle()
     comparison.value = null
     pairedAnalysis.value = null
+    batchAnalysis.value = null
     activeSource.value = 'catalog'
     selectedCatalogRunId.value = catalogRunId
     loading.value = false
@@ -364,6 +413,7 @@ function onHistoryChange() {
     releaseCurrentBundle()
     comparison.value = null
     pairedAnalysis.value = null
+    batchAnalysis.value = null
     activeSource.value = 'catalog'
     selectedCatalogRunId.value = null
     loading.value = false
@@ -377,6 +427,7 @@ function onHistoryChange() {
     releaseCurrentBundle()
     comparison.value = null
     pairedAnalysis.value = null
+    batchAnalysis.value = null
     activeSource.value = 'comparison'
     loading.value = false
     error.value = {
@@ -391,6 +442,7 @@ function onHistoryChange() {
     releaseCurrentBundle()
     comparison.value = null
     pairedAnalysis.value = null
+    batchAnalysis.value = null
     activeSource.value = 'pairing'
     loading.value = false
     error.value = {
@@ -400,11 +452,27 @@ function onHistoryChange() {
     liveMessage.value = error.value.message
     return
   }
+  if (fixture === 'batch') {
+    ++loadSequence
+    releaseCurrentBundle()
+    comparison.value = null
+    pairedAnalysis.value = null
+    batchAnalysis.value = null
+    activeSource.value = 'batch'
+    loading.value = false
+    error.value = {
+      code: 'BATCH_RESELECT_REQUIRED',
+      message: '为保护隐私，本地批次包不会持久化；请重新选择 BatchAnalysis 四个文件。',
+    }
+    liveMessage.value = error.value.message
+    return
+  }
   if (fixture === 'local') {
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
     pairedAnalysis.value = null
+    batchAnalysis.value = null
     activeSource.value = 'local'
     loading.value = false
     error.value = {
@@ -526,6 +594,17 @@ onBeforeUnmount(() => {
               @change="importPairedAnalysis"
             />
           </label>
+          <label class="local-import" :class="{ 'is-active': activeSource === 'batch' }">
+            <span>选择全因子批次文件</span>
+            <input
+              type="file"
+              multiple
+              accept=".json,.md,application/json,text/markdown"
+              aria-label="选择本地 VeriTrail BatchAnalysis 四个文件"
+              data-testid="local-batch-input"
+              @change="importBatchAnalysis"
+            />
+          </label>
         </nav>
 
         <div v-if="report" class="status-gate" data-testid="status-gate">
@@ -579,6 +658,8 @@ onBeforeUnmount(() => {
       <ComparisonView v-else-if="comparison" :loaded="comparison" />
 
       <PairedAnalysisView v-else-if="pairedAnalysis" :loaded="pairedAnalysis" />
+
+      <BatchAnalysisView v-else-if="batchAnalysis" :loaded="batchAnalysis" />
 
       <template v-else-if="report && bundle">
         <div class="run-plaque" data-testid="run-summary">

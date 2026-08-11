@@ -6,7 +6,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0–M7 FROZEN，M8 Core IMPLEMENTED / AUTOMATED。** M0 已冻结计划封存、
+**当前状态：v0 Implementation，M0–M7 FROZEN，M8 Core / Workbench IMPLEMENTED / AUTOMATED。** M0 已冻结计划封存、
 结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结
 有界真实 Chromium 采集；M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题。
 M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Workbench Run 门厅与两阶段
@@ -20,7 +20,8 @@ M6“同计划复跑确定性比较”已 `FROZEN`：Core/CLI、Comparison 0.1 �
 PairingPlan/PairedAnalysis、三态真实结果、来源损坏拒绝、逐字节复建、Catalog 隔离和故宫主题
 Workbench 均完成双 Python、生产与 Codex 内置浏览器终验；计划编辑、任意项目命令和完整自举
 仍是后续里程碑。M8 已实现四个批次公共契约、确定性 Core、`seal-batch` / `analyze-batch`、
-脱敏 2×2 示例与自动化反例；Workbench、真实 M5 批次、内置浏览器终验和冻结仍待后续完成。
+脱敏 2×2 示例、自动化反例，以及本地四文件验真的 BatchAnalysis 矩阵/wave 视图；真实 M5
+批次、内置浏览器终验和冻结仍待后续完成。
 
 ## 为什么需要验迹
 
@@ -239,13 +240,15 @@ ExperimentPlan 的版本、唯一主要变量值和 seal 变化。它生成独�
 Verdict；真实三态、损坏输入、确定性复建、Catalog 隔离和浏览器验收事实见
 [M7 预注册四角色配对反事实分析](docs/11-m7-preregistered-paired-analysis.md)。
 
-## M8 全因子批次矩阵与固定种子扰动（CORE IMPLEMENTED / AUTOMATED）
+## M8 全因子批次矩阵与固定种子扰动（CORE / WORKBENCH IMPLEMENTED / AUTOMATED）
 
 M8 Core 要求先串行覆盖完整全因子 Profile 矩阵，再以 `SHA256_RANK_V1` 和固定种子生成
 成员不变的扰动顺序；CoverageStatus、HypothesisStatus 与每个来源 Run Verdict 分开。当前已
 实现 BatchPlan、RunAssignment、BatchAnalysis、Manifest 与两个 CLI，并自动化验证三态、顺序
-污染、来源失败保留、确定性复建、损坏拒绝和 Catalog 隔离。它不执行项目命令或真实并行，
-也不做统计显著性和组件级多变量因果；Workbench 和真实批次终验仍为 `PENDING`。完整边界见
+污染、来源失败保留、确定性复建、损坏拒绝和 Catalog 隔离。Workbench 已实现显式四文件
+导入、完整性/Plan seal、全因子与固定种子顺序重算、双状态、来源 Verdict 和 wave 边界展示。
+它不执行项目命令或真实并行，也不做统计显著性和组件级多变量因果；真实批次与内置浏览器
+终验仍为 `PENDING`。完整边界见
 [M8 预注册全因子批次矩阵与固定种子扰动](docs/12-m8-preregistered-batch-matrix.md)。
 
 ### 本地运行
@@ -280,7 +283,7 @@ py -3.10 -m venv .venv
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
 - **Vue Workbench**：已实现 M3 只读证据包、断言和浏览器事实浏览，以及 M6 Comparison、
-  M7 PairedAnalysis 的本地验真；M8 BatchAnalysis UI、计划编辑和报告发布仍是后续能力。
+  M7 PairedAnalysis 与 M8 BatchAnalysis 的本地验真；计划编辑和报告发布仍是后续能力。
 - **Browser Adapter**：已实现基于 Playwright/Chromium 的回环站点证据采集；远程站点、认证、
   多角色与并行 Context 仍不在 M2 范围。
 
@@ -301,7 +304,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M5 有界运行编排与静态目标生命周期（FROZEN）](docs/09-m5-bounded-run-orchestrator.md)
 - [M6 同计划复跑确定性比较（FROZEN）](docs/10-m6-deterministic-rerun-comparison.md)
 - [M7 预注册四角色配对反事实分析（FROZEN）](docs/11-m7-preregistered-paired-analysis.md)
-- [M8 预注册全因子批次矩阵与固定种子扰动（CORE IMPLEMENTED / AUTOMATED）](docs/12-m8-preregistered-batch-matrix.md)
+- [M8 预注册全因子批次矩阵与固定种子扰动（CORE / WORKBENCH IMPLEMENTED / AUTOMATED）](docs/12-m8-preregistered-batch-matrix.md)
 
 ## 项目来源
 

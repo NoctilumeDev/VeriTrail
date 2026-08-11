@@ -2,6 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../src/App.vue'
 import {
+  createBatchAnalysisBundle,
   createComparisonBundle,
   createMinimalBundle,
   createPairedAnalysisBundle,
@@ -125,6 +126,23 @@ describe('App', () => {
 
     expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
     expect(window.location.search).toBe('?fixture=pairing')
+    expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('imports four explicit BatchAnalysis files and keeps local files ephemeral', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    const entries = await createBatchAnalysisBundle('SUPPORTED')
+    const files = [...entries].map(([name, blob]) => new File([blob], name, { type: blob.type }))
+    const input = wrapper.get('[data-testid="local-batch-input"]')
+    Object.defineProperty(input.element, 'files', { configurable: true, value: files })
+    await input.trigger('change')
+    await waitFor(wrapper, '[data-testid="batch-analysis-view"]')
+
+    expect(wrapper.get('[data-testid="batch-coverage-status"]').text()).toContain('COMPLETE')
+    expect(wrapper.get('[data-testid="batch-hypothesis-status"]').text()).toContain('SUPPORTED')
+    expect(window.location.search).toBe('?fixture=batch')
     expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
     wrapper.unmount()
   })

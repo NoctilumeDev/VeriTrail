@@ -361,3 +361,144 @@ export interface LoadedPairedAnalysis {
   manifest: PairedAnalysisManifest
   integrity: BundleIntegrity
 }
+
+export type BatchPhase = 'COVERAGE' | 'PERTURBATION'
+
+export type BatchCoverageStatus = 'COMPLETE' | 'INCOMPLETE' | 'INCONCLUSIVE'
+
+export type BatchHypothesisStatus = 'SUPPORTED' | 'CONTRADICTED' | 'INCONCLUSIVE'
+
+export interface BatchPrimaryDefinition {
+  name: string
+  source: string
+  unit?: string
+}
+
+export interface BatchDimension {
+  name: string
+  levels: Array<{ id: string; value: unknown }>
+}
+
+export interface BatchProfilePlan {
+  id: string
+  cells: Record<string, string>
+  plan_sha256: string
+  realization: {
+    subject_version: string
+    subject_source_ref: string
+    target_root: string
+    static_root_fingerprint: string
+  }
+  estimated_memory_mb: number
+}
+
+export interface BatchExecutionPolicy {
+  order_algorithm: 'SHA256_RANK_V1'
+  seed: number
+  perturbation_repetitions: number
+  max_parallel: 1 | 2
+  memory_budget_mb: number
+  preflight_between_waves: true
+  cleanup_between_waves: true
+}
+
+export interface BatchScheduleSlot {
+  slot_id: string
+  phase: BatchPhase
+  repetition: number
+  wave: number
+  position: number
+  profile_id: string
+}
+
+export interface BatchPlan {
+  schema_version: '0.1'
+  batch_id: string
+  version: number
+  question: string
+  primary_variable: BatchPrimaryDefinition
+  dimensions: BatchDimension[]
+  profiles: BatchProfilePlan[]
+  execution_policy: BatchExecutionPolicy
+  schedule: BatchScheduleSlot[]
+  outcomes: Array<{
+    assertion_id: string
+    expected_actual: Record<string, unknown>
+  }>
+  limits: string[]
+  reproduction_steps: string[]
+  cleanup_steps: string[]
+  seal: { algorithm: 'sha256'; digest: string }
+}
+
+export interface BatchSource {
+  run_id: string
+  created_at: string
+  execution_status: ExecutionStatus
+  verdict: Verdict
+  plan: PlanReference
+  random_seed: number
+  primary_variable: BatchPrimaryDefinition & { role: 'PRIMARY'; value: unknown }
+  bundle_sha256: string
+  control_projection_sha256: string
+  preflight_complete: boolean
+  cleanup_complete: boolean
+  browser_complete: boolean
+  static_root_fingerprint: string | null
+}
+
+export interface BatchOutcomeObservation {
+  assertion_id: string
+  expected_actual: unknown
+  actual: unknown
+  matches: boolean
+}
+
+export interface BatchAnalysisSlot extends BatchScheduleSlot {
+  source: BatchSource | null
+  outcomes: BatchOutcomeObservation[]
+}
+
+export interface BatchProfileSummary {
+  id: string
+  cells: Record<string, string>
+  occurrence_count: number
+  completed_count: number
+  mismatch_count: number
+}
+
+export interface BatchAnalysis {
+  schema_version: '0.1'
+  analysis_id: string
+  analysis_type: 'PREREGISTERED_FULL_FACTORIAL_BATCH'
+  rule_version: 'full-factorial-batch/0.1'
+  coverage_status: BatchCoverageStatus
+  hypothesis_status: BatchHypothesisStatus
+  runtime_overlap_claim: 'NOT_PROVEN'
+  batch_plan: PlanReference
+  primary_variable: BatchPrimaryDefinition
+  execution_policy: BatchExecutionPolicy
+  reasons: ReportReason[]
+  slots: BatchAnalysisSlot[]
+  profiles: BatchProfileSummary[]
+  unplanned_differences: Array<{
+    slot_id: string
+    assertion_id: string
+    baseline: unknown
+    observed: unknown
+  }>
+  limits: string[]
+}
+
+export interface BatchAnalysisManifest {
+  schema_version: '0.1'
+  analysis_id: string
+  files: BundleFileEntry[]
+}
+
+export interface LoadedBatchAnalysis {
+  analysis: BatchAnalysis
+  batchPlan: BatchPlan
+  manifest: BatchAnalysisManifest
+  integrity: BundleIntegrity
+}

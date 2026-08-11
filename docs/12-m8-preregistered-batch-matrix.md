@@ -2,9 +2,10 @@
 
 ## 状态
 
-`CORE IMPLEMENTED / AUTOMATED`。实现前独立合同已经落地为四个公共 Schema、Python Core、
-`seal-batch` / `analyze-batch` CLI、脱敏 2×2 示例与自动化反例；Workbench、真实 M5 批次、
-真实浏览器链路和最终冻结仍为 `PENDING`，因此本里程碑不是 `FROZEN`。前置语义基线是 M7 冻结提交
+`CORE / WORKBENCH IMPLEMENTED / AUTOMATED`。实现前独立合同已经落地为四个公共 Schema、
+Python Core、`seal-batch` / `analyze-batch` CLI、脱敏 2×2 示例、自动化反例，以及只读
+BatchAnalysis 四文件 Loader 与矩阵/wave 视图；真实 M5 批次、真实浏览器链路和最终冻结仍为
+`PENDING`，因此本里程碑不是 `FROZEN`。前置语义基线是 M7 冻结提交
 `e5c6e271423d4359fc63e542c95093b823404de8` 与标签 `m7-v0.8.0`；其后的
 `c616974` 只修正 M7 跨文档状态不一致，没有改变代码或公共契约。
 
@@ -234,9 +235,9 @@ ExecutionStatus/Verdict，不能自动选择成功 Run、平均掉失败或使�
 
 CLI 只读取既有 Run；它不调用 `run`、不启动 Profile、不执行清理命令，也不自动搜索历史目录。
 
-## Workbench 候选
+## Workbench
 
-Workbench 增加本地 BatchAnalysis 四文件入口。根据 M7 的真实目录选择器反例，M8 从一开始就
+Workbench 已增加本地 BatchAnalysis 四文件入口。根据 M7 的真实目录选择器反例，M8 从一开始就
 使用显式多文件选择，不依赖 `webkitdirectory`。Loader 必须：
 
 - 在显示前核对 Manifest 文件集合、路径、大小、SHA-256 与 BatchPlan seal；
@@ -327,16 +328,22 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 - 脱敏 2×2 自动化覆盖 `COMPLETE/SUPPORTED`、`COMPLETE/CONTRADICTED`、
   `INCOMPLETE/INCONCLUSIVE`、顺序污染 `INCONCLUSIVE/INCONCLUSIVE`、来源 `FAIL` 保留、
   逐字节复建、损坏来源、路径拒绝和 Catalog Run-only 隔离；
-- 本切片没有实现 Workbench，也没有执行合同“真实运行退出条件”中的真实 Chromium 批次。
+- Workbench `0.9.0-dev.1` 已实现显式四文件选择、Manifest 路径/大小/SHA-256、BatchPlan seal、
+  完整笛卡尔积、canonical coverage、`SHA256_RANK_V1`、wave 预算、Analysis ID、slot/Profile/Run
+  引用、Profile 计数、reason 与双状态重算；只读视图分开呈现 CoverageStatus、HypothesisStatus、
+  来源 ExecutionStatus/Verdict、outcome、矩阵、phase/wave 和“未证明真实并行”边界；
+- 前端自动化覆盖四类状态组合、来源 `FAIL` 保留、缺格、未声明漂移、来源证据不足、Plan seal、
+  伪造 seed 顺序、额外文件和状态冲突；类型检查、53 项 Vitest、lint 与生产构建通过；
+- Python 3.10.6 与 3.13.13 各 108 项全回归通过，M0–M7 冻结消费者未因本次 Workbench 扩展改变；
+- 本切片没有执行合同“真实运行退出条件”中的真实 M5/Chromium 批次。
   自动化结论不能提升为真实运行或冻结结论。
 
 ## 合同记录
 
 - 合同版本：M8 Preregistered Full-factorial Batch Matrix Contract 0.1；
 - 前置基线：`m7-v0.8.0` + 文档一致性提交 `c616974`；
-- 当前 Core 版本：Python Core `0.9.0.dev1`；Workbench 仍为 `0.8.0-dev.1`，待 M8 UI 实现后
-  才升级到 `0.9.0-dev.1`；
+- 当前版本：Python Core `0.9.0.dev1`；Workbench `0.9.0-dev.1`；
 - 已实现 Schema：BatchPlan / RunAssignment / BatchAnalysis / BatchAnalysis Manifest 0.1；
 - 已实现 CLI：`seal-batch`、`analyze-batch`；
-- 当前里程碑状态：`CORE IMPLEMENTED / AUTOMATED`，Workbench、真实批次、内置浏览器终验与
-  冻结均为 `PENDING`。
+- 当前里程碑状态：`CORE / WORKBENCH IMPLEMENTED / AUTOMATED`；真实批次、内置浏览器终验与
+  冻结仍为 `PENDING`。
