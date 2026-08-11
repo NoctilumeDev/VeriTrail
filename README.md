@@ -19,7 +19,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M6 | 同计划复跑确定性比较 | `FROZEN` |
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
-| M9 | 受控项目命令执行 | `IMPLEMENTING / PLAN_0_5_RUN_AUTOMATED` |
+| M9 | 受控项目命令执行 | `IMPLEMENTING / RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
@@ -31,8 +31,10 @@ Post-M8 Plan v1 已冻结为**规划基线**；M10–M14 仍为 `PLANNED`。M9 0
 `9f979c8` 交付锁定 `pywin32==312` 的 Windows Job Object 所有权后端与真实 helper 自动化。
 `fa27b51` 已把审批一致的单个可信命令接入 Plan 0.5 `run`，生成严格的 `runtime.command`、
 脱敏文本附件、subject 最终状态差异和清理事实，并完成 Bundle、Catalog、只读 API 与 Workbench
-通用读回自动化。真实 Python/Node 项目命令、真实 Chromium 全链路和人工终验仍未执行，M9
-不能标记完成。
+通用读回自动化。`9031719` 新增两个独立轻量 Subject 与真实验收矩阵；可信 Python module、直接
+`node.exe` script、重复 Run、适用负向、桌面/移动 Chromium、Catalog 和现有 Workbench 已真实
+跑通。Codex 内置浏览器的物理键盘终验、最终清理复核、GitHub 远端提交/tag 读回仍未完成，M9
+不能标记 `FROZEN`。
 
 ## 为什么需要验迹
 
@@ -281,6 +283,23 @@ coverage 与固定种子 perturbation，并验证四类分析结果、逐字节�
   --inconclusive .\artifacts\m8-batch-runtime\analyses\inconclusive `
   --output .\artifacts\my-unique-m8-browser
 ```
+
+## M9 受控项目命令执行（KEYBOARD_PENDING）
+
+M9 只允许一个用户信任并明确批准的 `ONESHOT`：结构化参数直接启动普通 `.exe`，不经过 Shell、
+stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目标、双视口 Chromium、裁决与
+不可变 Bundle；非零、超时、最终状态漂移和长存后代保留各自的状态语义。
+
+仓库中的真实矩阵使用两个独立轻量 Subject，所有 Plan 在首个 Run 前一次性封存，并串行运行：
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\m9_command_acceptance.py `
+  --node-executable C:\path\to\node.exe `
+  --output .\artifacts\my-unique-m9-command-acceptance
+```
+
+通过最多证明冻结合同对本次可信 Python module 与直接 Node script 成立；不证明文件系统/网络
+隔离、恶意代码 containment、通用包管理器、长运行服务、其他平台或完整自举。
 
 ### 本地运行
 

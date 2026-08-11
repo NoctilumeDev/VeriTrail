@@ -1,6 +1,6 @@
 # M9 受控项目命令执行合同
 
-> 状态：`IMPLEMENTING / CONTRACT_FROZEN / PLAN_0_5_RUN_AUTOMATED`
+> 状态：`IMPLEMENTING / CONTRACT_FROZEN / RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING`
 > 影响层级：`L3_SYSTEM`（外部进程、信任边界、公共 Plan/Evidence 合同）
 > 前置基线：`m8-v0.9.0` 与 `post-m8-plan-v1`
 > 实施门禁：实现只能遵循本合同 0.2；改变公共字段、状态、所有权、安全边界或验收矩阵时必须
@@ -597,14 +597,15 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 - 目标 CLI：`command-preview` 与扩展 `run`；
 - 目标版本：Python Core `0.10.0.dev1`，Workbench `0.10.0-dev.1`；
 - 目标冻结标签：`m9-v0.10.0`；
-- 当前里程碑状态：`IMPLEMENTING / PLAN_0_5_RUN_AUTOMATED`；
+- 当前里程碑状态：`IMPLEMENTING / RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING`；
 - 当前合同状态：`CONTRACT_FROZEN`；
 - 当前实现事实：`4d2bc84` 已完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与只读
   `command-preview` CLI；`9f979c8` 已完成 `pywin32==312` Windows Job Object 后端、暂停分配、
   直接无 Shell 启动、并发有界输出、超时/取消/输出超限/后代 grace 清理和活动进程上限读回；
   `fa27b51` 已完成审批一致的 Plan 0.5 `run`、运行前后 subject 有界快照、owned Run work、双重
   输出脱敏、严格 `runtime.command`、状态/Verdict 分离，以及 Bundle、Catalog、只读 API 与
-  Workbench 通用 Evidence 读回自动化；
+  Workbench 通用 Evidence 读回自动化；`9031719` 已增加两个独立轻量 Subject 和串行真实验收器，
+  不扩张为包管理器、服务或完整自举；
 - 当前隔离边界：锁定版本的 pywin32 `STARTUPINFO` 不提供 `STARTUPINFOEX` 句柄白名单，重定向标准
   句柄仍需 Windows 句柄继承；因此该后端不声明通用句柄能力隔离，仍只允许用户已信任的命令；
 - 当前自动化事实：CPython 3.10.6 与 3.13.13 各有 150 项测试通过；因单次执行器约 30 秒截止，
@@ -613,9 +614,30 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
   typed Run work、分配/恢复失败、活动进程上限、后代回收和外部同名进程保护；Workbench 54 项
   测试、lint、type-check 与生产构建通过；两套 Python `pip check` 通过，生产依赖 `npm audit`
   通过；测试后 helper、约定端口和仓库顶层 VeriTrail 临时目录残留均为 0；
+- 当前真实运行事实：2026-08-11 的最终 `r4` 矩阵在 Windows 11/C1 上串行完成 8 个 Run。Python 与
+  Node 两个独立正向 Plan 均为 `COMPLETED/PASS` 并完成 M5 静态目标、1280×720/390×844 Chromium、
+  四层 Evidence、Bundle 与清理；同 sealed Python Plan 复跑生成 `MATCH`。非零为
+  `COMPLETED/FAIL`，超时为 `ABORTED/PENDING`，最终状态漂移为
+  `COMPLETED/INCONCLUSIVE` 且未回滚项目文件，长存后代在 grace 后被 Job 回收并保持
+  `COMPLETED/FAIL`；秘密 canary 原值未进入 Bundle，stdout 记录一次脱敏；
+- 当前 Catalog/Workbench 事实：最终 `r4` Catalog 接纳 8/8 Bundle、0 issue、0 duplicate；Codex
+  内置浏览器已读回最终 r4 的 Python 正向与超时 Run，并在同一构建上检查 Node 正向、漂移、损坏
+  包隔离/恢复、桌面与 390×844 移动视口。页面 Console 为 0；已观察资源全部属于
+  `http://127.0.0.1:18770`，包含 `runtime.command`；HTTP 补证为 Catalog GET/HEAD 200、POST 405、
+  未知查询 400、命令文本附件 GET 200；桌面/移动文档横向溢出均为 0；
+- 当前资源与回归事实：`r4` 的两个 sealed target 端口、owned process、Run work 与 staging 残留均
+  为 0；CPython 3.10.6 与 3.13.13 再次各以 65 + 63 + 22 三片通过 150 项，Workbench 54 项、lint、
+  type-check、生产构建、两套 `pip check` 与官方 npm registry audit 均通过。敏感候选复核只有真实
+  canary 夹具及其 `[REDACTED]` 断言，不含真实秘密、个人绝对路径或账号；
 - 保留的失败事实：实现期间自动化曾暴露根进程或后代退出与输出超限观察之间的两条竞态，修复后
-  已加入回归；不得用根退出状态覆盖较晚到达的输出超限事实；
-- 当前未完成事实：尚未运行两个独立 Plan 的真实 Python module 与直接 `node.exe` 项目命令，
-  尚未用真实 Chromium 完成 Plan 0.5 正负 Bundle 的 Catalog/Workbench 全链路，也未执行人工键盘、
-  Console/Network、重复 Run、最终资源和 GitHub/tag 终验；
-- 当前运行结论：Plan 0.5 `run` 纵切面达到自动化中间状态，不构成 M9 完成或 `SUPPORTED` 最终声明。
+  已加入回归；本轮 `r1` 因验收器错误要求连非秘密 Authorization 字段名也消失而停止，`r2` 因读取
+  Comparison 的字段名错误而停止，均保留且由全新目录完整复跑修正。首次通过控制台入口启动浏览器
+  验收服务器时，终端中断只结束 Windows launcher、遗留精确可识别的 Python 子进程；该进程已按
+  PID 与完整任务命令双重核验后停止，最终服务改用直接 `python -m veritrail`，不得把启动器退出
+  冒充端口已释放；
+- 当前未完成事实：Codex 内置浏览器的合成与系统 `Tab/Enter` 没有移动或激活当前焦点，不能冒充
+  物理键盘通过；最终浏览器服务仍为这项人工检查有意保留。人工键盘后还需释放服务、复核全部端口/
+  进程/临时目录，提交本文档并从 GitHub 远端读回冻结提交与 `m9-v0.10.0` 标签；
+- 当前运行结论：M9 已取得真实命令、真实 Chromium、Catalog/Workbench 与适用负向证据，但物理
+  键盘、最终清理和远端冻结门禁未闭合；状态保持 `KEYBOARD_PENDING`，不构成 `FROZEN` 或超出合同
+  两个可信命令家族的通用 `SUPPORTED` 声明。

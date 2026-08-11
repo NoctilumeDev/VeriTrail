@@ -90,8 +90,10 @@ Plan / Evidence / Verdict
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
 自动化，`fa27b51` 完成 Plan 0.5 `run`、严格 `runtime.command`、最终状态漂移阻断、文本附件
-脱敏和 Bundle/Catalog/API/Workbench 通用读回自动化。真实 Python/Node 项目命令、真实浏览器
-终验与 `m9-v0.10.0` 标签均不存在，不能把自动化纵切面写成里程碑完成。
+脱敏和 Bundle/Catalog/API/Workbench 通用读回自动化。`9031719` 新增两个独立轻量 Subject 与真实
+验收矩阵；Python module、直接 `node.exe` script、重复 Run、适用负向、桌面/移动 Chromium、
+Catalog/Workbench、Console/Network 和双运行时回归已通过。内置浏览器物理键盘、最终清理、冻结
+提交及 `m9-v0.10.0` GitHub 远端标签读回仍不存在，不能把当前真实中间状态写成里程碑完成。
 
 ## 6. 详细文档
 
