@@ -1,12 +1,13 @@
 # M10 有界完整项目自举合同
 
-> 状态：`CONTRACT_DRAFT 0.1 / PLANNING`
+> 状态：`CONTRACT_FROZEN / PLANNING`
+> 合同版本：`M10 Bounded Project Bootstrap Contract 0.2`
 > 影响层级：`L3_SYSTEM`（项目 Profile、长运行进程、就绪状态机、所有权与逆序清理）
 > 前置基线：`m9-v0.10.0` @ `3181d69`
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：本合同冻结前不得新增 Plan 0.6、ProjectProfile、服务执行器或运行代码
+> 实施门禁：合同已经冻结，下一提交才可进入实现；本文不代表任何 Schema、CLI 或运行能力已经存在
 
 ## 1. M10 只回答一个问题
 
@@ -65,7 +66,7 @@ M10 并上浮合同，不得以“复用代码”为名静默改写基线。
 
 ## 4. 冷状态合同
 
-| 级别 | 定义 | M10 0.1 行为 |
+| 级别 | 定义 | M10 首片行为 |
 | --- | --- | --- |
 | `C0 RUNNING` | Profile 声明的服务或端口已经存在 | `NOT_PROVEN`；拒绝接管，不停止外部资源 |
 | `C1 PROCESS_COLD` | 合格运行时与项目依赖已存在，声明服务未运行 | 唯一冻结目标 |
@@ -82,40 +83,106 @@ M10 并上浮合同，不得以“复用代码”为名静默改写基线。
 6. 可用内存、磁盘、输出目录和工具自身预算满足 sealed 停止线；
 7. 上一 Run 的 owned 进程、端口、工作目录或 staging 残留为 0。
 
-任一条件不成立时不进入进程创建。资源、版本、端口或冷状态门禁导致的停止使用
-`ABORTED/PENDING`；发现主体或 Profile 漂移时使用 `INCONCLUSIVE`，不能自动修复环境后继续。
+CLI 接受有效合同与审批后才建立 Run；随后任一 C1 条件不成立都不得创建进程。资源、版本、端口
+或冷状态门禁导致的停止使用 `ABORTED/PENDING`；已批准 Preview 后才出现的 subject/Profile 观察
+漂移使用 `INCONCLUSIVE`，不能自动修复环境后继续。合同或 approval 本身无效时按第 12 节 pre-run
+拒绝，不建立 Run。
 
-## 5. 公共合同候选
+## 5. 公共合同
 
-M10 0.1 计划新增以下独立、版本化合同；字段在合同冻结前仍是提案，不是代码事实。
+M10 固定新增以下独立、版本化合同。JSON Schema 与 Python validator 必须同时执行严格字段、类型、
+范围和跨文档校验；任一方放宽都不构成兼容。
 
 ### 5.1 `ProjectProfile 0.1`
 
 ProjectProfile 是服务拓扑的权威声明，使用规范 JSON、内容哈希和独立 seal。它不保存本机绝对
-路径或秘密。首片固定：
+路径或秘密。顶层字段固定为：
 
-- 一个稳定 `profile_id` 与版本；
-- `platform=WINDOWS_11`、`cold_state=C1_PROCESS_COLD`；
-- 恰好两个节点：一个 `DEPENDENCY`、一个 `APPLICATION`；
-- 依赖节点 `depends_on=[]`，应用节点只依赖该依赖节点；禁止环和隐式依赖；
-- 每个节点固定 `adapter=TRUSTED_PROCESS_SERVICE`、tool binding、结构化参数、工作目录、环境名称、
-  单一回环端口、输出/进程上限、就绪策略与回收策略；
-- 应用节点声明唯一 browser origin；它必须与应用端口一致；
-- 全局启动顺序、逆序清理、资源预算、subject watch roots 和残留检查策略。
+| Field | ProjectProfile 0.1 rule |
+| --- | --- |
+| `schema_version` | 固定 `0.1` |
+| `profile_id` | 2–64 位 lowercase identifier |
+| `version` | 正整数；语义变化必须递增 |
+| `platform` | 固定 `WINDOWS_11` |
+| `cold_state` | 固定 `C1_PROCESS_COLD` |
+| `nodes` | 恰好两个不同 `node_id` 的节点 |
+| `start_order` | 恰好 `[DEPENDENCY node_id, APPLICATION node_id]` |
+| `teardown_order` | 必须是 `start_order` 的严格逆序 |
+| `application_node_id` | 必须引用唯一 APPLICATION |
+| `subject_watch_roots` | 1–8 个 subject 内安全相对路径；不能重叠或逃逸 |
+| `max_watch_files` | 1–2000 |
+| `max_watch_total_bytes` | 1–64 MiB |
+| `lifecycle_timeout_ms` | 5,000–900,000；只覆盖 process start 至 browser/evidence staging 的 teardown 前墙钟 |
+| `seal` | `SHA-256` + lowercase digest；未封存草案不能进入 Plan seal/Preview/Run |
+
+每个 `nodes[]` 的字段固定为：
+
+| Field | ProjectProfile node 0.1 rule |
+| --- | --- |
+| `node_id` | 2–64 位 lowercase identifier |
+| `role` | 恰好一个 `DEPENDENCY`、一个 `APPLICATION` |
+| `adapter` | 固定 `TRUSTED_PROCESS_SERVICE` |
+| `depends_on` | dependency 固定 `[]`；application 固定只引用 dependency |
+| `tool_binding` | 引用 ToolBindings 0.1 的稳定 ID |
+| `arguments` | 1–128 个 typed argument；不接受自由模板或变量展开 |
+| `working_directory` | subject 内 1–8 段安全相对 POSIX 路径或 `.` |
+| `environment` | 与 M9 同级严格环境名称策略，值不持久化 |
+| `port` | 1024–65535；两节点不同，固定绑定 `127.0.0.1` |
+| `readiness` | 唯一 `HTTP_GET_LOOPBACK_OWNED_PID` 策略 |
+| `limits` | 输出、活动进程与就绪超时上限 |
+| `shutdown` | 唯一 `JOB_TERMINATE_AFTER_CAPTURE` 策略 |
+
+typed argument 只允许四种互斥形态：`{"literal": "..."}`、
+`{"run_work_path": [segments...]}`、`{"node_port": "node_id"}` 与
+`{"node_origin": "node_id"}`。节点只能引用自身或已声明的传递依赖，禁止前向引用；origin 固定
+解析为 `http://127.0.0.1:<sealed-port>`。Preview 记录 typed 形态，不记录 Run work 绝对路径。
+
+`environment` 精确包含 `inherit` 与 `set`：继承名只允许 `SYSTEMROOT/WINDIR`，set 只能为空或
+`PYTHONDONTWRITEBYTECODE=1`；runner 另外注入独立 `TEMP/TMP`，Profile 不接受 PATH、秘密值、
+`.env` 或任意键。
+
+`readiness` 精确字段为：
+
+| Field | readiness 0.1 rule |
+| --- | --- |
+| `adapter` | `HTTP_GET_LOOPBACK_OWNED_PID` |
+| `path` | 无 origin/query/fragment/control character 的绝对 URL path |
+| `expected_status` | 固定 `200` |
+| `attempt_timeout_ms` | 100–2,000 |
+| `total_timeout_ms` | 500–30,000，且大于单次超时 |
+| `interval_ms` | 20–1,000 |
+| `consecutive_successes` | 固定 `2` |
+| `max_response_bytes` | 1–65,536；正文只 drain 后丢弃，不进入哈希或 Evidence |
+
+`limits` 精确包含 `max_stdout_bytes/max_stderr_bytes`（各 1–1 MiB）和 `max_processes`（1–32）。
+`shutdown` 精确包含 `adapter=JOB_TERMINATE_AFTER_CAPTURE`、`process_release_timeout_ms`、
+`port_release_timeout_ms` 与 `reader_shutdown_timeout_ms`，每项 100–10,000。
 
 Profile 的自动发现只能生成候选事实，不能修改或替代 sealed Profile。观察到的版本、端口或路径与
 Profile 不一致时停止；不得自动选择“看起来能用”的另一套 Python/Node。
 
 ### 5.2 `ExperimentPlan 0.6`
 
-Plan 0.6 绑定 `profile_id + profile_sha256`，而不复制 Profile 内容。它继续拥有问题、基线、唯一
-主要变量、资源停止线、浏览器步骤、断言、必需证据、复现与清理语义，并要求：
+Plan 0.6 不继承 Plan 0.5 的 `target/command`；它复用 Plan 0.3 的通用字段并新增
+`bootstrap_profile`。必需字段精确为 `schema_version/plan_id/version/subject/question/baseline/
+experiment_type/variables/required_evidence/assertions/random_seed/resource_budget/preflight/browser/
+bootstrap_profile/load_model/change_scope/reproduction_steps/cleanup_steps`，可选字段只有 `seal`。
+
+`bootstrap_profile` 精确包含 `profile_id/profile_version/profile_sha256`；Plan 绑定 Profile 而不复制
+Profile 内容。它继续拥有问题、基线、唯一主要变量、资源停止线、浏览器步骤、断言、必需证据、
+复现与清理语义，并要求：
 
 - `runtime.preflight`、`runtime.bootstrap` 与 `browser.session` 各恰好一份；
 - 至少一个 HARD/DEGRADATION 断言消费 `runtime.bootstrap`；
 - browser URL 的 origin 必须等于 Profile 的应用 origin；
 - Profile 与 Plan 都必须在首次运行前封存；任何语义变化生成新版本；
 - Plan 0.6 不要求也不隐式执行 Plan 0.5 的 `command` 或 M5 `STATIC_HTTP`。
+
+首片唯一 PRIMARY 变量固定命名为 `project_bootstrap_mode`，值固定
+`veritrail_managed_windows_c1_two_node_services`；其他项目事实只能是 CONTROLLED/NUISANCE/UNKNOWN。
+`preflight.ports` 必须把 Profile 两个端口各声明一次为 FREE，browser 所有 URL 必须使用 application
+origin。`seal` 处理 Plan 0.6 时必须同时接收并验证 sealed Profile；单文件结构校验不能冒充跨文档
+seal 已完成。
 
 ### 5.3 复用 `ToolBindings 0.1`
 
@@ -125,21 +192,31 @@ reparse point 和普通 `.exe`。绑定缺失或变化时 Preview 失效，禁�
 
 ### 5.4 `BootstrapPreview 0.1`
 
-执行前生成只读 Preview，至少封存：
+执行前生成只读 Preview，顶层字段固定为：
 
-- Plan/Profile seal 与政策哈希；
-- subject/working directory 身份摘要；
-- 两个 executable 身份、结构化参数和环境名称投影；
-- 确定性启动顺序与逆序清理顺序；
-- 两个回环端口、就绪 URL、浏览器 origin 与超时；
-- 每节点 Job/输出/进程上限和全局资源停止线；
-- 文件系统、网络、优雅停机、不可信代码与其他平台的 `NOT_PROVEN/NOT_SUPPORTED` claims；
-- `preview_sha256`。
+| Field | BootstrapPreview 0.1 rule |
+| --- | --- |
+| `schema_version` | 固定 `0.1` |
+| `plan_sha256` | live sealed Plan digest |
+| `profile_id/profile_version/profile_sha256` | 与 Plan ref 和 sealed Profile 三方一致 |
+| `subject_root_identity_sha256` | 只保存身份摘要 |
+| `platform/cold_state` | 固定 Windows 11/C1 |
+| `nodes` | 按 start_order 的两个 resolved node preview |
+| `start_order/teardown_order` | 与 Profile 一致且互为逆序 |
+| `application_origin` | 唯一回环 origin |
+| `browser_policy_sha256/resource_policy_sha256` | 绑定 Plan 浏览器与资源政策 |
+| `claims` | 固定安全/支持边界 |
+| `preview_sha256` | 排除自身后对规范 JSON 计算 SHA-256 |
+
+每个 resolved node preview 固定包含 node/role/dependency、executable basename/size/SHA/path identity、
+typed arguments、相对 working directory 与 identity、环境名称投影、端口/readiness/limits/shutdown
+政策及 node policy hash。`claims` 固定声明：filesystem/network/graceful-shutdown/executable-TOCTOU
+为 `NOT_PROVEN`，untrusted code/C0/C2/C3/Linux/macOS/Docker 为 `NOT_SUPPORTED`。
 
 `run` 必须接收用户批准的精确 Preview digest，并在进程创建前重新构建 live Preview；任何差异都
 拒绝运行。Preview 只展示路径身份摘要与 executable basename，不持久化个人绝对路径。
 
-### 5.5 CLI 入口候选
+### 5.5 CLI 入口
 
 ```text
 bootstrap-profile-seal --profile <draft> --output <sealed>
@@ -149,6 +226,29 @@ run --plan <sealed> --profile <sealed> --subject-root <root> --tool-bindings <lo
 ```
 
 不增加在线编辑、Shell 字符串、后台守护进程、全局服务注册或“自动修复”命令。
+
+### 5.6 Bundle 权威与所有权矩阵
+
+Plan 0.6 Run 的不可变 Bundle 必须同时包含 `sealed-plan.json` 与 `sealed-profile.json`，Manifest 对二者
+逐字节记录大小和 SHA-256。Bundle validator 必须验证 Profile 自身 seal、Plan 的
+`bootstrap_profile` 引用、两份封存文件和 `runtime.bootstrap` 中 Profile 身份四方一致；缺少 Profile
+或只校验 Plan 单文件时，Bundle 无效。ToolBindings 和其本机值永不进入 Bundle。
+
+Comparison 只有在两个来源 Bundle 都完成上述验证、Plan SHA 与 Profile SHA 均相同后才可消费
+Plan 0.6。Pairing 与 Batch 在出现各自的显式兼容合同前必须拒绝 Plan 0.6。Catalog 只能索引已经
+验真的 Bundle；Workbench 和 Report 只读既有事实，不成为 Profile、状态或裁决的新所有者。
+
+| Fact or decision | 唯一所有者 | 其他消费者的边界 |
+| --- | --- | --- |
+| 两节点拓扑、端口、顺序与节点政策 | sealed ProjectProfile | Plan 只引用；Preview/Evidence 只投影和核验 |
+| 实验问题、变量、断言与资源政策 | sealed ExperimentPlan | Profile 不解释实验语义 |
+| 本机可执行路径和值 | local ToolBindings | Preview 只保留身份摘要；Bundle 不持久化 |
+| 本次批准的解析结果 | BootstrapPreview | run 只接受精确 digest，不静默重建为新批准 |
+| 节点进程生命周期 | 每节点独立 Windows Job | PID/端口/名称不单独建立所有权 |
+| listener 就绪观察 | IP Helper + Job + HTTP 探针 | 不成为安全隔离或 TOCTOU 证明 |
+| 运行观察与清理事实 | `runtime.bootstrap` | Report/Catalog/Workbench 不改写 |
+| ExecutionStatus/Verdict | 既有 Core | M10 内部阶段不得增加公共枚举 |
+| 不可变交付事实 | Bundle + Manifest | SQLite Catalog 仍可删除重建 |
 
 ## 6. 生命周期状态机
 
@@ -208,9 +308,18 @@ ABORTING -> EVIDENCE_FINALIZED -> TEARDOWN_APPLICATION? -> TEARDOWN_DEPENDENCY? 
 5. Job 仍有活动进程，根/后代未出现未解释退出；
 6. 成功事实至少连续取得两次，避免一次瞬时响应冒充稳定就绪。
 
+每次候选成功必须按固定顺序采样：`Job PID set A -> GetExtendedTcpTable -> Job PID set B`；匹配
+`127.0.0.1:<sealed-port>` 的 LISTENER 行必须恰好一条，owner 同时属于 A 与 B，随后才发出/接受本次
+HTTP 成功。IP Helper 调用固定 `AF_INET + TCP_TABLE_OWNER_PID_LISTENER`，按
+`ERROR_INSUFFICIENT_BUFFER` 返回长度重试，结构/字节序/数量异常一律拒绝。`0.0.0.0`、IPv6、重复
+listener 行或 owner 集合变化都不是首片 READY。
+
 仅“进程存在”、仅“端口 LISTEN”或仅“HTTP 200”都不能单独成为 READY。owner PID 查询失败、
 响应来自外部 PID 或端口在启动竞态中被其他进程占用时，探针失败并进入 ABORTING；绝不停止该
 外部进程。
+
+Job/PID/TCP/HTTP 多次采样仍不是内核原子事务，因此 listener ownership TOCTOU containment 明确为
+`NOT_PROVEN`；两次连续成功只是首片的有界稳定性证据，不能宣传为安全隔离。
 
 `EXERCISED` 由现有 M2 Browser Adapter 对应用 origin 完成 sealed 桌面/移动步骤后产生。M10 不
 新增浏览器控制语义；Console、Network、截图、失败请求和溢出继续进入 `browser.session`，最终
@@ -233,6 +342,15 @@ Verdict 仍由 sealed assertions 决定。
 回收某一步失败不能阻止后续 best-effort 清理。`cleanup_complete=true` 只有全部适用条件为真；
 超时或残留必须保留具体节点、阶段、计数和错误类型。下一 Run 在残留解释并清除前不得开始。
 
+`lifecycle_timeout_ms` 耗尽后必须立即进入 ABORTING，但不能借此取消清理。应用和依赖始终各自获得
+sealed `shutdown` 三项超时，reader、端口和最终证据也使用有界收束预算；因此 Run 的最大墙钟是
+teardown 前 lifecycle 上限加上确定的清理与最终化上限，而不是一个会把清理时间耗尽的共享计时器。
+
+首片只保证处理 runner 捕获到的第一次 Ctrl-C/用户取消：停止新增步骤、保存已取得事实并执行逆序
+清理。重复强制终止 runner、runner 自身崩溃、操作系统崩溃或断电后的自动证据恢复均为
+`NOT_PROVEN`；`KILL_ON_JOB_CLOSE` 可以约束句柄关闭后的 owned 进程，但不能据此声称 Bundle 已完成、
+端口已复核或 subject 已恢复。下一 Run 的冷状态预检仍须拒绝任何未解释残留。
+
 ## 10. 写入、环境、网络与秘密边界
 
 - 服务仍只接受用户信任的本地代码；Job Object 不是安全沙箱；
@@ -247,31 +365,65 @@ Verdict 仍由 sealed assertions 决定。
 
 ## 11. `runtime.bootstrap` Evidence 0.1
 
-单一 Evidence 至少包含：
+公共 Evidence envelope 继续固定 `schema_version=0.1`，并精确包含 `evidence_type/source/captured_at/
+facts/observed_variables/metadata`；`evidence_type=runtime.bootstrap`，`source` 固定版本化 collector。
+`facts` 顶层字段固定为：
 
-- Plan/Profile/Preview/Tool policy 哈希与 collector 版本；
-- 声明/观察的 OS、冷状态、启动顺序、回收顺序和资源起点；
-- 每节点 executable 身份摘要、Job backend、active-process 上限和安全 claims；
-- 每阶段时间线、根进程退出、Job active-process 采样和输出摘要；
-- readiness 每次尝试的时间、结果类别、HTTP 状态、listener owner 是否属于 Job；
-- browser exercise 是否开始/完成及其 Evidence 引用；
-- ABORT/ERROR 原因、用户取消和停止线；
-- teardown 顺序、Job/handles/readers/ports/work/staging/subject 最终事实；
-- 脱敏计数、附件哈希、观察者资源和 `cleanup_complete`。
+| Field | Meaning |
+| --- | --- |
+| `plan_sha256/profile/preview_sha256` | 三个已审批政策身份；profile 含 id/version/SHA |
+| `platform/cold_state` | 声明与实际支持矩阵 |
+| `start_order/teardown_order` | sealed 顺序及实际完成顺序 |
+| `lifecycle_events` | 只追加的阶段、时间、结果类别；不得包含自由日志 |
+| `nodes` | 按 start_order 的两个严格 node facts |
+| `services_ready` | 两节点是否均满足 owned readiness |
+| `browser_exercise` | started/completed/browser Evidence SHA；不复制浏览器事实 |
+| `stop` | reason、stage、resource/user/safety/error 分类 |
+| `resource_observation` | Core、dependency、application、browser 分账摘要 |
+| `subject_observation` | before/after fingerprint、changed、scan_complete |
+| `cleanup` | 逆序、Job/handles/readers/ports/work/staging 的逐项事实 |
+| `cleanup_complete` | 仅全部适用清理事实为真时为 true |
 
-Evidence 不保存 PID 的长期身份主张；PID 只作为同一运行时间线内的短期诊断事实，持久化时可用
-Run-local ordinal/摘要表达。它不保存原始绝对路径、环境值、响应正文或完整命令行。
+每个 node facts 精确包含 `node_id/role/policy_sha256/process_created/target_assigned/target_resumed/
+root_exit_code/termination_reason/error_type/job/readiness/stdout/stderr/teardown`。`job` 记录 backend、
+limit readback、total/final active process counts 和 handles released；`stdout/stderr` 复用 M9 的有界
+stream/attachment 结构和双重脱敏规则。
+
+`readiness.attempts[]` 只记录 ordinal、elapsed、result category、HTTP status/response byte count、
+listener owner 是否在 Job、Job active-process count；不记录响应正文、PID、header 或 URL query。
+`teardown` 记录 requested、Job empty、root signaled、handles/readers released、port free 与 elapsed。
+
+`metadata` 精确声明 structured arguments、environment values/absolute paths/raw output 均未持久化，
+filesystem/network/graceful-shutdown/executable-TOCTOU 为 `NOT_PROVEN`，untrusted code 为
+`NOT_SUPPORTED`，listener owner backend 为 `WINDOWS_IP_HELPER_CTYPES_IPV4`，process ownership
+backend 为 `WINDOWS_JOB_OBJECT_PYWIN32_312`。生成附件时，Evidence verifier 必须要求两个节点的
+stdout/stderr 引用与 attachment 集合逐一、无遗漏、无额外项匹配。
+
+Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中参与 listener/Job 集合交叉判断，
+持久化时只保留计数和布尔归属事实。它不保存原始绝对路径、环境值、响应正文或完整命令行。
 
 ## 12. ExecutionStatus 与 Verdict 映射
+
+无效、未封存或互不匹配的 Plan/Profile，失效的 Preview，或 approval digest 不一致，都属于 pre-run
+拒绝：没有进程创建，也不得伪造 Run、ExecutionStatus、Verdict 或 `runtime.bootstrap`。批准后才出现
+的漂移必须进入不可覆盖的运行事实。
+
+`stop.reason` 只允许以下固定值：`NONE`、`RESOURCE_PREFLIGHT`、`PORT_CONFLICT`、
+`UNSUPPORTED_COLD_STATE`、`EXECUTABLE_DRIFT`、`SUBJECT_DRIFT`、`READINESS_TIMEOUT`、
+`LISTENER_OWNERSHIP_MISMATCH`、`NODE_EARLY_EXIT`、`USER_CANCELLED`、`LIFECYCLE_TIMEOUT`、
+`BROWSER_HARD_FAILURE`、`COLLECTOR_ERROR`、`EVIDENCE_ERROR`、`CLEANUP_ERROR`。不能以自由文本替代
+分类；诊断文本只能使用版本化、脱敏的 error type/code。
 
 | 场景 | ExecutionStatus | 默认 Verdict 上界 |
 | --- | --- | --- |
 | 两节点 READY、browser 完成、清理完成 | `COMPLETED` | 由 assertions 决定，可为 `PASS` |
 | 可信节点启动后提前退出且形成完整负向证据 | `COMPLETED` | HARD readiness 失败可为 `FAIL` |
 | 资源预检、端口竞争、版本/C1 缺口 | `ABORTED` | 无独立 HARD 失败时 `PENDING` |
-| readiness 总超时或用户中止 | `ABORTED` | 无独立 HARD 失败时 `PENDING` |
-| subject/Profile/Preview 漂移 | 依执行完整度决定 | `INCONCLUSIVE` |
-| Job/collector/证据系统非预期错误 | `ERROR` | `PENDING` 或已有 HARD `FAIL` |
+| listener owner 不匹配、readiness/lifecycle 总超时或用户中止 | `ABORTED` | 无独立 HARD 失败时 `PENDING` |
+| 启动瞬间 executable 身份变化或进程创建/Job 分配失败 | `ERROR` | `PENDING` |
+| 批准后 subject/Profile 观察漂移 | 已完成用户步骤则 `COMPLETED`，否则 `ABORTED` | `INCONCLUSIVE` |
+| browser 的 sealed HARD 断言观察到业务失败 | `COMPLETED` | 可为 `FAIL` |
+| Job/collector/证据系统非预期错误 | `ERROR` | 默认 `PENDING`；不得把 collector 缺陷当业务失败 |
 | 任一 owned 残留或逆序清理失败 | `ERROR` | cleanup HARD 断言为 `FAIL` |
 
 退出码、HTTP 200、Job 清空或浏览器成功都只是事实；任何一个都不能单独把整个 Run 提升为 PASS。
@@ -350,21 +502,21 @@ Run-local ordinal/摘要表达。它不保存原始绝对路径、环境值、�
 - 需要修改 M0–M9 冻结语义或删除不利失败事实；
 - 当前可用内存、磁盘或端口不满足 sealed 硬门槛。
 
-## 17. 合同冻结前的设计验证项
+## 17. 合同冻结设计验证记录
 
-本 0.1 草案还不能授权实现。首次只读设计核验形成以下候选决策：
+以下事实和决策在 Contract 0.2 冻结前完成核验；它们授权下一提交开始实现，不代表实现已存在：
 
-1. **listener owner 后端**：本机锁定的 `pywin32==312` 提供
+1. **listener owner 后端（已定）**：本机锁定的 `pywin32==312` 提供
    `JobObjectBasicProcessIdList`，但没有 `win32iphlpapi` 模块或 `GetExtendedTcpTable` binding。
-   草案选择一个 M10-only、窄封装的标准库 `ctypes` IP Helper 适配器读取
+   M10 固定使用一个 M10-only、窄封装的标准库 `ctypes` IP Helper 适配器读取
    `TCP_TABLE_OWNER_PID_LISTENER`；M9 Job 后端继续固定 pywin32，不降级为 ctypes。禁止新增 Shell、
-   `netstat` 或 PowerShell 文本解析。合同冻结前仍需核对结构大小、IPv4 字节序、缓冲区重试、
-   权限失败与 PID race 的负向设计；
-2. **Job 生命周期复用边界**：M9 `run_owned_process` 当前把 start、wait、terminate 和 close 固定在
+   `netstat` 或 PowerShell 文本解析。实现必须覆盖结构大小、IPv4 字节序、缓冲区重试、权限失败、
+   重复/宽绑定和 PID race；
+2. **Job 生命周期复用边界（已定）**：M9 `run_owned_process` 当前把 start、wait、terminate 和 close 固定在
    一次函数内，不能被长运行服务直接调用。M10 必须增加独立的 long-lived owned-service session；
    不改变 `run_owned_process` 的签名、返回值或 Plan 0.5 Evidence 映射。若抽取内部低层 helper，
    必须使用单独提交和 M9 characterization/full regression 证明行为未变；
-3. **Plan 0.6 消费者矩阵**：冻结候选如下，任何实现 diff 越界都回到合同评审。
+3. **Plan 0.6 消费者矩阵（已定）**：规则如下，任何实现 diff 越界都回到合同评审。
 
 | Consumer | Plan/Profile 0.1/0.6 rule |
 | --- | --- |
@@ -373,14 +525,21 @@ Run-local ordinal/摘要表达。它不保存原始绝对路径、环境值、�
 | `bootstrap-preview` | 只读解析 sealed Plan/Profile/ToolBindings，生成 Preview，不启动进程 |
 | `run` | Plan 0.6 必须提供 Profile、ToolBindings 与精确 approval digest；旧版本不要求新参数 |
 | evidence/verdict | 严格校验唯一 `runtime.bootstrap` 与政策哈希；不改写公共状态枚举 |
-| report/manifest | 透传 Plan 0.6 与新 Evidence，继续执行哈希、脱敏和不可覆盖规则 |
-| Catalog | 接纳通过现有 Bundle 验真的 Plan 0.6 Run；SQLite 仍是可重建派生索引 |
+| report/manifest | Bundle 必须携带并哈希 `sealed-profile.json`；Report 只透传身份与新 Evidence |
+| Bundle validator | 验证 Profile seal、Plan ref、Bundle 文件与 Evidence 四方一致；缺失 Profile 拒绝 |
+| Catalog | 只接纳通过上述 Bundle 验真的 Plan 0.6 Run；SQLite 仍是可重建派生索引 |
 | Workbench | 先只通过通用 Evidence 账册读回；M10 不增加执行按钮或前端新裁决 |
-| Comparison | 允许两个同 sealed Plan/Profile 的 M10 Run 使用既有三态比较，Profile SHA 纳入可比性 |
+| Comparison | 加载两个 Bundle 的 Profile；Plan SHA 与 Profile SHA 均相同才允许既有三态比较 |
 | Pairing/Batch | M10 不扩张其语义；在专门兼容合同出现前对 Plan 0.6 显式拒绝，不能部分解析 |
 
-上述候选决策、字段表与负向矩阵逐条复核后，合同才可升级为 `CONTRACT_FROZEN`。定义、草案或单元
-测试都不能替代真实运行；M10 只有全部退出门禁、清理和远端标签读回完成后才能标记 `FROZEN`。
+2026-08-11 的临时设计探针使用虚拟环境 Python 启动一个回环 HTTP 后代：Job process list 含 3 个
+进程，真正 listener 属于后代而非根进程；IP Helper owner 位于该 Job 集合。TerminateJobObject 后
+18774 释放，探针残留为 0。该事实验证 API 组合和“不能只看根 PID”的设计，不构成产品实现或
+M10 真实验收。
+
+上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
+`CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
+和远端标签读回完成后，里程碑本身才能标记 `FROZEN`。
 
 ## 18. 设计依据
 
