@@ -39,13 +39,12 @@
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
   真实 helper 自动化，`fa27b51` 完成 Plan 0.5 `run` 与严格 `runtime.command`，`9031719` 新增
-  两个独立轻量 Subject 和真实 Python/Node 正负矩阵。当前细分状态为
-  `LOCAL_VALIDATED / REMOTE_FREEZE_PENDING`：真实命令、重复 Run、适用负向、双视口 Chromium、
-  Catalog/Workbench、Console/Network、内置浏览器物理键盘、双 Python/前端回归与最终清理已通过；
-  GitHub 提交/tag 读回仍未完成。后续仍只允许按
-  合同实现一个可信、直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、
+  两个独立轻量 Subject 和真实 Python/Node 正负矩阵。冻结提交 `3181d69` 已通过真实命令、重复 Run、
+  适用负向、双视口 Chromium、Catalog/Workbench、Console/Network、内置浏览器物理键盘、双 Python/
+  前端回归与最终清理，并已从 GitHub 读回 `main` 和 `m9-v0.10.0` 标签，状态为 `FROZEN`。M9 仍只
+  允许一个可信、直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、
   自举、包管理器或前端控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
-  `m9-v0.10.0` 只有在全部实现和真实验收完成后才能创建。
+  标签 `m9-v0.10.0` 必须继续指向 `3181d69`；越过合同边界时必须开启后继里程碑而不是改写该基线。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

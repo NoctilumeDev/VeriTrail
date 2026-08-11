@@ -1,6 +1,6 @@
 # M9 受控项目命令执行合同
 
-> 状态：`LOCAL_VALIDATED / CONTRACT_FROZEN / REMOTE_FREEZE_PENDING`
+> 状态：`FROZEN / CONTRACT_FROZEN`
 > 影响层级：`L3_SYSTEM`（外部进程、信任边界、公共 Plan/Evidence 合同）
 > 前置基线：`m8-v0.9.0` 与 `post-m8-plan-v1`
 > 实施门禁：实现只能遵循本合同 0.2；改变公共字段、状态、所有权、安全边界或验收矩阵时必须
@@ -597,7 +597,7 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 - 目标 CLI：`command-preview` 与扩展 `run`；
 - 目标版本：Python Core `0.10.0.dev1`，Workbench `0.10.0-dev.1`；
 - 目标冻结标签：`m9-v0.10.0`；
-- 当前里程碑状态：`LOCAL_VALIDATED / REMOTE_FREEZE_PENDING`；
+- 当前里程碑状态：`FROZEN`；
 - 当前合同状态：`CONTRACT_FROZEN`；
 - 当前实现事实：`4d2bc84` 已完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与只读
   `command-preview` CLI；`9f979c8` 已完成 `pywin32==312` Windows Job Object 后端、暂停分配、
@@ -639,8 +639,11 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
   仍保留 venv launcher 与基础解释器两层进程；二者再次按 PID、父子关系和完整 M9 r4 Catalog 命令
   双重核验后停止。不得把终端会话退出冒充端口已经释放；最终复核确认 18770/18772/18773、M9
   Python/Node 进程和仓库 `.veritrail-*` 临时目录残留均为 0；
-- 当前未完成事实：本地代码、自动化、真实运行、内置浏览器物理键盘与最终清理门禁均已闭合；还需
-  提交本文档并从 GitHub 远端读回冻结提交与 `m9-v0.10.0` 标签；
-- 当前运行结论：M9 已在合同边界内完成本地验收，状态为 `LOCAL_VALIDATED / REMOTE_FREEZE_PENDING`；
-  GitHub 远端提交和标签读回前不构成 `FROZEN`，也不扩张为超出两个可信命令家族的通用
+- 当前远端事实：本地验收记录提交 `3181d6975d78d6be1ae1d76f4b1097faa1d72c8a` 已推送到 GitHub；
+  远端 `main` 与 `m9-v0.10.0^{}` 均读回该提交，远端 annotated tag 对象为
+  `61fa1dc2c71193ec4688bdbf42c28592b1696e31`；
+- 当前未完成事实：M9 合同范围内没有未闭合退出门禁；计划编辑、Shell/包管理器、长运行服务、完整
+  自举、其他平台、第二项目与不可信代码隔离仍属于后继里程碑，不得倒灌进 M9；
+- 当前运行结论：M9 已在合同边界内标记 `FROZEN`，冻结标签为 `m9-v0.10.0`。该结论只支持本轮两个
+  可信命令家族，不构成任意项目执行、文件系统/网络隔离或恶意代码 containment 的通用
   `SUPPORTED` 声明。
