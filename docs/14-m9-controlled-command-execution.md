@@ -63,10 +63,10 @@ M9 不回答：
 
 - Shell 拼接、隐式变量展开、管道、重定向和命令替换；
 - Plan 已封存但运行时解析到另一份可执行文件；
-- 参数、工作目录、环境名称或执行政策在预览后漂移；
+- 参数、工作目录、环境投影或执行政策在预览后漂移；
 - 命令无限运行、输出无限增长、等待交互输入或遗留子进程；
 - stdout/stderr、错误信息或证据中持久化秘密与个人绝对路径；
-- 受监测项目文件在运行中发生未声明变化；
+- 受监测项目文件的最终状态发生未声明漂移；
 - 资源停止、命令失败和业务 Verdict 被压扁成同一状态。
 
 ### 4.2 M9 不防护的风险
@@ -80,15 +80,16 @@ M9 不回答：
 - 自行启动未被可靠纳入所有权后端的进程；
 - 在输出脱敏前把秘密发送到外部系统。
 
-因此 M9 明确声明：
+下表定义 M9 完成全部真实验收后允许作出的**最大声明**，不是当前实现事实：
 
 | 能力 | M9 声明 |
 | --- | --- |
-| VeriTrail 调用层的 Shell 注入防护 | `SUPPORTED` |
-| sealed policy 与本机解析漂移检测 | `SUPPORTED` |
-| 有界 stdout/stderr 与持久化前脱敏 | `SUPPORTED` |
+| VeriTrail 调用层的 Shell 注入防护 | 真实证明后可 `SUPPORTED` |
+| sealed policy 与本机解析漂移检测 | 真实证明后可 `SUPPORTED` |
+| 有界 stdout/stderr 与持久化前脱敏 | 真实证明后可 `SUPPORTED` |
 | Windows 进程树所有权与清理 | 必须真实证明后才可 `SUPPORTED` |
-| 声明范围内项目污染检测 | 必须真实证明后才可 `SUPPORTED` |
+| 声明范围内最终状态漂移检测 | 必须真实证明后才可 `SUPPORTED` |
+| 命令全程写活动检测 | `NOT_PROVEN` |
 | 文件系统隔离 | `NOT_PROVEN` |
 | 网络隔离 | `NOT_PROVEN` |
 | 恶意代码 containment | `NOT_SUPPORTED` |
@@ -116,7 +117,7 @@ M9 只能用于用户已经信任并明确批准的本地项目命令。仓库�
 - 同一代码提交、静态目标字节、浏览器版本、视口和步骤；
 - 同一 M1 资源政策、M5 目标政策、断言、Artifact 上限和 Verdict 规则；
 - 固定 Windows 11、C1、单命令、单目标、单浏览器链、串行执行；
-- 相同 ToolBindings、解析后可执行文件摘要、参数、工作目录、环境名称和审批摘要；
+- 相同 ToolBindings、解析后可执行文件摘要、参数、工作目录、环境名称、环境投影摘要和审批摘要；
 - 相同受监测根、文件/字节上限、输出上限、超时和清理断言。
 
 ### 5.4 干扰与观察者效应
@@ -175,12 +176,12 @@ Plan 0.5 保留 Plan 0.4 全部字段与语义，只新增必填 `command`。候
     ],
     "working_directory": ".",
     "environment": {
-      "inherit": ["SYSTEMROOT", "WINDIR", "TEMP", "TMP"],
+      "inherit": ["SYSTEMROOT", "WINDIR"],
       "set": { "PYTHONDONTWRITEBYTECODE": "1" }
     },
     "stdin": "CLOSED",
     "timeout_ms": 300000,
-    "terminate_grace_ms": 2000,
+    "descendant_exit_grace_ms": 2000,
     "expected_exit_codes": [0],
     "max_stdout_bytes": 1048576,
     "max_stderr_bytes": 1048576,
@@ -203,11 +204,12 @@ Plan 0.5 保留 Plan 0.4 全部字段与语义，只新增必填 `command`。候
 - `working_directory` 是 subject-root 下安全的相对 POSIX 路径；允许精确的 `.` 表示 subject-root，
   其他路径禁止绝对路径、盘符、反斜杠、空段、`.`/`..` 段、symlink、junction 和 reparse point；
 - `arguments` 1–128 项，每项只能是 `literal` 或受限的 `run_work_path`，不能同时包含两者；
-- `literal` 是单个 argv 元素，不做 glob、变量、引号、转义或 Shell 解释；控制字符和 NUL 拒绝；
+- `literal` 是单个 argv 元素，不做 glob、变量、引号、转义或 Shell 解释；控制字符、NUL、秘密、
+  账号/机器标识和个人绝对路径拒绝；
 - `run_work_path` 只允许 1–8 段安全相对路径，由 runner 转换为当前 Run 临时工作区内的绝对路径；
 - Plan、Preview、Evidence 和终端 JSON 不持久化该绝对路径；
 - stdin 固定关闭，不支持交互确认、密码输入、TTY 或继承控制台输入；
-- timeout 1–900 秒；grace 0.1–10 秒；stdout/stderr 各 1 B–1 MiB；
+- timeout 1–900 秒；后代正常退出窗口 0.1–10 秒；stdout/stderr 各 1 B–1 MiB；
 - 允许退出码是唯一、排序的 0–255 整数；process 上限 1–32；
 - 监测根 1–8 个，均在 subject-root 内且互不重叠；单 Run 指纹上限 2000 文件、64 MiB；
 - 0.5 Seal 覆盖完整 command 政策。任何参数、环境、上限、监测根或期望退出码变化都产生新
@@ -216,10 +218,21 @@ Plan 0.5 保留 Plan 0.4 全部字段与语义，只新增必填 `command`。候
 ### 7.2 环境边界
 
 - 子进程从最小环境开始，只继承 Plan 明确列出的非秘密变量；
-- 允许继承名使用固定安全集合；默认拒绝名称含 token、secret、password、key、credential、
-  cookie、auth、proxy 等敏感含义的变量；
-- `environment.set` 只允许非秘密短文本；键和值都通过敏感规则，命中即拒绝 Plan；
-- runner 可以注入自己的临时工作区变量，但值不进入 Plan、Preview、Evidence 或日志；
+- M9 首片允许继承名固定为 `SYSTEMROOT` 与 `WINDIR`，键按 Windows 大小写不敏感语义规范化并
+  拒绝重复；`TEMP`/`TMP` 由 runner 指向 Run work，不继承用户路径；
+- 后续扩充允许集合必须先证明必要性；名称含 token、secret、password、key、credential、cookie、
+  auth、proxy 等敏感含义的变量一律拒绝；
+- `environment.set` 不接受任意键值。M9 首片固定只允许
+  `PYTHONDONTWRITEBYTECODE=1`；Node 正向 Plan 使用空 `set`。解释器加载路径、启动选项、代理、凭据、
+  动态库和用户目录相关变量均拒绝；扩表必须修改并重新冻结合同；
+- Preview 与 Run 都从当前父进程解析允许继承变量的**实际值**，对规范化后的完整环境投影计算
+  SHA-256；Approval 必须绑定该摘要，Run 前漂移即拒绝 spawn；
+- 环境投影按键排序，区分 inherited/set/runner 三类；inherited 与 set 绑定传给子进程的实际值，
+  runner 路径值规范为稳定的 `<RUN_WORK>` 语义占位符；
+- CommandPreview、Evidence 与日志只保存环境变量名称和投影摘要，不保存环境原值；SHA-256 不等于
+  脱敏，低熵个人值仍可能被猜测，因此 M9 必须先用上述固定集合排除账号、个人路径与秘密，而不是
+  依赖哈希掩盖它们；
+- runner 注入的实际绝对路径不进入 Plan、Preview、Evidence 或日志；
 - 不默认继承完整父进程环境，不读取或解析 `.env`；
 - 子进程继承环境值无法构成恶意程序隔离；M9 仍只接受可信命令。
 
@@ -286,15 +299,15 @@ Preview 必须：
 
 - 只读校验/Seal Plan，解析工作目录、ToolBindings、参数和监测范围；
 - 不创建目标进程，不执行 `--version`，不写项目和 Artifact；
-- 展示命令 ID、脱敏可执行文件身份、argv 边界、相对工作目录、环境变量名称、上限、写策略、
-  未证明的隔离边界和预计副作用；
+- 展示命令 ID、脱敏可执行文件身份、argv 边界、相对工作目录、环境变量名称、环境投影摘要、
+  上限、写策略、未证明的隔离边界和预计副作用；
 - 生成规范化 CommandPreview 与 SHA-256；
 - Approval 摘要覆盖 Plan seal、完整 command policy、解析后可执行文件身份、规范工作目录、环境
-  名称和监测范围，但不包含原绝对路径或秘密值；
+  名称、环境投影摘要和监测范围，但不包含原绝对路径或环境原值；
 - stdout 只输出结构化、脱敏 JSON，stderr 不输出 traceback 或个人路径。
 
-`run` 必须实时重建相同 Preview。缺少批准、摘要不匹配、工具身份漂移或政策漂移时，命令退出 2，
-不启动子进程、不创建 Run Bundle、不改动项目。
+`run` 必须实时重建相同 Preview。缺少批准、摘要不匹配、工具身份漂移、环境投影漂移或政策漂移
+时，命令退出 2，不启动子进程、不创建 Run Bundle、不改动项目。
 
 批准只确认“按屏幕所示运行这一个可信命令”，不表示用户授权任意后继进程、系统修改或未声明
 副作用。
@@ -312,7 +325,7 @@ VALIDATE / SEAL
           -> SPAWN / CAPTURE / REAP
               -> ACCEPTED EXIT -> SUBJECT DIFF -> M5 TARGET / BROWSER
               -> UNEXPECTED EXIT -> SUBJECT DIFF -> EVALUATE / BUNDLE
-              -> TIMEOUT/CANCEL/LIMIT -> KILL TREE -> SUBJECT DIFF -> EVALUATE / BUNDLE
+              -> TIMEOUT/CANCEL/LIMIT -> TERMINATE JOB -> SUBJECT DIFF -> EVALUATE / BUNDLE
               -> SPAWN ERROR -> CLEANUP -> EVALUATE / BUNDLE
           -> ARTIFACT FINALIZE / EVALUATE / ATOMIC BUNDLE
 ```
@@ -328,39 +341,82 @@ VALIDATE / SEAL
 - spawn 或所有权后端异常：`ERROR/PENDING`，除非已有独立硬失败证据；
 - 用户取消、超时、输出/进程/资源硬限触发：ExecutionStatus 为 `ABORTED`；无独立硬失败证据时
   Verdict 为 `PENDING`；
-- 监测范围变化、可执行文件后验身份变化或无法解释的环境漂移：`INCONCLUSIVE`，不得自动回滚
+- 监测范围最终状态漂移、可执行文件后验身份变化或无法解释的运行后环境漂移：`INCONCLUSIVE`，不得自动回滚
   或删除用户文件；
 - 进程树、捕获线程、临时工作区或 staging 清理失败：不得 `PASS`，残留必须可见；
 - Bundle 继续使用 staging + 原子 rename，已有 output/Run ID 永不覆盖。
 
-## 11. Windows 进程所有权与清理
+## 11. Windows 进程所有权与清理 ADR 候选
 
-M9 冻结前必须选定并记录 Windows 进程所有权后端 ADR。它必须能够：
+冻结候选决策是使用 Windows Job Object 作为 M9 的进程所有权边界，调用层候选为项目虚拟环境内
+锁定版本的 pywin32。当前只冻结设计方向，不声称依赖已安装或后端已实现。
+
+### 11.1 必须成立的创建顺序
+
+1. 创建本 Run 独占的 Job Object；
+2. 在 Job 上设置 `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`、`JOB_OBJECT_LIMIT_ACTIVE_PROCESS` 和
+   sealed `max_processes`，不允许 breakaway；
+3. 直接以 `CREATE_SUSPENDED` 创建目标 `.exe`，保留 process/thread handles；
+4. 在首线程执行任何目标代码前把进程分配给 Job；分配失败时终止仍暂停的目标并关闭所有句柄，
+   记录 `process_created=true`、`target_resumed=false` 与稳定错误，形成 `ERROR/PENDING`，禁止无 Job
+   降级运行；
+5. 分配成功后才 `ResumeThread`，并发排空 stdout/stderr；
+6. 根进程正常退出后，在 `descendant_exit_grace_ms` 内等待已拥有后代自行结束；仍有存活成员时
+   终止整个 Job；
+7. 超时、取消、输出/资源/进程硬限制触发时直接终止本 Run 的 Job，再等待并证明成员、管道线程
+   与句柄全部释放；
+8. 最后关闭 Job handle；`KILL_ON_JOB_CLOSE` 是异常路径的最后所有权保险，不是唯一清理步骤。
+
+先普通 `Popen`、后补分配 Job 存在目标进程先行执行/派生的竞态，不满足 M9。M9 也不使用
+`CREATE_BREAKAWAY_FROM_JOB`。Windows 普通控制台进程没有统一、可靠且不波及外部进程的温和终止
+协议，因此 M9 不承诺泛化的“先发优雅信号”；有界 grace 只用于根进程正常退出后的已拥有后代。
+
+### 11.2 嵌套 Job 与本机预检
+
+Windows 8 及以后允许满足约束的嵌套 Job，但 Codex/PowerShell 宿主自身可能已经在 Job 中。2026-08-11
+的只读探针确认：当前 PowerShell、项目虚拟环境和 Python 3.13 处于 Job，独立 Python 3.10 的观察
+结果不同；三个 Python 环境均未安装 pywin32。这只是当前环境事实，不替代实现后的能力测试。
+
+实现必须在目标执行前：
+
+- 调用 `IsProcessInJob` 记录当前进程是否已有上层 Job；
+- 创建本 Run Job 并验证必要 limit 能设置；嵌套兼容性的决定性检查仍是按 11.1 把暂停目标分配
+  进去；
+- 将嵌套/分配不兼容作为稳定 ownership error，保持 `ERROR/PENDING`，证明目标代码从未恢复执行；
+- 不以普通 `Popen`、PID 轮询、进程名匹配或全局端口清理作为回退。
+
+pywin32 若被采用，只能锁定到项目虚拟环境并完成版本、wheel/hash、许可证与两套 Python 兼容审查；
+不得执行全局 post-install，也不得因依赖缺失自动安装。依赖安装属于后续实施变更，当前未执行。
+
+### 11.3 所有权验收能力
+
+后端必须能够：
 
 - 直接创建目标进程而不经过 Shell；
 - 在目标执行用户权限内运行，不请求管理员/UAC 提权；
 - 把目标及其后代纳入本 Run 的所有权范围；
 - 同时排空 stdout/stderr，避免管道背压死锁；
 - 正常结束后等待全部已拥有后代退出；
-- 超时/取消时先执行有界温和终止，再对仍存活的已拥有进程强制回收；
+- 超时/取消/硬限制时只终止本 Run 的 Job；
 - 不按名称、模糊命令行或全局端口杀进程；
 - 记录已启动/观察/终止/残留数量，但不持久化个人命令行或不必要 PID；
 - 最终证明捕获线程、句柄、临时目录、staging 和已拥有进程树清理。
 
-若 Python 标准库不能可靠满足所有权与回收，不得用脆弱轮询冒充完成。允许评估 Windows Job
-Object 的最小封装或经过依赖/维护/许可证审查的成熟库；是否“纯标准库”不是冻结标准。
+是否“纯标准库”不是冻结标准；可靠所有权、可证伪失败和不产生 jobless 竞态才是标准。
 
-## 12. 项目污染与副作用边界
+## 12. 项目最终状态漂移与副作用边界
 
 M9 不具备 OS 文件系统沙箱。首个切片使用“声明 + 检测 + 阻止结论扩张”：
 
 - 运行前对每个 `subject_watch_root` 做普通文件、链接、大小和 SHA-256 有界快照；
-- 运行后用同一规则复算，报告新增、删除、修改、链接变化和无法读取；
+- 运行后用同一规则复算，报告最终新增、删除、修改、链接变化和无法读取；
 - 快照超限或采集失败时不启动进程；
 - `RUN_WORK_ONLY_DETECT_SUBJECT_CHANGES` 表示命令应只写 Run 临时区，但这是合同要求，不是内核
   强制；
-- 监测根发生变化时记录污染并阻止因果 `PASS`；VeriTrail 不替用户删除、覆盖或回滚文件；
-- 未列入监测根的 subject 路径与 subject-root 外部均明确为未观测；
+- 监测根最终状态发生漂移时记录污染并阻止因果 `PASS`；VeriTrail 不替用户删除、覆盖或回滚文件；
+- 前后指纹只证明采样时点的最终状态差异，不能证明命令没有“写入后恢复”的瞬时写活动；
+- 未列入监测根的 subject 路径、subject-root 外部、NTFS Alternate Data Streams 及文件系统元数据均
+  明确为未观测；Evidence 固定记录 `write_activity=NOT_PROVEN`；
 - Run 临时区必须由 VeriTrail 创建、确认所有权并在证据附件转存后清理；
 - 计划要求的构建产物只能写到 typed `run_work_path`；M9 不把产物复制回项目；
 - 如果真实命令不能在这个边界内运行，应留给 M10/C2 的隔离工作区合同，不能放宽 M9。
@@ -375,11 +431,14 @@ stdout 和 stderr 分开捕获为有界附件；不合并顺序，也不把终�
 - collector/version、Plan seal、command policy SHA-256、Preview SHA-256；
 - command ID、adapter、tool binding ID、可执行 basename/size/SHA-256 与脱敏身份摘要；
 - argv 个数与规范化参数摘要；敏感值和运行时绝对路径不重复保存；
-- 相对工作目录、继承/设置的环境变量**名称**、stdin/TTY/Shell 事实；
-- started/ended/elapsed、spawned、exit_code、exit_expected、termination_reason；
+- 相对工作目录、继承/设置的环境变量**名称**、`environment_projection_sha256`、stdin/TTY/Shell
+  事实；
+- started/ended/elapsed、process_created、target_assigned、target_resumed、exit_code、exit_expected、
+  termination_reason；
 - stdout/stderr 原始字节计数、持久化字节计数、截断/超限、脱敏计数和附件哈希；
 - 进程所有权后端、观察进程数、正常/强制终止数、tree_released；
-- subject snapshot policy/fingerprint、差异计数、mutation_detected、snapshot_complete；
+- subject snapshot policy/fingerprint、差异计数、`final_state_drift_detected`、snapshot_complete、
+  `write_activity=NOT_PROVEN`；
 - run work 创建/释放、捕获线程停止、句柄释放、cleanup_complete；
 - collector RSS before/peak/delta、资源/观察者错误和稳定 error type；
 - 明确元数据：`shell_used=false`、`structured_arguments=true`、
@@ -387,7 +446,7 @@ stdout 和 stderr 分开捕获为有界附件；不合并顺序，也不把终�
   `untrusted_code_containment=NOT_SUPPORTED`。
 
 Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Preview 漂移、计数/附件不一致、原绝对
-路径、未脱敏秘密、自相矛盾状态和重复 `runtime.command`。`cleanup_complete=false`、未解释污染
+路径、未脱敏秘密、自相矛盾状态和重复 `runtime.command`。`cleanup_complete=false`、未解释最终漂移
 或身份漂移必须阻止 `PASS`。
 
 ## 14. 控制组与证伪矩阵
@@ -395,7 +454,7 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 | 组 | 唯一变化 | 预期事实 |
 | --- | --- | --- |
 | M5 基线 | 无 command | 既有 Plan 0.4 字节/行为兼容 |
-| Python 正向 | 可信 Python module ONESHOT | 允许退出、无污染、继续 M5 链 |
+| Python 正向 | 可信 Python module ONESHOT | 允许退出、最终状态无漂移、继续 M5 链 |
 | Node 正向 | 可信 node.exe script ONESHOT | 独立 Run 证明第二命令家族 |
 | 缺少批准 | 无/错误 Preview SHA | spawn 前拒绝、0 Run |
 | 工具漂移 | Preview 后替换绑定身份 | spawn 前拒绝；后验漂移为 `INCONCLUSIVE` |
@@ -406,7 +465,8 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 | 用户取消 | 执行中取消 | `ABORTED/PENDING`，证据与清理保留 |
 | 输出超限 | stdout 或 stderr 超限 | 中止或稳定拒绝，内存/Artifact 不越界 |
 | 秘密 canary | 输出含测试秘密/路径 | 原值不落盘，脱敏事实可见 |
-| subject 变化 | 修改受监测普通文件 | `INCONCLUSIVE`，不回滚用户文件 |
+| subject 最终漂移 | 修改受监测普通文件且保留变化 | `INCONCLUSIVE`，不回滚用户文件 |
+| 瞬时写后恢复 | 修改后恢复原字节与类型 | 最终指纹可相同；`write_activity=NOT_PROVEN`，不得声称无写入 |
 | 子进程残留 | helper 创建长存后代 | 已拥有树回收；失败则不得 `PASS` |
 | 外部同名进程 | 预先存在同名程序 | 不接管、不停止、不计入本 Run |
 | 预检 ABORT/STOP | 只改变资源阈值 | 0 spawn，无 `runtime.command` |
@@ -419,12 +479,12 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 
 - Plan 0.5 Schema、Seal、篡改、unknown field、Plan 0.1–0.4 字节兼容；
 - ToolBindings 路径类型、普通 `.exe`、链接/reparse、身份摘要和 Preview/Run 漂移；
-- 参数边界、typed run path、工作目录、环境名称、秘密拒绝和审批摘要确定性；
+- 参数边界、typed run path、工作目录、环境投影摘要、秘密拒绝、漂移拒绝和审批摘要确定性；
 - shell/`.cmd/.bat`/inline code、stdin/TTY、超时、输出、进程数和监测上限；
 - 正常/非零/spawn error/timeout/cancel/output overflow 的状态与 Verdict 分离；
 - stdout/stderr 并发排空、脱敏、控制字符、有界附件、哈希和 Manifest；
-- 子进程树正常退出、温和终止、强制回收、外部同名进程保护和清理失败；
-- subject 前后快照、污染、快照超限、Run work 与 staging 清理；
+- suspended 分配、嵌套 Job、子进程树正常退出、Job 强制回收、外部同名进程保护和清理失败；
+- subject 前后快照、最终状态漂移、瞬时写未证明、快照超限、Run work 与 staging 清理；
 - `runtime.command` 严格校验、重复证据、政策/Preview 漂移和 Verdict；
 - M0–M8 全量回归、Catalog 接纳 Plan 0.5、Workbench 通用读回；
 - 两套 Python、前端 lint/test/build、依赖与敏感扫描；worker 数遵守 16 GB 资源策略。
@@ -437,7 +497,7 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 
 1. 在 Windows 11/C1 上用两个独立 Plan/Run 分别执行可信 Python module 与直接 `node.exe`
    script；不使用 npm、`.cmd`、Shell 或内联代码；
-2. 每个正向 Run 都完成 preflight、审批一致性、ONESHOT、subject 无污染、M5 静态目标、桌面/移动
+2. 每个正向 Run 都完成 preflight、审批一致性、ONESHOT、subject 最终状态无漂移、M5 静态目标、桌面/移动
    Chromium、Verdict、Bundle 和清理；
 3. 真实运行非零退出、超时/取消、秘密 canary、受监测文件变化和长存子进程等适用负向；
 4. Bundle 由 Catalog 建索引并被现有 Workbench 通用读回，不增加 M9 特殊 UI；
@@ -457,9 +517,10 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 
 - 可信命令与恶意代码边界没有使用“沙箱”式夸大表述；
 - Plan 0.5 只有一个 ONESHOT，不侵入 M10 长运行生命周期；
-- ToolBindings、Preview 和 Approval 能固定本机解析，而不持久化个人路径；
-- Windows 进程所有权后端有可实现且可证伪的候选方案；
-- 项目副作用采用 Run work + 声明监测 + 污染阻断，不自动删除用户文件；
+- ToolBindings、Preview 和 Approval 能固定本机解析与环境投影，而不持久化个人路径或环境原值；
+- Windows Job Object 后端有无 jobless 竞态的创建顺序、嵌套预检和可证伪失败语义；
+- 项目副作用采用 Run work + 最终状态监测 + 漂移阻断，不把前后指纹夸大成全程写活动证明，
+  不自动删除用户文件；
 - ExecutionStatus 与 Verdict 在全部异常路径上保持分离；
 - M5 `STATIC_HTTP`、浏览器、Bundle 和旧消费者保持兼容；
 - 自动化矩阵与真实运行矩阵都包含正向、失败、中止、污染、清理和秘密 canary；
@@ -468,9 +529,21 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 
 冻结合同只允许 M9 进入实现，不代表任何代码、运行或安全主张已经成立。
 
-## 18. 合同记录
+## 18. 冻结依据
 
-- 合同版本：M9 Controlled Project Command Execution Contract 0.1；
+- [Microsoft：Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects)
+- [Microsoft：AssignProcessToJobObject](https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-assignprocesstojobobject)
+- [Microsoft：Nested Jobs](https://learn.microsoft.com/en-us/windows/win32/procthread/nested-jobs)
+- [Microsoft：Process Creation Flags](https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
+- [pywin32：win32process.CreateProcess](https://mhammond.github.io/pywin32/win32process__CreateProcess_meth.html)
+- [pywin32：win32job](https://mhammond.github.io/pywin32/win32job.html)
+- [PyPI：pywin32](https://pypi.org/project/pywin32/)
+
+这些来源只证明 API/分发候选存在，不证明 VeriTrail 已正确调用，也不替代本机负向运行与残留核验。
+
+## 19. 合同记录
+
+- 合同版本：M9 Controlled Project Command Execution Contract 0.2-draft；
 - 目标 Plan：ExperimentPlan 0.5；
 - 目标本机输入：ToolBindings 0.1；
 - 目标 Preview：CommandPreview 0.1；
