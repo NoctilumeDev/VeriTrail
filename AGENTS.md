@@ -26,13 +26,13 @@
   真实四角色三态、逐字节复建、来源损坏拒绝、Catalog 隔离、生产与 Codex 内置浏览器、资源、
   安全和清理终验，标记 `FROZEN`。目录选择器在内置浏览器中不触发导入的失败事实与改成显式
   四文件导入的修复必须继续保留。计划编辑、任意项目命令和完整自举仍未实现。
-  M8“预注册全因子批次矩阵与固定种子扰动”已完成 Core 与 Workbench 切片：四个公共 Schema、
-  `seal-batch` / `analyze-batch`、脱敏 2×2 示例、自动化反例、BatchAnalysis 四文件 Loader 和
-  只读矩阵/wave 视图已 `IMPLEMENTED / AUTOMATED`；提交 `5caee26` 已用 8 个独立 M5 Run 完成
-  真实 2×2 coverage 与固定种子 perturbation、四类分析、确定性、反例和清理验收。生产构建也已
-  完成 Codex 内置浏览器四态、损坏恢复、刷新/返回、桌面/移动和 Console/Network 终验，并由
-  `scripts/m8_batch_browser_acceptance.py` 补证真实 Chromium 键盘顺序与同源只读网络。最终冻结仍为
-  `PENDING`，当前不得标记为 `FROZEN` 或开启 M9 实现。
+  M8“预注册全因子批次矩阵与固定种子扰动”已在合同 `b1ca45b`、Core `0510915`、Workbench
+  `a067f4c`、真实批次 `5caee26` 与浏览器终验 `ba77feb` 上完成四个公共 Schema、两个 CLI、
+  BatchAnalysis 四文件 Loader 和只读矩阵/wave 视图，并通过双 Python、8 个独立 M5 Run、四类
+  分析、确定性/反例、生产及 Codex 内置浏览器、人工系统键盘、资源、安全和清理终验，标记
+  `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
+  自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。计划编辑、任意项目命令、真实并行
+  和完整自举仍未实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
@@ -66,7 +66,7 @@
 - M7 冻结合同固定 `BASELINE -> TREATMENT -> RESTORED_BASELINE -> NEGATIVE_CONTROL` 四角色，
   新增独立 PairingPlan/PairedAnalysis；不得修改 M0–M6 契约、删减不利角色、把配对结果写成
   来源 `PASS/FAIL`，或扩大为统计显著性、组合变量与任意执行器。
-- M8 合同使用独立 BatchPlan/BatchAnalysis 表达 4–16 格全因子 Profile；确定性 coverage
+- M8 冻结合同使用独立 BatchPlan/BatchAnalysis 表达 4–16 格全因子 Profile；确定性 coverage
   必须先完成，seed 只能改变 perturbation 顺序，不能改变成员或补写缺格。M8 不执行来源 Run、
   不证明真实并行，不把 Profile 信号写成组件级因果或来源 `PASS/FAIL`。
 - v0 不接受任意 Shell 字符串执行。若未来引入命令执行，必须采用结构化参数、显式预览、最小权限和可审计允许列表。

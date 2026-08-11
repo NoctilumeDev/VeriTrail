@@ -2,11 +2,10 @@
 
 ## 状态
 
-`CORE / WORKBENCH IMPLEMENTED / AUTOMATED；REAL SOURCE / BROWSER TERMINAL VALIDATED`。
-实现前独立合同已经落地为四个公共 Schema、Python Core、`seal-batch` / `analyze-batch` CLI、
-脱敏 2×2 示例、自动化反例，以及只读 BatchAnalysis 四文件 Loader 与矩阵/wave 视图；真实
-M5 批次与生产 Workbench 浏览器链路已经完成，最终冻结仍为 `PENDING`，因此本里程碑不是
-`FROZEN`。前置语义基线是 M7 冻结提交
+`FROZEN`。本文件先在 `b1ca45b` 作为实现前独立合同提交，再由 `0510915` 实现 Python Core、
+四个公共 Schema 与两个 CLI，由 `a067f4c` 实现 BatchAnalysis 四文件 Loader 与矩阵/wave
+Workbench；`5caee26` 完成真实 2×2 M5 批次，`ba77feb` 完成生产与 Codex 内置浏览器终验，
+其后的独立冻结审查补齐内置浏览器人工系统键盘事实。前置语义基线仍是 M7 冻结提交
 `e5c6e271423d4359fc63e542c95093b823404de8` 与标签 `m7-v0.8.0`；其后的
 `c616974` 只修正 M7 跨文档状态不一致，没有改变代码或公共契约。
 
@@ -318,7 +317,7 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 生产容量、完整自举或跨项目通用性。组合 Profile 发现异常后，应回到单变量或 M7 四角色计划
 定位原因，而不是从矩阵相关性直接宣布根因。
 
-## 当前实现证据与剩余门禁
+## 冻结证据
 
 - 已实现 BatchPlan 0.1、RunAssignment 0.1、BatchAnalysis 0.1 与 BatchAnalysis Manifest 0.1；
 - Python Core 已验证完整笛卡尔积、canonical coverage、`SHA256_RANK_V1`、一/二路 wave 预算、
@@ -356,12 +355,31 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
   Catalog/API 表面重跑得到全 200、无外部资源和无写请求的干净结果；
 - 内置浏览器控制面的合成 `Tab` 对普通按钮也不能推进焦点，因此没有把它冒写成内置浏览器
   键盘通过；`scripts/m8_batch_browser_acceptance.py` 在同一生产构建的真实 Chromium 151 上
-  补证文件入口到矩阵的确定焦点顺序，并复验上述四态、损坏恢复、history、移动端与网络边界；
+  先补证文件入口到矩阵的确定焦点顺序，并复验上述四态、损坏恢复、history、移动端与网络边界；
+- 最终由用户在已聚焦四文件入口的 Codex 内置浏览器中只按一次系统 `Tab`，随后只读观察到
+  `DIV[tabindex="0"][aria-label="全因子 Profile 矩阵"]` 成为 activeElement，焦点轮廓可见、
+  文档横向溢出为 0、Console warning/error 为 0；人工验收记录 SHA-256 为
+  `0e2b4aca48013ff9a0c0d91fd5424bc1c836e849db96399011352b985ce8b7d4`；
 - 浏览器复验共 9 项检查、30 个同源只读请求、0 个 HTTP 错误、0 个外部请求、0 个写请求，
   Console、page error 与 request failure 均为空；桌面/移动截图按 SHA-256 记账，端口已释放；
 - 双 Python 各 108 项、前端 lint/type-check/53 项 Vitest/生产构建、`pip check` 与生产依赖
-  `npm audit` 均已再次通过；仍须完成最终资源、敏感和残留复核、干净提交、远端读回及
-  `m8-v0.9.0` 标签冻结，因此 M8 仍不能标记为 `FROZEN`。
+  `npm audit` 均已再次通过；最终复核时计划端口、浏览器进程和 `.veritrail-*` staging 均为 0，
+  Git 只包含预期文档状态变更，追踪文件未命中个人绝对路径、邮箱、私钥或令牌形态；
+- 独立冻结审查发现 README 文档索引仍保留旧状态并已在 `c2ca868` 修正；没有把跨文档不一致
+  带入冻结基线；
+- 冻结提交与 `m8-v0.9.0` 必须指向同一 Git object 并从 GitHub 远端读回；若读回不一致，
+  本状态自动失效并回退为 `PENDING`。
+
+## 冻结结论与边界
+
+这些事实支持冻结 M8：在 4–16 格有界全因子 Profile、确定性 coverage 优先、固定种子只改变
+扰动顺序、不可变来源 Run 与严格资源 wave 的边界内，VeriTrail 可以分开裁决 CoverageStatus、
+HypothesisStatus 和来源 Verdict，并在缺格、顺序污染、来源损坏或控制漂移时保留失败或降为
+不可归因。
+
+它们不证明组件级多变量因果、统计显著性、真实时间重叠、任意项目命令、中间件生命周期、
+生产容量、完整自举或跨项目通用性；`runtime_overlap_claim=NOT_PROVEN` 仍是冻结边界，不能被
+后继里程碑改写为真实微并行已经完成。
 
 ## 合同记录
 
@@ -370,4 +388,4 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 - 当前版本：Python Core `0.9.0.dev1`；Workbench `0.9.0-dev.1`；
 - 已实现 Schema：BatchPlan / RunAssignment / BatchAnalysis / BatchAnalysis Manifest 0.1；
 - 已实现 CLI：`seal-batch`、`analyze-batch`；
-- 当前里程碑状态：`BROWSER TERMINAL VALIDATED`；最终冻结仍为 `PENDING`。
+- 当前里程碑状态：`FROZEN`（tag `m8-v0.9.0`）。

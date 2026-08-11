@@ -188,11 +188,11 @@ outcome 预期与负对照边界；Core/CLI 与 Workbench 已通过双 Python、
 损坏来源与输出拒绝、Catalog 隔离、生产及 Codex 内置浏览器终验。合同与证据见
 `docs/11-m7-preregistered-paired-analysis.md`。
 
-M8 Core 与 Workbench 已实现独立 BatchPlan、RunAssignment 与 BatchAnalysis：先串行完成 4–16 格全因子
+M8 已冻结独立 BatchPlan、RunAssignment 与 BatchAnalysis：先串行完成 4–16 格全因子
 Profile coverage，再用固定种子生成成员集合不变的 perturbation 顺序，并从不可变 Run 分开
 判断覆盖、预注册假设和来源 Verdict。它不修改 ExperimentPlan 的单变量语义，也不执行项目
-命令或真实并行；8 个独立 M5 Run 的真实 2×2 批次及生产 Workbench 浏览器终验已经完成，
-最终冻结仍待完成。合同见
+命令或真实并行；8 个独立 M5 Run 的真实 2×2 批次、生产 Workbench 浏览器终验与内置浏览器
+人工键盘验收已经完成。合同与冻结证据见
 `docs/12-m8-preregistered-batch-matrix.md`。
 
 ## 9. 实现顺序
