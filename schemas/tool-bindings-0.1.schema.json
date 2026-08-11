@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/tool-bindings-0.1.schema.json",
+  "title": "VeriTrail Local ToolBindings",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "bindings"],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "bindings": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 32,
+      "propertyNames": { "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["executable"],
+        "properties": {
+          "executable": { "type": "string", "minLength": 1, "maxLength": 32767 }
+        }
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object as load_strict_json_object
 from veritrail.privacy import redact_value
 
-SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3", "0.4"}
+SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3", "0.4", "0.5"}
 PLAN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 VARIABLE_ROLES = {"PRIMARY", "CONTROLLED", "NUISANCE"}
 ASSERTION_SEVERITIES = {
@@ -54,6 +54,7 @@ TOP_LEVEL_FIELDS = {
     "preflight",
     "browser",
     "target",
+    "command",
     "seal",
 }
 PREFLIGHT_FIELDS = {
@@ -100,6 +101,40 @@ TARGET_FIELDS = {
     "max_total_bytes",
 }
 TARGET_PATH_SEGMENT_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
+COMMAND_FIELDS = {
+    "adapter",
+    "command_id",
+    "purpose",
+    "project_profile_id",
+    "tool_binding",
+    "arguments",
+    "working_directory",
+    "environment",
+    "stdin",
+    "timeout_ms",
+    "descendant_exit_grace_ms",
+    "expected_exit_codes",
+    "max_stdout_bytes",
+    "max_stderr_bytes",
+    "max_processes",
+    "write_policy",
+    "subject_watch_roots",
+    "max_watch_files",
+    "max_watch_total_bytes",
+    "network_policy",
+}
+COMMAND_ENVIRONMENT_FIELDS = {"inherit", "set"}
+COMMAND_ARGUMENT_FIELDS = {"literal", "run_work_path"}
+COMMAND_PATH_SEGMENT_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$")
+WINDOWS_RESERVED_PATH_NAMES = {
+    "aux",
+    "clock$",
+    "con",
+    "nul",
+    "prn",
+    *(f"com{index}" for index in range(1, 10)),
+    *(f"lpt{index}" for index in range(1, 10)),
+}
 
 
 def load_json_object(path: Path) -> dict[str, Any]:
@@ -174,7 +209,7 @@ def _validate_resource_budget(value: Any, schema_version: Any, errors: list[str]
             errors.append("resource_budget.memory_hard_mb must be a positive integer")
         if _is_integer(soft) and _is_integer(hard) and hard < soft:
             errors.append("resource_budget.memory_hard_mb must be >= memory_soft_mb")
-    elif schema_version in {"0.2", "0.3", "0.4"}:
+    elif schema_version in {"0.2", "0.3", "0.4", "0.5"}:
         _reject_unknown_fields(
             value,
             {"max_artifact_bytes"},
@@ -517,6 +552,191 @@ def _validate_target(
                 errors.append(f"target.port must match every browser URL port (mismatch at item {index})")
 
 
+def _validate_command_path(
+    value: Any,
+    path: str,
+    errors: list[str],
+    *,
+    allow_root: bool,
+) -> tuple[str, ...] | None:
+    if value == "." and allow_root:
+        return ()
+    if (
+        not isinstance(value, str)
+        or not value
+        or "\\" in value
+        or value.startswith("/")
+        or re.match(r"^[A-Za-z]:", value)
+    ):
+        errors.append(f"{path} must be a safe relative POSIX path")
+        return None
+    parts = value.split("/")
+    if not 1 <= len(parts) <= 8:
+        errors.append(f"{path} must contain 1-8 safe path segments")
+        return None
+    for part in parts:
+        basename = part.split(".", 1)[0].casefold()
+        if (
+            part in {"", ".", ".."}
+            or not COMMAND_PATH_SEGMENT_PATTERN.fullmatch(part)
+            or basename in WINDOWS_RESERVED_PATH_NAMES
+        ):
+            errors.append(f"{path} must contain 1-8 safe path segments")
+            return None
+    return tuple(part.casefold() for part in parts)
+
+
+def _validate_command(value: Any, errors: list[str]) -> None:
+    if not isinstance(value, dict):
+        errors.append("command must be an object for schema_version '0.5'")
+        return
+    _reject_unknown_fields(value, COMMAND_FIELDS, "command", errors)
+    if value.get("adapter") != "TRUSTED_PROCESS_ONESHOT":
+        errors.append("command.adapter must be TRUSTED_PROCESS_ONESHOT")
+
+    for field in ("command_id", "project_profile_id", "tool_binding"):
+        item = value.get(field)
+        if not isinstance(item, str) or not PLAN_ID_PATTERN.fullmatch(item):
+            errors.append(f"command.{field} must be a 2-64 character lowercase identifier")
+
+    purpose = value.get("purpose")
+    if not isinstance(purpose, str) or not purpose.strip() or len(purpose) > 256:
+        errors.append("command.purpose must be a non-empty string up to 256 characters")
+    elif redact_value(purpose)[1]:
+        errors.append("command.purpose must not contain secrets or personal identifiers")
+
+    arguments = value.get("arguments")
+    if not isinstance(arguments, list) or not 1 <= len(arguments) <= 128:
+        errors.append("command.arguments must contain 1-128 structured arguments")
+    else:
+        for index, argument in enumerate(arguments):
+            prefix = f"command.arguments[{index}]"
+            if not isinstance(argument, dict):
+                errors.append(f"{prefix} must be an object")
+                continue
+            _reject_unknown_fields(argument, COMMAND_ARGUMENT_FIELDS, prefix, errors)
+            present = [field for field in COMMAND_ARGUMENT_FIELDS if field in argument]
+            if len(present) != 1:
+                errors.append(f"{prefix} must contain exactly one of literal or run_work_path")
+                continue
+            if present[0] == "literal":
+                literal = argument.get("literal")
+                if (
+                    not isinstance(literal, str)
+                    or len(literal) > 4096
+                    or any(ord(character) < 32 or ord(character) == 127 for character in literal)
+                ):
+                    errors.append(f"{prefix}.literal must be a control-free string up to 4096 characters")
+                elif redact_value(literal)[1]:
+                    errors.append(f"{prefix}.literal must not contain secrets or personal identifiers")
+                elif literal.casefold() in {"-c", "/c", "-e", "--eval", "-command"}:
+                    errors.append(f"{prefix}.literal uses a forbidden inline or Shell entry point")
+            else:
+                segments = argument.get("run_work_path")
+                if not isinstance(segments, list) or not 1 <= len(segments) <= 8:
+                    errors.append(f"{prefix}.run_work_path must contain 1-8 safe path segments")
+                    continue
+                for segment in segments:
+                    basename = segment.split(".", 1)[0].casefold() if isinstance(segment, str) else ""
+                    if (
+                        not isinstance(segment, str)
+                        or not COMMAND_PATH_SEGMENT_PATTERN.fullmatch(segment)
+                        or basename in WINDOWS_RESERVED_PATH_NAMES
+                    ):
+                        errors.append(
+                            f"{prefix}.run_work_path must contain individual safe segments"
+                        )
+                        break
+
+    _validate_command_path(
+        value.get("working_directory"),
+        "command.working_directory",
+        errors,
+        allow_root=True,
+    )
+
+    environment = value.get("environment")
+    if not isinstance(environment, dict):
+        errors.append("command.environment must be an object")
+    else:
+        _reject_unknown_fields(environment, COMMAND_ENVIRONMENT_FIELDS, "command.environment", errors)
+        inherit = environment.get("inherit")
+        seen_names: set[str] = set()
+        if not isinstance(inherit, list) or len(inherit) > 2:
+            errors.append("command.environment.inherit must be a list with at most 2 entries")
+        else:
+            for index, name in enumerate(inherit):
+                normalized = name.upper() if isinstance(name, str) else None
+                if normalized not in {"SYSTEMROOT", "WINDIR"}:
+                    errors.append(
+                        f"command.environment.inherit[{index}] must be SYSTEMROOT or WINDIR"
+                    )
+                elif normalized in seen_names:
+                    errors.append(
+                        f"command.environment.inherit[{index}] duplicates {normalized}"
+                    )
+                else:
+                    seen_names.add(normalized)
+        explicit = environment.get("set")
+        if explicit not in ({}, {"PYTHONDONTWRITEBYTECODE": "1"}):
+            errors.append(
+                "command.environment.set must be empty or exactly PYTHONDONTWRITEBYTECODE=1"
+            )
+
+    if value.get("stdin") != "CLOSED":
+        errors.append("command.stdin must be CLOSED")
+    integer_ranges = {
+        "timeout_ms": (1000, 900_000),
+        "descendant_exit_grace_ms": (100, 10_000),
+        "max_stdout_bytes": (1, 1_048_576),
+        "max_stderr_bytes": (1, 1_048_576),
+        "max_processes": (1, 32),
+        "max_watch_files": (1, 2000),
+        "max_watch_total_bytes": (1, 67_108_864),
+    }
+    for field, (minimum, maximum) in integer_ranges.items():
+        item = value.get(field)
+        if not _is_integer(item) or not minimum <= item <= maximum:
+            errors.append(f"command.{field} must be an integer from {minimum} to {maximum}")
+
+    exit_codes = value.get("expected_exit_codes")
+    if (
+        not isinstance(exit_codes, list)
+        or not exit_codes
+        or any(not _is_integer(item) or not 0 <= item <= 255 for item in exit_codes)
+        or exit_codes != sorted(set(exit_codes))
+    ):
+        errors.append("command.expected_exit_codes must be sorted unique integers from 0 to 255")
+
+    if value.get("write_policy") != "RUN_WORK_ONLY_DETECT_SUBJECT_CHANGES":
+        errors.append(
+            "command.write_policy must be RUN_WORK_ONLY_DETECT_SUBJECT_CHANGES"
+        )
+    watch_roots = value.get("subject_watch_roots")
+    normalized_roots: list[tuple[str, ...]] = []
+    if not isinstance(watch_roots, list) or not 1 <= len(watch_roots) <= 8:
+        errors.append("command.subject_watch_roots must contain 1-8 safe relative paths")
+    else:
+        for index, root in enumerate(watch_roots):
+            normalized = _validate_command_path(
+                root,
+                f"command.subject_watch_roots[{index}]",
+                errors,
+                allow_root=True,
+            )
+            if normalized is not None:
+                normalized_roots.append(normalized)
+        for index, current in enumerate(normalized_roots):
+            for previous in normalized_roots[:index]:
+                shorter, longer = sorted((current, previous), key=len)
+                if longer[: len(shorter)] == shorter:
+                    errors.append("command.subject_watch_roots must be unique and non-overlapping")
+                    break
+
+    if value.get("network_policy") != "NOT_REQUIRED_NOT_ENFORCED":
+        errors.append("command.network_policy must be NOT_REQUIRED_NOT_ENFORCED")
+
+
 def validate_plan(plan: dict[str, Any]) -> None:
     errors: list[str] = []
     unknown_fields = sorted(set(plan) - TOP_LEVEL_FIELDS)
@@ -525,7 +745,7 @@ def validate_plan(plan: dict[str, Any]) -> None:
 
     schema_version = plan.get("schema_version")
     if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
-        errors.append("schema_version must be '0.1', '0.2', '0.3', or '0.4'")
+        errors.append("schema_version must be '0.1', '0.2', '0.3', '0.4', or '0.5'")
     plan_id = plan.get("plan_id")
     if not isinstance(plan_id, str) or not PLAN_ID_PATTERN.fullmatch(plan_id):
         errors.append("plan_id must be a 2-64 character lowercase identifier")
@@ -594,19 +814,25 @@ def validate_plan(plan: dict[str, Any]) -> None:
     _validate_string_list(required_evidence, "required_evidence", errors, non_empty=True)
     if isinstance(required_evidence, list) and len(required_evidence) != len(set(required_evidence)):
         errors.append("required_evidence must not contain duplicates")
-    if schema_version in {"0.2", "0.3", "0.4"} and (
+    if schema_version in {"0.2", "0.3", "0.4", "0.5"} and (
         not isinstance(required_evidence, list) or "runtime.preflight" not in required_evidence
     ):
         errors.append(f"schema_version {schema_version!r} must require runtime.preflight evidence")
-    if schema_version in {"0.3", "0.4"} and (
+    if schema_version in {"0.3", "0.4", "0.5"} and (
         not isinstance(required_evidence, list) or "browser.session" not in required_evidence
     ):
         errors.append(f"schema_version {schema_version!r} must require browser.session evidence")
-    if schema_version == "0.4" and (
+    if schema_version in {"0.4", "0.5"} and (
         not isinstance(required_evidence, list)
         or "runtime.orchestration" not in required_evidence
     ):
-        errors.append("schema_version '0.4' must require runtime.orchestration evidence")
+        errors.append(
+            f"schema_version {schema_version!r} must require runtime.orchestration evidence"
+        )
+    if schema_version == "0.5" and (
+        not isinstance(required_evidence, list) or "runtime.command" not in required_evidence
+    ):
+        errors.append("schema_version '0.5' must require runtime.command evidence")
 
     assertions = plan.get("assertions")
     assertion_ids: set[str] = set()
@@ -648,14 +874,14 @@ def validate_plan(plan: dict[str, Any]) -> None:
                 errors.append(f"{prefix}.expected is required")
         if decisive_count < 1:
             errors.append("at least one HARD or DEGRADATION_BOUNDARY assertion is required")
-        if schema_version in {"0.2", "0.3", "0.4"} and not any(
+        if schema_version in {"0.2", "0.3", "0.4", "0.5"} and not any(
             isinstance(assertion, dict) and assertion.get("evidence_type") == "runtime.preflight"
             for assertion in assertions
         ):
             errors.append(
                 f"schema_version {schema_version!r} must define an assertion over runtime.preflight"
             )
-        if schema_version in {"0.3", "0.4"} and not any(
+        if schema_version in {"0.3", "0.4", "0.5"} and not any(
             isinstance(assertion, dict)
             and assertion.get("evidence_type") == "browser.session"
             and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
@@ -664,14 +890,23 @@ def validate_plan(plan: dict[str, Any]) -> None:
             errors.append(
                 f"schema_version {schema_version!r} must define a decisive assertion over browser.session"
             )
-        if schema_version == "0.4" and not any(
+        if schema_version in {"0.4", "0.5"} and not any(
             isinstance(assertion, dict)
             and assertion.get("evidence_type") == "runtime.orchestration"
             and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
             for assertion in assertions
         ):
             errors.append(
-                "schema_version '0.4' must define a decisive assertion over runtime.orchestration"
+                f"schema_version {schema_version!r} must define a decisive assertion over runtime.orchestration"
+            )
+        if schema_version == "0.5" and not any(
+            isinstance(assertion, dict)
+            and assertion.get("evidence_type") == "runtime.command"
+            and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
+            for assertion in assertions
+        ):
+            errors.append(
+                "schema_version '0.5' must define a decisive assertion over runtime.command"
             )
 
     random_seed = plan.get("random_seed")
@@ -687,17 +922,23 @@ def validate_plan(plan: dict[str, Any]) -> None:
             errors.append("browser requires schema_version '0.3'")
         if "target" in plan:
             errors.append("target requires schema_version '0.4'")
+        if "command" in plan:
+            errors.append("command requires schema_version '0.5'")
     elif schema_version == "0.2":
         _validate_preflight(plan.get("preflight"), errors)
         if "browser" in plan:
             errors.append("browser requires schema_version '0.3'")
         if "target" in plan:
             errors.append("target requires schema_version '0.4'")
+        if "command" in plan:
+            errors.append("command requires schema_version '0.5'")
     elif schema_version == "0.3":
         _validate_preflight(plan.get("preflight"), errors)
         _validate_browser(plan.get("browser"), errors)
         if "target" in plan:
             errors.append("target requires schema_version '0.4'")
+        if "command" in plan:
+            errors.append("command requires schema_version '0.5'")
     elif schema_version == "0.4":
         _validate_preflight(plan.get("preflight"), errors)
         _validate_browser(plan.get("browser"), errors)
@@ -707,6 +948,18 @@ def validate_plan(plan: dict[str, Any]) -> None:
             plan.get("browser"),
             errors,
         )
+        if "command" in plan:
+            errors.append("command requires schema_version '0.5'")
+    elif schema_version == "0.5":
+        _validate_preflight(plan.get("preflight"), errors)
+        _validate_browser(plan.get("browser"), errors)
+        _validate_target(
+            plan.get("target"),
+            plan.get("preflight"),
+            plan.get("browser"),
+            errors,
+        )
+        _validate_command(plan.get("command"), errors)
 
     _validate_load_model(plan.get("load_model"), errors)
 

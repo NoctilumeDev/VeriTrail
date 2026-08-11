@@ -43,6 +43,54 @@ def orchestration_plan() -> dict[str, Any]:
         return json.load(handle)
 
 
+def command_plan() -> dict[str, Any]:
+    plan = orchestration_plan()
+    plan["schema_version"] = "0.5"
+    plan["required_evidence"].append("runtime.command")
+    plan["assertions"].append(
+        {
+            "id": "command-exit-accepted",
+            "severity": "HARD",
+            "evidence_type": "runtime.command",
+            "path": "/exit_expected",
+            "operator": "eq",
+            "expected": True,
+        }
+    )
+    plan["command"] = {
+        "adapter": "TRUSTED_PROCESS_ONESHOT",
+        "command_id": "python-unit-check",
+        "purpose": "run the sealed Python unit-test entry point",
+        "project_profile_id": "veritrail-self-check",
+        "tool_binding": "python",
+        "arguments": [
+            {"literal": "-m"},
+            {"literal": "unittest"},
+            {"literal": "discover"},
+            {"literal": "-s"},
+            {"literal": "tests"},
+        ],
+        "working_directory": ".",
+        "environment": {
+            "inherit": ["SYSTEMROOT", "WINDIR"],
+            "set": {"PYTHONDONTWRITEBYTECODE": "1"},
+        },
+        "stdin": "CLOSED",
+        "timeout_ms": 300000,
+        "descendant_exit_grace_ms": 2000,
+        "expected_exit_codes": [0],
+        "max_stdout_bytes": 1048576,
+        "max_stderr_bytes": 1048576,
+        "max_processes": 16,
+        "write_policy": "RUN_WORK_ONLY_DETECT_SUBJECT_CHANGES",
+        "subject_watch_roots": ["src", "tests"],
+        "max_watch_files": 2000,
+        "max_watch_total_bytes": 67108864,
+        "network_policy": "NOT_REQUIRED_NOT_ENFORCED",
+    }
+    return plan
+
+
 def artifact(
     *,
     suite_passed: bool = True,

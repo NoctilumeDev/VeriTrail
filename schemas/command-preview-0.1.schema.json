@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/command-preview-0.1.schema.json",
+  "title": "VeriTrail CommandPreview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_sha256",
+    "command_policy_sha256",
+    "command_id",
+    "project_profile_id",
+    "adapter",
+    "tool_binding_id",
+    "executable",
+    "arguments",
+    "argument_count",
+    "subject_root_identity_sha256",
+    "working_directory",
+    "working_directory_identity_sha256",
+    "environment",
+    "stdin",
+    "shell_used",
+    "tty_used",
+    "limits",
+    "write_policy",
+    "subject_watch_roots",
+    "network_policy",
+    "claims",
+    "preview_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "command_policy_sha256": { "$ref": "#/$defs/sha256" },
+    "command_id": { "$ref": "#/$defs/identifier" },
+    "project_profile_id": { "$ref": "#/$defs/identifier" },
+    "adapter": { "const": "TRUSTED_PROCESS_ONESHOT" },
+    "tool_binding_id": { "$ref": "#/$defs/identifier" },
+    "executable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basename", "size", "sha256", "path_identity_sha256"],
+      "properties": {
+        "basename": { "type": "string", "pattern": "^[^/\\\\]+\\.exe$" },
+        "size": { "type": "integer", "minimum": 2 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "path_identity_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "arguments": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "value"],
+            "properties": {
+              "kind": { "const": "literal" },
+              "value": { "type": "string", "maxLength": 4096 }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "segments", "value"],
+            "properties": {
+              "kind": { "const": "run_work_path" },
+              "segments": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+              },
+              "value": { "type": "string", "pattern": "^<RUN_WORK>/" }
+            }
+          }
+        ]
+      }
+    },
+    "argument_count": { "type": "integer", "minimum": 1, "maximum": 128 },
+    "subject_root_identity_sha256": { "$ref": "#/$defs/sha256" },
+    "working_directory": { "type": "string", "minLength": 1 },
+    "working_directory_identity_sha256": { "$ref": "#/$defs/sha256" },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inherit_names",
+        "set_names",
+        "runner_names",
+        "projection_sha256",
+        "values_persisted"
+      ],
+      "properties": {
+        "inherit_names": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["SYSTEMROOT", "WINDIR"] }
+        },
+        "set_names": {
+          "type": "array",
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "const": "PYTHONDONTWRITEBYTECODE" }
+        },
+        "runner_names": {
+          "const": ["TEMP", "TMP"]
+        },
+        "projection_sha256": { "$ref": "#/$defs/sha256" },
+        "values_persisted": { "const": false }
+      }
+    },
+    "stdin": { "const": "CLOSED" },
+    "shell_used": { "const": false },
+    "tty_used": { "const": false },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "timeout_ms",
+        "descendant_exit_grace_ms",
+        "expected_exit_codes",
+        "max_stdout_bytes",
+        "max_stderr_bytes",
+        "max_processes",
+        "max_watch_files",
+        "max_watch_total_bytes"
+      ],
+      "properties": {
+        "timeout_ms": { "type": "integer", "minimum": 1000, "maximum": 900000 },
+        "descendant_exit_grace_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000
+        },
+        "expected_exit_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 }
+        },
+        "max_stdout_bytes": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "max_stderr_bytes": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "max_processes": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "max_watch_files": { "type": "integer", "minimum": 1, "maximum": 2000 },
+        "max_watch_total_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        }
+      }
+    },
+    "write_policy": { "const": "RUN_WORK_ONLY_DETECT_SUBJECT_CHANGES" },
+    "subject_watch_roots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "network_policy": { "const": "NOT_REQUIRED_NOT_ENFORCED" },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filesystem_isolation",
+        "network_isolation",
+        "write_activity",
+        "executable_toctou_containment",
+        "untrusted_code_containment",
+        "process_limit_attempt_observation"
+      ],
+      "properties": {
+        "filesystem_isolation": { "const": "NOT_PROVEN" },
+        "network_isolation": { "const": "NOT_PROVEN" },
+        "write_activity": { "const": "NOT_PROVEN" },
+        "executable_toctou_containment": { "const": "NOT_PROVEN" },
+        "untrusted_code_containment": { "const": "NOT_SUPPORTED" },
+        "process_limit_attempt_observation": { "const": "NOT_PROVEN" }
+      }
+    },
+    "preview_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+    }
+  }
+}

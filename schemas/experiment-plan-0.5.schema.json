@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/experiment-plan-0.5.schema.json",
+  "title": "VeriTrail M9 ExperimentPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "version",
+    "subject",
+    "question",
+    "baseline",
+    "experiment_type",
+    "variables",
+    "required_evidence",
+    "assertions",
+    "random_seed",
+    "resource_budget",
+    "preflight",
+    "browser",
+    "target",
+    "command",
+    "load_model",
+    "change_scope",
+    "reproduction_steps",
+    "cleanup_steps"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.5" },
+    "plan_id": { "$ref": "experiment-plan-0.4.schema.json#/properties/plan_id" },
+    "version": { "$ref": "experiment-plan-0.4.schema.json#/properties/version" },
+    "subject": { "$ref": "experiment-plan-0.4.schema.json#/properties/subject" },
+    "question": { "$ref": "experiment-plan-0.4.schema.json#/properties/question" },
+    "baseline": { "$ref": "experiment-plan-0.4.schema.json#/properties/baseline" },
+    "experiment_type": {
+      "$ref": "experiment-plan-0.4.schema.json#/properties/experiment_type"
+    },
+    "variables": { "$ref": "experiment-plan-0.4.schema.json#/properties/variables" },
+    "required_evidence": {
+      "allOf": [
+        { "$ref": "experiment-plan-0.4.schema.json#/properties/required_evidence" },
+        {
+          "minItems": 4,
+          "contains": { "const": "runtime.command" },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "assertions": {
+      "allOf": [
+        { "$ref": "experiment-plan-0.4.schema.json#/properties/assertions" },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["severity", "evidence_type"],
+            "properties": {
+              "severity": { "enum": ["HARD", "DEGRADATION_BOUNDARY"] },
+              "evidence_type": { "const": "runtime.command" }
+            }
+          },
+          "minContains": 1
+        }
+      ]
+    },
+    "random_seed": { "$ref": "experiment-plan-0.4.schema.json#/properties/random_seed" },
+    "resource_budget": {
+      "$ref": "experiment-plan-0.4.schema.json#/properties/resource_budget"
+    },
+    "preflight": { "$ref": "experiment-plan-0.4.schema.json#/properties/preflight" },
+    "browser": { "$ref": "experiment-plan-0.4.schema.json#/properties/browser" },
+    "target": { "$ref": "experiment-plan-0.4.schema.json#/properties/target" },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "command_id",
+        "purpose",
+        "project_profile_id",
+        "tool_binding",
+        "arguments",
+        "working_directory",
+        "environment",
+        "stdin",
+        "timeout_ms",
+        "descendant_exit_grace_ms",
+        "expected_exit_codes",
+        "max_stdout_bytes",
+        "max_stderr_bytes",
+        "max_processes",
+        "write_policy",
+        "subject_watch_roots",
+        "max_watch_files",
+        "max_watch_total_bytes",
+        "network_policy"
+      ],
+      "properties": {
+        "adapter": { "const": "TRUSTED_PROCESS_ONESHOT" },
+        "command_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+        },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "project_profile_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+        },
+        "tool_binding": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+        },
+        "arguments": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["literal"],
+                "properties": {
+                  "literal": {
+                    "type": "string",
+                    "maxLength": 4096,
+                    "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["run_work_path"],
+                "properties": {
+                  "run_work_path": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 8,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "working_directory": {
+          "type": "string",
+          "pattern": "^(?:\\.|[A-Za-z0-9][A-Za-z0-9._-]{0,63}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,63}){0,7})$"
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["inherit", "set"],
+          "properties": {
+            "inherit": {
+              "type": "array",
+              "maxItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^(?:[Ss][Yy][Ss][Tt][Ee][Mm][Rr][Oo][Oo][Tt]|[Ww][Ii][Nn][Dd][Ii][Rr])$"
+              }
+            },
+            "set": {
+              "oneOf": [
+                { "type": "object", "maxProperties": 0 },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["PYTHONDONTWRITEBYTECODE"],
+                  "properties": { "PYTHONDONTWRITEBYTECODE": { "const": "1" } }
+                }
+              ]
+            }
+          }
+        },
+        "stdin": { "const": "CLOSED" },
+        "timeout_ms": { "type": "integer", "minimum": 1000, "maximum": 900000 },
+        "descendant_exit_grace_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000
+        },
+        "expected_exit_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0, "maximum": 255 }
+        },
+        "max_stdout_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "max_stderr_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "max_processes": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "write_policy": { "const": "RUN_WORK_ONLY_DETECT_SUBJECT_CHANGES" },
+        "subject_watch_roots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:\\.|[A-Za-z0-9][A-Za-z0-9._-]{0,63}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,63}){0,7})$"
+          }
+        },
+        "max_watch_files": { "type": "integer", "minimum": 1, "maximum": 2000 },
+        "max_watch_total_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 67108864
+        },
+        "network_policy": { "const": "NOT_REQUIRED_NOT_ENFORCED" }
+      }
+    },
+    "load_model": { "$ref": "experiment-plan-0.4.schema.json#/properties/load_model" },
+    "change_scope": { "$ref": "experiment-plan-0.4.schema.json#/properties/change_scope" },
+    "reproduction_steps": {
+      "$ref": "experiment-plan-0.4.schema.json#/properties/reproduction_steps"
+    },
+    "cleanup_steps": { "$ref": "experiment-plan-0.4.schema.json#/properties/cleanup_steps" },
+    "seal": { "$ref": "experiment-plan-0.4.schema.json#/properties/seal" }
+  }
+}

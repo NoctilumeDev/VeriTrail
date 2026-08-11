@@ -15,6 +15,7 @@ from veritrail.batching import (
 from veritrail.browser import collect_browser_evidence
 from veritrail.catalog import CatalogError, build_catalog
 from veritrail.comparison import ComparisonError, create_comparison_bundle
+from veritrail.command_preview import build_command_preview
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.local_api import create_catalog_server
@@ -63,7 +64,7 @@ def build_parser() -> argparse.ArgumentParser:
         "preflight", help="collect a bounded local resource preflight and create a verdict bundle"
     )
     preflight.add_argument(
-        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.2/0.3/0.4 JSON"
+        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.2/0.3/0.4/0.5 JSON"
     )
     preflight.add_argument("--output", type=Path, required=True, help="new output directory")
     preflight.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")
@@ -93,6 +94,26 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run.add_argument("--output", type=Path, required=True, help="new output directory")
     run.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")
+
+    command_preview = subparsers.add_parser(
+        "command-preview",
+        help="validate and preview one sealed Plan 0.5 trusted ONESHOT command without spawning",
+    )
+    command_preview.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.5 JSON"
+    )
+    command_preview.add_argument(
+        "--subject-root",
+        type=Path,
+        required=True,
+        help="explicit local subject root; represented only by a digest",
+    )
+    command_preview.add_argument(
+        "--tool-bindings",
+        type=Path,
+        required=True,
+        help="local ToolBindings 0.1 JSON; never persisted",
+    )
 
     catalog_build = subparsers.add_parser(
         "catalog-build",
@@ -208,10 +229,10 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "preflight":
             plan = load_and_seal_plan(args.plan)
-            if plan["schema_version"] not in {"0.2", "0.3", "0.4"}:
+            if plan["schema_version"] not in {"0.2", "0.3", "0.4", "0.5"}:
                 raise ValidationError(
                     [
-                        "preflight requires ExperimentPlan schema_version '0.2', '0.3', or '0.4'; "
+                        "preflight requires ExperimentPlan schema_version '0.2', '0.3', '0.4', or '0.5'; "
                         "Plan 0.1 remains read-only compatible"
                     ]
                 )
@@ -288,6 +309,33 @@ def main(argv: list[str] | None = None) -> int:
                     "verdict": report["verdict"],
                 }
             )
+            return 0
+        if args.command == "command-preview":
+            try:
+                plan = load_and_seal_plan(args.plan)
+                preview = build_command_preview(
+                    plan,
+                    subject_root=args.subject_root,
+                    tool_bindings_path=args.tool_bindings,
+                )
+            except VeriTrailError:
+                raise
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "COMMAND_PREVIEW_INTERNAL_ERROR",
+                                "message": "Command preview encountered an unexpected internal error.",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(preview)
             return 0
         if args.command == "run":
             plan = load_and_seal_plan(args.plan)
