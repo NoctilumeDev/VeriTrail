@@ -6,22 +6,24 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 它把分散在测试报告、浏览器 F12、HTTP、数据库、中间件、进程与资源快照中的事实，
 组织成可比较、可复现、可审计的实验运行，并使用确定性规则给出结论。
 
-**当前状态：v0 Implementation，M0–M8 FROZEN。** M0 已冻结计划封存、
-结构化证据导入、确定性裁决和 JSON/Markdown 证据包；M1 已冻结启动前资源预检；M2 已冻结
-有界真实 Chromium 采集；M3 已冻结只读 Vue 证据工作台和“宫阙验迹”故宫色彩主题。
-M4 已冻结离线 Bundle 目录、SQLite 派生快照、只读本地 API、Workbench Run 门厅与两阶段
-轻量自举；Plan v1 的选择器歧义失败 Run 保留，Plan v2 已从干净实现提交完成双 Python、
-真实 Chromium、Codex 内置浏览器、敏感与残留复核。M5 已冻结 Plan 0.4、内置只读
-`STATIC_HTTP` 目标、`runtime.orchestration` 和单一 `run` 入口；首个浏览器失败 Run 与修复后的
-正向 Run 均保留，ABORT/STOP、端口竞争、源变化、Catalog/Workbench 和清理边界已真实验证。
-M6“同计划复跑确定性比较”已 `FROZEN`：Core/CLI、Comparison 0.1 与 Workbench 只读验真已
-通过双 Python、真实 `MATCH/DRIFT/INCONCLUSIVE`、逐字节复建、生产与 Codex 内置浏览器、
-资源、安全和清理终验。M7“预注册四角色配对反事实分析”也已 `FROZEN`：固定四角色
-PairingPlan/PairedAnalysis、三态真实结果、来源损坏拒绝、逐字节复建、Catalog 隔离和故宫主题
-Workbench 均完成双 Python、生产与 Codex 内置浏览器终验；计划编辑、任意项目命令和完整自举
-仍是后续里程碑。M8“预注册全因子批次矩阵与固定种子扰动”已 `FROZEN`：四个公共契约、
-确定性 Core、两个 CLI、BatchAnalysis 矩阵/wave 视图、8 个独立 M5 Run、四类分析、生产与
-Codex 内置浏览器、真实 Chromium 自动化和内置浏览器人工键盘、资源、安全及清理终验均已完成。
+## 当前里程碑
+
+| Milestone | Capability | Status |
+| --- | --- | --- |
+| M0 | 封存计划、证据导入与确定性裁决 | `FROZEN` |
+| M1 | 启动前资源与环境预检 | `FROZEN` |
+| M2 | 有界真实 Chromium 证据 | `FROZEN` |
+| M3 | 只读 Vue 证据工作台 | `FROZEN` |
+| M4 | 本地 Run Catalog 与轻量自举 | `FROZEN` |
+| M5 | 有界运行编排与静态目标生命周期 | `FROZEN` |
+| M6 | 同计划复跑确定性比较 | `FROZEN` |
+| M7 | 预注册四角色配对反事实分析 | `FROZEN` |
+| M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
+
+`FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
+验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
+并行、完整自举和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
+[里程碑冻结历史](docs/milestones.md)。
 
 ## 为什么需要验迹
 
@@ -312,6 +314,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 
 ## 文档
 
+- [里程碑冻结历史](docs/milestones.md)
 - [产品定义](docs/00-product-brief.md)
 - [证据与实验模型](docs/01-evidence-model.md)
 - [架构与安全边界](docs/02-architecture.md)
