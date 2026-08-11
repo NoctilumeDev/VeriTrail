@@ -1,0 +1,7 @@
+{
+  "items": [
+    "direct node.exe",
+    "no shell",
+    "bounded cleanup"
+  ]
+}

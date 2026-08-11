@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M9 Python Subject</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; background: #f7f3e8; color: #172d32; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+      main { box-sizing: border-box; width: min(42rem, calc(100% - 2rem)); padding: 2rem; border: 1px solid #31555b; background: #fffdf7; }
+      label, input, button { display: block; width: 100%; box-sizing: border-box; }
+      input, button { margin-top: .5rem; padding: .75rem; font: inherit; }
+      button { border: 0; background: #31555b; color: white; cursor: pointer; }
+      #status { min-height: 1.5rem; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Trusted Python module · direct process</p>
+      <h1>M9 Python acceptance subject</h1>
+      <label for="run-label">Run label</label>
+      <input id="run-label" data-testid="run-label" value="m9-python-run">
+      <button type="button" data-testid="load-evidence">Load bounded evidence</button>
+      <p id="status" data-testid="status" aria-live="polite">waiting</p>
+      <ul data-testid="evidence-list" hidden></ul>
+    </main>
+    <script>
+      const button = document.querySelector('[data-testid="load-evidence"]');
+      const status = document.querySelector('[data-testid="status"]');
+      const list = document.querySelector('[data-testid="evidence-list"]');
+      button.addEventListener('click', async () => {
+        const response = await fetch('./data.json');
+        if (!response.ok) throw new Error('evidence request failed');
+        const payload = await response.json();
+        list.replaceChildren(...payload.items.map((item) => {
+          const row = document.createElement('li');
+          row.textContent = item;
+          return row;
+        }));
+        list.hidden = false;
+        status.textContent = `evidence ready: ${document.querySelector('[data-testid="run-label"]').value}`;
+      });
+    </script>
+  </body>
+</html>
