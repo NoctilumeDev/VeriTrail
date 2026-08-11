@@ -33,6 +33,9 @@
   `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
   自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。计划编辑、任意项目命令、真实并行
   和完整自举仍未实现。
+- Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，当前状态为 `DRAFT / UNFROZEN`。
+  在用户确认并冻结该路线前，不得开始 M9 或任何后继里程碑的实现；允许继续完善规划、风险模型、
+  合同和验收矩阵。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
