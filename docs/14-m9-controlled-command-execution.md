@@ -1,6 +1,6 @@
 # M9 受控项目命令执行合同
 
-> 状态：`PLANNED / CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`
+> 状态：`IMPLEMENTING / CONTRACT_FROZEN / PREVIEW_ONLY`
 > 影响层级：`L3_SYSTEM`（外部进程、信任边界、公共 Plan/Evidence 合同）
 > 前置基线：`m8-v0.9.0` 与 `post-m8-plan-v1`
 > 实施门禁：实现只能遵循本合同 0.2；改变公共字段、状态、所有权、安全边界或验收矩阵时必须
@@ -596,7 +596,9 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 - 目标 CLI：`command-preview` 与扩展 `run`；
 - 目标版本：Python Core `0.10.0.dev1`，Workbench `0.10.0-dev.1`；
 - 目标冻结标签：`m9-v0.10.0`；
-- 当前里程碑状态：`PLANNED`；
+- 当前里程碑状态：`IMPLEMENTING / PREVIEW_ONLY`；
 - 当前合同状态：`CONTRACT_FROZEN`；
-- 当前实现事实：无；
+- 当前实现事实：`4d2bc84` 已完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与只读
+  `command-preview` CLI；未安装 pywin32，未扩展 Plan 0.5 `run`，未创建目标进程，未生成
+  `runtime.command`；
 - 当前运行结论：无。

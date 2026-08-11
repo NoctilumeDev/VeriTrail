@@ -86,9 +86,10 @@ Plan / Evidence / Verdict
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
-`post-m8-plan-v1` 冻结为规划基线；M9–M14 仍为 `PLANNED`。M9 受控项目命令执行合同 0.2 已在
-`290b618` 进入 `CONTRACT_FROZEN`，但实现、依赖安装、自动化、真实运行与 `m9-v0.10.0` 标签均
-不存在，不能把合同冻结写成里程碑完成。
+`post-m8-plan-v1` 冻结为规划基线；M10–M14 仍为 `PLANNED`。M9 受控项目命令执行合同 0.2 已在
+`290b618` 进入 `CONTRACT_FROZEN`；首个实现切片 `4d2bc84` 只完成 Plan 0.5、ToolBindings 0.1、
+CommandPreview 0.1 与只读 CLI。pywin32 安装、目标进程、Plan 0.5 `run`、`runtime.command`、
+真实运行、浏览器终验与 `m9-v0.10.0` 标签均不存在，不能把审批预览写成里程碑完成。
 
 ## 6. 详细文档
 
@@ -101,3 +102,4 @@ Plan / Evidence / Verdict
 - [M6 同计划复跑确定性比较](10-m6-deterministic-rerun-comparison.md)
 - [M7 预注册四角色配对反事实分析](11-m7-preregistered-paired-analysis.md)
 - [M8 预注册全因子批次矩阵与固定种子扰动](12-m8-preregistered-batch-matrix.md)
+- [M9 受控项目命令执行合同](14-m9-controlled-command-execution.md)
