@@ -28,9 +28,11 @@
   四文件导入的修复必须继续保留。计划编辑、任意项目命令和完整自举仍未实现。
   M8“预注册全因子批次矩阵与固定种子扰动”已完成 Core 与 Workbench 切片：四个公共 Schema、
   `seal-batch` / `analyze-batch`、脱敏 2×2 示例、自动化反例、BatchAnalysis 四文件 Loader 和
-  只读矩阵/wave 视图已 `IMPLEMENTED / AUTOMATED`；真实 M5 批次、Codex 内置浏览器终验与冻结
-  仍为 `PENDING`，当前不得标记为
-  `FROZEN` 或开启 M9 实现。
+  只读矩阵/wave 视图已 `IMPLEMENTED / AUTOMATED`；提交 `5caee26` 已用 8 个独立 M5 Run 完成
+  真实 2×2 coverage 与固定种子 perturbation、四类分析、确定性、反例和清理验收。生产构建也已
+  完成 Codex 内置浏览器四态、损坏恢复、刷新/返回、桌面/移动和 Console/Network 终验，并由
+  `scripts/m8_batch_browser_acceptance.py` 补证真实 Chromium 键盘顺序与同源只读网络。最终冻结仍为
+  `PENDING`，当前不得标记为 `FROZEN` 或开启 M9 实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

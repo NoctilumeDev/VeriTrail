@@ -16,8 +16,10 @@ Catalog 隔离、生产与 Codex 内置浏览器、资源、安全和清理终�
 
 M8 全因子批次矩阵与固定种子扰动的 Core / Workbench 已 `IMPLEMENTED / AUTOMATED`：四个公共
 Schema、两个 CLI、脱敏 2×2 矩阵、三态/污染/确定性/安全反例，以及四文件只读 Loader、矩阵/
-wave/来源状态视图已经完成；真实 M5 批次、Codex 内置浏览器与最终清理终验仍为 `PENDING`，
-不得标记为 `FROZEN` 或写成完整闭环。
+wave/来源状态视图已经完成；8 个独立 M5 Run 的真实 2×2 批次、四类分析、确定性、反例与
+批次清理已经验证。生产 Workbench 的 Codex 内置浏览器四态、损坏恢复、刷新/返回、桌面/移动
+和 Console/Network 已验证，真实 Chromium 也已补证键盘顺序与同源只读网络。最终冻结仍为
+`PENDING`，不得标记为 `FROZEN` 或写成完整闭环。
 
 ## 2. v0 完整闭环
 

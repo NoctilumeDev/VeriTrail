@@ -2,10 +2,11 @@
 
 ## 状态
 
-`CORE / WORKBENCH IMPLEMENTED / AUTOMATED`。实现前独立合同已经落地为四个公共 Schema、
-Python Core、`seal-batch` / `analyze-batch` CLI、脱敏 2×2 示例、自动化反例，以及只读
-BatchAnalysis 四文件 Loader 与矩阵/wave 视图；真实 M5 批次、真实浏览器链路和最终冻结仍为
-`PENDING`，因此本里程碑不是 `FROZEN`。前置语义基线是 M7 冻结提交
+`CORE / WORKBENCH IMPLEMENTED / AUTOMATED；REAL SOURCE / BROWSER TERMINAL VALIDATED`。
+实现前独立合同已经落地为四个公共 Schema、Python Core、`seal-batch` / `analyze-batch` CLI、
+脱敏 2×2 示例、自动化反例，以及只读 BatchAnalysis 四文件 Loader 与矩阵/wave 视图；真实
+M5 批次与生产 Workbench 浏览器链路已经完成，最终冻结仍为 `PENDING`，因此本里程碑不是
+`FROZEN`。前置语义基线是 M7 冻结提交
 `e5c6e271423d4359fc63e542c95093b823404de8` 与标签 `m7-v0.8.0`；其后的
 `c616974` 只修正 M7 跨文档状态不一致，没有改变代码或公共契约。
 
@@ -347,8 +348,20 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
   Catalog 隔离均已执行；验收结束后计划端口释放且无 `.veritrail-*` staging；
 - 本次 wave 成员仍由脚本串行执行，`runtime_overlap_claim=NOT_PROVEN`；它证明调度与 Assignment，
   不证明真实微并行；
-- 生产 Workbench 的 Codex 内置浏览器桌面/移动、Console/Network、损坏恢复、history 与最终
-  清理终验尚未执行，因此 M8 仍不能冻结。
+- 生产 Workbench 已在 Codex 内置浏览器完成 `SUPPORTED`、`CONTRADICTED`、`INCOMPLETE`、
+  `INCONCLUSIVE` 四态导入、来源 `FAIL` 保留、损坏拒绝与正向恢复、刷新后重选/返回、桌面与
+  390×844 移动视口；移动矩阵使用有界内部滚动，文档本身无横向溢出；
+- 内置浏览器 Console 无 error/warning，页面资源全部来自生产 `catalog-serve` 的同一回环源；
+  初次误用裸静态服务器产生的 `/api/v1/catalog` 404 已明确判为失败证据并丢弃，随后在生产
+  Catalog/API 表面重跑得到全 200、无外部资源和无写请求的干净结果；
+- 内置浏览器控制面的合成 `Tab` 对普通按钮也不能推进焦点，因此没有把它冒写成内置浏览器
+  键盘通过；`scripts/m8_batch_browser_acceptance.py` 在同一生产构建的真实 Chromium 151 上
+  补证文件入口到矩阵的确定焦点顺序，并复验上述四态、损坏恢复、history、移动端与网络边界；
+- 浏览器复验共 9 项检查、30 个同源只读请求、0 个 HTTP 错误、0 个外部请求、0 个写请求，
+  Console、page error 与 request failure 均为空；桌面/移动截图按 SHA-256 记账，端口已释放；
+- 双 Python 各 108 项、前端 lint/type-check/53 项 Vitest/生产构建、`pip check` 与生产依赖
+  `npm audit` 均已再次通过；仍须完成最终资源、敏感和残留复核、干净提交、远端读回及
+  `m8-v0.9.0` 标签冻结，因此 M8 仍不能标记为 `FROZEN`。
 
 ## 合同记录
 
@@ -357,4 +370,4 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 - 当前版本：Python Core `0.9.0.dev1`；Workbench `0.9.0-dev.1`；
 - 已实现 Schema：BatchPlan / RunAssignment / BatchAnalysis / BatchAnalysis Manifest 0.1；
 - 已实现 CLI：`seal-batch`、`analyze-batch`；
-- 当前里程碑状态：`REAL SOURCE BATCH VALIDATED`；内置浏览器终验与冻结仍为 `PENDING`。
+- 当前里程碑状态：`BROWSER TERMINAL VALIDATED`；最终冻结仍为 `PENDING`。
