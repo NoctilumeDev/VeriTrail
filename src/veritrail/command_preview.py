@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import hashlib
-import importlib.metadata
 import os
 import re
 import stat
@@ -13,10 +12,12 @@ from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object
 from veritrail.plan import PLAN_ID_PATTERN, verify_sealed_plan
 from veritrail.privacy import redact_string
+from veritrail.windows_job import (
+    require_windows_command_capability as _require_windows_command_capability,
+)
 
 TOOL_BINDINGS_FIELDS = {"schema_version", "bindings"}
 TOOL_BINDING_FIELDS = {"executable"}
-EXPECTED_PYWIN32_VERSION = "312"
 MAX_BINDINGS = 32
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
 LOCAL_DRIVE_PATTERN = re.compile(r"^[A-Za-z]:$")
@@ -50,27 +51,6 @@ def _reject_unknown_fields(
     unknown = sorted(set(value) - allowed)
     if unknown:
         errors.append(f"{path} has unsupported fields: {', '.join(unknown)}")
-
-
-def _require_windows_command_capability() -> None:
-    if os.name != "nt":
-        raise SafetyError("M9 command preview is available only on the frozen Windows platform")
-    try:
-        import win32job  # noqa: F401
-        import win32process  # noqa: F401
-    except ImportError as exc:
-        raise SafetyError(
-            "M9 command capability is unavailable; install the locked command-windows extra "
-            "in the project virtual environment"
-        ) from exc
-    try:
-        installed = importlib.metadata.version("pywin32")
-    except importlib.metadata.PackageNotFoundError as exc:
-        raise SafetyError("M9 command capability cannot verify the locked pywin32 package") from exc
-    if installed != EXPECTED_PYWIN32_VERSION:
-        raise SafetyError(
-            f"M9 command capability requires locked pywin32 {EXPECTED_PYWIN32_VERSION}"
-        )
 
 
 def load_tool_bindings(path: Path) -> dict[str, Any]:
