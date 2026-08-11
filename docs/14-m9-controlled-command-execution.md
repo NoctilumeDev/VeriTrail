@@ -1,6 +1,6 @@
 # M9 受控项目命令执行合同
 
-> 状态：`IMPLEMENTING / CONTRACT_FROZEN / RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING`
+> 状态：`LOCAL_VALIDATED / CONTRACT_FROZEN / REMOTE_FREEZE_PENDING`
 > 影响层级：`L3_SYSTEM`（外部进程、信任边界、公共 Plan/Evidence 合同）
 > 前置基线：`m8-v0.9.0` 与 `post-m8-plan-v1`
 > 实施门禁：实现只能遵循本合同 0.2；改变公共字段、状态、所有权、安全边界或验收矩阵时必须
@@ -597,7 +597,7 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 - 目标 CLI：`command-preview` 与扩展 `run`；
 - 目标版本：Python Core `0.10.0.dev1`，Workbench `0.10.0-dev.1`；
 - 目标冻结标签：`m9-v0.10.0`；
-- 当前里程碑状态：`IMPLEMENTING / RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING`；
+- 当前里程碑状态：`LOCAL_VALIDATED / REMOTE_FREEZE_PENDING`；
 - 当前合同状态：`CONTRACT_FROZEN`；
 - 当前实现事实：`4d2bc84` 已完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与只读
   `command-preview` CLI；`9f979c8` 已完成 `pywin32==312` Windows Job Object 后端、暂停分配、
@@ -624,7 +624,9 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
   内置浏览器已读回最终 r4 的 Python 正向与超时 Run，并在同一构建上检查 Node 正向、漂移、损坏
   包隔离/恢复、桌面与 390×844 移动视口。页面 Console 为 0；已观察资源全部属于
   `http://127.0.0.1:18770`，包含 `runtime.command`；HTTP 补证为 Catalog GET/HEAD 200、POST 405、
-  未知查询 400、命令文本附件 GET 200；桌面/移动文档横向溢出均为 0；
+  未知查询 400、命令文本附件 GET 200；桌面/移动文档横向溢出均为 0。人工物理 `Tab/Enter` 最终
+  把焦点停在 `m9-real-python-nonzero` 目录按钮并打开对应 Run，页面读回 `COMPLETED/FAIL`，Console
+  与 Warning 均为 0；
 - 当前资源与回归事实：`r4` 的两个 sealed target 端口、owned process、Run work 与 staging 残留均
   为 0；CPython 3.10.6 与 3.13.13 再次各以 65 + 63 + 22 三片通过 150 项，Workbench 54 项、lint、
   type-check、生产构建、两套 `pip check` 与官方 npm registry audit 均通过。敏感候选复核只有真实
@@ -633,11 +635,12 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
   已加入回归；本轮 `r1` 因验收器错误要求连非秘密 Authorization 字段名也消失而停止，`r2` 因读取
   Comparison 的字段名错误而停止，均保留且由全新目录完整复跑修正。首次通过控制台入口启动浏览器
   验收服务器时，终端中断只结束 Windows launcher、遗留精确可识别的 Python 子进程；该进程已按
-  PID 与完整任务命令双重核验后停止，最终服务改用直接 `python -m veritrail`，不得把启动器退出
-  冒充端口已释放；
-- 当前未完成事实：Codex 内置浏览器的合成与系统 `Tab/Enter` 没有移动或激活当前焦点，不能冒充
-  物理键盘通过；最终浏览器服务仍为这项人工检查有意保留。人工键盘后还需释放服务、复核全部端口/
-  进程/临时目录，提交本文档并从 GitHub 远端读回冻结提交与 `m9-v0.10.0` 标签；
-- 当前运行结论：M9 已取得真实命令、真实 Chromium、Catalog/Workbench 与适用负向证据，但物理
-  键盘、最终清理和远端冻结门禁未闭合；状态保持 `KEYBOARD_PENDING`，不构成 `FROZEN` 或超出合同
-  两个可信命令家族的通用 `SUPPORTED` 声明。
+  PID 与完整任务命令双重核验后停止。最终服务虽改用虚拟环境 `python -m veritrail`，终端中断后
+  仍保留 venv launcher 与基础解释器两层进程；二者再次按 PID、父子关系和完整 M9 r4 Catalog 命令
+  双重核验后停止。不得把终端会话退出冒充端口已经释放；最终复核确认 18770/18772/18773、M9
+  Python/Node 进程和仓库 `.veritrail-*` 临时目录残留均为 0；
+- 当前未完成事实：本地代码、自动化、真实运行、内置浏览器物理键盘与最终清理门禁均已闭合；还需
+  提交本文档并从 GitHub 远端读回冻结提交与 `m9-v0.10.0` 标签；
+- 当前运行结论：M9 已在合同边界内完成本地验收，状态为 `LOCAL_VALIDATED / REMOTE_FREEZE_PENDING`；
+  GitHub 远端提交和标签读回前不构成 `FROZEN`，也不扩张为超出两个可信命令家族的通用
+  `SUPPORTED` 声明。

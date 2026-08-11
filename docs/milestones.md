@@ -2,7 +2,7 @@
 
 ## 1. 用途
 
-本文件承接 README 不再展开的 M0–M8 历史。它记录每个冻结基线回答的问题、真实取得的证据、
+本文件承接 README 不再展开的 M0–M9 历史。它记录每个冻结基线回答的问题、真实取得的证据、
 明确没有证明的能力，以及必须继续保留的失败事实。
 
 里程碑标签实际指向的 Git 提交是版本寻址权威；实现提交、合同提交、运行哈希和完整退出条件
@@ -21,6 +21,7 @@
 | M6 | 同 sealed Plan 的不可变 Run 确定性比较 | `FROZEN` | `m6-v0.7.0` @ `807ef1e` |
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
+| M9 | 可信一次性项目进程的受控执行与证据闭环 | `LOCAL_VALIDATED / REMOTE_FREEZE_PENDING` | — |
 
 `FROZEN` 只对该行声明的能力和对应文档中的环境、输入、资源及安全边界成立。代码、依赖、
 Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须标记过期并重新验收。
@@ -92,8 +93,8 @@ Plan / Evidence / Verdict
 自动化，`fa27b51` 完成 Plan 0.5 `run`、严格 `runtime.command`、最终状态漂移阻断、文本附件
 脱敏和 Bundle/Catalog/API/Workbench 通用读回自动化。`9031719` 新增两个独立轻量 Subject 与真实
 验收矩阵；Python module、直接 `node.exe` script、重复 Run、适用负向、桌面/移动 Chromium、
-Catalog/Workbench、Console/Network 和双运行时回归已通过。内置浏览器物理键盘、最终清理、冻结
-提交及 `m9-v0.10.0` GitHub 远端标签读回仍不存在，不能把当前真实中间状态写成里程碑完成。
+Catalog/Workbench、Console/Network、双运行时回归、内置浏览器物理键盘和最终清理均已通过。
+冻结提交及 `m9-v0.10.0` GitHub 远端标签读回仍不存在，不能把当前本地完成状态写成里程碑冻结。
 
 ## 6. 详细文档
 

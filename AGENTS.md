@@ -40,9 +40,9 @@
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
   真实 helper 自动化，`fa27b51` 完成 Plan 0.5 `run` 与严格 `runtime.command`，`9031719` 新增
   两个独立轻量 Subject 和真实 Python/Node 正负矩阵。当前细分状态为
-  `RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING`：真实命令、重复 Run、适用负向、双视口 Chromium、
-  Catalog/Workbench、Console/Network 与双 Python/前端回归已通过；内置浏览器物理键盘、最终清理、
-  GitHub/tag 读回仍未完成。后续仍只允许按
+  `LOCAL_VALIDATED / REMOTE_FREEZE_PENDING`：真实命令、重复 Run、适用负向、双视口 Chromium、
+  Catalog/Workbench、Console/Network、内置浏览器物理键盘、双 Python/前端回归与最终清理已通过；
+  GitHub 提交/tag 读回仍未完成。后续仍只允许按
   合同实现一个可信、直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、
   自举、包管理器或前端控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
   `m9-v0.10.0` 只有在全部实现和真实验收完成后才能创建。

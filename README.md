@@ -19,7 +19,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M6 | 同计划复跑确定性比较 | `FROZEN` |
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
-| M9 | 受控项目命令执行 | `IMPLEMENTING / RUNTIME_BROWSER_VALIDATED / KEYBOARD_PENDING` |
+| M9 | 受控项目命令执行 | `LOCAL_VALIDATED / REMOTE_FREEZE_PENDING` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
@@ -33,8 +33,9 @@ Post-M8 Plan v1 已冻结为**规划基线**；M10–M14 仍为 `PLANNED`。M9 0
 脱敏文本附件、subject 最终状态差异和清理事实，并完成 Bundle、Catalog、只读 API 与 Workbench
 通用读回自动化。`9031719` 新增两个独立轻量 Subject 与真实验收矩阵；可信 Python module、直接
 `node.exe` script、重复 Run、适用负向、桌面/移动 Chromium、Catalog 和现有 Workbench 已真实
-跑通。Codex 内置浏览器的物理键盘终验、最终清理复核、GitHub 远端提交/tag 读回仍未完成，M9
-不能标记 `FROZEN`。
+跑通。Codex 内置浏览器的物理 `Tab/Enter` 已打开非零退出 Run 并读回 `COMPLETED/FAIL`，Console/
+Warning 为 0；验收服务、约定端口、M9 进程与临时目录也已完成最终清理复核。GitHub 远端提交/tag
+读回尚未完成，因此 M9 仍不能标记 `FROZEN`。
 
 ## 为什么需要验迹
 
@@ -284,7 +285,7 @@ coverage 与固定种子 perturbation，并验证四类分析结果、逐字节�
   --output .\artifacts\my-unique-m8-browser
 ```
 
-## M9 受控项目命令执行（KEYBOARD_PENDING）
+## M9 受控项目命令执行（REMOTE_FREEZE_PENDING）
 
 M9 只允许一个用户信任并明确批准的 `ONESHOT`：结构化参数直接启动普通 `.exe`，不经过 Shell、
 stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目标、双视口 Chromium、裁决与
