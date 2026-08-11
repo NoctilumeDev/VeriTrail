@@ -335,8 +335,20 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 - 前端自动化覆盖四类状态组合、来源 `FAIL` 保留、缺格、未声明漂移、来源证据不足、Plan seal、
   伪造 seed 顺序、额外文件和状态冲突；类型检查、53 项 Vitest、lint 与生产构建通过；
 - Python 3.10.6 与 3.13.13 各 108 项全回归通过，M0–M7 冻结消费者未因本次 Workbench 扩展改变；
-- 本切片没有执行合同“真实运行退出条件”中的真实 M5/Chromium 批次。
-  自动化结论不能提升为真实运行或冻结结论。
+- `scripts/m8_batch_acceptance.py` 已在 16 GB Windows 主机上执行真实 2×2 批次：先封存
+  BatchPlan，再按 coverage 与固定种子 perturbation 顺序串行创建 8 个互不复用的 M5 `run`；
+  每个 Run 均完成资源预检、内置静态目标、Chromium 双视口和 cleanup；
+- 组合 Profile 在桌面视口产生一次预注册 Console 错误，两次来源 Run 均保持
+  `COMPLETED/FAIL`；BatchAnalysis 没有覆盖来源失败，同时得到 `COMPLETE/SUPPORTED`、
+  `COMPLETE/CONTRADICTED`、`INCOMPLETE/INCONCLUSIVE` 与顺序污染
+  `INCONCLUSIVE/INCONCLUSIVE`；
+- 相同输入四文件逐字节复建一致；只改变 seed 时成员、次数和 coverage 不变而 perturbation
+  顺序改变；缺格、Run/Bundle 复用、错误顺序、不安全路径、损坏来源、损坏输出、覆盖拒绝和
+  Catalog 隔离均已执行；验收结束后计划端口释放且无 `.veritrail-*` staging；
+- 本次 wave 成员仍由脚本串行执行，`runtime_overlap_claim=NOT_PROVEN`；它证明调度与 Assignment，
+  不证明真实微并行；
+- 生产 Workbench 的 Codex 内置浏览器桌面/移动、Console/Network、损坏恢复、history 与最终
+  清理终验尚未执行，因此 M8 仍不能冻结。
 
 ## 合同记录
 
@@ -345,5 +357,4 @@ M8 不能证明：组件级多变量因果、统计交互、真实并行、任�
 - 当前版本：Python Core `0.9.0.dev1`；Workbench `0.9.0-dev.1`；
 - 已实现 Schema：BatchPlan / RunAssignment / BatchAnalysis / BatchAnalysis Manifest 0.1；
 - 已实现 CLI：`seal-batch`、`analyze-batch`；
-- 当前里程碑状态：`CORE / WORKBENCH IMPLEMENTED / AUTOMATED`；真实批次、内置浏览器终验与
-  冻结仍为 `PENDING`。
+- 当前里程碑状态：`REAL SOURCE BATCH VALIDATED`；内置浏览器终验与冻结仍为 `PENDING`。
