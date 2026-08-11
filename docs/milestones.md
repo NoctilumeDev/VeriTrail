@@ -87,9 +87,10 @@ Plan / Evidence / Verdict
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
 `post-m8-plan-v1` 冻结为规划基线；M10–M14 仍为 `PLANNED`。M9 受控项目命令执行合同 0.2 已在
-`290b618` 进入 `CONTRACT_FROZEN`；首个实现切片 `4d2bc84` 只完成 Plan 0.5、ToolBindings 0.1、
-CommandPreview 0.1 与只读 CLI。pywin32 安装、目标进程、Plan 0.5 `run`、`runtime.command`、
-真实运行、浏览器终验与 `m9-v0.10.0` 标签均不存在，不能把审批预览写成里程碑完成。
+`290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
+与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
+自动化。Plan 0.5 `run`、`runtime.command`、真实 Python/Node 项目命令、浏览器终验与
+`m9-v0.10.0` 标签均不存在，不能把局部后端自动化写成里程碑完成。
 
 ## 6. 详细文档
 

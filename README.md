@@ -19,7 +19,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M6 | 同计划复跑确定性比较 | `FROZEN` |
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
-| M9 | 受控项目命令执行 | `IMPLEMENTING / PREVIEW_ONLY` |
+| M9 | 受控项目命令执行 | `IMPLEMENTING / OWNERSHIP_BACKEND_AUTOMATED` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
@@ -27,9 +27,10 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 [里程碑冻结历史](docs/milestones.md)。
 
 Post-M8 Plan v1 已冻结为**规划基线**；M10–M14 仍为 `PLANNED`。M9 0.2 独立合同已在
-`290b618` 冻结，首个实现切片 `4d2bc84` 只交付 Plan 0.5、ToolBindings 0.1 与只读
-CommandPreview 0.1。它没有安装 pywin32、没有扩展 `run`、没有创建目标进程，也不代表 M9
-命令执行或真实验收已经完成。
+`290b618` 冻结；`4d2bc84` 交付 Plan 0.5、ToolBindings 0.1 与只读 CommandPreview 0.1，
+`9f979c8` 交付锁定 `pywin32==312` 的 Windows Job Object 所有权后端与真实 helper 自动化。
+Plan 0.5 `run`、`runtime.command`、真实 Python/Node 项目命令、Bundle/Workbench 与浏览器全链路
+仍未实现或验收，M9 不能标记完成。
 
 ## 为什么需要验迹
 

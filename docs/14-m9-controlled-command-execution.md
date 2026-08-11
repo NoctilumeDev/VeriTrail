@@ -1,6 +1,6 @@
 # M9 受控项目命令执行合同
 
-> 状态：`IMPLEMENTING / CONTRACT_FROZEN / PREVIEW_ONLY`
+> 状态：`IMPLEMENTING / CONTRACT_FROZEN / OWNERSHIP_BACKEND_AUTOMATED`
 > 影响层级：`L3_SYSTEM`（外部进程、信任边界、公共 Plan/Evidence 合同）
 > 前置基线：`m8-v0.9.0` 与 `post-m8-plan-v1`
 > 实施门禁：实现只能遵循本合同 0.2；改变公共字段、状态、所有权、安全边界或验收矩阵时必须
@@ -360,7 +360,7 @@ VALIDATE / SEAL
 ## 11. Windows 进程所有权与清理 ADR-0001
 
 冻结决策是使用 Windows Job Object 作为 M9 的进程所有权边界，调用层锁定为项目虚拟环境内的
-`pywin32==312`。这不声称依赖已安装或后端已实现。
+`pywin32==312`。依赖与后端的当前实施事实只以第 19 节记录为准；能力缺失时必须关闭失败。
 
 ### 11.1 依赖决策
 
@@ -404,9 +404,10 @@ PyPI 将该发行版标记为 Python Software Foundation License；VeriTrail 不
 
 ### 11.3 嵌套 Job 与本机预检
 
-Windows 8 及以后允许满足约束的嵌套 Job，但 Codex/PowerShell 宿主自身可能已经在 Job 中。2026-08-11
-的只读探针确认：当前 PowerShell、项目虚拟环境和 Python 3.13 处于 Job，独立 Python 3.10 的观察
-结果不同；三个 Python 环境均未安装 pywin32。这只是当前环境事实，不替代实现后的能力测试。
+Windows 8 及以后允许满足约束的嵌套 Job，但 Codex/PowerShell 宿主自身可能已经在 Job 中。
+2026-08-11 实施前只读探针曾观察到宿主差异；实施后两个项目虚拟环境均已用锁定 wheel 完成真实
+暂停创建、Job 分配、恢复与清理自动化。该结果只证明当前 Windows 主机上的后端切片，不替代
+Plan 0.5 `run` 或完整真实命令验收。
 
 实现必须在目标执行前：
 
@@ -596,9 +597,18 @@ Evidence 校验器必须拒绝缺字段、额外字段、政策哈希错误、Pr
 - 目标 CLI：`command-preview` 与扩展 `run`；
 - 目标版本：Python Core `0.10.0.dev1`，Workbench `0.10.0-dev.1`；
 - 目标冻结标签：`m9-v0.10.0`；
-- 当前里程碑状态：`IMPLEMENTING / PREVIEW_ONLY`；
+- 当前里程碑状态：`IMPLEMENTING / OWNERSHIP_BACKEND_AUTOMATED`；
 - 当前合同状态：`CONTRACT_FROZEN`；
 - 当前实现事实：`4d2bc84` 已完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与只读
-  `command-preview` CLI；未安装 pywin32，未扩展 Plan 0.5 `run`，未创建目标进程，未生成
-  `runtime.command`；
-- 当前运行结论：无。
+  `command-preview` CLI；`9f979c8` 已完成 `pywin32==312` Windows Job Object 后端、暂停分配、
+  直接无 Shell 启动、并发有界输出、超时/取消/输出超限/后代 grace 清理和活动进程上限读回；
+- 当前隔离边界：锁定版本的 pywin32 `STARTUPINFO` 不提供 `STARTUPINFOEX` 句柄白名单，重定向标准
+  句柄仍需 Windows 句柄继承；因此该后端不声明通用句柄能力隔离，仍只允许用户已信任的命令；
+- 当前自动化事实：CPython 3.10.6 与 3.13.13 各有 136 项全量测试通过，其中 13 项使用真实 Windows
+  helper 进程覆盖分配/恢复失败、参数边界、stdin EOF、超时、取消、输出超限、活动进程上限、
+  长存后代回收及外部同名进程保护；测试后 helper 与约定端口残留均为 0；
+- 保留的失败事实：实现期间自动化曾暴露根进程或后代退出与输出超限观察之间的两条竞态，修复后
+  已加入回归；不得用根退出状态覆盖较晚到达的输出超限事实；
+- 当前未完成事实：尚未扩展 Plan 0.5 `run`，未生成或验证 `runtime.command`，未运行真实 Python/Node
+  项目命令，未接入 Bundle/Catalog/Workbench，也未执行真实浏览器与人工终验；
+- 当前运行结论：所有权后端切片达到自动化中间状态，不构成 M9 完成或 `SUPPORTED` 最终声明。

@@ -36,11 +36,12 @@
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
   规划基线。M10–M14 仍为 `PLANNED`；规划冻结不代表任何后继能力已经实现或验收。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
-  `IMPLEMENTING / PREVIEW_ONLY`。首个实现提交 `4d2bc84` 只完成 Plan 0.5、ToolBindings 0.1、
-  CommandPreview 0.1 与 `command-preview` CLI；pywin32 尚未安装，Plan 0.5 `run`、进程所有权、
-  `runtime.command`、真实命令和浏览器全链路均未实现或验收。后续仍只允许按合同实现一个可信、
-  直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、自举、包管理器或前端
-  控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
+  `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
+  `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
+  真实 helper 自动化，当前细分状态为 `OWNERSHIP_BACKEND_AUTOMATED`。Plan 0.5 `run`、
+  `runtime.command`、真实 Python/Node 项目命令和浏览器全链路仍未实现或验收。后续仍只允许按
+  合同实现一个可信、直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、
+  自举、包管理器或前端控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
   `m9-v0.10.0` 只有在全部实现和真实验收完成后才能创建。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
