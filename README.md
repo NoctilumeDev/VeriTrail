@@ -43,10 +43,11 @@ Post-M8 Plan v1 已冻结为**规划基线**；M9 已冻结，M10 Contract 0.2 �
 Warning 为 0；验收服务、约定端口、M9 进程与临时目录也已完成最终清理复核。GitHub `main` 与
 `m9-v0.10.0` 标签均已读回冻结提交 `3181d69`，M9 在合同边界内标记 `FROZEN`。
 
-M10 Contract 0.2 已冻结 Windows 11 / `C1 PROCESS_COLD` 的有界本地进程自举边界。首个 L2 合同
-实现片已加入 ProjectProfile 0.1、Plan 0.6 跨文档 seal、BootstrapPreview 0.1 和只读 Windows IP
-Helper listener 表门禁；它尚未加入长运行 Job session、owned readiness、`runtime.bootstrap`、
-Bundle/Profile 四方验真或真实浏览器运行。C2/C3、Docker、跨平台和真实项目证明继续留给后继合同。
+M10 Contract 0.2 已冻结 Windows 11 / `C1 PROCESS_COLD` 的有界本地进程自举边界。当前实现已有
+ProjectProfile 0.1、Plan 0.6 跨文档 seal、BootstrapPreview 0.1、Windows IP Helper listener 表，
+以及 M10 独立的长运行 Job session、owned HTTP readiness、双节点串行启动和 best-effort 逆序清理
+组件。它尚未接入公共 `run`、`runtime.bootstrap`、Bundle/Profile 四方验真或真实浏览器链路；
+C2/C3、Docker、跨平台和真实项目证明继续留给后继合同。
 
 ## 为什么需要验迹
 
@@ -332,9 +333,11 @@ stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目�
 
 M10 在 M9 的可信进程所有权基础上，只增加 Windows 11/C1 的长运行生命周期：按依赖顺序启动
 两个本地可信进程，以回环 HTTP 与 Job process list 共同证明就绪，由现有 Browser Adapter 完成
-exercise，最后按应用、依赖的逆序强制回收并证明无残留。当前已实现无进程副作用的首个合同片：
-Profile/Plan 封存、严格本地解析、精确 Preview digest 与内核 listener FREE 检查；它不代表服务
-生命周期、Evidence、Bundle 或真实链路已经完成。详见
+exercise，最后按应用、依赖的逆序强制回收并证明无残留。当前组件片已用真实 Windows 子进程与
+端口验证：每节点独立 Job、依赖 READY 后才创建应用、listener owner 与实时 Job process list
+交叉核验、连续两次 HTTP 200、失败后应用到依赖的逆序回收，以及 cleanup 失败时继续 best-effort
+清理。该内存态组件尚未生成公共 Evidence，也未接入 Browser、Bundle 或 CLI `run`，因此不代表
+M10 完整链路已经完成。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。
 
 ### 本地运行
@@ -365,7 +368,7 @@ py -3.10 -m venv .venv
 
 - **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检、有界浏览器采集、M4 离线
   Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 已进入合同层
-  实现，长运行生命周期尚未实现。
+  实现，并已有独立长运行 Job/readiness/逆序清理组件，公共 Run/Evidence/Bundle 尚未接入。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。

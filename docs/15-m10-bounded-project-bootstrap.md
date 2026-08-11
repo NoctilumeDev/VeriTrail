@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：Profile/Plan/Preview 与 listener 表首片已实现；长运行 Job/Evidence/Bundle/真实链路仍未实现
+> 实施门禁：Profile/Plan/Preview、listener、长运行 Job/readiness/逆序清理组件已实现；Evidence/Bundle/Browser/公共 Run 仍未实现
 
 ## 1. M10 只回答一个问题
 
@@ -504,7 +504,7 @@ Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中�
 
 ## 17. 合同冻结设计验证记录
 
-以下事实和决策在 Contract 0.2 冻结前完成核验；它们授权下一提交开始实现，不代表实现已存在：
+以下事实和决策在 Contract 0.2 冻结前完成核验；它们是实现必须保持的设计记录：
 
 1. **listener owner 后端（已定）**：本机锁定的 `pywin32==312` 提供
    `JobObjectBasicProcessIdList`，但没有 `win32iphlpapi` 模块或 `GetExtendedTcpTable` binding。
@@ -536,6 +536,13 @@ Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中�
 进程，真正 listener 属于后代而非根进程；IP Helper owner 位于该 Job 集合。TerminateJobObject 后
 18774 释放，探针残留为 0。该事实验证 API 组合和“不能只看根 PID”的设计，不构成产品实现或
 M10 真实验收。
+
+随后完成的生命周期组件片保持 M9 `run_owned_process` 行为不变，新增 M10-only 的逐节点长运行
+Job session、typed 参数/环境的内存态 materialization、`Job set A -> listener -> Job set B -> HTTP`
+owned readiness、依赖到应用的严格串行启动和应用到依赖的 best-effort 逆序清理。真实 Windows helper
+自动化已覆盖后代 listener 成功、提前退出、超时、宽绑定、外部 owner 不误杀、输出上限、应用失败
+回滚、双节点 READY 后用户取消和 cleanup 失败后继续清理。该事实仍只是组件运行证据；未生成 `runtime.bootstrap`、未接入
+Browser/Bundle/CLI `run`，不得据此标记 M10 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

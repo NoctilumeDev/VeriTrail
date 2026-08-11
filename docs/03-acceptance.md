@@ -27,8 +27,9 @@ Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览�
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
 M10 有界完整项目自举当前为 `IMPLEMENTING`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
-跨文档 seal、BootstrapPreview 0.1 与 Windows listener 表只读门禁已有代码和自动化；长运行 Job、
-readiness、Evidence、Bundle 和真实浏览器链路尚未实现。局部合同自动化不构成里程碑冻结事实；
+跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
+双节点串行启动和 best-effort 逆序清理已有代码与真实 helper 自动化；Evidence、Bundle、公共
+`run` 和真实浏览器链路尚未实现。组件自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准。
 

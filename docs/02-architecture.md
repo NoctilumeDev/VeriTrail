@@ -66,7 +66,8 @@ M5 已冻结一个更窄的编排切片：Core 内置的只读静态 HTTP 目标
 M9 已冻结 Plan 0.5 的单个可信 `ONESHOT`：ToolBindings 与只读 Preview 在本地解析普通 `.exe`，
 用户批准精确 digest 后由 Windows Job Object 在无 Shell、无 stdin/TTY 边界内执行，并生成严格
 `runtime.command`。M10 已冻结独立的 Windows 11/C1 长运行生命周期 Contract 0.2，并实现首个
-Profile/Plan/Preview 与 listener 表只读合同片；长运行服务和 Evidence 仍不存在。
+Profile/Plan/Preview、listener 表，以及独立长运行 Job session、owned HTTP readiness、双节点串行
+启动与逆序清理组件；公共 `runtime.bootstrap`、Bundle 和 Browser 链路仍不存在。
 
 ### 2.5 Browser Adapter
 
@@ -105,8 +106,8 @@ v0 不接受自由文本 Shell 命令。优先采用：
 - 显式工作目录、超时、环境允许列表和资源上限。
 
 M9 已对一个可信 `ONESHOT` 实现完整程序、参数、目录、环境名称、限制与副作用边界的只读预览和
-精确 digest 审批。M10 若进入实现，长运行服务仍必须使用独立 Profile、Preview、Job 所有权、
-owned readiness 与逆序清理；拒绝 Shell 拼接、隐式变量展开和把凭据写入命令行。
+精确 digest 审批。M10 长运行组件使用独立 Profile、Preview、逐节点 Job 所有权、owned readiness
+与逆序清理；继续拒绝 Shell 拼接、隐式变量展开和把凭据写入命令行。
 
 ## 5. 隐私与脱敏
 
@@ -203,8 +204,8 @@ Profile coverage，再用固定种子生成成员集合不变的 perturbation �
 
 M9 已冻结 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1、Windows Job Object trusted process
 runner 与 `runtime.command`。M10 Contract 0.2 冻结独立 sealed ProjectProfile、Plan 0.6 和
-`runtime.bootstrap` 的目标架构；Profile/Plan/Preview 首片已实现，长运行 session、Evidence 与
-Bundle 消费仍未实现。准确边界见
+`runtime.bootstrap` 的目标架构；Profile/Plan/Preview、长运行 session、owned readiness 与内存态
+双节点逆序清理组件已实现，Evidence、Bundle、Browser 和公共 Run 消费仍未实现。准确边界见
 `docs/15-m10-bounded-project-bootstrap.md`。
 
 ## 9. 实现顺序
