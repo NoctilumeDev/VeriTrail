@@ -23,7 +23,7 @@
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | Windows 11/C1 有界完整项目自举 | `CONTRACT_FROZEN` | Contract 0.2 |
+| M10 | Windows 11/C1 有界完整项目自举 | `IMPLEMENTING` | Contract 0.2 + L2 contract slice |
 | M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
@@ -107,8 +107,9 @@ Plan / Evidence / Verdict
 验收矩阵；Python module、直接 `node.exe` script、重复 Run、适用负向、桌面/移动 Chromium、
 Catalog/Workbench、Console/Network、双运行时回归、内置浏览器物理键盘和最终清理均已通过。
 冻结提交 `3181d69` 及 `m9-v0.10.0` 标签已从 GitHub 远端读回，M9 在合同边界内标记 `FROZEN`。
-M10 下一提交只允许按 Contract 0.2 实现 Windows 11/C1、两个 Run-owned 本地可信进程、owned HTTP
-readiness、浏览器 exercise 与逆序 Job 清理；不得把冻结合同写成实现事实。
+M10 已按 Contract 0.2 实现 ProjectProfile 0.1、Plan 0.6 跨文档 seal、BootstrapPreview 0.1 与只读
+Windows IP Helper listener 表首片；两个 Run-owned 服务、owned HTTP readiness、浏览器 exercise、
+Evidence、Bundle 和逆序 Job 清理仍未实现，不得把合同层通过写成完整自举事实。
 
 ## 6. 详细文档
 

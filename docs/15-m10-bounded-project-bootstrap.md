@@ -1,13 +1,13 @@
 # M10 有界完整项目自举合同
 
-> 状态：`CONTRACT_FROZEN / PLANNING`
+> 状态：`CONTRACT_FROZEN / IMPLEMENTING`
 > 合同版本：`M10 Bounded Project Bootstrap Contract 0.2`
 > 影响层级：`L3_SYSTEM`（项目 Profile、长运行进程、就绪状态机、所有权与逆序清理）
 > 前置基线：`m9-v0.10.0` @ `3181d69`
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：合同已经冻结，下一提交才可进入实现；本文不代表任何 Schema、CLI 或运行能力已经存在
+> 实施门禁：Profile/Plan/Preview 与 listener 表首片已实现；长运行 Job/Evidence/Bundle/真实链路仍未实现
 
 ## 1. M10 只回答一个问题
 
@@ -434,7 +434,7 @@ Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中�
 - 不启动 Docker、WSL 中间件、数据库或其他完整项目栈；
 - 每次 Preview 和 Run 重新采样内存、C/D 磁盘、两个端口与适配器版本；
 - Core、两个节点与 Chromium 分开记账；
-- Profile 声明每节点 process/output/time 限额和全局软/硬内存停止线；
+- Profile 声明每节点 process/output/time 限额；Plan preflight 声明全局软/硬内存停止线；
 - 软阈值停止进入下一阶段，硬阈值立即 ABORT、保存现场并逆序清理；
 - 不以机器档案快照代替当前事实，不因 16 GB 降低清理、安全或一致性断言。
 

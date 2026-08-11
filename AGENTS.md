@@ -47,10 +47,12 @@
   自举、包管理器或前端控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
   标签 `m9-v0.10.0` 必须继续指向 `3181d69`；越过合同边界时必须开启后继里程碑而不是改写该基线。
 - M10 独立 Contract 0.2 位于 `docs/15-m10-bounded-project-bootstrap.md`，当前状态为
-  `CONTRACT_FROZEN / PLANNING`。首片只允许 Windows 11、`C1 PROCESS_COLD`、一个 Run-owned 本地
+  `CONTRACT_FROZEN / IMPLEMENTING`。首个 L2 实现片已加入 ProjectProfile 0.1、Plan 0.6 跨文档
+  seal、BootstrapPreview 0.1 与只读 Windows IP Helper listener 表；尚未实现服务进程、readiness、
+  Evidence、Bundle 或 `run`。首片只允许 Windows 11、`C1 PROCESS_COLD`、一个 Run-owned 本地
   dependency、一个 application、`HTTP_GET_LOOPBACK_OWNED_PID` readiness、现有 Browser Adapter
-  exercise 与逆序 Job 清理。下一提交可按合同开始 Plan 0.6、ProjectProfile 和服务执行器实现；
-  C0 接管、C2/C3、Docker、跨平台、包管理器、真实项目和优雅停机均不得顺手加入。
+  exercise 与逆序 Job 清理；C0 接管、C2/C3、Docker、跨平台、包管理器、真实项目和优雅停机均
+  不得顺手加入。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

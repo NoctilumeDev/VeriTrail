@@ -14,6 +14,7 @@ from veritrail.batching import (
     write_sealed_batch_plan,
 )
 from veritrail.browser import collect_browser_evidence
+from veritrail.bootstrap_preview import build_bootstrap_preview
 from veritrail.catalog import CatalogError, build_catalog
 from veritrail.comparison import ComparisonError, create_comparison_bundle
 from veritrail.command_execution import collect_command_evidence
@@ -28,7 +29,18 @@ from veritrail.pairing import (
     load_and_seal_pairing_plan,
     write_sealed_pairing_plan,
 )
-from veritrail.plan import load_and_seal_plan, write_sealed_plan
+from veritrail.plan import (
+    load_and_seal_plan,
+    load_json_object as load_plan_json_object,
+    seal_plan,
+    verify_sealed_plan,
+    write_sealed_plan,
+)
+from veritrail.project_profile import (
+    load_and_seal_project_profile,
+    load_sealed_project_profile,
+    write_sealed_project_profile,
+)
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
 
@@ -43,7 +55,46 @@ def build_parser() -> argparse.ArgumentParser:
 
     seal = subparsers.add_parser("seal", help="validate and seal an experiment plan")
     seal.add_argument("--plan", type=Path, required=True, help="unsealed or already sealed plan JSON")
+    seal.add_argument(
+        "--profile",
+        type=Path,
+        help="required sealed ProjectProfile 0.1 for Plan 0.6; rejected for older plans",
+    )
     seal.add_argument("--output", type=Path, required=True, help="new sealed plan path")
+
+    profile_seal = subparsers.add_parser(
+        "bootstrap-profile-seal",
+        help="validate and seal one M10 ProjectProfile 0.1",
+    )
+    profile_seal.add_argument(
+        "--profile", type=Path, required=True, help="unsealed or already sealed ProjectProfile"
+    )
+    profile_seal.add_argument(
+        "--output", type=Path, required=True, help="new sealed ProjectProfile path"
+    )
+
+    bootstrap_preview = subparsers.add_parser(
+        "bootstrap-preview",
+        help="resolve a sealed Plan 0.6 and ProjectProfile without spawning processes",
+    )
+    bootstrap_preview.add_argument(
+        "--plan", type=Path, required=True, help="sealed ExperimentPlan 0.6 JSON"
+    )
+    bootstrap_preview.add_argument(
+        "--profile", type=Path, required=True, help="sealed ProjectProfile 0.1 JSON"
+    )
+    bootstrap_preview.add_argument(
+        "--subject-root",
+        type=Path,
+        required=True,
+        help="explicit local subject root; represented only by a digest",
+    )
+    bootstrap_preview.add_argument(
+        "--tool-bindings",
+        type=Path,
+        required=True,
+        help="local ToolBindings 0.1 JSON; never persisted",
+    )
 
     evaluate = subparsers.add_parser("evaluate", help="import evidence and create a verdict bundle")
     evaluate.add_argument("--plan", type=Path, required=True, help="unsealed or sealed plan JSON")
@@ -211,7 +262,22 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     try:
         if args.command == "seal":
-            plan = load_and_seal_plan(args.plan)
+            raw_plan = load_plan_json_object(args.plan)
+            is_bootstrap_plan = raw_plan.get("schema_version") == "0.6"
+            if is_bootstrap_plan and args.profile is None:
+                raise ValidationError(["Plan 0.6 seal requires --profile"])
+            if not is_bootstrap_plan and args.profile is not None:
+                raise ValidationError(["--profile is accepted only when sealing Plan 0.6"])
+            profile = (
+                load_sealed_project_profile(args.profile)
+                if args.profile is not None
+                else None
+            )
+            if "seal" in raw_plan:
+                verify_sealed_plan(raw_plan, profile)
+                plan = raw_plan
+            else:
+                plan = seal_plan(raw_plan, profile)
             write_sealed_plan(args.output, plan)
             _success(
                 {
@@ -220,6 +286,49 @@ def main(argv: list[str] | None = None) -> int:
                     "plan_sha256": plan["seal"]["digest"],
                 }
             )
+            return 0
+        if args.command == "bootstrap-profile-seal":
+            profile = load_and_seal_project_profile(args.profile)
+            write_sealed_project_profile(args.output, profile)
+            _success(
+                {
+                    "command": "bootstrap-profile-seal",
+                    "output": args.output.name,
+                    "profile_id": profile["profile_id"],
+                    "profile_version": profile["version"],
+                    "profile_sha256": profile["seal"]["digest"],
+                }
+            )
+            return 0
+        if args.command == "bootstrap-preview":
+            try:
+                profile = load_sealed_project_profile(args.profile)
+                plan = load_plan_json_object(args.plan)
+                verify_sealed_plan(plan, profile)
+                preview = build_bootstrap_preview(
+                    plan,
+                    profile,
+                    subject_root=args.subject_root,
+                    tool_bindings_path=args.tool_bindings,
+                )
+            except VeriTrailError:
+                raise
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "BOOTSTRAP_PREVIEW_INTERNAL_ERROR",
+                                "message": "Bootstrap preview encountered an unexpected internal error.",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
+            _success(preview)
             return 0
         if args.command == "evaluate":
             plan = load_and_seal_plan(args.plan)

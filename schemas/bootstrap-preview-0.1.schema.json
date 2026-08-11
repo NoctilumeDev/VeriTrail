@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/bootstrap-preview-0.1.schema.json",
+  "title": "VeriTrail M10 BootstrapPreview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_sha256",
+    "profile_id",
+    "profile_version",
+    "profile_sha256",
+    "subject_root_identity_sha256",
+    "platform",
+    "cold_state",
+    "nodes",
+    "start_order",
+    "teardown_order",
+    "application_origin",
+    "browser_policy_sha256",
+    "resource_policy_sha256",
+    "claims",
+    "preview_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "plan_sha256": { "$ref": "#/$defs/sha256" },
+    "profile_id": { "$ref": "#/$defs/identifier" },
+    "profile_version": { "type": "integer", "minimum": 1 },
+    "profile_sha256": { "$ref": "#/$defs/sha256" },
+    "subject_root_identity_sha256": { "$ref": "#/$defs/sha256" },
+    "platform": { "const": "WINDOWS_11" },
+    "cold_state": { "const": "C1_PROCESS_COLD" },
+    "nodes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "start_order": { "$ref": "#/$defs/twoNodeIds" },
+    "teardown_order": { "$ref": "#/$defs/twoNodeIds" },
+    "application_origin": {
+      "type": "string",
+      "pattern": "^http://127\\.0\\.0\\.1:[0-9]{4,5}$"
+    },
+    "browser_policy_sha256": { "$ref": "#/$defs/sha256" },
+    "resource_policy_sha256": { "$ref": "#/$defs/sha256" },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filesystem_isolation",
+        "network_isolation",
+        "graceful_shutdown",
+        "executable_toctou_containment",
+        "untrusted_code",
+        "c0_running",
+        "c2_workspace_cold",
+        "c3_host_cold",
+        "linux",
+        "macos",
+        "docker"
+      ],
+      "properties": {
+        "filesystem_isolation": { "const": "NOT_PROVEN" },
+        "network_isolation": { "const": "NOT_PROVEN" },
+        "graceful_shutdown": { "const": "NOT_PROVEN" },
+        "executable_toctou_containment": { "const": "NOT_PROVEN" },
+        "untrusted_code": { "const": "NOT_SUPPORTED" },
+        "c0_running": { "const": "NOT_SUPPORTED" },
+        "c2_workspace_cold": { "const": "NOT_SUPPORTED" },
+        "c3_host_cold": { "const": "NOT_SUPPORTED" },
+        "linux": { "const": "NOT_SUPPORTED" },
+        "macos": { "const": "NOT_SUPPORTED" },
+        "docker": { "const": "NOT_SUPPORTED" }
+      }
+    },
+    "preview_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+    },
+    "twoNodeIds": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/identifier" }
+    },
+    "executable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basename", "size", "sha256", "path_identity_sha256"],
+      "properties": {
+        "basename": { "type": "string", "pattern": "^[^/\\\\]+\\.exe$" },
+        "size": { "type": "integer", "minimum": 2 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "path_identity_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inherit_names", "set_names", "runner_names", "projection_sha256", "values_persisted"],
+      "properties": {
+        "inherit_names": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "enum": ["SYSTEMROOT", "WINDIR"] }
+        },
+        "set_names": {
+          "type": "array",
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "const": "PYTHONDONTWRITEBYTECODE" }
+        },
+        "runner_names": { "const": ["TEMP", "TMP"] },
+        "projection_sha256": { "$ref": "#/$defs/sha256" },
+        "values_persisted": { "const": false }
+      }
+    },
+    "argument": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "value"],
+          "properties": {
+            "kind": { "const": "literal" },
+            "value": {
+              "type": "string",
+              "maxLength": 4096,
+              "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "segments", "value"],
+          "properties": {
+            "kind": { "const": "run_work_path" },
+            "segments": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "type": "string" } },
+            "value": { "type": "string", "pattern": "^<RUN_WORK>/" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "node_id", "value"],
+          "properties": {
+            "kind": { "const": "node_port" },
+            "node_id": { "$ref": "#/$defs/identifier" },
+            "value": { "type": "integer", "minimum": 1024, "maximum": 65535 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "node_id", "value"],
+          "properties": {
+            "kind": { "const": "node_origin" },
+            "node_id": { "$ref": "#/$defs/identifier" },
+            "value": { "type": "string", "pattern": "^http://127\\.0\\.0\\.1:[0-9]{4,5}$" }
+          }
+        }
+      ]
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "role",
+        "depends_on",
+        "adapter",
+        "tool_binding_id",
+        "executable",
+        "arguments",
+        "working_directory",
+        "working_directory_identity_sha256",
+        "environment",
+        "port",
+        "port_preflight",
+        "readiness",
+        "limits",
+        "shutdown",
+        "node_policy_sha256"
+      ],
+      "properties": {
+        "node_id": { "$ref": "#/$defs/identifier" },
+        "role": { "enum": ["DEPENDENCY", "APPLICATION"] },
+        "depends_on": { "type": "array", "maxItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/identifier" } },
+        "adapter": { "const": "TRUSTED_PROCESS_SERVICE" },
+        "tool_binding_id": { "$ref": "#/$defs/identifier" },
+        "executable": { "$ref": "#/$defs/executable" },
+        "arguments": { "type": "array", "minItems": 1, "maxItems": 128, "items": { "$ref": "#/$defs/argument" } },
+        "working_directory": {
+          "type": "string",
+          "pattern": "^(?:\\.|[A-Za-z0-9][A-Za-z0-9._-]{0,63}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,63}){0,7})$"
+        },
+        "working_directory_identity_sha256": { "$ref": "#/$defs/sha256" },
+        "environment": { "$ref": "#/$defs/environment" },
+        "port": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "port_preflight": { "const": "FREE" },
+        "readiness": { "$ref": "project-profile-0.1.schema.json#/$defs/readiness" },
+        "limits": { "$ref": "project-profile-0.1.schema.json#/$defs/limits" },
+        "shutdown": { "$ref": "project-profile-0.1.schema.json#/$defs/shutdown" },
+        "node_policy_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

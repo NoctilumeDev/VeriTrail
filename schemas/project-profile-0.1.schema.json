@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/project-profile-0.1.schema.json",
+  "title": "VeriTrail M10 ProjectProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "version",
+    "platform",
+    "cold_state",
+    "nodes",
+    "start_order",
+    "teardown_order",
+    "application_node_id",
+    "subject_watch_roots",
+    "max_watch_files",
+    "max_watch_total_bytes",
+    "lifecycle_timeout_ms"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "profile_id": { "$ref": "#/$defs/identifier" },
+    "version": { "type": "integer", "minimum": 1 },
+    "platform": { "const": "WINDOWS_11" },
+    "cold_state": { "const": "C1_PROCESS_COLD" },
+    "nodes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/node" },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": ["role"],
+            "properties": { "role": { "const": "DEPENDENCY" } }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["role"],
+            "properties": { "role": { "const": "APPLICATION" } }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "start_order": { "$ref": "#/$defs/twoNodeIds" },
+    "teardown_order": { "$ref": "#/$defs/twoNodeIds" },
+    "application_node_id": { "$ref": "#/$defs/identifier" },
+    "subject_watch_roots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/relativePath" }
+    },
+    "max_watch_files": { "type": "integer", "minimum": 1, "maximum": 2000 },
+    "max_watch_total_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 67108864
+    },
+    "lifecycle_timeout_ms": {
+      "type": "integer",
+      "minimum": 5000,
+      "maximum": 900000
+    },
+    "seal": { "$ref": "#/$defs/seal" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "seal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "digest"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "digest": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "relativePath": {
+      "type": "string",
+      "pattern": "^(?:\\.|[A-Za-z0-9][A-Za-z0-9._-]{0,63}(?:/[A-Za-z0-9][A-Za-z0-9._-]{0,63}){0,7})$"
+    },
+    "pathSegments": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+      }
+    },
+    "twoNodeIds": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/identifier" }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inherit", "set"],
+      "properties": {
+        "inherit": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[Ss][Yy][Ss][Tt][Ee][Mm][Rr][Oo][Oo][Tt]|[Ww][Ii][Nn][Dd][Ii][Rr])$"
+          }
+        },
+        "set": {
+          "oneOf": [
+            { "type": "object", "maxProperties": 0 },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["PYTHONDONTWRITEBYTECODE"],
+              "properties": { "PYTHONDONTWRITEBYTECODE": { "const": "1" } }
+            }
+          ]
+        }
+      }
+    },
+    "argument": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["literal"],
+          "properties": {
+            "literal": {
+              "type": "string",
+              "maxLength": 4096,
+              "pattern": "^[^\\u0000-\\u001F\\u007F]*$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["run_work_path"],
+          "properties": { "run_work_path": { "$ref": "#/$defs/pathSegments" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["node_port"],
+          "properties": { "node_port": { "$ref": "#/$defs/identifier" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["node_origin"],
+          "properties": { "node_origin": { "$ref": "#/$defs/identifier" } }
+        }
+      ]
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "path",
+        "expected_status",
+        "attempt_timeout_ms",
+        "total_timeout_ms",
+        "interval_ms",
+        "consecutive_successes",
+        "max_response_bytes"
+      ],
+      "properties": {
+        "adapter": { "const": "HTTP_GET_LOOPBACK_OWNED_PID" },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048,
+          "pattern": "^/(?!/)[^?#\\u0000-\\u001F\\u007F]*$"
+        },
+        "expected_status": { "const": 200 },
+        "attempt_timeout_ms": { "type": "integer", "minimum": 100, "maximum": 2000 },
+        "total_timeout_ms": { "type": "integer", "minimum": 500, "maximum": 30000 },
+        "interval_ms": { "type": "integer", "minimum": 20, "maximum": 1000 },
+        "consecutive_successes": { "const": 2 },
+        "max_response_bytes": { "type": "integer", "minimum": 1, "maximum": 65536 }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_stdout_bytes", "max_stderr_bytes", "max_processes"],
+      "properties": {
+        "max_stdout_bytes": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "max_stderr_bytes": { "type": "integer", "minimum": 1, "maximum": 1048576 },
+        "max_processes": { "type": "integer", "minimum": 1, "maximum": 32 }
+      }
+    },
+    "shutdown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "process_release_timeout_ms",
+        "port_release_timeout_ms",
+        "reader_shutdown_timeout_ms"
+      ],
+      "properties": {
+        "adapter": { "const": "JOB_TERMINATE_AFTER_CAPTURE" },
+        "process_release_timeout_ms": { "type": "integer", "minimum": 100, "maximum": 10000 },
+        "port_release_timeout_ms": { "type": "integer", "minimum": 100, "maximum": 10000 },
+        "reader_shutdown_timeout_ms": { "type": "integer", "minimum": 100, "maximum": 10000 }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "role",
+        "adapter",
+        "depends_on",
+        "tool_binding",
+        "arguments",
+        "working_directory",
+        "environment",
+        "port",
+        "readiness",
+        "limits",
+        "shutdown"
+      ],
+      "properties": {
+        "node_id": { "$ref": "#/$defs/identifier" },
+        "role": { "enum": ["DEPENDENCY", "APPLICATION"] },
+        "adapter": { "const": "TRUSTED_PROCESS_SERVICE" },
+        "depends_on": {
+          "type": "array",
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "tool_binding": { "$ref": "#/$defs/identifier" },
+        "arguments": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/argument" }
+        },
+        "working_directory": { "$ref": "#/$defs/relativePath" },
+        "environment": { "$ref": "#/$defs/environment" },
+        "port": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "readiness": { "$ref": "#/$defs/readiness" },
+        "limits": { "$ref": "#/$defs/limits" },
+        "shutdown": { "$ref": "#/$defs/shutdown" }
+      }
+    }
+  }
+}
