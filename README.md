@@ -19,7 +19,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M6 | 同计划复跑确定性比较 | `FROZEN` |
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
-| M9 | 受控项目命令执行 | `IMPLEMENTING / OWNERSHIP_BACKEND_AUTOMATED` |
+| M9 | 受控项目命令执行 | `IMPLEMENTING / PLAN_0_5_RUN_AUTOMATED` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
@@ -29,8 +29,10 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 Post-M8 Plan v1 已冻结为**规划基线**；M10–M14 仍为 `PLANNED`。M9 0.2 独立合同已在
 `290b618` 冻结；`4d2bc84` 交付 Plan 0.5、ToolBindings 0.1 与只读 CommandPreview 0.1，
 `9f979c8` 交付锁定 `pywin32==312` 的 Windows Job Object 所有权后端与真实 helper 自动化。
-Plan 0.5 `run`、`runtime.command`、真实 Python/Node 项目命令、Bundle/Workbench 与浏览器全链路
-仍未实现或验收，M9 不能标记完成。
+`fa27b51` 已把审批一致的单个可信命令接入 Plan 0.5 `run`，生成严格的 `runtime.command`、
+脱敏文本附件、subject 最终状态差异和清理事实，并完成 Bundle、Catalog、只读 API 与 Workbench
+通用读回自动化。真实 Python/Node 项目命令、真实 Chromium 全链路和人工终验仍未执行，M9
+不能标记完成。
 
 ## 为什么需要验迹
 
