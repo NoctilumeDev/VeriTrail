@@ -1,13 +1,13 @@
 # M10 有界完整项目自举合同
 
-> 状态：`CONTRACT_FROZEN / SERIAL_VALIDATED`
+> 状态：`CONTRACT_FROZEN / STRESS_AUDITED`
 > 合同版本：`M10 Bounded Project Bootstrap Contract 0.2`
 > 影响层级：`L3_SYSTEM`（项目 Profile、长运行进程、就绪状态机、所有权与逆序清理）
 > 前置基线：`m9-v0.10.0` @ `3181d69`
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共退出矩阵、地基审查与严格串行轮已完成，状态为 `SERIAL_VALIDATED`；16 GB 压力轮仍未开始
+> 实施门禁：公共退出矩阵、地基审查、严格串行轮与 16 GB 压力轮已完成，状态为 `STRESS_AUDITED`；发布门禁待执行
 
 ## 1. M10 只回答一个问题
 
@@ -728,7 +728,10 @@ M10 裁决：生产构建由 Codex 内置浏览器从 Catalog 真实加载 `runt
 第一轮严格串行复验随后按预注册顺序逐项通过公共退出、双运行时、前端、依赖与生产 Workbench
 正负链路；Python 3.13 editable binding 丢失造成的收集失败被保留，修复环境后双运行时从 3.10 重新
 完整运行为 216/216。M10 当前推进为 `SERIAL_VALIDATED`，事实见
-[M10 第一轮严格串行完整复验](18-m10-serial-validation.md)；16 GB 压力轮和发布门禁仍未完成。
+[M10 第一轮严格串行完整复验](18-m10-serial-validation.md)。随后最终候选 `88d083a` 从 Wave A 完整
+通过 16 GB 有界压力审计：独立度 1/2/3、READY 后取消交错、1000 总请求、11 个 Bundle/Catalog
+独立验真及最终零残留均成立，最低可用内存为 7323 MiB；状态推进为 `STRESS_AUDITED`，事实见
+[M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)。发布门禁仍未完成。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

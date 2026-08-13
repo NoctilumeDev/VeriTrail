@@ -1,6 +1,6 @@
 # M10 完成、地基审查与双轮冻结计划
 
-> 状态：`FROZEN_EXECUTION_PLAN / SERIAL_VALIDATED`
+> 状态：`FROZEN_EXECUTION_PLAN / STRESS_AUDITED`
 > 计划版本：`M10 Completion and Foundation Audit Plan 0.1`
 > 影响层级：`L3_SYSTEM`
 > 依赖合同：[M10 Bounded Project Bootstrap Contract 0.2](15-m10-bounded-project-bootstrap.md)
@@ -207,4 +207,14 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   type-check、build、依赖审计与 compileall 通过。Codex 内置浏览器真实读回正向 PASS 与业务失败
   FAIL Bundle，刷新/返回、真实键盘、移动视口、Console 与页面资源账册成立；服务、端口、staging 与
   TEMP 最终清零。当前状态为 `SERIAL_VALIDATED`，完整记录见
-  [M10 第一轮严格串行完整复验](18-m10-serial-validation.md)。下一步进入阶段 D，压力审计尚未开始。
+  [M10 第一轮严格串行完整复验](18-m10-serial-validation.md)；
+- 2026-08-13：阶段 D 完成。压力 harness 的前三个候选分别暴露“至多一个 PASS”误写成“必须一个
+  PASS”、竞争者仍占声明端口时 owned cleanup 与全局 port-free 混淆，以及 Windows venv launcher
+  PID 不能证明真实 listener 所有权三项验收器问题；每次均先修正门禁并从 Wave A 全量重跑，不拼接
+  局部绿色。首次完整通过后，发布审查又补强硬停止/超时 worker 子树回收并由双 Python 真实进程树
+  测试证明；最终候选 `88d083a` 再次从头完成同端口竞争、独立度 1/2/3、READY 后取消交错与 1000 总
+  请求；6 个独立 Run PASS、3 个取消 Run 为 `ABORTED/PENDING`、2 个竞争 Run 安全 FAIL，11 个 Bundle
+  与 Catalog 独立验真，最低可用内存 7323 MiB，最终端口、进程和 staging 为零。当前状态为
+  `STRESS_AUDITED`，完整记录见
+  [M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)。下一步只能进入阶段 E 发布门禁；
+  在最终候选回归、代码质量/安全复核、内置浏览器与 GitHub/tag 读回全部成立前不得标记 `FROZEN`。
