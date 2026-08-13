@@ -59,8 +59,11 @@ Plan 0.6 现已接入公共 `run`：它重建 live Preview；预检 `PROCEED` �
 得到 `COMPLETED/PASS`，可复现选择器失败得到 `COMPLETED/FAIL`，二者均通过 Catalog 验真并释放端口与
 owned staging。预检 `STOP_ESCALATION/ABORT` 则在零被测进程下生成只含 preflight 的
 `ABORTED/PENDING` Bundle，Catalog 独立验真证据适用性；Preview 摘要不一致仍在进程创建前拒绝且不生成
-Run。其余
-完整退出矩阵、公共 Workbench 读回、第二类真实项目、C2/C3、Docker 与跨平台仍未完成。
+Run。bootstrap 已开始后的两类公共负向也已实跑：dependency 提前退出形成
+`NODE_EARLY_EXIT / COMPLETED/FAIL`，application readiness 超时形成
+`READINESS_TIMEOUT / ABORTED/FAIL`；两者都只包含 preflight/bootstrap Evidence、明确不生成 browser
+Evidence，并由 Catalog 验真所有权清理事实。其余完整退出矩阵、公共 Workbench 读回、第二类真实
+项目、C2/C3、Docker 与跨平台仍未完成。
 
 ## 为什么需要验迹
 
@@ -360,8 +363,10 @@ helper 已覆盖成功、subject 漂移不回滚和 staging 写入失败仍逆�
 Preview 精确审批、`PROCEED` 预检、真实 Browser、确定性裁决和不可变 Bundle/Catalog 验真；正向为
 `COMPLETED/PASS`，业务步骤负向为 `COMPLETED/FAIL`，审批不一致与预检停止均保证零进程启动。
 其中预检 `STOP_ESCALATION/ABORT` 已形成仅含 preflight 的 `ABORTED/PENDING` Bundle，不伪造
-bootstrap/browser 生命周期；审批不一致仍为零 Bundle 拒绝。其余退出矩阵、Workbench 读回和真实项目
-证明仍未完成，因此 M10 继续是
+bootstrap/browser 生命周期；审批不一致仍为零 Bundle 拒绝。dependency 提前退出与 application
+readiness 超时也已通过公共 `run` 形成严格的无 browser Bundle，分别裁决为
+`COMPLETED/FAIL` 与 `ABORTED/FAIL`，并完成 Catalog 与端口/staging 清理验证。其余退出矩阵、
+Workbench 读回和真实项目证明仍未完成，因此 M10 继续是
 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。
 
@@ -395,7 +400,8 @@ py -3.10 -m venv .venv
   Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 已进入合同层
   实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence、Plan/Profile Bundle
   验真、Run-owned staging、subject 指纹、资源分账和真实 Browser exercise；公共 Plan 0.6 `run` 的
-  `PROCEED` 正/负及预检停止 Bundle 路径也已接入，完整退出矩阵仍待完成。
+  `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle 路径也已
+  接入，完整退出矩阵仍待完成。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。

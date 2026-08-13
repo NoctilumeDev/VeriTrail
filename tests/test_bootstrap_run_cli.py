@@ -42,8 +42,14 @@ def _port_is_free(port: int) -> bool:
 @unittest.skipUnless(os.name == "nt", "M10 public bootstrap Run is Windows-only")
 class BootstrapRunCliTests(unittest.TestCase):
     def _fixture(
-        self, root: Path, *, browser_failure: bool = False
+        self,
+        root: Path,
+        *,
+        browser_failure: bool = False,
+        bootstrap_failure: str | None = None,
     ) -> tuple[Path, Path, Path, Path, dict, list[int]]:
+        if bootstrap_failure not in {None, "dependency-early-exit", "application-timeout"}:
+            raise ValueError("unsupported bootstrap failure fixture")
         subject = root / "subject"
         watched = subject / "watched"
         watched.mkdir(parents=True)
@@ -66,6 +72,12 @@ class BootstrapRunCliTests(unittest.TestCase):
             {"literal": "serve"},
             {"node_port": "dependency"},
         ]
+        if bootstrap_failure == "dependency-early-exit":
+            dependency["arguments"] = [
+                {"literal": "service.py"},
+                {"literal": "early-exit"},
+                {"literal": "17"},
+            ]
         application = nodes["application"]
         application["port"] = application_port
         application["arguments"] = [
@@ -74,9 +86,18 @@ class BootstrapRunCliTests(unittest.TestCase):
             {"node_port": "application"},
             {"node_origin": "dependency"},
         ]
+        if bootstrap_failure == "application-timeout":
+            application["arguments"] = [
+                {"literal": "service.py"},
+                {"literal": "sleep"},
+                {"literal": "30"},
+            ]
         for node in nodes.values():
             node["readiness"]["interval_ms"] = 50
             node["readiness"]["total_timeout_ms"] = 3_000
+        if bootstrap_failure == "application-timeout":
+            application["readiness"]["attempt_timeout_ms"] = 100
+            application["readiness"]["total_timeout_ms"] = 500
         profile = seal_project_profile(raw_profile)
 
         raw_plan = bootstrap_plan(profile)
@@ -181,6 +202,19 @@ class BootstrapRunCliTests(unittest.TestCase):
         payload = json.loads(stdout.getvalue()) if stdout.getvalue() else {}
         return code, payload, stderr.getvalue()
 
+    def _evidence_document(self, output: Path, evidence_type: str) -> dict:
+        manifest = json.loads(
+            (output / "evidence-manifest.json").read_text(encoding="utf-8")
+        )
+        entry = next(
+            item
+            for item in manifest["artifacts"]
+            if item["evidence_type"] == evidence_type
+        )
+        return json.loads(
+            (output / Path(*entry["path"].split("/"))).read_text(encoding="utf-8")
+        )
+
     def test_approved_run_creates_valid_pass_bundle_and_releases_resources(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -256,6 +290,134 @@ class BootstrapRunCliTests(unittest.TestCase):
                 {item["code"] for item in report["contamination"]},
             )
             validated = validate_bundle(output, root)
+            self.assertEqual("FAIL", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_dependency_early_exit_creates_completed_fail_bundle_without_browser(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan, profile, bindings, preview, ports = self._fixture(
+                root, bootstrap_failure="dependency-early-exit"
+            )
+            output = root / "bundle-dependency-early-exit"
+
+            code, payload, stderr = self._run(
+                subject=subject,
+                plan=plan,
+                profile=profile,
+                bindings=bindings,
+                approval=preview["preview_sha256"],
+                output=output,
+                run_id="m10-dependency-early-exit",
+            )
+
+            self.assertEqual("", stderr)
+            self.assertEqual(0, code)
+            self.assertEqual("PROCEED", payload["resource_decision"])
+            self.assertTrue(payload["bootstrap_started"])
+            self.assertFalse(payload["services_ready"])
+            self.assertFalse(payload["browser_started"])
+            self.assertFalse(payload["browser_completed"])
+            self.assertIsNone(payload["browser_capture_complete"])
+            self.assertTrue(payload["cleanup_complete"])
+            self.assertEqual("NODE_EARLY_EXIT", payload["stop_reason"])
+            self.assertEqual("COMPLETED", payload["execution_status"])
+            self.assertEqual("FAIL", payload["verdict"])
+
+            report = json.loads((output / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                {"runtime.preflight", "runtime.bootstrap"},
+                {item["evidence_type"] for item in report["evidence"]},
+            )
+            self.assertEqual(["browser.session"], report["missing_evidence"])
+            self.assertEqual([], report["contamination"])
+            self.assertEqual(
+                "FAIL",
+                next(
+                    item
+                    for item in report["assertions"]
+                    if item["id"] == "bootstrap-services-ready"
+                )["status"],
+            )
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual(["dependency"], bootstrap["start_order"]["actual"])
+            self.assertEqual(["dependency"], bootstrap["teardown_order"]["attempted"])
+            self.assertEqual(["dependency"], bootstrap["teardown_order"]["completed"])
+            self.assertFalse(bootstrap["browser_exercise"]["started"])
+            self.assertFalse(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(bootstrap["cleanup_complete"])
+            self.assertEqual(4, len(list((output / "attachments").rglob("*.*"))))
+            validated = validate_bundle(output, root)
+            self.assertEqual("COMPLETED", validated.execution_status)
+            self.assertEqual("FAIL", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_application_readiness_timeout_creates_aborted_fail_bundle_without_browser(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan, profile, bindings, preview, ports = self._fixture(
+                root, bootstrap_failure="application-timeout"
+            )
+            output = root / "bundle-application-timeout"
+
+            code, payload, stderr = self._run(
+                subject=subject,
+                plan=plan,
+                profile=profile,
+                bindings=bindings,
+                approval=preview["preview_sha256"],
+                output=output,
+                run_id="m10-application-timeout",
+            )
+
+            self.assertEqual("", stderr)
+            self.assertEqual(0, code)
+            self.assertEqual("PROCEED", payload["resource_decision"])
+            self.assertTrue(payload["bootstrap_started"])
+            self.assertFalse(payload["services_ready"])
+            self.assertFalse(payload["browser_started"])
+            self.assertFalse(payload["browser_completed"])
+            self.assertIsNone(payload["browser_capture_complete"])
+            self.assertTrue(payload["cleanup_complete"])
+            self.assertEqual("READINESS_TIMEOUT", payload["stop_reason"])
+            self.assertEqual("ABORTED", payload["execution_status"])
+            self.assertEqual("FAIL", payload["verdict"])
+
+            report = json.loads((output / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                {"runtime.preflight", "runtime.bootstrap"},
+                {item["evidence_type"] for item in report["evidence"]},
+            )
+            self.assertEqual(["browser.session"], report["missing_evidence"])
+            self.assertEqual([], report["contamination"])
+            self.assertEqual(
+                "FAIL",
+                next(
+                    item
+                    for item in report["assertions"]
+                    if item["id"] == "bootstrap-services-ready"
+                )["status"],
+            )
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual(
+                ["dependency", "application"], bootstrap["start_order"]["actual"]
+            )
+            self.assertEqual(
+                ["application", "dependency"],
+                bootstrap["teardown_order"]["attempted"],
+            )
+            self.assertEqual(
+                ["application", "dependency"],
+                bootstrap["teardown_order"]["completed"],
+            )
+            self.assertFalse(bootstrap["browser_exercise"]["started"])
+            self.assertFalse(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(bootstrap["cleanup_complete"])
+            self.assertEqual(4, len(list((output / "attachments").rglob("*.*"))))
+            validated = validate_bundle(output, root)
+            self.assertEqual("ABORTED", validated.execution_status)
             self.assertEqual("FAIL", validated.verdict)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))

@@ -37,7 +37,10 @@ subject 漂移不回滚、staging 失败仍逆序清理已有 Windows helper 自
 Preview 精确审批和预检 `PROCEED` 后完成真实 Browser 正/负、确定性裁决、不可变 Bundle 与 Catalog
 验真：正向为 `COMPLETED/PASS`，选择器业务失败为 `COMPLETED/FAIL`；预检
 `STOP_ESCALATION/ABORT` 在零被测进程下生成仅含 preflight 的 `ABORTED/PENDING` Bundle，摘要不一致
-仍在进程创建前拒绝且不生成 Run。完整退出矩阵、Workbench 读回和第二类项目仍未完成。组件与
+仍在进程创建前拒绝且不生成 Run。dependency 提前退出和 application readiness 超时也已通过公共
+`run` 形成严格的无 browser Bundle，分别得到 `NODE_EARLY_EXIT / COMPLETED/FAIL` 与
+`READINESS_TIMEOUT / ABORTED/FAIL`；Catalog 接纳两者，并复核 browser 不适用、逆序清理与端口/staging
+释放。完整退出矩阵、Workbench 读回和第二类项目仍未完成。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准。

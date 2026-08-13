@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共 Run 的 `PROCEED` 正/负与预检停止 Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回与第二类项目仍未实现
+> 实施门禁：公共 Run 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回与第二类项目仍未实现
 
 ## 1. M10 只回答一个问题
 
@@ -614,6 +614,15 @@ sealed authority；`runtime.bootstrap`、`browser.session` 和附件均为零，
 远端冻结门禁仍未完成，不得
 据此标记 M10 `FROZEN`。
 
+bootstrap 启动后的首个公共退出矩阵切片现已覆盖 dependency 提前退出与 application readiness 超时。
+前者只创建 dependency，仍按所有权尝试并完成该节点 teardown，形成
+`NODE_EARLY_EXIT / COMPLETED/FAIL`；后者启动两个节点后按 application、dependency 逆序清理，形成
+`READINESS_TIMEOUT / ABORTED/FAIL`。这里的 `FAIL` 来自 sealed Plan 对 `services_ready=true` 的独立
+HARD 断言，不是把所有 `ABORTED` 机械降为 `PENDING`。两类公共 Run 均只封存唯一 preflight、唯一
+bootstrap 和四个有界流附件，browser Evidence 为零；Catalog 接纳最终 Bundle，端口与 owned staging
+残留为零。用户中止、外部端口竞争、listener owner mismatch、cleanup/Evidence 注入失败等剩余公共
+出口仍未完成。
+
 本切片双运行时回归时，现有 `.venv313` 首次直接收集因工作副本未安装为可导入包而产生 34 个
 `ModuleNotFoundError`；该轮没有进入产品测试或创建被测进程。保持 venv 与系统环境不变、仅为该命令
 临时设置 `PYTHONPATH=src` 后，同一 Python 3.13.13 与 Python 3.10.6 均通过 202 项完整测试。这个入口
@@ -624,6 +633,12 @@ sealed authority；`runtime.bootstrap`、`browser.session` 和附件均为零，
 串行重复均通过，随后完整 202 项复跑也通过，因此当前只记录为尚未稳定复现的浏览器/时序偶发，
 不据此修改裁决合同，也不把后续绿色结果写成它从未发生。M10 仍须由剩余退出矩阵和最终验收决定是否
 冻结。
+
+本次 dependency 提前退出/application readiness 超时公共切片在 2026-08-13 完成 Python 3.10.6 与
+Python 3.13.13 严格串行回归，两套运行时均为 204/204 通过；本轮没有复现上述浏览器时序偶发。
+回归后约定 M10 端口、owned staging 与 helper 进程残留均为零。该结果只证明当前两个公共退出路径及
+既有回归保持成立，不替代用户中止、端口竞争、owner mismatch、故障注入、Workbench、第二类项目或
+最终内置浏览器验收。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
