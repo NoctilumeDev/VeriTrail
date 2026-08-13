@@ -27,8 +27,8 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
-验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意项目命令、真实
-并行、完整自举和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
+验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意或不可信项目命令、
+真实并行、M10 完整退出矩阵和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
 
 Post-M8 Plan v1 已冻结为**规划基线**；M9 已冻结，M10 Contract 0.2 已冻结，M11–M14
@@ -54,7 +54,11 @@ Run-owned work/staging，把脱敏的 teardown 前生命周期与流快照规范
 复核，同时比较 subject 前后指纹并分账 Core/dependency/application/browser 资源峰值。内部链路现已在
 两节点 READY 后调用冻结的 M2 Browser Adapter，校验并引用真实 `browser.session`；M10-only CDP observer
 以内存态进程 handles 完成 Chromium RSS 分账与关闭确认，真实双视口正向和选择器失败负向均已通过。
-公共 `run` 和完整 Bundle 纵向验收仍未接入；C2/C3、Docker、跨平台和真实项目证明继续留给后继合同。
+Plan 0.6 现已接入公共 `run` 的批准且预检 `PROCEED` 路径：它重建 live Preview、执行完整 observed-run，
+再原子生成同时含 Plan/Profile、preflight/bootstrap/browser Evidence 及附件的不可变 Bundle；真实正向
+得到 `COMPLETED/PASS`，可复现选择器失败得到 `COMPLETED/FAIL`，二者均通过 Catalog 验真并释放端口与
+owned staging。Preview 摘要不一致和预检停止均在进程创建前拒绝。预检停止后的 Plan 0.6 Bundle 语义、
+完整退出矩阵、公共 Workbench 读回、第二类真实项目、C2/C3、Docker 与跨平台仍未完成。
 
 ## 为什么需要验迹
 
@@ -350,8 +354,11 @@ Pairing/Batch 对 0.6 明确拒绝。当前还实现了带所有权 marker 的 R
 事实与流快照封存/读回、teardown 后安全释放，以及 subject 前后指纹和四方资源分账；真实 Windows
 helper 已覆盖成功、subject 漂移不回滚和 staging 写入失败仍逆序清理。冻结的 M2 Browser Adapter
 现已在两节点 READY 后生成并校验真实 `browser.session`，由 CDP 进程身份完成 Chromium RSS 与关闭
-观测；双视口正向和缺失选择器负向都保持先封存、再逆序清理。公共 `run` 与最终 Bundle 纵向链路
-仍未接入，因此 M10 继续是 `IMPLEMENTING`。详见
+观测；双视口正向和缺失选择器负向都保持先封存、再逆序清理。公共 Plan 0.6 `run` 现已接通
+Preview 精确审批、`PROCEED` 预检、真实 Browser、确定性裁决和不可变 Bundle/Catalog 验真；正向为
+`COMPLETED/PASS`，业务步骤负向为 `COMPLETED/FAIL`，审批不一致与预检停止均保证零进程启动。
+预检停止 Bundle 语义、其余退出矩阵、Workbench 读回和真实项目证明仍未完成，因此 M10 继续是
+`IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。
 
 ### 本地运行
@@ -383,8 +390,8 @@ py -3.10 -m venv .venv
 - **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检、有界浏览器采集、M4 离线
   Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 已进入合同层
   实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence、Plan/Profile Bundle
-  验真、Run-owned staging、subject 指纹、资源分账和内部真实 Browser exercise；公共 Run 与完整
-  Bundle 纵向链路尚未接入。
+  验真、Run-owned staging、subject 指纹、资源分账和真实 Browser exercise；公共 Plan 0.6 `run` 的
+  `PROCEED` 正/负 Bundle 路径也已接入，预检停止 Bundle 语义和完整退出矩阵仍待完成。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。

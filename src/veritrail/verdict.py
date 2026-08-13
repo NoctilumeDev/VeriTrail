@@ -220,6 +220,11 @@ def _detect_browser_contamination(
                 "message": "A browser-enabled Run must contain exactly one browser.session artifact.",
             }
         )
+    bootstrap_sessions = [
+        artifact
+        for artifact in evidence
+        if artifact.document["evidence_type"] == "runtime.bootstrap"
+    ]
     for artifact in sessions:
         facts = artifact.document["facts"]
         if facts["policy_sha256"] != sha256_json(plan["browser"]):
@@ -230,7 +235,23 @@ def _detect_browser_contamination(
                     "message": "The browser session policy differs from the sealed browser policy.",
                 }
             )
-        if facts["capture_complete"] is False and execution_status == "COMPLETED":
+        allowed_bootstrap_business_failure = False
+        if plan.get("schema_version") == "0.6" and len(bootstrap_sessions) == 1:
+            bootstrap = bootstrap_sessions[0].document["facts"]
+            browser_exercise = bootstrap["browser_exercise"]
+            allowed_bootstrap_business_failure = (
+                bootstrap["stop"]["reason"] == "BROWSER_HARD_FAILURE"
+                and browser_exercise["completed"] is True
+                and browser_exercise["evidence_sha256"] == artifact.sha256
+                and facts["all_steps_passed"] is False
+                and facts["cleanup_complete"] is True
+                and facts["collection_errors"] == []
+            )
+        if (
+            facts["capture_complete"] is False
+            and execution_status == "COMPLETED"
+            and not allowed_bootstrap_business_failure
+        ):
             contamination.append(
                 {
                     "code": "BROWSER_STATUS_CONFLICT",

@@ -15,6 +15,7 @@ from veritrail.batching import (
 )
 from veritrail.browser import collect_browser_evidence
 from veritrail.bootstrap_preview import build_bootstrap_preview
+from veritrail.bootstrap_public_run import run_bootstrap_bundle
 from veritrail.catalog import CatalogError, build_catalog
 from veritrail.comparison import ComparisonError, create_comparison_bundle
 from veritrail.command_execution import collect_command_evidence
@@ -136,10 +137,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     run = subparsers.add_parser(
         "run",
-        help="run Plan 0.4 or an approved Plan 0.5 trusted ONESHOT before the static target",
+        help="run Plan 0.4, approved Plan 0.5, or approved Plan 0.6 bootstrap",
     )
     run.add_argument(
-        "--plan", type=Path, required=True, help="unsealed or sealed Plan 0.4/0.5 JSON"
+        "--plan", type=Path, required=True, help="Plan 0.4/0.5 JSON or sealed Plan 0.6 JSON"
     )
     run.add_argument(
         "--subject-root",
@@ -157,6 +158,15 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--approve-command",
         help="required Plan 0.5 CommandPreview SHA-256 approval",
+    )
+    run.add_argument(
+        "--profile",
+        type=Path,
+        help="required sealed ProjectProfile 0.1 for Plan 0.6",
+    )
+    run.add_argument(
+        "--approve-bootstrap-preview-sha256",
+        help="required Plan 0.6 BootstrapPreview SHA-256 approval",
     )
 
     command_preview = subparsers.add_parser(
@@ -460,13 +470,42 @@ def main(argv: list[str] | None = None) -> int:
             _success(preview)
             return 0
         if args.command == "run":
-            plan = load_and_seal_plan(args.plan)
-            if plan["schema_version"] not in {"0.4", "0.5"}:
+            raw_plan = load_plan_json_object(args.plan)
+            is_bootstrap_run = raw_plan.get("schema_version") == "0.6"
+            profile = None
+            if is_bootstrap_run:
+                if args.profile is None:
+                    raise ValidationError(["Plan 0.6 run requires --profile"])
+                profile = load_sealed_project_profile(args.profile)
+                verify_sealed_plan(raw_plan, profile)
+                plan = raw_plan
+            else:
+                plan = load_and_seal_plan(args.plan)
+            if plan["schema_version"] not in {"0.4", "0.5", "0.6"}:
                 raise ValidationError(
-                    ["run requires ExperimentPlan schema_version '0.4' or '0.5'"]
+                    [
+                        "run requires ExperimentPlan schema_version '0.4', '0.5', or '0.6'"
+                    ]
                 )
             is_command_run = plan["schema_version"] == "0.5"
-            if is_command_run:
+            if is_bootstrap_run:
+                if args.tool_bindings is None:
+                    raise ValidationError(["Plan 0.6 run requires --tool-bindings"])
+                if args.approve_command is not None:
+                    raise ValidationError(["Plan 0.6 run does not accept --approve-command"])
+                if not isinstance(
+                    args.approve_bootstrap_preview_sha256, str
+                ) or not re.fullmatch(
+                    r"[0-9a-f]{64}",
+                    args.approve_bootstrap_preview_sha256,
+                ):
+                    raise ValidationError(
+                        [
+                            "Plan 0.6 run requires a lowercase SHA-256 "
+                            "--approve-bootstrap-preview-sha256"
+                        ]
+                    )
+            elif is_command_run:
                 if args.tool_bindings is None:
                     raise ValidationError(["Plan 0.5 run requires --tool-bindings"])
                 if not isinstance(args.approve_command, str) or not re.fullmatch(
@@ -475,14 +514,94 @@ def main(argv: list[str] | None = None) -> int:
                     raise ValidationError(
                         ["Plan 0.5 run requires a lowercase SHA-256 --approve-command"]
                     )
-            elif args.tool_bindings is not None or args.approve_command is not None:
+                if (
+                    args.profile is not None
+                    or args.approve_bootstrap_preview_sha256 is not None
+                ):
+                    raise ValidationError(
+                        ["Plan 0.5 run does not accept bootstrap approval arguments"]
+                    )
+            elif any(
+                value is not None
+                for value in (
+                    args.tool_bindings,
+                    args.approve_command,
+                    args.profile,
+                    args.approve_bootstrap_preview_sha256,
+                )
+            ):
                 raise ValidationError(
-                    ["Plan 0.4 run does not accept command approval arguments"]
+                    ["Plan 0.4 run does not accept command or bootstrap approval arguments"]
                 )
             if args.output.exists():
                 raise SafetyError(
                     f"refusing to overwrite existing output directory: {args.output.name}"
                 )
+            if is_bootstrap_run:
+                try:
+                    bootstrap_result = run_bootstrap_bundle(
+                        plan,
+                        profile,
+                        subject_root=args.subject_root,
+                        tool_bindings_path=args.tool_bindings,
+                        approved_preview_sha256=(
+                            args.approve_bootstrap_preview_sha256
+                        ),
+                        output=args.output,
+                        run_id=args.run_id,
+                    )
+                except VeriTrailError:
+                    raise
+                except Exception:
+                    print(
+                        json.dumps(
+                            {
+                                "error": {
+                                    "code": "BOOTSTRAP_RUN_INTERNAL_ERROR",
+                                    "message": "Project bootstrap encountered an unexpected internal error.",
+                                }
+                            },
+                            ensure_ascii=False,
+                            sort_keys=True,
+                        ),
+                        file=sys.stderr,
+                    )
+                    return 1
+                observed = bootstrap_result.observed
+                lifecycle = observed.lifecycle
+                browser_facts = (
+                    observed.browser.document["facts"]
+                    if observed.browser is not None
+                    else None
+                )
+                report = bootstrap_result.report
+                _success(
+                    {
+                        "command": "run",
+                        "output": args.output.name,
+                        "run_id": report["run_id"],
+                        "resource_decision": bootstrap_result.preflight.document[
+                            "facts"
+                        ]["decision"],
+                        "profile_sha256": profile["seal"]["digest"],
+                        "bootstrap_preview_sha256": (
+                            bootstrap_result.preview_sha256
+                        ),
+                        "services_ready": lifecycle.services_ready,
+                        "browser_started": lifecycle.ready_callback_started,
+                        "browser_completed": lifecycle.ready_callback_completed,
+                        "browser_capture_complete": (
+                            browser_facts["capture_complete"]
+                            if browser_facts is not None
+                            else None
+                        ),
+                        "stop_reason": lifecycle.stop_reason,
+                        "cleanup_complete": lifecycle.cleanup_complete,
+                        "execution_status": report["execution_status"],
+                        "verdict": report["verdict"],
+                    }
+                )
+                return 0
             preflight_document = collect_preflight_evidence(plan, args.output.parent)
             preflight_artifact = import_evidence_document(
                 preflight_document, "generated-preflight.json"

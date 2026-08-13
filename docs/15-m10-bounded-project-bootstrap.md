@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：Profile/Plan/Preview、listener、长运行 Job/readiness/逆序清理、Evidence/Bundle 消费和内部真实 Browser exercise 已实现；公共 Run 与完整纵向 Bundle 验收仍未实现
+> 实施门禁：公共 Run 的 `PROCEED` 正/负 Bundle 与 Catalog 验真已实现；预检停止 Bundle、完整退出矩阵、Workbench 读回与第二类项目仍未实现
 
 ## 1. M10 只回答一个问题
 
@@ -569,8 +569,20 @@ error 则归为 `COLLECTOR_ERROR`，不得伪装成业务失败。真实 Windows
 负向，两条链路都在 `EXERCISED -> EVIDENCE_FINALIZED -> application teardown -> dependency teardown`
 顺序下完成且 owned staging 残留为零。
 
-CLI `run`、最终 Bundle 纵向链路、公共 Catalog/Workbench 读回和 M10 完整退出矩阵仍未完成，不得据此
-标记 M10 `FROZEN`。
+公共 Plan 0.6 `run` 的首个纵向切片现已实现：加载并复核 sealed Plan/Profile，在启动前重建 live
+BootstrapPreview 并匹配精确审批摘要，采集 preflight；仅当决策为 `PROCEED` 时才调用 observed-run，
+随后把唯一 `runtime.preflight`、`runtime.bootstrap`、被 bootstrap 精确引用的 `browser.session`、
+固定附件与两份封存权威原子写入新 Bundle。真实双视口正向形成 `COMPLETED/PASS`，缺失选择器形成
+`BROWSER_HARD_FAILURE / COMPLETED/FAIL`；后者只有在唯一 bootstrap 明确引用该 browser Evidence 时，
+才不会被旧通用规则误判为 `BROWSER_STATUS_CONFLICT`。两类 Bundle 均通过 Catalog validator，端口和
+owned staging 均释放。Preview 摘要不一致、预检 `STOP_ESCALATION` 均在创建被测进程前拒绝且不生成
+Bundle。
+
+当前刻意不为预检停止伪造 `runtime.bootstrap`：Plan 0.6 又要求该 Evidence 唯一存在，若写入
+`services_ready=false` 会让硬断言产生假的业务 `FAIL`；若省略则与当前 Bundle cardinality 冲突。
+这项适用性/基数语义必须在下一切片先上浮合同并加负向矩阵，再决定 `ABORTED/PENDING` 的公共表示。
+完整退出矩阵、公共 Workbench 读回、第二类真实项目和 M10 最终浏览器/远端冻结门禁仍未完成，不得
+据此标记 M10 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

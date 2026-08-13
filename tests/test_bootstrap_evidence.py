@@ -6,6 +6,7 @@ import json
 import shutil
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from veritrail.batching import BatchError, _load_source as load_batch_source
@@ -18,11 +19,16 @@ from veritrail.bootstrap_lifecycle import (
 from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.catalog import _CandidateRejected, validate_bundle
 from veritrail.comparison import create_comparison_bundle
-from veritrail.evidence import validate_evidence, verify_imported_evidence
+from veritrail.evidence import (
+    import_evidence_document,
+    validate_evidence,
+    verify_imported_evidence,
+)
 from veritrail.errors import ValidationError
 from veritrail.pairing import PairingError, _load_source as load_pairing_source
 from veritrail.plan import seal_plan
 from veritrail.reporting import create_bundle
+from veritrail.verdict import evaluate
 from veritrail.windows_job import CapturedStream
 from veritrail.windows_readiness import OwnedReadinessObservation, ReadinessAttempt
 from veritrail.windows_service import (
@@ -31,6 +37,7 @@ from veritrail.windows_service import (
 )
 
 from tests.support import bootstrap_plan, sealed_bootstrap_profile, sealed_example_plan
+from tests.test_browser_evidence import _browser_artifact
 
 
 def _authorities() -> tuple[dict, dict, dict]:
@@ -250,6 +257,54 @@ class BootstrapEvidenceTests(unittest.TestCase):
         )
         with self.assertRaises(ValidationError):
             validate_evidence(mutated, "mutated-bootstrap.json")
+
+    def test_browser_collector_error_cannot_use_business_failure_exception(self) -> None:
+        plan, profile, preview = _authorities()
+        healthy = _browser_artifact(plan)
+        document = copy.deepcopy(healthy.document)
+        document["facts"]["capture_complete"] = False
+        document["facts"]["all_steps_passed"] = False
+        document["facts"]["collection_errors"] = [
+            {"collector": "viewport:desktop", "error_type": "ObserverFailure"}
+        ]
+        browser = import_evidence_document(
+            document,
+            "browser-collector-error.json",
+            attachments=healthy.attachments,
+        )
+        resource, subject = _observations()
+        resource["browser_peak_rss_mb"] = 16.0
+        lifecycle = replace(
+            _lifecycle(early_exit=False),
+            trigger_reason="BROWSER_HARD_FAILURE",
+            stop_reason="BROWSER_HARD_FAILURE",
+        )
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            lifecycle,
+            browser_exercise={
+                "started": True,
+                "completed": True,
+                "evidence_sha256": browser.sha256,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+
+        result = evaluate(
+            plan,
+            [browser, bootstrap.bootstrap],
+            bootstrap.execution_status,
+        )
+        self.assertIn(
+            "BROWSER_STATUS_CONFLICT",
+            {item["code"] for item in result["contamination"]},
+        )
 
     def test_bundle_catalog_and_comparison_enforce_plan_profile_authorities(self) -> None:
         plan, profile, preview = _authorities()

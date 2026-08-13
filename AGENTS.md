@@ -54,7 +54,10 @@
   前后指纹和 Core/dependency/application/browser 资源分账切片也已接入。冻结的 M2 Browser Adapter
   现已在两节点 READY 后接入内部 observed-run：严格复核 `browser.session` 与 policy SHA，使用 M10-only
   CDP 进程 handles 分账 Chromium RSS 并确认关闭，真实双视口正向与选择器失败负向均已自动化通过。
-  公共 `run` 与完整 Bundle 纵向链路仍不存在。首片只允许 Windows 11、
+  公共 Plan 0.6 `run` 已接入 Preview 精确审批与预检 `PROCEED` 路径，真实正向形成
+  `COMPLETED/PASS` Bundle、选择器业务失败形成无污染的 `COMPLETED/FAIL` Bundle，并通过 Catalog
+  验真与端口/staging 清理；审批不一致和预检停止均在零进程创建下拒绝。预检停止后的 Bundle
+  语义、完整退出矩阵、公共 Workbench 读回与真实项目证明仍未完成。首片只允许 Windows 11、
   `C1 PROCESS_COLD`、一个 Run-owned 本地
   dependency、一个 application、`HTTP_GET_LOOPBACK_OWNED_PID` readiness、现有 Browser Adapter
   exercise 与逆序 Job 清理；C0 接管、C2/C3、Docker、跨平台、包管理器、真实项目和优雅停机均
