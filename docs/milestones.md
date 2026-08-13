@@ -129,7 +129,9 @@ observed runner、不接管或终止外部 listener，并由 Catalog 验真仅�
 开发回归均为 207/207。dependency/application 的公共 owner-mismatch 切片也均拒绝 READY、不终止
 外部 listener；外部进程按计划自然退出后 owned Job 完成逆序清理，形成
 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog 可验真；双 Python 开发回归均为 208/208。
-其余退出矩阵、
+相同 sealed Plan/Profile 的连续两个公共正向 Run 也均为 `COMPLETED/PASS`，权威/Preview 一致、首份
+Bundle 未被覆盖，轮间无残留且 M6 Comparison 为 `MATCH`、0 differences；双 Python 开发回归均为
+209/209。其余退出矩阵、
 Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
 自举冻结事实。
 

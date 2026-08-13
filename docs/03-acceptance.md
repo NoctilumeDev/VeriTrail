@@ -47,7 +47,8 @@ TOCTOU 场景也得到预检期 `ABORTED/PENDING`：runner 未启动，外部监
 preflight 且 Catalog 验真通过。dependency/application 的公共 listener owner mismatch 也均拒绝 READY，
 外部进程按自身计划自然退出且未被 VeriTrail 终止，owned Job 随后逆序清理并形成
 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`；Catalog 接纳且无污染。完整退出矩阵、Workbench 读回和
-最终冻结门禁仍未完成；第二类真实项目证明属于
+最终冻结门禁仍未完成。相同 sealed Plan/Profile 已连续完成两次 `COMPLETED/PASS` 公共 Run：权威与
+Preview 一致，第一份 Bundle 未被覆盖，M6 Comparison 为 `MATCH`、0 差异且轮间无残留。第二类真实项目证明属于
 M11。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以

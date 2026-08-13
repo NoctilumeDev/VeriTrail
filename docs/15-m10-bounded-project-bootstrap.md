@@ -672,6 +672,13 @@ application→dependency 回收。外部进程不由 VeriTrail 终止，而是�
 Catalog 可验真；`FAIL` 来自 sealed `services_ready=true` HARD 断言，不是 cleanup 误报。加入该切片后，
 Python 3.10.6 与 Python 3.13.13 开发回归均为 208/208。
 
+C1 重复公共切片使用完全相同的 sealed Plan/Profile 与 live Preview 审批连续运行两次，两个独立 Run
+均为 `COMPLETED/PASS` 并分别通过 Catalog validator；Plan 摘要一致、两份 `sealed-profile.json` 逐字节
+一致、bootstrap 的 Preview SHA 一致，第二轮没有修改第一轮 `bundle-manifest.json`。每轮结束都先
+确认两个端口与 owned staging 为零再继续，最终 M6 Comparison 为 `MATCH`、0 differences。该结果只
+证明当前轻量 Subject 在串行复跑中未观察到残留污染，不扩张为重叠运行或第二类项目通用性声明。
+加入该切片后，Python 3.10.6 与 Python 3.13.13 开发回归均为 209/209。
+
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
 和远端标签读回完成后，里程碑本身才能标记 `FROZEN`。

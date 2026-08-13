@@ -69,7 +69,9 @@ Evidence，并由 Catalog 验真所有权清理事实。application READY 后的
 Catalog 与 staging 隔离成立。公共 listener owner mismatch 也已覆盖两个节点：外部 listener 不属于
 当前 Job 时绝不判 READY，外部进程按自身计划自然退出，VeriTrail 只逆序回收 owned Job，形成
 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog/清理成立。其余完整退出矩阵、公共 Workbench
-读回和最终冻结门禁仍未完成；第二类真实项目、
+读回和最终冻结门禁仍未完成。相同 sealed Plan/Profile 的连续两次公共正向 Run 也已实跑为
+`COMPLETED/PASS`，两份权威一致、首份 Bundle 未被覆盖，M6 Comparison 为 `MATCH` 且轮间无残留；
+第二类真实项目、
 C2/C3、Docker 与跨平台不属于 M10 已证明范围。
 
 ## 为什么需要验迹
@@ -379,7 +381,9 @@ Ctrl+C/Ctrl+Break 转为 cooperative cancel、等待证据封存和逆序清理�
 安全停止为 `ABORTED/PENDING`，未启动受控 runner、未误杀外部监听者且 Catalog 可验真。其余退出矩阵、
 listener owner mismatch 已在 dependency/application 两个节点公共实跑，均拒绝 READY、不启动 Browser、
 不终止外部进程，并在外部进程自然退出后完成 owned Job 逆序清理；封存 HARD readiness 断言使结果为
-`ABORTED/FAIL`。其余退出矩阵、Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
+`ABORTED/FAIL`。相同 sealed Plan/Profile 连续两次公共正向 Run 均为 `COMPLETED/PASS`，Comparison
+为 `MATCH`，首份 Bundle 未被第二轮修改且轮间端口/staging 为零。其余退出矩阵、Workbench 读回和
+最终冻结门禁仍未完成，因此 M10 继续是
 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终

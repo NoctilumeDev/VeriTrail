@@ -171,4 +171,8 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   readiness 识别为不属于当前 Job，拒绝 READY 且不误杀；外部进程按计划自然退出后，owned Job 完成
   适用逆序清理，公共 Bundle 为 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`、零 Browser、四流附件，
   Catalog 与无残留检查通过；双 Python 开发回归均为 208/208；
+- 2026-08-13：阶段 A 第 1 项的重复 Run 门禁完成定向开发切片。完全相同的 sealed Plan/Profile 连续
+  两次公共正向运行均为 `COMPLETED/PASS`，权威与 Preview 一致，首份 Bundle 未被覆盖；两轮均独立
+  Catalog 验真、轮间无残留，M6 Comparison 为 `MATCH`、0 differences；双 Python 开发回归均为
+  209/209；
 - 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。

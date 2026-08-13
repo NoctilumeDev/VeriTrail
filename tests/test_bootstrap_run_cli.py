@@ -19,6 +19,7 @@ from veritrail.bootstrap_public_run import run_bootstrap_bundle
 from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.catalog import validate_bundle
 from veritrail.cli import _bootstrap_interrupt_cancellation, main
+from veritrail.comparison import create_comparison_bundle
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 from veritrail.windows_readiness import probe_owned_http_readiness
@@ -279,6 +280,75 @@ class BootstrapRunCliTests(unittest.TestCase):
             validated = validate_bundle(output, root)
             self.assertEqual("m10-public-pass", validated.run_id)
             self.assertEqual("PASS", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_same_sealed_authorities_repeat_without_residual_contamination(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan, profile, bindings, preview, ports = self._fixture(root)
+            outputs = (root / "bundle-repeat-one", root / "bundle-repeat-two")
+            first_manifest: bytes | None = None
+
+            for ordinal, output in enumerate(outputs, start=1):
+                code, payload, stderr = self._run(
+                    subject=subject,
+                    plan=plan,
+                    profile=profile,
+                    bindings=bindings,
+                    approval=preview["preview_sha256"],
+                    output=output,
+                    run_id=f"m10-public-repeat-{ordinal}",
+                )
+                self.assertEqual("", stderr)
+                self.assertEqual(0, code)
+                self.assertEqual("PROCEED", payload["resource_decision"])
+                self.assertEqual("COMPLETED", payload["execution_status"])
+                self.assertEqual("PASS", payload["verdict"])
+                self.assertTrue(payload["cleanup_complete"])
+                validated = validate_bundle(output, root)
+                self.assertEqual(f"m10-public-repeat-{ordinal}", validated.run_id)
+                self.assertEqual("PASS", validated.verdict)
+                self.assertEqual([], list(root.glob(".veritrail-*")))
+                self.assertTrue(all(_port_is_free(port) for port in ports))
+                if ordinal == 1:
+                    first_manifest = (output / "bundle-manifest.json").read_bytes()
+                else:
+                    self.assertEqual(
+                        first_manifest,
+                        (outputs[0] / "bundle-manifest.json").read_bytes(),
+                    )
+
+            first_report = json.loads(
+                (outputs[0] / "report.json").read_text(encoding="utf-8")
+            )
+            second_report = json.loads(
+                (outputs[1] / "report.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(first_report["plan"], second_report["plan"])
+            self.assertEqual(
+                (outputs[0] / "sealed-profile.json").read_bytes(),
+                (outputs[1] / "sealed-profile.json").read_bytes(),
+            )
+            first_bootstrap = self._evidence_document(
+                outputs[0], "runtime.bootstrap"
+            )["facts"]
+            second_bootstrap = self._evidence_document(
+                outputs[1], "runtime.bootstrap"
+            )["facts"]
+            self.assertEqual(
+                first_bootstrap["preview_sha256"],
+                second_bootstrap["preview_sha256"],
+            )
+
+            comparison = create_comparison_bundle(
+                baseline=outputs[0],
+                repeat=outputs[1],
+                output=root / "repeat-comparison",
+            )
+            self.assertTrue(comparison.comparable)
+            self.assertEqual("MATCH", comparison.comparison_status)
+            self.assertEqual(0, comparison.difference_count)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
