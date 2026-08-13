@@ -1,6 +1,6 @@
 # M10 发布安全整改与冻结复验
 
-> 状态：`VERIFIED / FREEZE_PENDING`
+> 状态：`FROZEN`
 > 日期：2026-08-13
 > 依据：[M10 完成、地基审查与双轮冻结计划 0.1](16-m10-completion-and-foundation-audit.md)
 > 基线扫描：Codex Security Standard Scan `de6f7688-0571-49c8-ab90-a93f553a24f4`
@@ -71,7 +71,7 @@ handle；两项均有独立回归。Playwright driver 也在 Chromium 启动前�
 - [x] Codex 内置浏览器完整链路、Console、Network、桌面/移动与键盘复验通过；
 - [x] 端口、Job、helper、Chromium、staging 和服务残留为零；
 - [x] 修复后按 11 条原攻击路径逐项重审，无未解释发布阻断项；
-- [ ] 文档、提交、`origin/main` 和 `m10-v0.11.0` 标签读回一致。
+- [x] 冻结候选提交、当时的 `origin/main` 和 `m10-v0.11.0` 标签读回一致；状态文档另行归档。
 
 ## 5. 最终候选验证事实
 
@@ -104,5 +104,7 @@ handle；两项均有独立回归。Playwright driver 也在 Chromium 启动前�
 - 最终代码复审补上同一 pinned handle 摘要与 Browser abort 句柄释放后，13 项、双运行时和压力轮
   再次从头运行，未拼接旧绿色结果。
 
-当前只剩远端可寻址性门禁。只有 `origin/main`、冻结候选提交和 `m10-v0.11.0` 标签均成功读回，
-本文与 README 才能由 `FREEZE_PENDING / STRESS_AUDITED` 更新为 `FROZEN`；M11 仍不得开始。
+冻结候选提交 `008444319a4af54de3291fe5c0ab602001c30754`、当时的 `origin/main` 与注释标签
+`m10-v0.11.0^{}` 已从 GitHub 精确读回一致，标签对象为
+`70c26b827b13857b0663fd158f5aa30862d87bb1`。M10 因此在 Contract 0.2 边界内标记 `FROZEN`；
+后续状态归档提交不会移动冻结标签，M11–M14 仍保持 `PLANNED`。

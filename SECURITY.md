@@ -2,9 +2,9 @@
 
 ## Current status
 
-VeriTrail is a pre-release v0 implementation. M0 through M9 are frozen; M10 has passed its local
-release-security, regression, bounded-stress and browser gates, but remains freeze-pending until its remote
-commit and tag are read back. The repository includes the deterministic
+VeriTrail is a pre-release v0 implementation. M0 through M10 are frozen; the M10 implementation commit
+`008444319a4af54de3291fe5c0ab602001c30754` and annotated `m10-v0.11.0` tag have been read back from
+GitHub. The repository includes the deterministic
 Python evidence core, bounded resource/browser adapters, a read-only Vue workbench, rebuildable SQLite
 Catalog and loopback API, deterministic Comparison/Pairing/Batch analysis, a trusted Windows ONESHOT
 runner, and the Windows 11/C1 two-node bootstrap candidate. It does not claim support for untrusted code,

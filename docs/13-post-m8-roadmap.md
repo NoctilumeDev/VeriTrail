@@ -3,9 +3,9 @@
 > 状态：`FROZEN`（规划基线；实时执行进度见第 0 节）
 > 影响层级：`L3_SYSTEM`（仅规划，不修改代码、Schema、裁决或 M0–M8 冻结标签）
 > Plan v1 原始前置基线：M0–M8 均为 `FROZEN`，当时最新标签为 `m8-v0.9.0`
-> 当前实施基线：M9 已以 `m9-v0.10.0` @ `3181d69` 冻结
+> 当前实施基线：M9 已以 `m9-v0.10.0` @ `3181d69` 冻结；M10 已以 `m10-v0.11.0` @ `0084443` 冻结
 > 冻结引用：`post-m8-plan-v1`
-> 当前实施门禁：M10 Contract 0.2、功能矩阵、地基审查、严格串行轮与 16 GB 压力轮已完成；发布门禁待执行
+> 当前实施门禁：M10 全部门禁与远端读回完成；M11–M14 仍为 `PLANNED`
 
 ## 0. 当前执行进度（冻结后注记）
 
@@ -14,7 +14,7 @@
 | Milestone | Capability | Current status | Current ref |
 | --- | --- | --- | --- |
 | M9 | 受控项目命令执行 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | 有界完整项目自举 | `STRESS_AUDITED` | [Contract 0.2](15-m10-bounded-project-bootstrap.md) |
+| M10 | 有界完整项目自举 | `FROZEN` | `m10-v0.11.0` @ `0084443` |
 | M11 | 真实项目功能全链路 | `PLANNED` | 本文第 7 节 |
 | M12 | 故宫主题前端终稿 | `PLANNED` | 本文第 8 节 |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | 本文第 9 节 |
@@ -30,8 +30,10 @@ work/staging、pre-teardown 脱敏封存、subject 指纹与资源分账也已�
 `ABORTED/PENDING` Bundle；其余公共退出、失败封存、Catalog 隔离和 Workbench 通用账册读回也已完成。
 M10 地基审查已发现并修复报告重推导、readiness 所有权和只读文件稳定读取三个接缝，严格串行轮也
 已完成。随后 16 GB 有界压力轮从 Wave A 完整重跑，独立度 1/2/3、取消交错、1000 总请求、
-Bundle/Catalog 与零残留门禁全部成立；状态推进为 `STRESS_AUDITED`。当前只允许进入最终发布门禁，
-M11–M14 仍不得进入实现。
+Bundle/Catalog 与零残留门禁全部成立。发布安全整改又封闭 11 条原攻击路径和资源硬限制，最终候选
+完成严格串行 13/13、双 Python 228/228、Workbench 58/58、最终压力与 Codex 内置浏览器复验；
+`0084443` 与 `m10-v0.11.0^{}` 已从 GitHub 读回一致，状态为 `FROZEN`。M11–M14 仍保持
+`PLANNED`，尚未进入实现。
 
 ## 1. 产品判断
 

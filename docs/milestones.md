@@ -7,7 +7,7 @@
 只表示当前门禁，不构成能力事实。
 
 里程碑标签实际指向的 Git 提交是版本寻址权威；实现提交、合同提交、运行哈希和完整退出条件
-仍以对应的里程碑文档为准。下表中的标签与提交已于 2026-08-11 从 `origin` 核验。
+仍以对应的里程碑文档为准。M0–M9 已于 2026-08-11 从 `origin` 核验；M10 于 2026-08-13 核验。
 
 ## 2. 冻结与当前路线索引
 
@@ -23,7 +23,7 @@
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | Windows 11/C1 有界完整项目自举 | `STRESS_AUDITED` | Contract 0.2 + public exits + foundation/serial/stress review |
+| M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.0` @ `0084443` |
 | M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
@@ -46,7 +46,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M7 | 四角色三态、恢复基线、负对照、Catalog 隔离与浏览器验真 | 组合变量、统计显著性、任意配对或跨批次聚合 |
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
-| M10（压力已审） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、完整公共退出矩阵、重复/竞争/漂移/故障封存、Catalog/Workbench 读回、地基整改、同候选严格串行复验，以及独立度 1/2/3、取消交错和 1000 总请求的 16 GB 有界压力审计 | 正式通用并行、生产容量、第二类真实项目、发布门禁或里程碑冻结 |
+| M10 | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、完整公共退出矩阵、重复/竞争/漂移/故障封存、Catalog/Workbench 读回、地基与安全整改、同候选严格串行复验、独立度 1/2/3、取消交错、1000 总请求压力审计及远端读回 | 正式通用并行、生产容量、第二类真实项目、C2/C3、Docker、跨平台或不可信代码隔离 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -148,8 +148,10 @@ Plan 0.6 Report 重推导、READY 响应后 ownership、只读 API 稳定读取�
 harness 的三次验收器失败被保留并逐次从 Wave A 重跑；首次完整通过后的发布审查又补强硬停止/超时
 worker 子树回收。最终候选 `88d083a` 再次完成独立度 1/2/3、
 READY 后取消交错和 1000 总请求，11 个 Bundle/Catalog 独立验真，最低可用内存 7323 MiB 且最终
-零残留。M10 因而推进为 `STRESS_AUDITED`；第二类真实项目属于 M11，最终发布门禁仍未完成，不得把
-当前状态写成完整自举冻结事实。
+零残留。其后发布安全整改封闭 11 条原攻击路径与 Job 内存硬限制，最终候选又从头完成严格串行
+13/13、双 Python 228/228、Workbench 58/58、最低可用内存 6770 MiB 的压力轮与内置浏览器复验。
+`0084443` 和 `m10-v0.11.0^{}` 已从 GitHub 精确读回一致，M10 标记 `FROZEN`；第二类真实项目
+仍属于 M11。
 
 ## 6. 详细文档
 
@@ -168,4 +170,5 @@ READY 后取消交错和 1000 总请求，11 个 Bundle/Catalog 独立验真，�
 - [M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)
 - [M10 第一轮严格串行完整复验](18-m10-serial-validation.md)
 - [M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)
+- [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

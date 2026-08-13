@@ -26,7 +26,7 @@ Object trusted process runner 与 `runtime.command` 已通过双 Python、Python
 Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
-M10 有界完整项目自举当前为 `STRESS_AUDITED`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
+M10 有界完整项目自举已 `FROZEN`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
 跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、
@@ -63,8 +63,10 @@ M0–M10 地基审查已经修复 Catalog 报告重推导、READY 响应后 owne
 退出、双运行时、前端、依赖与生产 Workbench 正负 Run/刷新/返回/键盘/移动/Console/资源账册。其后
 同一候选从 Wave A 完整重跑 16 GB 有界压力审计：同端口竞争安全拒绝错误 owner，独立度 1/2/3 为
 6/6 `COMPLETED/PASS`，READY 后取消为 3/3 `ABORTED/PENDING`，1000 次回环请求零错误；最低可用内存
-7323 MiB，11 个 Bundle/Catalog 独立验真且端口、进程、staging 回零。这仍不构成发布门禁或里程碑
-冻结事实；
+7323 MiB，11 个 Bundle/Catalog 独立验真且端口、进程、staging 回零。随后发布安全整改封闭 11 条
+原攻击路径与 Job 内存硬限制，并从新候选完成严格串行 13/13、双 Python 228/228、Workbench 58/58、
+最终压力、Codex 内置浏览器与零残留复验；`0084443` 和 `m10-v0.11.0^{}` 已从 GitHub 精确读回，
+形成里程碑冻结事实。
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准；已完成的审查见
 [M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)，已完成的串行轮见

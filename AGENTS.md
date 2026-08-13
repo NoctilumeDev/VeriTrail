@@ -31,8 +31,7 @@
   BatchAnalysis 四文件 Loader 和只读矩阵/wave 视图，并通过双 Python、8 个独立 M5 Run、四类
   分析、确定性/反例、生产及 Codex 内置浏览器、人工系统键盘、资源、安全和清理终验，标记
   `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
-  自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。计划编辑、任意项目命令、真实并行
-  和完整自举仍未实现。
+  自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
   规划基线。M10 Contract 0.2 已冻结，M11–M14 仍为 `PLANNED`；冻结合同不代表后继能力已经实现
   或验收。
@@ -46,23 +45,14 @@
   允许一个可信、直接启动、无 Shell、无 stdin/TTY 的 `ONESHOT` 进程；不得顺手加入服务、
   自举、包管理器或前端控制台，也不得把结构化 runner 描述成文件系统、网络、TOCTOU 或恶意代码沙箱。目标
   标签 `m9-v0.10.0` 必须继续指向 `3181d69`；越过合同边界时必须开启后继里程碑而不是改写该基线。
-- M10 独立 Contract 0.2 位于 `docs/15-m10-bounded-project-bootstrap.md`，当前状态为
-  `CONTRACT_FROZEN / IMPLEMENTING`。当前实现已有 ProjectProfile 0.1、Plan 0.6 跨文档 seal、
-  BootstrapPreview 0.1、只读 Windows IP Helper listener 表，以及 M10-only 的长运行 Job session、
-  owned HTTP readiness、双节点串行生命周期与 best-effort 逆序清理组件；严格 `runtime.bootstrap`
-  四附件、Plan/Profile Bundle 消费，以及 Run-owned work/staging、pre-teardown 脱敏封存、subject
-  前后指纹和 Core/dependency/application/browser 资源分账切片也已接入。冻结的 M2 Browser Adapter
-  现已在两节点 READY 后接入内部 observed-run：严格复核 `browser.session` 与 policy SHA，使用 M10-only
-  CDP 进程 handles 分账 Chromium RSS 并确认关闭，真实双视口正向与选择器失败负向均已自动化通过。
-  公共 Plan 0.6 `run` 已接入 Preview 精确审批与预检 `PROCEED` 路径，真实正向形成
-  `COMPLETED/PASS` Bundle、选择器业务失败形成无污染的 `COMPLETED/FAIL` Bundle，并通过 Catalog
-  验真与端口/staging 清理；预检 `STOP_ESCALATION/ABORT` 已在零进程创建下生成仅含 preflight 的
-  `ABORTED/PENDING` Bundle，审批不一致仍拒绝且不生成 Run。完整退出矩阵、公共 Workbench 读回与
-  真实项目证明仍未完成。首片只允许 Windows 11、
-  `C1 PROCESS_COLD`、一个 Run-owned 本地
-  dependency、一个 application、`HTTP_GET_LOOPBACK_OWNED_PID` readiness、现有 Browser Adapter
-  exercise 与逆序 Job 清理；C0 接管、C2/C3、Docker、跨平台、包管理器、真实项目和优雅停机均
-  不得顺手加入。
+- M10 独立 Contract 0.2 位于 `docs/15-m10-bounded-project-bootstrap.md`。冻结提交
+  `008444319a4af54de3291fe5c0ab602001c30754` 已完成公共退出矩阵、M0–M10 地基与安全审查、严格
+  串行、双 Python 228/228、Workbench 58/58、16 GB 有界压力、Codex 内置浏览器与零残留复验；
+  冻结读回时 GitHub `main` 和 `m10-v0.11.0^{}` 均指向该提交，状态为 `FROZEN`。M10 只证明 Windows
+  11、`C1 PROCESS_COLD`、一个 Run-owned dependency、一个 application、
+  `HTTP_GET_LOOPBACK_OWNED_PID` readiness、既有 Browser Adapter 与逆序 Job 清理；C0 接管、
+  C2/C3、Docker、跨平台、包管理器、第二类真实项目、不可信代码隔离和优雅停机均未证明。M11–M14
+  继续保持 `PLANNED`，不得把 M10 冻结解释为允许跳过后继合同。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

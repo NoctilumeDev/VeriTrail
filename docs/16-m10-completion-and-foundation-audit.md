@@ -195,7 +195,7 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   API 读回 `runtime.bootstrap`，刷新后裁决与完整性不变，Console/Warning 为零且 Catalog/15 个 Bundle
   文件请求均被观察。双 Python 开发回归为 214/214，前端 55/55、lint、type-check、build 与本地
   服务/端口/进程/临时目录清理通过；
-- 阶段 A 全部完成，M10 当前为 `FEATURE_COMPLETE`。下一步只能进入阶段 B 地基系统/代码审查；阶段 B
+- 阶段 A 全部完成，M10 当时为 `FEATURE_COMPLETE`。下一步只能进入阶段 B 地基系统/代码审查；阶段 B
   阻断项清零前不得启动最终串行轮，第一轮通过前不得启动压力轮；
 - 2026-08-13：阶段 B 完成。系统/代码审查发现并修复 Plan 0.6 Catalog 未完整重推导 Report、HTTP
   READY 响应后的 listener ownership 竞态、只读 API 校验后重开文件的 verify/use 竞态，并同步
@@ -209,7 +209,7 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   venv 的本仓库 binding 后从 Python 3.10 重启全序列，双运行时均为 216/216；前端 55/55、lint、
   type-check、build、依赖审计与 compileall 通过。Codex 内置浏览器真实读回正向 PASS 与业务失败
   FAIL Bundle，刷新/返回、真实键盘、移动视口、Console 与页面资源账册成立；服务、端口、staging 与
-  TEMP 最终清零。当前状态为 `SERIAL_VALIDATED`，完整记录见
+  TEMP 最终清零。当时状态为 `SERIAL_VALIDATED`，完整记录见
   [M10 第一轮严格串行完整复验](18-m10-serial-validation.md)；
 - 2026-08-13：阶段 D 完成。压力 harness 的前三个候选分别暴露“至多一个 PASS”误写成“必须一个
   PASS”、竞争者仍占声明端口时 owned cleanup 与全局 port-free 混淆，以及 Windows venv launcher
@@ -233,5 +233,9 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   压力轮 11 Runs/0 issues，最低可用内存 6770 MiB，三取消、同端口竞争和 1000 请求均符合预注册
   结果。Codex 内置浏览器又真实完成 PASS/PENDING/FAIL、刷新/返回、键盘、资源账册、移动视口和
   Console 0 复验；最终端口、server/helper、Chromium 与 staging 为零。详细失败事实和安全矩阵见
-  [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)。当前为
+  [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)。当时为
   `VERIFIED / FREEZE_PENDING`；只剩 GitHub 冻结候选与 `m10-v0.11.0` 标签读回，M11 仍不得开始。
+- 2026-08-13：冻结候选 `008444319a4af54de3291fe5c0ab602001c30754` 已推送到 GitHub；
+  `origin/main` 与注释标签 `m10-v0.11.0^{}` 均精确读回该提交，标签对象为 `70c26b8`。M10 在
+  Contract 0.2 的 Windows 11/C1/16 GB/可信本地进程边界内标记 `FROZEN`；M11–M14 继续保持
+  `PLANNED`。

@@ -20,7 +20,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
 | M9 | 受控项目命令执行 | `FROZEN` |
-| M10 | 有界完整项目自举 | `STRESS_AUDITED` |
+| M10 | 有界完整项目自举 | `FROZEN` |
 | M11 | 真实项目功能全链路 | `PLANNED` |
 | M12 | 故宫主题前端终稿 | `PLANNED` |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
@@ -28,7 +28,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意或不可信项目命令、
-正式通用并行、第二项目证明和 M10 最终发布门禁仍未完成。提交链、保留的失败事实与逐里程碑边界见
+正式通用并行、第二类真实项目证明和 M11–M14 仍未完成。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
 
 `FEATURE_COMPLETE` 只表示当前合同内的功能与公共出口已经实现；`FOUNDATION_REVIEWED` 表示冻结前
@@ -37,7 +37,7 @@ M0–M10 地基审查的已知阻断项已整改并完成回归；`SERIAL_VALIDA
 16 GB 有界微并行、取消交错和 1000 总请求压力诊断。它们都不是最终发布状态，也不授权提前实现
 后继里程碑。
 
-Post-M8 Plan v1 已冻结为**规划基线**；M9 已冻结，M10 Contract 0.2 已冻结，M11–M14
+Post-M8 Plan v1 已冻结为**规划基线**；M9、M10 已冻结，M11–M14
 仍为 `PLANNED`。M9 0.2 独立合同已在
 `290b618` 冻结；`4d2bc84` 交付 Plan 0.5、ToolBindings 0.1 与只读 CommandPreview 0.1，
 `9f979c8` 交付锁定 `pywin32==312` 的 Windows Job Object 所有权后端与真实 helper 自动化。
@@ -89,9 +89,10 @@ Codex 内置浏览器从只读 API 真实读回 `runtime.preflight`、`runtime.b
 Plan 0.6 Report、READY 响应后的 listener ownership 竞态、只读 API 校验后重开文件的竞态，并同步
 Workbench M10 版本；双 Python 216/216 与前端门禁通过。其后的严格串行轮又按预注册顺序通过全部
 公共出口、修复并保留一次 Python 3.13 editable 环境漂移、从头完成双运行时 216/216，以及生产
-Workbench 正负 Run、刷新/返回、键盘、移动端、Console 与页面资源账册验收。M10 因而进入
-`SERIAL_VALIDATED`，但 16 GB 压力轮、最终发布门禁与标签均未完成，不得标记 `FROZEN`。C2/C3、Docker
-与跨平台不属于 M10 已证明范围。
+Workbench 正负 Run、刷新/返回、键盘、移动端、Console 与页面资源账册验收。随后压力与发布安全
+门禁从新候选完整重跑：最终双 Python 均为 228/228，Workbench 58/58，严格串行 13/13，1000 总请求
+零错误；Codex 内置浏览器和清理复验成立。冻结读回时 GitHub `main` 与 `m10-v0.11.0` 解引用均为
+`0084443`，M10 在合同边界内标记 `FROZEN`。C2/C3、Docker 与跨平台不属于 M10 已证明范围。
 
 ## 为什么需要验迹
 
@@ -373,7 +374,7 @@ stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目�
 通过最多证明冻结合同对本次可信 Python module 与直接 Node script 成立；不证明文件系统/网络
 隔离、恶意代码 containment、通用包管理器、长运行服务、其他平台或完整自举。
 
-## M10 有界完整项目自举（STRESS_AUDITED）
+## M10 有界完整项目自举（FROZEN）
 
 M10 在 M9 的可信进程所有权基础上，只增加 Windows 11/C1 的长运行生命周期：按依赖顺序启动
 两个本地可信进程，以回环 HTTP 与 Job process list 共同证明就绪，由现有 Browser Adapter 完成
@@ -412,8 +413,9 @@ Catalog 组合门禁与生产 Workbench 的内置浏览器通用账册读回已�
 逐出口、双运行时、前端、依赖和内置浏览器通过。其后同一最终候选从头完成 16 GB 有界压力轮：
 同端口竞争安全失败，独立度 1/2/3 全部 PASS，三个 READY 后取消全部形成
 `USER_CANCELLED / ABORTED/PENDING`，1000 次回环只读请求零错误，11 个 Bundle 和 Catalog 独立回读
-成立；最终候选最低可用内存 7323 MiB 且零残留。M10 当前为 `STRESS_AUDITED`，
-仍未通过最终发布门禁。详见
+成立。发布安全整改又封闭 11 条原攻击路径和 Job 内存硬限制，并从头完成严格串行 13/13、双 Python
+228/228、Workbench 58/58、最低可用内存 6770 MiB 的最终压力轮与内置浏览器复验，最终零残留。
+冻结候选 `0084443` 与 `m10-v0.11.0` 已从 GitHub 读回，M10 当前为 `FROZEN`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终
 两轮，具体顺序见
@@ -455,7 +457,7 @@ py -3.10 -m venv .venv
   实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence、Plan/Profile Bundle
   验真、Run-owned staging、subject 指纹、资源分账和真实 Browser exercise；公共 Plan 0.6 `run` 的
   `PROCEED` 正/负、全部公共退出矩阵、Catalog 隔离与 Workbench 通用账册读回已经接入；冻结前地基
-  审查、严格串行轮和 16 GB 有界压力轮已完成，最终发布门禁仍待完成。
+  审查、严格串行、16 GB 有界压力、安全整改、内置浏览器和远端标签门禁均已完成。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
@@ -490,7 +492,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M10 动态地基系统与代码质量审查（FOUNDATION_REVIEWED）](docs/17-m10-foundation-review.md)
 - [M10 第一轮严格串行完整复验（SERIAL_VALIDATED）](docs/18-m10-serial-validation.md)
 - [M10 第二轮 16 GB 有界压力审计（STRESS_AUDITED）](docs/19-m10-bounded-stress-audit.md)
-- [M10 发布安全整改与冻结复验（VERIFICATION_PENDING）](docs/20-m10-release-security-remediation.md)
+- [M10 发布安全整改与冻结复验（FROZEN）](docs/20-m10-release-security-remediation.md)
 
 ## 项目来源
 
