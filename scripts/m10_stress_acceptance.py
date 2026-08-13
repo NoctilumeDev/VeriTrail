@@ -33,6 +33,7 @@ from veritrail.project_profile import seal_project_profile
 from veritrail.plan import seal_plan
 from veritrail.resources import collect_preflight_evidence
 from veritrail.windows_readiness import probe_owned_http_readiness
+from veritrail.windows_service import OwnedServiceSession
 from veritrail.windows_tcp import list_ipv4_tcp_listeners
 
 
@@ -55,21 +56,6 @@ class MemoryStatusEx(ctypes.Structure):
         ("ullTotalVirtual", ctypes.c_ulonglong),
         ("ullAvailVirtual", ctypes.c_ulonglong),
         ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
-    ]
-
-
-class ProcessMemoryCounters(ctypes.Structure):
-    _fields_ = [
-        ("cb", ctypes.c_ulong),
-        ("PageFaultCount", ctypes.c_ulong),
-        ("PeakWorkingSetSize", ctypes.c_size_t),
-        ("WorkingSetSize", ctypes.c_size_t),
-        ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
-        ("QuotaPagedPoolUsage", ctypes.c_size_t),
-        ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
-        ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
-        ("PagefileUsage", ctypes.c_size_t),
-        ("PeakPagefileUsage", ctypes.c_size_t),
     ]
 
 
@@ -109,31 +95,6 @@ def available_memory_mb() -> int:
     if not ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(status)):
         raise ctypes.WinError()
     return int(status.ullAvailPhys // (1024 * 1024))
-
-
-def process_rss_mb(pid: int) -> float:
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-    psapi = ctypes.WinDLL("psapi", use_last_error=True)
-    kernel32.OpenProcess.argtypes = [ctypes.c_ulong, ctypes.c_int, ctypes.c_ulong]
-    kernel32.OpenProcess.restype = ctypes.c_void_p
-    kernel32.CloseHandle.argtypes = [ctypes.c_void_p]
-    psapi.GetProcessMemoryInfo.argtypes = [
-        ctypes.c_void_p,
-        ctypes.POINTER(ProcessMemoryCounters),
-        ctypes.c_ulong,
-    ]
-    psapi.GetProcessMemoryInfo.restype = ctypes.c_int
-    handle = kernel32.OpenProcess(0x1000 | 0x0010, False, pid)
-    if not handle:
-        raise OSError(ctypes.get_last_error(), "OpenProcess failed")
-    try:
-        counters = ProcessMemoryCounters()
-        counters.cb = ctypes.sizeof(counters)
-        if not psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb):
-            raise OSError(ctypes.get_last_error(), "GetProcessMemoryInfo failed")
-        return round(int(counters.WorkingSetSize) / (1024 * 1024), 3)
-    finally:
-        kernel32.CloseHandle(handle)
 
 
 def port_is_free(port: int) -> bool:
@@ -851,43 +812,57 @@ def run_http_stage(port: int, total: int, in_flight: int) -> dict[str, Any]:
 def run_http_wave(root: Path) -> dict[str, Any]:
     if available_memory_mb() < SOFT_FREE_MEMORY_MB:
         raise AssertionError("soft memory stop line reached before HTTP wave")
-    process = subprocess.Popen(
-        [
-            sys.executable,
+    environment = {
+        name: os.environ[name]
+        for name in ("SYSTEMROOT", "WINDIR")
+        if name in os.environ
+    }
+    session = OwnedServiceSession.start(
+        node_id="http-stress",
+        executable=Path(sys.executable).resolve(),
+        arguments=(
             str(Path(__file__).resolve()),
             "--worker",
             "http-server",
             "--port",
             "18890",
-        ],
-        cwd=REPOSITORY_ROOT,
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        ),
+        working_directory=REPOSITORY_ROOT,
+        environment=environment,
+        port=18890,
+        max_stdout_bytes=65536,
+        max_stderr_bytes=65536,
+        max_processes=8,
+        process_release_timeout_ms=5000,
+        port_release_timeout_ms=5000,
+        reader_shutdown_timeout_ms=5000,
     )
+    wave: dict[str, Any] | None = None
+    teardown = None
     try:
-        deadline = time.monotonic() + 10
-        owner = None
-        while time.monotonic() < deadline:
-            rows = [
-                row
-                for row in list_ipv4_tcp_listeners()
-                if row.local_address == "127.0.0.1" and row.local_port == 18890
-            ]
-            if len(rows) == 1:
-                owner = rows[0].owning_pid
-                break
-            if process.poll() is not None:
-                raise AssertionError("HTTP stress server exited before readiness")
-            time.sleep(0.05)
-        if owner != process.pid:
-            raise AssertionError(
-                f"HTTP listener owner mismatch: expected {process.pid}, observed {owner}"
-            )
+        readiness = probe_owned_http_readiness(
+            session,
+            {
+                "adapter": "HTTP_GET_LOOPBACK_OWNED_PID",
+                "path": "/health",
+                "expected_status": 200,
+                "attempt_timeout_ms": 500,
+                "total_timeout_ms": 10_000,
+                "interval_ms": 50,
+                "consecutive_successes": 2,
+                "max_response_bytes": 1024,
+            },
+        )
+        if not readiness.ready:
+            raise AssertionError(f"HTTP stress server did not become ready: {readiness}")
+        rows = [
+            row
+            for row in list_ipv4_tcp_listeners()
+            if row.local_address == "127.0.0.1" and row.local_port == 18890
+        ]
+        owned = session.active_process_ids()
+        if len(rows) != 1 or rows[0].owning_pid not in owned:
+            raise AssertionError("HTTP stress listener is not owned by its Job")
         stages: list[dict[str, Any]] = []
         minimum_free = available_memory_mb()
         for total, in_flight in ((100, 1), (200, 10), (300, 50), (400, 100)):
@@ -896,7 +871,9 @@ def run_http_wave(root: Path) -> dict[str, Any]:
             if free_mb < SOFT_FREE_MEMORY_MB:
                 raise AssertionError("soft memory stop line reached during HTTP ladder")
             stage = run_http_stage(18890, total, in_flight)
-            stage["server_rss_mb"] = process_rss_mb(process.pid)
+            stage["server_rss_mb"] = round(
+                session.sample_rss_bytes() / (1024 * 1024), 3
+            )
             stages.append(stage)
             minimum_free = min(minimum_free, int(stage["free_memory_mb_after"]))
             if stage["completed_count"] != total or stage["errors"]:
@@ -906,29 +883,30 @@ def run_http_wave(root: Path) -> dict[str, Any]:
                 for row in list_ipv4_tcp_listeners()
                 if row.local_address == "127.0.0.1" and row.local_port == 18890
             ]
-            if len(rows) != 1 or rows[0].owning_pid != process.pid:
+            if len(rows) != 1 or rows[0].owning_pid not in session.active_process_ids():
                 raise AssertionError("HTTP listener ownership changed during ladder")
         if sum(int(stage["request_count"]) for stage in stages) != 1000:
             raise AssertionError("HTTP request total drifted from 1000")
-        return {
+        wave = {
             "name": "http-1000-total",
             "listener_owner_verified": True,
+            "readiness_attempts": len(readiness.attempts),
             "minimum_free_memory_mb": minimum_free,
             "stages": stages,
         }
     finally:
-        if process.poll() is None:
-            process.terminate()
-        try:
-            process.communicate(timeout=10)
-        except subprocess.TimeoutExpired:
-            process.kill()
-            process.communicate(timeout=5)
-        deadline = time.monotonic() + 10
-        while time.monotonic() < deadline and not port_is_free(18890):
-            time.sleep(0.05)
-        if not port_is_free(18890):
-            raise AssertionError("HTTP stress port was not released")
+        teardown = session.terminate()
+    if not teardown.cleanup_complete or not port_is_free(18890):
+        raise AssertionError(f"HTTP stress cleanup failed: {teardown}")
+    if wave is None:
+        raise AssertionError("HTTP stress wave did not produce a result")
+    wave["cleanup"] = {
+        "job_empty": teardown.final_active_processes == 0,
+        "handles_released": teardown.handles_released,
+        "readers_released": teardown.readers_released,
+        "port_free": teardown.port_free,
+    }
+    return wave
 
 
 def run_parent(output: Path) -> int:
