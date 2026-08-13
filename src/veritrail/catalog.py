@@ -455,6 +455,28 @@ def _validate_sealed_authorities(
     if profile is None:
         return None
 
+    imported: list[ImportedEvidence] = []
+    evidence_documents: dict[str, dict[str, Any]] = {}
+    for entry in evidence["artifacts"]:
+        path = entry["path"]
+        try:
+            document = load_json_object(
+                physical_files[path], label="Plan 0.6 Evidence"
+            )
+            validate_evidence(document, path)
+        except Exception as exc:
+            raise _CandidateRejected("INVALID_EVIDENCE_DOCUMENT") from exc
+        evidence_documents[path] = document
+        imported.append(
+            ImportedEvidence(
+                document=document,
+                sha256=entry["sha256"],
+                size=entry["size"],
+                redacted_fields=entry["redacted_fields"],
+                input_name=path,
+            )
+        )
+
     preflight_entries = [
         item
         for item in evidence["artifacts"]
@@ -462,13 +484,7 @@ def _validate_sealed_authorities(
     ]
     if len(preflight_entries) != 1:
         raise _CandidateRejected("PREFLIGHT_EVIDENCE_CARDINALITY")
-    try:
-        preflight = load_json_object(
-            physical_files[preflight_entries[0]["path"]], label="Preflight Evidence"
-        )
-        validate_evidence(preflight, preflight_entries[0]["path"])
-    except Exception as exc:
-        raise _CandidateRejected("INVALID_EVIDENCE_DOCUMENT") from exc
+    preflight = evidence_documents[preflight_entries[0]["path"]]
 
     bootstrap_entries = [
         item
@@ -490,14 +506,7 @@ def _validate_sealed_authorities(
             for item in evidence["artifacts"]
         ):
             raise _CandidateRejected("PREFLIGHT_EVIDENCE_APPLICABILITY")
-        preflight_artifact = ImportedEvidence(
-            document=preflight,
-            sha256=preflight_entries[0]["sha256"],
-            size=preflight_entries[0]["size"],
-            redacted_fields=preflight_entries[0]["redacted_fields"],
-            input_name=preflight_entries[0]["path"],
-        )
-        expected_result = evaluate(plan, [preflight_artifact], "ABORTED")
+        expected_result = evaluate(plan, imported, "ABORTED")
         if any(
             canonical_json_bytes(report.get(field))
             != canonical_json_bytes(expected_result[field])
@@ -515,12 +524,7 @@ def _validate_sealed_authorities(
 
     if len(bootstrap_entries) != 1:
         raise _CandidateRejected("BOOTSTRAP_EVIDENCE_CARDINALITY")
-    try:
-        bootstrap = load_json_object(
-            physical_files[bootstrap_entries[0]["path"]], label="Bootstrap Evidence"
-        )
-    except Exception as exc:
-        raise _CandidateRejected("INVALID_EVIDENCE_DOCUMENT") from exc
+    bootstrap = evidence_documents[bootstrap_entries[0]["path"]]
     facts = bootstrap["facts"]
     expected_profile = {
         "id": profile["profile_id"],
@@ -555,6 +559,25 @@ def _validate_sealed_authorities(
         raise _CandidateRejected("BOOTSTRAP_BROWSER_REFERENCE_MISMATCH")
     if not browser["completed"] and browser_entries:
         raise _CandidateRejected("BROWSER_EVIDENCE_CARDINALITY")
+    expected_result = evaluate(plan, imported, report["execution_status"])
+    if any(
+        item.get("code") == "BOOTSTRAP_STATUS_CONFLICT"
+        for item in expected_result["contamination"]
+    ):
+        raise _CandidateRejected("BOOTSTRAP_STATUS_CONFLICT")
+    if any(
+        canonical_json_bytes(report.get(field))
+        != canonical_json_bytes(expected_result[field])
+        for field in (
+            "execution_status",
+            "verdict",
+            "reasons",
+            "assertions",
+            "missing_evidence",
+            "contamination",
+        )
+    ):
+        raise _CandidateRejected("BOOTSTRAP_REPORT_DERIVATION_MISMATCH")
     return profile["seal"]["digest"]
 
 

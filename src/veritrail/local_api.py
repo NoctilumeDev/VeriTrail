@@ -21,11 +21,10 @@ from veritrail.catalog import (
     _is_relative_to,
     _is_reparse,
     _root_binding,
-    _sha256_file,
     load_catalog_manifest,
     open_catalog_readonly,
 )
-from veritrail.canonical import canonical_json_bytes
+from veritrail.canonical import canonical_json_bytes, sha256_bytes
 
 MAX_REQUEST_PATH = 2048
 MAX_PAGE_SIZE = 100
@@ -83,6 +82,25 @@ def _safe_file(root: Path, relative_path: str, *, max_bytes: int) -> tuple[Path,
     if metadata.st_size > max_bytes:
         raise ValueError("file too large")
     return current, metadata
+
+
+def _read_stable_file(path: Path, expected: os.stat_result, *, max_bytes: int) -> bytes:
+    identity = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_nlink")
+    try:
+        with path.open("rb") as handle:
+            opened = os.fstat(handle.fileno())
+            content = handle.read(max_bytes + 1)
+        after = os.lstat(path)
+    except OSError as exc:
+        raise ValueError("file changed while opening") from exc
+    if (
+        len(content) > max_bytes
+        or any(getattr(expected, field) != getattr(opened, field) for field in identity)
+        or any(getattr(opened, field) != getattr(after, field) for field in identity)
+        or len(content) != opened.st_size
+    ):
+        raise ValueError("file changed while reading")
+    return content
 
 
 class CatalogApplication:
@@ -236,7 +254,7 @@ class CatalogApplication:
 
     def bundle_file(
         self, catalog_run_id: str, relative_path: str
-    ) -> tuple[Path, int, str, str]:
+    ) -> tuple[bytes, int, str, str]:
         if not CATALOG_RUN_ID_PATTERN.fullmatch(catalog_run_id):
             raise ApiError(HTTPStatus.NOT_FOUND, "RUN_NOT_FOUND", "Catalog Run 不存在。")
         try:
@@ -279,6 +297,7 @@ class CatalogApplication:
             ):
                 raise ValueError("unsafe bundle root")
             path, metadata = _safe_file(bundle_root, normalized, max_bytes=10 * 1024 * 1024)
+            content = _read_stable_file(path, metadata, max_bytes=10 * 1024 * 1024)
         except FileNotFoundError as exc:
             raise ApiError(
                 HTTPStatus.CONFLICT, "BUNDLE_UNAVAILABLE", "源 Bundle 当前不可用。"
@@ -287,7 +306,7 @@ class CatalogApplication:
             raise ApiError(
                 HTTPStatus.CONFLICT, "BUNDLE_UNAVAILABLE", "源 Bundle 当前不可安全读取。"
             ) from exc
-        if metadata.st_size != row["size"] or _sha256_file(path) != row["sha256"]:
+        if len(content) != row["size"] or sha256_bytes(content) != row["sha256"]:
             raise ApiError(
                 HTTPStatus.CONFLICT, "BUNDLE_CHANGED", "源 Bundle 已在索引后发生变化。"
             )
@@ -298,7 +317,7 @@ class CatalogApplication:
                 "BUNDLE_MEDIA_UNSUPPORTED",
                 "该 Bundle 文件类型不允许通过本地 API 提供。",
             )
-        return path, metadata.st_size, row["sha256"], content_type
+        return content, len(content), row["sha256"], content_type
 
 
 class ApiError(Exception):
@@ -495,7 +514,7 @@ class CatalogRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(body)
 
     def _send_bundle(self, catalog_run_id: str, relative_path: str, *, head_only: bool) -> None:
-        path, size, digest, content_type = self.server.application.bundle_file(
+        content, size, digest, content_type = self.server.application.bundle_file(
             catalog_run_id, relative_path
         )
         self.send_response(HTTPStatus.OK)
@@ -505,9 +524,7 @@ class CatalogRequestHandler(BaseHTTPRequestHandler):
         self._security_headers()
         self.end_headers()
         if not head_only:
-            with path.open("rb") as handle:
-                while chunk := handle.read(64 * 1024):
-                    self.wfile.write(chunk)
+            self.wfile.write(content)
 
     def _send_static(self, request_path: str, *, head_only: bool) -> None:
         raw = request_path.lstrip("/") or "index.html"
@@ -530,18 +547,20 @@ class CatalogRequestHandler(BaseHTTPRequestHandler):
                 raise ApiError(HTTPStatus.NOT_FOUND, "STATIC_NOT_FOUND", "静态资源不存在。")
         except (OSError, ValueError) as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "UNSAFE_PATH", "静态资源不可安全读取。") from exc
+        try:
+            content = _read_stable_file(path, metadata, max_bytes=MAX_STATIC_FILE_BYTES)
+        except ValueError as exc:
+            raise ApiError(HTTPStatus.CONFLICT, "STATIC_CHANGED", "静态资源读取期间发生变化。") from exc
         content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
         if content_type.startswith("text/") or content_type in {"application/javascript", "application/json"}:
             content_type += "; charset=utf-8"
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", content_type)
-        self.send_header("Content-Length", str(metadata.st_size))
+        self.send_header("Content-Length", str(len(content)))
         self._security_headers()
         self.end_headers()
         if not head_only:
-            with path.open("rb") as handle:
-                while chunk := handle.read(64 * 1024):
-                    self.wfile.write(chunk)
+            self.wfile.write(content)
 
 
 class BoundedCatalogServer(ThreadingHTTPServer):

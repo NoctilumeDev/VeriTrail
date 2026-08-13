@@ -23,7 +23,7 @@
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | Windows 11/C1 有界完整项目自举 | `FEATURE_COMPLETE` | Contract 0.2 + public exit matrix + Catalog/Workbench readback |
+| M10 | Windows 11/C1 有界完整项目自举 | `FOUNDATION_REVIEWED` | Contract 0.2 + public exit matrix + foundation review |
 | M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
@@ -46,7 +46,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M7 | 四角色三态、恢复基线、负对照、Catalog 隔离与浏览器验真 | 组合变量、统计显著性、任意配对或跨批次聚合 |
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
-| M10（功能完成） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、完整公共退出矩阵、重复/竞争/漂移/故障封存、Catalog 隔离与 Workbench 通用账册读回 | 地基系统/代码审查、最终串行轮、16 GB 压力轮、发布门禁或里程碑冻结 |
+| M10（地基已审查） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、完整公共退出矩阵、重复/竞争/漂移/故障封存、Catalog/Workbench 读回，以及 Report 重推导、响应后 ownership、稳定文件读取整改 | 最终串行轮、16 GB 压力轮、发布门禁或里程碑冻结 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -141,9 +141,10 @@ teardown 前稳定 `EVIDENCE_STAGING_FAILED` 进入受限 fallback，完整逆�
 `EVIDENCE_ERROR / ERROR/PENDING` 公共 Bundle，Catalog 可验真且未知 callback 反例被拒绝；双 Python
 开发回归均为 213/213。随后所有公共出口的单包验证与组合 Catalog 门禁连接：真实正向/预检停止
 Bundle 被同时接纳，损坏副本被隔离；生产 Workbench 由 Codex 内置浏览器真实读回
-`runtime.bootstrap`，双 Python 214/214、前端 55/55 及构建/清理门禁通过。M10 因而仅为
-`FEATURE_COMPLETE`；地基审查和最终两轮仍未实现，第二类真实项目属于 M11，不得把当前状态写成
-完整自举冻结事实。
+`runtime.bootstrap`，双 Python 214/214、前端 55/55 及构建/清理门禁通过。随后地基审查修复了
+Plan 0.6 Report 重推导、READY 响应后 ownership、只读 API 稳定读取三个接缝，并同步 Workbench 版本；
+双 Python 216/216 与前端门禁复验通过。M10 因而仅为 `FOUNDATION_REVIEWED`；最终两轮仍未实现，
+第二类真实项目属于 M11，不得把当前状态写成完整自举冻结事实。
 
 ## 6. 详细文档
 
@@ -159,4 +160,5 @@ Bundle 被同时接纳，损坏副本被隔离；生产 Workbench 由 Codex 内�
 - [M9 受控项目命令执行合同](14-m9-controlled-command-execution.md)
 - [M10 有界完整项目自举 Contract 0.2（CONTRACT_FROZEN）](15-m10-bounded-project-bootstrap.md)
 - [M10 完成、地基审查与双轮冻结计划 0.1](16-m10-completion-and-foundation-audit.md)
+- [M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

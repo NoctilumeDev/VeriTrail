@@ -1,13 +1,13 @@
 # M10 有界完整项目自举合同
 
-> 状态：`CONTRACT_FROZEN / FEATURE_COMPLETE`
+> 状态：`CONTRACT_FROZEN / FOUNDATION_REVIEWED`
 > 合同版本：`M10 Bounded Project Bootstrap Contract 0.2`
 > 影响层级：`L3_SYSTEM`（项目 Profile、长运行进程、就绪状态机、所有权与逆序清理）
 > 前置基线：`m9-v0.10.0` @ `3181d69`
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共退出矩阵、Catalog 隔离与 Workbench 通用账册读回已完成，状态为 `FEATURE_COMPLETE`；地基审查与最终两轮仍未开始
+> 实施门禁：公共退出矩阵与地基审查已完成，状态为 `FOUNDATION_REVIEWED`；最终串行轮与压力轮仍未开始
 
 ## 1. M10 只回答一个问题
 
@@ -718,8 +718,12 @@ M10 裁决：生产构建由 Codex 内置浏览器从 Catalog 真实加载 `runt
 `runtime.bootstrap`、`browser.session`，刷新后仍保持 Bundle 的 `COMPLETED/PASS` 与 14 个已核验文件；
 开发者日志无 error/warning，页面资源清单观察到 Catalog 与全部 15 个 Bundle 文件请求。Python
 3.10.6/3.13.13 开发回归均为 214/214，前端 55/55、lint、type-check 与 production build 通过；本地
-服务、端口、两个 Python 父子进程和验收临时目录随后清零。由此 M10 只升级为 `FEATURE_COMPLETE`，
-不得跳过地基审查、最终串行轮、16 GB 压力轮或发布门禁而标记 `FROZEN`。
+服务、端口、两个 Python 父子进程和验收临时目录随后清零。由此 M10 先升级为 `FEATURE_COMPLETE`。
+随后冻结前地基审查发现并修复 Plan 0.6 Catalog 报告重推导缺口、READY 响应后的 listener ownership
+竞态、只读 API 校验后重开文件的竞态和 Workbench 版本不一致；双 Python 216/216 与前端门禁复验
+通过，状态推进为 `FOUNDATION_REVIEWED`。审查事实见
+[M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)。不得跳过最终串行轮、16 GB 压力轮
+或发布门禁而标记 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

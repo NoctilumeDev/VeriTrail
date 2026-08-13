@@ -51,6 +51,34 @@ def _attempt(
     )
 
 
+def _post_response_ownership(
+    session: OwnedServiceSession,
+    *,
+    expected_owner: int,
+    expected_processes: frozenset[int],
+) -> tuple[str, int]:
+    before = session.active_process_ids()
+    listeners = list_ipv4_tcp_listeners()
+    after = session.active_process_ids()
+    port_rows = [
+        listener for listener in listeners if listener.local_port == session.port
+    ]
+    loopback_rows = [
+        listener for listener in port_rows if listener.local_address == "127.0.0.1"
+    ]
+    if (
+        len(port_rows) != 1
+        or len(loopback_rows) != 1
+        or loopback_rows[0].owning_pid != expected_owner
+        or expected_owner not in before
+        or expected_owner not in after
+    ):
+        return "LISTENER_OWNERSHIP_CHANGED", len(after)
+    if before != after or before != expected_processes:
+        return "JOB_PROCESS_SET_CHANGED", len(after)
+    return "STABLE", len(after)
+
+
 def probe_owned_http_readiness(
     session: OwnedServiceSession,
     readiness: Mapping[str, Any],
@@ -210,33 +238,79 @@ def probe_owned_http_readiness(
                 content = response.read(int(readiness["max_response_bytes"]) + 1)
                 status = int(response.status)
                 byte_count = len(content)
-                if byte_count > int(readiness["max_response_bytes"]):
-                    result = "HTTP_RESPONSE_TOO_LARGE"
-                    consecutive = 0
-                elif status != int(readiness["expected_status"]):
-                    result = "HTTP_STATUS_MISMATCH"
+                try:
+                    ownership, post_active_count = _post_response_ownership(
+                        session,
+                        expected_owner=owner,
+                        expected_processes=after,
+                    )
+                except SafetyError:
+                    attempts.append(
+                        _attempt(
+                            started=started,
+                            ordinal=ordinal,
+                            result="OWNERSHIP_QUERY_FAILED",
+                            http_status=status,
+                            response_byte_count=byte_count,
+                            job_active_process_count=active_count,
+                        )
+                    )
+                    terminal_error = "COLLECTOR_ERROR"
+                    break
+                if ownership == "LISTENER_OWNERSHIP_CHANGED":
+                    attempts.append(
+                        _attempt(
+                            started=started,
+                            ordinal=ordinal,
+                            result=ownership,
+                            http_status=status,
+                            response_byte_count=byte_count,
+                            job_active_process_count=post_active_count,
+                        )
+                    )
+                    terminal_error = "LISTENER_OWNERSHIP_MISMATCH"
+                    break
+                if ownership == "JOB_PROCESS_SET_CHANGED":
+                    attempts.append(
+                        _attempt(
+                            started=started,
+                            ordinal=ordinal,
+                            result=ownership,
+                            http_status=status,
+                            response_byte_count=byte_count,
+                            listener_owner_in_job=True,
+                            job_active_process_count=post_active_count,
+                        )
+                    )
                     consecutive = 0
                 else:
-                    result = "SUCCESS"
-                    consecutive += 1
-                attempts.append(
-                    _attempt(
-                        started=started,
-                        ordinal=ordinal,
-                        result=result,
-                        http_status=status,
-                        response_byte_count=byte_count,
-                        listener_owner_in_job=True,
-                        job_active_process_count=active_count,
+                    if byte_count > int(readiness["max_response_bytes"]):
+                        result = "HTTP_RESPONSE_TOO_LARGE"
+                        consecutive = 0
+                    elif status != int(readiness["expected_status"]):
+                        result = "HTTP_STATUS_MISMATCH"
+                        consecutive = 0
+                    else:
+                        result = "SUCCESS"
+                        consecutive += 1
+                    attempts.append(
+                        _attempt(
+                            started=started,
+                            ordinal=ordinal,
+                            result=result,
+                            http_status=status,
+                            response_byte_count=byte_count,
+                            listener_owner_in_job=True,
+                            job_active_process_count=active_count,
+                        )
                     )
-                )
-                if consecutive == int(readiness["consecutive_successes"]):
-                    return OwnedReadinessObservation(
-                        ready=True,
-                        attempts=tuple(attempts),
-                        error_type=None,
-                        elapsed_ms=round((time.monotonic() - started) * 1000, 3),
-                    )
+                    if consecutive == int(readiness["consecutive_successes"]):
+                        return OwnedReadinessObservation(
+                            ready=True,
+                            attempts=tuple(attempts),
+                            error_type=None,
+                            elapsed_ms=round((time.monotonic() - started) * 1000, 3),
+                        )
             except (OSError, http.client.HTTPException):
                 attempts.append(
                     _attempt(

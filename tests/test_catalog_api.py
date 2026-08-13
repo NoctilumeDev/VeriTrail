@@ -150,12 +150,20 @@ class CatalogApiTests(unittest.TestCase):
         self.assertEqual("application/json; charset=utf-8", headers["content-type"])
         self.assertEqual("api-run", json.loads(body)["run_id"])
 
+        verified, verified_size, _, _ = self.server.application.bundle_file(
+            run["catalog_run_id"], "report.json"
+        )
+        report = self.bundle / "report.json"
+        original = report.read_bytes()
+        report.write_bytes(b"changed after verified read")
+        self.assertEqual(original, verified)
+        self.assertEqual(len(original), verified_size)
+        report.write_bytes(original)
+
         status, _, body = self._request("GET", base_url + "%2e%2e/report.json")
         self.assertEqual(400, status)
         self.assertEqual("UNSAFE_PATH", json.loads(body)["error"]["code"])
 
-        report = self.bundle / "report.json"
-        original = report.read_bytes()
         changed = bytearray(original)
         changed[-2] = ord(" ") if changed[-2] != ord(" ") else ord("\t")
         report.write_bytes(changed)

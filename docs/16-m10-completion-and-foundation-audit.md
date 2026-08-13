@@ -1,6 +1,6 @@
 # M10 完成、地基审查与双轮冻结计划
 
-> 状态：`FROZEN_EXECUTION_PLAN / FEATURE_COMPLETE`
+> 状态：`FROZEN_EXECUTION_PLAN / FOUNDATION_REVIEWED`
 > 计划版本：`M10 Completion and Foundation Audit Plan 0.1`
 > 影响层级：`L3_SYSTEM`
 > 依赖合同：[M10 Bounded Project Bootstrap Contract 0.2](15-m10-bounded-project-bootstrap.md)
@@ -193,4 +193,11 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   文件请求均被观察。双 Python 开发回归为 214/214，前端 55/55、lint、type-check、build 与本地
   服务/端口/进程/临时目录清理通过；
 - 阶段 A 全部完成，M10 当前为 `FEATURE_COMPLETE`。下一步只能进入阶段 B 地基系统/代码审查；阶段 B
-  阻断项清零前不得启动最终串行轮，第一轮通过前不得启动压力轮。
+  阻断项清零前不得启动最终串行轮，第一轮通过前不得启动压力轮；
+- 2026-08-13：阶段 B 完成。系统/代码审查发现并修复 Plan 0.6 Catalog 未完整重推导 Report、HTTP
+  READY 响应后的 listener ownership 竞态、只读 API 校验后重开文件的 verify/use 竞态，并同步
+  Workbench M10 版本。整改中一次 `bundle_file` 返回形状回归由 Python 3.10 全量测试以 215/216 拦截，
+  恢复兼容后 Python 3.10/3.13 均为 216/216，前端 55/55、lint、type-check、build、依赖审计、
+  compileall 和 diff 门禁通过；当前状态为 `FOUNDATION_REVIEWED`。完整审查记录见
+  [M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)。下一步进入阶段 C；阶段 C 尚未开始，
+  不得把本次整改回归写成 `SERIAL_VALIDATED`。

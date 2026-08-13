@@ -20,7 +20,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
 | M9 | 受控项目命令执行 | `FROZEN` |
-| M10 | 有界完整项目自举 | `FEATURE_COMPLETE` |
+| M10 | 有界完整项目自举 | `FOUNDATION_REVIEWED` |
 | M11 | 真实项目功能全链路 | `PLANNED` |
 | M12 | 故宫主题前端终稿 | `PLANNED` |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
@@ -28,11 +28,12 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意或不可信项目命令、
-真实并行、第二项目证明和 M10 冻结前地基审查/双轮验收仍未完成。提交链、保留的失败事实与逐里程碑边界见
+真实并行、第二项目证明和 M10 冻结前双轮验收仍未完成。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
 
-`FEATURE_COMPLETE` 只表示当前合同内的功能与公共出口已经实现，可进入冻结前地基审查；它不是最终
-验收或发布状态，也不授权提前实现后继里程碑。
+`FEATURE_COMPLETE` 只表示当前合同内的功能与公共出口已经实现；`FOUNDATION_REVIEWED` 表示冻结前
+M0–M10 地基审查的已知阻断项已整改并完成回归。二者都不是最终验收或发布状态，也不授权提前实现
+后继里程碑。
 
 Post-M8 Plan v1 已冻结为**规划基线**；M9 已冻结，M10 Contract 0.2 已冻结，M11–M14
 仍为 `PLANNED`。M9 0.2 独立合同已在
@@ -82,9 +83,11 @@ best-effort 回收，HARD cleanup 断言与 Catalog 均拒绝伪装 clean。stag
 公共 Bundle；未知 callback 错误不能使用该 fallback。最后，真实 `COMPLETED/PASS` 与预检
 `ABORTED/PENDING` M10 Bundle 已在同一 Catalog 中被独立接纳，损坏副本被隔离；生产 Workbench 又由
 Codex 内置浏览器从只读 API 真实读回 `runtime.preflight`、`runtime.bootstrap` 与 `browser.session`，
-刷新后仍保持既有裁决，Console/Warning 为零。M10 因而进入 `FEATURE_COMPLETE`，但地基系统/代码审查、
-严格串行轮、16 GB 压力轮、最终发布门禁与标签均未完成，不得标记 `FROZEN`。C2/C3、Docker 与跨平台
-不属于 M10 已证明范围。
+刷新后仍保持既有裁决，Console/Warning 为零。随后 M0–M10 地基审查发现并修复 Catalog 未完整重推导
+Plan 0.6 Report、READY 响应后的 listener ownership 竞态、只读 API 校验后重开文件的竞态，并同步
+Workbench M10 版本；双 Python 216/216 与前端门禁通过。M10 因而进入 `FOUNDATION_REVIEWED`，但严格
+串行轮、16 GB 压力轮、最终发布门禁与标签均未完成，不得标记 `FROZEN`。C2/C3、Docker 与跨平台不属于
+M10 已证明范围。
 
 ## 为什么需要验迹
 
@@ -366,7 +369,7 @@ stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目�
 通过最多证明冻结合同对本次可信 Python module 与直接 Node script 成立；不证明文件系统/网络
 隔离、恶意代码 containment、通用包管理器、长运行服务、其他平台或完整自举。
 
-## M10 有界完整项目自举（FEATURE_COMPLETE）
+## M10 有界完整项目自举（FOUNDATION_REVIEWED）
 
 M10 在 M9 的可信进程所有权基础上，只增加 Windows 11/C1 的长运行生命周期：按依赖顺序启动
 两个本地可信进程，以回环 HTTP 与 Job process list 共同证明就绪，由现有 Browser Adapter 完成
@@ -400,12 +403,14 @@ mismatch 已在 dependency/application 两个节点公共实跑，均拒绝 READ
 application→dependency 两节点回收，并以 `CLEANUP_ERROR / ERROR/FAIL` 保留失败节点，不把实际
 best-effort 成功冒充观测 clean。staging 写入失败也已从“清理后无 Bundle”提升为受限失败 Bundle：
 真实 Browser 事实保留、逆序清理完整，ExecutionStatus/Verdict 为 `ERROR/PENDING`，绝不支持 PASS。
-Catalog 组合门禁与生产 Workbench 的内置浏览器通用账册读回已经完成，M10 当前为
-`FEATURE_COMPLETE`，但仍未通过地基审查、最终两轮与发布门禁。详见
+Catalog 组合门禁与生产 Workbench 的内置浏览器通用账册读回已经完成。其后的 M0–M10 地基审查已
+整改 Catalog 报告重推导、readiness 响应后所有权和只读 API 稳定读取三个接缝，M10 当前为
+`FOUNDATION_REVIEWED`，但仍未通过最终两轮与发布门禁。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终
 两轮，具体顺序见
-[M10 完成、地基审查与双轮冻结计划 0.1](docs/16-m10-completion-and-foundation-audit.md)。
+[M10 完成、地基审查与双轮冻结计划 0.1](docs/16-m10-completion-and-foundation-audit.md)，已完成的
+地基审查事实见 [M10 动态地基系统与代码质量审查](docs/17-m10-foundation-review.md)。
 
 ### 本地运行
 
@@ -470,6 +475,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M9 受控项目命令执行合同 0.2（CONTRACT_FROZEN）](docs/14-m9-controlled-command-execution.md)
 - [M10 有界完整项目自举合同 0.2（CONTRACT_FROZEN）](docs/15-m10-bounded-project-bootstrap.md)
 - [M10 完成、地基审查与双轮冻结计划 0.1（FROZEN execution plan）](docs/16-m10-completion-and-foundation-audit.md)
+- [M10 动态地基系统与代码质量审查（FOUNDATION_REVIEWED）](docs/17-m10-foundation-review.md)
 
 ## 项目来源
 

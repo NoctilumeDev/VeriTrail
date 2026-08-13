@@ -443,6 +443,33 @@ class BootstrapEvidenceTests(unittest.TestCase):
                 validate_bundle(authority_drift, root)
             self.assertEqual("BOOTSTRAP_AUTHORITY_MISMATCH", drift.exception.code)
 
+            report_drift = root / "report-drift-copy"
+            shutil.copytree(first, report_drift)
+            report_path = report_drift / "report.json"
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report["verdict"] = "PASS" if report["verdict"] != "PASS" else "FAIL"
+            _write_json(report_path, report, newline=True)
+            _refresh_bundle_entries(report_drift, ["report.json"])
+            with self.assertRaises(_CandidateRejected) as report_rejected:
+                validate_bundle(report_drift, root)
+            self.assertEqual(
+                "BOOTSTRAP_REPORT_DERIVATION_MISMATCH",
+                report_rejected.exception.code,
+            )
+
+            status_drift = root / "status-drift-copy"
+            shutil.copytree(first, status_drift)
+            report_path = status_drift / "report.json"
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report["execution_status"] = "ERROR"
+            _write_json(report_path, report, newline=True)
+            _refresh_bundle_entries(status_drift, ["report.json"])
+            with self.assertRaises(_CandidateRejected) as status_rejected:
+                validate_bundle(status_drift, root)
+            self.assertEqual(
+                "BOOTSTRAP_STATUS_CONFLICT", status_rejected.exception.code
+            )
+
             stopped_with_bootstrap = root / "stopped-with-bootstrap-copy"
             shutil.copytree(first, stopped_with_bootstrap)
             evidence_manifest_path = stopped_with_bootstrap / "evidence-manifest.json"
