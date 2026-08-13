@@ -275,6 +275,11 @@ def worker_summary(result: Any, bundle: Path, artifact_root: Path) -> dict[str, 
     validated = validate_bundle(bundle, artifact_root)
     observed = result.observed
     resource = observed.resource_observation if observed is not None else None
+    cleanup_facts = (
+        observed.evidence.bootstrap.document["facts"]["cleanup"]
+        if observed is not None and observed.evidence is not None
+        else None
+    )
     return {
         "status": "OK",
         "run_id": validated.run_id,
@@ -296,6 +301,7 @@ def worker_summary(result: Any, bundle: Path, artifact_root: Path) -> dict[str, 
             observed.lifecycle.ready_callback_started if observed is not None else False
         ),
         "resource_observation": resource,
+        "cleanup_facts": cleanup_facts,
     }
 
 
@@ -555,20 +561,38 @@ def run_same_port_wave(root: Path, rng: random.Random) -> dict[str, Any]:
             if item["execution_status"] != "ABORTED" or item["observed"]:
                 raise AssertionError(f"same-port preflight stop is invalid: {item}")
         elif item["verdict"] == "FAIL":
-            if (
-                item["execution_status"] not in {"ABORTED", "COMPLETED"}
-                or item["stop_reason"]
-                not in {
+            cleanup = item.get("cleanup_facts")
+            expected_contention_cleanup = (
+                item["execution_status"] == "ERROR"
+                and item["stop_reason"] == "CLEANUP_ERROR"
+                and isinstance(cleanup, dict)
+                and cleanup.get("ports_free") is False
+                and all(
+                    cleanup.get(field) is True
+                    for field in (
+                        "jobs_empty",
+                        "handles_released",
+                        "readers_released",
+                        "reverse_order_complete",
+                        "run_work_released",
+                        "staging_released",
+                    )
+                )
+            )
+            expected_readiness_failure = (
+                item["execution_status"] in {"ABORTED", "COMPLETED"}
+                and item["stop_reason"]
+                in {
                     "LISTENER_OWNERSHIP_MISMATCH",
                     "NODE_EARLY_EXIT",
                     "READINESS_TIMEOUT",
                 }
-            ):
+                and item["cleanup_complete"]
+            )
+            if not expected_contention_cleanup and not expected_readiness_failure:
                 raise AssertionError(f"same-port failure is unexplained: {item}")
         else:
             raise AssertionError(f"same-port result is unexplained: {item}")
-        if not item["cleanup_complete"]:
-            raise AssertionError(f"same-port Run did not clean up: {item}")
     publish_bundles(root, ["same-a", "same-b"])
     clean = assert_wave_clean(root, (18870, 18871))
     return {
