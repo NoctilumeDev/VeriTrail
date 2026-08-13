@@ -241,6 +241,25 @@ class PairingTests(unittest.TestCase):
             with self.assertRaisesRegex(PairingError, "拒绝覆盖"):
                 self._analyze(root, pairing, runs, "first")
 
+    def test_markdown_escapes_plan_control_text(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            pairing_path, runs = self._create_group(root)
+            plan = _json(pairing_path)
+            plan.pop("seal")
+            plan["limits"] = ["<img src=x onerror=alert(1)>\n[unsafe](javascript:alert(1))"]
+            escaped_path = root / "escaped-pairing.json"
+            write_sealed_pairing_plan(escaped_path, seal_pairing_plan(plan))
+
+            self._analyze(root, escaped_path, runs, "escaped-analysis")
+            markdown = (root / "escaped-analysis" / "paired-analysis.md").read_text(
+                encoding="utf-8"
+            )
+
+            self.assertNotIn("<img", markdown)
+            self.assertNotIn("[unsafe](javascript:", markdown)
+            self.assertIn("&lt;img", markdown)
+
     def test_tampered_source_and_pairing_plan_are_rejected_without_staging(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

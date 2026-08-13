@@ -151,6 +151,9 @@ M12 之后进行的全项目终审。
 - 第一轮严格串行完整通过；
 - 第二轮在封存停止线内完成，所有不变量成立或按计划安全停止；
 - Codex 内置浏览器、Console/Network、双运行时、前端、依赖、安全和清理门禁通过；
+- 发布安全扫描的 Report/Verdict 权威、进程/路径身份、浏览器网络、隐私、Markdown、前端语义上界
+  和 M10 内存硬限制阻断项全部整改，并按
+  [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md) 从新候选重新验证；
 - 工作区干净，本地、`origin/main` 与 GitHub 远端提交一致；
 - README、验收文档、里程碑历史和 Contract 0.2 使用同一完成口径。
 
@@ -218,3 +221,17 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   `STRESS_AUDITED`，完整记录见
   [M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)。下一步只能进入阶段 E 发布门禁；
   在最终候选回归、代码质量/安全复核、内置浏览器与 GitHub/tag 读回全部成立前不得标记 `FROZEN`。
+- 2026-08-13：阶段 E 安全扫描形成 2 个 medium、9 个 low 和 1 个 M10 资源合同阻断项；整改计划、
+  爆炸半径与重新验证顺序已固化到
+  [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)。实现候选已封闭权威重推导、
+  稳定单次读取、进程/目录 identity pin、WebSocket/Service Worker、凭据脱敏、截图确认、Markdown、
+  Workbench 权威标签/语义上界和 Job memory limit；最终双运行时、压力、内置浏览器与复扫仍须完成。
+- 2026-08-13：阶段 E 实现与本地发布验收完成。整改中先后由严格串行、Python 3.13、Workbench
+  type-check 和最终代码复审暴露 browser cleanup 二次等待、Chromium sandbox Job 竞争、派生包权威
+  标签遗漏、pinned handle 二次打开及 abort handle 释放问题；每次均修复后从受影响门禁起点重跑。
+  最终候选严格串行 13/13，Python 3.10/3.13 均 228/228，Workbench 58/58 与全部门禁通过；最终
+  压力轮 11 Runs/0 issues，最低可用内存 6770 MiB，三取消、同端口竞争和 1000 请求均符合预注册
+  结果。Codex 内置浏览器又真实完成 PASS/PENDING/FAIL、刷新/返回、键盘、资源账册、移动视口和
+  Console 0 复验；最终端口、server/helper、Chromium 与 staging 为零。详细失败事实和安全矩阵见
+  [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)。当前为
+  `VERIFIED / FREEZE_PENDING`；只剩 GitHub 冻结候选与 `m10-v0.11.0` 标签读回，M11 仍不得开始。

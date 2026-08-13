@@ -323,6 +323,7 @@ class BatchTests(unittest.TestCase):
                 for path in second.iterdir()
             }
             self.assertEqual(first_hashes, second_hashes)
+
             self.assertEqual(
                 ["sealed-batch-plan.json", "batch-analysis.json", "batch-analysis.md"],
                 [item["path"] for item in _json(first / "batch-analysis-manifest.json")["files"]],
@@ -391,6 +392,31 @@ class BatchTests(unittest.TestCase):
 
             catalog = build_catalog(root / "analysis-first", root / "analysis-catalog")
             self.assertEqual(0, catalog.run_count)
+
+    def test_markdown_escapes_batch_plan_control_text(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            batch, paths, runs_root = self._create_source_fixture(root)
+            draft = copy.deepcopy(batch)
+            draft.pop("seal")
+            draft["limits"] = ["<svg onload=alert(1)>\n[unsafe](javascript:alert(1))"]
+            sealed = seal_batch_plan(draft)
+            plan_path, assignment_path = self._write_inputs(
+                root, sealed, paths, runs_root, name="escaped"
+            )
+
+            output = root / "escaped-analysis"
+            create_batch_analysis_bundle(
+                batch_plan_path=plan_path,
+                assignment_path=assignment_path,
+                runs_root=runs_root,
+                output=output,
+            )
+            markdown = (output / "batch-analysis.md").read_text(encoding="utf-8")
+
+            self.assertNotIn("<svg", markdown)
+            self.assertNotIn("[unsafe](javascript:", markdown)
+            self.assertIn("&lt;svg", markdown)
 
     def test_wrong_wave_order_is_inconclusive_and_assignment_errors_are_sanitized(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

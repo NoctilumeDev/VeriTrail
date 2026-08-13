@@ -572,7 +572,12 @@ export async function loadPairedAnalysisFromBlobs(
     analysis,
     pairingPlan,
     manifest,
-    integrity: { verified: true, verifiedFiles: manifest.files.length, totalBytes: verifiedBytes },
+    integrity: {
+      verified: true,
+      authorityVerified: false,
+      verifiedFiles: manifest.files.length,
+      totalBytes: verifiedBytes,
+    },
   }
 }
 

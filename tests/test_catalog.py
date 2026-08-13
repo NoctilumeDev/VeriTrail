@@ -130,6 +130,34 @@ class CatalogTests(unittest.TestCase):
                 build_catalog(root, output)
             self.assertFalse(list(base.glob(".veritrail-catalog-*")))
 
+    def test_forged_report_verdict_is_rejected_even_with_recomputed_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "bundles"
+            root.mkdir()
+            bundle = self._bundle(root, "forged", "forged-verdict-run")
+            report_path = bundle / "report.json"
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report["verdict"] = "FAIL"
+            forged = json.dumps(report, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+            report_path.write_bytes(forged)
+            manifest_path = bundle / "bundle-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            report_entry = next(item for item in manifest["files"] if item["path"] == "report.json")
+            report_entry["sha256"] = hashlib.sha256(forged).hexdigest()
+            report_entry["size"] = len(forged)
+            manifest_path.write_text(
+                json.dumps(manifest, separators=(",", ":"), ensure_ascii=False),
+                encoding="utf-8",
+            )
+
+            output = base / "catalog"
+            result = build_catalog(root, output)
+
+            self.assertEqual("COMPLETED_WITH_ISSUES", result.status)
+            issues = _database_rows(output / "catalog.sqlite3", "catalog_issues")
+            self.assertEqual("REPORT_DERIVATION_MISMATCH", issues[0][1])
+
     def test_catalog_manifest_detects_database_change(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)

@@ -318,7 +318,11 @@ async function selectCatalogRun(
   pairedAnalysis.value = null
   batchAnalysis.value = null
   try {
-    const loaded = await loadSameOriginBundle(run.bundle.base_url, `本地目录 · ${run.run_id}`)
+    const loaded = await loadSameOriginBundle(
+      run.bundle.base_url,
+      `本地目录 · ${run.run_id}`,
+      true,
+    )
     if (
       loaded.report.run_id !== run.run_id ||
       loaded.report.execution_status !== run.execution_status ||
@@ -614,8 +618,8 @@ onBeforeUnmount(() => {
           <div class="integrity-seal" data-testid="integrity-status">
             <span aria-hidden="true">◇</span>
             <div>
-              <small>完整性</small>
-              <strong>已核验</strong>
+              <small>{{ bundle?.integrity.authorityVerified ? 'Core 裁决' : 'Bundle 字节' }}</small>
+              <strong>{{ bundle?.integrity.authorityVerified ? '已核验' : '自报 Verdict' }}</strong>
               <em>{{ bundle?.integrity.verifiedFiles }} 个文件</em>
             </div>
           </div>

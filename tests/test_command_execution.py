@@ -98,6 +98,8 @@ class CommandExecutionTests(unittest.TestCase):
             stderr=empty,
             active_process_limit=16,
             active_process_limit_enforced=created,
+            job_memory_limit_mb=1024,
+            job_memory_limit_enforced=created,
             process_limit_attempt_observation="NOT_PROVEN",
             total_assigned_processes=1 if created else 0,
             final_active_processes=0,

@@ -105,6 +105,7 @@ export interface BundleManifest {
 
 export interface BundleIntegrity {
   verified: true
+  authorityVerified: boolean
   verifiedFiles: number
   totalBytes: number
 }

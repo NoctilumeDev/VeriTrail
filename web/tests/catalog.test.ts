@@ -6,6 +6,7 @@ import type { CatalogResponse } from '../src/domain/types'
 import { createBootstrapBundle, createMinimalBundle } from './support'
 
 const catalogRunId = `cr_${'1'.repeat(24)}`
+let catalogPlanSha = 'a'.repeat(64)
 
 function catalogResponse(runCount = 1): CatalogResponse {
   return {
@@ -27,7 +28,7 @@ function catalogResponse(runCount = 1): CatalogResponse {
             created_at: '2026-08-09T00:00:00Z',
             execution_status: 'COMPLETED',
             verdict: 'PASS',
-            plan: { id: 'unit-plan', version: 1, sha256: 'a'.repeat(64) },
+            plan: { id: 'unit-plan', version: 1, sha256: catalogPlanSha },
             bundle: {
               sha256: 'b'.repeat(64),
               file_count: 3,
@@ -58,6 +59,9 @@ describe('Catalog API 0.1', () => {
   beforeEach(async () => {
     window.history.replaceState({}, '', '/?fixture=positive')
     bundle = await createMinimalBundle()
+    catalogPlanSha = (JSON.parse(await bundle.get('report.json')!.text()) as {
+      plan: { sha256: string }
+    }).plan.sha256
   })
 
   afterEach(() => vi.restoreAllMocks())
@@ -148,7 +152,9 @@ describe('Catalog API 0.1', () => {
     response.runs[0]!.plan = {
       id: 'm10-workbench-plan',
       version: 1,
-      sha256: 'a'.repeat(64),
+      sha256: (JSON.parse(await bundle.get('report.json')!.text()) as {
+        plan: { sha256: string }
+      }).plan.sha256,
     }
     installCatalogFetch(response)
     const wrapper = mount(App)
@@ -165,6 +171,7 @@ describe('Catalog API 0.1', () => {
     )
     expect(wrapper.get('[data-testid="status-gate"]').text()).toContain('COMPLETED')
     expect(wrapper.get('[data-testid="status-gate"]').text()).toContain('PASS')
+    expect(wrapper.get('[data-testid="integrity-status"]').text()).toContain('已核验')
     expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(false)
     wrapper.unmount()
   })

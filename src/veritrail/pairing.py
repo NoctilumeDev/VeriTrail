@@ -393,6 +393,23 @@ def _assertion_projection(assertion: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _markdown_text(value: Any) -> str:
+    rendered = str(value)
+    for source, replacement in (
+        ("\\", "\\\\"),
+        ("`", "\\`"),
+        ("<", "&lt;"),
+        (">", "&gt;"),
+        ("!", "\\!"),
+        ("[", "\\["),
+        ("]", "\\]"),
+        ("(", "\\("),
+        (")", "\\)"),
+    ):
+        rendered = rendered.replace(source, replacement)
+    return rendered.replace("\r", " ").replace("\n", " ")
+
+
 def _render_markdown(analysis: dict[str, Any]) -> str:
     lines = [
         "# VeriTrail Paired Counterfactual Analysis",
@@ -444,7 +461,7 @@ def _render_markdown(analysis: dict[str, Any]) -> str:
     else:
         lines.append("- None.")
     lines.extend(["", "## Boundary", ""])
-    lines.extend(f"- {item}" for item in analysis["limits"])
+    lines.extend(f"- {_markdown_text(item)}" for item in analysis["limits"])
     lines.append("")
     return "\n".join(lines)
 

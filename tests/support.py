@@ -118,6 +118,7 @@ def bootstrap_profile() -> dict[str, Any]:
         "max_stdout_bytes": 262144,
         "max_stderr_bytes": 262144,
         "max_processes": 8,
+        "max_job_memory_mb": 512,
     }
     shutdown = {
         "adapter": "JOB_TERMINATE_AFTER_CAPTURE",
@@ -244,6 +245,8 @@ def bootstrap_plan(profile: dict[str, Any] | None = None) -> dict[str, Any]:
     application_origin = "http://127.0.0.1:18772"
     plan["browser"]["start_url"] = f"{application_origin}/"
     plan["browser"]["allowed_origins"] = [application_origin]
+    plan["browser"]["screenshot_safety"] = "UNREDACTED_OPERATOR_ACKNOWLEDGED"
+    plan["browser"]["max_job_memory_mb"] = 1024
     for step in plan["browser"]["steps"]:
         if step["action"] == "goto":
             step["url"] = f"{application_origin}/"

@@ -622,9 +622,12 @@ def collect_orchestrated_evidence(
     lifecycle_complete = (
         server_started and ready and cleanup_complete and not collection_errors
     )
-    status_counts = Counter(str(item["status"]) for item in recorder.requests)
-    method_counts = Counter(item["method"] for item in recorder.requests)
-    rejected_count = sum(1 for item in recorder.requests if item["status"] >= 400)
+    requests = [
+        {**item, "status": int(item["status"])} for item in recorder.requests
+    ]
+    status_counts = Counter(str(item["status"]) for item in requests)
+    method_counts = Counter(item["method"] for item in requests)
+    rejected_count = sum(1 for item in requests if item["status"] >= 400)
     ended_at = _utc_now()
     facts = {
         "collector_version": COLLECTOR_VERSION,
@@ -645,8 +648,8 @@ def collect_orchestrated_evidence(
         "browser_complete": browser_complete,
         "lifecycle_complete": lifecycle_complete,
         "events": events,
-        "requests": recorder.requests,
-        "request_count": len(recorder.requests),
+        "requests": requests,
+        "request_count": len(requests),
         "method_counts": dict(sorted(method_counts.items())),
         "status_counts": dict(sorted(status_counts.items())),
         "rejected_request_count": rejected_count,

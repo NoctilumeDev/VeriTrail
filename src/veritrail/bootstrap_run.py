@@ -443,6 +443,8 @@ def _stage_document(
                     "target_resumed": start.target_resumed,
                     "active_process_limit": start.active_process_limit,
                     "active_process_limit_enforced": start.active_process_limit_enforced,
+                    "job_memory_limit_mb": start.job_memory_limit_mb,
+                    "job_memory_limit_enforced": start.job_memory_limit_enforced,
                     "error_type": start.error_type,
                 },
                 "readiness": None
@@ -576,6 +578,8 @@ def run_observed_bootstrap(
         "started": False,
         "completed": False,
         "evidence_sha256": None,
+        "job_memory_limit_mb": plan["browser"]["max_job_memory_mb"],
+        "job_memory_limit_enforced": False,
     }
     browser_peak_rss_mb: float | None = None
     browser_sampling_complete = False
@@ -619,6 +623,9 @@ def run_observed_bootstrap(
             or observed.peak_rss_mb < 0
             or not isinstance(observed.resource_sampling_complete, bool)
             or not isinstance(observed.process_cleanup_complete, bool)
+            or not isinstance(observed.job_memory_limit_mb, int)
+            or isinstance(observed.job_memory_limit_mb, bool)
+            or not isinstance(observed.job_memory_limit_enforced, bool)
         ):
             raise SafetyError("M10 Browser observation is invalid")
         verify_imported_evidence(observed.browser)
@@ -636,11 +643,15 @@ def run_observed_bootstrap(
             {
                 "completed": True,
                 "evidence_sha256": observed.browser.sha256,
+                "job_memory_limit_mb": observed.job_memory_limit_mb,
+                "job_memory_limit_enforced": observed.job_memory_limit_enforced,
             }
         )
         if (
             not observed.resource_sampling_complete
             or not observed.process_cleanup_complete
+            or observed.job_memory_limit_mb != plan["browser"]["max_job_memory_mb"]
+            or not observed.job_memory_limit_enforced
             or facts.get("cleanup_complete") is not True
             or facts.get("collection_errors") != []
         ):

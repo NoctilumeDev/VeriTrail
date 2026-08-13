@@ -56,7 +56,7 @@ describe('App', () => {
 
     expect(wrapper.get('[aria-label="运行状态：COMPLETED"]').text()).toContain('COMPLETED')
     expect(wrapper.get('[aria-label="验收结论：PASS"]').text()).toContain('PASS')
-    expect(wrapper.get('[data-testid="integrity-status"]').text()).toContain('已核验')
+    expect(wrapper.get('[data-testid="integrity-status"]').text()).toContain('自报 Verdict')
     expect(wrapper.get('[data-testid="browser-empty"]').text()).toContain('不等于浏览器检查通过')
     wrapper.unmount()
   })

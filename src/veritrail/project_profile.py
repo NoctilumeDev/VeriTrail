@@ -66,7 +66,12 @@ READINESS_FIELDS = {
     "consecutive_successes",
     "max_response_bytes",
 }
-LIMIT_FIELDS = {"max_stdout_bytes", "max_stderr_bytes", "max_processes"}
+LIMIT_FIELDS = {
+    "max_stdout_bytes",
+    "max_stderr_bytes",
+    "max_processes",
+    "max_job_memory_mb",
+}
 SHUTDOWN_FIELDS = {
     "adapter",
     "process_release_timeout_ms",
@@ -288,6 +293,7 @@ def _validate_limits(value: Any, prefix: str, errors: list[str]) -> None:
         "max_stdout_bytes": (1, 1_048_576),
         "max_stderr_bytes": (1, 1_048_576),
         "max_processes": (1, 32),
+        "max_job_memory_mb": (64, 2048),
     }
     for field, (minimum, maximum) in ranges.items():
         item = value.get(field)

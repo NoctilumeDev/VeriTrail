@@ -17,6 +17,7 @@ describe('PairedAnalysis Loader and View', () => {
 
     expect(loaded.analysis.analysis_status).toBe('SUPPORTED')
     expect(loaded.integrity.verifiedFiles).toBe(3)
+    expect(loaded.integrity.authorityVerified).toBe(false)
     expect(wrapper.get('[data-testid="paired-analysis-status"]').attributes('aria-label')).toBe(
       '配对分析：SUPPORTED',
     )

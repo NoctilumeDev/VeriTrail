@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 import json
+import os
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -200,6 +202,37 @@ class CommandPreviewTests(unittest.TestCase):
                     subject_root=subject,
                     tool_bindings_path=bindings,
                     environment={"SYSTEMROOT": "C:\\Windows", "WINDIR": "C:\\Windows"},
+                )
+
+    @unittest.skipUnless(os.name == "nt", "PE family identity is Windows-only")
+    def test_renamed_cmd_executable_is_rejected_by_pe_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = root / "subject"
+            (subject / "src").mkdir(parents=True)
+            (subject / "tests").mkdir()
+            renamed = root / "python.exe"
+            shutil.copy2(Path(os.environ["SYSTEMROOT"]) / "System32" / "cmd.exe", renamed)
+            bindings = root / "tool-bindings.json"
+            bindings.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "0.1",
+                        "bindings": {"python": {"executable": str(renamed.resolve())}},
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(SafetyError, "PE family"):
+                build_command_preview(
+                    seal_plan(command_plan()),
+                    subject_root=subject,
+                    tool_bindings_path=bindings,
+                    environment={
+                        "SYSTEMROOT": os.environ["SYSTEMROOT"],
+                        "WINDIR": os.environ["WINDIR"],
+                    },
                 )
 
 

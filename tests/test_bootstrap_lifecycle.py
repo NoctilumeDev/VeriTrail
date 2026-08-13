@@ -23,6 +23,7 @@ from veritrail.windows_readiness import (
 from veritrail.windows_service import (
     OwnedServiceStartObservation,
 )
+from veritrail.windows_job import inspect_executable_identity
 
 from tests.support import bootstrap_profile
 
@@ -65,8 +66,10 @@ def _spec(
         node_id=node_id,
         role=role,
         executable=Path(sys.executable),
+        executable_identity=inspect_executable_identity(Path(sys.executable)),
         arguments=("-m", "tests.fixtures.m10_service_helper", *arguments),
         working_directory=ROOT,
+        subject_root=ROOT,
         environment=_environment(directory),
         port=port,
         readiness={
@@ -83,6 +86,7 @@ def _spec(
             "max_stdout_bytes": 65_536,
             "max_stderr_bytes": 65_536,
             "max_processes": 4,
+            "max_job_memory_mb": 512,
         },
         shutdown={
             "adapter": "JOB_TERMINATE_AFTER_CAPTURE",
@@ -277,6 +281,8 @@ class BootstrapLifecycleTests(unittest.TestCase):
                         target_resumed=True,
                         active_process_limit=4,
                         active_process_limit_enforced=True,
+                        job_memory_limit_mb=512,
+                        job_memory_limit_enforced=True,
                         cleanup_complete=False,
                         error_type=None,
                         elapsed_ms=1.0,
@@ -358,6 +364,8 @@ class BootstrapLifecycleTests(unittest.TestCase):
                         target_resumed=True,
                         active_process_limit=4,
                         active_process_limit_enforced=True,
+                        job_memory_limit_mb=512,
+                        job_memory_limit_enforced=True,
                         cleanup_complete=False,
                         error_type=None,
                         elapsed_ms=1.0,

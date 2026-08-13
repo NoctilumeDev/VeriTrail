@@ -140,8 +140,12 @@ function validateBundleManifest(value: unknown): BundleManifest {
   if (files.length + 1 > MAX_FILES) fail('FILE_LIMIT', '证据包文件数量超过 256 个。')
   const paths = files.map((entry) => entry.path)
   if (new Set(paths).size !== paths.length) fail('DUPLICATE_PATH', '证据包清单包含重复路径。')
-  if (!paths.includes('report.json') || !paths.includes('evidence-manifest.json')) {
-    fail('MISSING_ROOT_FILE', '证据包缺少报告或 Evidence 清单。')
+  if (
+    !paths.includes('report.json') ||
+    !paths.includes('evidence-manifest.json') ||
+    !paths.includes('sealed-plan.json')
+  ) {
+    fail('MISSING_ROOT_FILE', '证据包缺少报告、Evidence 清单或 Sealed Plan。')
   }
   return {
     schema_version: requireVersion(document.schema_version, 'Bundle Manifest'),
@@ -283,16 +287,75 @@ function validateEvidenceDocument(value: unknown, artifact: EvidenceArtifact): E
   if (evidenceType !== artifact.evidence_type) {
     fail('REFERENCE_MISMATCH', 'Evidence 类型与清单不一致。')
   }
+  const facts = requireRecord(document.facts, `${artifact.path}.facts`)
+  if (evidenceType === 'browser.session') validateBrowserEvidenceBounds(facts, artifact.path)
   return {
     schema_version: requireVersion(document.schema_version, 'Evidence'),
     evidence_type: evidenceType,
     source: requireString(document.source, `${artifact.path}.source`),
     captured_at: requireString(document.captured_at, `${artifact.path}.captured_at`),
-    facts: requireRecord(document.facts, `${artifact.path}.facts`),
+    facts,
     ...(isRecord(document.observed_variables)
       ? { observed_variables: document.observed_variables }
       : {}),
     ...(isRecord(document.metadata) ? { metadata: document.metadata } : {}),
+  }
+}
+
+const BROWSER_ARRAY_LIMITS: Record<string, number> = {
+  viewport_runs: 8,
+  steps: 520,
+  console: 500,
+  page_errors: 100,
+  network: 1000,
+  screenshots: 512,
+}
+
+function validateBrowserEvidenceBounds(facts: Record<string, unknown>, path: string) {
+  for (const [field, limit] of Object.entries(BROWSER_ARRAY_LIMITS)) {
+    const values = requireArray(facts[field], `${path}.facts.${field}`)
+    if (values.length > limit) {
+      fail('EVIDENCE_LIMIT', `browser.session 的 ${field} 超过冻结上限。`)
+    }
+    values.forEach((value, index) => requireRecord(value, `${path}.facts.${field}[${index}]`))
+  }
+  const derivedCounts: Record<string, string> = {
+    viewport_count: 'viewport_runs',
+    screenshot_count: 'screenshots',
+  }
+  for (const [countField, arrayField] of Object.entries(derivedCounts)) {
+    if (requireNumber(facts[countField], `${path}.facts.${countField}`) !== (facts[arrayField] as unknown[]).length) {
+      fail('REFERENCE_MISMATCH', `browser.session 的 ${countField} 与事实数组不一致。`)
+    }
+  }
+}
+
+function canonicalJson(value: unknown): string {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value)
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`
+  const source = value as Record<string, unknown>
+  return `{${Object.keys(source)
+    .sort()
+    .map((key) => `${JSON.stringify(key)}:${canonicalJson(source[key])}`)
+    .join(',')}}`
+}
+
+async function validateSealedPlan(blob: Blob, report: VerdictReport) {
+  const plan = requireRecord(await parseJson(blob, 'sealed-plan.json'), 'sealed-plan.json')
+  const seal = requireRecord(plan.seal, 'sealed-plan.json.seal')
+  if (seal.algorithm !== 'sha256') fail('INVALID_AUTHORITY', 'Sealed Plan 使用了未知摘要算法。')
+  const digest = requireSha256(seal.digest, 'sealed-plan.json.seal.digest')
+  const unsigned = { ...plan }
+  delete unsigned.seal
+  if ((await sha256Hex(new Blob([canonicalJson(unsigned)]))) !== digest) {
+    fail('INVALID_AUTHORITY', 'Sealed Plan 的自封存摘要不一致。')
+  }
+  if (
+    report.plan.id !== requireString(plan.plan_id, 'sealed-plan.json.plan_id') ||
+    report.plan.version !== requireNumber(plan.version, 'sealed-plan.json.version') ||
+    report.plan.sha256 !== digest
+  ) {
+    fail('AUTHORITY_MISMATCH', 'Report 没有绑定当前 Sealed Plan。')
   }
 }
 
@@ -318,6 +381,7 @@ function sameArtifact(left: EvidenceArtifact, right: EvidenceArtifact): boolean 
 export async function loadBundleFromBlobs(
   entries: ReadonlyMap<string, Blob>,
   sourceLabel: string,
+  authorityVerified = false,
 ): Promise<LoadedBundle> {
   assertEntryLimits(entries)
   const manifestBlob = entries.get('bundle-manifest.json')
@@ -344,6 +408,7 @@ export async function loadBundleFromBlobs(
   }
 
   const report = validateReport(await parseJson(entries.get('report.json')!, 'report.json'))
+  await validateSealedPlan(entries.get('sealed-plan.json')!, report)
   const evidenceManifest = validateEvidenceManifest(
     await parseJson(entries.get('evidence-manifest.json')!, 'evidence-manifest.json'),
   )
@@ -414,6 +479,7 @@ export async function loadBundleFromBlobs(
     imageUrls,
     integrity: {
       verified: true,
+      authorityVerified,
       verifiedFiles: bundleManifest.files.length,
       totalBytes,
     },
@@ -470,6 +536,7 @@ export async function loadDemoBundle(id: DemoBundleId): Promise<LoadedBundle> {
 export async function loadSameOriginBundle(
   base: string,
   sourceLabel: string,
+  authorityVerified = false,
 ): Promise<LoadedBundle> {
   const entries = new Map<string, Blob>()
   const manifestUrl = safeSameOriginUrl(base, 'bundle-manifest.json')
@@ -479,7 +546,7 @@ export async function loadSameOriginBundle(
   for (const file of manifest.files) {
     entries.set(file.path, await fetchBlob(safeSameOriginUrl(base, file.path), file.path))
   }
-  return loadBundleFromBlobs(entries, sourceLabel)
+  return loadBundleFromBlobs(entries, sourceLabel, authorityVerified)
 }
 
 function localRelativePaths(files: File[]): string[] {

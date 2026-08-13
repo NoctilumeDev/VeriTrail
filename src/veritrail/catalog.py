@@ -17,7 +17,7 @@ from veritrail import __version__
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
 from veritrail.evidence import ImportedEvidence, validate_evidence
 from veritrail.errors import VeriTrailError
-from veritrail.jsonio import load_json_object
+from veritrail.jsonio import load_json_object, load_json_object_bytes
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.verdict import evaluate
@@ -165,6 +165,41 @@ def _sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _read_stable_file(path: Path) -> bytes:
+    """Read one ordinary single-link file and bind parsing to those exact bytes."""
+
+    try:
+        before = os.lstat(path)
+        if (
+            _is_reparse(before)
+            or not stat.S_ISREG(before.st_mode)
+            or before.st_nlink != 1
+        ):
+            raise _CandidateRejected("UNSAFE_BUNDLE_NODE")
+        with path.open("rb") as handle:
+            opened = os.fstat(handle.fileno())
+            content = handle.read(MAX_FILE_BYTES + 1)
+        after = os.lstat(path)
+    except _CandidateRejected:
+        raise
+    except OSError as exc:
+        raise _CandidateRejected("BUNDLE_UNREADABLE") from exc
+    identity_fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_nlink")
+    if (
+        _is_reparse(after)
+        or not stat.S_ISREG(opened.st_mode)
+        or not stat.S_ISREG(after.st_mode)
+        or opened.st_nlink != 1
+        or after.st_nlink != 1
+        or any(getattr(before, field) != getattr(opened, field) for field in identity_fields)
+        or any(getattr(opened, field) != getattr(after, field) for field in identity_fields)
+    ):
+        raise _CandidateRejected("BUNDLE_CHANGED_DURING_READ")
+    if len(content) > MAX_FILE_BYTES:
+        raise _CandidateRejected("BUNDLE_FILE_TOO_LARGE")
+    return content
+
+
 def _candidate_id(source_relative: str) -> str:
     return "cand_" + sha256_bytes(source_relative.encode("utf-8"))[:20]
 
@@ -257,7 +292,7 @@ def _validate_report_and_evidence(
     evidence: dict[str, Any],
     manifest_run_id: str,
     declared: dict[str, BundleFile],
-    physical_files: dict[str, Path],
+    file_bytes: dict[str, bytes],
 ) -> tuple[str, str, str, str, int, str]:
     if report.get("schema_version") != "0.1" or evidence.get("schema_version") != "0.1":
         raise _CandidateRejected("BUNDLE_VERSION_UNSUPPORTED")
@@ -350,7 +385,9 @@ def _validate_report_and_evidence(
         ):
             _required_string(raw.get(key))
         try:
-            document = load_json_object(physical_files[artifact_path], label="Evidence")
+            document = load_json_object_bytes(
+                file_bytes[artifact_path], label="Evidence", name=artifact_path
+            )
         except Exception as exc:
             raise _CandidateRejected("INVALID_BUNDLE_JSON") from exc
         if document.get("schema_version") != "0.1":
@@ -420,10 +457,12 @@ def _validate_sealed_authorities(
     report: dict[str, Any],
     evidence: dict[str, Any],
     declared: dict[str, BundleFile],
-    physical_files: dict[str, Path],
+    file_bytes: dict[str, bytes],
 ) -> str | None:
     try:
-        plan = load_json_object(physical_files["sealed-plan.json"], label="Sealed Plan")
+        plan = load_json_object_bytes(
+            file_bytes["sealed-plan.json"], label="Sealed Plan", name="sealed-plan.json"
+        )
     except Exception as exc:
         raise _CandidateRejected("INVALID_SEALED_PLAN") from exc
     profile: dict[str, Any] | None = None
@@ -431,8 +470,10 @@ def _validate_sealed_authorities(
         if "sealed-profile.json" not in declared:
             raise _CandidateRejected("MISSING_SEALED_PROFILE")
         try:
-            profile = load_json_object(
-                physical_files["sealed-profile.json"], label="Sealed ProjectProfile"
+            profile = load_json_object_bytes(
+                file_bytes["sealed-profile.json"],
+                label="Sealed ProjectProfile",
+                name="sealed-profile.json",
             )
             verify_sealed_project_profile(profile)
             verify_sealed_plan(plan, profile)
@@ -452,16 +493,13 @@ def _validate_sealed_authorities(
     }
     if report.get("plan") != expected_report_plan:
         raise _CandidateRejected("SEALED_PLAN_REPORT_MISMATCH")
-    if profile is None:
-        return None
-
     imported: list[ImportedEvidence] = []
     evidence_documents: dict[str, dict[str, Any]] = {}
     for entry in evidence["artifacts"]:
         path = entry["path"]
         try:
-            document = load_json_object(
-                physical_files[path], label="Plan 0.6 Evidence"
+            document = load_json_object_bytes(
+                file_bytes[path], label="Evidence", name=path
             )
             validate_evidence(document, path)
         except Exception as exc:
@@ -476,6 +514,23 @@ def _validate_sealed_authorities(
                 input_name=path,
             )
         )
+
+    if profile is None:
+        expected_result = evaluate(plan, imported, report["execution_status"])
+        if any(
+            canonical_json_bytes(report.get(field))
+            != canonical_json_bytes(expected_result[field])
+            for field in (
+                "execution_status",
+                "verdict",
+                "reasons",
+                "assertions",
+                "missing_evidence",
+                "contamination",
+            )
+        ):
+            raise _CandidateRejected("REPORT_DERIVATION_MISMATCH")
+        return None
 
     preflight_entries = [
         item
@@ -591,11 +646,15 @@ def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
     if not _is_relative_to(resolved_candidate, root):
         raise _CandidateRejected("BUNDLE_ROOT_ESCAPE")
     files = _collect_regular_files(candidate, root)
-    manifest_path = files.get("bundle-manifest.json")
-    if manifest_path is None:
+    if "bundle-manifest.json" not in files:
         raise _CandidateRejected("MISSING_BUNDLE_MANIFEST")
+    file_bytes = {path: _read_stable_file(value) for path, value in files.items()}
     try:
-        manifest = load_json_object(manifest_path, label="Bundle Manifest")
+        manifest = load_json_object_bytes(
+            file_bytes["bundle-manifest.json"],
+            label="Bundle Manifest",
+            name="bundle-manifest.json",
+        )
     except Exception as exc:
         raise _CandidateRejected("INVALID_BUNDLE_JSON") from exc
     run_id, declared_files = _parse_bundle_manifest(manifest)
@@ -603,24 +662,30 @@ def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
     if set(files) != set(declared) | {"bundle-manifest.json"}:
         raise _CandidateRejected("BUNDLE_FILE_SET_MISMATCH")
     for entry in declared_files:
-        path = files[entry.path]
-        if path.stat().st_size != entry.size:
+        content = file_bytes[entry.path]
+        if len(content) != entry.size:
             raise _CandidateRejected("BUNDLE_SIZE_MISMATCH")
-        if _sha256_file(path) != entry.sha256:
+        if sha256_bytes(content) != entry.sha256:
             raise _CandidateRejected("BUNDLE_HASH_MISMATCH")
     try:
-        report = load_json_object(files["report.json"], label="Report")
-        evidence = load_json_object(files["evidence-manifest.json"], label="Evidence Manifest")
+        report = load_json_object_bytes(
+            file_bytes["report.json"], label="Report", name="report.json"
+        )
+        evidence = load_json_object_bytes(
+            file_bytes["evidence-manifest.json"],
+            label="Evidence Manifest",
+            name="evidence-manifest.json",
+        )
     except Exception as exc:
         raise _CandidateRejected("INVALID_BUNDLE_JSON") from exc
     created_at, execution_status, verdict, plan_id, plan_version, plan_sha256 = (
-        _validate_report_and_evidence(report, evidence, run_id, declared, files)
+        _validate_report_and_evidence(report, evidence, run_id, declared, file_bytes)
     )
     profile_sha256 = _validate_sealed_authorities(
         report=report,
         evidence=evidence,
         declared=declared,
-        physical_files=files,
+        file_bytes=file_bytes,
     )
     bundle_sha256 = sha256_json(
         {
@@ -632,14 +697,13 @@ def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
             ],
         }
     )
-    manifest_metadata = manifest_path.stat()
     all_files = tuple(
         list(declared_files)
         + [
             BundleFile(
                 path="bundle-manifest.json",
-                sha256=_sha256_file(manifest_path),
-                size=manifest_metadata.st_size,
+                sha256=sha256_bytes(file_bytes["bundle-manifest.json"]),
+                size=len(file_bytes["bundle-manifest.json"]),
             )
         ]
     )

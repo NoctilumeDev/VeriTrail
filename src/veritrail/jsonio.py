@@ -29,3 +29,19 @@ def load_json_object(path: Path, *, label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValidationError([f"{label} {path.name} must contain a JSON object"])
     return value
+
+
+def load_json_object_bytes(
+    content: bytes, *, label: str, name: str
+) -> dict[str, Any]:
+    """Parse one already-owned byte snapshot without reopening a mutable path."""
+
+    try:
+        value = json.loads(
+            content.decode("utf-8"), object_pairs_hook=_unique_object
+        )
+    except (UnicodeError, json.JSONDecodeError, _DuplicateKeyError) as exc:
+        raise ValidationError([f"cannot read {label} {name}: {exc}"]) from exc
+    if not isinstance(value, dict):
+        raise ValidationError([f"{label} {name} must contain a JSON object"])
+    return value

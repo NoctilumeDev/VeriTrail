@@ -556,6 +556,22 @@ def _detect_bootstrap_contamination(
                 }
             )
         browser = facts["browser_exercise"]
+        if browser["job_memory_limit_mb"] != plan["browser"]["max_job_memory_mb"]:
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_BROWSER_MEMORY_LIMIT_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Browser Job memory limit differs from the sealed Plan.",
+                }
+            )
+        if browser["completed"] and not browser["job_memory_limit_enforced"]:
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_BROWSER_MEMORY_LIMIT_NOT_ENFORCED",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The sealed Browser Job memory limit was not enforced.",
+                }
+            )
         if browser["completed"] and (
             len(browser_sessions) != 1
             or browser["evidence_sha256"] != browser_sessions[0].sha256

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import importlib.metadata
+import hashlib
 import os
+import stat
 import threading
 import time
 from dataclasses import dataclass
@@ -15,6 +17,36 @@ PIPE_CHUNK_BYTES = 65_536
 WAIT_SLICE_MS = 20
 FORCED_CLEANUP_TIMEOUT_MS = 5_000
 BROKEN_PIPE_ERRORS = {109, 232}
+REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+FILE_FLAG_OPEN_REPARSE_POINT = 0x00200000
+FILE_FLAG_BACKUP_SEMANTICS = 0x02000000
+FORBIDDEN_EXECUTABLES = {
+    "bash.exe",
+    "cmd.exe",
+    "cscript.exe",
+    "docker.exe",
+    "gradle.exe",
+    "maven.exe",
+    "mshta.exe",
+    "mvn.exe",
+    "npm.exe",
+    "pnpm.exe",
+    "powershell.exe",
+    "pwsh.exe",
+    "regsvr32.exe",
+    "rundll32.exe",
+    "sh.exe",
+    "wmic.exe",
+    "wscript.exe",
+    "wsl.exe",
+    "yarn.exe",
+    "zsh.exe",
+}
+FORBIDDEN_EXECUTABLE_DESCRIPTIONS = {
+    "powershell",
+    "windows command processor",
+    "windows powershell",
+}
 
 
 @dataclass(frozen=True)
@@ -40,6 +72,8 @@ class OwnedProcessResult:
     stderr: CapturedStream
     active_process_limit: int
     active_process_limit_enforced: bool
+    job_memory_limit_mb: int
+    job_memory_limit_enforced: bool
     process_limit_attempt_observation: str
     total_assigned_processes: int
     final_active_processes: int
@@ -138,6 +172,183 @@ def require_windows_command_capability() -> None:
     _WindowsBackend()
 
 
+def _is_reparse(metadata: os.stat_result) -> bool:
+    return bool(getattr(metadata, "st_file_attributes", 0) & REPARSE_POINT)
+
+
+def assert_allowed_executable_family(
+    executable: Path, *, _backend: _WindowsBackend | None = None
+) -> None:
+    """Reject forbidden interpreter families by PE identity, not only pathname."""
+
+    if executable.name.casefold() in FORBIDDEN_EXECUTABLES:
+        raise SafetyError("selected executable family is outside the frozen no-Shell boundary")
+    backend = _WindowsBackend() if _backend is None else _backend
+    names: set[str] = set()
+    try:
+        translations = backend.win32api.GetFileVersionInfo(
+            str(executable), "\\VarFileInfo\\Translation"
+        )
+        for language, codepage in translations:
+            prefix = f"\\StringFileInfo\\{language:04x}{codepage:04x}"
+            for field in ("OriginalFilename", "InternalName", "FileDescription"):
+                try:
+                    value = backend.win32api.GetFileVersionInfo(
+                        str(executable), f"{prefix}\\{field}"
+                    )
+                except Exception:
+                    continue
+                if isinstance(value, str) and value.strip():
+                    names.add(value.strip().casefold())
+    except Exception:
+        pass
+    if names & FORBIDDEN_EXECUTABLES or names & FORBIDDEN_EXECUTABLE_DESCRIPTIONS:
+        raise SafetyError("selected executable PE family is outside the frozen no-Shell boundary")
+
+
+def inspect_executable_identity(
+    executable: Path,
+    *,
+    expected: Mapping[str, Any] | None = None,
+    _backend: _WindowsBackend | None = None,
+    _pinned_handle: Any | None = None,
+) -> dict[str, Any]:
+    """Inspect a PE while a handle denies concurrent write, delete and rename."""
+
+    backend = _WindowsBackend() if _backend is None else _backend
+    handle: Any | None = _pinned_handle
+    owns_handle = handle is None
+    try:
+        if handle is None:
+            handle = backend.win32file.CreateFile(
+                str(executable),
+                backend.win32con.GENERIC_READ,
+                backend.win32con.FILE_SHARE_READ,
+                None,
+                backend.win32con.OPEN_EXISTING,
+                backend.win32con.FILE_ATTRIBUTE_NORMAL
+                | FILE_FLAG_OPEN_REPARSE_POINT,
+                None,
+            )
+        before = os.lstat(executable)
+        if _is_reparse(before) or not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:
+            raise SafetyError("selected executable is not an ordinary single-link file")
+        assert_allowed_executable_family(executable, _backend=backend)
+        digest = hashlib.sha256()
+        signature = b""
+        backend.win32file.SetFilePointer(handle, 0, backend.win32con.FILE_BEGIN)
+        while True:
+            _, chunk = backend.win32file.ReadFile(handle, 1024 * 1024, None)
+            if not chunk:
+                break
+            if not signature:
+                signature = chunk[:2]
+            digest.update(chunk)
+        after = os.lstat(executable)
+        identity_fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns", "st_nlink")
+        if (
+            _is_reparse(after)
+            or not stat.S_ISREG(after.st_mode)
+            or any(getattr(before, field) != getattr(after, field) for field in identity_fields)
+        ):
+            raise SafetyError("selected executable changed during identity verification")
+        if signature != b"MZ":
+            raise ValidationError(["selected executable must have a Windows PE signature"])
+        normalized_path = os.path.normcase(str(executable.resolve(strict=True))).replace("\\", "/")
+        identity = {
+            "basename": executable.name,
+            "size": after.st_size,
+            "sha256": digest.hexdigest(),
+            "path_identity_sha256": hashlib.sha256(
+                normalized_path.encode("utf-8")
+            ).hexdigest(),
+        }
+        if expected is not None and dict(expected) != identity:
+            raise SafetyError("approved executable identity drifted before process creation")
+        return identity
+    except (OSError, backend.pywintypes.error) as exc:
+        raise SafetyError("selected executable could not be pinned for process creation") from exc
+    finally:
+        if owns_handle and handle is not None:
+            backend.close_handle(handle)
+
+
+class _PinnedLaunchPaths:
+    def __init__(
+        self,
+        *,
+        executable: Path,
+        expected_executable_identity: Mapping[str, Any] | None,
+        working_directory: Path,
+        subject_root: Path,
+        backend: _WindowsBackend,
+    ) -> None:
+        self.executable = executable
+        self.expected_executable_identity = expected_executable_identity
+        self.working_directory = working_directory
+        self.subject_root = subject_root
+        self.backend = backend
+        self.executable_handle: Any | None = None
+        self.directory_handle: Any | None = None
+
+    def __enter__(self) -> _PinnedLaunchPaths:
+        try:
+            self.executable_handle = self.backend.win32file.CreateFile(
+                str(self.executable),
+                self.backend.win32con.GENERIC_READ,
+                self.backend.win32con.FILE_SHARE_READ,
+                None,
+                self.backend.win32con.OPEN_EXISTING,
+                self.backend.win32con.FILE_ATTRIBUTE_NORMAL
+                | FILE_FLAG_OPEN_REPARSE_POINT,
+                None,
+            )
+            inspect_executable_identity(
+                self.executable,
+                expected=self.expected_executable_identity,
+                _backend=self.backend,
+                _pinned_handle=self.executable_handle,
+            )
+            subject = self.subject_root.resolve(strict=True)
+            before = os.lstat(self.working_directory)
+            resolved = self.working_directory.resolve(strict=True)
+            if (
+                _is_reparse(before)
+                or not stat.S_ISDIR(before.st_mode)
+                or os.path.commonpath((str(subject), str(resolved))) != str(subject)
+            ):
+                raise SafetyError("approved working directory drifted before process creation")
+            self.directory_handle = self.backend.win32file.CreateFile(
+                str(self.working_directory),
+                0,
+                self.backend.win32con.FILE_SHARE_READ
+                | self.backend.win32con.FILE_SHARE_WRITE,
+                None,
+                self.backend.win32con.OPEN_EXISTING,
+                FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT,
+                None,
+            )
+            after = os.lstat(self.working_directory)
+            identity_fields = ("st_dev", "st_ino", "st_mtime_ns")
+            if (
+                _is_reparse(after)
+                or not stat.S_ISDIR(after.st_mode)
+                or any(getattr(before, field) != getattr(after, field) for field in identity_fields)
+            ):
+                raise SafetyError("approved working directory drifted before process creation")
+            return self
+        except Exception:
+            self.__exit__(None, None, None)
+            raise
+
+    def __exit__(self, *_: Any) -> None:
+        for name in ("directory_handle", "executable_handle"):
+            handle = getattr(self, name)
+            if handle is not None:
+                self.backend.close_handle(handle)
+                setattr(self, name, None)
+
+
 def _quote_windows_argument(argument: str) -> str:
     if not argument:
         return '""'
@@ -183,6 +394,7 @@ def _validate_runtime_inputs(
     max_stdout_bytes: int,
     max_stderr_bytes: int,
     max_processes: int,
+    max_job_memory_mb: int,
 ) -> None:
     errors: list[str] = []
     if not executable.is_absolute() or executable.suffix.casefold() != ".exe":
@@ -222,6 +434,7 @@ def _validate_runtime_inputs(
         ("max_stdout_bytes", max_stdout_bytes, 1, 1_048_576),
         ("max_stderr_bytes", max_stderr_bytes, 1, 1_048_576),
         ("max_processes", max_processes, 1, 32),
+        ("max_job_memory_mb", max_job_memory_mb, 64, 4096),
     )
     for name, value, minimum, maximum in ranges:
         if not isinstance(value, int) or isinstance(value, bool) or not minimum <= value <= maximum:
@@ -230,7 +443,9 @@ def _validate_runtime_inputs(
         raise ValidationError(errors)
 
 
-def _create_job(backend: _WindowsBackend, max_processes: int) -> tuple[Any, bool, bool]:
+def _create_job(
+    backend: _WindowsBackend, max_processes: int, max_job_memory_mb: int
+) -> tuple[Any, bool, bool, bool]:
     job = backend.win32job.CreateJobObject(None, "")
     try:
         current_process = backend.win32api.GetCurrentProcess()
@@ -243,24 +458,30 @@ def _create_job(backend: _WindowsBackend, max_processes: int) -> tuple[Any, bool
         required_flags = (
             backend.win32job.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
             | backend.win32job.JOB_OBJECT_LIMIT_ACTIVE_PROCESS
+            | backend.win32job.JOB_OBJECT_LIMIT_JOB_MEMORY
         )
         information["BasicLimitInformation"]["LimitFlags"] = required_flags
         information["BasicLimitInformation"]["ActiveProcessLimit"] = max_processes
+        information["JobMemoryLimit"] = max_job_memory_mb * 1024 * 1024
         backend.win32job.SetInformationJobObject(
             job,
             backend.win32job.JobObjectExtendedLimitInformation,
             information,
         )
-        readback = backend.win32job.QueryInformationJobObject(
+        readback_information = backend.win32job.QueryInformationJobObject(
             job, backend.win32job.JobObjectExtendedLimitInformation
-        )["BasicLimitInformation"]
-        enforced = (
+        )
+        readback = readback_information["BasicLimitInformation"]
+        active_limit_enforced = (
             readback["LimitFlags"] & required_flags == required_flags
             and readback["ActiveProcessLimit"] == max_processes
         )
-        if not enforced:
+        memory_limit_enforced = (
+            readback_information["JobMemoryLimit"] == max_job_memory_mb * 1024 * 1024
+        )
+        if not active_limit_enforced or not memory_limit_enforced:
             raise SafetyError("M9 ownership backend could not verify the sealed Job limits")
-        return job, parent_in_job, enforced
+        return job, parent_in_job, active_limit_enforced, memory_limit_enforced
     except Exception:
         backend.close_handle(job)
         raise
@@ -351,6 +572,8 @@ def _pre_resume_failure_result(
     target_assigned: bool,
     active_process_limit: int,
     active_process_limit_enforced: bool,
+    job_memory_limit_mb: int,
+    job_memory_limit_enforced: bool,
     termination_reason: str,
     error_type: str,
     accounting: dict[str, int],
@@ -372,6 +595,8 @@ def _pre_resume_failure_result(
         stderr=_empty_stream(),
         active_process_limit=active_process_limit,
         active_process_limit_enforced=active_process_limit_enforced,
+        job_memory_limit_mb=job_memory_limit_mb,
+        job_memory_limit_enforced=job_memory_limit_enforced,
         process_limit_attempt_observation="NOT_PROVEN",
         total_assigned_processes=accounting["TotalProcesses"],
         final_active_processes=accounting["ActiveProcesses"],
@@ -397,6 +622,9 @@ def run_owned_process(
     max_stdout_bytes: int,
     max_stderr_bytes: int,
     max_processes: int,
+    max_job_memory_mb: int = 1024,
+    expected_executable_identity: Mapping[str, Any] | None = None,
+    subject_root: Path | None = None,
     cancel_event: threading.Event | None = None,
     _backend: _WindowsBackend | None = None,
 ) -> OwnedProcessResult:
@@ -410,11 +638,14 @@ def run_owned_process(
         max_stdout_bytes=max_stdout_bytes,
         max_stderr_bytes=max_stderr_bytes,
         max_processes=max_processes,
+        max_job_memory_mb=max_job_memory_mb,
     )
     require_windows_command_capability()
     backend = _WindowsBackend() if _backend is None else _backend
     started = time.monotonic()
-    job, parent_in_job, limit_enforced = _create_job(backend, max_processes)
+    job, parent_in_job, limit_enforced, memory_limit_enforced = _create_job(
+        backend, max_processes, max_job_memory_mb
+    )
     handles_released = True
     process_handle: Any | None = None
     thread_handle: Any | None = None
@@ -486,20 +717,32 @@ def run_owned_process(
             name: environment[name]
             for name in sorted(environment, key=lambda value: value.casefold())
         }
+        create_error_type = "PROCESS_CREATE_FAILED"
         try:
-            process_handle, thread_handle, _, _ = backend.win32process.CreateProcess(
-                str(executable),
-                command_line,
-                None,
-                None,
-                True,
-                creation_flags,
-                normalized_environment,
-                str(working_directory),
-                startup,
-            )
-            process_created = True
+            with _PinnedLaunchPaths(
+                executable=executable,
+                expected_executable_identity=expected_executable_identity,
+                working_directory=working_directory,
+                subject_root=working_directory if subject_root is None else subject_root,
+                backend=backend,
+            ):
+                process_handle, thread_handle, _, _ = backend.win32process.CreateProcess(
+                    str(executable),
+                    command_line,
+                    None,
+                    None,
+                    True,
+                    creation_flags,
+                    normalized_environment,
+                    str(working_directory),
+                    startup,
+                )
+                process_created = True
+        except SafetyError:
+            create_error_type = "LAUNCH_IDENTITY_DRIFT"
         except Exception:
+            create_error_type = "PROCESS_CREATE_FAILED"
+        if not process_created:
             close(stdout_write)
             stdout_write = None
             close(stderr_write)
@@ -520,8 +763,10 @@ def run_owned_process(
                 target_assigned=False,
                 active_process_limit=max_processes,
                 active_process_limit_enforced=limit_enforced,
-                termination_reason="PROCESS_CREATE_FAILED",
-                error_type="PROCESS_CREATE_FAILED",
+                job_memory_limit_mb=max_job_memory_mb,
+                job_memory_limit_enforced=memory_limit_enforced,
+                termination_reason=create_error_type,
+                error_type=create_error_type,
                 accounting=accounting,
                 handles_released=handles_released,
                 target_process_released=True,
@@ -571,6 +816,8 @@ def run_owned_process(
                 target_assigned=False,
                 active_process_limit=max_processes,
                 active_process_limit_enforced=limit_enforced,
+                job_memory_limit_mb=max_job_memory_mb,
+                job_memory_limit_enforced=memory_limit_enforced,
                 termination_reason="OWNERSHIP_ASSIGNMENT_FAILED",
                 error_type="OWNERSHIP_ASSIGNMENT_FAILED",
                 accounting=accounting,
@@ -744,6 +991,8 @@ def run_owned_process(
             stderr=stderr_result,
             active_process_limit=max_processes,
             active_process_limit_enforced=limit_enforced,
+            job_memory_limit_mb=max_job_memory_mb,
+            job_memory_limit_enforced=memory_limit_enforced,
             process_limit_attempt_observation="NOT_PROVEN",
             total_assigned_processes=accounting["TotalProcesses"],
             final_active_processes=accounting["ActiveProcesses"],

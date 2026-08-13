@@ -16,6 +16,7 @@ from veritrail.windows_job import (
     _CaptureState,
     _create_inheritable_pipe,
     _create_job,
+    _PinnedLaunchPaths,
     _read_pipe,
     _validate_runtime_inputs,
     _wait_for_tree_release,
@@ -33,6 +34,8 @@ class OwnedServiceStartObservation:
     target_resumed: bool
     active_process_limit: int
     active_process_limit_enforced: bool
+    job_memory_limit_mb: int
+    job_memory_limit_enforced: bool
     cleanup_complete: bool
     error_type: str | None
     elapsed_ms: float
@@ -150,6 +153,9 @@ class OwnedServiceSession:
         max_stdout_bytes: int,
         max_stderr_bytes: int,
         max_processes: int,
+        max_job_memory_mb: int = 512,
+        expected_executable_identity: Mapping[str, Any] | None = None,
+        subject_root: Path | None = None,
         process_release_timeout_ms: int,
         port_release_timeout_ms: int,
         reader_shutdown_timeout_ms: int,
@@ -165,6 +171,7 @@ class OwnedServiceSession:
             max_stdout_bytes=max_stdout_bytes,
             max_stderr_bytes=max_stderr_bytes,
             max_processes=max_processes,
+            max_job_memory_mb=max_job_memory_mb,
         )
         if not isinstance(node_id, str) or not node_id:
             raise SafetyError("M10 owned service requires a node id")
@@ -182,7 +189,9 @@ class OwnedServiceSession:
         backend = _WindowsBackend() if _backend is None else _backend
         started = time.monotonic()
         try:
-            job, parent_in_job, limit_enforced = _create_job(backend, max_processes)
+            job, parent_in_job, limit_enforced, memory_limit_enforced = _create_job(
+                backend, max_processes, max_job_memory_mb
+            )
         except Exception as exc:
             observation = OwnedServiceStartObservation(
                 parent_in_job=None,
@@ -191,6 +200,8 @@ class OwnedServiceSession:
                 target_resumed=False,
                 active_process_limit=max_processes,
                 active_process_limit_enforced=False,
+                job_memory_limit_mb=max_job_memory_mb,
+                job_memory_limit_enforced=False,
                 cleanup_complete=True,
                 error_type="JOB_CREATION_FAILED",
                 elapsed_ms=round((time.monotonic() - started) * 1000, 3),
@@ -300,6 +311,8 @@ class OwnedServiceSession:
                     target_resumed=target_resumed,
                     active_process_limit=max_processes,
                     active_process_limit_enforced=limit_enforced,
+                    job_memory_limit_mb=max_job_memory_mb,
+                    job_memory_limit_enforced=memory_limit_enforced,
                     cleanup_complete=cleanup_complete,
                     error_type=error_type,
                     elapsed_ms=round((time.monotonic() - started) * 1000, 3),
@@ -338,18 +351,27 @@ class OwnedServiceSession:
                 for name in sorted(environment, key=lambda value: value.casefold())
             }
             try:
-                process_handle, thread_handle, _, _ = backend.win32process.CreateProcess(
-                    str(executable),
-                    _build_command_line(executable, arguments),
-                    None,
-                    None,
-                    True,
-                    creation_flags,
-                    normalized_environment,
-                    str(working_directory),
-                    startup,
-                )
-                process_created = True
+                with _PinnedLaunchPaths(
+                    executable=executable,
+                    expected_executable_identity=expected_executable_identity,
+                    working_directory=working_directory,
+                    subject_root=working_directory if subject_root is None else subject_root,
+                    backend=backend,
+                ):
+                    process_handle, thread_handle, _, _ = backend.win32process.CreateProcess(
+                        str(executable),
+                        _build_command_line(executable, arguments),
+                        None,
+                        None,
+                        True,
+                        creation_flags,
+                        normalized_environment,
+                        str(working_directory),
+                        startup,
+                    )
+                    process_created = True
+            except SafetyError:
+                raise fail("LAUNCH_IDENTITY_DRIFT")
             except Exception:
                 raise fail("PROCESS_CREATE_FAILED")
 
@@ -392,6 +414,8 @@ class OwnedServiceSession:
                 target_resumed=True,
                 active_process_limit=max_processes,
                 active_process_limit_enforced=limit_enforced,
+                job_memory_limit_mb=max_job_memory_mb,
+                job_memory_limit_enforced=memory_limit_enforced,
                 cleanup_complete=False,
                 error_type=None,
                 elapsed_ms=round((time.monotonic() - started) * 1000, 3),

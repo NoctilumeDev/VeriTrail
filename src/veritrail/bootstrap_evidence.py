@@ -235,12 +235,29 @@ def collect_bootstrap_evidence(
         raise SafetyError("M10 bootstrap Evidence requires ExperimentPlan 0.6")
     _validate_preview(plan, profile, preview)
     _validate_observation_inputs(resource_observation, subject_observation)
-    if set(browser_exercise) != {"started", "completed", "evidence_sha256"}:
+    if set(browser_exercise) != {
+        "started",
+        "completed",
+        "evidence_sha256",
+        "job_memory_limit_mb",
+        "job_memory_limit_enforced",
+    }:
         raise SafetyError("M10 browser exercise must contain exact fields")
     if not isinstance(browser_exercise["started"], bool) or not isinstance(
         browser_exercise["completed"], bool
     ):
         raise SafetyError("M10 browser exercise states must be booleans")
+    if (
+        not isinstance(browser_exercise["job_memory_limit_mb"], int)
+        or isinstance(browser_exercise["job_memory_limit_mb"], bool)
+        or not 128 <= browser_exercise["job_memory_limit_mb"] <= 2048
+        or not isinstance(browser_exercise["job_memory_limit_enforced"], bool)
+        or (
+            browser_exercise["completed"]
+            and not browser_exercise["job_memory_limit_enforced"]
+        )
+    ):
+        raise SafetyError("M10 browser Job memory limit was not validly enforced")
     browser_digest = browser_exercise["evidence_sha256"]
     if browser_digest is not None and (
         not isinstance(browser_digest, str)
@@ -381,6 +398,10 @@ def collect_bootstrap_evidence(
                     "active_process_limit": policy["limits"]["max_processes"],
                     "active_process_limit_enforced": (
                         start.active_process_limit_enforced if start is not None else False
+                    ),
+                    "job_memory_limit_mb": policy["limits"]["max_job_memory_mb"],
+                    "job_memory_limit_enforced": (
+                        start.job_memory_limit_enforced if start is not None else False
                     ),
                     "total_assigned_processes": (
                         teardown.total_assigned_processes if teardown is not None else 0
@@ -737,7 +758,8 @@ def validate_bootstrap_evidence(
         job = node.get("job")
         job_fields = {
             "backend", "parent_in_job", "active_process_limit",
-            "active_process_limit_enforced", "total_assigned_processes",
+            "active_process_limit_enforced", "job_memory_limit_mb",
+            "job_memory_limit_enforced", "total_assigned_processes",
             "final_active_processes", "handles_released",
         }
         if (
@@ -750,11 +772,24 @@ def validate_bootstrap_evidence(
             )
             or not nonnegative_integer(job.get("active_process_limit"))
             or not isinstance(job.get("active_process_limit_enforced"), bool)
+            or not nonnegative_integer(job.get("job_memory_limit_mb"))
+            or not isinstance(job.get("job_memory_limit_enforced"), bool)
             or not nonnegative_integer(job.get("total_assigned_processes"))
             or not nonnegative_integer(job.get("final_active_processes"))
             or not isinstance(job.get("handles_released"), bool)
         ):
             errors.append(f"{prefix}.job is invalid")
+        elif (
+            not 64 <= job["job_memory_limit_mb"] <= 2048
+            or (
+                node.get("target_assigned") is True
+                and (
+                    job["active_process_limit_enforced"] is not True
+                    or job["job_memory_limit_enforced"] is not True
+                )
+            )
+        ):
+            errors.append(f"{prefix}.job did not enforce the sealed process and memory limits")
         readiness = node.get("readiness")
         if not isinstance(readiness, dict) or set(readiness) != {
             "adapter", "ready", "error_type", "elapsed_ms", "attempts"
@@ -855,9 +890,20 @@ def validate_bootstrap_evidence(
     browser = facts["browser_exercise"]
     if (
         not isinstance(browser, dict)
-        or set(browser) != {"started", "completed", "evidence_sha256"}
+        or set(browser) != {
+            "started", "completed", "evidence_sha256",
+            "job_memory_limit_mb", "job_memory_limit_enforced"
+        }
         or not isinstance(browser.get("started"), bool)
         or not isinstance(browser.get("completed"), bool)
+        or not isinstance(browser.get("job_memory_limit_mb"), int)
+        or isinstance(browser.get("job_memory_limit_mb"), bool)
+        or not 128 <= browser.get("job_memory_limit_mb", 0) <= 2048
+        or not isinstance(browser.get("job_memory_limit_enforced"), bool)
+        or (
+            browser.get("completed")
+            and browser.get("job_memory_limit_enforced") is not True
+        )
         or (browser.get("evidence_sha256") is not None and not sha(browser.get("evidence_sha256")))
         or (browser.get("completed") and (not browser.get("started") or browser.get("evidence_sha256") is None))
     ):

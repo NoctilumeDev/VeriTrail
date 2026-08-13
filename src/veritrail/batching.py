@@ -727,6 +727,23 @@ def _wave_key(slot: dict[str, Any]) -> tuple[int, int, int]:
     return (0 if slot["phase"] == "COVERAGE" else 1, slot["repetition"], slot["wave"])
 
 
+def _markdown_text(value: Any) -> str:
+    rendered = str(value)
+    for source, replacement in (
+        ("\\", "\\\\"),
+        ("`", "\\`"),
+        ("<", "&lt;"),
+        (">", "&gt;"),
+        ("!", "\\!"),
+        ("[", "\\["),
+        ("]", "\\]"),
+        ("(", "\\("),
+        (")", "\\)"),
+    ):
+        rendered = rendered.replace(source, replacement)
+    return rendered.replace("\r", " ").replace("\n", " ")
+
+
 def _render_markdown(analysis: dict[str, Any]) -> str:
     lines = [
         "# VeriTrail Full-factorial Batch Analysis",
@@ -772,7 +789,7 @@ def _render_markdown(analysis: dict[str, Any]) -> str:
     else:
         lines.append("- None.")
     lines.extend(["", "## Boundary", ""])
-    lines.extend(f"- {item}" for item in analysis["limits"])
+    lines.extend(f"- {_markdown_text(item)}" for item in analysis["limits"])
     lines.append("")
     return "\n".join(lines)
 

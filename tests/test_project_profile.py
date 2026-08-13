@@ -92,6 +92,12 @@ class ProjectProfileTests(unittest.TestCase):
             "query readiness": lambda profile: profile["nodes"][0]["readiness"].update(
                 path="/health?secret=value"
             ),
+            "missing memory bound": lambda profile: profile["nodes"][0]["limits"].pop(
+                "max_job_memory_mb"
+            ),
+            "oversized memory bound": lambda profile: profile["nodes"][0]["limits"].update(
+                max_job_memory_mb=4096
+            ),
         }
         for label, mutate in cases.items():
             with self.subTest(case=label):

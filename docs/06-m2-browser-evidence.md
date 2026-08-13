@@ -183,3 +183,8 @@ userinfo 被拒绝；查询参数只保留键并把值替换为固定占位符�
 
 本地运行包位于 Git 忽略的 `artifacts/`，不进入仓库。资源与延迟数字只描述本次 16 GB
 Windows 主机，不构成其他环境的容量结论。
+M10 管理式 Browser Run 进一步把 Service Worker 固定为 `BLOCKED`，并对 WebSocket 使用与 HTTP
+相同的 sealed loopback origin 白名单；这属于 M10 对 M2 适配器的运行时加固，不回写 M2 Plan 0.3
+冻结字段。M10 Plan 0.6 还必须显式封存
+`screenshot_safety=UNREDACTED_OPERATOR_ACKNOWLEDGED`：PNG 是未做 OCR/像素脱敏的视口事实，操作者
+必须保证被测页面只显示合成或可公开数据。文本脱敏不能被解释为截图已脱敏。

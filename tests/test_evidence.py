@@ -20,6 +20,8 @@ class EvidenceTests(unittest.TestCase):
                 "api_token": "synthetic-token",
                 "username": "synthetic-user",
                 "message": "loaded from C:\\Users\\alice\\project by alice@example.test at 192.0.2.1; password=demo",
+                "headers": "Authorization: Basic ZGVtbzpkZW1v\nCookie: session_id=synthetic; theme=dark\nSet-Cookie: sid=synthetic",
+                "session": "synthetic-session",
             },
         }
         redacted, count = redact_value(value)
@@ -30,7 +32,11 @@ class EvidenceTests(unittest.TestCase):
         self.assertIn("[REDACTED_EMAIL]", redacted["nested"]["message"])
         self.assertIn("[REDACTED_IP]", redacted["nested"]["message"])
         self.assertIn("password=[REDACTED]", redacted["nested"]["message"])
-        self.assertGreaterEqual(count, 7)
+        self.assertIn("Authorization: [REDACTED]", redacted["nested"]["headers"])
+        self.assertIn("Cookie: [REDACTED]", redacted["nested"]["headers"])
+        self.assertIn("Set-Cookie: [REDACTED]", redacted["nested"]["headers"])
+        self.assertEqual("[REDACTED]", redacted["nested"]["session"])
+        self.assertGreaterEqual(count, 11)
 
     def test_duplicate_sanitized_evidence_is_imported_once(self) -> None:
         source = ROOT / "examples" / "minimal" / "evidence-pass.json"

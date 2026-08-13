@@ -16,6 +16,7 @@ from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.canonical import sha256_json
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
+from veritrail.windows_job import inspect_executable_identity
 
 from tests.support import bootstrap_plan, bootstrap_profile
 from tests.test_browser_evidence import _browser_artifact
@@ -100,7 +101,7 @@ def _authorities(
             ResolvedBootstrapNode(
                 node_id=node_id,
                 executable=Path(sys.executable),
-                executable_identity={"sha256": "a" * 64},
+                executable_identity=inspect_executable_identity(Path(sys.executable)),
                 working_directory=subject,
                 inherited_environment={
                     name: value
@@ -130,6 +131,8 @@ def _exercise(plan: dict, port: int) -> ObservedBrowserEvidence:
         peak_rss_mb=8.0,
         resource_sampling_complete=True,
         process_cleanup_complete=True,
+        job_memory_limit_mb=plan["browser"]["max_job_memory_mb"],
+        job_memory_limit_enforced=True,
     )
 
 
@@ -282,6 +285,8 @@ class BootstrapObservedRunTests(unittest.TestCase):
                     peak_rss_mb=observed.peak_rss_mb,
                     resource_sampling_complete=True,
                     process_cleanup_complete=False,
+                    job_memory_limit_mb=observed.job_memory_limit_mb,
+                    job_memory_limit_enforced=True,
                 )
 
             result = run_observed_bootstrap(

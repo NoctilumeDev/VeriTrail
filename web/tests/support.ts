@@ -40,7 +40,21 @@ export function minimalReport(overrides: Record<string, unknown> = {}) {
 export async function createMinimalBundle(
   reportOverrides: Record<string, unknown> = {},
 ): Promise<Map<string, Blob>> {
-  const reportBlob = new Blob([JSON.stringify(minimalReport(reportOverrides))], {
+  const requestedPlan = reportOverrides.plan as
+    | { id?: string; version?: number }
+    | undefined
+  const authority = await createSealedPlan(
+    requestedPlan?.id ?? 'unit-plan',
+    requestedPlan?.version ?? 1,
+  )
+  const reportBlob = new Blob([JSON.stringify(minimalReport({
+    ...reportOverrides,
+    plan: {
+      id: requestedPlan?.id ?? 'unit-plan',
+      version: requestedPlan?.version ?? 1,
+      sha256: authority.digest,
+    },
+  }))], {
     type: 'application/json',
   })
   const evidenceManifestBlob = new Blob([
@@ -62,6 +76,11 @@ export async function createMinimalBundle(
       sha256: await sha256Hex(reportBlob),
       size: reportBlob.size,
     },
+    {
+      path: 'sealed-plan.json',
+      sha256: await sha256Hex(authority.blob),
+      size: authority.blob.size,
+    },
   ]
   const manifestBlob = new Blob([
     JSON.stringify({ schema_version: '0.1', run_id: files.length ? ((reportOverrides.run_id as string | undefined) ?? 'unit-run') : 'unit-run', files }),
@@ -70,6 +89,7 @@ export async function createMinimalBundle(
     ['bundle-manifest.json', manifestBlob],
     ['evidence-manifest.json', evidenceManifestBlob],
     ['report.json', reportBlob],
+    ['sealed-plan.json', authority.blob],
   ])
 }
 
@@ -109,12 +129,13 @@ export async function createBootstrapBundle(): Promise<Map<string, Blob>> {
     attachments: [],
     summary: { stop_reason: 'NONE', cleanup_complete: true },
   }
+  const authority = await createSealedPlan('m10-workbench-plan', 1)
   const reportBlob = new Blob([
     JSON.stringify(
       minimalReport({
         run_id: runId,
         created_at: capturedAt,
-        plan: { id: 'm10-workbench-plan', version: 1, sha256: 'a'.repeat(64) },
+        plan: { id: 'm10-workbench-plan', version: 1, sha256: authority.digest },
         execution_status: 'COMPLETED',
         verdict: 'PASS',
         reasons: [{ code: 'ALL_HARD_ASSERTIONS_PASSED', message: 'Sealed M10 fixture passed.' }],
@@ -158,6 +179,11 @@ export async function createBootstrapBundle(): Promise<Map<string, Blob>> {
       sha256: await sha256Hex(reportBlob),
       size: reportBlob.size,
     },
+    {
+      path: 'sealed-plan.json',
+      sha256: await sha256Hex(authority.blob),
+      size: authority.blob.size,
+    },
   ]
   const manifestBlob = new Blob([
     JSON.stringify({ schema_version: '0.1', run_id: runId, files }),
@@ -167,6 +193,7 @@ export async function createBootstrapBundle(): Promise<Map<string, Blob>> {
     [evidencePath, evidenceBlob],
     ['evidence-manifest.json', evidenceManifestBlob],
     ['report.json', reportBlob],
+    ['sealed-plan.json', authority.blob],
   ])
 }
 
@@ -190,6 +217,24 @@ function canonicalJson(value: unknown): string {
     .sort()
     .map((key) => `${JSON.stringify(key)}:${canonicalJson(source[key])}`)
     .join(',')}}`
+}
+
+export async function createSealedPlan(planId: string, version: number) {
+  const unsigned = {
+    schema_version: '0.1',
+    plan_id: planId,
+    version,
+  }
+  const digest = await sha256Hex(new Blob([canonicalJson(unsigned)]))
+  return {
+    digest,
+    blob: new Blob([
+      JSON.stringify({
+        ...unsigned,
+        seal: { algorithm: 'sha256', digest },
+      }),
+    ]),
+  }
 }
 
 export async function createComparisonBundle(

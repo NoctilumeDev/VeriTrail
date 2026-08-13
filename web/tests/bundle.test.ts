@@ -5,7 +5,7 @@ import {
   normalizeBundlePath,
   sha256Hex,
 } from '../src/domain/bundle'
-import { createMinimalBundle, minimalReport } from './support'
+import { createMinimalBundle, createSealedPlan, minimalReport } from './support'
 
 describe('Bundle Loader', () => {
   it('verifies a Report 0.1 bundle without browser evidence', async () => {
@@ -13,7 +13,12 @@ describe('Bundle Loader', () => {
 
     expect(loaded.report.execution_status).toBe('COMPLETED')
     expect(loaded.report.verdict).toBe('PASS')
-    expect(loaded.integrity).toEqual({ verified: true, verifiedFiles: 2, totalBytes: expect.any(Number) })
+    expect(loaded.integrity).toEqual({
+      verified: true,
+      authorityVerified: false,
+      verifiedFiles: 3,
+      totalBytes: expect.any(Number),
+    })
     expect(loaded.evidenceByPath).toEqual({})
     loaded.release()
   })
@@ -67,6 +72,32 @@ describe('Bundle Loader', () => {
     })
   })
 
+  it('rejects a bundle whose sealed Plan is missing', async () => {
+    const entries = await createMinimalBundle()
+    entries.delete('sealed-plan.json')
+
+    await expect(loadBundleFromBlobs(entries, 'unit')).rejects.toMatchObject({
+      code: 'MISSING_REFERENCE',
+    })
+  })
+
+  it('rejects a valid but different sealed Plan after manifest hashes are updated', async () => {
+    const entries = await createMinimalBundle()
+    const replacement = await createSealedPlan('different-plan', 1)
+    entries.set('sealed-plan.json', replacement.blob)
+    const manifest = JSON.parse(await entries.get('bundle-manifest.json')!.text()) as {
+      files: Array<{ path: string; sha256: string; size: number }>
+    }
+    const authorityEntry = manifest.files.find((file) => file.path === 'sealed-plan.json')!
+    authorityEntry.sha256 = await sha256Hex(replacement.blob)
+    authorityEntry.size = replacement.blob.size
+    entries.set('bundle-manifest.json', new Blob([JSON.stringify(manifest)]))
+
+    await expect(loadBundleFromBlobs(entries, 'unit')).rejects.toMatchObject({
+      code: 'AUTHORITY_MISMATCH',
+    })
+  })
+
   it('stops before parsing when the selection exceeds 256 files', async () => {
     const entries = await createMinimalBundle()
     for (let index = 0; index < 255; index += 1) {
@@ -89,7 +120,80 @@ describe('Bundle Loader', () => {
     )
   })
 
+  it('rejects semantically unbounded browser evidence despite valid file hashes', async () => {
+    const authority = await createSealedPlan('unit-plan', 1)
+    const evidenceBlob = new Blob([
+      JSON.stringify({
+        schema_version: '0.1',
+        evidence_type: 'browser.session',
+        source: 'unit',
+        captured_at: '2026-08-13T00:00:00Z',
+        facts: {
+          viewport_runs: [],
+          steps: [],
+          console: Array.from({ length: 501 }, () => ({ level: 'log' })),
+          page_errors: [],
+          network: [],
+          screenshots: [],
+          viewport_count: 0,
+          screenshot_count: 0,
+        },
+      }),
+    ])
+    const artifact = {
+      evidence_type: 'browser.session',
+      path: 'evidence/browser.json',
+      sha256: await sha256Hex(evidenceBlob),
+      size: evidenceBlob.size,
+      redacted: true,
+      redacted_fields: 0,
+      redaction_rule_version: '0.1',
+      parser_version: '0.1',
+      captured_at: '2026-08-13T00:00:00Z',
+      source: 'unit',
+      source_name: 'unit-browser',
+      retention: 'ephemeral',
+      attachments: [],
+    }
+    const reportBlob = new Blob([
+      JSON.stringify(minimalReport({
+        plan: { id: 'unit-plan', version: 1, sha256: authority.digest },
+        evidence: [artifact],
+      })),
+    ])
+    const evidenceManifestBlob = new Blob([
+      JSON.stringify({
+        schema_version: '0.1',
+        run_id: 'unit-run',
+        artifacts: [artifact],
+        duplicate_inputs_ignored: [],
+      }),
+    ])
+    const entries = new Map<string, Blob>([
+      ['report.json', reportBlob],
+      ['evidence-manifest.json', evidenceManifestBlob],
+      ['evidence/browser.json', evidenceBlob],
+      ['sealed-plan.json', authority.blob],
+    ])
+    const files = await Promise.all(
+      [...entries].map(async ([path, blob]) => ({
+        path,
+        sha256: await sha256Hex(blob),
+        size: blob.size,
+      })),
+    )
+    entries.set(
+      'bundle-manifest.json',
+      new Blob([JSON.stringify({ schema_version: '0.1', run_id: 'unit-run', files })]),
+    )
+
+    await expect(loadBundleFromBlobs(entries, 'unit')).rejects.toMatchObject({
+      code: 'EVIDENCE_LIMIT',
+    })
+  })
+
   it('accepts hashed UTF-8 command output without treating it as an image', async () => {
+    const authority = await createSealedPlan('unit-plan', 1)
     const outputBlob = new Blob(['sanitized command output\n'], {
       type: 'text/plain; charset=utf-8',
     })
@@ -124,7 +228,10 @@ describe('Bundle Loader', () => {
       retention: 'ephemeral',
       attachments: [attachment],
     }
-    const reportBlob = new Blob([JSON.stringify(minimalReport({ evidence: [artifact] }))])
+    const reportBlob = new Blob([JSON.stringify(minimalReport({
+      plan: { id: 'unit-plan', version: 1, sha256: authority.digest },
+      evidence: [artifact],
+    }))])
     const evidenceManifestBlob = new Blob([
       JSON.stringify({
         schema_version: '0.1',
@@ -138,6 +245,7 @@ describe('Bundle Loader', () => {
       ['evidence-manifest.json', evidenceManifestBlob],
       ['evidence/001-runtime.command.json', evidenceBlob],
       ['attachments/command/stdout.txt', outputBlob],
+      ['sealed-plan.json', authority.blob],
     ])
     const files = await Promise.all(
       [...entries].map(async ([path, blob]) => ({
@@ -159,6 +267,7 @@ describe('Bundle Loader', () => {
   })
 
   it('revokes attachment object URLs when a later evidence document is invalid', async () => {
+    const authority = await createSealedPlan('unit-plan', 1)
     const attachmentBlob = new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' })
     const firstEvidenceBlob = new Blob([
       JSON.stringify({
@@ -166,7 +275,16 @@ describe('Bundle Loader', () => {
         evidence_type: 'browser.session',
         source: 'unit',
         captured_at: '2026-08-09T00:00:00Z',
-        facts: {},
+        facts: {
+          viewport_runs: [],
+          steps: [],
+          console: [],
+          page_errors: [],
+          network: [],
+          screenshots: [],
+          viewport_count: 0,
+          screenshot_count: 0,
+        },
       }),
     ])
     const invalidEvidenceBlob = new Blob([
@@ -205,7 +323,10 @@ describe('Bundle Loader', () => {
       await artifact('runtime.preflight', 'evidence/invalid.json', invalidEvidenceBlob, []),
     ]
     const reportBlob = new Blob([
-      JSON.stringify(minimalReport({ evidence: artifacts })),
+      JSON.stringify(minimalReport({
+        plan: { id: 'unit-plan', version: 1, sha256: authority.digest },
+        evidence: artifacts,
+      })),
     ])
     const evidenceManifestBlob = new Blob([
       JSON.stringify({
@@ -221,6 +342,7 @@ describe('Bundle Loader', () => {
       ['evidence/first.json', firstEvidenceBlob],
       ['evidence/invalid.json', invalidEvidenceBlob],
       ['attachments/unit.png', attachmentBlob],
+      ['sealed-plan.json', authority.blob],
     ])
     const files = await Promise.all(
       [...dataFiles].map(async ([path, blob]) => ({

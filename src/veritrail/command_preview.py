@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import os
 import re
 import stat
@@ -15,6 +14,7 @@ from veritrail.jsonio import load_json_object
 from veritrail.plan import PLAN_ID_PATTERN, verify_sealed_plan
 from veritrail.privacy import redact_string
 from veritrail.windows_job import (
+    inspect_executable_identity,
     require_windows_command_capability as _require_windows_command_capability,
 )
 
@@ -23,30 +23,6 @@ TOOL_BINDING_FIELDS = {"executable"}
 MAX_BINDINGS = 32
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
 LOCAL_DRIVE_PATTERN = re.compile(r"^[A-Za-z]:$")
-FORBIDDEN_EXECUTABLES = {
-    "bash.exe",
-    "cmd.exe",
-    "cscript.exe",
-    "docker.exe",
-    "gradle.exe",
-    "maven.exe",
-    "mshta.exe",
-    "mvn.exe",
-    "npm.exe",
-    "pnpm.exe",
-    "powershell.exe",
-    "pwsh.exe",
-    "regsvr32.exe",
-    "rundll32.exe",
-    "sh.exe",
-    "wmic.exe",
-    "wscript.exe",
-    "wsl.exe",
-    "yarn.exe",
-    "zsh.exe",
-}
-
-
 @dataclass(frozen=True)
 class ResolvedCommand:
     preview: dict[str, Any]
@@ -152,39 +128,16 @@ def _resolve_executable(raw_path: str) -> tuple[Path, dict[str, Any]]:
         raise ValidationError(["selected executable must be an existing ordinary .exe file"]) from exc
 
     basename = resolved.name
-    if basename.casefold() in FORBIDDEN_EXECUTABLES:
-        raise SafetyError("selected executable family is outside the frozen M9 ONESHOT boundary")
     if redact_string(basename)[1]:
         raise SafetyError("selected executable basename contains sensitive or personal data")
 
-    digest = hashlib.sha256()
-    signature = b""
     try:
-        before = resolved.stat()
-        with resolved.open("rb") as handle:
-            while chunk := handle.read(1024 * 1024):
-                if not signature:
-                    signature = chunk[:2]
-                digest.update(chunk)
-            opened = os.fstat(handle.fileno())
-        after = resolved.stat()
-    except OSError as exc:
+        identity = inspect_executable_identity(resolved)
+    except (OSError, SafetyError, ValidationError) as exc:
+        if isinstance(exc, SafetyError):
+            message = str(exc).replace("frozen no-Shell boundary", "frozen M9 ONESHOT boundary")
+            raise SafetyError(message) from exc
         raise ValidationError(["selected executable could not be read for identity verification"]) from exc
-    identity_fields = ("st_dev", "st_ino", "st_size", "st_mtime_ns")
-    if any(getattr(before, field) != getattr(opened, field) for field in identity_fields) or any(
-        getattr(opened, field) != getattr(after, field) for field in identity_fields
-    ):
-        raise SafetyError("selected executable changed during identity verification")
-    if signature != b"MZ":
-        raise ValidationError(["selected executable must have a Windows PE signature"])
-
-    normalized_path = os.path.normcase(str(resolved)).replace("\\", "/")
-    identity = {
-        "basename": basename,
-        "size": after.st_size,
-        "sha256": digest.hexdigest(),
-        "path_identity_sha256": sha256_bytes(normalized_path.encode("utf-8")),
-    }
     return resolved, identity
 
 

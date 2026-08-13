@@ -25,6 +25,8 @@ MAX_EVENT_TEXT = 4096
 
 
 class _BrowserLifecycleObserver(Protocol):
+    def playwright_started(self, playwright: Any) -> None: ...
+
     def browser_started(self, browser: Any) -> None: ...
 
     def checkpoint(self, browser: Any) -> None: ...
@@ -50,6 +52,18 @@ def _origin(url: str) -> str | None:
         return None
     host = "localhost" if parsed.hostname == "127.0.0.1" else parsed.hostname
     return f"http://{host}:{port}"
+
+
+def _websocket_origin(url: str) -> str | None:
+    try:
+        parsed = urlsplit(url)
+        port = parsed.port
+    except ValueError:
+        return None
+    if parsed.scheme != "ws" or parsed.hostname not in {"localhost", "127.0.0.1"} or port is None:
+        return None
+    host = "localhost" if parsed.hostname == "127.0.0.1" else parsed.hostname
+    return f"ws://{host}:{port}"
 
 
 def sanitize_url(url: str) -> str:
@@ -181,6 +195,9 @@ def _collect_browser_evidence(
         for item in policy["allowed_origins"]
         if (normalized := _origin(item)) is not None
     }
+    allowed_websocket_origins = {
+        origin.replace("http://", "ws://", 1) for origin in allowed_origins
+    }
     started_at = _utc_now()
     steps: list[dict[str, Any]] = []
     console: list[dict[str, Any]] = []
@@ -200,7 +217,7 @@ def _collect_browser_evidence(
         if item not in collection_errors:
             collection_errors.append(item)
 
-    def observe(method: str, *values: Any) -> None:
+    def observe(method: str, *values: Any, required: bool = False) -> None:
         if lifecycle_observer is None:
             return
         try:
@@ -210,11 +227,16 @@ def _collect_browser_evidence(
                 lifecycle_observer.failed(method, type(exc).__name__)
             except Exception:
                 pass
+            if required:
+                raise
 
     try:
         playwright_context = sync_playwright()
         playwright = playwright_context.start()
         try:
+            # M10 uses this required hook to place the Playwright driver in the
+            # owned Job before it is allowed to create Chromium descendants.
+            observe("playwright_started", playwright, required=True)
             browser = playwright.chromium.launch(headless=policy["headless"])
         except Exception as exc:
             try:
@@ -245,6 +267,7 @@ def _collect_browser_evidence(
                 context = browser.new_context(
                     viewport={"width": viewport["width"], "height": viewport["height"]},
                     is_mobile=viewport["is_mobile"],
+                    service_workers="block",
                 )
 
                 def route_request(route: Any, request: Any) -> None:
@@ -257,6 +280,14 @@ def _collect_browser_evidence(
                         route.continue_()
 
                 context.route("**/*", route_request)
+
+                def route_web_socket(route: Any) -> None:
+                    if _websocket_origin(route.url) not in allowed_websocket_origins:
+                        route.close()
+                    else:
+                        route.connect_to_server()
+
+                context.route_web_socket("**/*", route_web_socket)
                 page = context.new_page()
                 observe("checkpoint", browser)
                 page.set_default_timeout(policy["timeout_ms"])
@@ -419,12 +450,12 @@ def _collect_browser_evidence(
         except Exception as exc:
             cleanup_complete = False
             record_collection_error("browser-close", type(exc).__name__)
-        observe("after_browser_close")
         try:
             playwright.stop()
         except Exception as exc:
             cleanup_complete = False
             record_collection_error("playwright-stop", type(exc).__name__)
+        observe("after_browser_close")
 
     failed_requests = [item for item in network if item["failure"] is not None]
     http_errors = [
@@ -499,6 +530,11 @@ def _collect_browser_evidence(
             "query_values_redacted": True,
             "contexts_parallel": False,
             "maximum_live_pages": 1,
+            "service_workers": "BLOCKED",
+            "websocket_scope": "sealed-loopback-origins-only",
+            "screenshot_safety": policy.get(
+                "screenshot_safety", "LEGACY_UNACKNOWLEDGED"
+            ),
         },
     }
     return import_evidence_document(

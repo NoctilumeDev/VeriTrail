@@ -39,6 +39,7 @@ describe('BatchAnalysis Loader and View', () => {
     const wrapper = mount(BatchAnalysisView, { props: { loaded } })
 
     expect(loaded.integrity.verifiedFiles).toBe(3)
+    expect(loaded.integrity.authorityVerified).toBe(false)
     expect(wrapper.get('[data-testid="batch-coverage-status"]').attributes('aria-label')).toBe(
       '覆盖状态：COMPLETE',
     )

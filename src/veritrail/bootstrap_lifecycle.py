@@ -28,8 +28,10 @@ class BootstrapServiceSpec:
     node_id: str
     role: str
     executable: Path
+    executable_identity: dict[str, Any]
     arguments: tuple[str, ...]
     working_directory: Path
+    subject_root: Path
     environment: dict[str, str]
     port: int
     readiness: dict[str, Any]
@@ -172,8 +174,10 @@ def materialize_bootstrap_service_specs(
                 node_id=node_id,
                 role=policy["role"],
                 executable=resolved_node.executable,
+                executable_identity=deepcopy(resolved_node.executable_identity),
                 arguments=tuple(arguments),
                 working_directory=resolved_node.working_directory,
+                subject_root=resolved.subject_root,
                 environment=environment,
                 port=policy["port"],
                 readiness=deepcopy(policy["readiness"]),
@@ -276,13 +280,16 @@ def run_bootstrap_lifecycle(
                 session = session_factory(
                     node_id=node.spec.node_id,
                     executable=node.spec.executable,
+                    expected_executable_identity=node.spec.executable_identity,
                     arguments=node.spec.arguments,
                     working_directory=node.spec.working_directory,
+                    subject_root=node.spec.subject_root,
                     environment=node.spec.environment,
                     port=node.spec.port,
                     max_stdout_bytes=limits["max_stdout_bytes"],
                     max_stderr_bytes=limits["max_stderr_bytes"],
                     max_processes=limits["max_processes"],
+                    max_job_memory_mb=limits["max_job_memory_mb"],
                     process_release_timeout_ms=shutdown[
                         "process_release_timeout_ms"
                     ],

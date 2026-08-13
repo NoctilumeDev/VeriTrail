@@ -96,7 +96,32 @@
     "random_seed": { "$ref": "experiment-plan-0.3.schema.json#/properties/random_seed" },
     "resource_budget": { "$ref": "experiment-plan-0.3.schema.json#/properties/resource_budget" },
     "preflight": { "$ref": "experiment-plan-0.3.schema.json#/properties/preflight" },
-    "browser": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser" },
+    "browser": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine",
+        "headless",
+        "start_url",
+        "allowed_origins",
+        "timeout_ms",
+        "viewports",
+        "steps",
+        "screenshot_safety",
+        "max_job_memory_mb"
+      ],
+      "properties": {
+        "engine": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/engine" },
+        "headless": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/headless" },
+        "start_url": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/start_url" },
+        "allowed_origins": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/allowed_origins" },
+        "timeout_ms": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/timeout_ms" },
+        "viewports": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/viewports" },
+        "steps": { "$ref": "experiment-plan-0.3.schema.json#/properties/browser/properties/steps" },
+        "screenshot_safety": { "const": "UNREDACTED_OPERATOR_ACKNOWLEDGED" },
+        "max_job_memory_mb": { "type": "integer", "minimum": 128, "maximum": 2048 }
+      }
+    },
     "bootstrap_profile": {
       "type": "object",
       "additionalProperties": false,

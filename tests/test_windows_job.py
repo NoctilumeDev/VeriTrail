@@ -7,9 +7,15 @@ import sys
 import tempfile
 import threading
 import unittest
+from unittest import mock
 from pathlib import Path
 
-from veritrail.windows_job import _WindowsBackend, run_owned_process
+from veritrail.windows_job import (
+    _PinnedLaunchPaths,
+    _WindowsBackend,
+    inspect_executable_identity,
+    run_owned_process,
+)
 
 
 @unittest.skipUnless(os.name == "nt", "M9 ownership backend is Windows-only")
@@ -33,6 +39,8 @@ class WindowsJobTests(unittest.TestCase):
         grace_ms: int = 300,
         stdout_limit: int = 1_048_576,
         max_processes: int = 4,
+        max_job_memory_mb: int = 1024,
+        expected_executable_identity: dict[str, object] | None = None,
         backend: _WindowsBackend | None = None,
         cancel_event: threading.Event | None = None,
     ):
@@ -46,6 +54,9 @@ class WindowsJobTests(unittest.TestCase):
             max_stdout_bytes=stdout_limit,
             max_stderr_bytes=1_048_576,
             max_processes=max_processes,
+            max_job_memory_mb=max_job_memory_mb,
+            expected_executable_identity=expected_executable_identity,
+            subject_root=Path.cwd().resolve(),
             cancel_event=cancel_event,
             _backend=backend,
         )
@@ -63,10 +74,51 @@ class WindowsJobTests(unittest.TestCase):
         self.assertTrue(result.stdout.stream_complete)
         self.assertTrue(result.stderr.stream_complete)
         self.assertTrue(result.active_process_limit_enforced)
+        self.assertEqual(1024, result.job_memory_limit_mb)
+        self.assertTrue(result.job_memory_limit_enforced)
         self.assertEqual("NOT_PROVEN", result.process_limit_attempt_observation)
         self.assertFalse(result.forced_termination_requested)
         self.assertEqual(0, result.final_active_processes)
         self.assertTrue(result.cleanup_complete)
+
+    def test_executable_identity_drift_stops_before_resume_and_marker(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "must-not-exist.txt"
+            result = self._run(
+                ["--mode", "marker", "--marker", str(marker)],
+                expected_executable_identity={"sha256": "0" * 64},
+            )
+
+            self.assertEqual("LAUNCH_IDENTITY_DRIFT", result.termination_reason)
+            self.assertFalse(result.process_created)
+            self.assertFalse(marker.exists())
+            self.assertTrue(result.job_memory_limit_enforced)
+            self.assertTrue(result.cleanup_complete)
+
+    def test_pinned_launch_identity_is_read_from_the_held_handle(self) -> None:
+        executable = Path(sys.executable).resolve()
+        expected = inspect_executable_identity(executable)
+        backend = _WindowsBackend()
+        original_create_file = backend.win32file.CreateFile
+        executable_opens = 0
+
+        def counted_create_file(path, *args):
+            nonlocal executable_opens
+            if Path(path) == executable:
+                executable_opens += 1
+            return original_create_file(path, *args)
+
+        with mock.patch.object(
+            backend.win32file, "CreateFile", side_effect=counted_create_file
+        ):
+            with _PinnedLaunchPaths(
+                executable=executable,
+                expected_executable_identity=expected,
+                working_directory=Path.cwd().resolve(),
+                subject_root=Path.cwd().resolve(),
+                backend=backend,
+            ):
+                self.assertEqual(1, executable_opens)
 
     def test_windows_argv_quoting_preserves_empty_spaces_quotes_and_backslashes(self) -> None:
         values = ["", "two words", 'quote"inside', "trailing\\", "plain"]

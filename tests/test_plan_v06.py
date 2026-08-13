@@ -116,6 +116,15 @@ class PlanV06Tests(unittest.TestCase):
                 target=orchestration_plan()["target"]
             ),
             "legacy command": lambda plan: plan.update(command=command_plan()["command"]),
+            "missing screenshot acknowledgement": lambda plan: plan["browser"].pop(
+                "screenshot_safety"
+            ),
+            "missing browser memory limit": lambda plan: plan["browser"].pop(
+                "max_job_memory_mb"
+            ),
+            "oversized browser memory limit": lambda plan: plan["browser"].update(
+                max_job_memory_mb=4096
+            ),
         }
         for label, mutate in cases.items():
             with self.subTest(case=label):

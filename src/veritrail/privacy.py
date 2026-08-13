@@ -24,14 +24,23 @@ SENSITIVE_KEYS = {
     "hostname",
     "host-name",
     "computer-name",
+    "session",
+    "session-id",
+    "sid",
+    "credential",
+    "auth",
 }
 KEY_NORMALIZER = re.compile(r"[_\s]+")
 BEARER_PATTERN = re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._~+/=-]+")
 TOKEN_PATTERN = re.compile(r"\b(?:gh[opsu]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b")
 GENERIC_API_TOKEN_PATTERN = re.compile(r"\b(?:sk-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16})\b")
 CREDENTIAL_ASSIGNMENT_PATTERN = re.compile(
-    r"(?i)\b(password|passwd|token|secret|api[_-]?key)\s*[:=]\s*[^\s,;]+"
+    r"(?i)\b(password|passwd|token|secret|api[_-]?key|session(?:[_-]?id)?|sid|credential|auth|cookie)\s*[:=]\s*(?!\[REDACTED\])[^\s,;]+"
 )
+BASIC_AUTH_HEADER_PATTERN = re.compile(
+    r"(?im)^(\s*(?:proxy-)?authorization\s*:\s*)(?:basic|digest|ntlm|negotiate)?\s*[^\r\n]+"
+)
+COOKIE_HEADER_PATTERN = re.compile(r"(?im)^(\s*(?:set-cookie|cookie)\s*:\s*)[^\r\n]+")
 BASIC_AUTH_URL_PATTERN = re.compile(r"(?i)([a-z][a-z0-9+.-]*://)[^/@\s:]+:[^/@\s]+@")
 WINDOWS_USER_PATTERN = re.compile(r"(?i)\b[A-Z]:[\\/]Users[\\/][^\\/\s]+")
 POSIX_USER_PATTERN = re.compile(r"/(?:Users|home)/[^/\s]+")
@@ -68,6 +77,8 @@ def redact_string(value: str) -> tuple[str, int]:
         (BEARER_PATTERN, "Bearer [REDACTED]"),
         (TOKEN_PATTERN, "[REDACTED_TOKEN]"),
         (GENERIC_API_TOKEN_PATTERN, "[REDACTED_TOKEN]"),
+        (BASIC_AUTH_HEADER_PATTERN, r"\1[REDACTED]"),
+        (COOKIE_HEADER_PATTERN, r"\1[REDACTED]"),
         (CREDENTIAL_ASSIGNMENT_PATTERN, r"\1=[REDACTED]"),
         (BASIC_AUTH_URL_PATTERN, r"\1[REDACTED]@"),
         (WINDOWS_USER_PATTERN, "<USER_HOME>"),

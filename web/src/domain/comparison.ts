@@ -272,7 +272,12 @@ export async function loadComparisonFromBlobs(
   return {
     comparison,
     manifest,
-    integrity: { verified: true, verifiedFiles: manifest.files.length, totalBytes: verifiedBytes },
+    integrity: {
+      verified: true,
+      authorityVerified: false,
+      verifiedFiles: manifest.files.length,
+      totalBytes: verifiedBytes,
+    },
   }
 }
 

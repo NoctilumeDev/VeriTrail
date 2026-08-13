@@ -411,8 +411,8 @@ Catalog 组合门禁与生产 Workbench 的内置浏览器通用账册读回已�
 整改 Catalog 报告重推导、readiness 响应后所有权和只读 API 稳定读取三个接缝；严格串行轮也已
 逐出口、双运行时、前端、依赖和内置浏览器通过。其后同一最终候选从头完成 16 GB 有界压力轮：
 同端口竞争安全失败，独立度 1/2/3 全部 PASS，三个 READY 后取消全部形成
-`USER_CANCELLED / ABORTED/PENDING`，1000 次回环只读请求零错误，最低可用内存 7529 MiB，11 个 Bundle
-和 Catalog 独立回读成立；最终候选最低可用内存 7323 MiB 且零残留。M10 当前为 `STRESS_AUDITED`，
+`USER_CANCELLED / ABORTED/PENDING`，1000 次回环只读请求零错误，11 个 Bundle 和 Catalog 独立回读
+成立；最终候选最低可用内存 7323 MiB 且零残留。M10 当前为 `STRESS_AUDITED`，
 仍未通过最终发布门禁。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终
@@ -421,6 +421,8 @@ Catalog 组合门禁与生产 Workbench 的内置浏览器通用账册读回已�
 地基审查事实见 [M10 动态地基系统与代码质量审查](docs/17-m10-foundation-review.md)，严格串行事实见
 [M10 第一轮严格串行完整复验](docs/18-m10-serial-validation.md)，压力事实见
 [M10 第二轮 16 GB 有界压力审计](docs/19-m10-bounded-stress-audit.md)。
+发布安全整改、资源硬边界和重新冻结顺序见
+[M10 发布安全整改与冻结复验](docs/20-m10-release-security-remediation.md)。
 
 ### 本地运行
 
@@ -488,6 +490,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M10 动态地基系统与代码质量审查（FOUNDATION_REVIEWED）](docs/17-m10-foundation-review.md)
 - [M10 第一轮严格串行完整复验（SERIAL_VALIDATED）](docs/18-m10-serial-validation.md)
 - [M10 第二轮 16 GB 有界压力审计（STRESS_AUDITED）](docs/19-m10-bounded-stress-audit.md)
+- [M10 发布安全整改与冻结复验（VERIFICATION_PENDING）](docs/20-m10-release-security-remediation.md)
 
 ## 项目来源
 

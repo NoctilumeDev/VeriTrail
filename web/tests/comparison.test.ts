@@ -15,6 +15,7 @@ describe('Comparison Loader and View', () => {
 
     expect(loaded.comparison.comparison_status).toBe('MATCH')
     expect(loaded.integrity.verifiedFiles).toBe(2)
+    expect(loaded.integrity.authorityVerified).toBe(false)
     expect(wrapper.get('[data-testid="comparison-status"]').attributes('aria-label')).toBe('复跑比较：MATCH')
     expect(wrapper.get('[data-testid="comparison-sources"]').text()).toContain('unit-baseline')
     expect(wrapper.get('[data-testid="comparison-sources"]').text()).toContain('PASS')

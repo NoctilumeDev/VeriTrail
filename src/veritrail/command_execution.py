@@ -473,8 +473,10 @@ def collect_command_evidence(
             try:
                 process_result = process_runner(
                     executable=resolved.executable,
+                    expected_executable_identity=resolved.executable_identity,
                     arguments=arguments,
                     working_directory=resolved.working_directory,
+                    subject_root=resolved.subject_root,
                     environment=environment,
                     timeout_ms=command["timeout_ms"],
                     descendant_exit_grace_ms=command["descendant_exit_grace_ms"],

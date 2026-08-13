@@ -2,10 +2,13 @@
 
 ## Current status
 
-VeriTrail is a pre-release v0 implementation with M0 through M3 frozen and no supported public release.
-The Python evidence core, bounded resource/browser adapters, and read-only Vue evidence workbench exist;
-SQLite, a local API, command orchestration, accounts, cloud sync, and a complete self-hosted loop remain
-future work.
+VeriTrail is a pre-release v0 implementation. M0 through M9 are frozen; M10 has passed its local
+release-security, regression, bounded-stress and browser gates, but remains freeze-pending until its remote
+commit and tag are read back. The repository includes the deterministic
+Python evidence core, bounded resource/browser adapters, a read-only Vue workbench, rebuildable SQLite
+Catalog and loopback API, deterministic Comparison/Pairing/Batch analysis, a trusted Windows ONESHOT
+runner, and the Windows 11/C1 two-node bootstrap candidate. It does not claim support for untrusted code,
+arbitrary Shell, cross-platform bootstrap, accounts, cloud sync, or production isolation.
 
 ## Reporting a vulnerability
 
@@ -28,7 +31,8 @@ The project treats the following as security-sensitive by design:
 ## Required safeguards
 
 - v0 must not execute arbitrary Shell strings.
-- Command execution, if introduced later, requires structured arguments, explicit preview, an auditable allowlist and bounded time/resources.
+- Command execution uses structured arguments, explicit digest approval, local executable bindings, Windows
+  Job ownership and bounded time/process/memory/output resources; it remains limited to trusted code.
 - Sensitive headers and values must be redacted before persistence or export.
 - Reports must render imported content as data, not executable HTML.
 - The M3 workbench rejects absolute/traversal/confusable paths, undeclared or duplicate files, unknown
@@ -37,4 +41,9 @@ The project treats the following as security-sensitive by design:
 - Attachment object URLs must be revoked on bundle switch, component teardown, and any later validation
   failure; invalid bundles must not expose a partial Report/Verdict view.
 - Local APIs must bind to loopback by default and must not silently expose evidence over the network.
+- A Bundle hash proves byte integrity, not truthful authorship. Catalog ingestion must independently derive
+  Verdict from the sealed Plan and verified Evidence. Direct Workbench imports must remain visibly labelled
+  as self-reported unless loaded through an independently verified Catalog.
+- Browser HTTP and WebSocket traffic is limited to sealed loopback origins; Service Workers are blocked in
+  managed capture. Screenshots are unredacted pixels and M10 requires explicit operator acknowledgement.
 - AI output, if introduced later, is advisory and cannot determine acceptance verdicts or bypass deterministic guards.

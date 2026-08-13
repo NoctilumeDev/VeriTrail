@@ -79,6 +79,8 @@ BROWSER_FIELDS = {
     "timeout_ms",
     "viewports",
     "steps",
+    "screenshot_safety",
+    "max_job_memory_mb",
 }
 BROWSER_ACTION_FIELDS = {
     "goto": {"id", "action", "url"},
@@ -312,15 +314,31 @@ def _loopback_origin(value: Any, path: str, errors: list[str]) -> str | None:
     return f"http://{parsed.hostname}:{port}"
 
 
-def _validate_browser(value: Any, errors: list[str]) -> None:
+def _validate_browser(
+    value: Any, errors: list[str], *, require_m10_safety: bool = False
+) -> None:
     if not isinstance(value, dict):
         errors.append("browser must be an object for schema_version '0.3' or newer")
         return
-    _reject_unknown_fields(value, BROWSER_FIELDS, "browser", errors)
+    allowed_fields = (
+        BROWSER_FIELDS
+        if require_m10_safety
+        else BROWSER_FIELDS - {"screenshot_safety", "max_job_memory_mb"}
+    )
+    _reject_unknown_fields(value, allowed_fields, "browser", errors)
     if value.get("engine") != "chromium":
         errors.append("browser.engine must be chromium")
     if not isinstance(value.get("headless"), bool):
         errors.append("browser.headless must be a boolean")
+    if require_m10_safety and value.get("screenshot_safety") != "UNREDACTED_OPERATOR_ACKNOWLEDGED":
+        errors.append(
+            "browser.screenshot_safety must explicitly acknowledge unredacted viewport pixels"
+        )
+    browser_memory = value.get("max_job_memory_mb")
+    if require_m10_safety and (
+        not _is_integer(browser_memory) or not 128 <= browser_memory <= 2048
+    ):
+        errors.append("browser.max_job_memory_mb must be an integer from 128 to 2048")
 
     origins = value.get("allowed_origins")
     normalized_origins: set[str] = set()
@@ -1100,7 +1118,7 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
         _validate_command(plan.get("command"), errors)
     elif schema_version == "0.6":
         _validate_preflight(plan.get("preflight"), errors)
-        _validate_browser(plan.get("browser"), errors)
+        _validate_browser(plan.get("browser"), errors, require_m10_safety=True)
         if "target" in plan:
             errors.append("schema_version '0.6' does not accept the Plan 0.4 target")
         if "command" in plan:
