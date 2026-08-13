@@ -114,6 +114,18 @@ def _serve(
     server.serve_forever()
 
 
+def _serve_for(port: int, seconds: float) -> None:
+    server = ThreadingHTTPServer(("127.0.0.1", port), _Handler)
+    server.timeout = 0.05
+    deadline = time.monotonic() + seconds
+    print("listener-ready", flush=True)
+    try:
+        while time.monotonic() < deadline:
+            server.handle_request()
+    finally:
+        server.server_close()
+
+
 def _dependency_status(origin: str) -> int:
     parsed = urlsplit(origin)
     if (
@@ -145,6 +157,10 @@ def main() -> int:
     serve.add_argument("--status", type=int, default=200)
     serve.add_argument("--response-size", type=int, default=2)
 
+    serve_for = subparsers.add_parser("serve-for")
+    serve_for.add_argument("port", type=int)
+    serve_for.add_argument("seconds", type=float)
+
     child = subparsers.add_parser("child-listener")
     child.add_argument("port", type=int)
 
@@ -174,6 +190,8 @@ def main() -> int:
             status=args.status,
             response_size=args.response_size,
         )
+    elif args.mode == "serve-for":
+        _serve_for(args.port, args.seconds)
     elif args.mode == "child-listener":
         child_process = subprocess.Popen(
             [

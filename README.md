@@ -66,7 +66,10 @@ Evidence，并由 Catalog 验真所有权清理事实。application READY 后的
 公共 Bundle 与 CLI Ctrl+C/Ctrl+Break 桥接，形成 `USER_CANCELLED / ABORTED/PENDING`、零 browser Evidence
 和完整逆序清理。实时 Preview 通过后由外部监听者抢占 dependency/application 端口的两种 TOCTOU
 场景也已形成预检期 `ABORTED/PENDING` Bundle：受控 runner 从未启动，外部监听者未被接管或终止，
-Catalog 与 staging 隔离成立。其余完整退出矩阵、公共 Workbench 读回和最终冻结门禁仍未完成；第二类真实项目、
+Catalog 与 staging 隔离成立。公共 listener owner mismatch 也已覆盖两个节点：外部 listener 不属于
+当前 Job 时绝不判 READY，外部进程按自身计划自然退出，VeriTrail 只逆序回收 owned Job，形成
+`LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog/清理成立。其余完整退出矩阵、公共 Workbench
+读回和最终冻结门禁仍未完成；第二类真实项目、
 C2/C3、Docker 与跨平台不属于 M10 已证明范围。
 
 ## 为什么需要验迹
@@ -374,7 +377,9 @@ user cancel 也形成 `USER_CANCELLED / ABORTED/PENDING`，CLI 会把
 Ctrl+C/Ctrl+Break 转为 cooperative cancel、等待证据封存和逆序清理，并恢复原 signal handler。其余
 实时 Preview 通过后再由外部监听者抢占 dependency/application 端口的公共场景，均在 preflight
 安全停止为 `ABORTED/PENDING`，未启动受控 runner、未误杀外部监听者且 Catalog 可验真。其余退出矩阵、
-Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
+listener owner mismatch 已在 dependency/application 两个节点公共实跑，均拒绝 READY、不启动 Browser、
+不终止外部进程，并在外部进程自然退出后完成 owned Job 逆序清理；封存 HARD readiness 断言使结果为
+`ABORTED/FAIL`。其余退出矩阵、Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终

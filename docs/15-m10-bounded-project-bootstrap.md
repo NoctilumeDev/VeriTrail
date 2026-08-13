@@ -663,6 +663,15 @@ Run-owned attachments 与 staging 均为零。该切片证明的是审批后 TOC
 已经存在的 listener 仍属于零 Run 的审批前提失效，二者不得混写。加入该公共用例后，Python 3.10.6
 与 Python 3.13.13 开发回归均为 207/207；它仍不替代最终串行轮。
 
+listener owner mismatch 公共切片分别让 dependency/application 的 owned Job 运行一个不绑定端口的
+长进程，同时由 Job 外部的真实 IPv4 listener 占用对应端口。owned readiness 观察到 listener owner
+不在当前 Job 后立即拒绝 READY；dependency 场景不创建 application，application 场景则按
+application→dependency 回收。外部进程不由 VeriTrail 终止，而是按预定时长自然退出并返回 0；端口
+随后在 sealed cleanup 时限内释放，因此 owned Job、reader、handle、port、work/staging 清理均完整。
+两类公共 Bundle 均为 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`、零 browser Evidence、四流附件且
+Catalog 可验真；`FAIL` 来自 sealed `services_ready=true` HARD 断言，不是 cleanup 误报。加入该切片后，
+Python 3.10.6 与 Python 3.13.13 开发回归均为 208/208。
+
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
 和远端标签读回完成后，里程碑本身才能标记 `FROZEN`。

@@ -126,7 +126,10 @@ Catalog 独立复核其证据适用性；审批摘要不一致仍零启动、零
 完整逆序清理；Python 3.10/3.13 开发回归均为 206/206。live Preview 通过后外部进程分别抢占
 dependency/application 端口的公共切片也已在 preflight 安全停止为 `ABORTED/PENDING`，不调用
 observed runner、不接管或终止外部 listener，并由 Catalog 验真仅含 preflight 的 Bundle；双 Python
-开发回归均为 207/207。其余退出矩阵、
+开发回归均为 207/207。dependency/application 的公共 owner-mismatch 切片也均拒绝 READY、不终止
+外部 listener；外部进程按计划自然退出后 owned Job 完成逆序清理，形成
+`LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog 可验真；双 Python 开发回归均为 208/208。
+其余退出矩阵、
 Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
 自举冻结事实。
 

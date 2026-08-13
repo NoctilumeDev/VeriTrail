@@ -6,6 +6,7 @@ import os
 import shutil
 import signal
 import socket
+import subprocess
 import sys
 import tempfile
 import threading
@@ -52,7 +53,13 @@ class BootstrapRunCliTests(unittest.TestCase):
         browser_failure: bool = False,
         bootstrap_failure: str | None = None,
     ) -> tuple[Path, Path, Path, Path, dict, list[int]]:
-        if bootstrap_failure not in {None, "dependency-early-exit", "application-timeout"}:
+        if bootstrap_failure not in {
+            None,
+            "dependency-early-exit",
+            "application-timeout",
+            "dependency-owner-mismatch",
+            "application-owner-mismatch",
+        }:
             raise ValueError("unsupported bootstrap failure fixture")
         subject = root / "subject"
         watched = subject / "watched"
@@ -82,6 +89,12 @@ class BootstrapRunCliTests(unittest.TestCase):
                 {"literal": "early-exit"},
                 {"literal": "17"},
             ]
+        elif bootstrap_failure == "dependency-owner-mismatch":
+            dependency["arguments"] = [
+                {"literal": "service.py"},
+                {"literal": "sleep"},
+                {"literal": "30"},
+            ]
         application = nodes["application"]
         application["port"] = application_port
         application["arguments"] = [
@@ -91,6 +104,12 @@ class BootstrapRunCliTests(unittest.TestCase):
             {"node_origin": "dependency"},
         ]
         if bootstrap_failure == "application-timeout":
+            application["arguments"] = [
+                {"literal": "service.py"},
+                {"literal": "sleep"},
+                {"literal": "30"},
+            ]
+        elif bootstrap_failure == "application-owner-mismatch":
             application["arguments"] = [
                 {"literal": "service.py"},
                 {"literal": "sleep"},
@@ -576,6 +595,136 @@ class BootstrapRunCliTests(unittest.TestCase):
                 finally:
                     if external is not None:
                         external.close()
+                self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_listener_owner_mismatch_aborts_without_killing_external_listener(self) -> None:
+        cases = (
+            (0, "dependency", "dependency-owner-mismatch"),
+            (1, "application", "application-owner-mismatch"),
+        )
+        for contested_index, label, failure in cases:
+            with self.subTest(node=label), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                subject, plan_path, profile_path, bindings, preview, ports = self._fixture(
+                    root,
+                    bootstrap_failure=failure,
+                )
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+                profile = json.loads(profile_path.read_text(encoding="utf-8"))
+                output = root / f"bundle-{label}-owner-mismatch"
+                external: subprocess.Popen[bytes] | None = None
+
+                def observed_runner(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    *,
+                    output_parent,
+                    cancel_event,
+                ):
+                    nonlocal external
+                    external = subprocess.Popen(
+                        [
+                            sys.executable,
+                            "service.py",
+                            "serve-for",
+                            str(ports[contested_index]),
+                            "1.5",
+                        ],
+                        cwd=subject,
+                        env={
+                            key: value
+                            for key, value in os.environ.items()
+                            if key in {"SYSTEMROOT", "WINDIR"}
+                        },
+                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                        stdin=subprocess.DEVNULL,
+                        stdout=subprocess.DEVNULL,
+                        stderr=subprocess.DEVNULL,
+                    )
+                    for _ in range(60):
+                        if not _port_is_free(ports[contested_index]):
+                            break
+                        if external.poll() is not None:
+                            self.fail("external listener exited before ownership probing")
+                        threading.Event().wait(0.05)
+                    else:
+                        self.fail("external listener did not become ready")
+                    return run_observed_bootstrap(
+                        observed_plan,
+                        observed_profile,
+                        resolved,
+                        output_parent=output_parent,
+                        cancel_event=cancel_event,
+                    )
+
+                try:
+                    result = run_bootstrap_bundle(
+                        plan,
+                        profile,
+                        subject_root=subject,
+                        tool_bindings_path=bindings,
+                        approved_preview_sha256=preview["preview_sha256"],
+                        output=output,
+                        run_id=f"m10-{label}-owner-mismatch",
+                        observed_runner=observed_runner,
+                    )
+
+                    self.assertIsNotNone(result.observed)
+                    lifecycle = result.observed.lifecycle
+                    self.assertFalse(lifecycle.services_ready)
+                    self.assertEqual(
+                        "LISTENER_OWNERSHIP_MISMATCH", lifecycle.trigger_reason
+                    )
+                    self.assertEqual(
+                        "LISTENER_OWNERSHIP_MISMATCH", lifecycle.stop_reason
+                    )
+                    expected_started = (
+                        ("dependency",)
+                        if label == "dependency"
+                        else ("dependency", "application")
+                    )
+                    self.assertEqual(expected_started, lifecycle.actual_start_order)
+                    self.assertEqual(
+                        tuple(reversed(expected_started)),
+                        lifecycle.actual_teardown_order,
+                    )
+                    self.assertTrue(lifecycle.cleanup_complete)
+                    contested = lifecycle.nodes[contested_index]
+                    self.assertIsNotNone(contested.readiness)
+                    self.assertFalse(contested.readiness.ready)
+                    self.assertEqual(
+                        "LISTENER_OWNERSHIP_MISMATCH",
+                        contested.readiness.error_type,
+                    )
+                    self.assertTrue(
+                        any(
+                            attempt.listener_owner_in_job is False
+                            for attempt in contested.readiness.attempts
+                        )
+                    )
+                    self.assertEqual(0, external.wait(timeout=3))
+                    self.assertEqual("ABORTED", result.report["execution_status"])
+                    self.assertEqual("FAIL", result.report["verdict"])
+                    self.assertEqual([], result.report["contamination"])
+                    self.assertEqual(["browser.session"], result.report["missing_evidence"])
+                    bootstrap = self._evidence_document(
+                        output, "runtime.bootstrap"
+                    )["facts"]
+                    self.assertEqual(
+                        "LISTENER_OWNERSHIP_MISMATCH", bootstrap["stop"]["reason"]
+                    )
+                    self.assertFalse(bootstrap["browser_exercise"]["started"])
+                    self.assertTrue(bootstrap["cleanup_complete"])
+                    self.assertEqual(4, len(list((output / "attachments").rglob("*.*"))))
+                    validated = validate_bundle(output, root)
+                    self.assertEqual("ABORTED", validated.execution_status)
+                    self.assertEqual("FAIL", validated.verdict)
+                    self.assertEqual([], list(root.glob(".veritrail-*")))
+                finally:
+                    if external is not None and external.poll() is None:
+                        external.terminate()
+                        external.wait(timeout=5)
                 self.assertTrue(all(_port_is_free(port) for port in ports))
 
     def test_bootstrap_interrupt_handler_requests_cancel_and_restores_handlers(self) -> None:

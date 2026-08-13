@@ -167,4 +167,8 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   端口，两条公共链路均在 preflight 安全停止为 `ABORTED/PENDING`；observed runner 未调用，外部
   listener 保持存活，Bundle 仅含 preflight，Catalog 可验真且 attachments/staging 为零；双 Python
   开发回归均为 207/207；
+- 2026-08-13：阶段 A 第 8 项完成定向开发切片。dependency/application 的外部 listener 均被 owned
+  readiness 识别为不属于当前 Job，拒绝 READY 且不误杀；外部进程按计划自然退出后，owned Job 完成
+  适用逆序清理，公共 Bundle 为 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`、零 Browser、四流附件，
+  Catalog 与无残留检查通过；双 Python 开发回归均为 208/208；
 - 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。
