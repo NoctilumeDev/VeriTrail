@@ -192,7 +192,7 @@ def main() -> int:
             summary["checks"].append("desktop-focus-history")
 
             page.get_by_test_id("fixture-invalid").click()
-            expect(page.get_by_test_id("error-state")).to_contain_text("HASH_MISMATCH")
+            expect(page.get_by_test_id("error-state")).to_contain_text("MISSING_ROOT_FILE")
             assert page.get_by_test_id("status-gate").count() == 0
             page.get_by_test_id("retry-positive").click()
             expect(page.get_by_test_id("status-gate")).to_contain_text("PASS")

@@ -9,6 +9,9 @@ import unittest
 from pathlib import Path
 
 from scripts.m10_stress_acceptance import (
+    HTTP_STRESS_REQUEST_QUEUE_SIZE,
+    HTTP_STRESS_STAGES,
+    StressHTTPServer,
     port_is_free,
     request_partition,
     terminate_worker_trees,
@@ -17,6 +20,15 @@ from scripts.m10_stress_acceptance import (
 
 @unittest.skipUnless(os.name == "nt", "M10 stress acceptance is Windows-only")
 class M10StressAcceptanceTests(unittest.TestCase):
+    def test_http_listener_backlog_covers_preregistered_peak(self) -> None:
+        peak_in_flight = max(in_flight for _, in_flight in HTTP_STRESS_STAGES)
+
+        self.assertEqual(
+            StressHTTPServer.request_queue_size,
+            HTTP_STRESS_REQUEST_QUEUE_SIZE,
+        )
+        self.assertGreaterEqual(HTTP_STRESS_REQUEST_QUEUE_SIZE, peak_in_flight)
+
     def test_request_partition_preserves_total_and_bound(self) -> None:
         partition = request_partition(400, 100)
 

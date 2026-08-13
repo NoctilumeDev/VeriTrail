@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from veritrail.atomic_publish import publish_staged_directory
 from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.catalog import _CandidateRejected, validate_bundle
 from veritrail.errors import VeriTrailError
@@ -440,7 +441,7 @@ def create_comparison_bundle(
             "files": files,
         }
         (stage / "comparison-manifest.json").write_bytes(canonical_json_bytes(manifest) + b"\n")
-        stage.rename(output)
+        publish_staged_directory(stage, output)
     except Exception:
         shutil.rmtree(stage, ignore_errors=True)
         raise

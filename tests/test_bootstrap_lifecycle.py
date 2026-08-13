@@ -248,6 +248,208 @@ class BootstrapLifecycleTests(unittest.TestCase):
             self.assertEqual(("application", "dependency"), result.actual_teardown_order)
             self.assertTrue(result.cleanup_complete)
 
+    def test_stop_request_precedes_concurrent_browser_business_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            dependency_port, application_port = self._ports()
+            specs = (
+                _spec(
+                    node_id="dependency",
+                    role="DEPENDENCY",
+                    port=dependency_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+                _spec(
+                    node_id="application",
+                    role="APPLICATION",
+                    port=application_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+            )
+            cancellation = threading.Event()
+
+            class FakeSession:
+                def __init__(self, node_id: str) -> None:
+                    self.node_id = node_id
+                    self.start_observation = OwnedServiceStartObservation(
+                        parent_in_job=False,
+                        process_created=True,
+                        target_assigned=True,
+                        target_resumed=True,
+                        active_process_limit=4,
+                        active_process_limit_enforced=True,
+                        job_memory_limit_mb=512,
+                        job_memory_limit_enforced=True,
+                        cleanup_complete=False,
+                        error_type=None,
+                        elapsed_ms=1.0,
+                    )
+
+                def terminate(self) -> object:
+                    return SimpleNamespace(cleanup_complete=True)
+
+            def ready(*args: object, **kwargs: object) -> OwnedReadinessObservation:
+                return OwnedReadinessObservation(
+                    ready=True,
+                    attempts=(),
+                    error_type=None,
+                    elapsed_ms=1.0,
+                )
+
+            def business_failure() -> str:
+                cancellation.set()
+                return "BROWSER_HARD_FAILURE"
+
+            result = run_bootstrap_lifecycle(
+                specs,
+                lifecycle_timeout_ms=5_000,
+                cancel_event=cancellation,
+                session_factory=lambda **values: FakeSession(str(values["node_id"])),
+                readiness_probe=ready,
+                on_services_ready=business_failure,
+            )
+
+            self.assertEqual("USER_CANCELLED", result.trigger_reason)
+            self.assertEqual("USER_CANCELLED", result.stop_reason)
+            self.assertTrue(result.ready_callback_completed)
+            self.assertTrue(result.cleanup_complete)
+
+    def test_late_user_cancel_overrides_resource_reason_after_cleanup(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            dependency_port, application_port = self._ports()
+            specs = (
+                _spec(
+                    node_id="dependency",
+                    role="DEPENDENCY",
+                    port=dependency_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+                _spec(
+                    node_id="application",
+                    role="APPLICATION",
+                    port=application_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+            )
+
+            class LateUserSignal:
+                def __init__(self) -> None:
+                    self.reads = 0
+
+                def reason(self) -> str:
+                    self.reads += 1
+                    return (
+                        "RESOURCE_MEMORY_HARD_LIMIT"
+                        if self.reads < 2
+                        else "USER_CANCELLED"
+                    )
+
+                def is_set(self) -> bool:
+                    return True
+
+            class FakeSession:
+                def __init__(self, node_id: str) -> None:
+                    self.node_id = node_id
+                    self.start_observation = OwnedServiceStartObservation(
+                        parent_in_job=False,
+                        process_created=True,
+                        target_assigned=True,
+                        target_resumed=True,
+                        active_process_limit=4,
+                        active_process_limit_enforced=True,
+                        job_memory_limit_mb=512,
+                        job_memory_limit_enforced=True,
+                        cleanup_complete=False,
+                        error_type=None,
+                        elapsed_ms=1.0,
+                    )
+
+                def terminate(self) -> object:
+                    return SimpleNamespace(cleanup_complete=True)
+
+            result = run_bootstrap_lifecycle(
+                specs,
+                lifecycle_timeout_ms=5_000,
+                cancel_event=LateUserSignal(),
+                session_factory=lambda **values: FakeSession(str(values["node_id"])),
+                readiness_probe=lambda *args, **kwargs: OwnedReadinessObservation(
+                    ready=True,
+                    attempts=(),
+                    error_type=None,
+                    elapsed_ms=1.0,
+                ),
+            )
+
+            self.assertEqual("USER_CANCELLED", result.trigger_reason)
+            self.assertEqual("USER_CANCELLED", result.stop_reason)
+            self.assertTrue(result.cleanup_complete)
+
+    def test_cleanup_failure_overrides_late_user_cancel(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            dependency_port, application_port = self._ports()
+            specs = (
+                _spec(
+                    node_id="dependency",
+                    role="DEPENDENCY",
+                    port=dependency_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+                _spec(
+                    node_id="application",
+                    role="APPLICATION",
+                    port=application_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+            )
+            cancellation = threading.Event()
+
+            class FakeSession:
+                def __init__(self, node_id: str) -> None:
+                    self.node_id = node_id
+                    self.start_observation = OwnedServiceStartObservation(
+                        parent_in_job=False,
+                        process_created=True,
+                        target_assigned=True,
+                        target_resumed=True,
+                        active_process_limit=4,
+                        active_process_limit_enforced=True,
+                        job_memory_limit_mb=512,
+                        job_memory_limit_enforced=True,
+                        cleanup_complete=False,
+                        error_type=None,
+                        elapsed_ms=1.0,
+                    )
+
+                def terminate(self) -> object:
+                    cancellation.set()
+                    return SimpleNamespace(cleanup_complete=self.node_id != "application")
+
+            result = run_bootstrap_lifecycle(
+                specs,
+                lifecycle_timeout_ms=5_000,
+                cancel_event=cancellation,
+                session_factory=lambda **values: FakeSession(str(values["node_id"])),
+                readiness_probe=lambda *args, **kwargs: OwnedReadinessObservation(
+                    ready=True,
+                    attempts=(),
+                    error_type=None,
+                    elapsed_ms=1.0,
+                ),
+                on_services_ready=lambda: None,
+            )
+
+            self.assertEqual("USER_CANCELLED", result.trigger_reason)
+            self.assertEqual("CLEANUP_ERROR", result.stop_reason)
+            self.assertFalse(result.cleanup_complete)
+
     def test_teardown_failure_does_not_block_remaining_reverse_cleanup(self) -> None:
         with tempfile.TemporaryDirectory() as raw_directory:
             directory = Path(raw_directory)

@@ -7,6 +7,20 @@ from veritrail.evidence import ImportedEvidence
 
 MISSING = object()
 DECISIVE_SEVERITIES = {"HARD", "DEGRADATION_BOUNDARY"}
+DIRECT_INVARIANT_FAILURE_EVIDENCE = {
+    "ORCHESTRATION_CLEANUP_INCOMPLETE": "runtime.orchestration",
+    "COMMAND_CLEANUP_INCOMPLETE": "runtime.command",
+    "BOOTSTRAP_CLEANUP_INCOMPLETE": "runtime.bootstrap",
+}
+BOOTSTRAP_COLLECTOR_V02 = "VeriTrail bootstrap-lifecycle/0.2"
+BOOTSTRAP_SERVICES_READY_INTERRUPTION_REASONS = {
+    "USER_CANCELLED",
+    "LIFECYCLE_TIMEOUT",
+    "RESOURCE_MEMORY_SOFT_LIMIT",
+    "RESOURCE_MEMORY_HARD_LIMIT",
+    "COLLECTOR_ERROR",
+    "EVIDENCE_ERROR",
+}
 
 
 def _json_pointer(document: Any, pointer: str) -> Any:
@@ -52,6 +66,25 @@ def _apply_operator(actual: Any, operator: str, expected: Any) -> bool:
     raise ValueError(f"unsupported operator: {operator}")
 
 
+def _assertion_fact_is_applicable(
+    plan: dict[str, Any],
+    artifact: ImportedEvidence,
+    assertion: dict[str, Any],
+    actual: Any,
+) -> bool:
+    if (
+        plan.get("schema_version") != "0.6"
+        or assertion["evidence_type"] != "runtime.bootstrap"
+        or assertion["path"] != "/facts/services_ready"
+        or actual is not False
+    ):
+        return True
+    facts = artifact.document.get("facts")
+    stop = facts.get("stop") if isinstance(facts, dict) else None
+    reason = stop.get("reason") if isinstance(stop, dict) else None
+    return reason not in BOOTSTRAP_SERVICES_READY_INTERRUPTION_REASONS
+
+
 def _evaluate_assertions(plan: dict[str, Any], evidence: list[ImportedEvidence]) -> list[dict[str, Any]]:
     by_type: dict[str, list[ImportedEvidence]] = {}
     for artifact in evidence:
@@ -61,9 +94,12 @@ def _evaluate_assertions(plan: dict[str, Any], evidence: list[ImportedEvidence])
     for assertion in plan["assertions"]:
         matching = by_type.get(assertion["evidence_type"], [])
         values: list[tuple[Any, str]] = []
+        inapplicable = False
         for artifact in matching:
             actual = _json_pointer(artifact.document, assertion["path"])
-            if actual is not MISSING or assertion["operator"] == "exists":
+            if not _assertion_fact_is_applicable(plan, artifact, assertion, actual):
+                inapplicable = True
+            elif actual is not MISSING or assertion["operator"] == "exists":
                 values.append((actual, artifact.sha256))
 
         base = {
@@ -81,7 +117,11 @@ def _evaluate_assertions(plan: dict[str, Any], evidence: list[ImportedEvidence])
                     **base,
                     "status": "NOT_EVALUATED",
                     "actual": None,
-                    "explanation": "No imported evidence supplied the required fact.",
+                    "explanation": (
+                        "The Run stopped before this phase fact became applicable."
+                        if inapplicable
+                        else "No imported evidence supplied the required fact."
+                    ),
                 }
             )
             continue
@@ -583,6 +623,22 @@ def _detect_bootstrap_contamination(
                     "message": "Bootstrap evidence does not reference the unique browser Evidence.",
                 }
             )
+        resource = facts["resource_observation"]
+        if artifact.document.get("source") == BOOTSTRAP_COLLECTOR_V02 and (
+            resource["available_memory_soft_min_mb"]
+            != plan["preflight"]["available_memory_soft_min_mb"]
+            or resource["available_memory_hard_min_mb"]
+            != plan["preflight"]["available_memory_hard_min_mb"]
+            or resource["hard_breach_grace_samples"]
+            != plan["preflight"]["hard_breach_grace_samples"]
+        ):
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_RESOURCE_POLICY_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Runtime host-memory thresholds differ from the sealed Plan.",
+                }
+            )
         if facts["cleanup_complete"] is False:
             contamination.append(
                 {
@@ -667,7 +723,44 @@ def evaluate(
         if result["severity"] in DECISIVE_SEVERITIES and result["status"] == "NOT_EVALUATED"
     ]
     reasons: list[dict[str, str]] = []
-    if failed:
+    direct_invariant_failures = [
+        item
+        for item in contamination
+        if item.get("code") in DIRECT_INVARIANT_FAILURE_EVIDENCE
+    ]
+    proven_direct_invariant_failures = [
+        item
+        for item in direct_invariant_failures
+        if any(
+            result["evidence_type"]
+            == DIRECT_INVARIANT_FAILURE_EVIDENCE[item["code"]]
+            and result["path"] == "/facts/cleanup_complete"
+            and item.get("evidence_sha256") in result["evidence_sha256"]
+            for result in failed
+        )
+    ]
+    attribution_blockers = [
+        item
+        for item in contamination
+        if item not in proven_direct_invariant_failures
+    ]
+    if proven_direct_invariant_failures:
+        verdict = "FAIL"
+        reasons.append(
+            {
+                "code": "DECISIVE_ASSERTION_FAILED",
+                "message": f"{len(failed)} hard or degradation-boundary assertion(s) failed.",
+            }
+        )
+    elif attribution_blockers:
+        verdict = "INCONCLUSIVE"
+        reasons.append(
+            {
+                "code": "CAUSAL_ATTRIBUTION_BLOCKED",
+                "message": f"{len(attribution_blockers)} variable, evidence-integrity, or baseline issue(s) block attribution.",
+            }
+        )
+    elif failed:
         verdict = "FAIL"
         reasons.append(
             {

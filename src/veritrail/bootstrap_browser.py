@@ -8,6 +8,7 @@ from veritrail.browser import _collect_browser_evidence
 from veritrail.evidence import ImportedEvidence
 from veritrail.errors import SafetyError
 from veritrail.resources import MEBIBYTE
+from veritrail.stop_control import StopRequested
 from veritrail.windows_job import (
     WAIT_SLICE_MS,
     _WindowsBackend,
@@ -30,6 +31,45 @@ class ObservedBrowserEvidence:
     process_cleanup_complete: bool
     job_memory_limit_mb: int
     job_memory_limit_enforced: bool
+
+
+class ObservedBrowserInterrupted(StopRequested):
+    def __init__(
+        self,
+        reason: str,
+        *,
+        peak_rss_mb: float | None,
+        resource_sampling_complete: bool,
+        process_cleanup_complete: bool,
+        job_memory_limit_mb: int,
+        job_memory_limit_enforced: bool,
+    ) -> None:
+        self.peak_rss_mb = peak_rss_mb
+        self.resource_sampling_complete = resource_sampling_complete
+        self.process_cleanup_complete = process_cleanup_complete
+        self.job_memory_limit_mb = job_memory_limit_mb
+        self.job_memory_limit_enforced = job_memory_limit_enforced
+        super().__init__(reason)
+
+
+class ObservedBrowserCollectionError(Exception):
+    def __init__(
+        self,
+        error_type: str,
+        *,
+        peak_rss_mb: float | None,
+        resource_sampling_complete: bool,
+        process_cleanup_complete: bool,
+        job_memory_limit_mb: int,
+        job_memory_limit_enforced: bool,
+    ) -> None:
+        self.error_type = error_type
+        self.peak_rss_mb = peak_rss_mb
+        self.resource_sampling_complete = resource_sampling_complete
+        self.process_cleanup_complete = process_cleanup_complete
+        self.job_memory_limit_mb = job_memory_limit_mb
+        self.job_memory_limit_enforced = job_memory_limit_enforced
+        super().__init__(error_type)
 
 
 class _ChromiumResourceObserver:
@@ -247,19 +287,85 @@ class _ChromiumResourceObserver:
         return pending
 
     def abort(self) -> None:
+        if self._handles:
+            try:
+                total = sum(
+                    int(
+                        self._backend.win32process.GetProcessMemoryInfo(handle)[
+                            "WorkingSetSize"
+                        ]
+                    )
+                    for handle in self._handles.values()
+                    if not self._handle_is_signalled(handle)
+                )
+                self._peak_rss_bytes = max(self._peak_rss_bytes, total)
+                self._sample_count += 1
+            except Exception:
+                self.failed("browser-abort-sample", "SamplingFailed")
+        pending = set(self._handles)
         if self._job is not None:
+            if pending:
+                try:
+                    self._backend.win32job.TerminateJobObject(self._job, 1)
+                except Exception:
+                    self.failed("browser-abort-job", "JobTerminationFailed")
+                else:
+                    pending = self._wait_for_process_release(pending)
             try:
                 self._backend.close_handle(self._job)
-            finally:
-                self._job = None
+            except Exception:
+                self._handles_released = False
+            self._job = None
+        self._processes_released = not pending
         for handle in self._handles.values():
             try:
                 self._backend.close_handle(handle)
             except Exception:
                 self._handles_released = False
         self._handles.clear()
+        self._after_close_observed = True
+        self._detached = self._session is None
 
     def result(self, browser: ImportedEvidence) -> ObservedBrowserEvidence:
+        values = self._result_values()
+        return ObservedBrowserEvidence(browser=browser, **values)
+
+    def interrupted(self, reason: str) -> ObservedBrowserInterrupted:
+        if not self._driver_assigned:
+            self.abort()
+            return ObservedBrowserInterrupted(
+                reason,
+                peak_rss_mb=0.0,
+                resource_sampling_complete=True,
+                process_cleanup_complete=(
+                    self._job is None and not self._handles and self._handles_released
+                ),
+                job_memory_limit_mb=self._max_job_memory_mb,
+                job_memory_limit_enforced=(
+                    self._process_limit_enforced and self._memory_limit_enforced
+                ),
+            )
+        if not self._after_close_observed:
+            self.abort()
+        return ObservedBrowserInterrupted(reason, **self._result_values())
+
+    def collection_error(self, error_type: str) -> ObservedBrowserCollectionError:
+        if not self._after_close_observed:
+            self.abort()
+        values = self._result_values()
+        if not self._driver_assigned:
+            values.update(
+                {
+                    "peak_rss_mb": 0.0,
+                    "resource_sampling_complete": True,
+                    "process_cleanup_complete": (
+                        self._job is None and not self._handles and self._handles_released
+                    ),
+                }
+            )
+        return ObservedBrowserCollectionError(error_type, **values)
+
+    def _result_values(self) -> dict[str, Any]:
         sampling_complete = (
             self._driver_assigned
             and self._sample_count > 0
@@ -271,24 +377,26 @@ class _ChromiumResourceObserver:
             and self._processes_released
             and self._handles_released
         )
-        return ObservedBrowserEvidence(
-            browser=browser,
-            peak_rss_mb=(
+        return {
+            "peak_rss_mb": (
                 round(self._peak_rss_bytes / MEBIBYTE, 3)
                 if self._sample_count > 0
                 else None
             ),
-            resource_sampling_complete=sampling_complete,
-            process_cleanup_complete=cleanup_complete,
-            job_memory_limit_mb=self._max_job_memory_mb,
-            job_memory_limit_enforced=(
+            "resource_sampling_complete": sampling_complete,
+            "process_cleanup_complete": cleanup_complete,
+            "job_memory_limit_mb": self._max_job_memory_mb,
+            "job_memory_limit_enforced": (
                 self._process_limit_enforced and self._memory_limit_enforced
             ),
-        )
+        }
 
 
 def collect_observed_browser_evidence(
     plan: dict[str, Any],
+    *,
+    cancel_event: object | None = None,
+    lifecycle_deadline: float | None = None,
 ) -> ObservedBrowserEvidence:
     """Collect frozen M2 Evidence plus M10-only Chromium resource ownership facts."""
 
@@ -297,8 +405,14 @@ def collect_observed_browser_evidence(
         _WindowsBackend(), plan["browser"]["max_job_memory_mb"]
     )
     try:
-        browser = _collect_browser_evidence(plan, lifecycle_observer=observer)
-    except Exception:
-        observer.abort()
-        raise
+        browser = _collect_browser_evidence(
+            plan,
+            lifecycle_observer=observer,
+            cancel_event=cancel_event,
+            lifecycle_deadline=lifecycle_deadline,
+        )
+    except StopRequested as exc:
+        raise observer.interrupted(exc.reason) from None
+    except Exception as exc:
+        raise observer.collection_error(type(exc).__name__) from exc
     return observer.result(browser)

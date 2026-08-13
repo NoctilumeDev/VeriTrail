@@ -5,8 +5,10 @@
 > 影响层级：`L3_SYSTEM`（项目 Profile、长运行进程、就绪状态机、所有权与逆序清理）
 > 前置基线：`m9-v0.10.0` @ `3181d69`
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
-> 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
-> 目标冻结标签：`m10-v0.11.0`
+> 冻结版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
+> 冻结后地基纠偏候选：Python Core `0.11.1.dev1`，Workbench `0.11.1-dev.1`；见文档 21
+> 历史冻结标签：`m10-v0.11.0`（不移动）
+> 补丁目标标签：`m10-v0.11.1`（远端读回待完成）
 > 实施门禁：全部本地发布门禁通过；冻结提交 `0084443` 与 `m10-v0.11.0` 已从 GitHub 读回
 
 ## 1. M10 只回答一个问题
@@ -442,7 +444,8 @@ bootstrap 未开始，所以所有 bootstrap 生命周期摘要在 CLI 中为不
 `stop.reason` 只允许以下固定值：`NONE`、`RESOURCE_PREFLIGHT`、`PORT_CONFLICT`、
 `UNSUPPORTED_COLD_STATE`、`EXECUTABLE_DRIFT`、`SUBJECT_DRIFT`、`READINESS_TIMEOUT`、
 `LISTENER_OWNERSHIP_MISMATCH`、`NODE_EARLY_EXIT`、`USER_CANCELLED`、`LIFECYCLE_TIMEOUT`、
-`BROWSER_HARD_FAILURE`、`COLLECTOR_ERROR`、`EVIDENCE_ERROR`、`CLEANUP_ERROR`。不能以自由文本替代
+`RESOURCE_MEMORY_SOFT_LIMIT`、`RESOURCE_MEMORY_HARD_LIMIT`、`BROWSER_HARD_FAILURE`、
+`COLLECTOR_ERROR`、`EVIDENCE_ERROR`、`CLEANUP_ERROR`。不能以自由文本替代
 分类；诊断文本只能使用版本化、脱敏的 error type/code。
 
 | 场景 | ExecutionStatus | 默认 Verdict 上界 |
@@ -467,6 +470,11 @@ bootstrap 未开始，所以所有 bootstrap 生命周期摘要在 CLI 中为不
 - Core、两个节点与 Chromium 分开记账；
 - Profile 声明每节点 process/output/time 限额；Plan preflight 声明全局软/硬内存停止线；
 - 软阈值停止进入下一阶段，硬阈值立即 ABORT、保存现场并逆序清理；
+- 运行期必须继续采样宿主机可用内存；Evidence 记录最低可用内存、sealed 软/硬阈值、连续硬越界
+  次数和实际触发原因，Catalog 重新核对阈值与 Plan 一致；节点/Browser Job 上限不能替代宿主机线；
+- Browser 在 Playwright 启动前、每个 viewport、初始导航与每个步骤前后检查共享停止信号；单个同步
+  Playwright 调用以 `min(browser timeout, lifecycle remaining)` 封顶。取消是合作式、有界响应，不
+  宣称能在同步调用内部任意指令点无延迟抢占；中止后仍必须证明 Chromium Job 与 handles 已释放；
 - 不以机器档案快照代替当前事实，不因 16 GB 降低清理、安全或一致性断言。
 
 ## 14. 首个真实纵向切片

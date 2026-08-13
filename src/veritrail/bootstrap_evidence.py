@@ -18,7 +18,8 @@ from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.windows_job import CapturedStream
 
-COLLECTOR_VERSION = "bootstrap-lifecycle/0.1"
+COLLECTOR_VERSION = "bootstrap-lifecycle/0.2"
+LEGACY_COLLECTOR_VERSION = "bootstrap-lifecycle/0.1"
 LISTENER_OWNER_BACKEND = "WINDOWS_IP_HELPER_CTYPES_IPV4"
 PROCESS_OWNERSHIP_BACKEND = "WINDOWS_JOB_OBJECT_PYWIN32_312"
 
@@ -34,6 +35,8 @@ STOP_REASONS = {
     "NODE_EARLY_EXIT",
     "USER_CANCELLED",
     "LIFECYCLE_TIMEOUT",
+    "RESOURCE_MEMORY_SOFT_LIMIT",
+    "RESOURCE_MEMORY_HARD_LIMIT",
     "BROWSER_HARD_FAILURE",
     "COLLECTOR_ERROR",
     "EVIDENCE_ERROR",
@@ -52,6 +55,8 @@ STOP_CATEGORIES = {
     "NODE_EARLY_EXIT": "SUBJECT",
     "USER_CANCELLED": "USER",
     "LIFECYCLE_TIMEOUT": "RESOURCE",
+    "RESOURCE_MEMORY_SOFT_LIMIT": "RESOURCE",
+    "RESOURCE_MEMORY_HARD_LIMIT": "RESOURCE",
     "BROWSER_HARD_FAILURE": "SUBJECT",
     "COLLECTOR_ERROR": "ERROR",
     "EVIDENCE_ERROR": "ERROR",
@@ -59,6 +64,19 @@ STOP_CATEGORIES = {
 }
 
 RESOURCE_FIELDS = {
+    "core_peak_rss_mb",
+    "dependency_peak_rss_mb",
+    "application_peak_rss_mb",
+    "browser_peak_rss_mb",
+    "host_available_memory_min_mb",
+    "available_memory_soft_min_mb",
+    "available_memory_hard_min_mb",
+    "hard_breach_grace_samples",
+    "max_consecutive_memory_hard_breaches",
+    "limit_trigger_reason",
+    "sampling_complete",
+}
+LEGACY_RESOURCE_FIELDS = {
     "core_peak_rss_mb",
     "dependency_peak_rss_mb",
     "application_peak_rss_mb",
@@ -157,6 +175,8 @@ def _execution_status(reason: str, browser_completed: bool, cleanup_complete: bo
         "LISTENER_OWNERSHIP_MISMATCH",
         "USER_CANCELLED",
         "LIFECYCLE_TIMEOUT",
+        "RESOURCE_MEMORY_SOFT_LIMIT",
+        "RESOURCE_MEMORY_HARD_LIMIT",
         "BROWSER_HARD_FAILURE",
     }:
         return "ABORTED"
@@ -187,14 +207,35 @@ def _validate_observation_inputs(
 ) -> None:
     if set(resource_observation) != RESOURCE_FIELDS:
         raise SafetyError("M10 resource observation must contain exact fields")
-    for name in RESOURCE_FIELDS - {"sampling_complete"}:
+    for name in RESOURCE_FIELDS - {"sampling_complete", "limit_trigger_reason"}:
         value = resource_observation[name]
         if value is not None and (
             not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0
         ):
             raise SafetyError("M10 resource observations must be non-negative or null")
+    for name in (
+        "available_memory_soft_min_mb",
+        "available_memory_hard_min_mb",
+        "hard_breach_grace_samples",
+        "max_consecutive_memory_hard_breaches",
+    ):
+        value = resource_observation[name]
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise SafetyError("M10 resource policies and counters must be integers")
+    soft = resource_observation["available_memory_soft_min_mb"]
+    hard = resource_observation["available_memory_hard_min_mb"]
+    grace = resource_observation["hard_breach_grace_samples"]
+    streak = resource_observation["max_consecutive_memory_hard_breaches"]
+    if soft <= 0 or hard <= 0 or soft < hard or grace < 1 or streak < 0:
+        raise SafetyError("M10 resource policies and counters are outside their bounds")
     if not isinstance(resource_observation["sampling_complete"], bool):
         raise SafetyError("M10 resource sampling completeness must be a boolean")
+    if resource_observation["limit_trigger_reason"] not in {
+        None,
+        "RESOURCE_MEMORY_SOFT_LIMIT",
+        "RESOURCE_MEMORY_HARD_LIMIT",
+    }:
+        raise SafetyError("M10 resource stop reason is invalid")
     if set(subject_observation) != SUBJECT_FIELDS:
         raise SafetyError("M10 subject observation must contain exact fields")
     for name in ("before_fingerprint", "after_fingerprint"):
@@ -241,12 +282,21 @@ def collect_bootstrap_evidence(
         "evidence_sha256",
         "job_memory_limit_mb",
         "job_memory_limit_enforced",
+        "process_cleanup_complete",
     }:
         raise SafetyError("M10 browser exercise must contain exact fields")
     if not isinstance(browser_exercise["started"], bool) or not isinstance(
         browser_exercise["completed"], bool
     ):
         raise SafetyError("M10 browser exercise states must be booleans")
+    if (
+        browser_exercise["started"]
+        and not isinstance(browser_exercise["process_cleanup_complete"], bool)
+    ) or (
+        not browser_exercise["started"]
+        and browser_exercise["process_cleanup_complete"] is not None
+    ):
+        raise SafetyError("M10 browser process cleanup state conflicts with startup")
     if (
         not isinstance(browser_exercise["job_memory_limit_mb"], int)
         or isinstance(browser_exercise["job_memory_limit_mb"], bool)
@@ -467,16 +517,20 @@ def collect_bootstrap_evidence(
         lifecycle.cleanup_complete
         and node_cleanup
         and all(cleanup.values())
+        and (
+            not browser_exercise["started"]
+            or browser_exercise["process_cleanup_complete"] is True
+        )
         and tuple(lifecycle.actual_teardown_order)
         == tuple(reversed(lifecycle.actual_start_order))
     )
     reason = lifecycle.stop_reason
     if reason not in STOP_REASONS:
         reason = "COLLECTOR_ERROR"
-    if subject_observation["scan_complete"] and subject_observation["changed"] is True:
-        reason = "SUBJECT_DRIFT"
-    elif not subject_observation["scan_complete"] or not resource_observation["sampling_complete"]:
+    if not subject_observation["scan_complete"] or not resource_observation["sampling_complete"]:
         reason = "EVIDENCE_ERROR"
+    elif subject_observation["changed"] is True:
+        reason = "SUBJECT_DRIFT"
     elif reason == "NONE" and not browser_exercise["completed"]:
         reason = (
             "BROWSER_HARD_FAILURE"
@@ -592,8 +646,13 @@ def validate_bootstrap_evidence(
     if not isinstance(facts, dict) or set(facts) != fact_fields:
         errors.append(f"{input_name}.facts must contain exact bootstrap fields")
         return
-    if document.get("source") != f"VeriTrail {COLLECTOR_VERSION}":
+    source = document.get("source")
+    if source not in {
+        f"VeriTrail {COLLECTOR_VERSION}",
+        f"VeriTrail {LEGACY_COLLECTOR_VERSION}",
+    }:
         errors.append(f"{input_name}.source must identify the frozen bootstrap collector")
+    current_collector = source == f"VeriTrail {COLLECTOR_VERSION}"
     if document.get("observed_variables") != {
         "project_bootstrap_mode": "veritrail_managed_windows_c1_two_node_services"
     }:
@@ -888,12 +947,15 @@ def validate_bootstrap_evidence(
         ):
             errors.append(f"{prefix}.teardown observations are invalid")
     browser = facts["browser_exercise"]
+    expected_browser_fields = {
+        "started", "completed", "evidence_sha256",
+        "job_memory_limit_mb", "job_memory_limit_enforced",
+    }
+    if current_collector:
+        expected_browser_fields.add("process_cleanup_complete")
     if (
         not isinstance(browser, dict)
-        or set(browser) != {
-            "started", "completed", "evidence_sha256",
-            "job_memory_limit_mb", "job_memory_limit_enforced"
-        }
+        or set(browser) != expected_browser_fields
         or not isinstance(browser.get("started"), bool)
         or not isinstance(browser.get("completed"), bool)
         or not isinstance(browser.get("job_memory_limit_mb"), int)
@@ -906,29 +968,120 @@ def validate_bootstrap_evidence(
         )
         or (browser.get("evidence_sha256") is not None and not sha(browser.get("evidence_sha256")))
         or (browser.get("completed") and (not browser.get("started") or browser.get("evidence_sha256") is None))
+        or (
+            current_collector
+            and (
+                (
+                    browser.get("started")
+                    and not isinstance(browser.get("process_cleanup_complete"), bool)
+                )
+                or (
+                    not browser.get("started")
+                    and browser.get("process_cleanup_complete") is not None
+                )
+            )
+        )
     ):
         errors.append(f"{input_name}.facts.browser_exercise is invalid")
     stop = facts["stop"]
+    allowed_stop_reasons = (
+        STOP_REASONS
+        if current_collector
+        else STOP_REASONS
+        - {"RESOURCE_MEMORY_SOFT_LIMIT", "RESOURCE_MEMORY_HARD_LIMIT"}
+    )
     if (
         not isinstance(stop, dict)
         or set(stop) != {"reason", "stage", "category"}
-        or stop.get("reason") not in STOP_REASONS
+        or stop.get("reason") not in allowed_stop_reasons
         or stop.get("category") != STOP_CATEGORIES.get(stop.get("reason"))
         or not isinstance(stop.get("stage"), str)
     ):
         errors.append(f"{input_name}.facts.stop is invalid")
     resource = facts["resource_observation"]
-    if not isinstance(resource, dict) or set(resource) != RESOURCE_FIELDS:
+    expected_resource_fields = RESOURCE_FIELDS if current_collector else LEGACY_RESOURCE_FIELDS
+    if not isinstance(resource, dict) or set(resource) != expected_resource_fields:
         errors.append(f"{input_name}.facts.resource_observation is invalid")
     elif (
         not isinstance(resource.get("sampling_complete"), bool)
         or any(
             value is not None and not number(value)
             for key, value in resource.items()
-            if key != "sampling_complete"
+            if key not in {"sampling_complete", "limit_trigger_reason"}
+        )
+        or (
+            current_collector
+            and resource.get("limit_trigger_reason")
+            not in {None, "RESOURCE_MEMORY_SOFT_LIMIT", "RESOURCE_MEMORY_HARD_LIMIT"}
         )
     ):
         errors.append(f"{input_name}.facts.resource_observation values are invalid")
+    if current_collector and isinstance(resource, dict) and isinstance(stop, dict):
+        trigger = resource.get("limit_trigger_reason")
+        reason = stop.get("reason")
+        minimum = resource.get("host_available_memory_min_mb")
+        soft = resource.get("available_memory_soft_min_mb")
+        hard = resource.get("available_memory_hard_min_mb")
+        grace = resource.get("hard_breach_grace_samples")
+        streak = resource.get("max_consecutive_memory_hard_breaches")
+        if any(
+            not isinstance(value, int) or isinstance(value, bool)
+            for value in (soft, hard, grace, streak)
+        ):
+            errors.append(
+                f"{input_name}.facts resource policies and counters must be integers"
+            )
+        elif (
+            soft <= 0
+            or hard <= 0
+            or soft < hard
+            or grace < 1
+            or streak < 0
+        ):
+            errors.append(
+                f"{input_name}.facts resource policies and counters are outside their bounds"
+            )
+        if (
+            trigger in {"RESOURCE_MEMORY_SOFT_LIMIT", "RESOURCE_MEMORY_HARD_LIMIT"}
+            and reason
+            not in {
+                trigger,
+                "USER_CANCELLED",
+                "SUBJECT_DRIFT",
+                "EVIDENCE_ERROR",
+                "CLEANUP_ERROR",
+            }
+        ) or (
+            reason in {"RESOURCE_MEMORY_SOFT_LIMIT", "RESOURCE_MEMORY_HARD_LIMIT"}
+            and trigger != reason
+        ):
+            errors.append(f"{input_name}.facts resource stop reason conflicts with observations")
+        if trigger == "RESOURCE_MEMORY_SOFT_LIMIT" and not (
+            number(minimum) and number(soft) and minimum < soft
+        ):
+            errors.append(f"{input_name}.facts soft memory stop lacks a threshold breach")
+        if trigger == "RESOURCE_MEMORY_HARD_LIMIT" and not (
+            number(minimum)
+            and number(hard)
+            and isinstance(grace, int)
+            and not isinstance(grace, bool)
+            and grace >= 1
+            and isinstance(streak, int)
+            and not isinstance(streak, bool)
+            and streak >= grace
+            and minimum < hard
+        ):
+            errors.append(f"{input_name}.facts hard memory stop lacks a sustained breach")
+        if trigger != "RESOURCE_MEMORY_HARD_LIMIT" and (
+            isinstance(grace, int)
+            and not isinstance(grace, bool)
+            and isinstance(streak, int)
+            and not isinstance(streak, bool)
+            and streak >= grace
+        ):
+            errors.append(
+                f"{input_name}.facts sustained hard memory breach lacks a hard trigger"
+            )
     subject = facts["subject_observation"]
     if not isinstance(subject, dict) or set(subject) != SUBJECT_FIELDS:
         errors.append(f"{input_name}.facts.subject_observation is invalid")
@@ -966,6 +1119,14 @@ def validate_bootstrap_evidence(
         errors.append(f"{input_name}.facts.cleanup is invalid")
     elif facts["cleanup_complete"] is True and not all(cleanup.values()):
         errors.append(f"{input_name}.facts cannot overstate cleanup completeness")
+    elif (
+        current_collector
+        and isinstance(browser, dict)
+        and browser.get("started") is True
+        and browser.get("process_cleanup_complete") is not True
+        and facts["cleanup_complete"] is True
+    ):
+        errors.append(f"{input_name}.facts cannot omit Browser process cleanup failure")
     if not isinstance(facts["services_ready"], bool) or not isinstance(
         facts["cleanup_complete"], bool
     ):
@@ -992,6 +1153,10 @@ def validate_bootstrap_evidence(
         or facts["cleanup_complete"] is not True
         or not isinstance(browser, dict)
         or browser.get("completed") is not True
+        or (
+            current_collector
+            and browser.get("process_cleanup_complete") is not True
+        )
         or not isinstance(resource, dict)
         or resource.get("sampling_complete") is not True
         or not isinstance(subject, dict)
@@ -999,5 +1164,19 @@ def validate_bootstrap_evidence(
         or subject.get("changed") is not False
     ):
         errors.append(f"{input_name}.facts NONE stop reason requires a complete clean lifecycle")
+    if (
+        current_collector
+        and isinstance(stop, dict)
+        and isinstance(resource, dict)
+        and isinstance(subject, dict)
+        and (
+            resource.get("sampling_complete") is False
+            or subject.get("scan_complete") is False
+        )
+        and stop.get("reason") not in {"EVIDENCE_ERROR", "CLEANUP_ERROR"}
+    ):
+        errors.append(
+            f"{input_name}.facts incomplete observations require an evidence or cleanup error"
+        )
     if document.get("metadata") != METADATA:
         errors.append(f"{input_name}.metadata must contain exact bootstrap safety claims")

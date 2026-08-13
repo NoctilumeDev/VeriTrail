@@ -7,15 +7,23 @@ import shutil
 import socket
 import sys
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
 
-from veritrail.bootstrap_browser import ObservedBrowserEvidence
+from unittest.mock import patch
+
+from veritrail.bootstrap_browser import (
+    ObservedBrowserEvidence,
+    collect_observed_browser_evidence,
+)
 from veritrail.bootstrap_preview import ResolvedBootstrap, ResolvedBootstrapNode
-from veritrail.bootstrap_run import run_observed_bootstrap
+from veritrail.bootstrap_run import _BootstrapResourceMonitor, run_observed_bootstrap
 from veritrail.canonical import sha256_json
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
+from veritrail.stop_control import StopSignal
 from veritrail.windows_job import inspect_executable_identity
 
 from tests.support import bootstrap_plan, bootstrap_profile
@@ -134,6 +142,91 @@ def _exercise(plan: dict, port: int) -> ObservedBrowserEvidence:
         job_memory_limit_mb=plan["browser"]["max_job_memory_mb"],
         job_memory_limit_enforced=True,
     )
+
+
+def _with_blocking_browser_step(
+    plan: dict,
+    profile: dict,
+    resolved: ResolvedBootstrap,
+    *,
+    lifecycle_timeout_ms: int,
+) -> tuple[dict, dict, ResolvedBootstrap]:
+    raw_profile = copy.deepcopy(profile)
+    raw_profile.pop("seal")
+    raw_profile["lifecycle_timeout_ms"] = lifecycle_timeout_ms
+    updated_profile = seal_project_profile(raw_profile)
+    raw_plan = copy.deepcopy(plan)
+    raw_plan.pop("seal")
+    raw_plan["bootstrap_profile"] = {
+        "profile_id": updated_profile["profile_id"],
+        "profile_version": updated_profile["version"],
+        "profile_sha256": updated_profile["seal"]["digest"],
+    }
+    raw_plan["browser"]["steps"] = [
+        {
+            "id": "wait-for-unreachable-text",
+            "action": "expect_text",
+            "selector": "[data-testid='status']",
+            "value": "this text is never produced",
+        }
+    ]
+    updated_plan = seal_plan(raw_plan, updated_profile)
+    preview = copy.deepcopy(resolved.preview)
+    preview.update(
+        {
+            "plan_sha256": updated_plan["seal"]["digest"],
+            "profile_version": updated_profile["version"],
+            "profile_sha256": updated_profile["seal"]["digest"],
+        }
+    )
+    preview.pop("preview_sha256")
+    preview["preview_sha256"] = sha256_json(preview)
+    return (
+        updated_plan,
+        updated_profile,
+        ResolvedBootstrap(
+            preview=preview,
+            subject_root=resolved.subject_root,
+            nodes=resolved.nodes,
+        ),
+    )
+
+
+class BootstrapResourceMonitorTests(unittest.TestCase):
+    def test_hard_grace_first_triggers_soft_stop_then_upgrades_to_hard(self) -> None:
+        samples = iter((50, 50))
+        stop_signal = StopSignal()
+        monitor = _BootstrapResourceMonitor(
+            {
+                "available_memory_soft_min_mb": 100,
+                "available_memory_hard_min_mb": 100,
+                "hard_breach_grace_samples": 2,
+            },
+            stop_signal,
+            host_memory_reader=lambda: (16 * 1024**3, next(samples) * 1024**2),
+        )
+
+        monitor._sample()
+        self.assertEqual("RESOURCE_MEMORY_SOFT_LIMIT", stop_signal.reason())
+
+        monitor._sample()
+        self.assertEqual("RESOURCE_MEMORY_HARD_LIMIT", stop_signal.reason())
+
+    def test_sampling_failure_requests_collector_stop(self) -> None:
+        stop_signal = StopSignal()
+        monitor = _BootstrapResourceMonitor(
+            {
+                "available_memory_soft_min_mb": 100,
+                "available_memory_hard_min_mb": 50,
+                "hard_breach_grace_samples": 2,
+            },
+            stop_signal,
+            host_memory_reader=lambda: (_ for _ in ()).throw(OSError("unavailable")),
+        )
+
+        monitor._sample()
+
+        self.assertEqual("COLLECTOR_ERROR", stop_signal.reason())
 
 
 @unittest.skipUnless(os.name == "nt", "M10 observed bootstrap is Windows-only")
@@ -304,6 +397,12 @@ class BootstrapObservedRunTests(unittest.TestCase):
             self.assertEqual("ERROR", result.evidence.execution_status)
             self.assertFalse(result.evidence.continue_pipeline)
             self.assertTrue(result.lifecycle.cleanup_complete)
+            bootstrap = result.evidence.bootstrap.document["facts"]
+            self.assertEqual("CLEANUP_ERROR", bootstrap["stop"]["reason"])
+            self.assertFalse(bootstrap["cleanup_complete"])
+            self.assertFalse(
+                bootstrap["browser_exercise"]["process_cleanup_complete"]
+            )
             self.assertEqual(
                 ["application", "dependency"],
                 list(result.lifecycle.actual_teardown_order),
@@ -405,6 +504,192 @@ class BootstrapObservedRunTests(unittest.TestCase):
             )
             self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
 
+    def test_user_cancel_interrupts_active_browser_and_preserves_cleanup(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(
+                subject, application_mode="browser-application"
+            )
+            plan, profile, resolved = _with_blocking_browser_step(
+                plan,
+                profile,
+                resolved,
+                lifecycle_timeout_ms=15_000,
+            )
+            cancellation = threading.Event()
+            browser_entered = threading.Event()
+            original = collect_observed_browser_evidence
+
+            def observed_browser(active_plan: dict, **kwargs):
+                browser_entered.set()
+                return original(active_plan, **kwargs)
+
+            def cancel_during_browser() -> None:
+                self.assertTrue(browser_entered.wait(5))
+                time.sleep(0.5)
+                cancellation.set()
+
+            trigger = threading.Thread(target=cancel_during_browser, daemon=True)
+            trigger.start()
+            with patch(
+                "veritrail.bootstrap_run.collect_observed_browser_evidence",
+                side_effect=observed_browser,
+            ):
+                result = run_observed_bootstrap(
+                    plan,
+                    profile,
+                    resolved,
+                    output_parent=root / "artifacts",
+                    cancel_event=cancellation,
+                )
+            trigger.join(2)
+
+            self.assertFalse(trigger.is_alive())
+            self.assertEqual("USER_CANCELLED", result.lifecycle.stop_reason)
+            self.assertTrue(result.lifecycle.ready_callback_started)
+            self.assertFalse(result.lifecycle.ready_callback_completed)
+            self.assertIsNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("ABORTED", result.evidence.execution_status)
+            bootstrap = result.evidence.bootstrap.document["facts"]
+            self.assertTrue(bootstrap["browser_exercise"]["started"])
+            self.assertFalse(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(
+                bootstrap["browser_exercise"]["process_cleanup_complete"]
+            )
+            self.assertEqual(
+                ["application", "dependency"],
+                list(result.lifecycle.actual_teardown_order),
+            )
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_lifecycle_deadline_interrupts_active_browser_before_policy_timeout(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(
+                subject, application_mode="browser-application"
+            )
+            plan, profile, resolved = _with_blocking_browser_step(
+                plan,
+                profile,
+                resolved,
+                lifecycle_timeout_ms=5_000,
+            )
+            started = time.monotonic()
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+            )
+            elapsed = time.monotonic() - started
+
+            self.assertEqual("LIFECYCLE_TIMEOUT", result.lifecycle.stop_reason)
+            self.assertLess(elapsed, 9.0)
+            self.assertIsNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("ABORTED", result.evidence.execution_status)
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertEqual(
+                ["application", "dependency"],
+                list(result.lifecycle.actual_teardown_order),
+            )
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_runtime_host_memory_hard_limit_aborts_and_cleans_started_node(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(subject)
+            low_available = 100 * 1024 * 1024
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+                host_memory_reader=lambda: (16 * 1024**3, low_available),
+            )
+
+            self.assertEqual(
+                "RESOURCE_MEMORY_HARD_LIMIT", result.lifecycle.stop_reason
+            )
+            self.assertEqual((), result.lifecycle.actual_start_order)
+            self.assertEqual((), result.lifecycle.actual_teardown_order)
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertIsNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("ABORTED", result.evidence.execution_status)
+            resource = result.resource_observation
+            self.assertEqual(
+                "RESOURCE_MEMORY_HARD_LIMIT", resource["limit_trigger_reason"]
+            )
+            self.assertGreaterEqual(
+                resource["max_consecutive_memory_hard_breaches"],
+                resource["hard_breach_grace_samples"],
+            )
+            self.assertEqual(100.0, resource["host_available_memory_min_mb"])
+            self.assertTrue(resource["sampling_complete"])
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_runtime_host_memory_soft_limit_stops_before_process_start(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(subject)
+            soft_only_available = 3_000 * 1024 * 1024
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+                host_memory_reader=lambda: (16 * 1024**3, soft_only_available),
+            )
+
+            self.assertEqual("RESOURCE_MEMORY_SOFT_LIMIT", result.lifecycle.stop_reason)
+            self.assertEqual((), result.lifecycle.actual_start_order)
+            self.assertEqual((), result.lifecycle.actual_teardown_order)
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertIsNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("ABORTED", result.evidence.execution_status)
+            resource = result.resource_observation
+            self.assertEqual(
+                "RESOURCE_MEMORY_SOFT_LIMIT", resource["limit_trigger_reason"]
+            )
+            self.assertEqual(3_000.0, resource["host_available_memory_min_mb"])
+            self.assertTrue(resource["sampling_complete"])
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_runtime_host_memory_sampling_failure_fails_closed_before_process_start(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(subject)
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+                host_memory_reader=lambda: (_ for _ in ()).throw(
+                    OSError("unavailable")
+                ),
+            )
+
+            self.assertEqual("COLLECTOR_ERROR", result.lifecycle.stop_reason)
+            self.assertEqual((), result.lifecycle.actual_start_order)
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("EVIDENCE_ERROR", result.evidence.bootstrap.document["facts"]["stop"]["reason"])
+            self.assertEqual("ERROR", result.evidence.execution_status)
+            self.assertFalse(result.resource_observation["sampling_complete"])
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
 
 if __name__ == "__main__":
     unittest.main()

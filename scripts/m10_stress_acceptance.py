@@ -43,6 +43,8 @@ SOFT_FREE_MEMORY_MB = 3072
 HARD_FREE_MEMORY_MB = 2048
 PORTS = tuple(range(18870, 18891))
 WORKER_TIMEOUT_SECONDS = 90
+HTTP_STRESS_STAGES = ((100, 1), (200, 10), (300, 50), (400, 100))
+HTTP_STRESS_REQUEST_QUEUE_SIZE = 128
 
 
 class MemoryStatusEx(ctypes.Structure):
@@ -783,8 +785,12 @@ class HealthHandler(BaseHTTPRequestHandler):
         return
 
 
+class StressHTTPServer(ThreadingHTTPServer):
+    request_queue_size = HTTP_STRESS_REQUEST_QUEUE_SIZE
+
+
 def serve_http(port: int) -> int:
-    server = ThreadingHTTPServer(("127.0.0.1", port), HealthHandler)
+    server = StressHTTPServer(("127.0.0.1", port), HealthHandler)
     server.daemon_threads = True
     print("READY", flush=True)
     try:
@@ -941,7 +947,7 @@ def run_http_wave(root: Path) -> dict[str, Any]:
             raise AssertionError("HTTP stress listener is not owned by its Job")
         stages: list[dict[str, Any]] = []
         minimum_free = available_memory_mb()
-        for total, in_flight in ((100, 1), (200, 10), (300, 50), (400, 100)):
+        for total, in_flight in HTTP_STRESS_STAGES:
             free_mb = available_memory_mb()
             minimum_free = min(minimum_free, free_mb)
             if free_mb < SOFT_FREE_MEMORY_MB:

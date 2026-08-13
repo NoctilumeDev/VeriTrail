@@ -4,7 +4,11 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from veritrail.bootstrap_browser import _ChromiumResourceObserver
+from veritrail.bootstrap_browser import (
+    ObservedBrowserCollectionError,
+    ObservedBrowserInterrupted,
+    _ChromiumResourceObserver,
+)
 from veritrail.errors import SafetyError
 
 
@@ -107,6 +111,42 @@ class ChromiumResourceObserverTests(unittest.TestCase):
         self.assertIsNone(observer._job)
         self.assertEqual({}, observer._handles)
         self.assertEqual(["owned-job", first, second], backend.closed)
+
+    def test_interrupt_before_driver_assignment_releases_empty_job(self) -> None:
+        backend = _DriverBackend()
+        with patch(
+            "veritrail.bootstrap_browser._create_job",
+            return_value=("owned-job", False, True, True),
+        ):
+            observer = _ChromiumResourceObserver(backend, 512)  # type: ignore[arg-type]
+
+        interruption = observer.interrupted("USER_CANCELLED")
+
+        self.assertIsInstance(interruption, ObservedBrowserInterrupted)
+        self.assertEqual("USER_CANCELLED", interruption.reason)
+        self.assertEqual(0.0, interruption.peak_rss_mb)
+        self.assertTrue(interruption.resource_sampling_complete)
+        self.assertTrue(interruption.process_cleanup_complete)
+        self.assertIsNone(observer._job)
+        self.assertEqual(["owned-job"], backend.closed)
+
+    def test_collection_error_before_driver_assignment_releases_empty_job(self) -> None:
+        backend = _DriverBackend()
+        with patch(
+            "veritrail.bootstrap_browser._create_job",
+            return_value=("owned-job", False, True, True),
+        ):
+            observer = _ChromiumResourceObserver(backend, 512)  # type: ignore[arg-type]
+
+        failure = observer.collection_error("SafetyError")
+
+        self.assertIsInstance(failure, ObservedBrowserCollectionError)
+        self.assertEqual("SafetyError", failure.error_type)
+        self.assertEqual(0.0, failure.peak_rss_mb)
+        self.assertTrue(failure.resource_sampling_complete)
+        self.assertTrue(failure.process_cleanup_complete)
+        self.assertIsNone(observer._job)
+        self.assertEqual(["owned-job"], backend.closed)
 
 
 if __name__ == "__main__":

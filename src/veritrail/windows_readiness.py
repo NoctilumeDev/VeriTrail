@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Mapping
 
 from veritrail.errors import SafetyError
+from veritrail.stop_control import requested_stop_reason
 from veritrail.windows_service import OwnedServiceSession
 from veritrail.windows_tcp import list_ipv4_tcp_listeners
 
@@ -96,11 +97,12 @@ def probe_owned_http_readiness(
 
     while time.monotonic() < deadline:
         ordinal += 1
-        if cancel_event is not None and cancel_event.is_set():
+        cancellation_reason = requested_stop_reason(cancel_event)
+        if cancellation_reason is not None:
             attempts.append(
                 _attempt(started=started, ordinal=ordinal, result="CANCELLED")
             )
-            terminal_error = "USER_CANCELLED"
+            terminal_error = cancellation_reason
             break
         stream_error = session.stream_error_type()
         if stream_error is not None:

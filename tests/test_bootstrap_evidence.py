@@ -37,7 +37,12 @@ from veritrail.windows_service import (
     OwnedServiceTeardownObservation,
 )
 
-from tests.support import bootstrap_plan, sealed_bootstrap_profile, sealed_example_plan
+from tests.support import (
+    artifact,
+    bootstrap_plan,
+    sealed_bootstrap_profile,
+    sealed_example_plan,
+)
 from tests.test_browser_evidence import _browser_artifact
 
 
@@ -197,6 +202,12 @@ def _observations() -> tuple[dict, dict]:
             "dependency_peak_rss_mb": 24.0,
             "application_peak_rss_mb": 25.0,
             "browser_peak_rss_mb": None,
+            "host_available_memory_min_mb": 4096.0,
+            "available_memory_soft_min_mb": 4096,
+            "available_memory_hard_min_mb": 2048,
+            "hard_breach_grace_samples": 2,
+            "max_consecutive_memory_hard_breaches": 0,
+            "limit_trigger_reason": None,
             "sampling_complete": True,
         },
         {
@@ -259,6 +270,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
                     "evidence_sha256": "d" * 64,
                     "job_memory_limit_mb": 1024,
                     "job_memory_limit_enforced": True,
+                    "process_cleanup_complete": True,
                 },
                 resource_observation=resource,
                 subject_observation=subject,
@@ -280,6 +292,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
                 "evidence_sha256": "a" * 64,
                 "job_memory_limit_mb": 1024,
                 "job_memory_limit_enforced": True,
+                "process_cleanup_complete": True,
             },
             resource_observation=resource,
             subject_observation=subject,
@@ -303,6 +316,355 @@ class BootstrapEvidenceTests(unittest.TestCase):
         )
         with self.assertRaises(ValidationError):
             validate_evidence(mutated, "mutated-bootstrap.json")
+
+    def test_legacy_bootstrap_evidence_remains_readable(self) -> None:
+        plan, profile, preview = _authorities()
+        resource, subject = _observations()
+        current = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            _lifecycle(early_exit=False),
+            browser_exercise={
+                "started": True,
+                "completed": True,
+                "evidence_sha256": "a" * 64,
+                "job_memory_limit_mb": 1024,
+                "job_memory_limit_enforced": True,
+                "process_cleanup_complete": True,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+        legacy = copy.deepcopy(current.bootstrap.document)
+        legacy["source"] = "VeriTrail bootstrap-lifecycle/0.1"
+        legacy["facts"]["browser_exercise"].pop("process_cleanup_complete")
+        for field in set(resource) - {
+            "core_peak_rss_mb",
+            "dependency_peak_rss_mb",
+            "application_peak_rss_mb",
+            "browser_peak_rss_mb",
+            "sampling_complete",
+        }:
+            legacy["facts"]["resource_observation"].pop(field)
+
+        validate_evidence(legacy, "legacy-bootstrap.json")
+
+        invalid_current = copy.deepcopy(current.bootstrap.document)
+        invalid_current["facts"]["resource_observation"][
+            "hard_breach_grace_samples"
+        ] = 2.5
+        with self.assertRaisesRegex(ValidationError, "must be integers"):
+            validate_evidence(invalid_current, "invalid-current-bootstrap.json")
+
+        missing_current = copy.deepcopy(current.bootstrap.document)
+        missing_current["facts"]["resource_observation"][
+            "available_memory_soft_min_mb"
+        ] = None
+        with self.assertRaisesRegex(ValidationError, "must be integers"):
+            validate_evidence(missing_current, "missing-current-bootstrap.json")
+
+        equal_thresholds = copy.deepcopy(current.bootstrap.document)
+        equal_thresholds["facts"]["resource_observation"].update(
+            {
+                "available_memory_soft_min_mb": 1,
+                "available_memory_hard_min_mb": 1,
+            }
+        )
+        validate_evidence(equal_thresholds, "equal-thresholds-bootstrap.json")
+
+        inconsistent_current = copy.deepcopy(current.bootstrap.document)
+        inconsistent_current["facts"]["resource_observation"][
+            "max_consecutive_memory_hard_breaches"
+        ] = 2
+        with self.assertRaisesRegex(ValidationError, "lacks a hard trigger"):
+            validate_evidence(
+                inconsistent_current,
+                "inconsistent-current-bootstrap.json",
+            )
+
+    def test_runtime_memory_policy_drift_is_inconclusive_and_catalog_rederived(self) -> None:
+        plan, profile, preview = _authorities()
+        resource, subject = _observations()
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            _lifecycle(early_exit=True),
+            browser_exercise={
+                "started": False,
+                "completed": False,
+                "evidence_sha256": None,
+                "job_memory_limit_mb": 1024,
+                "job_memory_limit_enforced": False,
+                "process_cleanup_complete": None,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+        drifted_document = copy.deepcopy(bootstrap.bootstrap.document)
+        drifted_document["facts"]["resource_observation"][
+            "available_memory_hard_min_mb"
+        ] += 1
+        drifted = import_evidence_document(
+            drifted_document,
+            "drifted-bootstrap.json",
+            attachments=bootstrap.bootstrap.attachments,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            preflight = _preflight(plan, root)
+            output = root / "drifted"
+            report = create_bundle(
+                plan=plan,
+                project_profile=profile,
+                evidence_paths=[],
+                output=output,
+                run_id="m10-resource-policy-drift",
+                execution_status="COMPLETED",
+                generated_evidence=[preflight, drifted],
+            )
+            validated = validate_bundle(output, root)
+
+        self.assertEqual("INCONCLUSIVE", report["verdict"])
+        self.assertIn(
+            "BOOTSTRAP_RESOURCE_POLICY_DRIFT",
+            {item["code"] for item in report["contamination"]},
+        )
+        self.assertEqual("INCONCLUSIVE", validated.verdict)
+
+    def test_browser_process_cleanup_failure_is_public_fail_and_catalog_rederived(self) -> None:
+        plan, profile, preview = _authorities()
+        browser = _browser_artifact(plan)
+        resource, subject = _observations()
+        resource["browser_peak_rss_mb"] = 16.0
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            _lifecycle(early_exit=False),
+            browser_exercise={
+                "started": True,
+                "completed": True,
+                "evidence_sha256": browser.sha256,
+                "job_memory_limit_mb": 1024,
+                "job_memory_limit_enforced": True,
+                "process_cleanup_complete": False,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+        facts = bootstrap.bootstrap.document["facts"]
+        self.assertEqual("CLEANUP_ERROR", facts["stop"]["reason"])
+        self.assertFalse(facts["cleanup_complete"])
+        verify_imported_evidence(bootstrap.bootstrap)
+
+        overstated = copy.deepcopy(bootstrap.bootstrap.document)
+        overstated["facts"]["cleanup_complete"] = True
+        with self.assertRaisesRegex(ValidationError, "Browser process cleanup"):
+            validate_evidence(overstated, "overstated-bootstrap.json")
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            preflight = _preflight(plan, root)
+            unknown_variable = artifact(
+                observed_variables={"background_load": "unknown"}
+            )
+            output = root / "browser-cleanup-failure"
+            report = create_bundle(
+                plan=plan,
+                project_profile=profile,
+                evidence_paths=[],
+                output=output,
+                run_id="m10-browser-cleanup-failure",
+                execution_status=bootstrap.execution_status,
+                generated_evidence=[
+                    preflight,
+                    bootstrap.bootstrap,
+                    browser,
+                    unknown_variable,
+                ],
+            )
+            validated = validate_bundle(output, root)
+
+        self.assertEqual("ERROR", report["execution_status"])
+        self.assertEqual("FAIL", report["verdict"])
+        self.assertIn(
+            "BOOTSTRAP_CLEANUP_INCOMPLETE",
+            {item["code"] for item in report["contamination"]},
+        )
+        self.assertIn(
+            "UNKNOWN_VARIABLE",
+            {item["code"] for item in report["contamination"]},
+        )
+        self.assertEqual("FAIL", validated.verdict)
+
+    def test_cleanup_fact_without_its_own_decisive_assertion_cannot_bypass_contamination(
+        self,
+    ) -> None:
+        plan, profile, preview = _authorities()
+        raw_plan = copy.deepcopy(plan)
+        raw_plan.pop("seal")
+        cleanup_assertion = next(
+            item
+            for item in raw_plan["assertions"]
+            if item["id"] == "bootstrap-cleanup-complete"
+        )
+        cleanup_assertion.update(
+            {
+                "id": "bootstrap-unrelated-hard-failure",
+                "path": "/facts/services_ready",
+                "expected": False,
+            }
+        )
+        plan = seal_plan(raw_plan, profile)
+        preview["plan_sha256"] = plan["seal"]["digest"]
+        preview.pop("preview_sha256")
+        preview["preview_sha256"] = sha256_json(preview)
+        browser = _browser_artifact(plan)
+        resource, subject = _observations()
+        resource["browser_peak_rss_mb"] = 16.0
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            _lifecycle(early_exit=False),
+            browser_exercise={
+                "started": True,
+                "completed": True,
+                "evidence_sha256": browser.sha256,
+                "job_memory_limit_mb": 1024,
+                "job_memory_limit_enforced": True,
+                "process_cleanup_complete": False,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+        unknown_variable = artifact(observed_variables={"background_load": "unknown"})
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / "unasserted-cleanup-failure"
+            report = create_bundle(
+                plan=plan,
+                project_profile=profile,
+                evidence_paths=[],
+                output=output,
+                run_id="unasserted-cleanup-failure",
+                execution_status=bootstrap.execution_status,
+                generated_evidence=[
+                    _preflight(plan, root),
+                    bootstrap.bootstrap,
+                    browser,
+                    unknown_variable,
+                ],
+            )
+            validated = validate_bundle(output, root)
+
+        self.assertEqual("INCONCLUSIVE", report["verdict"])
+        self.assertIn(
+            "BOOTSTRAP_CLEANUP_INCOMPLETE",
+            {item["code"] for item in report["contamination"]},
+        )
+        self.assertTrue(any(item["status"] == "FAIL" for item in report["assertions"]))
+        self.assertEqual("INCONCLUSIVE", validated.verdict)
+
+    def test_user_cancel_can_remain_final_reason_after_resource_trigger(self) -> None:
+        plan, profile, preview = _authorities()
+        resource, subject = _observations()
+        resource.update(
+            {
+                "host_available_memory_min_mb": 1024.0,
+                "limit_trigger_reason": "RESOURCE_MEMORY_HARD_LIMIT",
+                "max_consecutive_memory_hard_breaches": 2,
+            }
+        )
+        lifecycle = replace(
+            _lifecycle(early_exit=True),
+            trigger_reason="USER_CANCELLED",
+            stop_reason="USER_CANCELLED",
+        )
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            lifecycle,
+            browser_exercise={
+                "started": False,
+                "completed": False,
+                "evidence_sha256": None,
+                "job_memory_limit_mb": 1024,
+                "job_memory_limit_enforced": False,
+                "process_cleanup_complete": None,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+
+        self.assertEqual(
+            "USER_CANCELLED",
+            bootstrap.bootstrap.document["facts"]["stop"]["reason"],
+        )
+        self.assertEqual("ABORTED", bootstrap.execution_status)
+        verify_imported_evidence(bootstrap.bootstrap)
+
+    def test_incomplete_resource_observation_overrides_subject_drift(self) -> None:
+        plan, profile, preview = _authorities()
+        resource, subject = _observations()
+        resource["sampling_complete"] = False
+        subject.update(
+            {
+                "after_fingerprint": "c" * 64,
+                "changed": True,
+            }
+        )
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            _lifecycle(early_exit=True),
+            browser_exercise={
+                "started": False,
+                "completed": False,
+                "evidence_sha256": None,
+                "job_memory_limit_mb": 1024,
+                "job_memory_limit_enforced": False,
+                "process_cleanup_complete": None,
+            },
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+
+        self.assertEqual(
+            "EVIDENCE_ERROR",
+            bootstrap.bootstrap.document["facts"]["stop"]["reason"],
+        )
+        self.assertEqual("ERROR", bootstrap.execution_status)
+
+        forged = copy.deepcopy(bootstrap.bootstrap.document)
+        forged["facts"]["stop"].update(
+            {"reason": "SUBJECT_DRIFT", "category": "SAFETY"}
+        )
+        with self.assertRaisesRegex(ValidationError, "incomplete observations"):
+            validate_evidence(forged, "forged-incomplete-bootstrap.json")
 
     def test_browser_collector_error_cannot_use_business_failure_exception(self) -> None:
         plan, profile, preview = _authorities()
@@ -336,6 +698,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
                 "evidence_sha256": browser.sha256,
                 "job_memory_limit_mb": 1024,
                 "job_memory_limit_enforced": True,
+                "process_cleanup_complete": True,
             },
             resource_observation=resource,
             subject_observation=subject,
@@ -368,6 +731,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
                 "evidence_sha256": None,
                 "job_memory_limit_mb": 1024,
                 "job_memory_limit_enforced": False,
+                "process_cleanup_complete": None,
             },
             resource_observation=resource,
             subject_observation=subject,
@@ -532,6 +896,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
                 "evidence_sha256": None,
                 "job_memory_limit_mb": 1024,
                 "job_memory_limit_enforced": False,
+                "process_cleanup_complete": None,
             },
             resource_observation=resource,
             subject_observation=subject,

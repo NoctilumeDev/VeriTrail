@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from veritrail.atomic_publish import publish_staged_directory
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.evidence import ImportedEvidence, import_evidence_files, verify_imported_evidence
@@ -349,7 +350,7 @@ def create_bundle(
             "files": [_hash_file(stage / relative, relative) for relative in bundle_files],
         }
         _write_json(stage / "bundle-manifest.json", bundle_manifest)
-        stage.rename(output)
+        publish_staged_directory(stage, output)
         return report
     except Exception:
         shutil.rmtree(stage, ignore_errors=True)

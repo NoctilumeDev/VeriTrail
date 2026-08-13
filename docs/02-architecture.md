@@ -74,7 +74,7 @@ Run-owned work/staging、封存并读回 teardown 前脱敏事实、比较 subje
 Core/dependency/application/browser 资源分账。公共 Plan 0.6 `run` 已串起 Preview 审批、`PROCEED`
 预检、真实 Browser、裁决、Bundle 和 Catalog 验真；`STOP_ESCALATION/ABORT` 在 bootstrap 前收束为
 仅含 preflight 的 `ABORTED/PENDING` Bundle，Plan 的完整必需证据与本次阶段适用证据分开解释。
-完整退出矩阵仍未完成。
+M10 冻结公共退出矩阵已经完成；冻结后的地基纠偏和重新验收见文档 21，M11 第二类真实项目仍未开始。
 
 ### 2.5 Browser Adapter
 
@@ -215,8 +215,9 @@ runner 与 `runtime.command`。M10 Contract 0.2 冻结独立 sealed ProjectProfi
 双节点逆序清理组件已实现，严格 Evidence、Plan/Profile Bundle、Catalog 与 Comparison 消费、
 Run-owned staging、subject 指纹及资源分账也已接入；真实 Browser 与公共 Plan 0.6 `run` 的
 `PROCEED` 正/负 Bundle 路径已经实现，预检停止也已收束为仅含 preflight 的
-`ABORTED/PENDING` Bundle；完整退出矩阵仍未完成。准确边界见
-`docs/15-m10-bounded-project-bootstrap.md`。
+`ABORTED/PENDING` Bundle；冻结公共退出矩阵已完成，冻结后资源与停止语义纠偏也已完成本地运行级
+复验。准确边界见 `docs/15-m10-bounded-project-bootstrap.md` 与
+`docs/21-m10-post-freeze-foundation-remediation.md`。
 
 ## 9. 实现顺序
 

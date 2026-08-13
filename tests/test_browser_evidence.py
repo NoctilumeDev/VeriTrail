@@ -4,10 +4,13 @@ import copy
 import hashlib
 import json
 import tempfile
+import threading
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from veritrail.browser import sanitize_url
+from veritrail.browser import _collect_browser_evidence, sanitize_url
 from veritrail.canonical import sha256_json
 from veritrail.evidence import (
     EvidenceAttachment,
@@ -20,6 +23,7 @@ from veritrail.errors import ValidationError
 from veritrail.plan import seal_plan
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
+from veritrail.stop_control import StopRequested
 from veritrail.verdict import evaluate
 
 from tests.support import browser_plan
@@ -185,6 +189,67 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
 
 
 class BrowserEvidenceTests(unittest.TestCase):
+    def test_cancel_arriving_during_playwright_start_is_observed_after_ownership_hook(
+        self,
+    ) -> None:
+        plan = _safe_runtime_plan()
+        cancellation = threading.Event()
+        observer_calls: list[str] = []
+        playwright = SimpleNamespace(stop=lambda: None)
+
+        class Context:
+            def start(self) -> object:
+                cancellation.set()
+                return playwright
+
+        class Observer:
+            def playwright_started(self, value: object) -> None:
+                self.assert_is_playwright(value)
+                observer_calls.append("playwright_started")
+
+            @staticmethod
+            def assert_is_playwright(value: object) -> None:
+                if value is not playwright:
+                    raise AssertionError("unexpected Playwright object")
+
+            def failed(self, method: str, error_type: str) -> None:
+                raise AssertionError(f"unexpected observer failure: {method}/{error_type}")
+
+        with patch("playwright.sync_api.sync_playwright", return_value=Context()):
+            with self.assertRaisesRegex(StopRequested, "USER_CANCELLED"):
+                _collect_browser_evidence(
+                    plan,
+                    lifecycle_observer=Observer(),
+                    cancel_event=cancellation,
+                )
+
+        self.assertEqual(["playwright_started"], observer_calls)
+
+    def test_ownership_hook_failure_is_not_hidden_by_simultaneous_cancel(self) -> None:
+        plan = _safe_runtime_plan()
+        cancellation = threading.Event()
+        playwright = SimpleNamespace(stop=lambda: None)
+
+        class Context:
+            def start(self) -> object:
+                return playwright
+
+        class Observer:
+            def playwright_started(self, value: object) -> None:
+                cancellation.set()
+                raise RuntimeError("ownership failed")
+
+            def failed(self, method: str, error_type: str) -> None:
+                return None
+
+        with patch("playwright.sync_api.sync_playwright", return_value=Context()):
+            with self.assertRaisesRegex(ValidationError, "Playwright could not start"):
+                _collect_browser_evidence(
+                    plan,
+                    lifecycle_observer=Observer(),
+                    cancel_event=cancellation,
+                )
+
     def test_url_sanitizer_removes_query_values_userinfo_and_loopback_ip(self) -> None:
         value = sanitize_url(
             "http://demo:secret@127.0.0.1:18765/data.json?token=secret&mode=test#part"

@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from veritrail import __version__
+from veritrail.atomic_publish import publish_staged_directory
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
 from veritrail.evidence import ImportedEvidence, validate_evidence
 from veritrail.errors import VeriTrailError
@@ -993,7 +994,7 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
             "tool_version": __version__,
         }
         (stage / "catalog-manifest.json").write_bytes(canonical_json_bytes(manifest) + b"\n")
-        stage.rename(output)
+        publish_staged_directory(stage, output)
     except CatalogError:
         shutil.rmtree(stage, ignore_errors=True)
         raise

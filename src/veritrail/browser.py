@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import importlib.metadata
+import math
 from collections import Counter
 from datetime import datetime, timezone
 from time import monotonic
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from veritrail.canonical import sha256_json
@@ -15,6 +16,7 @@ from veritrail.evidence import (
     import_evidence_document,
 )
 from veritrail.errors import ValidationError
+from veritrail.stop_control import StopRequested, requested_stop_reason
 
 COLLECTOR_VERSION = "browser-playwright/0.1"
 WRITE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
@@ -129,7 +131,9 @@ def _execute_step(
     viewport_name: str,
     timeout_ms: int,
     screenshot_index: int,
+    check_stop: Callable[[], None],
 ) -> tuple[EvidenceAttachment | None, dict[str, Any] | None]:
+    check_stop()
     action = step["action"]
     if action == "goto":
         page.goto(step["url"], wait_until="load", timeout=timeout_ms)
@@ -146,6 +150,7 @@ def _execute_step(
         locator.wait_for(state="visible", timeout=timeout_ms)
         deadline = monotonic() + timeout_ms / 1000
         while step["value"] not in locator.inner_text(timeout=timeout_ms):
+            check_stop()
             if monotonic() >= deadline:
                 raise TimeoutError(
                     f"expected text was not observed for step {step['id']!r}"
@@ -181,6 +186,8 @@ def _collect_browser_evidence(
     plan: dict[str, Any],
     *,
     lifecycle_observer: _BrowserLifecycleObserver | None = None,
+    cancel_event: object | None = None,
+    lifecycle_deadline: float | None = None,
 ) -> ImportedEvidence:
     try:
         from playwright.sync_api import sync_playwright
@@ -190,6 +197,24 @@ def _collect_browser_evidence(
         ) from exc
 
     policy = plan["browser"]
+
+    def check_stop() -> None:
+        reason = requested_stop_reason(cancel_event)
+        if reason is not None:
+            raise StopRequested(reason)
+        if lifecycle_deadline is not None and monotonic() >= lifecycle_deadline:
+            raise StopRequested("LIFECYCLE_TIMEOUT")
+
+    def operation_timeout_ms() -> int:
+        check_stop()
+        timeout_ms = int(policy["timeout_ms"])
+        if lifecycle_deadline is not None:
+            remaining_ms = max(
+                1,
+                math.ceil((lifecycle_deadline - monotonic()) * 1000),
+            )
+            timeout_ms = min(timeout_ms, remaining_ms)
+        return timeout_ms
     allowed_origins = {
         normalized
         for item in policy["allowed_origins"]
@@ -230,6 +255,7 @@ def _collect_browser_evidence(
             if required:
                 raise
 
+    check_stop()
     try:
         playwright_context = sync_playwright()
         playwright = playwright_context.start()
@@ -237,15 +263,29 @@ def _collect_browser_evidence(
             # M10 uses this required hook to place the Playwright driver in the
             # owned Job before it is allowed to create Chromium descendants.
             observe("playwright_started", playwright, required=True)
-            browser = playwright.chromium.launch(headless=policy["headless"])
+        except Exception:
+            try:
+                playwright.stop()
+            except Exception:
+                pass
+            raise
+        try:
+            check_stop()
+            browser = playwright.chromium.launch(
+                headless=policy["headless"],
+                timeout=operation_timeout_ms(),
+            )
         except Exception as exc:
             try:
                 playwright.stop()
             except Exception:
                 pass
+            check_stop()
             raise ValidationError(
                 [f"Chromium could not be launched ({type(exc).__name__}); install the pinned browser binary"]
             ) from exc
+    except StopRequested:
+        raise
     except ValidationError:
         raise
     except Exception as exc:
@@ -254,7 +294,9 @@ def _collect_browser_evidence(
     browser_version = browser.version
     try:
         observe("browser_started", browser)
+        check_stop()
         for viewport in policy["viewports"]:
+            check_stop()
             viewport_name = viewport["name"]
             viewport_started = _utc_now()
             viewport_steps_start = len(steps)
@@ -290,8 +332,8 @@ def _collect_browser_evidence(
                 context.route_web_socket("**/*", route_web_socket)
                 page = context.new_page()
                 observe("checkpoint", browser)
-                page.set_default_timeout(policy["timeout_ms"])
-                page.set_default_navigation_timeout(policy["timeout_ms"])
+                page.set_default_timeout(operation_timeout_ms())
+                page.set_default_navigation_timeout(operation_timeout_ms())
 
                 def on_console(message: Any) -> None:
                     if len(console) >= MAX_CONSOLE_EVENTS:
@@ -374,9 +416,18 @@ def _collect_browser_evidence(
                 steps.append(initial)
                 initial_started = monotonic()
                 try:
-                    page.goto(policy["start_url"], wait_until="load", timeout=policy["timeout_ms"])
+                    page.goto(
+                        policy["start_url"],
+                        wait_until="load",
+                        timeout=operation_timeout_ms(),
+                    )
+                    check_stop()
                     _finish_step(initial, initial_started)
+                except StopRequested as exc:
+                    _finish_step(initial, initial_started, error=exc)
+                    raise
                 except Exception as exc:
+                    check_stop()
                     _finish_step(initial, initial_started, error=exc)
                     viewport_failed = True
                 finally:
@@ -389,26 +440,34 @@ def _collect_browser_evidence(
                         steps.append(entry)
                         step_started = monotonic()
                         try:
+                            check_stop()
                             if declared_step["action"] == "screenshot":
                                 screenshot_index += 1
                             attachment, reference = _execute_step(
                                 page=page,
                                 step=declared_step,
                                 viewport_name=viewport_name,
-                                timeout_ms=policy["timeout_ms"],
+                                timeout_ms=operation_timeout_ms(),
                                 screenshot_index=screenshot_index,
+                                check_stop=check_stop,
                             )
+                            check_stop()
                             if attachment is not None and reference is not None:
                                 attachments.append(attachment)
                                 screenshots.append(reference)
                             _finish_step(entry, step_started)
+                        except StopRequested as exc:
+                            _finish_step(entry, step_started, error=exc)
+                            raise
                         except Exception as exc:
+                            check_stop()
                             _finish_step(entry, step_started, error=exc)
                             viewport_failed = True
                             break
                         finally:
                             observe("checkpoint", browser)
                 if page is not None:
+                    check_stop()
                     overflow_px = max(
                         0,
                         int(
@@ -417,6 +476,8 @@ def _collect_browser_evidence(
                             )
                         ),
                     )
+            except StopRequested:
+                raise
             except Exception as exc:
                 viewport_failed = True
                 record_collection_error(f"viewport:{viewport_name}", type(exc).__name__)

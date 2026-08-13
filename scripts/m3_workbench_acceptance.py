@@ -24,6 +24,52 @@ class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:
         return
 
+    def _serve_empty_catalog(self, *, include_body: bool) -> None:
+        payload = json.dumps(
+            {
+                "schema_version": "0.1",
+                "catalog": {
+                    "catalog_id": "cat_000000000000000000000000",
+                    "build_status": "COMPLETED",
+                    "read_only": True,
+                    "run_count": 0,
+                    "issue_count": 0,
+                    "duplicate_count": 0,
+                },
+                "pagination": {
+                    "page": 1,
+                    "page_size": 100,
+                    "total_items": 0,
+                    "total_pages": 0,
+                },
+                "runs": [],
+                "issues": [],
+                "issues_truncated": False,
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(payload)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        if include_body:
+            self.wfile.write(payload)
+
+    def do_GET(self) -> None:  # noqa: N802
+        if self.path == "/api/v1/catalog":
+            self._serve_empty_catalog(include_body=True)
+            return
+        super().do_GET()
+
+    def do_HEAD(self) -> None:  # noqa: N802
+        if self.path == "/api/v1/catalog":
+            self._serve_empty_catalog(include_body=False)
+            return
+        super().do_HEAD()
+
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -153,7 +199,7 @@ def main() -> int:
             summary["checks"].append("desktop-negative-evidence")
 
             page.get_by_test_id("fixture-invalid").click()
-            expect(page.get_by_test_id("error-state")).to_contain_text("HASH_MISMATCH")
+            expect(page.get_by_test_id("error-state")).to_contain_text("MISSING_ROOT_FILE")
             assert page.get_by_test_id("status-gate").count() == 0
             page.get_by_test_id("retry-positive").click()
             expect(page.locator('[aria-label="验收结论：PASS"]')).to_be_visible()

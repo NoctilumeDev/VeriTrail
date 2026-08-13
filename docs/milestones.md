@@ -23,7 +23,7 @@
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.0` @ `0084443` |
+| M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` + patch candidate | `m10-v0.11.0` @ `0084443`；`m10-v0.11.1` 待读回 |
 | M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
@@ -171,4 +171,5 @@ READY 后取消交错和 1000 总请求，11 个 Bundle/Catalog 独立验真，�
 - [M10 第一轮严格串行完整复验](18-m10-serial-validation.md)
 - [M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)
 - [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)
+- [M10 冻结后地基纠偏与重新验收](21-m10-post-freeze-foundation-remediation.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

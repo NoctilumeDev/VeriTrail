@@ -73,6 +73,20 @@ describe('App', () => {
     wrapper.unmount()
   })
 
+  it('keeps every local import focus target aligned with its visible label', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+
+    const inputs = wrapper.findAll('.local-import input[type="file"]')
+    expect(inputs).toHaveLength(4)
+    for (const input of inputs) {
+      expect(input.element.parentElement).toBeInstanceOf(HTMLLabelElement)
+      expect(input.attributes('aria-label')).toMatch(/^选择本地 VeriTrail /)
+    }
+
+    wrapper.unmount()
+  })
+
   it('contains an invalid bundle and recovers through the explicit retry', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')

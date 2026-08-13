@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
 import BrowserEvidence from '../src/components/BrowserEvidence.vue'
 import type { EvidenceDocument } from '../src/domain/types'
@@ -51,7 +52,10 @@ describe('BrowserEvidence', () => {
     const tabs = wrapper.findAll('[role="tab"]')
 
     expect(tabs).toHaveLength(4)
+    expect(tabs.map((tab) => tab.attributes('tabindex'))).toEqual(['0', '-1', '-1', '-1'])
     await tabs[0]!.trigger('keydown', { key: 'ArrowRight' })
+    await nextTick()
+    expect(tabs.map((tab) => tab.attributes('tabindex'))).toEqual(['-1', '0', '-1', '-1'])
     expect(wrapper.get('[aria-labelledby="tab-console"]').text()).toContain('synthetic failure')
     await tabs[2]!.trigger('click')
     expect(wrapper.get('[aria-labelledby="tab-network"]').text()).toContain('404')

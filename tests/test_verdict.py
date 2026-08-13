@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import copy
+import tempfile
 import unittest
+from pathlib import Path
 
+from veritrail.catalog import validate_bundle
+from veritrail.reporting import create_bundle
 from veritrail.verdict import evaluate
 
 from tests.support import artifact, sealed_example_plan
@@ -21,6 +25,84 @@ class VerdictTests(unittest.TestCase):
         )
         self.assertEqual("FAIL", result["verdict"])
         self.assertEqual(2, sum(item["status"] == "FAIL" for item in result["assertions"]))
+
+    def test_variable_contamination_blocks_attribution_of_hard_failure(self) -> None:
+        cases = (
+            (
+                "unknown",
+                {
+                    "fixture_mode": "passing",
+                    "python_major_minor": "3.10",
+                    "background_load": "unexpected",
+                },
+                "UNKNOWN_VARIABLE",
+            ),
+            (
+                "controlled-drift",
+                {"fixture_mode": "passing", "python_major_minor": "3.13"},
+                "VARIABLE_DRIFT",
+            ),
+        )
+        for name, observations, code in cases:
+            with self.subTest(case=name):
+                result = evaluate(
+                    sealed_example_plan(),
+                    [
+                        artifact(
+                            suite_passed=False,
+                            failures=1,
+                            observed_variables=observations,
+                        )
+                    ],
+                    "COMPLETED",
+                )
+                self.assertEqual("INCONCLUSIVE", result["verdict"])
+                self.assertIn(code, {item["code"] for item in result["contamination"]})
+                self.assertTrue(
+                    any(item["status"] == "FAIL" for item in result["assertions"])
+                )
+
+    def test_evidence_conflict_blocks_attribution_of_other_hard_failure(self) -> None:
+        result = evaluate(
+            sealed_example_plan(),
+            [
+                artifact(suite_passed=False, failures=1),
+                artifact(suite_passed=False, failures=2),
+            ],
+            "COMPLETED",
+        )
+        self.assertEqual("INCONCLUSIVE", result["verdict"])
+        self.assertTrue(any(item["status"] == "FAIL" for item in result["assertions"]))
+        self.assertIn(
+            "EVIDENCE_CONFLICT",
+            {item["code"] for item in result["contamination"]},
+        )
+
+    def test_catalog_rederives_contaminated_hard_failure_as_inconclusive(self) -> None:
+        plan = sealed_example_plan()
+        failed = artifact(
+            suite_passed=False,
+            failures=1,
+            observed_variables={
+                "fixture_mode": "passing",
+                "python_major_minor": "3.10",
+                "background_load": "unexpected",
+            },
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / "bundle"
+            report = create_bundle(
+                plan=plan,
+                evidence_paths=[],
+                output=output,
+                run_id="contaminated-hard-failure",
+                execution_status="COMPLETED",
+                generated_evidence=[failed],
+            )
+            validated = validate_bundle(output, root)
+        self.assertEqual("INCONCLUSIVE", report["verdict"])
+        self.assertEqual("INCONCLUSIVE", validated.verdict)
 
     def test_missing_evidence_is_pending(self) -> None:
         result = evaluate(sealed_example_plan(), [], "COMPLETED")

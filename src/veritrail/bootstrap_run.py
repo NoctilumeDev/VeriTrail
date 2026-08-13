@@ -6,12 +6,14 @@ import stat
 import tempfile
 import threading
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any, Callable
 
 from veritrail.bootstrap_browser import (
+    ObservedBrowserCollectionError,
     ObservedBrowserEvidence,
+    ObservedBrowserInterrupted,
     collect_observed_browser_evidence,
 )
 from veritrail.bootstrap_evidence import (
@@ -37,7 +39,8 @@ from veritrail.errors import SafetyError, ValidationError
 from veritrail.evidence import ImportedEvidence, verify_imported_evidence
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
-from veritrail.resources import MEBIBYTE, process_rss_bytes
+from veritrail.resources import MEBIBYTE, host_memory_bytes, process_rss_bytes
+from veritrail.stop_control import StopRequested, StopSignal
 from veritrail.windows_readiness import (
     OwnedReadinessObservation,
     probe_owned_http_readiness,
@@ -260,7 +263,13 @@ class _OwnedBootstrapWorkspace:
 
 
 class _BootstrapResourceMonitor:
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        policy: dict[str, Any],
+        stop_signal: StopSignal,
+        *,
+        host_memory_reader: Callable[[], tuple[int, int]] = host_memory_bytes,
+    ) -> None:
         self._lock = threading.Lock()
         self._stop = threading.Event()
         self._thread: threading.Thread | None = None
@@ -268,6 +277,14 @@ class _BootstrapResourceMonitor:
         self._roles: dict[str, str] = {}
         self._core_samples: list[float] = []
         self._node_samples: dict[str, list[float]] = {}
+        self._policy = policy
+        self._stop_signal = stop_signal
+        self._host_memory_reader = host_memory_reader
+        self._host_available_samples: list[float] = []
+        self._sampling_complete = True
+        self._hard_memory_streak = 0
+        self._max_hard_memory_streak = 0
+        self._limit_trigger_reason: str | None = None
 
     def register(self, node_id: str, role: str, session: Any) -> None:
         with self._lock:
@@ -277,21 +294,61 @@ class _BootstrapResourceMonitor:
         self._sample()
 
     def _sample(self) -> None:
+        sampling_failed = False
         try:
             core = round(process_rss_bytes() / MEBIBYTE, 3)
         except (OSError, ValueError):
             core = None
+            sampling_failed = True
+        try:
+            _, available = self._host_memory_reader()
+            host_available = round(available / MEBIBYTE, 3)
+        except (OSError, ValueError):
+            host_available = None
+            sampling_failed = True
         with self._lock:
             sessions = tuple(self._sessions.items())
             if core is not None:
                 self._core_samples.append(core)
+            if sampling_failed:
+                self._sampling_complete = False
+            if host_available is not None:
+                self._host_available_samples.append(host_available)
+                hard_minimum = self._policy["available_memory_hard_min_mb"]
+                soft_minimum = self._policy["available_memory_soft_min_mb"]
+                if host_available < hard_minimum:
+                    self._hard_memory_streak += 1
+                    self._max_hard_memory_streak = max(
+                        self._max_hard_memory_streak,
+                        self._hard_memory_streak,
+                    )
+                    if (
+                        self._hard_memory_streak
+                        >= self._policy["hard_breach_grace_samples"]
+                    ):
+                        self._limit_trigger_reason = "RESOURCE_MEMORY_HARD_LIMIT"
+                else:
+                    self._hard_memory_streak = 0
+                if (
+                    host_available < soft_minimum
+                    and self._limit_trigger_reason is None
+                ):
+                    self._limit_trigger_reason = "RESOURCE_MEMORY_SOFT_LIMIT"
+                trigger_reason = self._limit_trigger_reason
+        if host_available is not None and trigger_reason is not None:
+            self._stop_signal.request(trigger_reason)
         for node_id, session in sessions:
             try:
                 value = round(session.sample_rss_bytes() / MEBIBYTE, 3)
             except (AttributeError, OSError, SafetyError, ValueError):
+                sampling_failed = True
+                with self._lock:
+                    self._sampling_complete = False
                 continue
             with self._lock:
                 self._node_samples.setdefault(node_id, []).append(value)
+        if sampling_failed:
+            self._stop_signal.request("COLLECTOR_ERROR")
 
     def _run(self) -> None:
         while not self._stop.wait(SAMPLE_INTERVAL_SECONDS):
@@ -299,6 +356,20 @@ class _BootstrapResourceMonitor:
 
     def start(self) -> None:
         self._sample()
+        while True:
+            with self._lock:
+                hard_streak = self._hard_memory_streak
+                trigger_reason = self._limit_trigger_reason
+                grace_samples = self._policy["hard_breach_grace_samples"]
+            if (
+                trigger_reason == "RESOURCE_MEMORY_HARD_LIMIT"
+                or hard_streak == 0
+                or hard_streak >= grace_samples
+            ):
+                break
+            if self._stop.wait(SAMPLE_INTERVAL_SECONDS):
+                break
+            self._sample()
         self._thread = threading.Thread(
             target=self._run,
             name="veritrail-bootstrap-rss",
@@ -307,7 +378,6 @@ class _BootstrapResourceMonitor:
         self._thread.start()
 
     def stop(self) -> bool:
-        self._sample()
         self._stop.set()
         if self._thread is not None:
             self._thread.join(1.0)
@@ -343,9 +413,15 @@ class _BootstrapResourceMonitor:
                 node_id for node_id, values in self._node_samples.items() if values
             }
             core_sampled = bool(self._core_samples)
+            host_samples = list(self._host_available_samples)
+            samples_complete = self._sampling_complete
+            max_hard_streak = self._max_hard_memory_streak
+            trigger_reason = self._limit_trigger_reason
         sampling_complete = (
             thread_stopped
             and core_sampled
+            and bool(host_samples)
+            and samples_complete
             and set(actual_start_order).issubset(sampled_nodes)
             and (
                 not browser_started
@@ -358,6 +434,18 @@ class _BootstrapResourceMonitor:
         return {
             **peaks,
             "browser_peak_rss_mb": browser_peak_rss_mb,
+            "host_available_memory_min_mb": min(host_samples) if host_samples else None,
+            "available_memory_soft_min_mb": self._policy[
+                "available_memory_soft_min_mb"
+            ],
+            "available_memory_hard_min_mb": self._policy[
+                "available_memory_hard_min_mb"
+            ],
+            "hard_breach_grace_samples": self._policy[
+                "hard_breach_grace_samples"
+            ],
+            "max_consecutive_memory_hard_breaches": max_hard_streak,
+            "limit_trigger_reason": trigger_reason,
             "sampling_complete": sampling_complete,
         }
 
@@ -549,13 +637,14 @@ def run_observed_bootstrap(
     resolved: ResolvedBootstrap,
     *,
     output_parent: Path,
-    browser_runner: Callable[[dict[str, Any]], ObservedBrowserEvidence] | None = None,
+    browser_runner: Callable[..., ObservedBrowserEvidence] | None = None,
     cancel_event: threading.Event | None = None,
     session_factory: Callable[..., Any] = OwnedServiceSession.start,
     readiness_probe: Callable[..., OwnedReadinessObservation] = (
         probe_owned_http_readiness
     ),
     staging_writer: Callable[[Path, bytes], None] | None = None,
+    host_memory_reader: Callable[[], tuple[int, int]] = host_memory_bytes,
 ) -> BootstrapObservedRunResult:
     """Run the M10 lifecycle through owned staging and post-teardown observations.
 
@@ -573,13 +662,19 @@ def run_observed_bootstrap(
         max_total_bytes=profile["max_watch_total_bytes"],
     )
     workspace = _OwnedBootstrapWorkspace.create(output_parent)
-    monitor = _BootstrapResourceMonitor()
+    stop_signal = StopSignal(cancel_event)
+    monitor = _BootstrapResourceMonitor(
+        plan["preflight"],
+        stop_signal,
+        host_memory_reader=host_memory_reader,
+    )
     browser_exercise: dict[str, Any] = {
         "started": False,
         "completed": False,
         "evidence_sha256": None,
         "job_memory_limit_mb": plan["browser"]["max_job_memory_mb"],
         "job_memory_limit_enforced": False,
+        "process_cleanup_complete": None,
     }
     browser_peak_rss_mb: float | None = None
     browser_sampling_complete = False
@@ -611,11 +706,54 @@ def run_observed_bootstrap(
         monitor.register(node_id, roles[node_id], session)
         return session
 
-    def exercise() -> str | None:
+    def exercise(lifecycle_deadline: float) -> str | None:
         nonlocal browser_artifact, browser_peak_rss_mb, browser_sampling_complete
+        stop_reason = stop_signal.reason()
+        if stop_reason is not None:
+            raise StopRequested(stop_reason)
         browser_exercise["started"] = True
         runner = browser_runner or collect_observed_browser_evidence
-        observed = runner(plan)
+        try:
+            observed = (
+                runner(plan)
+                if browser_runner is not None
+                else runner(
+                    plan,
+                    cancel_event=stop_signal,
+                    lifecycle_deadline=lifecycle_deadline,
+                )
+            )
+        except ObservedBrowserInterrupted as exc:
+            browser_peak_rss_mb = exc.peak_rss_mb
+            browser_sampling_complete = exc.resource_sampling_complete
+            browser_exercise.update(
+                {
+                    "job_memory_limit_mb": exc.job_memory_limit_mb,
+                    "job_memory_limit_enforced": exc.job_memory_limit_enforced,
+                    "process_cleanup_complete": exc.process_cleanup_complete,
+                }
+            )
+            if (
+                not exc.resource_sampling_complete
+                or not exc.process_cleanup_complete
+                or exc.job_memory_limit_mb != plan["browser"]["max_job_memory_mb"]
+                or not exc.job_memory_limit_enforced
+            ):
+                raise SafetyError("M10 interrupted Browser cleanup is incomplete") from exc
+            raise StopRequested(exc.reason) from None
+        except ObservedBrowserCollectionError as exc:
+            browser_peak_rss_mb = exc.peak_rss_mb
+            browser_sampling_complete = exc.resource_sampling_complete
+            browser_exercise.update(
+                {
+                    "job_memory_limit_mb": exc.job_memory_limit_mb,
+                    "job_memory_limit_enforced": exc.job_memory_limit_enforced,
+                    "process_cleanup_complete": exc.process_cleanup_complete,
+                }
+            )
+            raise SafetyError(
+                f"M10 Browser collection failed ({exc.error_type})"
+            ) from exc
         if (
             not isinstance(observed, ObservedBrowserEvidence)
             or isinstance(observed.peak_rss_mb, bool)
@@ -645,6 +783,7 @@ def run_observed_bootstrap(
                 "evidence_sha256": observed.browser.sha256,
                 "job_memory_limit_mb": observed.job_memory_limit_mb,
                 "job_memory_limit_enforced": observed.job_memory_limit_enforced,
+                "process_cleanup_complete": observed.process_cleanup_complete,
             }
         )
         if (
@@ -693,8 +832,8 @@ def run_observed_bootstrap(
         lifecycle = run_bootstrap_lifecycle(
             specs,
             lifecycle_timeout_ms=profile["lifecycle_timeout_ms"],
-            cancel_event=cancel_event,
-            on_services_ready=exercise,
+            cancel_event=stop_signal,
+            on_services_ready_with_deadline=exercise,
             on_evidence_finalize=stage_pre_teardown,
             session_factory=tracked_session_factory,
             readiness_probe=readiness_probe,
@@ -724,6 +863,28 @@ def run_observed_bootstrap(
     finally:
         if not monitor_stopped:
             monitor_stopped = monitor.stop()
+
+    late_stop_reason = stop_signal.reason()
+    if late_stop_reason == "USER_CANCELLED" and lifecycle.stop_reason in {
+        "NONE",
+        "RESOURCE_MEMORY_SOFT_LIMIT",
+        "RESOURCE_MEMORY_HARD_LIMIT",
+    }:
+        event_type = type(lifecycle.events[0])
+        lifecycle = replace(
+            lifecycle,
+            events=(
+                *lifecycle.events,
+                event_type(
+                    ordinal=len(lifecycle.events) + 1,
+                    stage="STOP_OBSERVED",
+                    result=late_stop_reason,
+                    elapsed_ms=round(lifecycle.elapsed_ms, 3),
+                ),
+            ),
+            trigger_reason=late_stop_reason,
+            stop_reason=late_stop_reason,
+        )
 
     resource = monitor.final_observation(
         actual_start_order=lifecycle.actual_start_order,

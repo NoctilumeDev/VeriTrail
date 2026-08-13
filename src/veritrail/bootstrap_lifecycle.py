@@ -10,6 +10,7 @@ from typing import Any, Callable, Sequence
 from veritrail.bootstrap_preview import ResolvedBootstrap
 from veritrail.errors import SafetyError
 from veritrail.project_profile import verify_sealed_project_profile
+from veritrail.stop_control import StopRequested, requested_stop_reason
 from veritrail.windows_readiness import (
     OwnedReadinessObservation,
     probe_owned_http_readiness,
@@ -205,6 +206,8 @@ def _stop_reason(error_type: str | None) -> str:
         "NODE_EARLY_EXIT",
         "USER_CANCELLED",
         "LIFECYCLE_TIMEOUT",
+        "RESOURCE_MEMORY_SOFT_LIMIT",
+        "RESOURCE_MEMORY_HARD_LIMIT",
     }:
         return error_type
     return "COLLECTOR_ERROR"
@@ -216,6 +219,7 @@ def run_bootstrap_lifecycle(
     lifecycle_timeout_ms: int,
     cancel_event: threading.Event | None = None,
     on_services_ready: Callable[[], str | None] | None = None,
+    on_services_ready_with_deadline: Callable[[float], str | None] | None = None,
     on_evidence_finalize: Callable[[BootstrapPreTeardownObservation], None] | None = None,
     session_factory: Callable[..., OwnedServiceSession] = OwnedServiceSession.start,
     readiness_probe: Callable[..., OwnedReadinessObservation] = (
@@ -225,6 +229,8 @@ def run_bootstrap_lifecycle(
     """Run the two service lifecycle without creating public Evidence or a Bundle."""
 
     _validate_specs(specs)
+    if on_services_ready is not None and on_services_ready_with_deadline is not None:
+        raise SafetyError("M10 lifecycle accepts only one services-ready callback")
     if (
         not isinstance(lifecycle_timeout_ms, int)
         or isinstance(lifecycle_timeout_ms, bool)
@@ -258,8 +264,9 @@ def run_bootstrap_lifecycle(
 
     def abort_if_needed() -> bool:
         nonlocal trigger_reason
-        if cancel_event is not None and cancel_event.is_set():
-            trigger_reason = "USER_CANCELLED"
+        requested_reason = requested_stop_reason(cancel_event)
+        if requested_reason is not None:
+            trigger_reason = requested_reason
             return True
         if time.monotonic() >= deadline:
             trigger_reason = "LIFECYCLE_TIMEOUT"
@@ -344,13 +351,22 @@ def run_bootstrap_lifecycle(
         else:
             if abort_if_needed():
                 event("ABORTING", trigger_reason)
-            elif on_services_ready is not None:
+            elif on_services_ready is not None or on_services_ready_with_deadline is not None:
                 callback_started = True
                 try:
-                    exercise_outcome = on_services_ready()
+                    exercise_outcome = (
+                        on_services_ready_with_deadline(deadline)
+                        if on_services_ready_with_deadline is not None
+                        else on_services_ready()
+                    )
                     if exercise_outcome not in {None, "BROWSER_HARD_FAILURE"}:
                         raise SafetyError("M10 exercise callback returned an invalid outcome")
                     callback_completed = True
+                except StopRequested as exc:
+                    trigger_reason = exc.reason
+                    event("EXERCISED", trigger_reason)
+                    event("SERVICES_READY_CALLBACK", "INTERRUPTED")
+                    event("ABORTING", trigger_reason)
                 except Exception:
                     trigger_reason = "COLLECTOR_ERROR"
                     event("EXERCISED", "COLLECTOR_ERROR")
@@ -359,10 +375,10 @@ def run_bootstrap_lifecycle(
                 else:
                     event("EXERCISED", exercise_outcome or "COMPLETED")
                     event("SERVICES_READY_CALLBACK", "COMPLETED")
-                    if exercise_outcome == "BROWSER_HARD_FAILURE":
-                        trigger_reason = exercise_outcome
+                    if abort_if_needed():
                         event("ABORTING", trigger_reason)
-                    elif abort_if_needed():
+                    elif exercise_outcome == "BROWSER_HARD_FAILURE":
+                        trigger_reason = exercise_outcome
                         event("ABORTING", trigger_reason)
     finally:
         if on_evidence_finalize is not None:
@@ -442,6 +458,14 @@ def run_bootstrap_lifecycle(
             for node, _ in sessions
         )
     )
+    late_stop_reason = requested_stop_reason(cancel_event)
+    if late_stop_reason == "USER_CANCELLED" and trigger_reason in {
+        "NONE",
+        "RESOURCE_MEMORY_SOFT_LIMIT",
+        "RESOURCE_MEMORY_HARD_LIMIT",
+    }:
+        trigger_reason = late_stop_reason
+        event("STOP_OBSERVED", trigger_reason)
     stop_reason = trigger_reason
     if not cleanup_complete:
         stop_reason = "CLEANUP_ERROR"

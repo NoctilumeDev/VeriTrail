@@ -11,12 +11,19 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
 
 from veritrail.bootstrap_preview import build_bootstrap_preview, resolve_bootstrap
+from veritrail.bootstrap_browser import (
+    ObservedBrowserCollectionError,
+    ObservedBrowserEvidence,
+    collect_observed_browser_evidence,
+)
 from veritrail.bootstrap_public_run import run_bootstrap_bundle
 from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.catalog import build_catalog, validate_bundle
@@ -471,6 +478,301 @@ class BootstrapRunCliTests(unittest.TestCase):
             )
             validated = validate_bundle(output, root)
             self.assertEqual("FAIL", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_browser_process_cleanup_failure_is_public_error_fail(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(
+                root
+            )
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            output = root / "bundle-browser-cleanup-failure"
+
+            def incomplete_browser(active_plan: dict) -> ObservedBrowserEvidence:
+                observed = collect_observed_browser_evidence(active_plan)
+                return replace(observed, process_cleanup_complete=False)
+
+            def observed_runner(
+                observed_plan,
+                observed_profile,
+                resolved,
+                *,
+                output_parent,
+                cancel_event,
+            ):
+                return run_observed_bootstrap(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    output_parent=output_parent,
+                    cancel_event=cancel_event,
+                    browser_runner=incomplete_browser,
+                )
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=output,
+                run_id="m10-browser-cleanup-failure",
+                observed_runner=observed_runner,
+            )
+
+            self.assertIsNotNone(result.observed)
+            self.assertEqual("ERROR", result.report["execution_status"])
+            self.assertEqual("FAIL", result.report["verdict"])
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("CLEANUP_ERROR", bootstrap["stop"]["reason"])
+            self.assertFalse(bootstrap["cleanup_complete"])
+            self.assertFalse(
+                bootstrap["browser_exercise"]["process_cleanup_complete"]
+            )
+            validated = validate_bundle(output, root)
+            self.assertEqual("ERROR", validated.execution_status)
+            self.assertEqual("FAIL", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_runtime_resource_stops_and_sampling_failure_preserve_pending_verdict(
+        self,
+    ) -> None:
+        scenarios = (
+            (
+                "soft",
+                lambda: (16 * 1024**3, 1_536 * 1024**2),
+                "RESOURCE_MEMORY_SOFT_LIMIT",
+                "ABORTED",
+            ),
+            (
+                "hard",
+                lambda: (16 * 1024**3, 0),
+                "RESOURCE_MEMORY_HARD_LIMIT",
+                "ABORTED",
+            ),
+            (
+                "sampling-error",
+                lambda: (_ for _ in ()).throw(OSError("unavailable")),
+                "EVIDENCE_ERROR",
+                "ERROR",
+            ),
+        )
+        for name, memory_reader, expected_reason, expected_status in scenarios:
+            with self.subTest(scenario=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                subject, plan_path, profile_path, bindings, preview, ports = self._fixture(
+                    root
+                )
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+                profile = json.loads(profile_path.read_text(encoding="utf-8"))
+                plan.pop("seal")
+                plan["preflight"].update(
+                    {
+                        "sample_count": 2,
+                        "available_memory_soft_min_mb": 2_048,
+                        "available_memory_hard_min_mb": 1_024,
+                        "hard_breach_grace_samples": 2,
+                    }
+                )
+                plan = seal_plan(plan, profile)
+                preview = build_bootstrap_preview(
+                    plan,
+                    profile,
+                    subject_root=subject,
+                    tool_bindings_path=bindings,
+                )
+                output = root / f"bundle-runtime-{name}"
+
+                def observed_runner(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    *,
+                    output_parent,
+                    cancel_event,
+                ):
+                    return run_observed_bootstrap(
+                        observed_plan,
+                        observed_profile,
+                        resolved,
+                        output_parent=output_parent,
+                        cancel_event=cancel_event,
+                        host_memory_reader=memory_reader,
+                    )
+
+                result = run_bootstrap_bundle(
+                    plan,
+                    profile,
+                    subject_root=subject,
+                    tool_bindings_path=bindings,
+                    approved_preview_sha256=preview["preview_sha256"],
+                    output=output,
+                    run_id=f"m10-runtime-{name}",
+                    observed_runner=observed_runner,
+                )
+
+                self.assertIsNotNone(result.observed)
+                self.assertEqual(expected_status, result.report["execution_status"])
+                self.assertEqual("PENDING", result.report["verdict"])
+                self.assertEqual(
+                    "NOT_EVALUATED",
+                    next(
+                        item
+                        for item in result.report["assertions"]
+                        if item["id"] == "bootstrap-services-ready"
+                    )["status"],
+                )
+                bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+                self.assertEqual(expected_reason, bootstrap["stop"]["reason"])
+                self.assertTrue(bootstrap["cleanup_complete"])
+                validated = validate_bundle(output, root)
+                self.assertEqual(expected_status, validated.execution_status)
+                self.assertEqual("PENDING", validated.verdict)
+                self.assertEqual([], list(root.glob(".veritrail-*")))
+                self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_user_cancel_during_browser_creates_public_pending_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, _, ports = self._fixture(root)
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            plan.pop("seal")
+            plan["browser"]["steps"] = [
+                {
+                    "id": "wait-for-unreachable-text",
+                    "action": "expect_text",
+                    "selector": "[data-testid='status']",
+                    "value": "this text is never produced",
+                }
+            ]
+            plan = seal_plan(plan, profile)
+            preview = build_bootstrap_preview(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+            )
+            output = root / "bundle-browser-user-cancelled"
+            cancellation = threading.Event()
+            browser_entered = threading.Event()
+            original = collect_observed_browser_evidence
+
+            def observed_browser(active_plan: dict, **kwargs):
+                browser_entered.set()
+                return original(active_plan, **kwargs)
+
+            def cancel_during_browser() -> None:
+                if not browser_entered.wait(5):
+                    return
+                time.sleep(0.5)
+                cancellation.set()
+
+            trigger = threading.Thread(target=cancel_during_browser, daemon=True)
+            trigger.start()
+            with patch(
+                "veritrail.bootstrap_run.collect_observed_browser_evidence",
+                side_effect=observed_browser,
+            ):
+                result = run_bootstrap_bundle(
+                    plan,
+                    profile,
+                    subject_root=subject,
+                    tool_bindings_path=bindings,
+                    approved_preview_sha256=preview["preview_sha256"],
+                    output=output,
+                    run_id="m10-browser-user-cancelled",
+                    cancel_event=cancellation,
+                )
+            trigger.join(2)
+
+            self.assertFalse(trigger.is_alive())
+            self.assertIsNotNone(result.observed)
+            self.assertEqual("ABORTED", result.report["execution_status"])
+            self.assertEqual("PENDING", result.report["verdict"])
+            self.assertEqual(["browser.session"], result.report["missing_evidence"])
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("USER_CANCELLED", bootstrap["stop"]["reason"])
+            self.assertTrue(bootstrap["services_ready"])
+            self.assertTrue(bootstrap["browser_exercise"]["started"])
+            self.assertFalse(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(
+                bootstrap["browser_exercise"]["process_cleanup_complete"]
+            )
+            self.assertTrue(bootstrap["cleanup_complete"])
+            validated = validate_bundle(output, root)
+            self.assertEqual("ABORTED", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_browser_collector_error_creates_public_error_pending_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(
+                root
+            )
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            output = root / "bundle-browser-collector-error"
+
+            def fail_browser(active_plan: dict) -> ObservedBrowserEvidence:
+                raise ObservedBrowserCollectionError(
+                    "SafetyError",
+                    peak_rss_mb=0.0,
+                    resource_sampling_complete=True,
+                    process_cleanup_complete=True,
+                    job_memory_limit_mb=active_plan["browser"]["max_job_memory_mb"],
+                    job_memory_limit_enforced=True,
+                )
+
+            def observed_runner(
+                observed_plan,
+                observed_profile,
+                resolved,
+                *,
+                output_parent,
+                cancel_event,
+            ):
+                return run_observed_bootstrap(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    output_parent=output_parent,
+                    cancel_event=cancel_event,
+                    browser_runner=fail_browser,
+                )
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=output,
+                run_id="m10-browser-collector-error",
+                observed_runner=observed_runner,
+            )
+
+            self.assertIsNotNone(result.observed)
+            self.assertEqual("ERROR", result.report["execution_status"])
+            self.assertEqual("PENDING", result.report["verdict"])
+            self.assertEqual(["browser.session"], result.report["missing_evidence"])
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("COLLECTOR_ERROR", bootstrap["stop"]["reason"])
+            self.assertTrue(bootstrap["browser_exercise"]["started"])
+            self.assertFalse(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(
+                bootstrap["browser_exercise"]["process_cleanup_complete"]
+            )
+            self.assertTrue(bootstrap["cleanup_complete"])
+            validated = validate_bundle(output, root)
+            self.assertEqual("ERROR", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
