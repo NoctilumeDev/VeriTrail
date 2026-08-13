@@ -163,4 +163,8 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
 - 2026-08-13：阶段 A 第 6 项完成开发切片。application READY 后 cooperative user cancel 形成
   `USER_CANCELLED / ABORTED/PENDING` 公共 Bundle，CLI Ctrl+C/Ctrl+Break 只请求取消并等待 Evidence/
   逆序清理，Catalog、四流附件、端口与 staging 验真通过；双 Python 开发回归均为 206/206；
+- 2026-08-13：阶段 A 第 7 项完成定向开发切片。live Preview 通过后分别抢占 dependency/application
+  端口，两条公共链路均在 preflight 安全停止为 `ABORTED/PENDING`；observed runner 未调用，外部
+  listener 保持存活，Bundle 仅含 preflight，Catalog 可验真且 attachments/staging 为零；双 Python
+  开发回归均为 207/207；
 - 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。

@@ -123,7 +123,10 @@ Catalog 独立复核其证据适用性；审批摘要不一致仍零启动、零
 `NODE_EARLY_EXIT / COMPLETED/FAIL` 与 `READINESS_TIMEOUT / ABORTED/FAIL`；两者均不生成 browser Evidence，
 保留四个有界流附件并通过 Catalog、端口与 staging 清理验证。application READY 后 user cancel 也已
 接入公共 Bundle 和 CLI signal 桥接，形成 `USER_CANCELLED / ABORTED/PENDING`、零 browser Evidence 与
-完整逆序清理；Python 3.10/3.13 开发回归均为 206/206。其余退出矩阵、
+完整逆序清理；Python 3.10/3.13 开发回归均为 206/206。live Preview 通过后外部进程分别抢占
+dependency/application 端口的公共切片也已在 preflight 安全停止为 `ABORTED/PENDING`，不调用
+observed runner、不接管或终止外部 listener，并由 Catalog 验真仅含 preflight 的 Bundle；双 Python
+开发回归均为 207/207。其余退出矩阵、
 Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
 自举冻结事实。
 

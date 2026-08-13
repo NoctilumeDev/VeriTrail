@@ -42,7 +42,9 @@ Preview 精确审批和预检 `PROCEED` 后完成真实 Browser 正/负、确定
 `READINESS_TIMEOUT / ABORTED/FAIL`；Catalog 接纳两者，并复核 browser 不适用、逆序清理与端口/staging
 释放。application READY 后 user cancel 也已通过 cooperative event 和 CLI Ctrl+C/Ctrl+Break 桥接形成
 `USER_CANCELLED / ABORTED/PENDING`，Browser 未启动、四流附件与 application→dependency 清理完整，
-Catalog 验真通过。完整退出矩阵、Workbench 读回和最终冻结门禁仍未完成；第二类真实项目证明属于
+Catalog 验真通过。实时 Preview 通过后，dependency/application 端口分别被外部监听者抢占的公共
+TOCTOU 场景也得到预检期 `ABORTED/PENDING`：runner 未启动，外部监听者未被接管或终止，Bundle 只含
+preflight 且 Catalog 验真通过。完整退出矩阵、Workbench 读回和最终冻结门禁仍未完成；第二类真实项目证明属于
 M11。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以

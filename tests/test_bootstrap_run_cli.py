@@ -13,7 +13,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
-from veritrail.bootstrap_preview import build_bootstrap_preview
+from veritrail.bootstrap_preview import build_bootstrap_preview, resolve_bootstrap
 from veritrail.bootstrap_public_run import run_bootstrap_bundle
 from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.catalog import validate_bundle
@@ -504,6 +504,79 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual("PENDING", validated.verdict)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_port_conflict_after_live_preview_aborts_without_touching_external_owner(self) -> None:
+        for contested_index, label in enumerate(("dependency", "application")):
+            with self.subTest(node=label), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                subject, plan_path, profile_path, bindings, preview, ports = self._fixture(
+                    root
+                )
+                plan = json.loads(plan_path.read_text(encoding="utf-8"))
+                profile = json.loads(profile_path.read_text(encoding="utf-8"))
+                output = root / f"bundle-{label}-port-conflict"
+                external: socket.socket | None = None
+
+                def resolve_then_contest(*args, **kwargs):
+                    nonlocal external
+                    resolved = resolve_bootstrap(*args, **kwargs)
+                    external = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    external.bind(("127.0.0.1", ports[contested_index]))
+                    external.listen(socket.SOMAXCONN)
+                    return resolved
+
+                def fail_if_called(*_args, **_kwargs):
+                    self.fail("port-conflicted preflight invoked the observed runner")
+
+                try:
+                    result = run_bootstrap_bundle(
+                        plan,
+                        profile,
+                        subject_root=subject,
+                        tool_bindings_path=bindings,
+                        approved_preview_sha256=preview["preview_sha256"],
+                        output=output,
+                        run_id=f"m10-{label}-port-conflict",
+                        resolver=resolve_then_contest,
+                        observed_runner=fail_if_called,
+                    )
+
+                    self.assertIsNone(result.observed)
+                    self.assertEqual(
+                        "ABORT", result.preflight.document["facts"]["decision"]
+                    )
+                    conflict = next(
+                        item
+                        for item in result.preflight.document["facts"]["port_checks"]
+                        if item["port"] == ports[contested_index]
+                    )
+                    self.assertEqual("FREE", conflict["expected"])
+                    self.assertEqual("LISTENING", conflict["actual"])
+                    self.assertFalse(conflict["matched"])
+                    self.assertEqual("ABORTED", result.report["execution_status"])
+                    self.assertEqual("PENDING", result.report["verdict"])
+                    self.assertEqual([], result.report["contamination"])
+                    self.assertEqual(
+                        ["runtime.preflight"],
+                        [
+                            item["evidence_type"]
+                            for item in result.report["evidence"]
+                        ],
+                    )
+                    self.assertFalse((output / "attachments").exists())
+                    self.assertEqual(
+                        1,
+                        external.getsockopt(socket.SOL_SOCKET, socket.SO_ACCEPTCONN),
+                    )
+                    self.assertFalse(_port_is_free(ports[contested_index]))
+                    validated = validate_bundle(output, root)
+                    self.assertEqual("ABORTED", validated.execution_status)
+                    self.assertEqual("PENDING", validated.verdict)
+                    self.assertEqual([], list(root.glob(".veritrail-*")))
+                finally:
+                    if external is not None:
+                        external.close()
+                self.assertTrue(all(_port_is_free(port) for port in ports))
 
     def test_bootstrap_interrupt_handler_requests_cancel_and_restores_handlers(self) -> None:
         handled = [signal.SIGINT]

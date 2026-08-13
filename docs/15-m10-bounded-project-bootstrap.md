@@ -655,6 +655,14 @@ user cancel 公共切片随后把 cooperative cancellation 从 observed-run 贯�
 附件与 application→dependency 完整逆序清理，Catalog 验真且端口/staging 残留为零。Python 3.10.6
 与 Python 3.13.13 开发回归均为 206/206；这仍是开发期切片证据，不是计划 0.1 的最终串行轮。
 
+外部端口竞争公共切片把竞争点放在 live Preview 成功重建并匹配审批摘要之后、Run preflight 采样
+之前。dependency 与 application 两个声明端口分别由测试进程持有真实 IPv4 loopback listener，公共
+Bundle runner 均在零 observed-run/零受控进程下形成 `ABORTED/PENDING`，Evidence 仅含唯一 preflight；
+外部 listener 在 Bundle/Catalog 验真之后仍保持可接受连接，证明 VeriTrail 没有按端口接管或误杀它，
+Run-owned attachments 与 staging 均为零。该切片证明的是审批后 TOCTOU 的安全拒绝；Preview 重建前
+已经存在的 listener 仍属于零 Run 的审批前提失效，二者不得混写。加入该公共用例后，Python 3.10.6
+与 Python 3.13.13 开发回归均为 207/207；它仍不替代最终串行轮。
+
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
 和远端标签读回完成后，里程碑本身才能标记 `FROZEN`。
