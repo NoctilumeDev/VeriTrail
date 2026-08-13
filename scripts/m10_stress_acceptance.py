@@ -417,8 +417,75 @@ def start_worker(command: list[str]) -> subprocess.Popen[str]:
     )
 
 
+def terminate_worker_trees(
+    workers: list[tuple[str, subprocess.Popen[str], Path]],
+) -> None:
+    windows_root = os.environ.get("SYSTEMROOT") or os.environ.get("WINDIR")
+    if not windows_root:
+        raise AssertionError("Windows root is unavailable for worker tree cleanup")
+    taskkill = Path(windows_root) / "System32" / "taskkill.exe"
+    if not taskkill.is_file():
+        raise AssertionError("taskkill.exe is unavailable for worker tree cleanup")
+
+    errors: list[str] = []
+    for label, process, _ in workers:
+        if process.poll() is not None:
+            continue
+        try:
+            completed = subprocess.run(
+                [str(taskkill), "/PID", str(process.pid), "/T", "/F"],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=10,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                check=False,
+            )
+        except Exception as exc:
+            errors.append(f"{label}:TASKKILL_{type(exc).__name__}")
+            continue
+        if completed.returncode != 0 and process.poll() is None:
+            errors.append(f"{label}:TASKKILL_EXIT_{completed.returncode}")
+
+    for label, process, _ in workers:
+        try:
+            process.communicate(timeout=10)
+        except subprocess.TimeoutExpired:
+            try:
+                process.kill()
+                process.communicate(timeout=5)
+            except Exception as exc:
+                errors.append(f"{label}:LAUNCHER_{type(exc).__name__}")
+        except Exception as exc:
+            errors.append(f"{label}:PIPE_{type(exc).__name__}")
+        if process.poll() is None:
+            errors.append(f"{label}:LAUNCHER_STILL_RUNNING")
+    if errors:
+        raise AssertionError(f"worker tree cleanup was incomplete: {sorted(errors)}")
+
+
+def raise_after_worker_cleanup(
+    workers: list[tuple[str, subprocess.Popen[str], Path]],
+    *,
+    root: Path,
+    ports: tuple[int, ...],
+    cause: BaseException,
+) -> None:
+    try:
+        terminate_worker_trees(workers)
+        assert_wave_clean(root, ports)
+    except Exception as cleanup_error:
+        raise AssertionError(
+            f"{cause}; emergency worker cleanup failed: {cleanup_error}"
+        ) from cause
+    raise cause
+
+
 def wait_workers(
     workers: list[tuple[str, subprocess.Popen[str], Path]],
+    *,
+    root: Path,
+    ports: tuple[int, ...],
 ) -> tuple[list[dict[str, Any]], int]:
     deadline = time.monotonic() + WORKER_TIMEOUT_SECONDS
     minimum_free = available_memory_mb()
@@ -426,15 +493,19 @@ def wait_workers(
         free_mb = available_memory_mb()
         minimum_free = min(minimum_free, free_mb)
         if free_mb < HARD_FREE_MEMORY_MB:
-            for _, process, _ in workers:
-                if process.poll() is None:
-                    process.terminate()
-            raise AssertionError("hard memory stop line reached")
+            raise_after_worker_cleanup(
+                workers,
+                root=root,
+                ports=ports,
+                cause=AssertionError("hard memory stop line reached"),
+            )
         if time.monotonic() >= deadline:
-            for _, process, _ in workers:
-                if process.poll() is None:
-                    process.terminate()
-            raise TimeoutError("worker wave timed out")
+            raise_after_worker_cleanup(
+                workers,
+                root=root,
+                ports=ports,
+                cause=TimeoutError("worker wave timed out"),
+            )
         time.sleep(0.05)
 
     summaries: list[dict[str, Any]] = []
@@ -504,13 +575,15 @@ def run_same_port_wave(root: Path, rng: random.Random) -> dict[str, Any]:
     ready_paths = [root / "barriers" / f"{label}.ready" for label in labels]
     while not all(path.exists() for path in ready_paths):
         if any(process.poll() is not None for _, process, _ in workers):
-            wait_workers(workers)
+            wait_workers(workers, root=root, ports=(18870, 18871))
             raise AssertionError("same-port worker exited before synchronized release")
         if time.monotonic() >= deadline:
             raise TimeoutError("same-port workers did not reach the barrier")
         time.sleep(0.02)
     barrier.write_text("release\n", encoding="utf-8")
-    summaries, minimum_free = wait_workers(workers)
+    summaries, minimum_free = wait_workers(
+        workers, root=root, ports=(18870, 18871)
+    )
     pass_count = sum(item["verdict"] == "PASS" for item in summaries)
     if pass_count > 1:
         raise AssertionError(f"same-port wave produced multiple PASS Runs: {summaries}")
@@ -602,7 +675,8 @@ def run_independent_wave(
                 summary,
             )
         )
-    summaries, minimum_free = wait_workers(workers)
+    ports = tuple(port for _, dep, app in definitions for port in (dep, app))
+    summaries, minimum_free = wait_workers(workers, root=root, ports=ports)
     if len(summaries) != degree or any(
         item["execution_status"] != "COMPLETED"
         or item["verdict"] != "PASS"
@@ -611,7 +685,6 @@ def run_independent_wave(
     ):
         raise AssertionError(f"independent degree {degree} did not pass: {summaries}")
     publish_bundles(root, [label for label, _, _ in definitions])
-    ports = tuple(port for _, dep, app in definitions for port in (dep, app))
     clean = assert_wave_clean(root, ports)
     return {
         "name": f"independent-degree-{degree}",
@@ -665,7 +738,10 @@ def run_cancel_wave(root: Path, rng: random.Random) -> dict[str, Any]:
                 summary,
             )
         )
-    summaries, minimum_free = wait_workers(workers)
+    cancellation_ports = tuple(range(18884, 18890))
+    summaries, minimum_free = wait_workers(
+        workers, root=root, ports=cancellation_ports
+    )
     if any(
         item["execution_status"] != "ABORTED"
         or item["verdict"] != "PENDING"
@@ -676,7 +752,7 @@ def run_cancel_wave(root: Path, rng: random.Random) -> dict[str, Any]:
     ):
         raise AssertionError(f"cancel wave is inconsistent: {summaries}")
     publish_bundles(root, [label for label, _, _ in definitions])
-    clean = assert_wave_clean(root, tuple(range(18884, 18890)))
+    clean = assert_wave_clean(root, cancellation_ports)
     return {
         "name": "cancel-cleanup-interleave",
         "seed": SEED,
