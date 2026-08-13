@@ -93,6 +93,14 @@ class BootstrapPreTeardownStreams:
     stderr: CapturedStream | None
 
 
+class BootstrapEvidenceFinalizationError(SafetyError):
+    def __init__(self, error_type: str) -> None:
+        if error_type != "EVIDENCE_STAGING_FAILED":
+            raise ValueError("unsupported M10 evidence finalization error type")
+        self.error_type = error_type
+        super().__init__(error_type)
+
+
 @dataclass
 class _MutableNodeObservation:
     spec: BootstrapServiceSpec
@@ -395,6 +403,10 @@ def run_bootstrap_lifecycle(
                         streams=tuple(pre_teardown_streams),
                     )
                 )
+            except BootstrapEvidenceFinalizationError as exc:
+                trigger_reason = "EVIDENCE_ERROR"
+                event("EVIDENCE_FINALIZATION", exc.error_type)
+                event("ABORTING", trigger_reason)
             except Exception:
                 trigger_reason = "EVIDENCE_ERROR"
                 event("EVIDENCE_FINALIZATION", "FAILED")

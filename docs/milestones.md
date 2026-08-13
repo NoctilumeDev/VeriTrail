@@ -136,7 +136,10 @@ Bundle 未被覆盖，轮间无残留且 M6 Comparison 为 `MATCH`、0 differenc
 `COMPLETED/INCONCLUSIVE`，Browser/Catalog/清理均成立；双 Python 开发回归均为 210/210。cleanup
 注入失败公共链路仍继续 application→dependency best-effort 回收，并以 HARD cleanup 断言形成
 `CLEANUP_ERROR / ERROR/FAIL`；Catalog 拒绝伪装 clean，独立残留为零。Python 3.10 首轮全量曾无诊断
-非零退出，定向与完整复跑未复现；最终双 Python 开发回归均为 211/211。其余退出矩阵、
+非零退出，定向与完整复跑未复现；最终双 Python 开发回归均为 211/211。staging 写入失败也已由
+teardown 前稳定 `EVIDENCE_STAGING_FAILED` 进入受限 fallback，完整逆序清理后形成
+`EVIDENCE_ERROR / ERROR/PENDING` 公共 Bundle，Catalog 可验真且未知 callback 反例被拒绝；双 Python
+开发回归均为 213/213。其余退出矩阵、
 Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
 自举冻结事实。
 

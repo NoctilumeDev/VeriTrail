@@ -24,7 +24,7 @@ from veritrail.evidence import (
     validate_evidence,
     verify_imported_evidence,
 )
-from veritrail.errors import ValidationError
+from veritrail.errors import SafetyError, ValidationError
 from veritrail.pairing import PairingError, _load_source as load_pairing_source
 from veritrail.plan import seal_plan
 from veritrail.reporting import create_bundle
@@ -231,6 +231,37 @@ def _refresh_bundle_entries(bundle: Path, changed: list[str]) -> None:
 
 
 class BootstrapEvidenceTests(unittest.TestCase):
+    def test_only_explicit_staging_failure_can_use_failure_evidence_fallback(self) -> None:
+        plan, profile, preview = _authorities()
+        resource, subject = _observations()
+        lifecycle = _lifecycle(early_exit=False)
+        lifecycle = replace(
+            lifecycle,
+            events=(
+                BootstrapLifecycleEvent(1, "PREPARED", "ENTERED", 0.1),
+                BootstrapLifecycleEvent(2, "EVIDENCE_FINALIZATION", "FAILED", 5.0),
+                BootstrapLifecycleEvent(3, "TEARDOWN_COMPLETE", "COMPLETE", 10.0),
+            ),
+            trigger_reason="EVIDENCE_ERROR",
+            stop_reason="EVIDENCE_ERROR",
+        )
+        with self.assertRaisesRegex(SafetyError, "explicit failed"):
+            collect_bootstrap_evidence(
+                plan,
+                profile,
+                preview,
+                lifecycle,
+                browser_exercise={
+                    "started": True,
+                    "completed": True,
+                    "evidence_sha256": "d" * 64,
+                },
+                resource_observation=resource,
+                subject_observation=subject,
+                run_work_released=True,
+                staging_released=True,
+            )
+
     def test_strict_evidence_has_four_redacted_stream_attachments(self) -> None:
         plan, profile, preview = _authorities()
         resource, subject = _observations()

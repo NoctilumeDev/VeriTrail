@@ -74,7 +74,9 @@ Catalog 与 staging 隔离成立。公共 listener owner mismatch 也已覆盖�
 subject watch root 最终漂移也已贯通公共链路：不回滚用户文件，完整执行保持 `COMPLETED`，但固定
 `BOOTSTRAP_SUBJECT_DRIFT` 阻止错误 PASS 并裁决为 `INCONCLUSIVE`。第二类真实项目、
 cleanup 注入失败也已形成公共 `CLEANUP_ERROR / ERROR/FAIL` Bundle：应用清理失败不阻断依赖的
-best-effort 回收，HARD cleanup 断言与 Catalog 均拒绝伪装 clean。C2/C3、Docker 与跨平台不属于
+best-effort 回收，HARD cleanup 断言与 Catalog 均拒绝伪装 clean。staging 写入失败则以显式
+`EVIDENCE_STAGING_FAILED` 进入受限 fallback Evidence，在逆序清理后形成 `EVIDENCE_ERROR / ERROR/PENDING`
+公共 Bundle；未知 callback 错误不能使用该 fallback。C2/C3、Docker 与跨平台不属于
 M10 已证明范围。
 
 ## 为什么需要验迹
@@ -390,7 +392,9 @@ subject drift 公共切片还发现并修复了“Evidence 已记录漂移但 Ve
 现在用户文件保持变化、不自动回滚，结果为 `COMPLETED/INCONCLUSIVE` 且清理/Catalog 成立。其余退出
 cleanup 注入失败公共链路也会继续完成 application→dependency 两节点回收，并以
 `CLEANUP_ERROR / ERROR/FAIL` 保留失败节点，不把实际 best-effort 成功冒充观测 clean。其余退出矩阵、
-Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
+staging 写入失败也已从“清理后无 Bundle”提升为受限失败 Bundle：真实 Browser 事实保留、逆序清理
+完整，ExecutionStatus/Verdict 为 `ERROR/PENDING`，绝不支持 PASS。其余退出矩阵、Workbench 读回和
+最终冻结门禁仍未完成，因此 M10 继续是
 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终

@@ -19,6 +19,7 @@ from veritrail.bootstrap_evidence import (
     collect_bootstrap_evidence,
 )
 from veritrail.bootstrap_lifecycle import (
+    BootstrapEvidenceFinalizationError,
     BootstrapLifecycleObservation,
     BootstrapPreTeardownObservation,
     materialize_bootstrap_service_specs,
@@ -663,7 +664,12 @@ def run_observed_bootstrap(
             resource_peaks=monitor.current_peaks(),
             replacements=path_replacements,
         )
-        staged_sha256 = workspace.stage(document, writer=staging_writer)
+        try:
+            staged_sha256 = workspace.stage(document, writer=staging_writer)
+        except Exception as exc:
+            raise BootstrapEvidenceFinalizationError(
+                "EVIDENCE_STAGING_FAILED"
+            ) from exc
 
     try:
         specs = materialize_bootstrap_service_specs(
@@ -682,11 +688,23 @@ def run_observed_bootstrap(
             session_factory=tracked_session_factory,
             readiness_probe=readiness_probe,
         )
-        try:
-            workspace.verify_staged()
-            stage_verified = True
-        except SafetyError:
-            error_type = "EVIDENCE_STAGING_VERIFY_FAILED"
+        finalization_failure = next(
+            (
+                event.result
+                for event in lifecycle.events
+                if event.stage == "EVIDENCE_FINALIZATION"
+                and event.result == "EVIDENCE_STAGING_FAILED"
+            ),
+            None,
+        )
+        if finalization_failure is not None:
+            error_type = finalization_failure
+        else:
+            try:
+                workspace.verify_staged()
+                stage_verified = True
+            except SafetyError:
+                error_type = "EVIDENCE_STAGING_VERIFY_FAILED"
     except Exception:
         if not monitor_stopped:
             monitor_stopped = monitor.stop()
@@ -722,7 +740,14 @@ def run_observed_bootstrap(
         event.stage == "EVIDENCE_FINALIZED" and event.result == "COMPLETE"
         for event in lifecycle.events
     )
-    if stage_verified and finalized:
+    explicit_staging_failure = any(
+        event.stage == "EVIDENCE_FINALIZATION"
+        and event.result == "EVIDENCE_STAGING_FAILED"
+        for event in lifecycle.events
+    )
+    if (stage_verified and finalized) or (
+        explicit_staging_failure and lifecycle.stop_reason == "EVIDENCE_ERROR"
+    ):
         try:
             evidence = collect_bootstrap_evidence(
                 plan,

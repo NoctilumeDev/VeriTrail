@@ -183,4 +183,8 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   attempted/completed 顺序保持 application→dependency；公共 Bundle 以 HARD cleanup 断言形成
   `CLEANUP_ERROR / ERROR/FAIL`，Catalog 复算一致，独立残留检查为零；Python 3.10 首轮全量曾无诊断
   非零退出，受影响 34 项、3.10 完整复跑与 3.13 完整回归随后通过，完整回归均为 211/211；
+- 2026-08-13：阶段 A 第 11 项完成定向开发切片。部分 staging 写入失败在 teardown 前固定记录
+  `EVIDENCE_STAGING_FAILED`，随后完整逆序清理；受限 fallback Evidence 形成
+  `EVIDENCE_ERROR / ERROR/PENDING` 公共 Bundle 并由 Catalog 验真，未知 callback 错误反例被拒绝；
+  双 Python 开发回归均为 213/213；
 - 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。

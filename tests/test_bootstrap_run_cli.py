@@ -980,6 +980,83 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
+    def test_staging_failure_creates_public_error_bundle_after_reverse_cleanup(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(root)
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            output = root / "bundle-staging-failure"
+
+            def fail_staging(path: Path, content: bytes) -> None:
+                path.write_bytes(content[:17])
+                raise OSError("injected staging failure")
+
+            def observed_runner(
+                observed_plan,
+                observed_profile,
+                resolved,
+                *,
+                output_parent,
+                cancel_event,
+            ):
+                return run_observed_bootstrap(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    output_parent=output_parent,
+                    cancel_event=cancel_event,
+                    staging_writer=fail_staging,
+                )
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=output,
+                run_id="m10-staging-failure",
+                observed_runner=observed_runner,
+            )
+
+            self.assertIsNotNone(result.observed)
+            self.assertEqual("EVIDENCE_STAGING_FAILED", result.observed.error_type)
+            lifecycle = result.observed.lifecycle
+            self.assertEqual("EVIDENCE_ERROR", lifecycle.trigger_reason)
+            self.assertEqual("EVIDENCE_ERROR", lifecycle.stop_reason)
+            self.assertEqual(
+                ("application", "dependency"), lifecycle.actual_teardown_order
+            )
+            self.assertTrue(lifecycle.cleanup_complete)
+            failed_index = next(
+                index
+                for index, event in enumerate(lifecycle.events)
+                if event.stage == "EVIDENCE_FINALIZATION"
+                and event.result == "EVIDENCE_STAGING_FAILED"
+            )
+            first_teardown = next(
+                index
+                for index, event in enumerate(lifecycle.events)
+                if event.stage.startswith("TEARDOWN_")
+            )
+            self.assertLess(failed_index, first_teardown)
+            self.assertEqual("ERROR", result.report["execution_status"])
+            self.assertEqual("PENDING", result.report["verdict"])
+            self.assertEqual([], result.report["contamination"])
+            self.assertEqual([], result.report["missing_evidence"])
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("EVIDENCE_ERROR", bootstrap["stop"]["reason"])
+            self.assertTrue(bootstrap["services_ready"])
+            self.assertTrue(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(bootstrap["cleanup_complete"])
+            self.assertEqual(6, len(list((output / "attachments").rglob("*.*"))))
+            validated = validate_bundle(output, root)
+            self.assertEqual("ERROR", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
     def test_bootstrap_interrupt_handler_requests_cancel_and_restores_handlers(self) -> None:
         handled = [signal.SIGINT]
         if hasattr(signal, "SIGBREAK"):

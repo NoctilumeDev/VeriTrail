@@ -290,7 +290,8 @@ DISCOVERED
 从 `PREPARED` 之后任一阶段均可进入：
 
 ```text
-ABORTING -> EVIDENCE_FINALIZED -> TEARDOWN_APPLICATION? -> TEARDOWN_DEPENDENCY? -> TEARDOWN_COMPLETE
+ABORTING -> EVIDENCE_FINALIZED | EVIDENCE_FINALIZATION_FAILED
+         -> TEARDOWN_APPLICATION? -> TEARDOWN_DEPENDENCY? -> TEARDOWN_COMPLETE
 ```
 
 问号只表示该节点可能尚未创建，不表示可以跳过已创建节点。所有阶段转换追加时间线，不能覆盖旧
@@ -300,6 +301,11 @@ ABORTING -> EVIDENCE_FINALIZED -> TEARDOWN_APPLICATION? -> TEARDOWN_DEPENDENCY? 
 不再执行被测用户步骤。它不是最终 Bundle 已落盘；最终 `runtime.bootstrap` 在 teardown 事实齐全
 后一次性生成并进入不可变清单。即使 staging 或 Evidence 生成失败，`finally` 清理也必须运行；
 验收器保留该失败与残留事实，不能因为无法写 Bundle 就跳过回收。
+
+唯一允许生成 fallback `runtime.bootstrap` 的失败事件是 teardown 前显式
+`EVIDENCE_FINALIZATION / EVIDENCE_STAGING_FAILED`。它只能从仍在内存中的有界事实和 teardown 后流快照
+生成，stop 固定为 `EVIDENCE_ERROR`、ExecutionStatus 固定为 `ERROR`，不能支持 PASS；未知 callback
+异常、缺少该稳定事件或事件发生在 teardown 之后都必须拒绝 fallback。
 
 ## 7. 进程所有权与启动
 
@@ -579,8 +585,9 @@ owned readiness、依赖到应用的严格串行启动和应用到依赖的 best
 回滚、双节点 READY 后用户取消和 cleanup 失败后继续清理。
 
 当前证据切片继续保持公共状态枚举不变：生命周期增加 teardown 之前的 fact-finalization 回调门禁；
-回调成功并追加 `EVIDENCE_FINALIZED` 后，观测才可生成严格 `runtime.bootstrap` 与两节点四个有界脱敏
-流附件，回调失败固定记录 `EVIDENCE_ERROR` 且仍逆序清理；Plan 0.6 Bundle 同时携带并哈希
+正常路径只有回调成功并追加 `EVIDENCE_FINALIZED` 后才可生成严格 `runtime.bootstrap` 与两节点四个
+有界脱敏流附件；显式 staging 写入失败则记录 `EVIDENCE_STAGING_FAILED`，仍逆序清理并只允许生成
+`EVIDENCE_ERROR` fallback Evidence，其他回调失败不允许冒充。Plan 0.6 Bundle 同时携带并哈希
 `sealed-plan.json` / `sealed-profile.json`；Catalog
 复核 Plan/Profile/Evidence 与 node policy，Comparison 同时消费 Plan/Profile SHA，Pairing/Batch 对
 Plan 0.6 返回稳定的不支持错误。缺失 Profile、重算 Manifest 后的 Evidence/Profile 身份漂移、附件
@@ -696,6 +703,13 @@ cleanup 故障公共切片在应用的真实 `terminate()` 完成后注入 `HAND
 失败摘要地以非零码退出；随后受影响 34 项定向回归、Python 3.10.6 完整复跑与 Python 3.13.13 完整
 回归均通过，后两者均为 211/211，且各轮后 helper/staging 残留为零。该无诊断退出按开发期测试进程/
 浏览器偶发保留，未被改写为从未发生，也不等同于最终串行轮已经通过。
+
+Evidence staging 公共切片让 writer 写入部分内容后抛出异常，生命周期在任何 teardown 前记录稳定
+`EVIDENCE_STAGING_FAILED`，随后按 application→dependency 完成回收并删除损坏 staging。受限 fallback
+从内存态事实与 teardown 流快照生成 `runtime.bootstrap`，保留已完成 Browser 的精确引用，但 stop 为
+`EVIDENCE_ERROR`、公共 Bundle 为 `ERROR/PENDING`，因此绝不成为成功证据；Catalog 复算一致。附加反例
+证明普通 `EVIDENCE_FINALIZATION/FAILED` 不能生成 fallback，防止宽泛异常被包装成可信失败事实。
+Python 3.10.6 与 Python 3.13.13 开发回归均为 213/213。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

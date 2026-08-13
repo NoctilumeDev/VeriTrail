@@ -53,7 +53,9 @@ M11。subject watch root 漂移的公共链路会保留用户修改、不执行�
 `BOOTSTRAP_SUBJECT_DRIFT` 把完整执行裁决为 `COMPLETED/INCONCLUSIVE`；该切片修复了 Evidence 已记录
 漂移但旧 Verdict 仍错误 PASS 的消费者缺口。cleanup 观测注入失败时，应用节点失败不会跳过依赖
 回收；公共 Bundle 形成 `CLEANUP_ERROR / ERROR/FAIL`，HARD cleanup 断言、污染检测与 Catalog 复算
-一致。组件与
+一致。staging writer 显式失败时，生命周期在 teardown 前记录 `EVIDENCE_STAGING_FAILED`，随后完成
+逆序清理并从内存中生成只能表达失败的 fallback `runtime.bootstrap`；公共 Bundle/Catalog 为
+`EVIDENCE_ERROR / ERROR/PENDING`，普通未知 callback 异常不能走该路径。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准；功能完成后的地基系统/代码审查、第一轮

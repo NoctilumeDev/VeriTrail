@@ -251,9 +251,15 @@ class BootstrapObservedRunTests(unittest.TestCase):
                 ),
                 staging_writer=fail_staging,
             )
-            self.assertIsNone(result.evidence)
-            self.assertEqual("EVIDENCE_STAGING_VERIFY_FAILED", result.error_type)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("EVIDENCE_STAGING_FAILED", result.error_type)
             self.assertEqual("EVIDENCE_ERROR", result.lifecycle.stop_reason)
+            self.assertEqual("ERROR", result.evidence.execution_status)
+            self.assertFalse(result.evidence.continue_pipeline)
+            self.assertIn(
+                ("EVIDENCE_FINALIZATION", "EVIDENCE_STAGING_FAILED"),
+                [(event.stage, event.result) for event in result.lifecycle.events],
+            )
             self.assertTrue(result.lifecycle.cleanup_complete)
             self.assertTrue(result.run_work_released)
             self.assertTrue(result.staging_released)

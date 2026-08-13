@@ -268,16 +268,35 @@ def collect_bootstrap_evidence(
         for index, event in enumerate(lifecycle.events)
         if event.stage == "EVIDENCE_FINALIZED" and event.result == "COMPLETE"
     ]
+    staging_failed = [
+        index
+        for index, event in enumerate(lifecycle.events)
+        if event.stage == "EVIDENCE_FINALIZATION"
+        and event.result == "EVIDENCE_STAGING_FAILED"
+    ]
     teardown_events = [
         index
         for index, event in enumerate(lifecycle.events)
         if event.stage.startswith("TEARDOWN_")
     ]
-    if len(finalized) != 1 or (
-        teardown_events and finalized[0] >= min(teardown_events)
+    normal_finalization = len(finalized) == 1 and not staging_failed
+    failure_finalization = (
+        not finalized
+        and len(staging_failed) == 1
+        and lifecycle.stop_reason == "EVIDENCE_ERROR"
+    )
+    finalization_index = (
+        finalized[0]
+        if normal_finalization
+        else staging_failed[0]
+        if failure_finalization
+        else None
+    )
+    if finalization_index is None or (
+        teardown_events and finalization_index >= min(teardown_events)
     ):
         raise SafetyError(
-            "M10 bootstrap Evidence requires one successful pre-teardown fact finalization"
+            "M10 bootstrap Evidence requires one successful or explicit failed pre-teardown finalization"
         )
 
     replacements = [(left, right) for left, right in path_replacements if left]
@@ -641,6 +660,13 @@ def validate_bootstrap_evidence(
             and event.get("stage") == "EVIDENCE_FINALIZED"
             and event.get("result") == "COMPLETE"
         ]
+        staging_failed = [
+            index
+            for index, event in enumerate(events)
+            if isinstance(event, dict)
+            and event.get("stage") == "EVIDENCE_FINALIZATION"
+            and event.get("result") == "EVIDENCE_STAGING_FAILED"
+        ]
         teardown_events = [
             index
             for index, event in enumerate(events)
@@ -648,11 +674,29 @@ def validate_bootstrap_evidence(
             and isinstance(event.get("stage"), str)
             and event["stage"].startswith("TEARDOWN_")
         ]
-        if len(finalized) != 1 or (
-            teardown_events and finalized[0] >= min(teardown_events)
+        stop_reason = (
+            facts.get("stop", {}).get("reason")
+            if isinstance(facts.get("stop"), dict)
+            else None
+        )
+        normal_finalization = len(finalized) == 1 and not staging_failed
+        failure_finalization = (
+            not finalized
+            and len(staging_failed) == 1
+            and stop_reason == "EVIDENCE_ERROR"
+        )
+        finalization_index = (
+            finalized[0]
+            if normal_finalization
+            else staging_failed[0]
+            if failure_finalization
+            else None
+        )
+        if finalization_index is None or (
+            teardown_events and finalization_index >= min(teardown_events)
         ):
             errors.append(
-                f"{input_name}.facts lifecycle must finalize pre-teardown facts before cleanup"
+                f"{input_name}.facts lifecycle must record a successful or explicit failed pre-teardown finalization before cleanup"
             )
     nodes = facts["nodes"]
     node_fields = {
