@@ -62,8 +62,8 @@ owned staging。预检 `STOP_ESCALATION/ABORT` 则在零被测进程下生成只
 Run。bootstrap 已开始后的两类公共负向也已实跑：dependency 提前退出形成
 `NODE_EARLY_EXIT / COMPLETED/FAIL`，application readiness 超时形成
 `READINESS_TIMEOUT / ABORTED/FAIL`；两者都只包含 preflight/bootstrap Evidence、明确不生成 browser
-Evidence，并由 Catalog 验真所有权清理事实。其余完整退出矩阵、公共 Workbench 读回、第二类真实
-项目、C2/C3、Docker 与跨平台仍未完成。
+Evidence，并由 Catalog 验真所有权清理事实。其余完整退出矩阵、公共 Workbench 读回和最终冻结门禁
+仍未完成；第二类真实项目、C2/C3、Docker 与跨平台不属于 M10 已证明范围。
 
 ## 为什么需要验迹
 
@@ -366,9 +366,12 @@ Preview 精确审批、`PROCEED` 预检、真实 Browser、确定性裁决和不
 bootstrap/browser 生命周期；审批不一致仍为零 Bundle 拒绝。dependency 提前退出与 application
 readiness 超时也已通过公共 `run` 形成严格的无 browser Bundle，分别裁决为
 `COMPLETED/FAIL` 与 `ABORTED/FAIL`，并完成 Catalog 与端口/staging 清理验证。其余退出矩阵、
-Workbench 读回和真实项目证明仍未完成，因此 M10 继续是
+Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
 `IMPLEMENTING`。详见
-[M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。
+[M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
+才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终
+两轮，具体顺序见
+[M10 完成、地基审查与双轮冻结计划 0.1](docs/16-m10-completion-and-foundation-audit.md)。
 
 ### 本地运行
 
@@ -432,6 +435,7 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [Post-M8 收束路线 Plan v1（FROZEN planning baseline）](docs/13-post-m8-roadmap.md)
 - [M9 受控项目命令执行合同 0.2（CONTRACT_FROZEN）](docs/14-m9-controlled-command-execution.md)
 - [M10 有界完整项目自举合同 0.2（CONTRACT_FROZEN）](docs/15-m10-bounded-project-bootstrap.md)
+- [M10 完成、地基审查与双轮冻结计划 0.1（FROZEN execution plan）](docs/16-m10-completion-and-foundation-audit.md)
 
 ## 项目来源
 

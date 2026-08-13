@@ -46,7 +46,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M7 | 四角色三态、恢复基线、负对照、Catalog 隔离与浏览器验真 | 组合变量、统计显著性、任意配对或跨批次聚合 |
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
-| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、公共 `run` 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真 | 完整退出矩阵、Workbench 读回、第二类项目或里程碑冻结 |
+| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、公共 `run` 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真 | 完整退出矩阵、Workbench 读回、地基审查、最终两轮或里程碑冻结 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -122,7 +122,8 @@ Catalog 独立复核其证据适用性；审批摘要不一致仍零启动、零
 退出和 application readiness 超时也已通过公共 `run`，分别形成
 `NODE_EARLY_EXIT / COMPLETED/FAIL` 与 `READINESS_TIMEOUT / ABORTED/FAIL`；两者均不生成 browser Evidence，
 保留四个有界流附件并通过 Catalog、端口与 staging 清理验证。其余退出矩阵、
-Workbench 读回和第二类项目仍未实现，不得把当前切片写成完整自举冻结事实。
+Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
+自举冻结事实。
 
 ## 6. 详细文档
 
@@ -137,4 +138,5 @@ Workbench 读回和第二类项目仍未实现，不得把当前切片写成完�
 - [M8 预注册全因子批次矩阵与固定种子扰动](12-m8-preregistered-batch-matrix.md)
 - [M9 受控项目命令执行合同](14-m9-controlled-command-execution.md)
 - [M10 有界完整项目自举 Contract 0.2（CONTRACT_FROZEN）](15-m10-bounded-project-bootstrap.md)
+- [M10 完成、地基审查与双轮冻结计划 0.1](16-m10-completion-and-foundation-audit.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

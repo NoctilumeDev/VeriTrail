@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共 Run 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回与第二类项目仍未实现
+> 实施门禁：公共 Run 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回、地基审查与最终两轮仍未完成
 
 ## 1. M10 只回答一个问题
 
@@ -516,6 +516,14 @@ bootstrap 未开始，所以所有 bootstrap 生命周期摘要在 CLI 中为不
   残留均为 0；工作区干净；
 - GitHub 远端读回冻结提交与 `m10-v0.11.0` 标签后才可标记 `FROZEN`。
 
+### 15.4 完成、地基审查与双轮冻结顺序
+
+Contract 0.2 的能力范围和退出矩阵保持不变；具体实施顺序、M0–M10 动态地基审查、第一轮严格串行
+终验与第二轮 16 GB 有界压力审计，统一由
+[M10 完成、地基审查与双轮冻结计划 0.1](16-m10-completion-and-foundation-audit.md) 约束。
+开发期定向测试或全量回归不能冒充最终两轮；功能未闭环或第一轮未通过时，禁止启动压力轮。
+压力审计通过也不扩大本合同的并行能力声明。
+
 ## 16. 停止条件
 
 出现以下任一情况立即停止实施或运行：
@@ -610,7 +618,7 @@ owned staging 均释放。
 sealed authority；`runtime.bootstrap`、`browser.session` 和附件均为零，相关硬断言保持
 `NOT_EVALUATED`。Bundle writer、Verdict 和 Catalog 分别拒绝停止后夹带生命周期 Evidence、错误状态、
 错误 Verdict 与 browser 基数；Plan 0.1–0.5 的既有停止语义不变。Preview 摘要不一致仍属于零 Run、
-零 Bundle 的 pre-run 拒绝。完整退出矩阵、公共 Workbench 读回、第二类真实项目和 M10 最终浏览器/
+零 Bundle 的 pre-run 拒绝。完整退出矩阵、公共 Workbench 读回和 M10 最终浏览器/
 远端冻结门禁仍未完成，不得
 据此标记 M10 `FROZEN`。
 
@@ -637,7 +645,7 @@ bootstrap 和四个有界流附件，browser Evidence 为零；Catalog 接纳最
 本次 dependency 提前退出/application readiness 超时公共切片在 2026-08-13 完成 Python 3.10.6 与
 Python 3.13.13 严格串行回归，两套运行时均为 204/204 通过；本轮没有复现上述浏览器时序偶发。
 回归后约定 M10 端口、owned staging 与 helper 进程残留均为零。该结果只证明当前两个公共退出路径及
-既有回归保持成立，不替代用户中止、端口竞争、owner mismatch、故障注入、Workbench、第二类项目或
+既有回归保持成立，不替代用户中止、端口竞争、owner mismatch、故障注入、Workbench、地基审查或
 最终内置浏览器验收。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记

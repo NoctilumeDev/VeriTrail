@@ -40,10 +40,13 @@ Preview 精确审批和预检 `PROCEED` 后完成真实 Browser 正/负、确定
 仍在进程创建前拒绝且不生成 Run。dependency 提前退出和 application readiness 超时也已通过公共
 `run` 形成严格的无 browser Bundle，分别得到 `NODE_EARLY_EXIT / COMPLETED/FAIL` 与
 `READINESS_TIMEOUT / ABORTED/FAIL`；Catalog 接纳两者，并复核 browser 不适用、逆序清理与端口/staging
-释放。完整退出矩阵、Workbench 读回和第二类项目仍未完成。组件与
+释放。完整退出矩阵、Workbench 读回和最终冻结门禁仍未完成；第二类真实项目证明属于 M11。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以
-[独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准。
+[独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准；功能完成后的地基系统/代码审查、第一轮
+严格串行终验和第二轮 16 GB 有界压力审计，按
+[M10 完成、地基审查与双轮冻结计划 0.1](16-m10-completion-and-foundation-audit.md) 执行。开发期回归不能
+替代这两轮，第一轮未通过时不得启动第二轮。
 
 ## 2. v0 完整闭环
 
