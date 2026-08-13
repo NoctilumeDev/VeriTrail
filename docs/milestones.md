@@ -7,7 +7,8 @@
 只表示当前门禁，不构成能力事实。
 
 里程碑标签实际指向的 Git 提交是版本寻址权威；实现提交、合同提交、运行哈希和完整退出条件
-仍以对应的里程碑文档为准。M0–M9 已于 2026-08-11 从 `origin` 核验；M10 于 2026-08-13 核验。
+仍以对应的里程碑文档为准。M0–M9 已于 2026-08-11 从 `origin` 核验；M10 当前补丁基线于
+2026-08-14 核验。
 
 ## 2. 冻结与当前路线索引
 
@@ -153,6 +154,11 @@ READY 后取消交错和 1000 总请求，11 个 Bundle/Catalog 独立验真，�
 `0084443` 和 `m10-v0.11.0^{}` 已从 GitHub 精确读回一致，M10 标记 `FROZEN`；第二类真实项目
 仍属于 M11。
 
+冻结后系统审查又发现 Verdict 归因优先级、Browser 生命周期停止、运行期宿主机内存停止线与
+Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Python 262/262、Workbench 59/59、公共
+出口、独立度 1/2/3、取消交错、1000 总请求、生产浏览器和清理复验；实现提交 `f4efdd2` 与
+`m10-v0.11.1^{}` 已从 GitHub 精确读回。旧 `m10-v0.11.0` 不移动，M11 必须引用新补丁基线。
+
 ## 6. 详细文档
 
 - [M0 纵向切片](04-m0-vertical-slice.md)
@@ -172,4 +178,5 @@ READY 后取消交错和 1000 总请求，11 个 Bundle/Catalog 独立验真，�
 - [M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)
 - [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)
 - [M10 冻结后地基纠偏与重新验收](21-m10-post-freeze-foundation-remediation.md)
+- [M11 真实项目候选适配性与合同草案](22-m11-real-project-suitability-and-contract-draft.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

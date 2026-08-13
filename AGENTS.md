@@ -57,6 +57,10 @@
   `HTTP_GET_LOOPBACK_OWNED_PID` readiness、既有 Browser Adapter 与逆序 Job 清理；C0 接管、
   C2/C3、Docker、跨平台、包管理器、第二类真实项目、不可信代码隔离和优雅停机均未证明。M11–M14
   继续保持 `PLANNED`，不得把 M10 冻结解释为允许跳过后继合同。
+- M11 只读候选盘点与合同草案位于 `docs/22-m11-real-project-suitability-and-contract-draft.md`。当前
+  `TARGET_NOT_SELECTED / CONTRACT_NOT_FROZEN`；DarkRoomLibrary、InkNarratives 与 PlainJournal 的
+  真实最小拓扑都不能直接装入 M10 恰好两节点边界。不得增加假依赖、隐藏必要服务、使用 Mock/Pages
+  替代真实链路，或在目标选择和独立能力合同冻结前开始 M11 实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
