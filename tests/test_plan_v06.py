@@ -82,6 +82,12 @@ class PlanV06Tests(unittest.TestCase):
 
     def test_plan_v06_frozen_primary_evidence_and_contract_boundaries(self) -> None:
         profile = sealed_bootstrap_profile()
+
+        def weaken_bootstrap_assertions(plan: dict) -> None:
+            for assertion in plan["assertions"]:
+                if assertion["evidence_type"] == "runtime.bootstrap":
+                    assertion["severity"] = "OBSERVATION"
+
         cases = {
             "primary name": lambda plan: next(
                 item for item in plan["variables"] if item["role"] == "PRIMARY"
@@ -95,11 +101,7 @@ class PlanV06Tests(unittest.TestCase):
             "legacy evidence": lambda plan: plan["required_evidence"].append(
                 "runtime.command"
             ),
-            "weak bootstrap assertion": lambda plan: next(
-                item
-                for item in plan["assertions"]
-                if item["evidence_type"] == "runtime.bootstrap"
-            ).update(severity="OBSERVATION"),
+            "weak bootstrap assertion": weaken_bootstrap_assertions,
             "legacy assertion": lambda plan: plan["assertions"].append(
                 {
                     "id": "legacy-command",

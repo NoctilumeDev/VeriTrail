@@ -687,6 +687,16 @@ subject 最终漂移公共切片在 application READY 后改变 sealed watch roo
 归因。Catalog 按同一结果验真，Browser、端口、Job 与 staging 均清理。Python 3.10.6 与
 Python 3.13.13 开发回归均为 210/210。
 
+cleanup 故障公共切片在应用的真实 `terminate()` 完成后注入 `HANDLE_RELEASE_FAILED` 观测，验证状态机
+不会因首个 teardown 失败而跳过依赖：attempted/completed 均保持 application→dependency，依赖清理
+事实继续完整。验收 Plan 显式增加 `bootstrap-cleanup-complete` HARD 断言，最终 Bundle 为
+`CLEANUP_ERROR / ERROR/FAIL`，并含 `BOOTSTRAP_CLEANUP_INCOMPLETE`；Catalog 复算同样拒绝伪装 clean。
+测试夹具在注入观测前已真实释放应用资源，所以独立端口/staging 检查仍为零；这只证明 best-effort
+与失败封存语义，不把注入的失败事实改写为成功。Python 3.10.6 首次全量开发回归在前段无 unittest
+失败摘要地以非零码退出；随后受影响 34 项定向回归、Python 3.10.6 完整复跑与 Python 3.13.13 完整
+回归均通过，后两者均为 211/211，且各轮后 helper/staging 残留为零。该无诊断退出按开发期测试进程/
+浏览器偶发保留，未被改写为从未发生，也不等同于最终串行轮已经通过。
+
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
 和远端标签读回完成后，里程碑本身才能标记 `FROZEN`。

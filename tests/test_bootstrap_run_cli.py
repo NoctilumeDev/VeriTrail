@@ -12,6 +12,7 @@ import tempfile
 import threading
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from dataclasses import replace
 from pathlib import Path
 
 from veritrail.bootstrap_preview import build_bootstrap_preview, resolve_bootstrap
@@ -23,6 +24,7 @@ from veritrail.comparison import create_comparison_bundle
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 from veritrail.windows_readiness import probe_owned_http_readiness
+from veritrail.windows_service import OwnedServiceSession
 
 from tests.support import bootstrap_plan, bootstrap_profile
 
@@ -872,6 +874,111 @@ class BootstrapRunCliTests(unittest.TestCase):
                         external.terminate()
                         external.wait(timeout=5)
                 self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_cleanup_failure_is_public_and_does_not_skip_remaining_teardown(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(root)
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            output = root / "bundle-cleanup-failure"
+            actual_termination_order: list[str] = []
+
+            class CleanupFailureProxy:
+                def __init__(self, session: OwnedServiceSession) -> None:
+                    self._session = session
+                    self.node_id = session.node_id
+                    self.start_observation = session.start_observation
+
+                def __getattr__(self, name: str):
+                    return getattr(self._session, name)
+
+                def terminate(self):
+                    actual_termination_order.append(self.node_id)
+                    observation = self._session.terminate()
+                    if self.node_id != "application":
+                        return observation
+                    return replace(
+                        observation,
+                        handles_released=False,
+                        error_type="HANDLE_RELEASE_FAILED",
+                        cleanup_complete=False,
+                    )
+
+            def injected_session_factory(**kwargs):
+                return CleanupFailureProxy(OwnedServiceSession.start(**kwargs))
+
+            def observed_runner(
+                observed_plan,
+                observed_profile,
+                resolved,
+                *,
+                output_parent,
+                cancel_event,
+            ):
+                return run_observed_bootstrap(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    output_parent=output_parent,
+                    cancel_event=cancel_event,
+                    session_factory=injected_session_factory,
+                )
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=output,
+                run_id="m10-cleanup-failure",
+                observed_runner=observed_runner,
+            )
+
+            self.assertIsNotNone(result.observed)
+            lifecycle = result.observed.lifecycle
+            self.assertEqual(["application", "dependency"], actual_termination_order)
+            self.assertEqual(
+                ("application", "dependency"), lifecycle.teardown_attempt_order
+            )
+            self.assertEqual(
+                ("application", "dependency"), lifecycle.actual_teardown_order
+            )
+            self.assertEqual("NONE", lifecycle.trigger_reason)
+            self.assertEqual("CLEANUP_ERROR", lifecycle.stop_reason)
+            self.assertFalse(lifecycle.cleanup_complete)
+            self.assertEqual("ERROR", result.report["execution_status"])
+            self.assertEqual("FAIL", result.report["verdict"])
+            self.assertIn(
+                "BOOTSTRAP_CLEANUP_INCOMPLETE",
+                {item["code"] for item in result.report["contamination"]},
+            )
+            self.assertEqual(
+                "FAIL",
+                next(
+                    item
+                    for item in result.report["assertions"]
+                    if item["id"] == "bootstrap-cleanup-complete"
+                )["status"],
+            )
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("CLEANUP_ERROR", bootstrap["stop"]["reason"])
+            self.assertFalse(bootstrap["cleanup_complete"])
+            application = next(
+                node for node in bootstrap["nodes"] if node["role"] == "APPLICATION"
+            )
+            dependency = next(
+                node for node in bootstrap["nodes"] if node["role"] == "DEPENDENCY"
+            )
+            self.assertFalse(application["teardown"]["handles_released"])
+            self.assertTrue(dependency["teardown"]["handles_released"])
+            self.assertTrue(bootstrap["browser_exercise"]["completed"])
+            validated = validate_bundle(output, root)
+            self.assertEqual("ERROR", validated.execution_status)
+            self.assertEqual("FAIL", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
 
     def test_bootstrap_interrupt_handler_requests_cancel_and_restores_handlers(self) -> None:
         handled = [signal.SIGINT]

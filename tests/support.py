@@ -227,6 +227,16 @@ def bootstrap_plan(profile: dict[str, Any] | None = None) -> dict[str, Any]:
             "expected": True,
         }
     )
+    plan["assertions"].append(
+        {
+            "id": "bootstrap-cleanup-complete",
+            "severity": "HARD",
+            "evidence_type": "runtime.bootstrap",
+            "path": "/facts/cleanup_complete",
+            "operator": "eq",
+            "expected": True,
+        }
+    )
     plan["preflight"]["ports"] = [
         {"port": 18771, "expected": "FREE"},
         {"port": 18772, "expected": "FREE"},
