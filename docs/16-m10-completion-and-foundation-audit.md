@@ -1,6 +1,6 @@
 # M10 完成、地基审查与双轮冻结计划
 
-> 状态：`FROZEN_EXECUTION_PLAN / FOUNDATION_REVIEWED`
+> 状态：`FROZEN_EXECUTION_PLAN / SERIAL_VALIDATED`
 > 计划版本：`M10 Completion and Foundation Audit Plan 0.1`
 > 影响层级：`L3_SYSTEM`
 > 依赖合同：[M10 Bounded Project Bootstrap Contract 0.2](15-m10-bounded-project-bootstrap.md)
@@ -200,4 +200,11 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   恢复兼容后 Python 3.10/3.13 均为 216/216，前端 55/55、lint、type-check、build、依赖审计、
   compileall 和 diff 门禁通过；当前状态为 `FOUNDATION_REVIEWED`。完整审查记录见
   [M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)。下一步进入阶段 C；阶段 C 尚未开始，
-  不得把本次整改回归写成 `SERIAL_VALIDATED`。
+  不得把本次整改回归写成 `SERIAL_VALIDATED`；
+- 2026-08-13：阶段 C 完成。13 个预注册 method 严格串行覆盖十二类公共退出，批间残留为零；首次
+  Python 3.13 在收集阶段因 editable binding 丢失而 35 errors/0 产品测试，本轮按规则停止。修复两个
+  venv 的本仓库 binding 后从 Python 3.10 重启全序列，双运行时均为 216/216；前端 55/55、lint、
+  type-check、build、依赖审计与 compileall 通过。Codex 内置浏览器真实读回正向 PASS 与业务失败
+  FAIL Bundle，刷新/返回、真实键盘、移动视口、Console 与页面资源账册成立；服务、端口、staging 与
+  TEMP 最终清零。当前状态为 `SERIAL_VALIDATED`，完整记录见
+  [M10 第一轮严格串行完整复验](18-m10-serial-validation.md)。下一步进入阶段 D，压力审计尚未开始。

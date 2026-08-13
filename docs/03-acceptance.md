@@ -26,7 +26,7 @@ Object trusted process runner 与 `runtime.command` 已通过双 Python、Python
 Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
-M10 有界完整项目自举当前为 `FOUNDATION_REVIEWED`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
+M10 有界完整项目自举当前为 `SERIAL_VALIDATED`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
 跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、
@@ -59,11 +59,13 @@ M11。subject watch root 漂移的公共链路会保留用户修改、不执行�
 已在同一 Catalog 中接纳，损坏副本被隔离；生产 Workbench 已由 Codex 内置浏览器经只读 API 读回
 `runtime.bootstrap`，刷新后保持既有裁决且 Console/Warning 为零。完整功能矩阵因而闭环。其后的
 M0–M10 地基审查已经修复 Catalog 报告重推导、READY 响应后 ownership 与只读 API 稳定读取三个
-接缝，并完成双 Python 216/216 及前端门禁；这些整改回归仍不构成最终串行验收或里程碑冻结事实；
+接缝，并完成双 Python 216/216 及前端门禁。其后的冻结候选严格串行轮已按预注册顺序通过所有公共
+退出、双运行时、前端、依赖与生产 Workbench 正负 Run/刷新/返回/键盘/移动/Console/资源账册；这仍
+不构成压力审计或里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准；已完成的审查见
-[M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)，后续第一轮严格串行终验和第二轮
-16 GB 有界压力审计按
+[M10 动态地基系统与代码质量审查](17-m10-foundation-review.md)，已完成的串行轮见
+[M10 第一轮严格串行完整复验](18-m10-serial-validation.md)，后续第二轮 16 GB 有界压力审计按
 [M10 完成、地基审查与双轮冻结计划 0.1](16-m10-completion-and-foundation-audit.md) 执行。开发期回归不能
 替代这两轮，第一轮未通过时不得启动第二轮。
 
