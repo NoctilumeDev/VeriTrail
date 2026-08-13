@@ -49,7 +49,9 @@ preflight 且 Catalog 验真通过。dependency/application 的公共 listener o
 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`；Catalog 接纳且无污染。完整退出矩阵、Workbench 读回和
 最终冻结门禁仍未完成。相同 sealed Plan/Profile 已连续完成两次 `COMPLETED/PASS` 公共 Run：权威与
 Preview 一致，第一份 Bundle 未被覆盖，M6 Comparison 为 `MATCH`、0 差异且轮间无残留。第二类真实项目证明属于
-M11。组件与
+M11。subject watch root 漂移的公共链路会保留用户修改、不执行回滚，并以
+`BOOTSTRAP_SUBJECT_DRIFT` 把完整执行裁决为 `COMPLETED/INCONCLUSIVE`；该切片修复了 Evidence 已记录
+漂移但旧 Verdict 仍错误 PASS 的消费者缺口。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准；功能完成后的地基系统/代码审查、第一轮

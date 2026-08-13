@@ -679,6 +679,14 @@ C1 重复公共切片使用完全相同的 sealed Plan/Profile 与 live Preview 
 证明当前轻量 Subject 在串行复跑中未观察到残留污染，不扩张为重叠运行或第二类项目通用性声明。
 加入该切片后，Python 3.10.6 与 Python 3.13.13 开发回归均为 209/209。
 
+subject 最终漂移公共切片在 application READY 后改变 sealed watch root 中的文件，再完成真实 Browser
+与逆序清理。`runtime.bootstrap` 正确保留前后不同指纹、`changed=true` 与 `SUBJECT_DRIFT`，用户文件
+保持修改而不回滚；首次公共测试同时发现 Verdict 消费者虽看见该 Evidence 却错误给出 `PASS`。修复
+只在 Plan 0.6 bootstrap 污染检测器中增加稳定 `BOOTSTRAP_SUBJECT_DRIFT`，不改 Evidence、Plan 或旧版
+裁决语义；最终 Bundle 为 `COMPLETED/INCONCLUSIVE`，表示用户步骤确已完成，但控制条件漂移阻断因果
+归因。Catalog 按同一结果验真，Browser、端口、Job 与 staging 均清理。Python 3.10.6 与
+Python 3.13.13 开发回归均为 210/210。
+
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理
 和远端标签读回完成后，里程碑本身才能标记 `FROZEN`。

@@ -576,6 +576,14 @@ def _detect_bootstrap_contamination(
                 }
             )
         reason = facts["stop"]["reason"]
+        if reason == "SUBJECT_DRIFT":
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_SUBJECT_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The watched subject changed during the bootstrap Run, blocking causal attribution.",
+                }
+            )
         browser_completed = browser["completed"]
         if not facts["cleanup_complete"] or reason in {
             "COLLECTOR_ERROR",

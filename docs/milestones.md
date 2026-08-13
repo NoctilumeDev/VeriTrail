@@ -131,7 +131,9 @@ observed runner、不接管或终止外部 listener，并由 Catalog 验真仅�
 `LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog 可验真；双 Python 开发回归均为 208/208。
 相同 sealed Plan/Profile 的连续两个公共正向 Run 也均为 `COMPLETED/PASS`，权威/Preview 一致、首份
 Bundle 未被覆盖，轮间无残留且 M6 Comparison 为 `MATCH`、0 differences；双 Python 开发回归均为
-209/209。其余退出矩阵、
+209/209。subject watch root 漂移公共切片保留用户修改、不回滚；它发现并修复了 Evidence 已记录
+`SUBJECT_DRIFT` 但 Verdict 错误 PASS 的消费者缺口，现在以 `BOOTSTRAP_SUBJECT_DRIFT` 形成
+`COMPLETED/INCONCLUSIVE`，Browser/Catalog/清理均成立；双 Python 开发回归均为 210/210。其余退出矩阵、
 Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
 自举冻结事实。
 

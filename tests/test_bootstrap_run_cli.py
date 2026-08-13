@@ -594,6 +594,82 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
+    def test_subject_drift_is_preserved_and_makes_public_verdict_inconclusive(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(root)
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            output = root / "bundle-subject-drift"
+
+            def drift_after_application_ready(session, readiness, **kwargs):
+                observation = probe_owned_http_readiness(
+                    session,
+                    readiness,
+                    **kwargs,
+                )
+                if session.node_id == "application" and observation.ready:
+                    (subject / "watched" / "state.txt").write_text(
+                        "changed\n", encoding="utf-8"
+                    )
+                return observation
+
+            def observed_runner(
+                observed_plan,
+                observed_profile,
+                resolved,
+                *,
+                output_parent,
+                cancel_event,
+            ):
+                return run_observed_bootstrap(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    output_parent=output_parent,
+                    cancel_event=cancel_event,
+                    readiness_probe=drift_after_application_ready,
+                )
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=output,
+                run_id="m10-subject-drift",
+                observed_runner=observed_runner,
+            )
+
+            self.assertIsNotNone(result.observed)
+            self.assertTrue(result.observed.subject_observation["changed"])
+            self.assertTrue(result.observed.lifecycle.cleanup_complete)
+            self.assertEqual("COMPLETED", result.report["execution_status"])
+            self.assertEqual("INCONCLUSIVE", result.report["verdict"])
+            self.assertEqual(
+                {"BOOTSTRAP_SUBJECT_DRIFT"},
+                {item["code"] for item in result.report["contamination"]},
+            )
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("SUBJECT_DRIFT", bootstrap["stop"]["reason"])
+            self.assertTrue(bootstrap["subject_observation"]["changed"])
+            self.assertNotEqual(
+                bootstrap["subject_observation"]["before_fingerprint"],
+                bootstrap["subject_observation"]["after_fingerprint"],
+            )
+            self.assertTrue(bootstrap["browser_exercise"]["completed"])
+            self.assertTrue(bootstrap["cleanup_complete"])
+            self.assertEqual(
+                "changed\n",
+                (subject / "watched" / "state.txt").read_text(encoding="utf-8"),
+            )
+            validated = validate_bundle(output, root)
+            self.assertEqual("COMPLETED", validated.execution_status)
+            self.assertEqual("INCONCLUSIVE", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
     def test_port_conflict_after_live_preview_aborts_without_touching_external_owner(self) -> None:
         for contested_index, label in enumerate(("dependency", "application")):
             with self.subTest(node=label), tempfile.TemporaryDirectory() as directory:

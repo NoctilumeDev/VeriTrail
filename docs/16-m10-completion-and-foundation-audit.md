@@ -175,4 +175,8 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   两次公共正向运行均为 `COMPLETED/PASS`，权威与 Preview 一致，首份 Bundle 未被覆盖；两轮均独立
   Catalog 验真、轮间无残留，M6 Comparison 为 `MATCH`、0 differences；双 Python 开发回归均为
   209/209；
+- 2026-08-13：阶段 A 第 9 项完成定向开发切片。watch root 漂移被保留且不回滚，公共测试发现旧
+  Verdict 未消费 `SUBJECT_DRIFT` 而错误 PASS；增加 Plan 0.6 专属 `BOOTSTRAP_SUBJECT_DRIFT` 后形成
+  `COMPLETED/INCONCLUSIVE`，真实 Browser、Catalog、逆序清理与无残留均通过；双 Python 开发回归均
+  为 210/210；
 - 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。
