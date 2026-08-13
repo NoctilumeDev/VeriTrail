@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import http.client
 import os
 import shutil
@@ -9,16 +10,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from veritrail.bootstrap_browser import ObservedBrowserEvidence
 from veritrail.bootstrap_preview import ResolvedBootstrap, ResolvedBootstrapNode
-from veritrail.bootstrap_run import (
-    BootstrapBrowserObservation,
-    run_observed_bootstrap,
-)
+from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.canonical import sha256_json
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 
 from tests.support import bootstrap_plan, bootstrap_profile
+from tests.test_browser_evidence import _browser_artifact
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -33,7 +33,9 @@ def _free_port(excluded: set[int] | None = None) -> int:
             return port
 
 
-def _authorities(subject: Path) -> tuple[dict, dict, ResolvedBootstrap]:
+def _authorities(
+    subject: Path, *, application_mode: str = "application"
+) -> tuple[dict, dict, ResolvedBootstrap]:
     dependency_port = _free_port()
     application_port = _free_port({dependency_port})
     raw_profile = bootstrap_profile()
@@ -53,7 +55,7 @@ def _authorities(subject: Path) -> tuple[dict, dict, ResolvedBootstrap]:
     application["port"] = application_port
     application["arguments"] = [
         {"literal": "service.py"},
-        {"literal": "application"},
+        {"literal": application_mode},
         {"node_port": "application"},
         {"node_origin": "dependency"},
     ]
@@ -113,7 +115,7 @@ def _authorities(subject: Path) -> tuple[dict, dict, ResolvedBootstrap]:
     return plan, profile, resolved
 
 
-def _exercise(port: int) -> BootstrapBrowserObservation:
+def _exercise(plan: dict, port: int) -> ObservedBrowserEvidence:
     connection = http.client.HTTPConnection("127.0.0.1", port, timeout=1)
     try:
         connection.request("GET", "/")
@@ -123,7 +125,12 @@ def _exercise(port: int) -> BootstrapBrowserObservation:
         connection.close()
     if response.status != 200 or b'"dependency_status": 200' not in content:
         raise AssertionError("application exercise did not observe its dependency")
-    return BootstrapBrowserObservation(evidence_sha256="b" * 64, peak_rss_mb=8.0)
+    return ObservedBrowserEvidence(
+        browser=_browser_artifact(plan),
+        peak_rss_mb=8.0,
+        resource_sampling_complete=True,
+        process_cleanup_complete=True,
+    )
 
 
 @unittest.skipUnless(os.name == "nt", "M10 observed bootstrap is Windows-only")
@@ -145,7 +152,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
             subject = self._subject(root)
             plan, profile, resolved = _authorities(subject)
             application_port = next(
-                node["port"] for node in profile["nodes"] if node["role"] == "APPLICATION"
+                node["port"]
+                for node in profile["nodes"]
+                if node["role"] == "APPLICATION"
             )
             staged: list[bytes] = []
 
@@ -161,7 +170,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
                 profile,
                 resolved,
                 output_parent=root / "artifacts",
-                browser_runner=lambda: _exercise(application_port),
+                browser_runner=lambda active_plan: _exercise(
+                    active_plan, application_port
+                ),
                 staging_writer=writer,
             )
             self.assertIsNone(result.error_type)
@@ -191,8 +202,8 @@ class BootstrapObservedRunTests(unittest.TestCase):
                 node["port"] for node in profile["nodes"] if node["role"] == "APPLICATION"
             )
 
-            def exercise_with_drift() -> BootstrapBrowserObservation:
-                observed = _exercise(application_port)
+            def exercise_with_drift(active_plan: dict) -> ObservedBrowserEvidence:
+                observed = _exercise(active_plan, application_port)
                 (subject / "watched" / "state.txt").write_text(
                     "changed\n", encoding="utf-8"
                 )
@@ -235,7 +246,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
                 profile,
                 resolved,
                 output_parent=root / "artifacts",
-                browser_runner=lambda: _exercise(application_port),
+                browser_runner=lambda active_plan: _exercise(
+                    active_plan, application_port
+                ),
                 staging_writer=fail_staging,
             )
             self.assertIsNone(result.evidence)
@@ -245,6 +258,140 @@ class BootstrapObservedRunTests(unittest.TestCase):
             self.assertTrue(result.run_work_released)
             self.assertTrue(result.staging_released)
             self.assertTrue(result.owned_root_released)
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_browser_observer_failure_is_collector_error_not_business_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(subject)
+            application_port = next(
+                node["port"] for node in profile["nodes"] if node["role"] == "APPLICATION"
+            )
+
+            def incomplete_observer(active_plan: dict) -> ObservedBrowserEvidence:
+                observed = _exercise(active_plan, application_port)
+                return ObservedBrowserEvidence(
+                    browser=observed.browser,
+                    peak_rss_mb=observed.peak_rss_mb,
+                    resource_sampling_complete=True,
+                    process_cleanup_complete=False,
+                )
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+                browser_runner=incomplete_observer,
+            )
+
+            self.assertIsNone(result.error_type)
+            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("COLLECTOR_ERROR", result.lifecycle.stop_reason)
+            self.assertEqual("ERROR", result.evidence.execution_status)
+            self.assertFalse(result.evidence.continue_pipeline)
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertEqual(
+                ["application", "dependency"],
+                list(result.lifecycle.actual_teardown_order),
+            )
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_real_chromium_is_observed_and_linked_before_reverse_teardown(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(
+                subject, application_mode="browser-application"
+            )
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+            )
+
+            self.assertIsNone(result.error_type)
+            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            browser = result.browser.document["facts"]
+            bootstrap = result.evidence.bootstrap.document["facts"]
+            self.assertTrue(browser["capture_complete"])
+            self.assertTrue(browser["all_steps_passed"])
+            self.assertEqual(2, browser["viewport_count"])
+            self.assertEqual(2, browser["screenshot_count"])
+            self.assertEqual(
+                result.browser.sha256,
+                bootstrap["browser_exercise"]["evidence_sha256"],
+            )
+            self.assertTrue(result.resource_observation["sampling_complete"])
+            self.assertGreater(result.resource_observation["browser_peak_rss_mb"], 0)
+            self.assertEqual(
+                ["application", "dependency"],
+                list(result.lifecycle.actual_teardown_order),
+            )
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            stages = [event.stage for event in result.lifecycle.events]
+            self.assertLess(stages.index("EXERCISED"), stages.index("EVIDENCE_FINALIZED"))
+            self.assertLess(
+                stages.index("EVIDENCE_FINALIZED"),
+                stages.index("TEARDOWN_APPLICATION"),
+            )
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_real_browser_hard_failure_keeps_evidence_and_cleans_resources(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(
+                subject, application_mode="browser-application"
+            )
+            raw_plan = copy.deepcopy(plan)
+            raw_plan.pop("seal")
+            raw_plan["browser"]["timeout_ms"] = 1_000
+            raw_plan["browser"]["steps"][0]["selector"] = "[data-testid='missing']"
+            plan = seal_plan(raw_plan, profile)
+            preview = copy.deepcopy(resolved.preview)
+            preview["plan_sha256"] = plan["seal"]["digest"]
+            preview.pop("preview_sha256")
+            preview["preview_sha256"] = sha256_json(preview)
+            resolved = ResolvedBootstrap(
+                preview=preview,
+                subject_root=resolved.subject_root,
+                nodes=resolved.nodes,
+            )
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+            )
+
+            self.assertIsNone(result.error_type)
+            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(result.evidence)
+            self.assertFalse(result.browser.document["facts"]["capture_complete"])
+            self.assertEqual("BROWSER_HARD_FAILURE", result.lifecycle.stop_reason)
+            self.assertIn(
+                ("EXERCISED", "BROWSER_HARD_FAILURE"),
+                [(event.stage, event.result) for event in result.lifecycle.events],
+            )
+            self.assertEqual("COMPLETED", result.evidence.execution_status)
+            self.assertTrue(result.evidence.continue_pipeline)
+            self.assertEqual(
+                "BROWSER_HARD_FAILURE",
+                result.evidence.bootstrap.document["facts"]["stop"]["reason"],
+            )
+            self.assertTrue(result.resource_observation["sampling_complete"])
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertEqual(
+                ["application", "dependency"],
+                list(result.lifecycle.actual_teardown_order),
+            )
             self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
 
 

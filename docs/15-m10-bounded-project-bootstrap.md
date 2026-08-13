@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：Profile/Plan/Preview、listener、长运行 Job/readiness/逆序清理组件已实现；Evidence/Bundle/Browser/公共 Run 仍未实现
+> 实施门禁：Profile/Plan/Preview、listener、长运行 Job/readiness/逆序清理、Evidence/Bundle 消费和内部真实 Browser exercise 已实现；公共 Run 与完整纵向 Bundle 验收仍未实现
 
 ## 1. M10 只回答一个问题
 
@@ -551,7 +551,7 @@ owned readiness、依赖到应用的严格串行启动和应用到依赖的 best
 Plan 0.6 返回稳定的不支持错误。缺失 Profile、重算 Manifest 后的 Evidence/Profile 身份漂移、附件
 缺失或额外项均有自动化负向。
 
-当前 observed-run 切片进一步创建带随机所有权 marker 的单 Run 根目录，严格分离 work 与 staging；
+observed-run 切片进一步创建带随机所有权 marker 的单 Run 根目录，严格分离 work 与 staging；
 `EVIDENCE_FINALIZED` 回调把无 PID、无绝对路径、无环境值的生命周期事实和双节点有界脱敏流快照
 写成规范 JSON，写入后立即逐字节读回，teardown 完成后再次按大小与 SHA-256 复核，再以不跟随
 reparse point 的方式释放 owned work/staging/root。共享 subject observer 在运行与清理前后比较 sealed
@@ -559,9 +559,18 @@ watch roots；资源 observer 低频采样 Core 与两个 owned Job 的 working 
 提供的独立峰值。真实 Windows helper 自动化已覆盖成功生成严格 Evidence、subject 漂移保留且不回滚，
 以及 staging 写入注入失败后两个 Job 仍逆序清理且 owned 目录残留为零。
 
-该切片使用受控 exercise 回调证明观察与封存接口，并不冒充现有 M2 Browser Adapter 已接入；CLI
-`run`、真实 `browser.session`、最终 Bundle 纵向链路和 M10 完整退出矩阵仍未完成，不得据此标记
-M10 `FROZEN`。
+当前 Browser 切片已把冻结的 M2 Browser Adapter 接入同一生命周期：只有两个节点均 READY 后才创建
+一个有界 Chromium，桌面与移动视口继续严格串行；生成的 `browser.session` 先通过原有严格校验和
+policy SHA 复核，再把其 Evidence SHA 写入 `runtime.bootstrap.browser_exercise`。M10-only CDP observer
+只在内存中取得当前 owned Chromium 的进程集合，持有进程 handles、分账采样 RSS，并在 browser close
+后证明进程释放；PID 不进入 Evidence。sealed step 的可复现业务失败保留有效 `browser.session`，映射为
+`BROWSER_HARD_FAILURE / COMPLETED` 以便后续确定性裁决；采样、observer、browser cleanup 或 collection
+error 则归为 `COLLECTOR_ERROR`，不得伪装成业务失败。真实 Windows 自动化已覆盖双视口正向与缺失选择器
+负向，两条链路都在 `EXERCISED -> EVIDENCE_FINALIZED -> application teardown -> dependency teardown`
+顺序下完成且 owned staging 残留为零。
+
+CLI `run`、最终 Bundle 纵向链路、公共 Catalog/Workbench 读回和 M10 完整退出矩阵仍未完成，不得据此
+标记 M10 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

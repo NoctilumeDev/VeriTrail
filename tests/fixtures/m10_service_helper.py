@@ -12,6 +12,7 @@ from urllib.parse import urlsplit
 
 class _Handler(BaseHTTPRequestHandler):
     dependency_status: int | None = None
+    browser_application = False
     response_size = 2
     status = 200
 
@@ -25,6 +26,60 @@ class _Handler(BaseHTTPRequestHandler):
             self.wfile.write(content)
             return
         if self.path == "/":
+            if self.browser_application:
+                content = b"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>M10 browser fixture</title>
+  <style>
+    body { margin: 0; padding: 24px; font: 16px sans-serif; }
+    main { width: min(100%, 720px); margin: 0 auto; }
+    input, button { box-sizing: border-box; min-height: 40px; }
+  </style>
+</head>
+<body>
+  <main>
+    <label>Run <input data-testid="run-label" autocomplete="off"></label>
+    <button data-testid="load-evidence" type="button">Load evidence</button>
+    <p data-testid="status">waiting</p>
+    <ul data-testid="evidence-list"></ul>
+  </main>
+  <script>
+    const label = document.querySelector('[data-testid="run-label"]');
+    const status = document.querySelector('[data-testid="status"]');
+    const list = document.querySelector('[data-testid="evidence-list"]');
+    document.querySelector('[data-testid="load-evidence"]').addEventListener('click', async () => {
+      const response = await fetch(`/data.json?run=${encodeURIComponent(label.value)}`);
+      const evidence = await response.json();
+      list.replaceChildren(Object.assign(document.createElement('li'), {
+        textContent: `dependency: ${evidence.dependency_status}`
+      }));
+      status.textContent = `evidence ready: ${label.value}`;
+    });
+  </script>
+</body>
+</html>
+"""
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(content)))
+                self.end_headers()
+                self.wfile.write(content)
+                return
+            content = json.dumps(
+                {"dependency_status": self.dependency_status},
+                sort_keys=True,
+            ).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+        if self.browser_application and self.path.startswith("/data.json?"):
             content = json.dumps(
                 {"dependency_status": self.dependency_status},
                 sort_keys=True,
@@ -48,10 +103,12 @@ def _serve(
     status: int,
     response_size: int,
     dependency_status: int | None = None,
+    browser_application: bool = False,
 ) -> None:
     _Handler.status = status
     _Handler.response_size = response_size
     _Handler.dependency_status = dependency_status
+    _Handler.browser_application = browser_application
     server = ThreadingHTTPServer((address, port), _Handler)
     print("listener-ready", flush=True)
     server.serve_forever()
@@ -95,6 +152,10 @@ def main() -> int:
     application.add_argument("port", type=int)
     application.add_argument("dependency_origin")
 
+    browser_application = subparsers.add_parser("browser-application")
+    browser_application.add_argument("port", type=int)
+    browser_application.add_argument("dependency_origin")
+
     sleep = subparsers.add_parser("sleep")
     sleep.add_argument("seconds", type=float)
 
@@ -125,7 +186,7 @@ def main() -> int:
         )
         print("child-created", flush=True)
         return child_process.wait()
-    elif args.mode == "application":
+    elif args.mode in {"application", "browser-application"}:
         dependency_status = _dependency_status(args.dependency_origin)
         if dependency_status != 200:
             return 41
@@ -135,6 +196,7 @@ def main() -> int:
             status=200,
             response_size=2,
             dependency_status=dependency_status,
+            browser_application=args.mode == "browser-application",
         )
     elif args.mode == "sleep":
         time.sleep(args.seconds)

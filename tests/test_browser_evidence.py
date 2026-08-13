@@ -130,8 +130,11 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
         "browser_engine": "chromium",
         "browser_version": "145.0.0.0",
         "headless": plan["browser"]["headless"],
-        "start_url": plan["browser"]["start_url"],
-        "allowed_origins": plan["browser"]["allowed_origins"],
+        "start_url": sanitize_url(plan["browser"]["start_url"]),
+        "allowed_origins": sorted(
+            sanitize_url(origin).rstrip("/")
+            for origin in plan["browser"]["allowed_origins"]
+        ),
         "started_at": "2026-08-09T00:00:00Z",
         "ended_at": "2026-08-09T00:00:02Z",
         "capture_complete": True,

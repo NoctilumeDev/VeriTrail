@@ -46,7 +46,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M7 | 四角色三态、恢复基线、负对照、Catalog 隔离与浏览器验真 | 组合变量、统计显著性、任意配对或跨批次聚合 |
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
-| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Plan/Profile Bundle 验真、Run-owned staging、subject 指纹与资源分账 | 公共 `run`、真实 Browser exercise、完整纵向 Run、第二类项目或里程碑冻结 |
+| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Plan/Profile Bundle 验真、Run-owned staging、subject 指纹/资源分账、内部真实 Browser exercise | 公共 `run`、完整纵向 Bundle/Catalog/Workbench、第二类项目或里程碑冻结 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -113,7 +113,10 @@ Windows IP Helper listener 表，并已加入每节点独立长运行 Job、owne
 串行启动和 best-effort 逆序清理组件。当前新增严格 `runtime.bootstrap` 构造/校验与固定四流附件，
 Plan 0.6 Bundle 同时封存 Profile，Catalog/Comparison 复核权威身份，Pairing/Batch 显式拒绝 0.6。
 内部 observed-run 还拥有并释放 work/staging、封存并读回 teardown 前脱敏事实与流快照、比较 subject
-指纹并分账四方资源。真实 Browser exercise 和公共 `run` 仍未实现，不得把这些切片写成完整自举事实。
+指纹并分账四方资源。冻结的 M2 Browser Adapter 已在两节点 READY 后生成真实 `browser.session`，并由
+M10-only CDP observer 以内存态进程 handles 分账 Chromium RSS、确认关闭；真实双视口正向与选择器
+失败负向均完成逆序清理。公共 `run` 和完整 Bundle/Catalog/Workbench 纵向链路仍未实现，不得把这些
+切片写成完整自举事实。
 
 ## 6. 详细文档
 

@@ -4,7 +4,7 @@ import importlib.metadata
 from collections import Counter
 from datetime import datetime, timezone
 from time import monotonic
-from typing import Any
+from typing import Any, Protocol
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from veritrail.canonical import sha256_json
@@ -22,6 +22,18 @@ MAX_NETWORK_EVENTS = 1000
 MAX_CONSOLE_EVENTS = 500
 MAX_PAGE_ERRORS = 100
 MAX_EVENT_TEXT = 4096
+
+
+class _BrowserLifecycleObserver(Protocol):
+    def browser_started(self, browser: Any) -> None: ...
+
+    def checkpoint(self, browser: Any) -> None: ...
+
+    def before_browser_close(self, browser: Any) -> None: ...
+
+    def after_browser_close(self) -> None: ...
+
+    def failed(self, stage: str, error_type: str) -> None: ...
 
 
 def _utc_now() -> str:
@@ -151,7 +163,11 @@ def _execute_step(
     return None, None
 
 
-def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
+def _collect_browser_evidence(
+    plan: dict[str, Any],
+    *,
+    lifecycle_observer: _BrowserLifecycleObserver | None = None,
+) -> ImportedEvidence:
     try:
         from playwright.sync_api import sync_playwright
     except ImportError as exc:
@@ -184,6 +200,17 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
         if item not in collection_errors:
             collection_errors.append(item)
 
+    def observe(method: str, *values: Any) -> None:
+        if lifecycle_observer is None:
+            return
+        try:
+            getattr(lifecycle_observer, method)(*values)
+        except Exception as exc:
+            try:
+                lifecycle_observer.failed(method, type(exc).__name__)
+            except Exception:
+                pass
+
     try:
         playwright_context = sync_playwright()
         playwright = playwright_context.start()
@@ -204,6 +231,7 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
 
     browser_version = browser.version
     try:
+        observe("browser_started", browser)
         for viewport in policy["viewports"]:
             viewport_name = viewport["name"]
             viewport_started = _utc_now()
@@ -230,6 +258,7 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
 
                 context.route("**/*", route_request)
                 page = context.new_page()
+                observe("checkpoint", browser)
                 page.set_default_timeout(policy["timeout_ms"])
                 page.set_default_navigation_timeout(policy["timeout_ms"])
 
@@ -319,6 +348,8 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
                 except Exception as exc:
                     _finish_step(initial, initial_started, error=exc)
                     viewport_failed = True
+                finally:
+                    observe("checkpoint", browser)
 
                 if not viewport_failed:
                     screenshot_index = 0
@@ -344,6 +375,8 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
                             _finish_step(entry, step_started, error=exc)
                             viewport_failed = True
                             break
+                        finally:
+                            observe("checkpoint", browser)
                 if page is not None:
                     overflow_px = max(
                         0,
@@ -380,11 +413,13 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
                 }
             )
     finally:
+        observe("before_browser_close", browser)
         try:
             browser.close()
         except Exception as exc:
             cleanup_complete = False
             record_collection_error("browser-close", type(exc).__name__)
+        observe("after_browser_close")
         try:
             playwright.stop()
         except Exception as exc:
@@ -471,3 +506,9 @@ def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
         "generated-browser.json",
         attachments=tuple(attachments),
     )
+
+
+def collect_browser_evidence(plan: dict[str, Any]) -> ImportedEvidence:
+    """Collect the frozen M2 browser.session without M10 resource observation."""
+
+    return _collect_browser_evidence(plan)

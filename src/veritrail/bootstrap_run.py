@@ -10,6 +10,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
+from veritrail.bootstrap_browser import (
+    ObservedBrowserEvidence,
+    collect_observed_browser_evidence,
+)
 from veritrail.bootstrap_evidence import (
     BootstrapEvidenceResult,
     collect_bootstrap_evidence,
@@ -29,6 +33,7 @@ from veritrail.command_execution import (
     sanitize_output,
 )
 from veritrail.errors import SafetyError, ValidationError
+from veritrail.evidence import ImportedEvidence, verify_imported_evidence
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.resources import MEBIBYTE, process_rss_bytes
@@ -47,15 +52,10 @@ REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
 
 
 @dataclass(frozen=True)
-class BootstrapBrowserObservation:
-    evidence_sha256: str
-    peak_rss_mb: float
-
-
-@dataclass(frozen=True)
 class BootstrapObservedRunResult:
     lifecycle: BootstrapLifecycleObservation
     evidence: BootstrapEvidenceResult | None
+    browser: ImportedEvidence | None
     resource_observation: dict[str, Any]
     subject_observation: dict[str, Any]
     run_work_released: bool
@@ -333,6 +333,7 @@ class _BootstrapResourceMonitor:
         actual_start_order: tuple[str, ...],
         browser_started: bool,
         browser_peak_rss_mb: float | None,
+        browser_sampling_complete: bool,
         thread_stopped: bool,
     ) -> dict[str, Any]:
         peaks = self.current_peaks()
@@ -345,7 +346,13 @@ class _BootstrapResourceMonitor:
             thread_stopped
             and core_sampled
             and set(actual_start_order).issubset(sampled_nodes)
-            and (not browser_started or browser_peak_rss_mb is not None)
+            and (
+                not browser_started
+                or (
+                    browser_peak_rss_mb is not None
+                    and browser_sampling_complete
+                )
+            )
         )
         return {
             **peaks,
@@ -539,7 +546,7 @@ def run_observed_bootstrap(
     resolved: ResolvedBootstrap,
     *,
     output_parent: Path,
-    browser_runner: Callable[[], BootstrapBrowserObservation] | None = None,
+    browser_runner: Callable[[dict[str, Any]], ObservedBrowserEvidence] | None = None,
     cancel_event: threading.Event | None = None,
     session_factory: Callable[..., Any] = OwnedServiceSession.start,
     readiness_probe: Callable[..., OwnedReadinessObservation] = (
@@ -550,7 +557,7 @@ def run_observed_bootstrap(
     """Run the M10 lifecycle through owned staging and post-teardown observations.
 
     This is an internal M10 slice. It intentionally does not expose the public CLI
-    `run` path and does not adapt the existing Browser collector yet.
+    `run` path; it reuses the frozen M2 Browser adapter with M10-only observation.
     """
 
     verify_sealed_project_profile(profile)
@@ -570,6 +577,8 @@ def run_observed_bootstrap(
         "evidence_sha256": None,
     }
     browser_peak_rss_mb: float | None = None
+    browser_sampling_complete = False
+    browser_artifact: ImportedEvidence | None = None
     staged_sha256: str | None = None
     stage_verified = False
     error_type: str | None = None
@@ -597,28 +606,50 @@ def run_observed_bootstrap(
         monitor.register(node_id, roles[node_id], session)
         return session
 
-    def exercise() -> None:
-        nonlocal browser_peak_rss_mb
+    def exercise() -> str | None:
+        nonlocal browser_artifact, browser_peak_rss_mb, browser_sampling_complete
         browser_exercise["started"] = True
-        if browser_runner is None:
-            raise SafetyError("M10 Browser adapter is not connected")
-        observed = browser_runner()
+        runner = browser_runner or collect_observed_browser_evidence
+        observed = runner(plan)
         if (
-            not isinstance(observed, BootstrapBrowserObservation)
-            or len(observed.evidence_sha256) != 64
-            or any(character not in "0123456789abcdef" for character in observed.evidence_sha256)
+            not isinstance(observed, ObservedBrowserEvidence)
             or isinstance(observed.peak_rss_mb, bool)
             or not isinstance(observed.peak_rss_mb, (int, float))
             or observed.peak_rss_mb < 0
+            or not isinstance(observed.resource_sampling_complete, bool)
+            or not isinstance(observed.process_cleanup_complete, bool)
         ):
             raise SafetyError("M10 Browser observation is invalid")
+        verify_imported_evidence(observed.browser)
+        facts = observed.browser.document.get("facts")
+        if (
+            observed.browser.document.get("evidence_type") != "browser.session"
+            or not isinstance(facts, dict)
+            or facts.get("policy_sha256") != sha256_json(plan["browser"])
+        ):
+            raise SafetyError("M10 Browser Evidence differs from the sealed policy")
+        browser_artifact = observed.browser
         browser_peak_rss_mb = round(float(observed.peak_rss_mb), 3)
+        browser_sampling_complete = observed.resource_sampling_complete
         browser_exercise.update(
             {
                 "completed": True,
-                "evidence_sha256": observed.evidence_sha256,
+                "evidence_sha256": observed.browser.sha256,
             }
         )
+        if (
+            not observed.resource_sampling_complete
+            or not observed.process_cleanup_complete
+            or facts.get("cleanup_complete") is not True
+            or facts.get("collection_errors") != []
+        ):
+            raise SafetyError("M10 Browser collection or owned cleanup is incomplete")
+        if (
+            facts.get("capture_complete") is not True
+            or facts.get("all_steps_passed") is not True
+        ):
+            return "BROWSER_HARD_FAILURE"
+        return None
 
     def stage_pre_teardown(observation: BootstrapPreTeardownObservation) -> None:
         nonlocal staged_sha256
@@ -646,7 +677,7 @@ def run_observed_bootstrap(
             specs,
             lifecycle_timeout_ms=profile["lifecycle_timeout_ms"],
             cancel_event=cancel_event,
-            on_services_ready=exercise if browser_runner is not None else None,
+            on_services_ready=exercise,
             on_evidence_finalize=stage_pre_teardown,
             session_factory=tracked_session_factory,
             readiness_probe=readiness_probe,
@@ -669,6 +700,7 @@ def run_observed_bootstrap(
         actual_start_order=lifecycle.actual_start_order,
         browser_started=browser_exercise["started"],
         browser_peak_rss_mb=browser_peak_rss_mb,
+        browser_sampling_complete=browser_sampling_complete,
         thread_stopped=monitor_stopped,
     )
     run_work_released, staging_released, owned_root_released = workspace.release()
@@ -713,6 +745,7 @@ def run_observed_bootstrap(
     return BootstrapObservedRunResult(
         lifecycle=lifecycle,
         evidence=evidence,
+        browser=browser_artifact,
         resource_observation=resource,
         subject_observation=subject,
         run_work_released=run_work_released,

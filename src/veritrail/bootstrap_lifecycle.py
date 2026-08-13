@@ -203,7 +203,7 @@ def run_bootstrap_lifecycle(
     *,
     lifecycle_timeout_ms: int,
     cancel_event: threading.Event | None = None,
-    on_services_ready: Callable[[], None] | None = None,
+    on_services_ready: Callable[[], str | None] | None = None,
     on_evidence_finalize: Callable[[BootstrapPreTeardownObservation], None] | None = None,
     session_factory: Callable[..., OwnedServiceSession] = OwnedServiceSession.start,
     readiness_probe: Callable[..., OwnedReadinessObservation] = (
@@ -332,15 +332,22 @@ def run_bootstrap_lifecycle(
             elif on_services_ready is not None:
                 callback_started = True
                 try:
-                    on_services_ready()
+                    exercise_outcome = on_services_ready()
+                    if exercise_outcome not in {None, "BROWSER_HARD_FAILURE"}:
+                        raise SafetyError("M10 exercise callback returned an invalid outcome")
                     callback_completed = True
                 except Exception:
                     trigger_reason = "COLLECTOR_ERROR"
+                    event("EXERCISED", "COLLECTOR_ERROR")
                     event("SERVICES_READY_CALLBACK", "FAILED")
                     event("ABORTING", trigger_reason)
                 else:
+                    event("EXERCISED", exercise_outcome or "COMPLETED")
                     event("SERVICES_READY_CALLBACK", "COMPLETED")
-                    if abort_if_needed():
+                    if exercise_outcome == "BROWSER_HARD_FAILURE":
+                        trigger_reason = exercise_outcome
+                        event("ABORTING", trigger_reason)
+                    elif abort_if_needed():
                         event("ABORTING", trigger_reason)
     finally:
         if on_evidence_finalize is not None:
