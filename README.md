@@ -46,8 +46,11 @@ Warning 为 0；验收服务、约定端口、M9 进程与临时目录也已完�
 M10 Contract 0.2 已冻结 Windows 11 / `C1 PROCESS_COLD` 的有界本地进程自举边界。当前实现已有
 ProjectProfile 0.1、Plan 0.6 跨文档 seal、BootstrapPreview 0.1、Windows IP Helper listener 表，
 以及 M10 独立的长运行 Job session、owned HTTP readiness、双节点串行启动和 best-effort 逆序清理
-组件。它尚未接入公共 `run`、`runtime.bootstrap`、Bundle/Profile 四方验真或真实浏览器链路；
-C2/C3、Docker、跨平台和真实项目证明继续留给后继合同。
+组件；成功的 pre-teardown fact-finalization 门禁之后，生命周期观测可转换为严格
+`runtime.bootstrap`，固定生成四个脱敏流附件。Plan 0.6 Bundle
+会同时封存并哈希 Plan/Profile，Catalog 复核 Plan/Profile/Evidence 身份，Comparison 同时要求 Plan SHA
+与 Profile SHA，Pairing/Batch 则显式拒绝 0.6。公共 `run`、Run-owned staging 前置封存、真实 Browser
+exercise 和完整纵向验收仍未接入；C2/C3、Docker、跨平台和真实项目证明继续留给后继合同。
 
 ## 为什么需要验迹
 
@@ -336,8 +339,11 @@ M10 在 M9 的可信进程所有权基础上，只增加 Windows 11/C1 的长运
 exercise，最后按应用、依赖的逆序强制回收并证明无残留。当前组件片已用真实 Windows 子进程与
 端口验证：每节点独立 Job、依赖 READY 后才创建应用、listener owner 与实时 Job process list
 交叉核验、连续两次 HTTP 200、失败后应用到依赖的逆序回收，以及 cleanup 失败时继续 best-effort
-清理。该内存态组件尚未生成公共 Evidence，也未接入 Browser、Bundle 或 CLI `run`，因此不代表
-M10 完整链路已经完成。详见
+清理。该内存态组件本身不直接生成公共 Evidence；随后完成的证据切片已把该观测严格转换为
+`runtime.bootstrap`，并要求 pre-teardown facts 先经回调封存成功，固定校验
+两节点 stdout/stderr 四个附件，并让 Plan 0.6 Bundle、Catalog 与 Comparison 验证 sealed Profile；
+Pairing/Batch 对 0.6 明确拒绝。它仍未把 Run-owned staging、Browser exercise 与公共 `run` 串成真实
+纵向链路，因此 M10 继续是 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。
 
 ### 本地运行
@@ -368,7 +374,8 @@ py -3.10 -m venv .venv
 
 - **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检、有界浏览器采集、M4 离线
   Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 已进入合同层
-  实现，并已有独立长运行 Job/readiness/逆序清理组件，公共 Run/Evidence/Bundle 尚未接入。
+  实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence 与 Plan/Profile Bundle
+  验真；公共 Run、staging 前置封存与 Browser 纵向链路尚未接入。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。

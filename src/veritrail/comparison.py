@@ -14,6 +14,7 @@ from veritrail.catalog import _CandidateRejected, validate_bundle
 from veritrail.errors import VeriTrailError
 from veritrail.jsonio import load_json_object
 from veritrail.plan import verify_sealed_plan
+from veritrail.project_profile import verify_sealed_project_profile
 
 COMPARISON_SCHEMA_VERSION = "0.1"
 COMPARISON_RULE_VERSION = "rerun-semantic/0.1"
@@ -47,6 +48,7 @@ class _SourceRun:
     bundle_sha256: str
     semantic_projection: dict[str, Any]
     semantic_sha256: str
+    profile_sha256: str | None
 
 
 def _sha256_file(path: Path) -> str:
@@ -184,7 +186,18 @@ def _load_source(candidate: Path) -> _SourceRun:
     try:
         plan = load_json_object(candidate / "sealed-plan.json", label="Sealed Plan")
         report = load_json_object(candidate / "report.json", label="Report")
-        verify_sealed_plan(plan)
+        profile_sha256: str | None = None
+        if plan.get("schema_version") == "0.6":
+            if "sealed-profile.json" not in declared:
+                raise ValueError("missing sealed ProjectProfile")
+            profile = load_json_object(
+                candidate / "sealed-profile.json", label="Sealed ProjectProfile"
+            )
+            verify_sealed_project_profile(profile)
+            verify_sealed_plan(plan, profile)
+            profile_sha256 = profile["seal"]["digest"]
+        else:
+            verify_sealed_plan(plan)
     except Exception as exc:
         raise ComparisonError(
             "SOURCE_SEALED_PLAN_INVALID",
@@ -198,6 +211,7 @@ def _load_source(candidate: Path) -> _SourceRun:
         bundle_sha256=validated.bundle_sha256,
         semantic_projection=projection,
         semantic_sha256=sha256_json(projection),
+        profile_sha256=profile_sha256,
     )
 
 
@@ -248,7 +262,7 @@ def _differences(left: Any, right: Any, path: str = "") -> list[dict[str, Any]]:
 
 def _source_reference(source: _SourceRun, role: str) -> dict[str, Any]:
     report = source.report
-    return {
+    reference = {
         "role": role,
         "run_id": report["run_id"],
         "created_at": report["created_at"],
@@ -259,6 +273,9 @@ def _source_reference(source: _SourceRun, role: str) -> dict[str, Any]:
         "bundle_sha256": source.bundle_sha256,
         "semantic_sha256": source.semantic_sha256,
     }
+    if source.profile_sha256 is not None:
+        reference["project_profile_sha256"] = source.profile_sha256
+    return reference
 
 
 def _render_markdown(comparison: dict[str, Any]) -> str:
@@ -331,6 +348,13 @@ def create_comparison_bundle(
             {
                 "code": "PLAN_DIGEST_MISMATCH",
                 "message": "两侧不是同一 sealed Plan，不能进行同计划复跑判断。",
+            }
+        )
+    if baseline_source.profile_sha256 != repeat_source.profile_sha256:
+        reasons.append(
+            {
+                "code": "PROFILE_DIGEST_MISMATCH",
+                "message": "两侧不是同一 sealed ProjectProfile，不能进行 M10 同配置复跑判断。",
             }
         )
     if baseline_source.report["random_seed"] != repeat_source.report["random_seed"]:

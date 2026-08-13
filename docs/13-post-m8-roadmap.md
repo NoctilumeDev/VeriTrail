@@ -5,7 +5,7 @@
 > Plan v1 原始前置基线：M0–M8 均为 `FROZEN`，当时最新标签为 `m8-v0.9.0`
 > 当前实施基线：M9 已以 `m9-v0.10.0` @ `3181d69` 冻结
 > 冻结引用：`post-m8-plan-v1`
-> 当前实施门禁：M10 Contract 0.2 已冻结，长运行生命周期组件片已实现；公共 Run/Evidence/Bundle 仍按层门禁推进
+> 当前实施门禁：M10 Contract 0.2 已冻结，生命周期、Evidence 与 Bundle 权威切片已实现；公共 Run/Browser 仍按层门禁推进
 
 ## 0. 当前执行进度（冻结后注记）
 
@@ -22,8 +22,9 @@
 
 M9 已完成代码、自动化、真实命令、浏览器、物理键盘、资源、安全、清理和 GitHub/tag 读回。
 M10 已完成合同与设计验证，并实现 Profile/Plan/Preview、listener、逐节点长运行 Job、owned HTTP
-readiness、双节点串行启动和 best-effort 逆序清理组件；公共 `runtime.bootstrap`、Evidence、Bundle、
-Browser 与真实 Run 链路仍未完成。M11–M14 仍不得进入实现。
+readiness、双节点串行启动和 best-effort 逆序清理组件，以及严格 `runtime.bootstrap` 四附件、同时
+封存 Plan/Profile 的 Bundle、Catalog/Comparison 身份复核和 Pairing/Batch 显式拒绝；Browser、
+Run-owned staging 与真实公共 Run 链路仍未完成。M11–M14 仍不得进入实现。
 
 ## 1. 产品判断
 

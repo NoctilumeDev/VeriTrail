@@ -23,7 +23,7 @@
 | M7 | 固定四角色、预注册 outcome 的配对反事实分析 | `FROZEN` | `m7-v0.8.0` @ `e5c6e27` |
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | Windows 11/C1 有界完整项目自举 | `IMPLEMENTING` | Contract 0.2 + lifecycle component slice |
+| M10 | Windows 11/C1 有界完整项目自举 | `IMPLEMENTING` | Contract 0.2 + lifecycle/Evidence/Bundle authority slices |
 | M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
@@ -46,6 +46,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M7 | 四角色三态、恢复基线、负对照、Catalog 隔离与浏览器验真 | 组合变量、统计显著性、任意配对或跨批次聚合 |
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
+| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Plan/Profile Bundle 与 Catalog/Comparison 验真 | 公共 `run`、真实 Browser exercise、完整纵向 Run、第二类项目或里程碑冻结 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -109,8 +110,9 @@ Catalog/Workbench、Console/Network、双运行时回归、内置浏览器物理
 冻结提交 `3181d69` 及 `m9-v0.10.0` 标签已从 GitHub 远端读回，M9 在合同边界内标记 `FROZEN`。
 M10 已按 Contract 0.2 实现 ProjectProfile 0.1、Plan 0.6 跨文档 seal、BootstrapPreview 0.1 与只读
 Windows IP Helper listener 表，并已加入每节点独立长运行 Job、owned HTTP readiness、双节点严格
-串行启动和 best-effort 逆序清理组件；浏览器 exercise、`runtime.bootstrap`、Bundle 和公共 `run`
-仍未实现，不得把组件通过写成完整自举事实。
+串行启动和 best-effort 逆序清理组件。当前新增严格 `runtime.bootstrap` 构造/校验与固定四流附件，
+Plan 0.6 Bundle 同时封存 Profile，Catalog/Comparison 复核权威身份，Pairing/Batch 显式拒绝 0.6。
+浏览器 exercise、Run-owned staging 前置封存和公共 `run` 仍未实现，不得把这些切片写成完整自举事实。
 
 ## 6. 详细文档
 

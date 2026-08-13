@@ -541,8 +541,16 @@ M10 真实验收。
 Job session、typed 参数/环境的内存态 materialization、`Job set A -> listener -> Job set B -> HTTP`
 owned readiness、依赖到应用的严格串行启动和应用到依赖的 best-effort 逆序清理。真实 Windows helper
 自动化已覆盖后代 listener 成功、提前退出、超时、宽绑定、外部 owner 不误杀、输出上限、应用失败
-回滚、双节点 READY 后用户取消和 cleanup 失败后继续清理。该事实仍只是组件运行证据；未生成 `runtime.bootstrap`、未接入
-Browser/Bundle/CLI `run`，不得据此标记 M10 `FROZEN`。
+回滚、双节点 READY 后用户取消和 cleanup 失败后继续清理。
+
+当前证据切片继续保持公共状态枚举不变：生命周期增加 teardown 之前的 fact-finalization 回调门禁；
+回调成功并追加 `EVIDENCE_FINALIZED` 后，观测才可生成严格 `runtime.bootstrap` 与两节点四个有界脱敏
+流附件，回调失败固定记录 `EVIDENCE_ERROR` 且仍逆序清理；Plan 0.6 Bundle 同时携带并哈希
+`sealed-plan.json` / `sealed-profile.json`；Catalog
+复核 Plan/Profile/Evidence 与 node policy，Comparison 同时消费 Plan/Profile SHA，Pairing/Batch 对
+Plan 0.6 返回稳定的不支持错误。缺失 Profile、重算 Manifest 后的 Evidence/Profile 身份漂移、附件
+缺失或额外项均有自动化负向。该事实仍未接入 Browser、Run-owned staging 前置封存或 CLI `run`，
+不得据此标记 M10 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

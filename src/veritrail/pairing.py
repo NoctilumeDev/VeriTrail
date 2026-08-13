@@ -343,6 +343,11 @@ def _load_source(candidate: Path, primary_name: str) -> _SourceRun:
     try:
         plan = load_json_object(candidate / "sealed-plan.json", label="Sealed ExperimentPlan")
         report = load_json_object(candidate / "report.json", label="Report")
+        if plan.get("schema_version") == "0.6":
+            raise PairingError(
+                "SOURCE_PLAN_VERSION_UNSUPPORTED",
+                "M7 Pairing 尚无 Plan 0.6 / ProjectProfile 兼容合同。",
+            )
         verify_sealed_plan(plan)
     except PairingError:
         raise

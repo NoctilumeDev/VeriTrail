@@ -71,6 +71,19 @@ class BootstrapLifecycleObservation:
     elapsed_ms: float
 
 
+@dataclass(frozen=True)
+class BootstrapPreTeardownObservation:
+    expected_start_order: tuple[str, str]
+    actual_start_order: tuple[str, ...]
+    expected_teardown_order: tuple[str, str]
+    events: tuple[BootstrapLifecycleEvent, ...]
+    nodes: tuple[BootstrapNodeObservation, BootstrapNodeObservation]
+    services_ready: bool
+    ready_callback_started: bool
+    ready_callback_completed: bool
+    trigger_reason: str
+
+
 @dataclass
 class _MutableNodeObservation:
     spec: BootstrapServiceSpec
@@ -182,6 +195,7 @@ def run_bootstrap_lifecycle(
     lifecycle_timeout_ms: int,
     cancel_event: threading.Event | None = None,
     on_services_ready: Callable[[], None] | None = None,
+    on_evidence_finalize: Callable[[BootstrapPreTeardownObservation], None] | None = None,
     session_factory: Callable[..., OwnedServiceSession] = OwnedServiceSession.start,
     readiness_probe: Callable[..., OwnedReadinessObservation] = (
         probe_owned_http_readiness
@@ -320,6 +334,37 @@ def run_bootstrap_lifecycle(
                     if abort_if_needed():
                         event("ABORTING", trigger_reason)
     finally:
+        if on_evidence_finalize is not None:
+            pre_teardown_nodes = tuple(
+                BootstrapNodeObservation(
+                    node_id=node.spec.node_id,
+                    role=node.spec.role,
+                    start=node.start,
+                    readiness=node.readiness,
+                    teardown=None,
+                )
+                for node in mutable
+            )
+            try:
+                on_evidence_finalize(
+                    BootstrapPreTeardownObservation(
+                        expected_start_order=(specs[0].node_id, specs[1].node_id),
+                        actual_start_order=tuple(actual_start_order),
+                        expected_teardown_order=(specs[1].node_id, specs[0].node_id),
+                        events=tuple(events),
+                        nodes=(pre_teardown_nodes[0], pre_teardown_nodes[1]),
+                        services_ready=services_ready,
+                        ready_callback_started=callback_started,
+                        ready_callback_completed=callback_completed,
+                        trigger_reason=trigger_reason,
+                    )
+                )
+            except Exception:
+                trigger_reason = "EVIDENCE_ERROR"
+                event("EVIDENCE_FINALIZATION", "FAILED")
+                event("ABORTING", trigger_reason)
+            else:
+                event("EVIDENCE_FINALIZED", "COMPLETE")
         for node, session in reversed(sessions):
             teardown_attempt_order.append(node.spec.node_id)
             event(f"TEARDOWN_{node.spec.role}", "ENTERED")

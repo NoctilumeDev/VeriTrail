@@ -180,6 +180,12 @@ Bundle。需要来源真实性时，必须另加独立权限、数字签名、�
 
 真实 HTTP/浏览器、进程与端口、资源曲线、数据库/缓存/消息事实、多实例、故障恢复和最终状态。
 
+M10 的 `runtime.bootstrap` 是 RuntimeEvidence 的一个严格子类型：它引用 sealed Plan、sealed
+ProjectProfile 与获批 Preview，只保存双节点生命周期、owned readiness、资源/subject 摘要、浏览器
+Evidence 引用和清理事实；两个节点的 stdout/stderr 固定为四个有界脱敏附件。PID、响应正文、环境
+值、绝对路径和 ToolBindings 不进入证据。Report/Workbench 不改写这些事实，Catalog 必须从 Bundle
+中的两份封存文件重新验真。
+
 计划声明哪些层为必需。缺失必需层只能得到 `PENDING`，不能用另一层替代。
 
 ## 7. 不变量与降级

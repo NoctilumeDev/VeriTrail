@@ -1276,6 +1276,10 @@ def validate_evidence(document: dict[str, Any], input_name: str) -> None:
         _validate_orchestration_evidence(document, input_name, errors)
     if document.get("evidence_type") == "runtime.command":
         _validate_command_evidence(document, input_name, errors)
+    if document.get("evidence_type") == "runtime.bootstrap":
+        from veritrail.bootstrap_evidence import validate_bootstrap_evidence
+
+        validate_bootstrap_evidence(document, input_name, errors)
     try:
         canonical_json_bytes(document)
     except (TypeError, ValueError) as exc:
@@ -1391,6 +1395,32 @@ def verify_imported_evidence(artifact: ImportedEvidence) -> None:
             ):
                 raise ValidationError(
                     [f"command output reference does not match attachment: {path}"]
+                )
+    elif evidence_type == "runtime.bootstrap":
+        nodes = artifact.document.get("facts", {}).get("nodes", [])
+        referenced = {
+            stream["attachment"]["path"]: stream["attachment"]
+            for node in nodes
+            if isinstance(node, dict)
+            for stream in (node.get("stdout"), node.get("stderr"))
+            if isinstance(stream, dict) and isinstance(stream.get("attachment"), dict)
+        }
+        if len(referenced) != 4 or set(referenced) != set(attachment_by_path):
+            raise ValidationError(
+                ["bootstrap output references do not match exactly four generated attachments"]
+            )
+        for path, reference in referenced.items():
+            attachment = attachment_by_path[path]
+            if any(
+                (
+                    reference.get("sha256") != attachment.sha256,
+                    reference.get("size") != attachment.size,
+                    reference.get("media_type") != attachment.media_type,
+                    reference.get("logical_name") != attachment.logical_name,
+                )
+            ):
+                raise ValidationError(
+                    [f"bootstrap output reference does not match attachment: {path}"]
                 )
     elif attachment_by_path:
         raise ValidationError(["this evidence type does not support generated attachments"])

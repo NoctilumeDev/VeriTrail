@@ -265,6 +265,7 @@ class BootstrapLifecycleTests(unittest.TestCase):
                 ),
             )
             terminated: list[str] = []
+            sequence: list[str] = []
 
             class FakeSession:
                 def __init__(self, node_id: str) -> None:
@@ -283,6 +284,7 @@ class BootstrapLifecycleTests(unittest.TestCase):
 
                 def terminate(self) -> object:
                     terminated.append(self.node_id)
+                    sequence.append(f"teardown:{self.node_id}")
                     if self.node_id == "application":
                         raise RuntimeError("injected teardown failure")
                     return SimpleNamespace(cleanup_complete=True)
@@ -298,18 +300,109 @@ class BootstrapLifecycleTests(unittest.TestCase):
                     elapsed_ms=1.0,
                 )
 
+            def finalize(snapshot: object) -> None:
+                sequence.append("evidence-finalized")
+                nodes = getattr(snapshot, "nodes")
+                self.assertTrue(all(node.teardown is None for node in nodes))
+
             result = run_bootstrap_lifecycle(
                 specs,
                 lifecycle_timeout_ms=5_000,
                 session_factory=factory,
                 readiness_probe=ready,
+                on_evidence_finalize=finalize,
             )
             self.assertEqual(["application", "dependency"], terminated)
+            self.assertEqual(
+                ["evidence-finalized", "teardown:application", "teardown:dependency"],
+                sequence,
+            )
+            self.assertTrue(
+                any(event.stage == "EVIDENCE_FINALIZED" for event in result.events)
+            )
             self.assertEqual(("application", "dependency"), result.teardown_attempt_order)
             self.assertEqual(("dependency",), result.actual_teardown_order)
             self.assertEqual("NONE", result.trigger_reason)
             self.assertEqual("CLEANUP_ERROR", result.stop_reason)
             self.assertFalse(result.cleanup_complete)
+
+    def test_evidence_finalization_failure_precedes_and_does_not_skip_cleanup(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            dependency_port, application_port = self._ports()
+            specs = (
+                _spec(
+                    node_id="dependency",
+                    role="DEPENDENCY",
+                    port=dependency_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+                _spec(
+                    node_id="application",
+                    role="APPLICATION",
+                    port=application_port,
+                    directory=directory,
+                    arguments=("sleep", "30"),
+                ),
+            )
+            terminated: list[str] = []
+
+            class FakeSession:
+                def __init__(self, node_id: str) -> None:
+                    self.node_id = node_id
+                    self.start_observation = OwnedServiceStartObservation(
+                        parent_in_job=False,
+                        process_created=True,
+                        target_assigned=True,
+                        target_resumed=True,
+                        active_process_limit=4,
+                        active_process_limit_enforced=True,
+                        cleanup_complete=False,
+                        error_type=None,
+                        elapsed_ms=1.0,
+                    )
+
+                def terminate(self) -> object:
+                    terminated.append(self.node_id)
+                    return SimpleNamespace(cleanup_complete=True)
+
+            def factory(**values: object) -> FakeSession:
+                return FakeSession(str(values["node_id"]))
+
+            def ready(*args: object, **kwargs: object) -> OwnedReadinessObservation:
+                return OwnedReadinessObservation(
+                    ready=True,
+                    attempts=(),
+                    error_type=None,
+                    elapsed_ms=1.0,
+                )
+
+            def fail_finalization(snapshot: object) -> None:
+                raise RuntimeError("injected evidence finalization failure")
+
+            result = run_bootstrap_lifecycle(
+                specs,
+                lifecycle_timeout_ms=5_000,
+                session_factory=factory,
+                readiness_probe=ready,
+                on_evidence_finalize=fail_finalization,
+            )
+            self.assertEqual("EVIDENCE_ERROR", result.trigger_reason)
+            self.assertEqual("EVIDENCE_ERROR", result.stop_reason)
+            self.assertTrue(result.cleanup_complete)
+            self.assertEqual(["application", "dependency"], terminated)
+            failed = next(
+                index
+                for index, event in enumerate(result.events)
+                if event.stage == "EVIDENCE_FINALIZATION"
+            )
+            first_teardown = next(
+                index
+                for index, event in enumerate(result.events)
+                if event.stage.startswith("TEARDOWN_")
+            )
+            self.assertLess(failed, first_teardown)
 
     def test_materialization_keeps_paths_and_environment_values_in_memory(self) -> None:
         with tempfile.TemporaryDirectory() as raw_directory:

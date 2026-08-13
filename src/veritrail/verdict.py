@@ -170,7 +170,7 @@ def _detect_variable_contamination(
 def _detect_preflight_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.2", "0.3", "0.4", "0.5"}:
+    if plan.get("schema_version") not in {"0.2", "0.3", "0.4", "0.5", "0.6"}:
         return []
     preflight = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.preflight"
@@ -207,7 +207,7 @@ def _detect_preflight_contamination(
 def _detect_browser_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.3", "0.4", "0.5"}:
+    if plan.get("schema_version") not in {"0.3", "0.4", "0.5", "0.6"}:
         return []
     sessions = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "browser.session"
@@ -468,6 +468,98 @@ def _detect_command_contamination(
     return contamination
 
 
+def _detect_bootstrap_contamination(
+    plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
+) -> list[dict[str, Any]]:
+    if plan.get("schema_version") != "0.6":
+        return []
+    sessions = [
+        artifact
+        for artifact in evidence
+        if artifact.document["evidence_type"] == "runtime.bootstrap"
+    ]
+    contamination: list[dict[str, Any]] = []
+    if len(sessions) > 1:
+        contamination.append(
+            {
+                "code": "MULTIPLE_BOOTSTRAP_EVIDENCE",
+                "message": "A Plan 0.6 Run must contain exactly one runtime.bootstrap artifact.",
+            }
+        )
+    browser_sessions = [
+        artifact for artifact in evidence if artifact.document["evidence_type"] == "browser.session"
+    ]
+    expected_profile = plan["bootstrap_profile"]
+    for artifact in sessions:
+        facts = artifact.document["facts"]
+        if facts["plan_sha256"] != plan["seal"]["digest"]:
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_PLAN_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Bootstrap evidence references a different sealed Plan.",
+                }
+            )
+        if facts["profile"] != {
+            "id": expected_profile["profile_id"],
+            "version": expected_profile["profile_version"],
+            "sha256": expected_profile["profile_sha256"],
+        }:
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_PROFILE_DRIFT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Bootstrap evidence references a different sealed ProjectProfile.",
+                }
+            )
+        browser = facts["browser_exercise"]
+        if browser["completed"] and (
+            len(browser_sessions) != 1
+            or browser["evidence_sha256"] != browser_sessions[0].sha256
+        ):
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_BROWSER_REFERENCE_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Bootstrap evidence does not reference the unique browser Evidence.",
+                }
+            )
+        if facts["cleanup_complete"] is False:
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_CLEANUP_INCOMPLETE",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "The bootstrap lifecycle did not complete every owned cleanup obligation.",
+                }
+            )
+        reason = facts["stop"]["reason"]
+        browser_completed = browser["completed"]
+        if not facts["cleanup_complete"] or reason in {
+            "COLLECTOR_ERROR",
+            "EVIDENCE_ERROR",
+            "CLEANUP_ERROR",
+            "EXECUTABLE_DRIFT",
+        }:
+            allowed_statuses = {"ERROR"}
+        elif reason == "NODE_EARLY_EXIT":
+            allowed_statuses = {"COMPLETED"}
+        elif reason in {"SUBJECT_DRIFT", "BROWSER_HARD_FAILURE"} and browser_completed:
+            allowed_statuses = {"COMPLETED"}
+        elif reason == "NONE":
+            allowed_statuses = {"COMPLETED"}
+        else:
+            allowed_statuses = {"ABORTED"}
+        if execution_status not in allowed_statuses:
+            contamination.append(
+                {
+                    "code": "BOOTSTRAP_STATUS_CONFLICT",
+                    "evidence_sha256": artifact.sha256,
+                    "message": "Bootstrap stop reason conflicts with the Run execution status.",
+                }
+            )
+    return contamination
+
+
 def evaluate(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> dict[str, Any]:
@@ -479,6 +571,7 @@ def evaluate(
     contamination.extend(_detect_browser_contamination(plan, evidence, execution_status))
     contamination.extend(_detect_orchestration_contamination(plan, evidence, execution_status))
     contamination.extend(_detect_command_contamination(plan, evidence, execution_status))
+    contamination.extend(_detect_bootstrap_contamination(plan, evidence, execution_status))
     if plan["baseline"]["status"] == "EXPIRED":
         contamination.append(
             {

@@ -15,8 +15,11 @@ from typing import Any, Iterable
 
 from veritrail import __version__
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
+from veritrail.evidence import validate_evidence
 from veritrail.errors import VeriTrailError
 from veritrail.jsonio import load_json_object
+from veritrail.plan import verify_sealed_plan
+from veritrail.project_profile import verify_sealed_project_profile
 
 CATALOG_SCHEMA_VERSION = "0.1"
 CATALOG_API_VERSION = "0.1"
@@ -67,6 +70,7 @@ class ValidatedBundle:
     plan_id: str
     plan_version: int
     plan_sha256: str
+    profile_sha256: str | None
     bundle_sha256: str
     files: tuple[BundleFile, ...]
     total_bytes: int
@@ -242,7 +246,7 @@ def _parse_bundle_manifest(value: dict[str, Any]) -> tuple[str, tuple[BundleFile
                 size=_required_nonnegative_int(raw.get("size")),
             )
         )
-    if not {"report.json", "evidence-manifest.json"}.issubset(seen):
+    if not {"report.json", "evidence-manifest.json", "sealed-plan.json"}.issubset(seen):
         raise _CandidateRejected("MISSING_BUNDLE_ROOT_FILE")
     return run_id, tuple(sorted(entries, key=lambda item: item.path))
 
@@ -356,6 +360,11 @@ def _validate_report_and_evidence(
         _required_string(document.get("captured_at"))
         if not isinstance(document.get("facts"), dict):
             raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
+        if evidence_type == "runtime.bootstrap":
+            try:
+                validate_evidence(document, artifact_path)
+            except Exception as exc:
+                raise _CandidateRejected("INVALID_EVIDENCE_DOCUMENT") from exc
         attachments = raw.get("attachments")
         if not isinstance(attachments, list):
             raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
@@ -385,7 +394,115 @@ def _validate_report_and_evidence(
                 raise _CandidateRejected("EVIDENCE_INDEX_MISMATCH")
             if attachment.size != _required_nonnegative_int(attachment_raw.get("size")):
                 raise _CandidateRejected("EVIDENCE_INDEX_MISMATCH")
+        if evidence_type == "runtime.bootstrap":
+            references = {
+                stream["attachment"]["path"]: stream["attachment"]
+                for node in document["facts"]["nodes"]
+                for stream in (node["stdout"], node["stderr"])
+            }
+            indexed = {item["path"]: item for item in attachments}
+            if len(references) != 4 or set(references) != set(indexed):
+                raise _CandidateRejected("BOOTSTRAP_ATTACHMENT_MISMATCH")
+            for path, reference in references.items():
+                item = indexed[path]
+                if any(
+                    canonical_json_bytes(reference.get(field))
+                    != canonical_json_bytes(item.get(field))
+                    for field in ("sha256", "size", "media_type", "logical_name")
+                ):
+                    raise _CandidateRejected("BOOTSTRAP_ATTACHMENT_MISMATCH")
     return created_at, execution_status, verdict, plan_id, plan_version, plan_sha256
+
+
+def _validate_sealed_authorities(
+    *,
+    report: dict[str, Any],
+    evidence: dict[str, Any],
+    declared: dict[str, BundleFile],
+    physical_files: dict[str, Path],
+) -> str | None:
+    try:
+        plan = load_json_object(physical_files["sealed-plan.json"], label="Sealed Plan")
+    except Exception as exc:
+        raise _CandidateRejected("INVALID_SEALED_PLAN") from exc
+    profile: dict[str, Any] | None = None
+    if plan.get("schema_version") == "0.6":
+        if "sealed-profile.json" not in declared:
+            raise _CandidateRejected("MISSING_SEALED_PROFILE")
+        try:
+            profile = load_json_object(
+                physical_files["sealed-profile.json"], label="Sealed ProjectProfile"
+            )
+            verify_sealed_project_profile(profile)
+            verify_sealed_plan(plan, profile)
+        except Exception as exc:
+            raise _CandidateRejected("INVALID_SEALED_AUTHORITY") from exc
+    else:
+        if "sealed-profile.json" in declared:
+            raise _CandidateRejected("UNEXPECTED_SEALED_PROFILE")
+        try:
+            verify_sealed_plan(plan)
+        except Exception as exc:
+            raise _CandidateRejected("INVALID_SEALED_PLAN") from exc
+    expected_report_plan = {
+        "id": plan.get("plan_id"),
+        "version": plan.get("version"),
+        "sha256": plan.get("seal", {}).get("digest"),
+    }
+    if report.get("plan") != expected_report_plan:
+        raise _CandidateRejected("SEALED_PLAN_REPORT_MISMATCH")
+    if profile is None:
+        return None
+
+    bootstrap_entries = [
+        item
+        for item in evidence["artifacts"]
+        if item.get("evidence_type") == "runtime.bootstrap"
+    ]
+    if len(bootstrap_entries) != 1:
+        raise _CandidateRejected("BOOTSTRAP_EVIDENCE_CARDINALITY")
+    try:
+        bootstrap = load_json_object(
+            physical_files[bootstrap_entries[0]["path"]], label="Bootstrap Evidence"
+        )
+    except Exception as exc:
+        raise _CandidateRejected("INVALID_EVIDENCE_DOCUMENT") from exc
+    facts = bootstrap["facts"]
+    expected_profile = {
+        "id": profile["profile_id"],
+        "version": profile["version"],
+        "sha256": profile["seal"]["digest"],
+    }
+    if (
+        facts.get("plan_sha256") != plan["seal"]["digest"]
+        or plan.get("bootstrap_profile")
+        != {
+            "profile_id": expected_profile["id"],
+            "profile_version": expected_profile["version"],
+            "profile_sha256": expected_profile["sha256"],
+        }
+        or facts.get("profile") != expected_profile
+    ):
+        raise _CandidateRejected("BOOTSTRAP_AUTHORITY_MISMATCH")
+    profile_nodes = {node["node_id"]: node for node in profile["nodes"]}
+    evidence_nodes = facts.get("nodes", [])
+    if [node.get("node_id") for node in evidence_nodes] != profile["start_order"]:
+        raise _CandidateRejected("BOOTSTRAP_AUTHORITY_MISMATCH")
+    if any(
+        node.get("policy_sha256") != sha256_json(profile_nodes[node["node_id"]])
+        for node in evidence_nodes
+    ):
+        raise _CandidateRejected("BOOTSTRAP_AUTHORITY_MISMATCH")
+    browser = facts["browser_exercise"]
+    browser_entries = [
+        item for item in evidence["artifacts"] if item.get("evidence_type") == "browser.session"
+    ]
+    if browser["completed"] and (
+        len(browser_entries) != 1
+        or browser["evidence_sha256"] != browser_entries[0].get("sha256")
+    ):
+        raise _CandidateRejected("BOOTSTRAP_BROWSER_REFERENCE_MISMATCH")
+    return profile["seal"]["digest"]
 
 
 def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
@@ -423,6 +540,12 @@ def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
     created_at, execution_status, verdict, plan_id, plan_version, plan_sha256 = (
         _validate_report_and_evidence(report, evidence, run_id, declared, files)
     )
+    profile_sha256 = _validate_sealed_authorities(
+        report=report,
+        evidence=evidence,
+        declared=declared,
+        physical_files=files,
+    )
     bundle_sha256 = sha256_json(
         {
             "schema_version": "0.1",
@@ -453,6 +576,7 @@ def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
         plan_id=plan_id,
         plan_version=plan_version,
         plan_sha256=plan_sha256,
+        profile_sha256=profile_sha256,
         bundle_sha256=bundle_sha256,
         files=tuple(sorted(all_files, key=lambda item: item.path)),
         total_bytes=sum(item.size for item in all_files),

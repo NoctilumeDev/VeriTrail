@@ -8,10 +8,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from veritrail.canonical import canonical_json_bytes, sha256_bytes
+from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.evidence import ImportedEvidence, import_evidence_files, verify_imported_evidence
 from veritrail.plan import verify_sealed_plan
+from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.verdict import evaluate
 
 RUN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
@@ -181,8 +182,17 @@ def create_bundle(
     run_id: str,
     execution_status: str,
     generated_evidence: list[ImportedEvidence] | None = None,
+    project_profile: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    verify_sealed_plan(plan)
+    if plan.get("schema_version") == "0.6":
+        if project_profile is None:
+            raise ValidationError(["ExperimentPlan 0.6 Bundle requires a sealed ProjectProfile"])
+        verify_sealed_project_profile(project_profile)
+        verify_sealed_plan(plan, project_profile)
+    else:
+        if project_profile is not None:
+            raise ValidationError(["sealed ProjectProfile is accepted only for ExperimentPlan 0.6"])
+        verify_sealed_plan(plan)
     if not RUN_ID_PATTERN.fullmatch(run_id):
         raise ValidationError(["run_id must be a 2-64 character lowercase identifier"])
     if output.exists():
@@ -210,6 +220,49 @@ def create_bundle(
                 )
         seen_hashes.add(artifact.sha256)
         imported.append(artifact)
+    if project_profile is not None:
+        bootstrap = [
+            artifact
+            for artifact in imported
+            if artifact.document["evidence_type"] == "runtime.bootstrap"
+        ]
+        if len(bootstrap) != 1:
+            raise ValidationError(
+                ["ExperimentPlan 0.6 Bundle requires exactly one runtime.bootstrap artifact"]
+            )
+        facts = bootstrap[0].document["facts"]
+        expected_profile = {
+            "id": project_profile["profile_id"],
+            "version": project_profile["version"],
+            "sha256": project_profile["seal"]["digest"],
+        }
+        nodes = {node["node_id"]: node for node in facts["nodes"]}
+        profile_nodes = {node["node_id"]: node for node in project_profile["nodes"]}
+        if (
+            facts["plan_sha256"] != plan["seal"]["digest"]
+            or facts["profile"] != expected_profile
+            or list(nodes) != project_profile["start_order"]
+            or any(
+                nodes[node_id]["policy_sha256"] != sha256_json(profile_nodes[node_id])
+                for node_id in project_profile["start_order"]
+            )
+        ):
+            raise ValidationError(
+                ["runtime.bootstrap authority differs from the sealed Plan or ProjectProfile"]
+            )
+        browser = facts["browser_exercise"]
+        browser_artifacts = [
+            artifact
+            for artifact in imported
+            if artifact.document["evidence_type"] == "browser.session"
+        ]
+        if browser["completed"] and (
+            len(browser_artifacts) != 1
+            or browser["evidence_sha256"] != browser_artifacts[0].sha256
+        ):
+            raise ValidationError(
+                ["runtime.bootstrap browser reference does not match the generated Evidence"]
+            )
     attachment_paths = [
         attachment.path for artifact in imported for attachment in artifact.attachments
     ]
@@ -218,6 +271,8 @@ def create_bundle(
     stage = Path(tempfile.mkdtemp(prefix=".veritrail-", dir=output.parent))
     try:
         _write_json(stage / "sealed-plan.json", plan)
+        if project_profile is not None:
+            _write_json(stage / "sealed-profile.json", project_profile)
         _, evidence_entries = _artifact_manifest(stage, imported, duplicates, run_id)
         result = evaluate(plan, imported, execution_status)
         primary_variable = next(item for item in plan["variables"] if item["role"] == "PRIMARY")
