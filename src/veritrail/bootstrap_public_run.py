@@ -21,7 +21,7 @@ SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 class BootstrapPublicRunResult:
     report: dict[str, Any]
     preflight: ImportedEvidence
-    observed: BootstrapObservedRunResult
+    observed: BootstrapObservedRunResult | None
     preview_sha256: str
 
 
@@ -40,7 +40,7 @@ def run_bootstrap_bundle(
     ),
     observed_runner: Callable[..., BootstrapObservedRunResult] = run_observed_bootstrap,
 ) -> BootstrapPublicRunResult:
-    """Create one immutable Plan 0.6 Bundle after an approved PROCEED preflight."""
+    """Create one immutable Plan 0.6 Bundle after an approved live preflight."""
 
     verify_sealed_project_profile(profile)
     verify_sealed_plan(plan, profile)
@@ -75,8 +75,20 @@ def run_bootstrap_bundle(
     )
     decision = preflight.document["facts"]["decision"]
     if decision != "PROCEED":
-        raise SafetyError(
-            "M10 public Run does not yet emit a preflight-stopped Plan 0.6 Bundle"
+        report = create_bundle(
+            plan=plan,
+            project_profile=profile,
+            evidence_paths=[],
+            output=output,
+            run_id=run_id,
+            execution_status="ABORTED",
+            generated_evidence=[preflight],
+        )
+        return BootstrapPublicRunResult(
+            report=report,
+            preflight=preflight,
+            observed=None,
+            preview_sha256=preview_sha256,
         )
 
     observed = observed_runner(

@@ -35,8 +35,9 @@ M10 有界完整项目自举当前为 `IMPLEMENTING`，M11–M14 为 `PLANNED`�
 脱敏生命周期/流快照，teardown 后复核并释放，同时生成 subject 前后指纹和四方资源分账；成功、
 subject 漂移不回滚、staging 失败仍逆序清理已有 Windows helper 自动化。公共 Plan 0.6 `run` 已在
 Preview 精确审批和预检 `PROCEED` 后完成真实 Browser 正/负、确定性裁决、不可变 Bundle 与 Catalog
-验真：正向为 `COMPLETED/PASS`，选择器业务失败为 `COMPLETED/FAIL`；摘要不一致和预检停止均在进程
-创建前拒绝。预检停止 Bundle 语义、完整退出矩阵、Workbench 读回和第二类项目仍未完成。组件与
+验真：正向为 `COMPLETED/PASS`，选择器业务失败为 `COMPLETED/FAIL`；预检
+`STOP_ESCALATION/ABORT` 在零被测进程下生成仅含 preflight 的 `ABORTED/PENDING` Bundle，摘要不一致
+仍在进程创建前拒绝且不生成 Run。完整退出矩阵、Workbench 读回和第二类项目仍未完成。组件与
 消费者自动化不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准。

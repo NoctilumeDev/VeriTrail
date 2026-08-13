@@ -12,6 +12,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 from veritrail.bootstrap_preview import build_bootstrap_preview
+from veritrail.bootstrap_public_run import run_bootstrap_bundle
 from veritrail.catalog import validate_bundle
 from veritrail.cli import main
 from veritrail.plan import seal_plan
@@ -199,9 +200,10 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual("", stderr)
             self.assertEqual(0, code)
             self.assertEqual("PROCEED", payload["resource_decision"])
+            self.assertTrue(payload["bootstrap_started"])
             self.assertTrue(payload["services_ready"])
-            self.assertTrue(payload["browser_completed"])
-            self.assertTrue(payload["browser_capture_complete"])
+            self.assertTrue(payload["browser_completed"], payload)
+            self.assertTrue(payload["browser_capture_complete"], payload)
             self.assertTrue(payload["cleanup_complete"])
             self.assertEqual("NONE", payload["stop_reason"])
             self.assertEqual("COMPLETED", payload["execution_status"])
@@ -284,7 +286,7 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
-    def test_preflight_stop_is_explicitly_rejected_before_process_start(self) -> None:
+    def test_preflight_stop_creates_pending_bundle_without_starting_processes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subject, plan_path, profile_path, bindings, _, ports = self._fixture(root)
@@ -312,12 +314,112 @@ class BootstrapRunCliTests(unittest.TestCase):
                 run_id="m10-public-preflight-stop",
             )
 
-            self.assertEqual({}, payload)
-            self.assertEqual(2, code)
-            self.assertIn("does not yet emit a preflight-stopped Plan 0.6 Bundle", stderr)
-            self.assertFalse(output.exists())
+            self.assertEqual("", stderr)
+            self.assertEqual(0, code)
+            self.assertEqual("STOP_ESCALATION", payload["resource_decision"])
+            self.assertFalse(payload["bootstrap_started"])
+            self.assertIsNone(payload["services_ready"])
+            self.assertIsNone(payload["browser_started"])
+            self.assertIsNone(payload["browser_completed"])
+            self.assertIsNone(payload["browser_capture_complete"])
+            self.assertIsNone(payload["stop_reason"])
+            self.assertIsNone(payload["cleanup_complete"])
+            self.assertEqual("ABORTED", payload["execution_status"])
+            self.assertEqual("PENDING", payload["verdict"])
+            report = json.loads((output / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual(
+                ["browser.session", "runtime.bootstrap"], report["missing_evidence"]
+            )
+            self.assertEqual(
+                ["runtime.preflight"],
+                [item["evidence_type"] for item in report["evidence"]],
+            )
+            self.assertFalse((output / "attachments").exists())
+            validated = validate_bundle(output, root)
+            self.assertEqual("ABORTED", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_preflight_abort_creates_pending_bundle_without_starting_processes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, _, ports = self._fixture(root)
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            plan.pop("seal")
+            plan["preflight"]["available_memory_soft_min_mb"] = 1_000_000
+            plan["preflight"]["available_memory_hard_min_mb"] = 1_000_000
+            plan = seal_plan(plan, profile)
+            plan_path.write_text(json.dumps(plan), encoding="utf-8")
+            preview = build_bootstrap_preview(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+            )
+            output = root / "bundle-preflight-abort"
+
+            code, payload, stderr = self._run(
+                subject=subject,
+                plan=plan_path,
+                profile=profile_path,
+                bindings=bindings,
+                approval=preview["preview_sha256"],
+                output=output,
+                run_id="m10-public-preflight-abort",
+            )
+
+            self.assertEqual("", stderr)
+            self.assertEqual(0, code)
+            self.assertEqual("ABORT", payload["resource_decision"])
+            self.assertFalse(payload["bootstrap_started"])
+            self.assertEqual("ABORTED", payload["execution_status"])
+            self.assertEqual("PENDING", payload["verdict"])
+            report = json.loads((output / "report.json").read_text(encoding="utf-8"))
+            self.assertEqual([], report["contamination"])
+            self.assertEqual(
+                ["runtime.preflight"],
+                [item["evidence_type"] for item in report["evidence"]],
+            )
+            validated = validate_bundle(output, root)
+            self.assertEqual("ABORTED", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_stopped_preflight_never_calls_observed_runner(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, _, _ = self._fixture(root)
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            plan.pop("seal")
+            plan["preflight"]["available_memory_soft_min_mb"] = 1_000_000
+            plan = seal_plan(plan, profile)
+            preview = build_bootstrap_preview(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+            )
+
+            def fail_if_called(*_args, **_kwargs):
+                self.fail("preflight-stopped run invoked the observed bootstrap runner")
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=root / "stopped-direct",
+                run_id="m10-stopped-direct",
+                observed_runner=fail_if_called,
+            )
+            self.assertIsNone(result.observed)
+            self.assertEqual("ABORTED", result.report["execution_status"])
+            self.assertEqual("PENDING", result.report["verdict"])
 
     def test_invalid_run_id_is_rejected_before_live_resolution(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

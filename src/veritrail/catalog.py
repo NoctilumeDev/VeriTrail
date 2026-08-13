@@ -15,11 +15,12 @@ from typing import Any, Iterable
 
 from veritrail import __version__
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
-from veritrail.evidence import validate_evidence
+from veritrail.evidence import ImportedEvidence, validate_evidence
 from veritrail.errors import VeriTrailError
 from veritrail.jsonio import load_json_object
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
+from veritrail.verdict import evaluate
 
 CATALOG_SCHEMA_VERSION = "0.1"
 CATALOG_API_VERSION = "0.1"
@@ -454,11 +455,64 @@ def _validate_sealed_authorities(
     if profile is None:
         return None
 
+    preflight_entries = [
+        item
+        for item in evidence["artifacts"]
+        if item.get("evidence_type") == "runtime.preflight"
+    ]
+    if len(preflight_entries) != 1:
+        raise _CandidateRejected("PREFLIGHT_EVIDENCE_CARDINALITY")
+    try:
+        preflight = load_json_object(
+            physical_files[preflight_entries[0]["path"]], label="Preflight Evidence"
+        )
+        validate_evidence(preflight, preflight_entries[0]["path"])
+    except Exception as exc:
+        raise _CandidateRejected("INVALID_EVIDENCE_DOCUMENT") from exc
+
     bootstrap_entries = [
         item
         for item in evidence["artifacts"]
         if item.get("evidence_type") == "runtime.bootstrap"
     ]
+    browser_entries = [
+        item for item in evidence["artifacts"] if item.get("evidence_type") == "browser.session"
+    ]
+    if preflight["facts"]["decision"] != "PROCEED":
+        if report.get("execution_status") != "ABORTED":
+            raise _CandidateRejected("PREFLIGHT_STATUS_CONFLICT")
+        if bootstrap_entries:
+            raise _CandidateRejected("BOOTSTRAP_EVIDENCE_CARDINALITY")
+        if browser_entries:
+            raise _CandidateRejected("BROWSER_EVIDENCE_CARDINALITY")
+        if any(
+            item.get("evidence_type") != "runtime.preflight"
+            for item in evidence["artifacts"]
+        ):
+            raise _CandidateRejected("PREFLIGHT_EVIDENCE_APPLICABILITY")
+        preflight_artifact = ImportedEvidence(
+            document=preflight,
+            sha256=preflight_entries[0]["sha256"],
+            size=preflight_entries[0]["size"],
+            redacted_fields=preflight_entries[0]["redacted_fields"],
+            input_name=preflight_entries[0]["path"],
+        )
+        expected_result = evaluate(plan, [preflight_artifact], "ABORTED")
+        if any(
+            canonical_json_bytes(report.get(field))
+            != canonical_json_bytes(expected_result[field])
+            for field in (
+                "execution_status",
+                "verdict",
+                "reasons",
+                "assertions",
+                "missing_evidence",
+                "contamination",
+            )
+        ):
+            raise _CandidateRejected("PREFLIGHT_REPORT_DERIVATION_MISMATCH")
+        return profile["seal"]["digest"]
+
     if len(bootstrap_entries) != 1:
         raise _CandidateRejected("BOOTSTRAP_EVIDENCE_CARDINALITY")
     try:
@@ -494,14 +548,13 @@ def _validate_sealed_authorities(
     ):
         raise _CandidateRejected("BOOTSTRAP_AUTHORITY_MISMATCH")
     browser = facts["browser_exercise"]
-    browser_entries = [
-        item for item in evidence["artifacts"] if item.get("evidence_type") == "browser.session"
-    ]
     if browser["completed"] and (
         len(browser_entries) != 1
         or browser["evidence_sha256"] != browser_entries[0].get("sha256")
     ):
         raise _CandidateRejected("BOOTSTRAP_BROWSER_REFERENCE_MISMATCH")
+    if not browser["completed"] and browser_entries:
+        raise _CandidateRejected("BROWSER_EVIDENCE_CARDINALITY")
     return profile["seal"]["digest"]
 
 

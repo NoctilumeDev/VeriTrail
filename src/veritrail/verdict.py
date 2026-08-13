@@ -193,14 +193,36 @@ def _detect_preflight_contamination(
                     "message": "The observed preflight policy differs from the sealed preflight policy.",
                 }
             )
-        if facts["decision"] == "ABORT" and execution_status != "ABORTED":
+        stopped_plan_06 = (
+            plan.get("schema_version") == "0.6" and facts["decision"] != "PROCEED"
+        )
+        if (facts["decision"] == "ABORT" or stopped_plan_06) and execution_status != "ABORTED":
             contamination.append(
                 {
                     "code": "PREFLIGHT_STATUS_CONFLICT",
                     "evidence_sha256": artifact.sha256,
-                    "message": "Preflight decided ABORT but the Run execution status is not ABORTED.",
+                    "message": "The preflight decision requires ABORTED but the Run status differs.",
                 }
             )
+        if stopped_plan_06:
+            if any(
+                item.document["evidence_type"] == "runtime.bootstrap" for item in evidence
+            ):
+                contamination.append(
+                    {
+                        "code": "PREFLIGHT_BOOTSTRAP_CONFLICT",
+                        "evidence_sha256": artifact.sha256,
+                        "message": "A preflight-stopped Plan 0.6 Run cannot contain bootstrap Evidence.",
+                    }
+                )
+            if any(item.document["evidence_type"] == "browser.session" for item in evidence):
+                contamination.append(
+                    {
+                        "code": "PREFLIGHT_BROWSER_CONFLICT",
+                        "evidence_sha256": artifact.sha256,
+                        "message": "A preflight-stopped Plan 0.6 Run cannot contain browser Evidence.",
+                    }
+                )
     return contamination
 
 

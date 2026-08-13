@@ -56,8 +56,9 @@
   CDP 进程 handles 分账 Chromium RSS 并确认关闭，真实双视口正向与选择器失败负向均已自动化通过。
   公共 Plan 0.6 `run` 已接入 Preview 精确审批与预检 `PROCEED` 路径，真实正向形成
   `COMPLETED/PASS` Bundle、选择器业务失败形成无污染的 `COMPLETED/FAIL` Bundle，并通过 Catalog
-  验真与端口/staging 清理；审批不一致和预检停止均在零进程创建下拒绝。预检停止后的 Bundle
-  语义、完整退出矩阵、公共 Workbench 读回与真实项目证明仍未完成。首片只允许 Windows 11、
+  验真与端口/staging 清理；预检 `STOP_ESCALATION/ABORT` 已在零进程创建下生成仅含 preflight 的
+  `ABORTED/PENDING` Bundle，审批不一致仍拒绝且不生成 Run。完整退出矩阵、公共 Workbench 读回与
+  真实项目证明仍未完成。首片只允许 Windows 11、
   `C1 PROCESS_COLD`、一个 Run-owned 本地
   dependency、一个 application、`HTTP_GET_LOOPBACK_OWNED_PID` readiness、现有 Browser Adapter
   exercise 与逆序 Job 清理；C0 接管、C2/C3、Docker、跨平台、包管理器、真实项目和优雅停机均

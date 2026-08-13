@@ -5,7 +5,7 @@
 > Plan v1 原始前置基线：M0–M8 均为 `FROZEN`，当时最新标签为 `m8-v0.9.0`
 > 当前实施基线：M9 已以 `m9-v0.10.0` @ `3181d69` 冻结
 > 冻结引用：`post-m8-plan-v1`
-> 当前实施门禁：M10 Contract 0.2 已冻结，公共 Run 的 `PROCEED` 正/负 Bundle 路径已实现；预检停止 Bundle、完整退出矩阵与 Workbench 读回仍按层门禁推进
+> 当前实施门禁：M10 Contract 0.2 已冻结，公共 Run 的 `PROCEED` 正/负与预检停止 Bundle 路径已实现；完整退出矩阵与 Workbench 读回仍按层门禁推进
 
 ## 0. 当前执行进度（冻结后注记）
 
@@ -26,7 +26,8 @@ readiness、双节点串行启动和 best-effort 逆序清理组件，以及严�
 封存 Plan/Profile 的 Bundle、Catalog/Comparison 身份复核和 Pairing/Batch 显式拒绝；Run-owned
 work/staging、pre-teardown 脱敏封存、subject 指纹与资源分账也已有 observed-run。真实 Browser 已接入
 公共 Plan 0.6 `run` 的批准且预检 `PROCEED` 路径，正向与业务失败负向均生成可被 Catalog 验真的
-不可变 Bundle，并完成逆序清理。预检停止 Bundle、其余退出矩阵和 Workbench 读回仍未完成；
+不可变 Bundle，并完成逆序清理。`STOP_ESCALATION/ABORT` 已在零被测进程下生成仅含 preflight 的
+`ABORTED/PENDING` Bundle；其余退出矩阵和 Workbench 读回仍未完成；
 M11–M14 仍不得进入实现。
 
 ## 1. 产品判断

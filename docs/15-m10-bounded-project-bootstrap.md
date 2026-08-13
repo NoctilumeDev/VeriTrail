@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共 Run 的 `PROCEED` 正/负 Bundle 与 Catalog 验真已实现；预检停止 Bundle、完整退出矩阵、Workbench 读回与第二类项目仍未实现
+> 实施门禁：公共 Run 的 `PROCEED` 正/负与预检停止 Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回与第二类项目仍未实现
 
 ## 1. M10 只回答一个问题
 
@@ -172,7 +172,10 @@ bootstrap_profile/load_model/change_scope/reproduction_steps/cleanup_steps`，�
 Profile 内容。它继续拥有问题、基线、唯一主要变量、资源停止线、浏览器步骤、断言、必需证据、
 复现与清理语义，并要求：
 
-- `runtime.preflight`、`runtime.bootstrap` 与 `browser.session` 各恰好一份；
+- `required_evidence` 中 `runtime.preflight`、`runtime.bootstrap` 与 `browser.session` 各恰好声明一份；
+- 每次 Run 必须恰有一份 `runtime.preflight`；只有决策为 `PROCEED` 时才适用且必须恰有一份
+  `runtime.bootstrap`，只有 bootstrap 明确完成 browser exercise 时才适用且必须恰有一份
+  `browser.session`；
 - 至少一个 HARD/DEGRADATION 断言消费 `runtime.bootstrap`；
 - browser URL 的 origin 必须等于 Profile 的应用 origin；
 - Profile 与 Plan 都必须在首次运行前封存；任何语义变化生成新版本；
@@ -231,8 +234,23 @@ run --plan <sealed> --profile <sealed> --subject-root <root> --tool-bindings <lo
 
 Plan 0.6 Run 的不可变 Bundle 必须同时包含 `sealed-plan.json` 与 `sealed-profile.json`，Manifest 对二者
 逐字节记录大小和 SHA-256。Bundle validator 必须验证 Profile 自身 seal、Plan 的
-`bootstrap_profile` 引用、两份封存文件和 `runtime.bootstrap` 中 Profile 身份四方一致；缺少 Profile
-或只校验 Plan 单文件时，Bundle 无效。ToolBindings 和其本机值永不进入 Bundle。
+`bootstrap_profile` 引用和两份封存文件；进入 bootstrap 后，还必须验证 `runtime.bootstrap` 中 Profile
+身份四方一致。缺少 Profile 或只校验 Plan 单文件时，Bundle 无效。ToolBindings 和其本机值永不进入
+Bundle。
+
+证据基数按本次运行阶段而不是按 Plan 的完整成功目标机械解释：
+
+| preflight decision | ExecutionStatus | `runtime.preflight` | `runtime.bootstrap` | `browser.session` |
+| --- | --- | --- | --- | --- |
+| `STOP_ESCALATION` / `ABORT` | 必须 `ABORTED` | 恰好 1 | 必须 0 | 必须 0 |
+| `PROCEED`，browser 未完成 | 由 bootstrap stop 决定 | 恰好 1 | 恰好 1 | 必须 0 |
+| `PROCEED`，browser 已完成 | 由 bootstrap stop 决定 | 恰好 1 | 恰好 1 | 恰好 1，且 SHA 被 bootstrap 引用 |
+
+预检停止 Bundle 仍封存 Plan/Profile 和 preflight 事实；缺失的 bootstrap/browser 保持
+`NOT_EVALUATED`，不得生成 `services_ready=false` 的伪生命周期 Evidence。Report、Bundle validator、
+Catalog 与 Verdict 必须对同一矩阵作独立核验。没有独立 HARD 失败或污染时 Verdict 为 `PENDING`；
+preflight 自身已经证明的 HARD 失败或变量/政策污染仍按冻结规则保留为 `FAIL/INCONCLUSIVE`，Catalog
+必须从 sealed Plan 和唯一 preflight 重新裁决并核对 Report，不能硬编码 Verdict。
 
 Comparison 只有在两个来源 Bundle 都完成上述验证、Plan SHA 与 Profile SHA 均相同后才可消费
 Plan 0.6。Pairing 与 Batch 在出现各自的显式兼容合同前必须拒绝 Plan 0.6。Catalog 只能索引已经
@@ -246,7 +264,8 @@ Plan 0.6。Pairing 与 Batch 在出现各自的显式兼容合同前必须拒绝
 | 本次批准的解析结果 | BootstrapPreview | run 只接受精确 digest，不静默重建为新批准 |
 | 节点进程生命周期 | 每节点独立 Windows Job | PID/端口/名称不单独建立所有权 |
 | listener 就绪观察 | IP Helper + Job + HTTP 探针 | 不成为安全隔离或 TOCTOU 证明 |
-| 运行观察与清理事实 | `runtime.bootstrap` | Report/Catalog/Workbench 不改写 |
+| 预检资源快照与停止决策 | `runtime.preflight` | 停止后不得伪造 bootstrap/browser 事实 |
+| 已进入 bootstrap 后的运行观察与清理事实 | `runtime.bootstrap` | Report/Catalog/Workbench 不改写 |
 | ExecutionStatus/Verdict | 既有 Core | M10 内部阶段不得增加公共枚举 |
 | 不可变交付事实 | Bundle + Manifest | SQLite Catalog 仍可删除重建 |
 
@@ -408,6 +427,12 @@ Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中�
 拒绝：没有进程创建，也不得伪造 Run、ExecutionStatus、Verdict 或 `runtime.bootstrap`。批准后才出现
 的漂移必须进入不可覆盖的运行事实。
 
+Preview 获得批准且 live preflight 已形成后，`STOP_ESCALATION` 与 `ABORT` 不再属于“没有 Run”的
+拒绝：它们必须生成只含唯一 preflight Evidence 的不可变 Bundle，ExecutionStatus 固定为 `ABORTED`；
+没有独立 HARD 失败或污染时 Verdict 为 `PENDING`，否则保留 preflight 已证明的确定性裁决；
+bootstrap 未开始，所以所有 bootstrap 生命周期摘要在 CLI 中为不适用值，不能用 `false` 冒充已观察
+失败。Plan 中完整成功目标所列的 bootstrap/browser Evidence 继续显示为 missing/NOT_EVALUATED。
+
 `stop.reason` 只允许以下固定值：`NONE`、`RESOURCE_PREFLIGHT`、`PORT_CONFLICT`、
 `UNSUPPORTED_COLD_STATE`、`EXECUTABLE_DRIFT`、`SUBJECT_DRIFT`、`READINESS_TIMEOUT`、
 `LISTENER_OWNERSHIP_MISMATCH`、`NODE_EARLY_EXIT`、`USER_CANCELLED`、`LIFECYCLE_TIMEOUT`、
@@ -471,13 +496,15 @@ Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中�
 3. dependency 提前退出，application 从未创建，已创建资源仍清理；
 4. application readiness 超时，dependency 与 application 均逆序清理；
 5. browser exercise 失败，两个服务仍逆序清理并形成负向证据；
-6. 用户在 application READY 后中止，形成 `ABORTED/PENDING` 与完整清理；
-7. dependency 或 application 端口被外部进程占用：不创建/不接管/不终止外部进程；
-8. listener owner 与 Job 不匹配：不得误判 READY，不误杀外部进程；
-9. subject 最终状态漂移：不回滚，Verdict 为 `INCONCLUSIVE`；
-10. cleanup 注入失败：继续 best-effort 回收，状态不得伪装为 clean；
-11. Evidence staging 注入失败：仍执行逆序清理并由验收器保留失败事实；
-12. Catalog 接纳最终 Bundle，现有 Workbench 通用账册读回 `runtime.bootstrap`。
+6. preflight `STOP_ESCALATION` 与硬 `ABORT` 各形成仅含 preflight 的 `ABORTED/PENDING` Bundle，
+   bootstrap/browser Evidence、被测进程与附件均为零；
+7. 用户在 application READY 后中止，形成 `ABORTED/PENDING` 与完整清理；
+8. dependency 或 application 端口被外部进程占用：不创建/不接管/不终止外部进程；
+9. listener owner 与 Job 不匹配：不得误判 READY，不误杀外部进程；
+10. subject 最终状态漂移：不回滚，Verdict 为 `INCONCLUSIVE`；
+11. cleanup 注入失败：继续 best-effort 回收，状态不得伪装为 clean；
+12. Evidence staging 注入失败：仍执行逆序清理并由验收器保留失败事实；
+13. Catalog 接纳最终 Bundle，现有 Workbench 通用账册读回适用 Evidence。
 
 ### 15.3 浏览器、资源、安全与清理终验
 
@@ -524,7 +551,7 @@ Evidence 不保存 PID 的长期身份主张；PID 只在同一运行内存中�
 | plan sealer/validator | 识别 Plan 0.6 并绑定 Profile SHA；旧 Plan 0.1–0.5 行为不变 |
 | `bootstrap-preview` | 只读解析 sealed Plan/Profile/ToolBindings，生成 Preview，不启动进程 |
 | `run` | Plan 0.6 必须提供 Profile、ToolBindings 与精确 approval digest；旧版本不要求新参数 |
-| evidence/verdict | 严格校验唯一 `runtime.bootstrap` 与政策哈希；不改写公共状态枚举 |
+| evidence/verdict | 严格校验阶段适用性、唯一证据与政策哈希；不改写公共状态枚举 |
 | report/manifest | Bundle 必须携带并哈希 `sealed-profile.json`；Report 只透传身份与新 Evidence |
 | Bundle validator | 验证 Profile seal、Plan ref、Bundle 文件与 Evidence 四方一致；缺失 Profile 拒绝 |
 | Catalog | 只接纳通过上述 Bundle 验真的 Plan 0.6 Run；SQLite 仍是可重建派生索引 |
@@ -569,20 +596,34 @@ error 则归为 `COLLECTOR_ERROR`，不得伪装成业务失败。真实 Windows
 负向，两条链路都在 `EXERCISED -> EVIDENCE_FINALIZED -> application teardown -> dependency teardown`
 顺序下完成且 owned staging 残留为零。
 
-公共 Plan 0.6 `run` 的首个纵向切片现已实现：加载并复核 sealed Plan/Profile，在启动前重建 live
-BootstrapPreview 并匹配精确审批摘要，采集 preflight；仅当决策为 `PROCEED` 时才调用 observed-run，
-随后把唯一 `runtime.preflight`、`runtime.bootstrap`、被 bootstrap 精确引用的 `browser.session`、
-固定附件与两份封存权威原子写入新 Bundle。真实双视口正向形成 `COMPLETED/PASS`，缺失选择器形成
+公共 Plan 0.6 `run` 的纵向切片现已实现：加载并复核 sealed Plan/Profile，在启动前重建 live
+BootstrapPreview 并匹配精确审批摘要，采集 preflight；仅当决策为 `PROCEED` 时才调用 observed-run。
+PROCEED 路径把唯一 `runtime.preflight`、`runtime.bootstrap`、被 bootstrap 精确引用的
+`browser.session`、固定附件与两份封存权威原子写入新 Bundle。真实双视口正向形成
+`COMPLETED/PASS`，缺失选择器形成
 `BROWSER_HARD_FAILURE / COMPLETED/FAIL`；后者只有在唯一 bootstrap 明确引用该 browser Evidence 时，
 才不会被旧通用规则误判为 `BROWSER_STATUS_CONFLICT`。两类 Bundle 均通过 Catalog validator，端口和
-owned staging 均释放。Preview 摘要不一致、预检 `STOP_ESCALATION` 均在创建被测进程前拒绝且不生成
-Bundle。
+owned staging 均释放。
 
-当前刻意不为预检停止伪造 `runtime.bootstrap`：Plan 0.6 又要求该 Evidence 唯一存在，若写入
-`services_ready=false` 会让硬断言产生假的业务 `FAIL`；若省略则与当前 Bundle cardinality 冲突。
-这项适用性/基数语义必须在下一切片先上浮合同并加负向矩阵，再决定 `ABORTED/PENDING` 的公共表示。
-完整退出矩阵、公共 Workbench 读回、第二类真实项目和 M10 最终浏览器/远端冻结门禁仍未完成，不得
+证据适用性切片现已把 Plan 的完整成功目标与单次 Run 的实际阶段分开：`STOP_ESCALATION` 和硬
+`ABORT` 都在创建被测进程前形成 `ABORTED/PENDING` Bundle，只含唯一 `runtime.preflight` 与两份
+sealed authority；`runtime.bootstrap`、`browser.session` 和附件均为零，相关硬断言保持
+`NOT_EVALUATED`。Bundle writer、Verdict 和 Catalog 分别拒绝停止后夹带生命周期 Evidence、错误状态、
+错误 Verdict 与 browser 基数；Plan 0.1–0.5 的既有停止语义不变。Preview 摘要不一致仍属于零 Run、
+零 Bundle 的 pre-run 拒绝。完整退出矩阵、公共 Workbench 读回、第二类真实项目和 M10 最终浏览器/
+远端冻结门禁仍未完成，不得
 据此标记 M10 `FROZEN`。
+
+本切片双运行时回归时，现有 `.venv313` 首次直接收集因工作副本未安装为可导入包而产生 34 个
+`ModuleNotFoundError`；该轮没有进入产品测试或创建被测进程。保持 venv 与系统环境不变、仅为该命令
+临时设置 `PYTHONPATH=src` 后，同一 Python 3.13.13 与 Python 3.10.6 均通过 202 项完整测试。这个入口
+失败作为测试脚手架事实保留，不能误写成产品用例失败，也不能从最终记录中抹去。
+
+最终代码回归中，Python 3.13 首轮曾有 1/202 的正向公共 Run 仅观察到
+`browser_completed=false`；该轮退出后端口、项目进程和 staging 均为零。相同用例单独复现及连续三次
+串行重复均通过，随后完整 202 项复跑也通过，因此当前只记录为尚未稳定复现的浏览器/时序偶发，
+不据此修改裁决合同，也不把后续绿色结果写成它从未发生。M10 仍须由剩余退出矩阵和最终验收决定是否
+冻结。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

@@ -568,10 +568,10 @@ def main(argv: list[str] | None = None) -> int:
                     )
                     return 1
                 observed = bootstrap_result.observed
-                lifecycle = observed.lifecycle
+                lifecycle = observed.lifecycle if observed is not None else None
                 browser_facts = (
                     observed.browser.document["facts"]
-                    if observed.browser is not None
+                    if observed is not None and observed.browser is not None
                     else None
                 )
                 report = bootstrap_result.report
@@ -587,16 +587,27 @@ def main(argv: list[str] | None = None) -> int:
                         "bootstrap_preview_sha256": (
                             bootstrap_result.preview_sha256
                         ),
-                        "services_ready": lifecycle.services_ready,
-                        "browser_started": lifecycle.ready_callback_started,
-                        "browser_completed": lifecycle.ready_callback_completed,
+                        "bootstrap_started": observed is not None,
+                        "services_ready": (
+                            lifecycle.services_ready if lifecycle is not None else None
+                        ),
+                        "browser_started": (
+                            lifecycle.ready_callback_started if lifecycle is not None else None
+                        ),
+                        "browser_completed": (
+                            lifecycle.ready_callback_completed if lifecycle is not None else None
+                        ),
                         "browser_capture_complete": (
                             browser_facts["capture_complete"]
                             if browser_facts is not None
                             else None
                         ),
-                        "stop_reason": lifecycle.stop_reason,
-                        "cleanup_complete": lifecycle.cleanup_complete,
+                        "stop_reason": (
+                            lifecycle.stop_reason if lifecycle is not None else None
+                        ),
+                        "cleanup_complete": (
+                            lifecycle.cleanup_complete if lifecycle is not None else None
+                        ),
                         "execution_status": report["execution_status"],
                         "verdict": report["verdict"],
                     }

@@ -28,6 +28,7 @@ from veritrail.errors import ValidationError
 from veritrail.pairing import PairingError, _load_source as load_pairing_source
 from veritrail.plan import seal_plan
 from veritrail.reporting import create_bundle
+from veritrail.resources import collect_preflight_evidence
 from veritrail.verdict import evaluate
 from veritrail.windows_job import CapturedStream
 from veritrail.windows_readiness import OwnedReadinessObservation, ReadinessAttempt
@@ -205,6 +206,14 @@ def _observations() -> tuple[dict, dict]:
     )
 
 
+def _preflight(plan: dict, root: Path, decision: str = "PROCEED"):
+    document = collect_preflight_evidence(plan, root)
+    facts = document["facts"]
+    facts["decision"] = decision
+    facts["decision_reasons"] = []
+    return import_evidence_document(document, f"preflight-{decision.lower()}.json")
+
+
 def _write_json(path: Path, value: dict, *, newline: bool) -> None:
     content = canonical_json_bytes(value) + (b"\n" if newline else b"")
     path.write_bytes(content)
@@ -324,6 +333,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
         self.assertEqual("COMPLETED", bootstrap.execution_status)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            preflight = _preflight(plan, root)
             first = root / "first"
             second = root / "second"
             for output, run_id in ((first, "m10-source-a"), (second, "m10-source-b")):
@@ -334,7 +344,7 @@ class BootstrapEvidenceTests(unittest.TestCase):
                     output=output,
                     run_id=run_id,
                     execution_status=bootstrap.execution_status,
-                    generated_evidence=[bootstrap.bootstrap],
+                    generated_evidence=[preflight, bootstrap.bootstrap],
                 )
                 validated = validate_bundle(output, root)
                 self.assertEqual(profile["seal"]["digest"], validated.profile_sha256)
@@ -401,6 +411,165 @@ class BootstrapEvidenceTests(unittest.TestCase):
             with self.assertRaises(_CandidateRejected) as drift:
                 validate_bundle(authority_drift, root)
             self.assertEqual("BOOTSTRAP_AUTHORITY_MISMATCH", drift.exception.code)
+
+            stopped_with_bootstrap = root / "stopped-with-bootstrap-copy"
+            shutil.copytree(first, stopped_with_bootstrap)
+            evidence_manifest_path = stopped_with_bootstrap / "evidence-manifest.json"
+            evidence_manifest = json.loads(evidence_manifest_path.read_text(encoding="utf-8"))
+            preflight_entry = next(
+                item
+                for item in evidence_manifest["artifacts"]
+                if item["evidence_type"] == "runtime.preflight"
+            )
+            preflight_path = stopped_with_bootstrap / Path(*preflight_entry["path"].split("/"))
+            preflight_document = json.loads(preflight_path.read_text(encoding="utf-8"))
+            preflight_document["facts"]["decision"] = "STOP_ESCALATION"
+            preflight_document["facts"]["decision_reasons"] = []
+            _write_json(preflight_path, preflight_document, newline=False)
+            preflight_content = preflight_path.read_bytes()
+            preflight_entry["sha256"] = hashlib.sha256(preflight_content).hexdigest()
+            preflight_entry["size"] = len(preflight_content)
+            _write_json(evidence_manifest_path, evidence_manifest, newline=True)
+            report_path = stopped_with_bootstrap / "report.json"
+            stopped_report = json.loads(report_path.read_text(encoding="utf-8"))
+            stopped_report["execution_status"] = "ABORTED"
+            stopped_report["verdict"] = "PENDING"
+            stopped_report["evidence"] = copy.deepcopy(evidence_manifest["artifacts"])
+            _write_json(report_path, stopped_report, newline=True)
+            _refresh_bundle_entries(
+                stopped_with_bootstrap,
+                [preflight_entry["path"], "evidence-manifest.json", "report.json"],
+            )
+            with self.assertRaises(_CandidateRejected) as stopped_extra:
+                validate_bundle(stopped_with_bootstrap, root)
+            self.assertEqual(
+                "BOOTSTRAP_EVIDENCE_CARDINALITY", stopped_extra.exception.code
+            )
+
+    def test_preflight_stopped_bundle_applies_only_preflight_evidence(self) -> None:
+        plan, profile, preview = _authorities()
+        resource, subject = _observations()
+        bootstrap = collect_bootstrap_evidence(
+            plan,
+            profile,
+            preview,
+            _lifecycle(early_exit=True),
+            browser_exercise={"started": False, "completed": False, "evidence_sha256": None},
+            resource_observation=resource,
+            subject_observation=subject,
+            run_work_released=True,
+            staging_released=True,
+            captured_at="2026-08-13T00:00:00Z",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            stopped = _preflight(plan, root, "STOP_ESCALATION")
+            output = root / "stopped"
+            report = create_bundle(
+                plan=plan,
+                project_profile=profile,
+                evidence_paths=[],
+                output=output,
+                run_id="m10-stopped",
+                execution_status="ABORTED",
+                generated_evidence=[stopped],
+            )
+            self.assertEqual("PENDING", report["verdict"])
+            self.assertEqual([], report["contamination"])
+            self.assertEqual(
+                ["browser.session", "runtime.bootstrap"], report["missing_evidence"]
+            )
+            contaminated = evaluate(
+                plan,
+                [stopped, bootstrap.bootstrap, _browser_artifact(plan)],
+                "ABORTED",
+            )
+            self.assertNotEqual("PASS", contaminated["verdict"])
+            self.assertTrue(
+                {"PREFLIGHT_BOOTSTRAP_CONFLICT", "PREFLIGHT_BROWSER_CONFLICT"}
+                <= {item["code"] for item in contaminated["contamination"]}
+            )
+            validated = validate_bundle(output, root)
+            self.assertEqual("ABORTED", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
+
+            with self.assertRaisesRegex(ValidationError, "must use execution_status ABORTED"):
+                create_bundle(
+                    plan=plan,
+                    project_profile=profile,
+                    evidence_paths=[],
+                    output=root / "wrong-status",
+                    run_id="m10-wrong-status",
+                    execution_status="COMPLETED",
+                    generated_evidence=[stopped],
+                )
+            with self.assertRaisesRegex(ValidationError, "must not contain runtime.bootstrap"):
+                create_bundle(
+                    plan=plan,
+                    project_profile=profile,
+                    evidence_paths=[],
+                    output=root / "extra-bootstrap",
+                    run_id="m10-extra-bootstrap",
+                    execution_status="ABORTED",
+                    generated_evidence=[stopped, bootstrap.bootstrap],
+                )
+            with self.assertRaisesRegex(ValidationError, "must not contain browser.session"):
+                create_bundle(
+                    plan=plan,
+                    project_profile=profile,
+                    evidence_paths=[],
+                    output=root / "extra-browser",
+                    run_id="m10-extra-browser",
+                    execution_status="ABORTED",
+                    generated_evidence=[stopped, _browser_artifact(plan)],
+                )
+
+            tampered = root / "tampered"
+            shutil.copytree(output, tampered)
+            report_path = tampered / "report.json"
+            tampered_report = json.loads(report_path.read_text(encoding="utf-8"))
+            tampered_report["verdict"] = "PASS"
+            _write_json(report_path, tampered_report, newline=True)
+            _refresh_bundle_entries(tampered, ["report.json"])
+            with self.assertRaises(_CandidateRejected) as rejected:
+                validate_bundle(tampered, root)
+            self.assertEqual(
+                "PREFLIGHT_REPORT_DERIVATION_MISMATCH", rejected.exception.code
+            )
+
+            status_tampered = root / "status-tampered"
+            shutil.copytree(output, status_tampered)
+            status_report_path = status_tampered / "report.json"
+            status_report = json.loads(status_report_path.read_text(encoding="utf-8"))
+            status_report["execution_status"] = "COMPLETED"
+            _write_json(status_report_path, status_report, newline=True)
+            _refresh_bundle_entries(status_tampered, ["report.json"])
+            with self.assertRaises(_CandidateRejected) as status_rejected:
+                validate_bundle(status_tampered, root)
+            self.assertEqual("PREFLIGHT_STATUS_CONFLICT", status_rejected.exception.code)
+
+            failed_preflight_document = copy.deepcopy(stopped.document)
+            failed_preflight_document["facts"]["decision"] = "ABORT"
+            failed_preflight_document["facts"]["snapshot_complete"] = False
+            failed_preflight_document["facts"]["collection_errors"] = [
+                {"collector": "resource_sample", "error_type": "OSError"}
+            ]
+            failed_preflight = import_evidence_document(
+                failed_preflight_document, "failed-preflight.json"
+            )
+            failed_output = root / "failed-preflight"
+            failed_report = create_bundle(
+                plan=plan,
+                project_profile=profile,
+                evidence_paths=[],
+                output=failed_output,
+                run_id="m10-failed-preflight",
+                execution_status="ABORTED",
+                generated_evidence=[failed_preflight],
+            )
+            self.assertEqual("FAIL", failed_report["verdict"])
+            failed_validated = validate_bundle(failed_output, root)
+            self.assertEqual("FAIL", failed_validated.verdict)
 
     def test_plan_06_bundle_requires_profile_and_legacy_bundle_rejects_one(self) -> None:
         plan, profile, _ = _authorities()
