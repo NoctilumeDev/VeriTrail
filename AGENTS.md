@@ -48,8 +48,12 @@
 - M10 独立 Contract 0.2 位于 `docs/15-m10-bounded-project-bootstrap.md`。冻结提交
   `008444319a4af54de3291fe5c0ab602001c30754` 已完成公共退出矩阵、M0–M10 地基与安全审查、严格
   串行、双 Python 228/228、Workbench 58/58、16 GB 有界压力、Codex 内置浏览器与零残留复验；
-  冻结读回时 GitHub `main` 和 `m10-v0.11.0^{}` 均指向该提交，状态为 `FROZEN`。M10 只证明 Windows
-  11、`C1 PROCESS_COLD`、一个 Run-owned dependency、一个 application、
+  冻结读回时 GitHub `main` 和 `m10-v0.11.0^{}` 均指向该提交。冻结后地基纠偏已在实现提交
+  `f4efdd25c50b19077c61994bce3e2aca5244d5ec` 完成双 Python 262/262、Workbench 59/59、公共出口、
+  16 GB 有界压力、生产浏览器与清理复验；首次补丁冻结读回时，GitHub `main` 与
+  `m10-v0.11.1^{}` 均指向该提交，当前 M10 地基状态为 `FROZEN`。`m10-v0.11.0` 和
+  `m10-v0.11.1` 均不得移动。M10 只证明 Windows 11、
+  `C1 PROCESS_COLD`、一个 Run-owned dependency、一个 application、
   `HTTP_GET_LOOPBACK_OWNED_PID` readiness、既有 Browser Adapter 与逆序 Job 清理；C0 接管、
   C2/C3、Docker、跨平台、包管理器、第二类真实项目、不可信代码隔离和优雅停机均未证明。M11–M14
   继续保持 `PLANNED`，不得把 M10 冻结解释为允许跳过后继合同。
