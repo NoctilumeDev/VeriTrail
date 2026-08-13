@@ -7,7 +7,7 @@
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共 Run 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回、地基审查与最终两轮仍未完成
+> 实施门禁：公共 Run 的 `PROCEED` 正/负、预检停止、dependency 提前退出、application readiness 超时与 user cancel Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回、地基审查与最终两轮仍未完成
 
 ## 1. M10 只回答一个问题
 
@@ -647,6 +647,13 @@ Python 3.13.13 严格串行回归，两套运行时均为 204/204 通过；本�
 回归后约定 M10 端口、owned staging 与 helper 进程残留均为零。该结果只证明当前两个公共退出路径及
 既有回归保持成立，不替代用户中止、端口竞争、owner mismatch、故障注入、Workbench、地基审查或
 最终内置浏览器验收。
+
+user cancel 公共切片随后把 cooperative cancellation 从 observed-run 贯通到 Bundle runner，并由 CLI
+在主线程把 Ctrl+C/Ctrl+Break 转为 cancel event；signal handler 在调用结束后恢复，信号处理期间不直接
+跳过 Evidence 或 teardown。真实 Windows 自动化把取消精确放在 application 连续 READY 后、Browser
+创建前，得到 `USER_CANCELLED / ABORTED/PENDING`、唯一 preflight/bootstrap、零 browser、四个有界流
+附件与 application→dependency 完整逆序清理，Catalog 验真且端口/staging 残留为零。Python 3.10.6
+与 Python 3.13.13 开发回归均为 206/206；这仍是开发期切片证据，不是计划 0.1 的最终串行轮。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

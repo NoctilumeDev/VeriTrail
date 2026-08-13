@@ -62,8 +62,10 @@ owned staging。预检 `STOP_ESCALATION/ABORT` 则在零被测进程下生成只
 Run。bootstrap 已开始后的两类公共负向也已实跑：dependency 提前退出形成
 `NODE_EARLY_EXIT / COMPLETED/FAIL`，application readiness 超时形成
 `READINESS_TIMEOUT / ABORTED/FAIL`；两者都只包含 preflight/bootstrap Evidence、明确不生成 browser
-Evidence，并由 Catalog 验真所有权清理事实。其余完整退出矩阵、公共 Workbench 读回和最终冻结门禁
-仍未完成；第二类真实项目、C2/C3、Docker 与跨平台不属于 M10 已证明范围。
+Evidence，并由 Catalog 验真所有权清理事实。application READY 后的 cooperative user cancel 也已接入
+公共 Bundle 与 CLI Ctrl+C/Ctrl+Break 桥接，形成 `USER_CANCELLED / ABORTED/PENDING`、零 browser Evidence
+和完整逆序清理。其余完整退出矩阵、公共 Workbench 读回和最终冻结门禁仍未完成；第二类真实项目、
+C2/C3、Docker 与跨平台不属于 M10 已证明范围。
 
 ## 为什么需要验迹
 
@@ -366,7 +368,9 @@ Preview 精确审批、`PROCEED` 预检、真实 Browser、确定性裁决和不
 bootstrap/browser 生命周期；审批不一致仍为零 Bundle 拒绝。dependency 提前退出与 application
 readiness 超时也已通过公共 `run` 形成严格的无 browser Bundle，分别裁决为
 `COMPLETED/FAIL` 与 `ABORTED/FAIL`，并完成 Catalog 与端口/staging 清理验证。其余退出矩阵、
-Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
+application READY 后 user cancel 现也形成 `USER_CANCELLED / ABORTED/PENDING`，CLI 会把
+Ctrl+C/Ctrl+Break 转为 cooperative cancel、等待证据封存和逆序清理，并恢复原 signal handler。其余
+退出矩阵、Workbench 读回和最终冻结门禁仍未完成，因此 M10 继续是
 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终

@@ -155,3 +155,12 @@ M12 之后进行的全项目终审。
 - README、验收文档、里程碑历史和 Contract 0.2 使用同一完成口径。
 
 M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实现，再回来补动态地基。
+
+## 8. 实施记录
+
+- 2026-08-13：计划 0.1 冻结并进入实施；同步纠正“第二类真实项目属于 M10 门禁”的旧进度口径，
+  该证明保持归属 M11；
+- 2026-08-13：阶段 A 第 6 项完成开发切片。application READY 后 cooperative user cancel 形成
+  `USER_CANCELLED / ABORTED/PENDING` 公共 Bundle，CLI Ctrl+C/Ctrl+Break 只请求取消并等待 Evidence/
+  逆序清理，Catalog、四流附件、端口与 staging 验真通过；双 Python 开发回归均为 206/206；
+- 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。

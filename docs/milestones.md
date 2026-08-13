@@ -46,7 +46,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M7 | 四角色三态、恢复基线、负对照、Catalog 隔离与浏览器验真 | 组合变量、统计显著性、任意配对或跨批次聚合 |
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
-| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、公共 `run` 的 `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle、Catalog 验真 | 完整退出矩阵、Workbench 读回、地基审查、最终两轮或里程碑冻结 |
+| M10（当前切片） | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、公共 `run` 的 `PROCEED` 正/负、预检停止、dependency 提前退出、application readiness 超时与 user cancel Bundle、Catalog 验真 | 完整退出矩阵、Workbench 读回、地基审查、最终两轮或里程碑冻结 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -121,7 +121,9 @@ Catalog 验真；`STOP_ESCALATION/ABORT` 零启动并形成仅含 preflight 的 
 Catalog 独立复核其证据适用性；审批摘要不一致仍零启动、零 Bundle。bootstrap 后的 dependency 提前
 退出和 application readiness 超时也已通过公共 `run`，分别形成
 `NODE_EARLY_EXIT / COMPLETED/FAIL` 与 `READINESS_TIMEOUT / ABORTED/FAIL`；两者均不生成 browser Evidence，
-保留四个有界流附件并通过 Catalog、端口与 staging 清理验证。其余退出矩阵、
+保留四个有界流附件并通过 Catalog、端口与 staging 清理验证。application READY 后 user cancel 也已
+接入公共 Bundle 和 CLI signal 桥接，形成 `USER_CANCELLED / ABORTED/PENDING`、零 browser Evidence 与
+完整逆序清理；Python 3.10/3.13 开发回归均为 206/206。其余退出矩阵、
 Workbench 读回、地基审查和最终两轮仍未实现；第二类真实项目属于 M11，不得把当前切片写成完整
 自举冻结事实。
 

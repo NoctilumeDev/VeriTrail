@@ -4,19 +4,23 @@ import io
 import json
 import os
 import shutil
+import signal
 import socket
 import sys
 import tempfile
+import threading
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 from veritrail.bootstrap_preview import build_bootstrap_preview
 from veritrail.bootstrap_public_run import run_bootstrap_bundle
+from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.catalog import validate_bundle
-from veritrail.cli import main
+from veritrail.cli import _bootstrap_interrupt_cancellation, main
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
+from veritrail.windows_readiness import probe_owned_http_readiness
 
 from tests.support import bootstrap_plan, bootstrap_profile
 
@@ -421,6 +425,103 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual("FAIL", validated.verdict)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_user_cancel_after_services_ready_creates_aborted_pending_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(root)
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            output = root / "bundle-user-cancelled"
+            cancellation = threading.Event()
+
+            def cancel_after_application_ready(session, readiness, **kwargs):
+                observation = probe_owned_http_readiness(
+                    session,
+                    readiness,
+                    **kwargs,
+                )
+                if session.node_id == "application" and observation.ready:
+                    cancellation.set()
+                return observation
+
+            def observed_runner(
+                observed_plan,
+                observed_profile,
+                resolved,
+                *,
+                output_parent,
+                cancel_event,
+            ):
+                self.assertIs(cancellation, cancel_event)
+                return run_observed_bootstrap(
+                    observed_plan,
+                    observed_profile,
+                    resolved,
+                    output_parent=output_parent,
+                    cancel_event=cancel_event,
+                    readiness_probe=cancel_after_application_ready,
+                )
+
+            result = run_bootstrap_bundle(
+                plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+                approved_preview_sha256=preview["preview_sha256"],
+                output=output,
+                run_id="m10-user-cancelled",
+                cancel_event=cancellation,
+                observed_runner=observed_runner,
+            )
+
+            self.assertIsNotNone(result.observed)
+            lifecycle = result.observed.lifecycle
+            self.assertTrue(lifecycle.services_ready)
+            self.assertFalse(lifecycle.ready_callback_started)
+            self.assertFalse(lifecycle.ready_callback_completed)
+            self.assertEqual("USER_CANCELLED", lifecycle.stop_reason)
+            self.assertEqual(
+                ("application", "dependency"), lifecycle.actual_teardown_order
+            )
+            self.assertTrue(lifecycle.cleanup_complete)
+            self.assertEqual("ABORTED", result.report["execution_status"])
+            self.assertEqual("PENDING", result.report["verdict"])
+            self.assertEqual([], result.report["contamination"])
+            self.assertEqual(["browser.session"], result.report["missing_evidence"])
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertTrue(bootstrap["services_ready"])
+            self.assertFalse(bootstrap["browser_exercise"]["started"])
+            self.assertFalse(bootstrap["browser_exercise"]["completed"])
+            self.assertEqual("USER_CANCELLED", bootstrap["stop"]["reason"])
+            self.assertEqual(
+                ["application", "dependency"],
+                bootstrap["teardown_order"]["completed"],
+            )
+            self.assertEqual(4, len(list((output / "attachments").rglob("*.*"))))
+            validated = validate_bundle(output, root)
+            self.assertEqual("ABORTED", validated.execution_status)
+            self.assertEqual("PENDING", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_bootstrap_interrupt_handler_requests_cancel_and_restores_handlers(self) -> None:
+        handled = [signal.SIGINT]
+        if hasattr(signal, "SIGBREAK"):
+            handled.append(signal.SIGBREAK)
+        previous = {item: signal.getsignal(item) for item in handled}
+
+        with _bootstrap_interrupt_cancellation() as cancellation:
+            self.assertFalse(cancellation.is_set())
+            handler = signal.getsignal(signal.SIGINT)
+            self.assertTrue(callable(handler))
+            handler(signal.SIGINT, None)
+            self.assertTrue(cancellation.is_set())
+
+        self.assertEqual(
+            previous,
+            {item: signal.getsignal(item) for item in handled},
+        )
 
     def test_preview_approval_mismatch_creates_no_bundle_or_process(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

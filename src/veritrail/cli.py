@@ -3,8 +3,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import signal
 import sys
+import threading
+from contextlib import contextmanager
 from pathlib import Path
+from types import FrameType
+from typing import Iterator
 
 from veritrail import __version__
 from veritrail.batching import (
@@ -44,6 +49,37 @@ from veritrail.project_profile import (
 )
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
+
+
+@contextmanager
+def _bootstrap_interrupt_cancellation() -> Iterator[threading.Event]:
+    """Translate console interrupts into cooperative M10 cancellation.
+
+    The first and subsequent signals only request cancellation so the lifecycle can
+    finalize evidence and clean owned resources. The caller's handlers are restored
+    before returning to the surrounding CLI.
+    """
+
+    cancellation = threading.Event()
+    if threading.current_thread() is not threading.main_thread():
+        yield cancellation
+        return
+
+    handled_signals = [signal.SIGINT]
+    if hasattr(signal, "SIGBREAK"):
+        handled_signals.append(signal.SIGBREAK)
+    previous = {item: signal.getsignal(item) for item in handled_signals}
+
+    def request_cancel(_signum: int, _frame: FrameType | None) -> None:
+        cancellation.set()
+
+    try:
+        for item in handled_signals:
+            signal.signal(item, request_cancel)
+        yield cancellation
+    finally:
+        for item, handler in previous.items():
+            signal.signal(item, handler)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -539,17 +575,19 @@ def main(argv: list[str] | None = None) -> int:
                 )
             if is_bootstrap_run:
                 try:
-                    bootstrap_result = run_bootstrap_bundle(
-                        plan,
-                        profile,
-                        subject_root=args.subject_root,
-                        tool_bindings_path=args.tool_bindings,
-                        approved_preview_sha256=(
-                            args.approve_bootstrap_preview_sha256
-                        ),
-                        output=args.output,
-                        run_id=args.run_id,
-                    )
+                    with _bootstrap_interrupt_cancellation() as cancellation:
+                        bootstrap_result = run_bootstrap_bundle(
+                            plan,
+                            profile,
+                            subject_root=args.subject_root,
+                            tool_bindings_path=args.tool_bindings,
+                            approved_preview_sha256=(
+                                args.approve_bootstrap_preview_sha256
+                            ),
+                            output=args.output,
+                            run_id=args.run_id,
+                            cancel_event=cancellation,
+                        )
                 except VeriTrailError:
                     raise
                 except Exception:

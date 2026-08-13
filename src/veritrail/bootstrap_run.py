@@ -556,8 +556,8 @@ def run_observed_bootstrap(
 ) -> BootstrapObservedRunResult:
     """Run the M10 lifecycle through owned staging and post-teardown observations.
 
-    This is an internal M10 slice. It intentionally does not expose the public CLI
-    `run` path; it reuses the frozen M2 Browser adapter with M10-only observation.
+    The public Bundle runner invokes this M10-only observation engine. It reuses the
+    frozen M2 Browser adapter without changing that adapter's public contract.
     """
 
     verify_sealed_project_profile(profile)

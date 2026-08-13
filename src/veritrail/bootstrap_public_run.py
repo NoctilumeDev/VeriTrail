@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -34,6 +35,7 @@ def run_bootstrap_bundle(
     approved_preview_sha256: str,
     output: Path,
     run_id: str,
+    cancel_event: threading.Event | None = None,
     resolver: Callable[..., ResolvedBootstrap] = resolve_bootstrap,
     preflight_collector: Callable[[dict[str, Any], Path], dict[str, Any]] = (
         collect_preflight_evidence
@@ -96,6 +98,7 @@ def run_bootstrap_bundle(
         profile,
         resolved,
         output_parent=output.parent,
+        cancel_event=cancel_event,
     )
     if observed.evidence is None:
         raise SafetyError(
