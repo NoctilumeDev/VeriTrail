@@ -549,8 +549,19 @@ owned readiness、依赖到应用的严格串行启动和应用到依赖的 best
 `sealed-plan.json` / `sealed-profile.json`；Catalog
 复核 Plan/Profile/Evidence 与 node policy，Comparison 同时消费 Plan/Profile SHA，Pairing/Batch 对
 Plan 0.6 返回稳定的不支持错误。缺失 Profile、重算 Manifest 后的 Evidence/Profile 身份漂移、附件
-缺失或额外项均有自动化负向。该事实仍未接入 Browser、Run-owned staging 前置封存或 CLI `run`，
-不得据此标记 M10 `FROZEN`。
+缺失或额外项均有自动化负向。
+
+当前 observed-run 切片进一步创建带随机所有权 marker 的单 Run 根目录，严格分离 work 与 staging；
+`EVIDENCE_FINALIZED` 回调把无 PID、无绝对路径、无环境值的生命周期事实和双节点有界脱敏流快照
+写成规范 JSON，写入后立即逐字节读回，teardown 完成后再次按大小与 SHA-256 复核，再以不跟随
+reparse point 的方式释放 owned work/staging/root。共享 subject observer 在运行与清理前后比较 sealed
+watch roots；资源 observer 低频采样 Core 与两个 owned Job 的 working set，并接纳 Browser adapter
+提供的独立峰值。真实 Windows helper 自动化已覆盖成功生成严格 Evidence、subject 漂移保留且不回滚，
+以及 staging 写入注入失败后两个 Job 仍逆序清理且 owned 目录残留为零。
+
+该切片使用受控 exercise 回调证明观察与封存接口，并不冒充现有 M2 Browser Adapter 已接入；CLI
+`run`、真实 `browser.session`、最终 Bundle 纵向链路和 M10 完整退出矩阵仍未完成，不得据此标记
+M10 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

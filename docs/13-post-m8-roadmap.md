@@ -23,8 +23,9 @@
 M9 已完成代码、自动化、真实命令、浏览器、物理键盘、资源、安全、清理和 GitHub/tag 读回。
 M10 已完成合同与设计验证，并实现 Profile/Plan/Preview、listener、逐节点长运行 Job、owned HTTP
 readiness、双节点串行启动和 best-effort 逆序清理组件，以及严格 `runtime.bootstrap` 四附件、同时
-封存 Plan/Profile 的 Bundle、Catalog/Comparison 身份复核和 Pairing/Batch 显式拒绝；Browser、
-Run-owned staging 与真实公共 Run 链路仍未完成。M11–M14 仍不得进入实现。
+封存 Plan/Profile 的 Bundle、Catalog/Comparison 身份复核和 Pairing/Batch 显式拒绝；Run-owned
+work/staging、pre-teardown 脱敏封存、subject 指纹与资源分账也已有内部 observed-run。真实 Browser
+与公共 Run 链路仍未完成。M11–M14 仍不得进入实现。
 
 ## 1. 产品判断
 

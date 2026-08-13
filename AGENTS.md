@@ -49,8 +49,10 @@
 - M10 独立 Contract 0.2 位于 `docs/15-m10-bounded-project-bootstrap.md`，当前状态为
   `CONTRACT_FROZEN / IMPLEMENTING`。当前实现已有 ProjectProfile 0.1、Plan 0.6 跨文档 seal、
   BootstrapPreview 0.1、只读 Windows IP Helper listener 表，以及 M10-only 的长运行 Job session、
-  owned HTTP readiness、双节点串行生命周期与 best-effort 逆序清理组件；尚未接入公共
-  `runtime.bootstrap`、Evidence、Bundle、Browser 或 `run`。首片只允许 Windows 11、
+  owned HTTP readiness、双节点串行生命周期与 best-effort 逆序清理组件；严格 `runtime.bootstrap`
+  四附件、Plan/Profile Bundle 消费，以及 Run-owned work/staging、pre-teardown 脱敏封存、subject
+  前后指纹和 Core/dependency/application/browser 资源分账切片也已接入。真实 Browser Adapter、公共
+  `run` 与完整 Bundle 纵向链路仍不存在。首片只允许 Windows 11、
   `C1 PROCESS_COLD`、一个 Run-owned 本地
   dependency、一个 application、`HTTP_GET_LOOPBACK_OWNED_PID` readiness、现有 Browser Adapter
   exercise 与逆序 Job 清理；C0 接管、C2/C3、Docker、跨平台、包管理器、真实项目和优雅停机均

@@ -31,7 +31,10 @@ M10 有界完整项目自举当前为 `IMPLEMENTING`，M11–M14 为 `PLANNED`�
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、
 四个流附件、Plan/Profile Bundle、Catalog/Comparison 权威复核和 Pairing/Batch 显式拒绝也已有
-自动化。公共 `run`、Run-owned staging 前置封存和真实浏览器链路尚未实现。组件与消费者自动化
+自动化。内部 observed-run 已真实创建并核验 Run-owned work/staging，在 teardown 前落盘并读回
+脱敏生命周期/流快照，teardown 后复核并释放，同时生成 subject 前后指纹和四方资源分账；成功、
+subject 漂移不回滚、staging 失败仍逆序清理已有 Windows helper 自动化。公共 `run` 和真实浏览器
+链路尚未实现。组件与消费者自动化
 不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准。

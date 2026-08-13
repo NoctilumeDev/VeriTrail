@@ -20,6 +20,7 @@ from veritrail.windows_service import (
     OwnedServiceStartObservation,
     OwnedServiceTeardownObservation,
 )
+from veritrail.windows_job import CapturedStream
 
 
 @dataclass(frozen=True)
@@ -82,6 +83,14 @@ class BootstrapPreTeardownObservation:
     ready_callback_started: bool
     ready_callback_completed: bool
     trigger_reason: str
+    streams: tuple["BootstrapPreTeardownStreams", ...]
+
+
+@dataclass(frozen=True)
+class BootstrapPreTeardownStreams:
+    node_id: str
+    stdout: CapturedStream | None
+    stderr: CapturedStream | None
 
 
 @dataclass
@@ -345,6 +354,25 @@ def run_bootstrap_lifecycle(
                 )
                 for node in mutable
             )
+            pre_teardown_streams: list[BootstrapPreTeardownStreams] = []
+            sessions_by_node = {node.spec.node_id: session for node, session in sessions}
+            for spec in specs:
+                session = sessions_by_node.get(spec.node_id)
+                stdout: CapturedStream | None = None
+                stderr: CapturedStream | None = None
+                if session is not None and hasattr(session, "snapshot_streams"):
+                    try:
+                        stdout, stderr = session.snapshot_streams()
+                    except Exception:
+                        stdout = None
+                        stderr = None
+                pre_teardown_streams.append(
+                    BootstrapPreTeardownStreams(
+                        node_id=spec.node_id,
+                        stdout=stdout,
+                        stderr=stderr,
+                    )
+                )
             try:
                 on_evidence_finalize(
                     BootstrapPreTeardownObservation(
@@ -357,6 +385,7 @@ def run_bootstrap_lifecycle(
                         ready_callback_started=callback_started,
                         ready_callback_completed=callback_completed,
                         trigger_reason=trigger_reason,
+                        streams=tuple(pre_teardown_streams),
                     )
                 )
             except Exception:

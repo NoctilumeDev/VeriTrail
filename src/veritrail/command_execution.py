@@ -120,8 +120,8 @@ def _hash_regular_file(path: Path, metadata: os.stat_result) -> str:
     return digest.hexdigest()
 
 
-def capture_subject_snapshot(
-    resolved: ResolvedCommand,
+def capture_subject_root_snapshot(
+    subject_root: Path,
     watch_roots: list[str],
     *,
     max_files: int,
@@ -132,9 +132,9 @@ def capture_subject_snapshot(
     link_count = 0
     for relative_root in watch_roots:
         root = (
-            resolved.subject_root
+            subject_root
             if relative_root == "."
-            else resolved.subject_root.joinpath(*relative_root.split("/"))
+            else subject_root.joinpath(*relative_root.split("/"))
         )
         stack = [root]
         while stack:
@@ -151,7 +151,7 @@ def capture_subject_snapshot(
                     metadata = os.lstat(path)
                 except OSError as exc:
                     raise ValidationError(["subject snapshot contains an unreadable node"]) from exc
-                relative = path.relative_to(resolved.subject_root).as_posix()
+                relative = path.relative_to(subject_root).as_posix()
                 is_link = child.is_symlink() or _is_reparse(metadata)
                 if is_link:
                     try:
@@ -195,6 +195,23 @@ def capture_subject_snapshot(
     )
 
 
+def capture_subject_snapshot(
+    resolved: ResolvedCommand,
+    watch_roots: list[str],
+    *,
+    max_files: int,
+    max_total_bytes: int,
+) -> SubjectSnapshot:
+    """Compatibility wrapper for the frozen M9 command observer."""
+
+    return capture_subject_root_snapshot(
+        resolved.subject_root,
+        watch_roots,
+        max_files=max_files,
+        max_total_bytes=max_total_bytes,
+    )
+
+
 def _snapshot_diff(
     before: SubjectSnapshot, after: SubjectSnapshot
 ) -> tuple[dict[str, int], bool]:
@@ -228,6 +245,14 @@ def _snapshot_diff(
         "link_changed": link_changed,
     }
     return counts, any(counts.values())
+
+
+def compare_subject_snapshots(
+    before: SubjectSnapshot, after: SubjectSnapshot
+) -> tuple[dict[str, int], bool]:
+    """Expose the shared, count-only subject comparison without path disclosure."""
+
+    return _snapshot_diff(before, after)
 
 
 def _redact_output_text(text: str, replacements: list[tuple[str, str]]) -> tuple[str, int, int]:

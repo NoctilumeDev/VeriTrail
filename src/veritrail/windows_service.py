@@ -429,6 +429,50 @@ class OwnedServiceSession:
             return frozenset()
         return _active_process_ids(self._backend, self._job)
 
+    def sample_rss_bytes(self) -> int:
+        """Return a race-checked working-set sample for this owned Job tree."""
+
+        if self._teardown is not None:
+            return 0
+        query_access = (
+            self._backend.win32con.PROCESS_QUERY_INFORMATION
+            | self._backend.win32con.PROCESS_VM_READ
+        )
+        for _ in range(2):
+            before = self.active_process_ids()
+            total = 0
+            failed = False
+            for process_id in before:
+                handle: Any | None = None
+                try:
+                    handle = self._backend.win32api.OpenProcess(
+                        query_access, False, process_id
+                    )
+                    information = self._backend.win32process.GetProcessMemoryInfo(handle)
+                    total += int(information["WorkingSetSize"])
+                except Exception:
+                    failed = True
+                finally:
+                    if handle is not None:
+                        try:
+                            self._backend.close_handle(handle)
+                        except Exception:
+                            failed = True
+            after = self.active_process_ids()
+            if before == after and not failed:
+                return total
+        raise SafetyError("M10 could not obtain a stable owned Job RSS sample")
+
+    def snapshot_streams(self) -> tuple[CapturedStream, CapturedStream]:
+        """Copy bounded stream facts before teardown without stopping readers."""
+
+        if self._teardown is not None:
+            return self._teardown.stdout, self._teardown.stderr
+        return (
+            self._stdout_state.result(thread_stopped=False),
+            self._stderr_state.result(thread_stopped=False),
+        )
+
     def root_exit_code(self) -> int | None:
         if self._teardown is not None:
             return None

@@ -62,25 +62,28 @@ class _CaptureState:
         self.complete = False
         self.overflowed = False
         self.error_type: str | None = None
+        self._lock = threading.Lock()
 
     def add(self, content: bytes) -> None:
-        self.observed += len(content)
-        remaining = max(0, self.limit - len(self.content))
-        if remaining:
-            self.content.extend(content[:remaining])
-        if self.observed > self.limit:
-            self.overflowed = True
-            self.overflow_event.set()
+        with self._lock:
+            self.observed += len(content)
+            remaining = max(0, self.limit - len(self.content))
+            if remaining:
+                self.content.extend(content[:remaining])
+            if self.observed > self.limit:
+                self.overflowed = True
+                self.overflow_event.set()
 
     def result(self, *, thread_stopped: bool) -> CapturedStream:
-        return CapturedStream(
-            content=bytes(self.content),
-            observed_bytes_lower_bound=self.observed,
-            stream_complete=self.complete,
-            overflowed=self.overflowed,
-            thread_stopped=thread_stopped,
-            error_type=self.error_type,
-        )
+        with self._lock:
+            return CapturedStream(
+                content=bytes(self.content),
+                observed_bytes_lower_bound=self.observed,
+                stream_complete=self.complete,
+                overflowed=self.overflowed,
+                thread_stopped=thread_stopped,
+                error_type=self.error_type,
+            )
 
 
 class _WindowsBackend:

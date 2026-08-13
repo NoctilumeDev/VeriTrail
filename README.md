@@ -49,8 +49,11 @@ ProjectProfile 0.1、Plan 0.6 跨文档 seal、BootstrapPreview 0.1、Windows IP
 组件；成功的 pre-teardown fact-finalization 门禁之后，生命周期观测可转换为严格
 `runtime.bootstrap`，固定生成四个脱敏流附件。Plan 0.6 Bundle
 会同时封存并哈希 Plan/Profile，Catalog 复核 Plan/Profile/Evidence 身份，Comparison 同时要求 Plan SHA
-与 Profile SHA，Pairing/Batch 则显式拒绝 0.6。公共 `run`、Run-owned staging 前置封存、真实 Browser
-exercise 和完整纵向验收仍未接入；C2/C3、Docker、跨平台和真实项目证明继续留给后继合同。
+与 Profile SHA，Pairing/Batch 则显式拒绝 0.6。当前内部 observed-run 切片还会创建并核验唯一
+Run-owned work/staging，把脱敏的 teardown 前生命周期与流快照规范化落盘、读回并在 teardown 后
+复核，同时比较 subject 前后指纹并分账 Core/dependency/application/browser 资源峰值。公共 `run`、
+真实 Browser Adapter exercise 和完整 Bundle 纵向验收仍未接入；C2/C3、Docker、跨平台和真实项目
+证明继续留给后继合同。
 
 ## 为什么需要验迹
 
@@ -342,8 +345,10 @@ exercise，最后按应用、依赖的逆序强制回收并证明无残留。当
 清理。该内存态组件本身不直接生成公共 Evidence；随后完成的证据切片已把该观测严格转换为
 `runtime.bootstrap`，并要求 pre-teardown facts 先经回调封存成功，固定校验
 两节点 stdout/stderr 四个附件，并让 Plan 0.6 Bundle、Catalog 与 Comparison 验证 sealed Profile；
-Pairing/Batch 对 0.6 明确拒绝。它仍未把 Run-owned staging、Browser exercise 与公共 `run` 串成真实
-纵向链路，因此 M10 继续是 `IMPLEMENTING`。详见
+Pairing/Batch 对 0.6 明确拒绝。当前还实现了带所有权 marker 的 Run work/staging、teardown 前脱敏
+事实与流快照封存/读回、teardown 后安全释放，以及 subject 前后指纹和四方资源分账；真实 Windows
+helper 已覆盖成功、subject 漂移不回滚和 staging 写入失败仍逆序清理。它仍未接入真实 Browser
+Adapter、公共 `run` 与最终 Bundle 纵向链路，因此 M10 继续是 `IMPLEMENTING`。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。
 
 ### 本地运行
@@ -374,8 +379,8 @@ py -3.10 -m venv .venv
 
 - **Python Core**：CLI、计划/证据、确定性裁决、启动前资源预检、有界浏览器采集、M4 离线
   Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 已进入合同层
-  实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence 与 Plan/Profile Bundle
-  验真；公共 Run、staging 前置封存与 Browser 纵向链路尚未接入。
+  实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence、Plan/Profile Bundle
+  验真、Run-owned staging、subject 指纹和资源分账；公共 Run 与真实 Browser 纵向链路尚未接入。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。
