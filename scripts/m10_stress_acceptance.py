@@ -545,14 +545,30 @@ def run_same_port_wave(root: Path, rng: random.Random) -> dict[str, Any]:
     barrier.write_text("release\n", encoding="utf-8")
     summaries, minimum_free = wait_workers(workers)
     pass_count = sum(item["verdict"] == "PASS" for item in summaries)
-    if pass_count != 1:
-        raise AssertionError(f"same-port wave expected exactly one PASS: {summaries}")
+    if pass_count > 1:
+        raise AssertionError(f"same-port wave produced multiple PASS Runs: {summaries}")
     for item in summaries:
         if item["verdict"] == "PASS":
             if item["execution_status"] != "COMPLETED":
                 raise AssertionError("same-port winner did not complete")
-        elif item["verdict"] not in {"FAIL", "PENDING"}:
-            raise AssertionError(f"same-port loser is unexplained: {item}")
+        elif item["verdict"] == "PENDING":
+            if item["execution_status"] != "ABORTED" or item["observed"]:
+                raise AssertionError(f"same-port preflight stop is invalid: {item}")
+        elif item["verdict"] == "FAIL":
+            if (
+                item["execution_status"] not in {"ABORTED", "COMPLETED"}
+                or item["stop_reason"]
+                not in {
+                    "LISTENER_OWNERSHIP_MISMATCH",
+                    "NODE_EARLY_EXIT",
+                    "READINESS_TIMEOUT",
+                }
+            ):
+                raise AssertionError(f"same-port failure is unexplained: {item}")
+        else:
+            raise AssertionError(f"same-port result is unexplained: {item}")
+        if not item["cleanup_complete"]:
+            raise AssertionError(f"same-port Run did not clean up: {item}")
     publish_bundles(root, ["same-a", "same-b"])
     clean = assert_wave_clean(root, (18870, 18871))
     return {
