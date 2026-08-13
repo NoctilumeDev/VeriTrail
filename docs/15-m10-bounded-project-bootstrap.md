@@ -1,13 +1,13 @@
 # M10 有界完整项目自举合同
 
-> 状态：`CONTRACT_FROZEN / IMPLEMENTING`
+> 状态：`CONTRACT_FROZEN / FEATURE_COMPLETE`
 > 合同版本：`M10 Bounded Project Bootstrap Contract 0.2`
 > 影响层级：`L3_SYSTEM`（项目 Profile、长运行进程、就绪状态机、所有权与逆序清理）
 > 前置基线：`m9-v0.10.0` @ `3181d69`
 > 首个证明范围：Windows 11 / `C1 PROCESS_COLD` / 宿主机本地可信进程 / 严格串行
 > 目标版本：Python Core `0.11.0.dev1`，Workbench `0.11.0-dev.1`
 > 目标冻结标签：`m10-v0.11.0`
-> 实施门禁：公共 Run 的 `PROCEED` 正/负、预检停止、dependency 提前退出、application readiness 超时与 user cancel Bundle、Catalog 验真已实现；完整退出矩阵、Workbench 读回、地基审查与最终两轮仍未完成
+> 实施门禁：公共退出矩阵、Catalog 隔离与 Workbench 通用账册读回已完成，状态为 `FEATURE_COMPLETE`；地基审查与最终两轮仍未开始
 
 ## 1. M10 只回答一个问题
 
@@ -625,8 +625,8 @@ owned staging 均释放。
 sealed authority；`runtime.bootstrap`、`browser.session` 和附件均为零，相关硬断言保持
 `NOT_EVALUATED`。Bundle writer、Verdict 和 Catalog 分别拒绝停止后夹带生命周期 Evidence、错误状态、
 错误 Verdict 与 browser 基数；Plan 0.1–0.5 的既有停止语义不变。Preview 摘要不一致仍属于零 Run、
-零 Bundle 的 pre-run 拒绝。完整退出矩阵、公共 Workbench 读回和 M10 最终浏览器/
-远端冻结门禁仍未完成，不得
+零 Bundle 的 pre-run 拒绝。这里记录的是当时的证据适用性切片；当前完整退出矩阵和公共 Workbench
+读回已在后续切片完成，但 M10 最终浏览器/远端冻结门禁仍未完成，不得
 据此标记 M10 `FROZEN`。
 
 bootstrap 启动后的首个公共退出矩阵切片现已覆盖 dependency 提前退出与 application readiness 超时。
@@ -710,6 +710,16 @@ Evidence staging 公共切片让 writer 写入部分内容后抛出异常，生�
 `EVIDENCE_ERROR`、公共 Bundle 为 `ERROR/PENDING`，因此绝不成为成功证据；Catalog 复算一致。附加反例
 证明普通 `EVIDENCE_FINALIZATION/FAILED` 不能生成 fallback，防止宽泛异常被包装成可信失败事实。
 Python 3.10.6 与 Python 3.13.13 开发回归均为 213/213。
+
+功能完成切片把所有既有公共出口的单包 `validate_bundle` 证据与一次组合 Catalog 门禁连接起来：真实
+`COMPLETED/PASS`、预检 `ABORTED/PENDING` 在同一只读 Catalog 中被接纳，篡改 Report 的副本以
+`BUNDLE_SIZE_MISMATCH` 单独隔离，不影响有效 Run。Workbench 继续只做通用消费者，不新增执行按钮或
+M10 裁决：生产构建由 Codex 内置浏览器从 Catalog 真实加载 `runtime.preflight`、
+`runtime.bootstrap`、`browser.session`，刷新后仍保持 Bundle 的 `COMPLETED/PASS` 与 14 个已核验文件；
+开发者日志无 error/warning，页面资源清单观察到 Catalog 与全部 15 个 Bundle 文件请求。Python
+3.10.6/3.13.13 开发回归均为 214/214，前端 55/55、lint、type-check 与 production build 通过；本地
+服务、端口、两个 Python 父子进程和验收临时目录随后清零。由此 M10 只升级为 `FEATURE_COMPLETE`，
+不得跳过地基审查、最终串行轮、16 GB 压力轮或发布门禁而标记 `FROZEN`。
 
 上述决策、字段表、所有权与负向矩阵已完成合同级复核，Contract 0.2 因而标记
 `CONTRACT_FROZEN`。定义、合同或临时探针都不能替代实现与真实运行；M10 只有全部退出门禁、清理

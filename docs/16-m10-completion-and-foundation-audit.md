@@ -1,6 +1,6 @@
 # M10 完成、地基审查与双轮冻结计划
 
-> 状态：`FROZEN_EXECUTION_PLAN / IMPLEMENTING`
+> 状态：`FROZEN_EXECUTION_PLAN / FEATURE_COMPLETE`
 > 计划版本：`M10 Completion and Foundation Audit Plan 0.1`
 > 影响层级：`L3_SYSTEM`
 > 依赖合同：[M10 Bounded Project Bootstrap Contract 0.2](15-m10-bounded-project-bootstrap.md)
@@ -187,4 +187,10 @@ M10 未冻结前，M11–M14 只能保持 `PLANNED`；不能先进入后继实�
   `EVIDENCE_STAGING_FAILED`，随后完整逆序清理；受限 fallback Evidence 形成
   `EVIDENCE_ERROR / ERROR/PENDING` 公共 Bundle 并由 Catalog 验真，未知 callback 错误反例被拒绝；
   双 Python 开发回归均为 213/213；
-- 阶段 A 仍未完成，当前不得进入地基审查、最终串行轮或压力轮。
+- 2026-08-13：阶段 A 第 12 项完成。真实 `COMPLETED/PASS` 与预检 `ABORTED/PENDING` M10 Bundle
+  在同一 Catalog 中被接纳，损坏副本以稳定问题码隔离；生产 Workbench 由 Codex 内置浏览器通过只读
+  API 读回 `runtime.bootstrap`，刷新后裁决与完整性不变，Console/Warning 为零且 Catalog/15 个 Bundle
+  文件请求均被观察。双 Python 开发回归为 214/214，前端 55/55、lint、type-check、build 与本地
+  服务/端口/进程/临时目录清理通过；
+- 阶段 A 全部完成，M10 当前为 `FEATURE_COMPLETE`。下一步只能进入阶段 B 地基系统/代码审查；阶段 B
+  阻断项清零前不得启动最终串行轮，第一轮通过前不得启动压力轮。

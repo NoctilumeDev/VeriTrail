@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../src/App.vue'
 import { CatalogLoadError, validateCatalog } from '../src/domain/catalog'
 import type { CatalogResponse } from '../src/domain/types'
-import { createMinimalBundle } from './support'
+import { createBootstrapBundle, createMinimalBundle } from './support'
 
 const catalogRunId = `cr_${'1'.repeat(24)}`
 
@@ -139,6 +139,34 @@ describe('Catalog API 0.1', () => {
     expect(document.activeElement?.getAttribute('data-catalog-run-id')).toBe(catalogRunId)
     wrapper.unmount()
     host.remove()
+  })
+
+  it('reads M10 runtime.bootstrap through the generic evidence ledger without re-adjudication', async () => {
+    bundle = await createBootstrapBundle()
+    const response = catalogResponse()
+    response.runs[0]!.run_id = 'm10-workbench-readback'
+    response.runs[0]!.plan = {
+      id: 'm10-workbench-plan',
+      version: 1,
+      sha256: 'a'.repeat(64),
+    }
+    installCatalogFetch(response)
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-catalog-run-id]')
+    await wrapper.get('[data-catalog-run-id]').trigger('click')
+    await waitFor(wrapper, '[data-testid="evidence-ledger"]')
+
+    expect(wrapper.get('[data-testid="run-summary"]').text()).toContain(
+      '本地目录 · m10-workbench-readback',
+    )
+    expect(wrapper.get('[data-testid="evidence-ledger"]').text()).toContain('runtime.bootstrap')
+    expect(wrapper.get('[data-testid="assertion-list"]').text()).toContain(
+      'bootstrap-cleanup-complete',
+    )
+    expect(wrapper.get('[data-testid="status-gate"]').text()).toContain('COMPLETED')
+    expect(wrapper.get('[data-testid="status-gate"]').text()).toContain('PASS')
+    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(false)
+    wrapper.unmount()
   })
 
   it('clears trusted details when a selected source Bundle changes', async () => {

@@ -73,6 +73,103 @@ export async function createMinimalBundle(
   ])
 }
 
+export async function createBootstrapBundle(): Promise<Map<string, Blob>> {
+  const runId = 'm10-workbench-readback'
+  const capturedAt = '2026-08-13T00:00:00Z'
+  const evidencePath = 'evidence/runtime.bootstrap.json'
+  const evidenceBlob = new Blob([
+    JSON.stringify({
+      schema_version: '0.1',
+      evidence_type: 'runtime.bootstrap',
+      source: 'veritrail.bootstrap/0.1',
+      captured_at: capturedAt,
+      facts: {
+        services_ready: true,
+        browser_exercise: { started: true, completed: true },
+        stop: { reason: 'NONE' },
+        cleanup_complete: true,
+      },
+      observed_variables: { actual_start_order: ['dependency', 'application'] },
+      metadata: { bounded_fixture: true },
+    }),
+  ])
+  const artifact = {
+    evidence_type: 'runtime.bootstrap',
+    path: evidencePath,
+    sha256: await sha256Hex(evidenceBlob),
+    size: evidenceBlob.size,
+    redacted: false,
+    redacted_fields: 0,
+    redaction_rule_version: 'redaction/0.1',
+    parser_version: 'runtime.bootstrap/0.1',
+    captured_at: capturedAt,
+    source: 'veritrail.bootstrap/0.1',
+    source_name: 'bounded bootstrap lifecycle',
+    retention: 'BUNDLE',
+    attachments: [],
+    summary: { stop_reason: 'NONE', cleanup_complete: true },
+  }
+  const reportBlob = new Blob([
+    JSON.stringify(
+      minimalReport({
+        run_id: runId,
+        created_at: capturedAt,
+        plan: { id: 'm10-workbench-plan', version: 1, sha256: 'a'.repeat(64) },
+        execution_status: 'COMPLETED',
+        verdict: 'PASS',
+        reasons: [{ code: 'ALL_HARD_ASSERTIONS_PASSED', message: 'Sealed M10 fixture passed.' }],
+        evidence: [artifact],
+        assertions: [
+          {
+            id: 'bootstrap-cleanup-complete',
+            severity: 'HARD',
+            status: 'PASS',
+            expected: true,
+            actual: true,
+            evidence_type: 'runtime.bootstrap',
+          },
+        ],
+        baseline: { id: 'm10-bootstrap-baseline', status: 'VALID' },
+        primary_variable: { name: 'bootstrap_mode', role: 'PRIMARY', value: 'PROCESS_COLD' },
+      }),
+    ),
+  ])
+  const evidenceManifestBlob = new Blob([
+    JSON.stringify({
+      schema_version: '0.1',
+      run_id: runId,
+      artifacts: [artifact],
+      duplicate_inputs_ignored: [],
+    }),
+  ])
+  const files = [
+    {
+      path: evidencePath,
+      sha256: await sha256Hex(evidenceBlob),
+      size: evidenceBlob.size,
+    },
+    {
+      path: 'evidence-manifest.json',
+      sha256: await sha256Hex(evidenceManifestBlob),
+      size: evidenceManifestBlob.size,
+    },
+    {
+      path: 'report.json',
+      sha256: await sha256Hex(reportBlob),
+      size: reportBlob.size,
+    },
+  ]
+  const manifestBlob = new Blob([
+    JSON.stringify({ schema_version: '0.1', run_id: runId, files }),
+  ])
+  return new Map([
+    ['bundle-manifest.json', manifestBlob],
+    [evidencePath, evidenceBlob],
+    ['evidence-manifest.json', evidenceManifestBlob],
+    ['report.json', reportBlob],
+  ])
+}
+
 export function installFetchForBundles(bundles: Record<string, Map<string, Blob>>) {
   return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url)

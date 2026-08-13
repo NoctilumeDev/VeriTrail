@@ -26,7 +26,7 @@ Object trusted process runner 与 `runtime.command` 已通过双 Python、Python
 Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
-M10 有界完整项目自举当前为 `IMPLEMENTING`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
+M10 有界完整项目自举当前为 `FEATURE_COMPLETE`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
 跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、
@@ -46,8 +46,8 @@ Catalog 验真通过。实时 Preview 通过后，dependency/application 端口�
 TOCTOU 场景也得到预检期 `ABORTED/PENDING`：runner 未启动，外部监听者未被接管或终止，Bundle 只含
 preflight 且 Catalog 验真通过。dependency/application 的公共 listener owner mismatch 也均拒绝 READY，
 外部进程按自身计划自然退出且未被 VeriTrail 终止，owned Job 随后逆序清理并形成
-`LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`；Catalog 接纳且无污染。完整退出矩阵、Workbench 读回和
-最终冻结门禁仍未完成。相同 sealed Plan/Profile 已连续完成两次 `COMPLETED/PASS` 公共 Run：权威与
+`LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL`；Catalog 接纳且无污染。相同 sealed Plan/Profile 已连续
+完成两次 `COMPLETED/PASS` 公共 Run：权威与
 Preview 一致，第一份 Bundle 未被覆盖，M6 Comparison 为 `MATCH`、0 差异且轮间无残留。第二类真实项目证明属于
 M11。subject watch root 漂移的公共链路会保留用户修改、不执行回滚，并以
 `BOOTSTRAP_SUBJECT_DRIFT` 把完整执行裁决为 `COMPLETED/INCONCLUSIVE`；该切片修复了 Evidence 已记录
@@ -55,8 +55,10 @@ M11。subject watch root 漂移的公共链路会保留用户修改、不执行�
 回收；公共 Bundle 形成 `CLEANUP_ERROR / ERROR/FAIL`，HARD cleanup 断言、污染检测与 Catalog 复算
 一致。staging writer 显式失败时，生命周期在 teardown 前记录 `EVIDENCE_STAGING_FAILED`，随后完成
 逆序清理并从内存中生成只能表达失败的 fallback `runtime.bootstrap`；公共 Bundle/Catalog 为
-`EVIDENCE_ERROR / ERROR/PENDING`，普通未知 callback 异常不能走该路径。组件与
-消费者自动化不构成里程碑冻结事实；
+`EVIDENCE_ERROR / ERROR/PENDING`，普通未知 callback 异常不能走该路径。真实正向与预检停止 Bundle
+已在同一 Catalog 中接纳，损坏副本被隔离；生产 Workbench 已由 Codex 内置浏览器经只读 API 读回
+`runtime.bootstrap`，刷新后保持既有裁决且 Console/Warning 为零。完整功能矩阵因而闭环；组件与
+消费者自动化以及本次开发期浏览器读回仍不构成里程碑冻结事实；
 M10 的完整退出矩阵以
 [独立 Contract 0.2](15-m10-bounded-project-bootstrap.md) 为准；功能完成后的地基系统/代码审查、第一轮
 严格串行终验和第二轮 16 GB 有界压力审计，按

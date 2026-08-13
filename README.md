@@ -20,7 +20,7 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 | M7 | 预注册四角色配对反事实分析 | `FROZEN` |
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
 | M9 | 受控项目命令执行 | `FROZEN` |
-| M10 | 有界完整项目自举 | `IMPLEMENTING` |
+| M10 | 有界完整项目自举 | `FEATURE_COMPLETE` |
 | M11 | 真实项目功能全链路 | `PLANNED` |
 | M12 | 故宫主题前端终稿 | `PLANNED` |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
@@ -28,8 +28,11 @@ VeriTrail（验迹）是一个面向独立开发者和小型工程团队的本�
 
 `FROZEN` 表示该里程碑已在自身边界内完成代码、自动化、适用的真实运行、浏览器、安全与清理
 验收，并以 Git 标签形成可寻址基线；它不等于整个 v0 已完成。计划编辑、任意或不可信项目命令、
-真实并行、M10 完整退出矩阵和第二项目证明仍未实现。提交链、保留的失败事实与逐里程碑边界见
+真实并行、第二项目证明和 M10 冻结前地基审查/双轮验收仍未完成。提交链、保留的失败事实与逐里程碑边界见
 [里程碑冻结历史](docs/milestones.md)。
+
+`FEATURE_COMPLETE` 只表示当前合同内的功能与公共出口已经实现，可进入冻结前地基审查；它不是最终
+验收或发布状态，也不授权提前实现后继里程碑。
 
 Post-M8 Plan v1 已冻结为**规划基线**；M9 已冻结，M10 Contract 0.2 已冻结，M11–M14
 仍为 `PLANNED`。M9 0.2 独立合同已在
@@ -68,16 +71,20 @@ Evidence，并由 Catalog 验真所有权清理事实。application READY 后的
 场景也已形成预检期 `ABORTED/PENDING` Bundle：受控 runner 从未启动，外部监听者未被接管或终止，
 Catalog 与 staging 隔离成立。公共 listener owner mismatch 也已覆盖两个节点：外部 listener 不属于
 当前 Job 时绝不判 READY，外部进程按自身计划自然退出，VeriTrail 只逆序回收 owned Job，形成
-`LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog/清理成立。其余完整退出矩阵、公共 Workbench
-读回和最终冻结门禁仍未完成。相同 sealed Plan/Profile 的连续两次公共正向 Run 也已实跑为
+`LISTENER_OWNERSHIP_MISMATCH / ABORTED/FAIL` 且 Catalog/清理成立。相同 sealed Plan/Profile 的连续
+两次公共正向 Run 也已实跑为
 `COMPLETED/PASS`，两份权威一致、首份 Bundle 未被覆盖，M6 Comparison 为 `MATCH` 且轮间无残留；
 subject watch root 最终漂移也已贯通公共链路：不回滚用户文件，完整执行保持 `COMPLETED`，但固定
 `BOOTSTRAP_SUBJECT_DRIFT` 阻止错误 PASS 并裁决为 `INCONCLUSIVE`。第二类真实项目、
 cleanup 注入失败也已形成公共 `CLEANUP_ERROR / ERROR/FAIL` Bundle：应用清理失败不阻断依赖的
 best-effort 回收，HARD cleanup 断言与 Catalog 均拒绝伪装 clean。staging 写入失败则以显式
 `EVIDENCE_STAGING_FAILED` 进入受限 fallback Evidence，在逆序清理后形成 `EVIDENCE_ERROR / ERROR/PENDING`
-公共 Bundle；未知 callback 错误不能使用该 fallback。C2/C3、Docker 与跨平台不属于
-M10 已证明范围。
+公共 Bundle；未知 callback 错误不能使用该 fallback。最后，真实 `COMPLETED/PASS` 与预检
+`ABORTED/PENDING` M10 Bundle 已在同一 Catalog 中被独立接纳，损坏副本被隔离；生产 Workbench 又由
+Codex 内置浏览器从只读 API 真实读回 `runtime.preflight`、`runtime.bootstrap` 与 `browser.session`，
+刷新后仍保持既有裁决，Console/Warning 为零。M10 因而进入 `FEATURE_COMPLETE`，但地基系统/代码审查、
+严格串行轮、16 GB 压力轮、最终发布门禁与标签均未完成，不得标记 `FROZEN`。C2/C3、Docker 与跨平台
+不属于 M10 已证明范围。
 
 ## 为什么需要验迹
 
@@ -359,7 +366,7 @@ stdin/TTY、npm/Maven 或 Docker。正向命令结束后继续 M5 的静态目�
 通过最多证明冻结合同对本次可信 Python module 与直接 Node script 成立；不证明文件系统/网络
 隔离、恶意代码 containment、通用包管理器、长运行服务、其他平台或完整自举。
 
-## M10 有界完整项目自举（IMPLEMENTING）
+## M10 有界完整项目自举（FEATURE_COMPLETE）
 
 M10 在 M9 的可信进程所有权基础上，只增加 Windows 11/C1 的长运行生命周期：按依赖顺序启动
 两个本地可信进程，以回环 HTTP 与 Job process list 共同证明就绪，由现有 Browser Adapter 完成
@@ -383,19 +390,18 @@ readiness 超时也已通过公共 `run` 形成严格的无 browser Bundle，分
 user cancel 也形成 `USER_CANCELLED / ABORTED/PENDING`，CLI 会把
 Ctrl+C/Ctrl+Break 转为 cooperative cancel、等待证据封存和逆序清理，并恢复原 signal handler。其余
 实时 Preview 通过后再由外部监听者抢占 dependency/application 端口的公共场景，均在 preflight
-安全停止为 `ABORTED/PENDING`，未启动受控 runner、未误杀外部监听者且 Catalog 可验真。其余退出矩阵、
-listener owner mismatch 已在 dependency/application 两个节点公共实跑，均拒绝 READY、不启动 Browser、
+安全停止为 `ABORTED/PENDING`，未启动受控 runner、未误杀外部监听者且 Catalog 可验真。listener owner
+mismatch 已在 dependency/application 两个节点公共实跑，均拒绝 READY、不启动 Browser、
 不终止外部进程，并在外部进程自然退出后完成 owned Job 逆序清理；封存 HARD readiness 断言使结果为
 `ABORTED/FAIL`。相同 sealed Plan/Profile 连续两次公共正向 Run 均为 `COMPLETED/PASS`，Comparison
-为 `MATCH`，首份 Bundle 未被第二轮修改且轮间端口/staging 为零。其余退出矩阵、Workbench 读回和
-subject drift 公共切片还发现并修复了“Evidence 已记录漂移但 Verdict 错误 PASS”的消费者缺口；
-现在用户文件保持变化、不自动回滚，结果为 `COMPLETED/INCONCLUSIVE` 且清理/Catalog 成立。其余退出
-cleanup 注入失败公共链路也会继续完成 application→dependency 两节点回收，并以
-`CLEANUP_ERROR / ERROR/FAIL` 保留失败节点，不把实际 best-effort 成功冒充观测 clean。其余退出矩阵、
-staging 写入失败也已从“清理后无 Bundle”提升为受限失败 Bundle：真实 Browser 事实保留、逆序清理
-完整，ExecutionStatus/Verdict 为 `ERROR/PENDING`，绝不支持 PASS。其余退出矩阵、Workbench 读回和
-最终冻结门禁仍未完成，因此 M10 继续是
-`IMPLEMENTING`。详见
+为 `MATCH`，首份 Bundle 未被第二轮修改且轮间端口/staging 为零。subject drift 公共切片还发现并
+修复了“Evidence 已记录漂移但 Verdict 错误 PASS”的消费者缺口；现在用户文件保持变化、不自动回滚，
+结果为 `COMPLETED/INCONCLUSIVE` 且清理/Catalog 成立。cleanup 注入失败公共链路继续完成
+application→dependency 两节点回收，并以 `CLEANUP_ERROR / ERROR/FAIL` 保留失败节点，不把实际
+best-effort 成功冒充观测 clean。staging 写入失败也已从“清理后无 Bundle”提升为受限失败 Bundle：
+真实 Browser 事实保留、逆序清理完整，ExecutionStatus/Verdict 为 `ERROR/PENDING`，绝不支持 PASS。
+Catalog 组合门禁与生产 Workbench 的内置浏览器通用账册读回已经完成，M10 当前为
+`FEATURE_COMPLETE`，但仍未通过地基审查、最终两轮与发布门禁。详见
 [M10 有界完整项目自举合同 0.2](docs/15-m10-bounded-project-bootstrap.md)。M10 只有在功能矩阵闭环后，
 才进入 M0–M10 地基系统/代码审查、严格串行完整复验和 16 GB 有界压力审计；开发期回归不冒充最终
 两轮，具体顺序见
@@ -431,8 +437,8 @@ py -3.10 -m venv .venv
   Catalog、固定回环只读 API、M8 全因子批次派生分析与 M9 可信一次性命令；M10 已进入合同层
   实现，并已有独立长运行 Job/readiness/逆序清理、严格 bootstrap Evidence、Plan/Profile Bundle
   验真、Run-owned staging、subject 指纹、资源分账和真实 Browser exercise；公共 Plan 0.6 `run` 的
-  `PROCEED` 正/负、预检停止、dependency 提前退出与 application readiness 超时 Bundle 路径也已
-  接入，完整退出矩阵仍待完成。
+  `PROCEED` 正/负、全部公共退出矩阵、Catalog 隔离与 Workbench 通用账册读回已经接入；冻结前地基
+  审查、最终两轮与发布门禁仍待完成。
 - **SQLite**：M4 已实现的可删除、可重建派生目录快照；更完整的本地元数据、运行关系和结论
   索引仍是后续目标。
 - **Artifact Store**：日志、HAR、截图、报告与哈希清单；默认不进入 Git。

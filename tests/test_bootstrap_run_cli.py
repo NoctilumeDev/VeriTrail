@@ -6,6 +6,7 @@ import os
 import shutil
 import signal
 import socket
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -18,7 +19,7 @@ from pathlib import Path
 from veritrail.bootstrap_preview import build_bootstrap_preview, resolve_bootstrap
 from veritrail.bootstrap_public_run import run_bootstrap_bundle
 from veritrail.bootstrap_run import run_observed_bootstrap
-from veritrail.catalog import validate_bundle
+from veritrail.catalog import build_catalog, validate_bundle
 from veritrail.cli import _bootstrap_interrupt_cancellation, main
 from veritrail.comparison import create_comparison_bundle
 from veritrail.plan import seal_plan
@@ -283,6 +284,90 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual("m10-public-pass", validated.run_id)
             self.assertEqual("PASS", validated.verdict)
             self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_catalog_accepts_public_m10_outcomes_and_isolates_a_corrupt_copy(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            fixture = base / "fixture"
+            fixture.mkdir()
+            artifacts = base / "artifacts"
+            artifacts.mkdir()
+            subject, plan_path, profile_path, bindings, preview, ports = self._fixture(
+                fixture
+            )
+
+            pass_output = artifacts / "pass"
+            code, payload, stderr = self._run(
+                subject=subject,
+                plan=plan_path,
+                profile=profile_path,
+                bindings=bindings,
+                approval=preview["preview_sha256"],
+                output=pass_output,
+                run_id="m10-catalog-pass",
+            )
+            self.assertEqual((0, "", "PASS"), (code, stderr, payload["verdict"]))
+
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+            stopped_plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            stopped_plan.pop("seal")
+            stopped_plan["preflight"]["available_memory_soft_min_mb"] = 1_000_000
+            stopped_plan = seal_plan(stopped_plan, profile)
+            stopped_plan_path = fixture / "sealed-plan-stopped.json"
+            stopped_plan_path.write_text(json.dumps(stopped_plan), encoding="utf-8")
+            stopped_preview = build_bootstrap_preview(
+                stopped_plan,
+                profile,
+                subject_root=subject,
+                tool_bindings_path=bindings,
+            )
+            stopped_output = artifacts / "stopped"
+            code, payload, stderr = self._run(
+                subject=subject,
+                plan=stopped_plan_path,
+                profile=profile_path,
+                bindings=bindings,
+                approval=stopped_preview["preview_sha256"],
+                output=stopped_output,
+                run_id="m10-catalog-stopped",
+            )
+            self.assertEqual(
+                (0, "", "ABORTED", "PENDING"),
+                (code, stderr, payload["execution_status"], payload["verdict"]),
+            )
+
+            corrupt_output = artifacts / "corrupt-copy"
+            shutil.copytree(pass_output, corrupt_output)
+            report_path = corrupt_output / "report.json"
+            report_path.write_bytes(report_path.read_bytes() + b" ")
+
+            catalog_output = base / "catalog"
+            catalog = build_catalog(artifacts, catalog_output)
+            self.assertEqual("COMPLETED_WITH_ISSUES", catalog.status)
+            self.assertEqual(2, catalog.run_count)
+            self.assertEqual(1, catalog.issue_count)
+            connection = sqlite3.connect(catalog_output / "catalog.sqlite3")
+            try:
+                runs = connection.execute(
+                    "SELECT run_id, execution_status, verdict "
+                    "FROM catalog_runs ORDER BY run_id"
+                ).fetchall()
+                issues = connection.execute(
+                    "SELECT code FROM catalog_issues ORDER BY issue_id"
+                ).fetchall()
+            finally:
+                connection.close()
+            self.assertEqual(
+                [
+                    ("m10-catalog-pass", "COMPLETED", "PASS"),
+                    ("m10-catalog-stopped", "ABORTED", "PENDING"),
+                ],
+                runs,
+            )
+            self.assertEqual([("BUNDLE_SIZE_MISMATCH",)], issues)
+            self.assertEqual([], list(base.glob(".veritrail-catalog-*")))
+            self.assertEqual([], list(fixture.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
     def test_same_sealed_authorities_repeat_without_residual_contamination(self) -> None:

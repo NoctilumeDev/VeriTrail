@@ -5,7 +5,7 @@
 > Plan v1 原始前置基线：M0–M8 均为 `FROZEN`，当时最新标签为 `m8-v0.9.0`
 > 当前实施基线：M9 已以 `m9-v0.10.0` @ `3181d69` 冻结
 > 冻结引用：`post-m8-plan-v1`
-> 当前实施门禁：M10 Contract 0.2 已冻结，公共 Run 的 `PROCEED` 正/负与预检停止 Bundle 路径已实现；完整退出矩阵与 Workbench 读回仍按层门禁推进
+> 当前实施门禁：M10 Contract 0.2 与功能矩阵已完成；当前进入 M0–M10 地基审查，最终串行轮与压力轮尚未开始
 
 ## 0. 当前执行进度（冻结后注记）
 
@@ -14,7 +14,7 @@
 | Milestone | Capability | Current status | Current ref |
 | --- | --- | --- | --- |
 | M9 | 受控项目命令执行 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
-| M10 | 有界完整项目自举 | `IMPLEMENTING` | [Contract 0.2](15-m10-bounded-project-bootstrap.md) |
+| M10 | 有界完整项目自举 | `FEATURE_COMPLETE` | [Contract 0.2](15-m10-bounded-project-bootstrap.md) |
 | M11 | 真实项目功能全链路 | `PLANNED` | 本文第 7 节 |
 | M12 | 故宫主题前端终稿 | `PLANNED` | 本文第 8 节 |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | 本文第 9 节 |
@@ -27,8 +27,8 @@ readiness、双节点串行启动和 best-effort 逆序清理组件，以及严�
 work/staging、pre-teardown 脱敏封存、subject 指纹与资源分账也已有 observed-run。真实 Browser 已接入
 公共 Plan 0.6 `run` 的批准且预检 `PROCEED` 路径，正向与业务失败负向均生成可被 Catalog 验真的
 不可变 Bundle，并完成逆序清理。`STOP_ESCALATION/ABORT` 已在零被测进程下生成仅含 preflight 的
-`ABORTED/PENDING` Bundle；其余退出矩阵和 Workbench 读回仍未完成；
-M11–M14 仍不得进入实现。
+`ABORTED/PENDING` Bundle；其余公共退出、失败封存、Catalog 隔离和 Workbench 通用账册读回也已完成。
+M10 当前只允许进入地基审查，M11–M14 仍不得进入实现。
 
 ## 1. 产品判断
 
