@@ -26,14 +26,15 @@ Object trusted process runner 与 `runtime.command` 已通过双 Python、Python
 Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
-M10 有界完整项目自举已 `FROZEN`，M11 为 `FREEZE_CANDIDATE`，M12–M14 为 `PLANNED`。M11 Contract 0.3 已冻结
+M10 有界完整项目自举与 M11 真实项目功能全链路均已 `FROZEN`，M12–M14 为 `PLANNED`。M11 Contract 0.3 已冻结
 `OPTION_B`、InkNarratives 精确 ref 和 Gate A -> Gate B 严格串行，并纠正 Plan/Profile 一对一绑定；
 Profile 0.2、Plan 0.7、单节点生命周期和 collector 0.3 已通过 Gate A 的双 Python、真实 Chromium、
 13 个预注册出口、Catalog/Comparison、资源、安全、清理与 Workbench 消费验证；真实项目 Gate B
 Plan v1 首个 Run 已按 `COMPLETED/FAIL` 保留，Contract 0.4 的 Plan v2 随后严格串行取得
 `PASS / FAIL / PENDING / PASS`，正向恢复 Comparison 为 `MATCH`、0 differences。生产 Workbench、内置
-浏览器物理键盘、双 Python 277/277、优化模式验收门禁与零残留也已形成事实；最终版本、前端和发布
-门禁关闭前仍不能标记冻结。准确矩阵与事实见文档 23、25、26、27。ProjectProfile 0.1、Plan 0.6
+浏览器物理键盘、双 Python 277/277、优化模式验收门禁与零残留也已形成事实；冻结提交 `b13e2fb`
+已推送；冻结读回时远端 `main` 与 `m11-v0.12.0^{}` 均精确指向该提交。准确矩阵与事实见文档
+23、25、26、27。ProjectProfile 0.1、Plan 0.6
 跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、

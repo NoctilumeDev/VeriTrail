@@ -1,6 +1,6 @@
 # M11 单节点能力与真实项目全链路合同 0.4
 
-> 状态：`GATE_A_VALIDATED / GATE_B_PLAN_V1_FAILED / GATE_B_V2_VALIDATED / FREEZE_CANDIDATE`
+> 状态：`GATE_A_VALIDATED / GATE_B_PLAN_V1_FAILED / GATE_B_V2_VALIDATED / FROZEN`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`
 > 前置基线：`m10-v0.11.1` @ `f4efdd25c50b19077c61994bce3e2aca5244d5ec`
@@ -38,7 +38,8 @@ InkNarratives。不能通过给目标添加假依赖、统一入口、发布目�
 Contract 0.3 的 Gate A 已以 Profile 0.2、Plan 0.7、单节点生命周期、13 个公共出口、
 Catalog/Comparison、资源、安全和零残留事实关闭，详见文档 25。Gate B v1 首个 Run 的失败不证明
 真实项目能力；v2 随后按预注册顺序完成四个 Run、Comparison、Catalog/Workbench、内置浏览器、
-双 Python 与清理门禁，详见文档 27。最终发布门禁关闭前 M11 仍为 `FREEZE_CANDIDATE`，不得进入 M12。
+双 Python 与清理门禁，详见文档 27。冻结提交与远端标签读回完成后，M11 已标记 `FROZEN`；M12 仍为
+`PLANNED`。
 
 ## 2. 两道门必须严格串行
 
@@ -436,9 +437,10 @@ owned process、Job、Chromium、staging、run-work、Workbench/Catalog 服务�
 - [x] Gate B Plan v2 使用新版本、新 seal 与新 Run ID，在任何 v2 Run 前公开预注册。
 - [x] Gate B v2 四 Run、恢复 Comparison、Catalog/Workbench、物理键盘与目标 owned 清理均形成事实。
 - [x] 双 Python 277/277、优化模式 Workbench 验收与系统/代码质量审查已通过。
+- [x] 候选提交 `b13e2fb` 已推送；冻结读回时远端 `main` 与 `m11-v0.12.0^{}` 均精确指向该提交。
 
-以上条目说明合同、Gate A/B 和冻结候选事实已经关闭；最终版本、前端、依赖、安全、残留与远端标签
-门禁完成前仍只能显示 `FREEZE_CANDIDATE`，不能提前写 `FROZEN`。
+以上条目说明合同、Gate A/B、最终版本、前端、依赖、安全、残留与远端标签门禁均已关闭，M11
+在本合同边界内标记 `FROZEN`。
 
 M11 只有在 Gate A 和 Gate B 均完成代码事实、自动化、真实 Chromium、Codex 内置浏览器、失败恢复、
 Catalog/Workbench、Comparison、敏感扫描、资源和零残留证据后，才能标记 `FROZEN` 并创建不可移动

@@ -33,7 +33,7 @@
   `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
   自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
-  规划基线。M10 已冻结，M11 当前为 `FREEZE_CANDIDATE`，M12–M14 仍为 `PLANNED`；冻结合同不代表
+  规划基线。M10、M11 已冻结，M12–M14 仍为 `PLANNED`；冻结合同不代表
   后继能力已经实现或验收。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
@@ -70,8 +70,10 @@
   Gate B Plan 升为 version 2、保留 Profile v1 与全部资源/裁决边界，并使用新 Run ID；v2 已严格串行
   取得 `PASS / FAIL / PENDING / PASS`、Comparison `MATCH`、Catalog/Workbench、内置浏览器物理键盘、
   双 Python 277/277 与零残留事实。系统审查修复了 Workbench 验收脚本在 `python -O` 下会移除关键
-  `assert` 的门禁缺陷；优化模式完整 Workbench 复跑通过。事实见文档 26、27。最终发布门禁关闭前
-  M11 仍为 `FREEZE_CANDIDATE`，不得进入 M12。
+  `assert` 的门禁缺陷；优化模式完整 Workbench 复跑通过。冻结提交
+  `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40` 已推送；冻结读回时远端 `main` 和
+  `m11-v0.12.0^{}` 均精确指向该提交，M11 状态为 `FROZEN`。事实见文档 26、27；M12–M14 仍为
+  `PLANNED`。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。

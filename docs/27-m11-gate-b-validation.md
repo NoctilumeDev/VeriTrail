@@ -1,6 +1,6 @@
 # M11 Gate B 真实项目验证
 
-> 状态：`GATE_B_VALIDATED / M11_FREEZE_CANDIDATE`
+> 状态：`GATE_B_VALIDATED / M11_FROZEN`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`
 > Gate B harness：`da6390eeccb806cd8975103220d625488b293673`
@@ -17,7 +17,7 @@ Contract 0.4 / Plan v2 的 Gate B 严格串行矩阵已经按预注册顺序真�
 
 这证明 M11 的单 application 真实项目链路在当前 Windows 11 / C1 process-cold / 16 GB 边界内成立。
 生产 Workbench、双 Python 全量回归、M0-M11 系统审查与代码质量审查随后也已独立完成；最终前端、
-依赖、安全、残留与远端标签门禁关闭前仍只能称为冻结候选，计划文字和局部通过不能替代这些事实。
+依赖、安全、残留和远端标签门禁也已关闭。冻结来自完整运行事实，不来自计划文字或局部通过。
 
 ## 2. 冻结 authority 与串行结果
 
@@ -129,7 +129,7 @@ Profile，Pairing/Batch 明确拒绝 0.7。没有发现 Core、Schema、状态�
 | `DEFERRED_TARGET_L0` | 长卷页约 1280px 的 13px 根级测量溢出 | 归属固定 Subject 的装饰层；预注册 1440/390 与用户实际 692px 均为 0，留给 InkNarratives 独立版本处理 |
 | `STRUCTURAL_DEBT` | `bootstrap_evidence.py`、`bootstrap_run.py` 与两个 M11 harness 体量较大 | M13 再按所有权拆分评估；M11 合同稳定期不做无证据重构 |
 
-## 8. 冻结候选回归与后续门禁
+## 8. 冻结回归与发布门禁
 
 - Python 3.10.6：`277/277 PASS`，128.667 s；
 - Python 3.13.13：`277/277 PASS`，127.660 s；
@@ -146,8 +146,10 @@ Profile，Pairing/Batch 明确拒绝 0.7。没有发现 Core、Schema、状态�
 - [x] Workbench 60/60、lint、type-check、production build 与两类 npm audit；
 - [x] M0-M11 系统思维审查与代码质量审查；
 - [x] 资源、敏感扫描、端口、owned 进程、staging/run-work、SQLite sidecar 与目标状态最终读回；
-- [x] VeriTrail 与固定 Subject 的远端 `main` 均与本地候选精确一致；
+- [x] 候选提交前 VeriTrail 远端基线无漂移；固定 Subject 的本地 HEAD 与远端 `main` 精确一致；
 - [x] Python/Workbench 版本更新为 `0.12.0.dev1` / `0.12.0-dev.1`；
-- [ ] 提交并推送候选，创建不可移动 `m11-v0.12.0` 标签，再从远端读回分支与解引用标签。
+- [x] 候选提交 `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40` 已推送；注释标签
+  `m11-v0.12.0` 已创建；冻结读回时远端 `main` 与 `m11-v0.12.0^{}` 均精确指向该提交。
 
-因此当前准确表述仍是“M11 冻结候选”。只有最后一项远端冻结事实成立后才标记 `FROZEN`。
+因此 M11 已在 Contract 0.4 声明的 Windows 11 / C1 / 16 GB / 固定 InkNarratives ref 边界内标记
+`FROZEN`。M12–M14 继续保持 `PLANNED`，本次冻结不外推未证明能力。
