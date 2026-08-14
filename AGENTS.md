@@ -84,8 +84,9 @@
   已在文档 35 形成真实 M11 MATCH、脱敏 DRIFT/INCONCLUSIVE、生产 Chromium、优化模式与内置浏览器事实，
   D2 Pairing 和 D3 Batch 仍未开始。M12-B/C 空间收束与 Runs 目录整改计划 0.1 已在
   `docs/36-m12-bc-spatial-recomposition-plan.md` 确认：R1 公共外壳（Header、十字中枢与过门）与 R2 Runs
-  主链均已在文档 37、38 通过生产 Chromium、内置浏览器和清理事实；下一步只能先计划 D2 Pairing，且
-  `StatusBadge.vue` 不得作为局部整改的全局入口。M12 仍是
+  主链均已在文档 37、38 通过生产 Chromium、内置浏览器和清理事实。D2 Pairing 的计划 0.1 位于文档 39，
+  当前尚待用户确认；确认前不得修改 Pairing 生产代码或进入 D3，且 `StatusBadge.vue` 不得作为局部整改的全局
+  入口。M12 仍是
   `IMPLEMENTING / NOT_FROZEN`：
   不得提前把 Browser Evidence 终稿、全局状态、版本或 M12 标签混入该切片，也不得触及 L2/L3 数据、裁决或
   安全合同。

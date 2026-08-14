@@ -1,9 +1,9 @@
 # M12-D 派生分析视图计划 0.1
 
-> 状态：`IMPLEMENTING / D1_COMPLETE / D2-D3_NOT_IMPLEMENTED`
+> 状态：`IMPLEMENTING / D1_COMPLETE / D2_PLAN_DRAFTED / D3_NOT_IMPLEMENTED`
 > 日期：2026-08-14
 > 前置事实：[M12-C 空间令牌与 Runs 主链运行事实](33-m12-c-run-mainline-facts.md)
-> 当前提交基线：`70d21c3`
+> 当前提交基线：`0a6f789`（R2 Runs 主链事实已闭环）
 > 影响声明：`L0_PRESENTATION + BOUNDED_L1_COMPONENT`
 > 禁止越界：`L2_CONTRACT / L3_SYSTEM`
 
@@ -112,8 +112,9 @@ M12-D 的运行事实必须明确区分自动化、真实 Chromium 与内置浏�
 Network/CDP 事实；内置浏览器负责真实可见操作、焦点、历史与响应式，若其控制接口不能提供 response
 事件，不得伪称其为 F12 Network 抓包。
 
-D1 的已取得事实见 [M12-D1 Comparison 运行事实](35-m12-d1-comparison-facts.md)。该事实只关闭 D1，不为
-D2 Pairing 或 D3 Batch 预先提供完成结论。
+D1 的已取得事实见 [M12-D1 Comparison 运行事实](35-m12-d1-comparison-facts.md)。D2 的独立计划见
+[M12-D2 Pairing 四角色有向序列表现计划 0.1](39-m12-d2-pairing-presentation-plan.md)。它们均不为 D3 Batch
+预先提供完成结论。
 
 ## 6. 非目标与交接
 
