@@ -47,10 +47,20 @@ class M11GateBAcceptanceContractTests(unittest.TestCase):
 
         self.assertEqual(EXPECTED_POSITIVE_PLAN_SHA256, plan["seal"]["digest"])
         self.assertEqual("0.7", plan["schema_version"])
+        self.assertEqual(2, plan["version"])
         self.assertEqual(EXPECTED_SUBJECT_REF, plan["subject"]["source_ref"])
         self.assertEqual(2, len(plan["browser"]["viewports"]))
         self.assertEqual(4, sum(step["action"] == "screenshot" for step in plan["browser"]["steps"]))
         self.assertEqual(4, sum(step["action"] == "goto" for step in plan["browser"]["steps"]))
+        cabin_step = next(
+            step
+            for step in plan["browser"]["steps"]
+            if step["id"] == "scroll-cabin-visible"
+        )
+        self.assertEqual(
+            {"id": "scroll-cabin-visible", "action": "expect_visible", "selector": "#cabin"},
+            cabin_step,
+        )
         self.assertEqual(PAGES[0][0], plan["browser"]["start_url"].split(str(APPLICATION_PORT), 1)[1])
         screenshot_assertion = next(
             item

@@ -1,6 +1,6 @@
-# M11 单节点能力与真实项目全链路合同 0.3
+# M11 单节点能力与真实项目全链路合同 0.4
 
-> 状态：`CONTRACT_CORRECTED / TARGET_SELECTED / GATE_A_VALIDATED / GATE_B_NOT_STARTED`
+> 状态：`GATE_A_VALIDATED / GATE_B_PLAN_V1_FAILED / GATE_B_PLAN_V2_PREREGISTERED`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`
 > 前置基线：`m10-v0.11.1` @ `f4efdd25c50b19077c61994bce3e2aca5244d5ec`
@@ -14,6 +14,16 @@ Contract 0.2 已在 `eb39c0a` 留下不可变历史。Gate A 实现前的严格 
 Plan authority；不改变 Profile、Run 顺序、出口、资源预算、裁决、Gate A -> Gate B 门禁或真实目标。
 这项纠偏发生在任何 Gate A Run 之前，不能被解释为观察结果后移动标准。
 
+Contract 0.3 的 Gate B Plan v1 已由提交 `2c14393` 在观察前公开预注册。首个正向 Run
+`m11-gateb-ink-positive-01` 真实得到 `BROWSER_HARD_FAILURE / COMPLETED / FAIL`：移动视口的长卷页
+把 `.chapter-nav` 隐藏，预注册的 `a[href="#cabin"]` 无法作为可见元素点击。失败 Bundle、原 sealed
+authority 与目录 `tmp/m11-gateb-contract03-20260814-160143` 必须保留，不能改写为通过事实。
+
+Contract 0.4 不修改 Gate A Core、Profile、目标 ref、资源线、裁决或目标项目，只把两个 Gate B Plan
+升为 version 2，并使用全新 Run ID。长卷步骤改为验证真实 `#cabin` 后直接点击其中可见书册；该交互在
+两个视口共享同一用户语义，Playwright 会滚动到书册后打开阅读层。v1 失败是目标响应式交互假设错误，
+不是证据模型或生命周期的公共能力缺口。详细失败事实见文档 26。
+
 ## 1. 合同只解决什么
 
 M11 要证明 VeriTrail 能验收一个不同于自身 fixture 的真实项目。现有探针已经取得两组运行事实：
@@ -26,8 +36,8 @@ M11 要证明 VeriTrail 能验收一个不同于自身 fixture 的真实项目�
 InkNarratives。不能通过给目标添加假依赖、统一入口、发布目录或 VeriTrail 专用脚本绕开能力缺口。
 
 Contract 0.3 的 Gate A 已以 Profile 0.2、Plan 0.7、单节点生命周期、13 个公共出口、
-Catalog/Comparison、资源、安全和零残留事实关闭，详见文档 25。它仍不证明真实项目能力：Gate B
-尚未开始，M11 继续保持 `PLANNED`，不得创建 M11 标签或进入 M12。
+Catalog/Comparison、资源、安全和零残留事实关闭，详见文档 25。Gate B v1 首个 Run 的失败不证明
+真实项目能力，v2 尚未运行；M11 继续保持 `PLANNED`，不得创建 M11 标签或进入 M12。
 
 ## 2. 两道门必须严格串行
 
@@ -273,8 +283,8 @@ Gate A 的自动化、真实运行和清理事实固定为一个提交后，Gate
 
 | Authority | ID | Version | Use |
 | --- | --- | ---: | --- |
-| positive Plan | `m11-ink-single-app-positive` | 1 | 正向、端口竞争和恢复正向 |
-| Browser-negative Plan | `m11-ink-single-app-browser-negative` | 1 | 只把一个具名 selector 换为 `#veritrail-m11-missing-selector` |
+| positive Plan | `m11-ink-single-app-positive` | 2 | 正向、端口竞争和恢复正向；v1 失败保留 |
+| Browser-negative Plan | `m11-ink-single-app-browser-negative` | 2 | 只把一个具名 selector 换为 `#veritrail-m11-missing-selector` |
 | ProjectProfile | `m11-ink-single-app` | 1 | 全部 Gate B Run |
 
 固定运行形态：
@@ -313,7 +323,7 @@ observer RSS delta soft 线 64 MiB。Gate B readiness 页面已由 `002` 观察�
 
 ### 9.2 自动 Browser Plan 步骤
 
-positive Plan 在桌面 `1440x960` 与移动 `390x844` 上执行完全相同的下表步骤。`goto` 使用 Gate B
+positive Plan v2 在桌面 `1440x960` 与移动 `390x844` 上执行完全相同的下表步骤。`goto` 使用 Gate B
 application origin 与表中百分号编码 path；每次导航后均先验证文档 200、`main` 可见、`h1` 包含固定
 文本，再执行交互。总步骤不得超过既有 50 步上限，截图 action 不得超过 4 个。
 
@@ -323,7 +333,7 @@ application origin 与表中百分号编码 path；每次导航后均先验证�
 | 2 | `/%E6%9A%97%E5%AE%A4.html` | `暗室 · 藏书` | `#library` visible; click `.book[data-title="封装之书"]`; `#readerTitle` contains `封装之书` |
 | 3 | `/%E6%9F%B3%E6%B0%B8.html` | `乐章集` | click `a[href="#juan8"]`; `#juan8` visible |
 | 4 | `/%E7%8E%8B%E7%BB%B4.html` | `空山见王维` | click `a[href="#c6"]`; `#c6` visible |
-| 5 | `/%E9%95%BF%E5%8D%B7.html` | `夜航船` | click `a[href="#cabin"]`, then `.book[data-book="mountain"]`; `#reader-title` contains `空山之后` |
+| 5 | `/%E9%95%BF%E5%8D%B7.html` | `夜航船` | `#cabin` visible; click `.book[data-book="mountain"]`; `#reader-title` contains `空山之后` |
 
 固定截图放在苏轼章节、暗室读者层、王维末章和长卷读者层之后。Browser-negative Plan 与 positive Plan
 的 authority、Profile、目标、资源、页面顺序和其他步骤完全相同，只把苏轼 `#chapter11` 的
@@ -350,13 +360,13 @@ application origin 与表中百分号编码 path；每次导航后均先验证�
 
 | Order | Run ID | Plan | Frozen scenario | Expected |
 | ---: | --- | --- | --- | --- |
-| 1 | `m11-gateb-ink-positive-01` | positive | 精确 ref、五页双视口正向 | `NONE / COMPLETED / PASS` |
-| 2 | `m11-gateb-ink-browser-negative-01` | Browser-negative | 苏轼页预注册不存在 selector | `BROWSER_HARD_FAILURE / COMPLETED / FAIL` |
-| 3 | `m11-gateb-ink-port-conflict-01` | positive | Preview 后、live preflight 前由外部 owner 占用 18775 | preflight-only / `ABORTED / PENDING` |
-| 4 | `m11-gateb-ink-recovery-positive-02` | positive | 外部 owner 自行结束并证明端口恢复后，同 ref 恢复正向 | `NONE / COMPLETED / PASS` |
+| 1 | `m11-gateb-v2-ink-positive-01` | positive v2 | 精确 ref、五页双视口正向 | `NONE / COMPLETED / PASS` |
+| 2 | `m11-gateb-v2-ink-browser-negative-01` | Browser-negative v2 | 苏轼页预注册不存在 selector | `BROWSER_HARD_FAILURE / COMPLETED / FAIL` |
+| 3 | `m11-gateb-v2-ink-port-conflict-01` | positive v2 | Preview 后、live preflight 前由外部 owner 占用 18775 | preflight-only / `ABORTED / PENDING` |
+| 4 | `m11-gateb-v2-ink-recovery-positive-02` | positive v2 | 外部 owner 自行结束并证明端口恢复后，同 ref 恢复正向 | `NONE / COMPLETED / PASS` |
 
 四个 Bundle 均保留且由 Catalog 独立验真。只比较
-`m11-gateb-ink-positive-01` 与 `m11-gateb-ink-recovery-positive-02`；两者必须绑定完全相同的 sealed
+`m11-gateb-v2-ink-positive-01` 与 `m11-gateb-v2-ink-recovery-positive-02`；两者必须绑定完全相同的 sealed
 positive Plan/Profile，并以 M6 Comparison 得到 `MATCH`。若实际为 `DRIFT/INCONCLUSIVE`，必须解释
 来源并停止冻结，不能放宽比较规则。Browser-negative 因 selector 不同而必须使用独立 sealed Plan，
 不得参加比较。Pairing/Batch 在本目标没有真实反事实或组合语义，保持 `NOT_APPLICABLE`。
@@ -421,8 +431,10 @@ owned process、Job、Chromium、staging、run-work、Workbench/Catalog 服务�
 - [x] Contract 0.2 冻结提交只创建文档合同，没有创建实现代码、Schema、版本或 M11 标签；
 - [x] Contract 0.3 在任何 Gate A Run 前纠正 Plan/Profile 一对一绑定，不改变出口和判定标准；
 - [x] Gate A 实现与 13 个真实出口已从 Run 1 全量通过，并进入固定实现提交；事实见文档 25。
+- [x] Gate B Plan v1 首个正向 Run 已按原标准保留 `FAIL`，没有启动后续 v1 Run 或移动原 authority；
+- [x] Gate B Plan v2 使用新版本、新 seal 与新 Run ID，在任何 v2 Run 前公开预注册。
 
-前八项说明合同内容与 Gate A 事实已关闭，不说明 Gate B 或整个 M11 已实现。README 里 M11 在 Gate B
+前十项说明合同内容、Gate A 事实和 v2 入口已关闭，不说明 Gate B 或整个 M11 已实现。README 里 M11 在 Gate B
 取得事实前必须继续显示 `PLANNED`；开始编码后也只能使用准确的内部阶段状态，不能提前写 `FROZEN`。
 
 M11 只有在 Gate A 和 Gate B 均完成代码事实、自动化、真实 Chromium、Codex 内置浏览器、失败恢复、

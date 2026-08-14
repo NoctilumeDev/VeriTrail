@@ -29,13 +29,14 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 owned HTTP readiness、真实 Chromium、确定性 Bundle/Catalog 和逆序 Job 清理；不证明 C2/C3、
 Docker、跨平台、生产容量或不可信代码隔离。
 
-M11 Contract 0.3 已纠正 Plan/Profile 一对一权威绑定，并保持目标无关 Gate A 与 InkNarratives
-Gate B 的严格串行边界。Gate A 已通过目标无关单应用实现、双 Python、真实 Chromium、13 个公共
-出口、Catalog/Comparison、资源、安全、清理和 Workbench 单节点消费验证；Gate B 尚未开始，所以
-M11 继续为 `PLANNED`。准确合同见
+M11 Contract 0.4 保持目标无关 Gate A 与 InkNarratives Gate B 的严格串行边界。Gate A 已通过目标
+无关单应用实现、双 Python、真实 Chromium、13 个公共出口、Catalog/Comparison、资源、安全、清理和
+Workbench 消费验证。Gate B Plan v1 首个真实 Run 因移动端隐藏导航得到 `COMPLETED/FAIL` 并保留；
+Plan v2 已使用新 authority 与 Run ID 预注册，尚未取得 v2 运行事实，所以 M11 继续为 `PLANNED`。准确合同见
 [单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，运行事实见
 [M11 Gate A 验证](docs/25-m11-gate-a-validation.md)。完整提交、失败事实和证明边界见
-[里程碑冻结历史](docs/milestones.md)。
+[里程碑冻结历史](docs/milestones.md)，v1 失败分层见
+[M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)。
 
 ## 快速开始
 

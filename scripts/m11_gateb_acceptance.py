@@ -39,8 +39,8 @@ APPLICATION_PORT = 18775
 EXPECTED_SUBJECT_REF = "b443a1c967bbc4c50f1bec7ece62abc4c4196fdb"
 EXPECTED_GATE_A_COMMIT = "36b24581549ab23503b710718cdab74358aa71cd"
 EXPECTED_PROFILE_SHA256 = "a9385a78a282e485d0cd7aa6f2970d51cf240ea3bc41324276ab5d59960fd7f4"
-EXPECTED_POSITIVE_PLAN_SHA256 = "f09abbb53ba4795f2d2bbe62fa2d2a1b0a1a0d0ab8bff2368c8bc7fc5d8283c4"
-EXPECTED_NEGATIVE_PLAN_SHA256 = "f865bf28915217c59965a1b5c44bb118d38b835689cef4db8557448ae3e5d0a9"
+EXPECTED_POSITIVE_PLAN_SHA256 = "8300700074b8d8f520ccf21fd2369b5607881eb96b7a1e62c7a18d91ba200841"
+EXPECTED_NEGATIVE_PLAN_SHA256 = "47bb71543916929652139e20b85ee2587c3a7847e7b92659822aeaa3c662eddb"
 MEBIBYTE = 1024 * 1024
 
 PAGES = (
@@ -51,17 +51,17 @@ PAGES = (
     ("/%E9%95%BF%E5%8D%B7.html", "夜航船"),
 )
 RUNS = (
-    ("m11-gateb-ink-positive-01", "positive", "NONE", "COMPLETED", "PASS"),
+    ("m11-gateb-v2-ink-positive-01", "positive", "NONE", "COMPLETED", "PASS"),
     (
-        "m11-gateb-ink-browser-negative-01",
+        "m11-gateb-v2-ink-browser-negative-01",
         "browser-negative",
         "BROWSER_HARD_FAILURE",
         "COMPLETED",
         "FAIL",
     ),
-    ("m11-gateb-ink-port-conflict-01", "positive", None, "ABORTED", "PENDING"),
+    ("m11-gateb-v2-ink-port-conflict-01", "positive", None, "ABORTED", "PENDING"),
     (
-        "m11-gateb-ink-recovery-positive-02",
+        "m11-gateb-v2-ink-recovery-positive-02",
         "positive",
         "NONE",
         "COMPLETED",
@@ -236,9 +236,9 @@ def _browser_steps(origin: str) -> list[dict[str, Any]]:
             "value": "夜航船",
         },
         {
-            "id": "scroll-cabin-click",
-            "action": "click",
-            "selector": 'a[href="#cabin"]',
+            "id": "scroll-cabin-visible",
+            "action": "expect_visible",
+            "selector": "#cabin",
         },
         {
             "id": "scroll-book-click",
@@ -259,6 +259,7 @@ def raw_positive_plan(profile_sha256: str) -> dict[str, Any]:
     plan = read_json(REPOSITORY_ROOT / "examples" / "bootstrap" / "plan-positive.json")
     origin = f"http://127.0.0.1:{APPLICATION_PORT}"
     plan["plan_id"] = "m11-ink-single-app-positive"
+    plan["version"] = 2
     plan["subject"] = {
         "id": "inknarratives",
         "version": "1",
@@ -512,7 +513,7 @@ def run_scenario(
     external_socket: socket.socket | None = None
     recovery = {"external_owner_preserved": None, "actual_resource_recovery": None}
 
-    if run_id == "m11-gateb-ink-port-conflict-01":
+    if run_id == "m11-gateb-v2-ink-port-conflict-01":
 
         def resolve_then_contest(*args: Any, **kwargs: Any) -> Any:
             nonlocal external_socket
@@ -740,7 +741,7 @@ def main() -> int:
         validated = validate_bundle(runs_root / run_id, runs_root)
         artifact = bootstrap_artifact(runs_root / run_id)
         if artifact is None:
-            if run_id != "m11-gateb-ink-port-conflict-01":
+            if run_id != "m11-gateb-v2-ink-port-conflict-01":
                 raise AssertionError(f"{run_id} did not publish bootstrap Evidence")
             actual_stop = None
         else:
@@ -770,7 +771,7 @@ def main() -> int:
         if actual_stop != expected_stop:
             raise AssertionError(f"{run_id} stop reason differs from the contract")
         browser = evidence_artifact(runs_root / run_id, "browser.session")
-        if run_id == "m11-gateb-ink-port-conflict-01":
+        if run_id == "m11-gateb-v2-ink-port-conflict-01":
             if browser is not None:
                 raise AssertionError("port conflict Run fabricated Browser evidence")
             if (
@@ -784,7 +785,7 @@ def main() -> int:
             verify_browser_artifact(
                 run_id,
                 browser,
-                positive=run_id != "m11-gateb-ink-browser-negative-01",
+                positive=run_id != "m11-gateb-v2-ink-browser-negative-01",
             )
         if not port_is_free(APPLICATION_PORT):
             raise AssertionError(f"{run_id} left port 18775 occupied after recovery")
@@ -809,8 +810,8 @@ def main() -> int:
         )
 
     comparison = create_comparison_bundle(
-        baseline=runs_root / "m11-gateb-ink-positive-01",
-        repeat=runs_root / "m11-gateb-ink-recovery-positive-02",
+        baseline=runs_root / "m11-gateb-v2-ink-positive-01",
+        repeat=runs_root / "m11-gateb-v2-ink-recovery-positive-02",
         output=output / "comparison",
     )
     comparison_document = read_json(output / "comparison" / "comparison.json")
@@ -821,8 +822,8 @@ def main() -> int:
     ):
         raise AssertionError("the two positive Gate B Runs did not compare as MATCH")
 
-    corrupted = runs_root / "m11-gateb-corrupted-copy"
-    shutil.copytree(runs_root / "m11-gateb-ink-positive-01", corrupted)
+    corrupted = runs_root / "m11-gateb-v2-corrupted-copy"
+    shutil.copytree(runs_root / "m11-gateb-v2-ink-positive-01", corrupted)
     with (corrupted / "report.json").open("ab") as stream:
         stream.write(b"\n")
     catalog = build_catalog(runs_root, output / "catalog")
@@ -856,6 +857,8 @@ def main() -> int:
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "gate_a_commit": EXPECTED_GATE_A_COMMIT,
         "gate_b_harness_commit": gate_b_harness_commit,
+        "plan_revision": 2,
+        "retained_plan_v1_failure": "tmp/m11-gateb-contract03-20260814-160143",
         "subject": {
             "id": "inknarratives",
             "ref": EXPECTED_SUBJECT_REF,

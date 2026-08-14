@@ -77,8 +77,9 @@ Core/dependency/application/browser 资源分账。公共 Plan 0.6 `run` 已串�
 M10 冻结公共退出矩阵已经完成；冻结后的地基纠偏和重新验收见文档 21。M11 Contract 0.3 已固定
 Profile 0.2/Plan 0.7 的单 application Gate A 与 InkNarratives Gate B 双门顺序，并纠正每个 sealed Plan
 只能绑定一个 sealed Profile 的权威关系。Gate A 已通过单 APPLICATION 生命周期、collector 0.3、
-真实 Chromium、13 个公共出口与全消费者验证；Gate B 尚未开始，里程碑继续为 `PLANNED`。架构合同
-与运行事实见文档 23、25。
+真实 Chromium、13 个公共出口与全消费者验证；Gate B Plan v1 首个真实 Run 已按移动导航失败保留，
+Contract 0.4 只将目标交互 Plan 升为 v2，尚未取得 v2 运行事实，里程碑继续为 `PLANNED`。架构合同
+与运行事实见文档 23、25、26。
 
 ### 2.5 Browser Adapter
 

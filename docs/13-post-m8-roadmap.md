@@ -16,7 +16,7 @@
 | --- | --- | --- | --- |
 | M9 | 受控项目命令执行 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2` |
-| M11 | 真实项目功能全链路 | `PLANNED`（Gate A validated；Gate B not started） | 本文第 7 节与文档 23、25 |
+| M11 | 真实项目功能全链路 | `PLANNED`（Gate A validated；Gate B Plan v1 failed；v2 preregistered） | 本文第 7 节与文档 23、25、26 |
 | M12 | 故宫主题前端终稿 | `PLANNED` | 本文第 8 节 |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | 本文第 9 节 |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | 本文第 10 节 |
@@ -40,8 +40,8 @@ Windows 原子发布和清理复验；首次补丁读回时 `main` 与 `m10-v0.1
 候选适配性盘点因此必须引用新补丁基线，不能继续继承旧标签的已知缺口。
 
 M11 的冻结后候选盘点与探索事实见文档 22；用户确认后的单节点能力与真实项目双门 Contract 0.3
-见文档 23，Gate A 运行事实见文档 25。Gate A 通过不反向改写本文第 7 节，也不把 M11 从
-`PLANNED` 提前为已实现；Gate B 仍须严格串行执行。未来 M13 独立合同起草时，
+及 Gate B Plan v2 纠偏 Contract 0.4 见文档 23，Gate A 与 v1 失败事实见文档 25、26。Gate A 通过
+不反向改写本文第 7 节，也不把 M11 从 `PLANNED` 提前为已实现；Gate B v2 仍须严格串行执行。未来 M13 独立合同起草时，
 审查发现固定分为 `BLOCKER / MUST_FIX / DEFERRED`，禁止为了追求零 warning 或零 smell 进行无关
 全仓重写；该规则同样只作为后继合同门禁，不倒填为 Plan v1 冻结时已经存在的条款。
 
@@ -270,8 +270,8 @@ M10 不自动安装系统级 Python、Node、Java、Maven、Docker 或中间件�
 - 不同类型的真实目标：用于排除“VeriTrail 只适配 VeriTrail”的自证循环。
 
 只读盘点完成后，M11 Contract 0.3 已固定先交付目标无关的 Windows/C1 单 application Gate A，再以
-固定实现验证 `InkNarratives @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb` 的 Gate B。该后继合同不
-改变本文的通用目标，也不代表任一 Gate 已经实现或运行。
+固定实现验证 `InkNarratives @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb` 的 Gate B。Gate B v1 已
+保留首个真实失败，Contract 0.4 只把目标交互计划升为 v2；它不改变本文的通用目标，也不代表 v2 已通过。
 
 ### 7.2 代表性完整链路
 

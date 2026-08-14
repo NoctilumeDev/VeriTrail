@@ -29,8 +29,9 @@ Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览�
 M10 有界完整项目自举已 `FROZEN`，M11–M14 为 `PLANNED`。M11 Contract 0.3 已冻结
 `OPTION_B`、InkNarratives 精确 ref 和 Gate A -> Gate B 严格串行，并纠正 Plan/Profile 一对一绑定；
 Profile 0.2、Plan 0.7、单节点生命周期和 collector 0.3 已通过 Gate A 的双 Python、真实 Chromium、
-13 个预注册出口、Catalog/Comparison、资源、安全、清理与 Workbench 消费验证；真实项目 Gate B Run
-仍未开始，M11 不能冻结。准确矩阵与事实见文档 23、25。ProjectProfile 0.1、Plan 0.6
+13 个预注册出口、Catalog/Comparison、资源、安全、清理与 Workbench 消费验证；真实项目 Gate B
+Plan v1 首个 Run 已按 `COMPLETED/FAIL` 保留，Contract 0.4 的 Plan v2 尚未取得运行事实，M11 不能冻结。准确矩阵与
+事实见文档 23、25、26。ProjectProfile 0.1、Plan 0.6
 跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、
