@@ -107,6 +107,19 @@ describe('App', () => {
     wrapper.unmount()
   })
 
+  it('keeps demo fixtures and the local evidence directory as separate Runs source groups', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="runs-toolstrip"]')
+
+    const toolstrip = wrapper.get('[data-testid="runs-toolstrip"]')
+    expect(toolstrip.get('[role="group"]').attributes('aria-label')).toBe('示例证据')
+    expect(toolstrip.get('[data-testid="fixture-positive"]').text()).toBe('正向证据')
+    expect(toolstrip.get('[data-testid="fixture-negative"]').text()).toBe('负向证据')
+    expect(toolstrip.get('[data-testid="fixture-invalid"]').text()).toBe('校验损坏包')
+    expect(toolstrip.get('[data-testid="local-bundle-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+    wrapper.unmount()
+  })
+
   it('contains an invalid bundle and recovers through the explicit retry', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')

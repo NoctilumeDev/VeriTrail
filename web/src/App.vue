@@ -656,35 +656,40 @@ onBeforeUnmount(() => {
 
     <main id="main-content" class="evidence-axis">
       <template v-if="publicView === 'runs'">
-        <section class="view-introduction" aria-labelledby="view-runs-title">
-          <p class="eyebrow">Public View · 北向</p>
-          <h2 id="view-runs-title" tabindex="-1" data-testid="view-runs-title">Runs / Catalog</h2>
-          <nav class="source-switcher" aria-label="Runs 证据包来源">
-            <button
-              type="button"
-              :aria-pressed="activeSource === 'positive'"
-              data-testid="fixture-positive"
-              @click="selectDemo('positive')"
-            >
-              正向证据
-            </button>
-            <button
-              type="button"
-              :aria-pressed="activeSource === 'negative'"
-              data-testid="fixture-negative"
-              @click="selectDemo('negative')"
-            >
-              负向证据
-            </button>
-            <button
-              type="button"
-              :aria-pressed="activeSource === 'invalid'"
-              data-testid="fixture-invalid"
-              @click="selectDemo('invalid')"
-            >
-              校验损坏包
-            </button>
-            <label class="local-import" :class="{ 'is-active': activeSource === 'local' }">
+        <section class="view-introduction view-introduction--runs" aria-labelledby="view-runs-title">
+          <div class="view-introduction__heading">
+            <p class="eyebrow">Public View · 北向</p>
+            <h2 id="view-runs-title" tabindex="-1" data-testid="view-runs-title">Runs / Catalog</h2>
+          </div>
+          <div class="runs-toolstrip" aria-label="Runs 证据包来源" data-testid="runs-toolstrip">
+            <div class="source-switcher" role="group" aria-label="示例证据">
+              <span class="source-switcher__label">示例证据</span>
+              <button
+                type="button"
+                :aria-pressed="activeSource === 'positive'"
+                data-testid="fixture-positive"
+                @click="selectDemo('positive')"
+              >
+                正向证据
+              </button>
+              <button
+                type="button"
+                :aria-pressed="activeSource === 'negative'"
+                data-testid="fixture-negative"
+                @click="selectDemo('negative')"
+              >
+                负向证据
+              </button>
+              <button
+                type="button"
+                :aria-pressed="activeSource === 'invalid'"
+                data-testid="fixture-invalid"
+                @click="selectDemo('invalid')"
+              >
+                校验损坏包
+              </button>
+            </div>
+            <label class="local-import runs-toolstrip__local" :class="{ 'is-active': activeSource === 'local' }">
               <span>选择本地证据包</span>
               <input
                 type="file"
@@ -695,7 +700,7 @@ onBeforeUnmount(() => {
                 @change="importLocal"
               />
             </label>
-          </nav>
+          </div>
         </section>
 
       <RunCatalog
