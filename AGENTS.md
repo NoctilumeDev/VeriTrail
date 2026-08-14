@@ -76,6 +76,11 @@
   `PLANNED`。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
+- M12 表现系统重构设计计划 0.1 位于 `docs/28-m12-palace-workbench-design-plan.md`，当前状态为
+  `DESIGN_FROZEN / IMPLEMENTATION_NOT_STARTED`。它把 M11 冻结界面作为控制组，允许 `L0 + bounded L1`
+  的信息空间、十字中轴导航和表现组件重构，但禁止触及任何 L2/L3 数据、裁决或安全合同。用户确认并
+  形成的本计划提交必须先于生产代码；实施仍需从 M12-A 控制组审计开始，不得跳到主题 CSS、版本或
+  M12 标签。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

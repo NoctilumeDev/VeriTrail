@@ -155,8 +155,9 @@ sealed Plan / Profile
 - **SQLite Catalog**：可删除、可重建的只读 Run 索引，不拥有 Verdict 真相。
 - **Vue Workbench**：本地只读展示 Bundle、Comparison、PairedAnalysis 与 BatchAnalysis。
 
-Workbench 的“宫阙验迹 / Palace Evidence”使用纯 CSS 中轴、院落、格栅和状态令牌，不依赖装饰贴图、
-CDN、远程字体或统计脚本。宫墙朱只表达 `FAIL`、`ERROR` 与异常；状态不依赖颜色单独传达。
+当前 M11 Workbench 的“宫阙验迹 / Palace Evidence”使用纯 CSS 中轴、院落、格栅和状态令牌，不依赖
+装饰贴图、CDN、远程字体或统计脚本；其宫墙朱只表达 `FAIL`、`ERROR` 与异常。M12 冻结设计计划将其作为
+控制组，拟重构为空间结构朱与证据警示朱严格分层的表现系统；两者都不能让状态只依赖颜色传达。
 
 ## 安全边界
 
@@ -208,6 +209,7 @@ M12 等待 M11 功能事实稳定；M13 不借“代码质量”重写合同；M
 - [M11 Gate A 单应用能力验证](docs/25-m11-gate-a-validation.md)
 - [M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)
 - [M11 Gate B 真实项目验证与冻结门禁](docs/27-m11-gate-b-validation.md)
+- [M12 宫阙验迹表现系统重构设计计划 0.1](docs/28-m12-palace-workbench-design-plan.md)
 
 ## 项目来源
 
