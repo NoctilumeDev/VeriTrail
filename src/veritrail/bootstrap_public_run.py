@@ -42,17 +42,22 @@ def run_bootstrap_bundle(
     ),
     observed_runner: Callable[..., BootstrapObservedRunResult] = run_observed_bootstrap,
 ) -> BootstrapPublicRunResult:
-    """Create one immutable Plan 0.6 Bundle after an approved live preflight."""
+    """Create one immutable bootstrap Bundle after an approved live preflight."""
 
     verify_sealed_project_profile(profile)
     verify_sealed_plan(plan, profile)
-    if plan.get("schema_version") != "0.6":
-        raise ValidationError(["bootstrap Run requires ExperimentPlan schema_version '0.6'"])
+    plan_version = plan.get("schema_version")
+    if plan_version not in {"0.6", "0.7"}:
+        raise ValidationError(
+            ["bootstrap Run requires ExperimentPlan schema_version '0.6' or '0.7'"]
+        )
     if not isinstance(approved_preview_sha256, str) or not SHA256_PATTERN.fullmatch(
         approved_preview_sha256
     ):
         raise ValidationError(
-            ["Plan 0.6 run requires a lowercase SHA-256 bootstrap Preview approval"]
+            [
+                f"Plan {plan_version} run requires a lowercase SHA-256 bootstrap Preview approval"
+            ]
         )
     if not RUN_ID_PATTERN.fullmatch(run_id):
         raise ValidationError(["run_id must be a 2-64 character lowercase identifier"])

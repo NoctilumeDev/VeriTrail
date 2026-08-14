@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/experiment-plan-0.7.schema.json",
+  "title": "VeriTrail M11 Single-Application ExperimentPlan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "version",
+    "subject",
+    "question",
+    "baseline",
+    "experiment_type",
+    "variables",
+    "required_evidence",
+    "assertions",
+    "random_seed",
+    "resource_budget",
+    "preflight",
+    "browser",
+    "bootstrap_profile",
+    "load_model",
+    "change_scope",
+    "reproduction_steps",
+    "cleanup_steps"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.7" },
+    "plan_id": { "$ref": "experiment-plan-0.3.schema.json#/properties/plan_id" },
+    "version": { "$ref": "experiment-plan-0.3.schema.json#/properties/version" },
+    "subject": { "$ref": "experiment-plan-0.3.schema.json#/properties/subject" },
+    "question": { "$ref": "experiment-plan-0.3.schema.json#/properties/question" },
+    "baseline": { "$ref": "experiment-plan-0.3.schema.json#/properties/baseline" },
+    "experiment_type": { "const": "SINGLE_VARIABLE" },
+    "variables": {
+      "allOf": [
+        { "$ref": "experiment-plan-0.3.schema.json#/properties/variables" },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["name", "role", "value"],
+            "properties": {
+              "name": { "const": "project_bootstrap_topology" },
+              "role": { "const": "PRIMARY" },
+              "value": { "const": "veritrail_managed_windows_c1_single_application" }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "required_evidence": {
+      "allOf": [
+        { "$ref": "experiment-plan-0.3.schema.json#/properties/required_evidence" },
+        { "contains": { "const": "runtime.preflight" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "const": "browser.session" }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "const": "runtime.bootstrap" }, "minContains": 1, "maxContains": 1 },
+        { "not": { "contains": { "enum": ["runtime.command", "runtime.orchestration"] } } }
+      ]
+    },
+    "assertions": {
+      "allOf": [
+        { "$ref": "experiment-plan-0.3.schema.json#/properties/assertions" },
+        {
+          "contains": {
+            "type": "object",
+            "required": ["severity", "evidence_type"],
+            "properties": {
+              "severity": { "enum": ["HARD", "DEGRADATION_BOUNDARY"] },
+              "evidence_type": { "const": "runtime.bootstrap" }
+            }
+          },
+          "minContains": 1
+        },
+        {
+          "not": {
+            "contains": {
+              "type": "object",
+              "required": ["evidence_type"],
+              "properties": {
+                "evidence_type": { "enum": ["runtime.command", "runtime.orchestration"] }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "random_seed": { "$ref": "experiment-plan-0.3.schema.json#/properties/random_seed" },
+    "resource_budget": { "$ref": "experiment-plan-0.3.schema.json#/properties/resource_budget" },
+    "preflight": { "$ref": "experiment-plan-0.3.schema.json#/properties/preflight" },
+    "browser": { "$ref": "experiment-plan-0.6.schema.json#/properties/browser" },
+    "bootstrap_profile": { "$ref": "experiment-plan-0.6.schema.json#/properties/bootstrap_profile" },
+    "load_model": { "$ref": "experiment-plan-0.3.schema.json#/properties/load_model" },
+    "change_scope": { "$ref": "experiment-plan-0.3.schema.json#/properties/change_scope" },
+    "reproduction_steps": { "$ref": "experiment-plan-0.3.schema.json#/properties/reproduction_steps" },
+    "cleanup_steps": { "$ref": "experiment-plan-0.3.schema.json#/properties/cleanup_steps" },
+    "seal": { "$ref": "experiment-plan-0.3.schema.json#/properties/seal" }
+  }
+}

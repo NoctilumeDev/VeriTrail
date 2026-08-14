@@ -60,10 +60,12 @@
 - M11 只读候选盘点与探索探针位于 `docs/22-m11-real-project-suitability-and-contract-draft.md`。探针已
   证明现有候选不能直接装入 M10 两节点边界，并证明 InkNarratives 原始目录的单节点 HTTP/代表页
   浏览器形态真实可运行。用户已确认 `OPTION_B`、精确 ref、Gate A -> Gate B 严格串行和不适用项；
-  `docs/23-m11-single-node-real-project-contract.md` 现为 Contract 0.2，状态
-  `CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`。M11 里程碑仍为 `PLANNED`；合同
-  冻结提交完成 GitHub 公开读回后才允许从 Gate A 开始实现。不得增加假依赖、隐藏必要服务、使用
-  Mock/Pages 替代真实链路，或在 Gate A 固定实现提交前进入 Gate B。
+  `docs/23-m11-single-node-real-project-contract.md` 的 0.2 已在 `eb39c0a` 留下历史，当前 Contract 0.3
+  只纠正 Plan/Profile 一对一权威绑定。Gate A 已完成 Profile 0.2、Plan 0.7、单 APPLICATION、
+  collector 0.3、双 Python 272/272、真实 Chromium、13 个预注册出口、Catalog/Comparison、资源、
+  安全、清理与 Workbench 60/60 验证，事实见 `docs/25-m11-gate-a-validation.md`。M11 里程碑仍为
+  `PLANNED`，Gate B 尚未开始；Gate A 固定实现提交从 GitHub 读回前不得进入 Gate B。不得增加假依赖、
+  隐藏必要服务、使用 Mock/Pages 替代真实链路，或绕过固定提交读回门禁进入 Gate B。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。

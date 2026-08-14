@@ -1,0 +1,57 @@
+{
+  "schema_version": "0.2",
+  "topology": "SINGLE_APPLICATION",
+  "profile_id": "m11-single-app-helper-readiness-timeout",
+  "version": 1,
+  "platform": "WINDOWS_11",
+  "cold_state": "C1_PROCESS_COLD",
+  "nodes": [
+    {
+      "node_id": "application",
+      "role": "APPLICATION",
+      "adapter": "TRUSTED_PROCESS_SERVICE",
+      "depends_on": [],
+      "tool_binding": "python-application",
+      "arguments": [
+        { "literal": "gatea_helper.py" },
+        { "literal": "idle" },
+        { "literal": "30" }
+      ],
+      "working_directory": "examples/bootstrap",
+      "environment": {
+        "inherit": ["SYSTEMROOT", "WINDIR"],
+        "set": { "PYTHONDONTWRITEBYTECODE": "1" }
+      },
+      "port": 18774,
+      "readiness": {
+        "adapter": "HTTP_GET_LOOPBACK_OWNED_PID",
+        "path": "/health",
+        "expected_status": 200,
+        "attempt_timeout_ms": 250,
+        "total_timeout_ms": 1000,
+        "interval_ms": 100,
+        "consecutive_successes": 2,
+        "max_response_bytes": 4096
+      },
+      "limits": {
+        "max_stdout_bytes": 262144,
+        "max_stderr_bytes": 262144,
+        "max_processes": 8,
+        "max_job_memory_mb": 512
+      },
+      "shutdown": {
+        "adapter": "JOB_TERMINATE_AFTER_CAPTURE",
+        "process_release_timeout_ms": 5000,
+        "port_release_timeout_ms": 5000,
+        "reader_shutdown_timeout_ms": 5000
+      }
+    }
+  ],
+  "start_order": ["application"],
+  "teardown_order": ["application"],
+  "application_node_id": "application",
+  "subject_watch_roots": ["examples/bootstrap"],
+  "max_watch_files": 2000,
+  "max_watch_total_bytes": 67108864,
+  "lifecycle_timeout_ms": 120000
+}

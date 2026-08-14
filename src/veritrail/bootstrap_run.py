@@ -456,6 +456,7 @@ def _validate_preview_identity(
     digest = preview.get("preview_sha256")
     unsigned = {key: value for key, value in preview.items() if key != "preview_sha256"}
     expected = {
+        "schema_version": "0.2" if plan["schema_version"] == "0.7" else "0.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
@@ -465,6 +466,8 @@ def _validate_preview_identity(
         "start_order": profile["start_order"],
         "teardown_order": profile["teardown_order"],
     }
+    if plan["schema_version"] == "0.7":
+        expected["topology"] = profile["topology"]
     if not isinstance(digest, str) or digest != sha256_json(unsigned):
         raise SafetyError("M10 approved bootstrap Preview seal is invalid")
     if any(preview.get(key) != value for key, value in expected.items()):
@@ -570,7 +573,7 @@ def _stage_document(
             }
         )
     return {
-        "schema_version": "0.1",
+        "schema_version": "0.2" if profile["schema_version"] == "0.2" else "0.1",
         "record_type": "bootstrap.pre_teardown",
         "plan_sha256": plan["seal"]["digest"],
         "profile_sha256": profile["seal"]["digest"],
@@ -646,10 +649,10 @@ def run_observed_bootstrap(
     staging_writer: Callable[[Path, bytes], None] | None = None,
     host_memory_reader: Callable[[], tuple[int, int]] = host_memory_bytes,
 ) -> BootstrapObservedRunResult:
-    """Run the M10 lifecycle through owned staging and post-teardown observations.
+    """Run a sealed bootstrap lifecycle through staging and post-teardown checks.
 
-    The public Bundle runner invokes this M10-only observation engine. It reuses the
-    frozen M2 Browser adapter without changing that adapter's public contract.
+    The public Bundle runner invokes this version-dispatched observation engine. It
+    reuses the frozen M2 Browser adapter without changing that adapter's contract.
     """
 
     verify_sealed_project_profile(profile)

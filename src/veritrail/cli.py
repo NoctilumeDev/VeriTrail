@@ -95,13 +95,13 @@ def build_parser() -> argparse.ArgumentParser:
     seal.add_argument(
         "--profile",
         type=Path,
-        help="required sealed ProjectProfile 0.1 for Plan 0.6; rejected for older plans",
+        help="required sealed ProjectProfile 0.1/0.2 for Plan 0.6/0.7; rejected otherwise",
     )
     seal.add_argument("--output", type=Path, required=True, help="new sealed plan path")
 
     profile_seal = subparsers.add_parser(
         "bootstrap-profile-seal",
-        help="validate and seal one M10 ProjectProfile 0.1",
+        help="validate and seal one ProjectProfile 0.1 or 0.2",
     )
     profile_seal.add_argument(
         "--profile", type=Path, required=True, help="unsealed or already sealed ProjectProfile"
@@ -112,13 +112,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     bootstrap_preview = subparsers.add_parser(
         "bootstrap-preview",
-        help="resolve a sealed Plan 0.6 and ProjectProfile without spawning processes",
+        help="resolve a sealed Plan 0.6/0.7 and ProjectProfile without spawning processes",
     )
     bootstrap_preview.add_argument(
-        "--plan", type=Path, required=True, help="sealed ExperimentPlan 0.6 JSON"
+        "--plan", type=Path, required=True, help="sealed ExperimentPlan 0.6/0.7 JSON"
     )
     bootstrap_preview.add_argument(
-        "--profile", type=Path, required=True, help="sealed ProjectProfile 0.1 JSON"
+        "--profile", type=Path, required=True, help="sealed ProjectProfile 0.1/0.2 JSON"
     )
     bootstrap_preview.add_argument(
         "--subject-root",
@@ -173,10 +173,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     run = subparsers.add_parser(
         "run",
-        help="run Plan 0.4, approved Plan 0.5, or approved Plan 0.6 bootstrap",
+        help="run Plan 0.4, approved Plan 0.5, or approved Plan 0.6/0.7 bootstrap",
     )
     run.add_argument(
-        "--plan", type=Path, required=True, help="Plan 0.4/0.5 JSON or sealed Plan 0.6 JSON"
+        "--plan", type=Path, required=True, help="Plan 0.4/0.5 JSON or sealed Plan 0.6/0.7 JSON"
     )
     run.add_argument(
         "--subject-root",
@@ -198,11 +198,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--profile",
         type=Path,
-        help="required sealed ProjectProfile 0.1 for Plan 0.6",
+        help="required sealed ProjectProfile 0.1/0.2 for Plan 0.6/0.7",
     )
     run.add_argument(
         "--approve-bootstrap-preview-sha256",
-        help="required Plan 0.6 BootstrapPreview SHA-256 approval",
+        help="required Plan 0.6/0.7 BootstrapPreview SHA-256 approval",
     )
 
     command_preview = subparsers.add_parser(
@@ -309,11 +309,15 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "seal":
             raw_plan = load_plan_json_object(args.plan)
-            is_bootstrap_plan = raw_plan.get("schema_version") == "0.6"
+            is_bootstrap_plan = raw_plan.get("schema_version") in {"0.6", "0.7"}
             if is_bootstrap_plan and args.profile is None:
-                raise ValidationError(["Plan 0.6 seal requires --profile"])
+                raise ValidationError(
+                    [f"Plan {raw_plan.get('schema_version')} seal requires --profile"]
+                )
             if not is_bootstrap_plan and args.profile is not None:
-                raise ValidationError(["--profile is accepted only when sealing Plan 0.6"])
+                raise ValidationError(
+                    ["--profile is accepted only when sealing Plan 0.6 or 0.7"]
+                )
             profile = (
                 load_sealed_project_profile(args.profile)
                 if args.profile is not None
@@ -507,28 +511,34 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "run":
             raw_plan = load_plan_json_object(args.plan)
-            is_bootstrap_run = raw_plan.get("schema_version") == "0.6"
+            is_bootstrap_run = raw_plan.get("schema_version") in {"0.6", "0.7"}
             profile = None
             if is_bootstrap_run:
                 if args.profile is None:
-                    raise ValidationError(["Plan 0.6 run requires --profile"])
+                    raise ValidationError(
+                        [f"Plan {raw_plan.get('schema_version')} run requires --profile"]
+                    )
                 profile = load_sealed_project_profile(args.profile)
                 verify_sealed_plan(raw_plan, profile)
                 plan = raw_plan
             else:
                 plan = load_and_seal_plan(args.plan)
-            if plan["schema_version"] not in {"0.4", "0.5", "0.6"}:
+            if plan["schema_version"] not in {"0.4", "0.5", "0.6", "0.7"}:
                 raise ValidationError(
                     [
-                        "run requires ExperimentPlan schema_version '0.4', '0.5', or '0.6'"
+                        "run requires ExperimentPlan schema_version '0.4', '0.5', '0.6', or '0.7'"
                     ]
                 )
             is_command_run = plan["schema_version"] == "0.5"
             if is_bootstrap_run:
                 if args.tool_bindings is None:
-                    raise ValidationError(["Plan 0.6 run requires --tool-bindings"])
+                    raise ValidationError(
+                        [f"Plan {plan['schema_version']} run requires --tool-bindings"]
+                    )
                 if args.approve_command is not None:
-                    raise ValidationError(["Plan 0.6 run does not accept --approve-command"])
+                    raise ValidationError(
+                        [f"Plan {plan['schema_version']} run does not accept --approve-command"]
+                    )
                 if not isinstance(
                     args.approve_bootstrap_preview_sha256, str
                 ) or not re.fullmatch(
@@ -537,7 +547,7 @@ def main(argv: list[str] | None = None) -> int:
                 ):
                     raise ValidationError(
                         [
-                            "Plan 0.6 run requires a lowercase SHA-256 "
+                            f"Plan {plan['schema_version']} run requires a lowercase SHA-256 "
                             "--approve-bootstrap-preview-sha256"
                         ]
                     )

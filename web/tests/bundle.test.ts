@@ -5,7 +5,12 @@ import {
   normalizeBundlePath,
   sha256Hex,
 } from '../src/domain/bundle'
-import { createMinimalBundle, createSealedPlan, minimalReport } from './support'
+import {
+  createMinimalBundle,
+  createSealedPlan,
+  createSingleApplicationBootstrapBundle,
+  minimalReport,
+} from './support'
 
 describe('Bundle Loader', () => {
   it('verifies a Report 0.1 bundle without browser evidence', async () => {
@@ -20,6 +25,48 @@ describe('Bundle Loader', () => {
       totalBytes: expect.any(Number),
     })
     expect(loaded.evidenceByPath).toEqual({})
+    loaded.release()
+  })
+
+  it('preserves Plan 0.7 single-application bootstrap facts without a dependency placeholder', async () => {
+    const entries = await createSingleApplicationBootstrapBundle()
+    const loaded = await loadBundleFromBlobs(entries, 'unit-single-application')
+    const evidence = loaded.evidenceByPath['evidence/runtime.bootstrap.json']!
+    const facts = evidence.facts as {
+      nodes: Array<{ node_id: string; role: string }>
+      start_order: { sealed: string[]; actual: string[] }
+      teardown_order: { sealed: string[]; attempted: string[]; completed: string[] }
+      resource_observation: {
+        application_peak_rss_mb: number
+        dependency_peak_rss_mb: number | null
+      }
+    }
+    const authority = JSON.parse(await entries.get('sealed-plan.json')!.text()) as {
+      schema_version: string
+    }
+
+    expect(authority.schema_version).toBe('0.7')
+    expect(loaded.report.primary_variable).toMatchObject({
+      name: 'project_bootstrap_topology',
+      value: 'veritrail_managed_windows_c1_single_application',
+    })
+    expect(evidence.source).toBe('VeriTrail bootstrap-lifecycle/0.3')
+    expect(facts.nodes).toEqual([{ node_id: 'application', role: 'APPLICATION' }])
+    expect(facts.start_order).toEqual({ sealed: ['application'], actual: ['application'] })
+    expect(facts.teardown_order).toEqual({
+      sealed: ['application'],
+      attempted: ['application'],
+      completed: ['application'],
+    })
+    expect(facts.resource_observation).toEqual({
+      application_peak_rss_mb: 32,
+      dependency_peak_rss_mb: null,
+    })
+    expect(loaded.evidenceManifest.artifacts[0]!.attachments.map((item) => item.logical_name)).toEqual([
+      'bootstrap-application-stdout',
+      'bootstrap-application-stderr',
+    ])
+    expect(facts.nodes.some((node) => node.role === 'DEPENDENCY')).toBe(false)
     loaded.release()
   })
 

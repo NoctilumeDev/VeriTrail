@@ -18,7 +18,8 @@ from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.windows_job import CapturedStream
 
-COLLECTOR_VERSION = "bootstrap-lifecycle/0.2"
+COLLECTOR_VERSION = "bootstrap-lifecycle/0.3"
+M10_COLLECTOR_VERSION = "bootstrap-lifecycle/0.2"
 LEGACY_COLLECTOR_VERSION = "bootstrap-lifecycle/0.1"
 LISTENER_OWNER_BACKEND = "WINDOWS_IP_HELPER_CTYPES_IPV4"
 PROCESS_OWNERSHIP_BACKEND = "WINDOWS_JOB_OBJECT_PYWIN32_312"
@@ -189,6 +190,7 @@ def _validate_preview(plan: dict[str, Any], profile: dict[str, Any], preview: di
     if not isinstance(digest, str) or digest != sha256_json(unsigned):
         raise SafetyError("M10 approved bootstrap Preview seal is invalid")
     expected = {
+        "schema_version": "0.2" if plan["schema_version"] == "0.7" else "0.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
@@ -198,6 +200,8 @@ def _validate_preview(plan: dict[str, Any], profile: dict[str, Any], preview: di
         "start_order": profile["start_order"],
         "teardown_order": profile["teardown_order"],
     }
+    if plan["schema_version"] == "0.7":
+        expected["topology"] = profile["topology"]
     if any(preview.get(key) != value for key, value in expected.items()):
         raise SafetyError("M10 approved bootstrap Preview identity drifted")
 
@@ -268,12 +272,13 @@ def collect_bootstrap_evidence(
     path_replacements: Sequence[tuple[str, str]] = (),
     captured_at: str | None = None,
 ) -> BootstrapEvidenceResult:
-    """Freeze a completed lifecycle observation into strict M10 Evidence."""
+    """Freeze a completed lifecycle observation into strict bootstrap Evidence."""
 
     verify_sealed_project_profile(profile)
     verify_sealed_plan(plan, profile)
-    if plan.get("schema_version") != "0.6":
-        raise SafetyError("M10 bootstrap Evidence requires ExperimentPlan 0.6")
+    plan_version = plan.get("schema_version")
+    if plan_version not in {"0.6", "0.7"}:
+        raise SafetyError("bootstrap Evidence requires ExperimentPlan 0.6 or 0.7")
     _validate_preview(plan, profile, preview)
     _validate_observation_inputs(resource_observation, subject_observation)
     if set(browser_exercise) != {
@@ -542,10 +547,26 @@ def collect_bootstrap_evidence(
     browser_completed = bool(browser_exercise["completed"])
     execution_status = _execution_status(reason, browser_completed, cleanup_complete)
     stop_stage = lifecycle.events[-1].stage if lifecycle.events else "DISCOVERED"
+    collector_version = (
+        COLLECTOR_VERSION if plan_version == "0.7" else M10_COLLECTOR_VERSION
+    )
+    observed_variables = (
+        {
+            "project_bootstrap_topology": (
+                "veritrail_managed_windows_c1_single_application"
+            )
+        }
+        if plan_version == "0.7"
+        else {
+            "project_bootstrap_mode": (
+                "veritrail_managed_windows_c1_two_node_services"
+            )
+        }
+    )
     document = {
         "schema_version": "0.1",
         "evidence_type": "runtime.bootstrap",
-        "source": f"VeriTrail {COLLECTOR_VERSION}",
+        "source": f"VeriTrail {collector_version}",
         "captured_at": captured_at
         or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "facts": {
@@ -597,9 +618,7 @@ def collect_bootstrap_evidence(
             "cleanup": cleanup,
             "cleanup_complete": cleanup_complete,
         },
-        "observed_variables": {
-            "project_bootstrap_mode": "veritrail_managed_windows_c1_two_node_services"
-        },
+        "observed_variables": observed_variables,
         "metadata": dict(METADATA),
     }
     artifact = import_evidence_document(
@@ -649,13 +668,29 @@ def validate_bootstrap_evidence(
     source = document.get("source")
     if source not in {
         f"VeriTrail {COLLECTOR_VERSION}",
+        f"VeriTrail {M10_COLLECTOR_VERSION}",
         f"VeriTrail {LEGACY_COLLECTOR_VERSION}",
     }:
         errors.append(f"{input_name}.source must identify the frozen bootstrap collector")
-    current_collector = source == f"VeriTrail {COLLECTOR_VERSION}"
-    if document.get("observed_variables") != {
-        "project_bootstrap_mode": "veritrail_managed_windows_c1_two_node_services"
-    }:
+    current_collector = source in {
+        f"VeriTrail {COLLECTOR_VERSION}",
+        f"VeriTrail {M10_COLLECTOR_VERSION}",
+    }
+    single_node_collector = source == f"VeriTrail {COLLECTOR_VERSION}"
+    expected_variables = (
+        {
+            "project_bootstrap_topology": (
+                "veritrail_managed_windows_c1_single_application"
+            )
+        }
+        if single_node_collector
+        else {
+            "project_bootstrap_mode": (
+                "veritrail_managed_windows_c1_two_node_services"
+            )
+        }
+    )
+    if document.get("observed_variables") != expected_variables:
         errors.append(f"{input_name}.observed_variables must contain the frozen bootstrap mode")
 
     def sha(value: Any) -> bool:
@@ -702,9 +737,10 @@ def validate_bootstrap_evidence(
         errors.append(f"{input_name}.facts.teardown_order must contain exact fields")
     sealed_start = start.get("sealed", []) if isinstance(start, dict) else []
     sealed_teardown = teardown.get("sealed", []) if isinstance(teardown, dict) else []
+    expected_node_count = 1 if single_node_collector else 2
     if (
         not isinstance(sealed_start, list)
-        or len(sealed_start) != 2
+        or len(sealed_start) != expected_node_count
         or any(not isinstance(item, str) for item in sealed_start)
         or sealed_teardown != list(reversed(sealed_start))
     ):
@@ -784,8 +820,10 @@ def validate_bootstrap_evidence(
         "target_resumed", "root_exit_code", "termination_reason", "error_type", "job",
         "readiness", "stdout", "stderr", "teardown",
     }
-    if not isinstance(nodes, list) or len(nodes) != 2:
-        errors.append(f"{input_name}.facts.nodes must contain exactly two nodes")
+    if not isinstance(nodes, list) or len(nodes) != expected_node_count:
+        errors.append(
+            f"{input_name}.facts.nodes must contain exactly {expected_node_count} node(s)"
+        )
         nodes = []
     for index, node in enumerate(nodes):
         prefix = f"{input_name}.facts.nodes[{index}]"
@@ -793,8 +831,14 @@ def validate_bootstrap_evidence(
             errors.append(f"{prefix} must contain exact node fields")
             continue
         if (
-            node.get("node_id") != (sealed_start[index] if len(sealed_start) == 2 else None)
-            or node.get("role") not in {"DEPENDENCY", "APPLICATION"}
+            node.get("node_id")
+            != (
+                sealed_start[index]
+                if len(sealed_start) == expected_node_count
+                else None
+            )
+            or node.get("role")
+            not in ({"APPLICATION"} if single_node_collector else {"DEPENDENCY", "APPLICATION"})
             or not sha(node.get("policy_sha256"))
         ):
             errors.append(f"{prefix} identity is invalid")
@@ -1082,6 +1126,24 @@ def validate_bootstrap_evidence(
             errors.append(
                 f"{input_name}.facts sustained hard memory breach lacks a hard trigger"
             )
+        if single_node_collector and resource.get("dependency_peak_rss_mb") is not None:
+            errors.append(
+                f"{input_name}.facts single-node resource observation must not fabricate dependency RSS"
+            )
+        application_started = any(
+            isinstance(node, dict)
+            and node.get("role") == "APPLICATION"
+            and node.get("process_created") is True
+            for node in nodes
+        )
+        if (
+            single_node_collector
+            and application_started
+            and not number(resource.get("application_peak_rss_mb"))
+        ):
+            errors.append(
+                f"{input_name}.facts started application requires an application RSS observation"
+            )
     subject = facts["subject_observation"]
     if not isinstance(subject, dict) or set(subject) != SUBJECT_FIELDS:
         errors.append(f"{input_name}.facts.subject_observation is invalid")
@@ -1139,7 +1201,7 @@ def validate_bootstrap_evidence(
         errors.append(f"{input_name}.facts cleanup reason conflicts with completion")
     if facts["services_ready"] is True and (
         actual_start != sealed_start
-        or len(nodes) != 2
+        or len(nodes) != expected_node_count
         or any(
             not isinstance(node, dict)
             or not isinstance(node.get("readiness"), dict)

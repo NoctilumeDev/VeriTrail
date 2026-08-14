@@ -24,7 +24,7 @@ WINDOWS_RESERVED_PATH_NAMES = {
     *(f"lpt{index}" for index in range(1, 10)),
 }
 
-PROFILE_FIELDS = {
+PROFILE_V01_FIELDS = {
     "schema_version",
     "profile_id",
     "version",
@@ -40,6 +40,9 @@ PROFILE_FIELDS = {
     "lifecycle_timeout_ms",
     "seal",
 }
+PROFILE_V02_FIELDS = PROFILE_V01_FIELDS | {"topology"}
+# Backward-compatible name for the frozen 0.1 contract.
+PROFILE_FIELDS = PROFILE_V01_FIELDS
 NODE_FIELDS = {
     "node_id",
     "role",
@@ -320,9 +323,16 @@ def _validate_shutdown(value: Any, prefix: str, errors: list[str]) -> None:
 
 def validate_project_profile(profile: dict[str, Any]) -> None:
     errors: list[str] = []
-    _reject_unknown_fields(profile, PROFILE_FIELDS, "ProjectProfile", errors)
-    if profile.get("schema_version") != "0.1":
-        errors.append("ProjectProfile.schema_version must be '0.1'")
+    schema_version = profile.get("schema_version")
+    if schema_version == "0.1":
+        _reject_unknown_fields(profile, PROFILE_V01_FIELDS, "ProjectProfile", errors)
+    elif schema_version == "0.2":
+        _reject_unknown_fields(profile, PROFILE_V02_FIELDS, "ProjectProfile", errors)
+        if profile.get("topology") != "SINGLE_APPLICATION":
+            errors.append("ProjectProfile 0.2 topology must be SINGLE_APPLICATION")
+    else:
+        _reject_unknown_fields(profile, PROFILE_V02_FIELDS, "ProjectProfile", errors)
+        errors.append("ProjectProfile.schema_version must be '0.1' or '0.2'")
     _validate_identifier(profile.get("profile_id"), "profile_id", errors)
     version = profile.get("version")
     if not _is_integer(version) or version < 1:
@@ -335,8 +345,13 @@ def validate_project_profile(profile: dict[str, Any]) -> None:
     nodes = profile.get("nodes")
     node_map: dict[str, dict[str, Any]] = {}
     role_map: dict[str, str] = {}
-    if not isinstance(nodes, list) or len(nodes) != 2:
-        errors.append("nodes must contain exactly two entries")
+    expected_node_count = 1 if schema_version == "0.2" else 2
+    if not isinstance(nodes, list) or len(nodes) != expected_node_count:
+        errors.append(
+            "nodes must contain exactly one APPLICATION entry"
+            if schema_version == "0.2"
+            else "nodes must contain exactly two entries"
+        )
     else:
         for index, node in enumerate(nodes):
             prefix = f"nodes[{index}]"
@@ -351,8 +366,16 @@ def validate_project_profile(profile: dict[str, Any]) -> None:
                 else:
                     node_map[node_id] = node
             role = node.get("role")
-            if role not in {"DEPENDENCY", "APPLICATION"}:
-                errors.append(f"{prefix}.role must be DEPENDENCY or APPLICATION")
+            allowed_roles = {"APPLICATION"} if schema_version == "0.2" else {
+                "DEPENDENCY",
+                "APPLICATION",
+            }
+            if role not in allowed_roles:
+                errors.append(
+                    f"{prefix}.role must be APPLICATION"
+                    if schema_version == "0.2"
+                    else f"{prefix}.role must be DEPENDENCY or APPLICATION"
+                )
             elif role in role_map:
                 errors.append(f"nodes must contain exactly one {role}")
             elif node_id is not None:
@@ -376,43 +399,61 @@ def validate_project_profile(profile: dict[str, Any]) -> None:
 
     dependency_id = role_map.get("DEPENDENCY")
     application_id = role_map.get("APPLICATION")
-    if set(role_map) != {"DEPENDENCY", "APPLICATION"}:
-        errors.append("nodes must contain exactly one DEPENDENCY and one APPLICATION")
-    if dependency_id is not None:
-        dependency = node_map[dependency_id]
-        if dependency.get("depends_on") != []:
-            errors.append("dependency.depends_on must be []")
-        _validate_arguments(
-            dependency.get("arguments"),
-            prefix=f"nodes[{nodes.index(dependency)}].arguments",
-            node_id=dependency_id,
-            allowed_node_refs={dependency_id},
-            errors=errors,
-        )
-    if application_id is not None and dependency_id is not None:
-        application = node_map[application_id]
-        if application.get("depends_on") != [dependency_id]:
-            errors.append("application.depends_on must contain only the dependency node id")
-        _validate_arguments(
-            application.get("arguments"),
-            prefix=f"nodes[{nodes.index(application)}].arguments",
-            node_id=application_id,
-            allowed_node_refs={dependency_id, application_id},
-            errors=errors,
-        )
-
-    expected_start = (
-        [dependency_id, application_id]
-        if dependency_id is not None and application_id is not None
-        else None
-    )
-    if expected_start is not None and profile.get("start_order") != expected_start:
-        errors.append("start_order must be [DEPENDENCY node id, APPLICATION node id]")
-    if expected_start is not None and profile.get("teardown_order") != list(reversed(expected_start)):
-        errors.append("teardown_order must be the strict reverse of start_order")
+    expected_start: list[str] | None = None
+    if schema_version == "0.2":
+        if set(role_map) != {"APPLICATION"}:
+            errors.append("nodes must contain exactly one APPLICATION")
+        if application_id is not None:
+            application = node_map[application_id]
+            if application.get("depends_on") != []:
+                errors.append("application.depends_on must be [] for SINGLE_APPLICATION")
+            _validate_arguments(
+                application.get("arguments"),
+                prefix=f"nodes[{nodes.index(application)}].arguments",
+                node_id=application_id,
+                allowed_node_refs={application_id},
+                errors=errors,
+            )
+            expected_start = [application_id]
+        if expected_start is not None and profile.get("start_order") != expected_start:
+            errors.append("start_order must contain only the APPLICATION node id")
+        if expected_start is not None and profile.get("teardown_order") != expected_start:
+            errors.append("teardown_order must contain only the APPLICATION node id")
+    else:
+        if set(role_map) != {"DEPENDENCY", "APPLICATION"}:
+            errors.append("nodes must contain exactly one DEPENDENCY and one APPLICATION")
+        if dependency_id is not None:
+            dependency = node_map[dependency_id]
+            if dependency.get("depends_on") != []:
+                errors.append("dependency.depends_on must be []")
+            _validate_arguments(
+                dependency.get("arguments"),
+                prefix=f"nodes[{nodes.index(dependency)}].arguments",
+                node_id=dependency_id,
+                allowed_node_refs={dependency_id},
+                errors=errors,
+            )
+        if application_id is not None and dependency_id is not None:
+            application = node_map[application_id]
+            if application.get("depends_on") != [dependency_id]:
+                errors.append("application.depends_on must contain only the dependency node id")
+            _validate_arguments(
+                application.get("arguments"),
+                prefix=f"nodes[{nodes.index(application)}].arguments",
+                node_id=application_id,
+                allowed_node_refs={dependency_id, application_id},
+                errors=errors,
+            )
+            expected_start = [dependency_id, application_id]
+        if expected_start is not None and profile.get("start_order") != expected_start:
+            errors.append("start_order must be [DEPENDENCY node id, APPLICATION node id]")
+        if expected_start is not None and profile.get("teardown_order") != list(
+            reversed(expected_start)
+        ):
+            errors.append("teardown_order must be the strict reverse of start_order")
     if application_id is not None and profile.get("application_node_id") != application_id:
         errors.append("application_node_id must reference the unique APPLICATION")
-    if isinstance(nodes, list) and len(nodes) == 2:
+    if schema_version == "0.1" and isinstance(nodes, list) and len(nodes) == 2:
         ports = [node.get("port") for node in nodes if isinstance(node, dict)]
         if len(ports) == 2 and ports[0] == ports[1]:
             errors.append("node ports must be different")

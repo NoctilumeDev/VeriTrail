@@ -13,6 +13,7 @@ DIRECT_INVARIANT_FAILURE_EVIDENCE = {
     "BOOTSTRAP_CLEANUP_INCOMPLETE": "runtime.bootstrap",
 }
 BOOTSTRAP_COLLECTOR_V02 = "VeriTrail bootstrap-lifecycle/0.2"
+BOOTSTRAP_COLLECTOR_V03 = "VeriTrail bootstrap-lifecycle/0.3"
 BOOTSTRAP_SERVICES_READY_INTERRUPTION_REASONS = {
     "USER_CANCELLED",
     "LIFECYCLE_TIMEOUT",
@@ -73,7 +74,7 @@ def _assertion_fact_is_applicable(
     actual: Any,
 ) -> bool:
     if (
-        plan.get("schema_version") != "0.6"
+        plan.get("schema_version") not in {"0.6", "0.7"}
         or assertion["evidence_type"] != "runtime.bootstrap"
         or assertion["path"] != "/facts/services_ready"
         or actual is not False
@@ -210,7 +211,14 @@ def _detect_variable_contamination(
 def _detect_preflight_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.2", "0.3", "0.4", "0.5", "0.6"}:
+    if plan.get("schema_version") not in {
+        "0.2",
+        "0.3",
+        "0.4",
+        "0.5",
+        "0.6",
+        "0.7",
+    }:
         return []
     preflight = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "runtime.preflight"
@@ -233,10 +241,13 @@ def _detect_preflight_contamination(
                     "message": "The observed preflight policy differs from the sealed preflight policy.",
                 }
             )
-        stopped_plan_06 = (
-            plan.get("schema_version") == "0.6" and facts["decision"] != "PROCEED"
+        stopped_bootstrap_plan = (
+            plan.get("schema_version") in {"0.6", "0.7"}
+            and facts["decision"] != "PROCEED"
         )
-        if (facts["decision"] == "ABORT" or stopped_plan_06) and execution_status != "ABORTED":
+        if (
+            facts["decision"] == "ABORT" or stopped_bootstrap_plan
+        ) and execution_status != "ABORTED":
             contamination.append(
                 {
                     "code": "PREFLIGHT_STATUS_CONFLICT",
@@ -244,7 +255,7 @@ def _detect_preflight_contamination(
                     "message": "The preflight decision requires ABORTED but the Run status differs.",
                 }
             )
-        if stopped_plan_06:
+        if stopped_bootstrap_plan:
             if any(
                 item.document["evidence_type"] == "runtime.bootstrap" for item in evidence
             ):
@@ -252,7 +263,7 @@ def _detect_preflight_contamination(
                     {
                         "code": "PREFLIGHT_BOOTSTRAP_CONFLICT",
                         "evidence_sha256": artifact.sha256,
-                        "message": "A preflight-stopped Plan 0.6 Run cannot contain bootstrap Evidence.",
+                        "message": "A preflight-stopped bootstrap Run cannot contain bootstrap Evidence.",
                     }
                 )
             if any(item.document["evidence_type"] == "browser.session" for item in evidence):
@@ -260,7 +271,7 @@ def _detect_preflight_contamination(
                     {
                         "code": "PREFLIGHT_BROWSER_CONFLICT",
                         "evidence_sha256": artifact.sha256,
-                        "message": "A preflight-stopped Plan 0.6 Run cannot contain browser Evidence.",
+                        "message": "A preflight-stopped bootstrap Run cannot contain browser Evidence.",
                     }
                 )
     return contamination
@@ -269,7 +280,7 @@ def _detect_preflight_contamination(
 def _detect_browser_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") not in {"0.3", "0.4", "0.5", "0.6"}:
+    if plan.get("schema_version") not in {"0.3", "0.4", "0.5", "0.6", "0.7"}:
         return []
     sessions = [
         artifact for artifact in evidence if artifact.document["evidence_type"] == "browser.session"
@@ -298,7 +309,7 @@ def _detect_browser_contamination(
                 }
             )
         allowed_bootstrap_business_failure = False
-        if plan.get("schema_version") == "0.6" and len(bootstrap_sessions) == 1:
+        if plan.get("schema_version") in {"0.6", "0.7"} and len(bootstrap_sessions) == 1:
             bootstrap = bootstrap_sessions[0].document["facts"]
             browser_exercise = bootstrap["browser_exercise"]
             allowed_bootstrap_business_failure = (
@@ -554,7 +565,8 @@ def _detect_command_contamination(
 def _detect_bootstrap_contamination(
     plan: dict[str, Any], evidence: list[ImportedEvidence], execution_status: str
 ) -> list[dict[str, Any]]:
-    if plan.get("schema_version") != "0.6":
+    plan_version = plan.get("schema_version")
+    if plan_version not in {"0.6", "0.7"}:
         return []
     sessions = [
         artifact
@@ -566,7 +578,7 @@ def _detect_bootstrap_contamination(
         contamination.append(
             {
                 "code": "MULTIPLE_BOOTSTRAP_EVIDENCE",
-                "message": "A Plan 0.6 Run must contain exactly one runtime.bootstrap artifact.",
+                "message": f"A Plan {plan_version} Run must contain exactly one runtime.bootstrap artifact.",
             }
         )
     browser_sessions = [
@@ -624,7 +636,10 @@ def _detect_bootstrap_contamination(
                 }
             )
         resource = facts["resource_observation"]
-        if artifact.document.get("source") == BOOTSTRAP_COLLECTOR_V02 and (
+        if artifact.document.get("source") in {
+            BOOTSTRAP_COLLECTOR_V02,
+            BOOTSTRAP_COLLECTOR_V03,
+        } and (
             resource["available_memory_soft_min_mb"]
             != plan["preflight"]["available_memory_soft_min_mb"]
             or resource["available_memory_hard_min_mb"]

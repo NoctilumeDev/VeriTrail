@@ -1,0 +1,46 @@
+{
+  "schema_version": "0.1",
+  "base_plan": "plan-positive.json",
+  "authorities": [
+    {
+      "name": "positive",
+      "plan_id": "m11-single-app-gatea-positive",
+      "profile": "profile-positive.json",
+      "profile_sha256": "da2aee1a73fade42d2c5efb6092817d2a91d60142d52915586a266b42261f5b7",
+      "plan_sha256": "c8cae904d6091cf8d2b7e55c63b50308d80d63e340e1cd2afdd2a80c903e0ed6",
+      "browser_missing_selector": null
+    },
+    {
+      "name": "browser-negative",
+      "plan_id": "m11-single-app-gatea-browser-negative",
+      "profile": "profile-positive.json",
+      "profile_sha256": "da2aee1a73fade42d2c5efb6092817d2a91d60142d52915586a266b42261f5b7",
+      "plan_sha256": "8fdf25e241ebcbce66a1a56035cc8ac8a1e91a6198a50c55318ce1159dc761ee",
+      "browser_missing_selector": "#veritrail-m11-missing-selector"
+    },
+    {
+      "name": "early-exit",
+      "plan_id": "m11-single-app-gatea-early-exit",
+      "profile": "profile-early-exit.json",
+      "profile_sha256": "42512b038b685377c6514cac4cf1555d14b73383f1087a2f8d56529127a5c71a",
+      "plan_sha256": "8fbba5b3d2ea849699fc4afc486cf4f7b8608229b5845bedda78ea91069d46bb",
+      "browser_missing_selector": null
+    },
+    {
+      "name": "readiness-timeout",
+      "plan_id": "m11-single-app-gatea-readiness-timeout",
+      "profile": "profile-readiness-timeout.json",
+      "profile_sha256": "8b0120e2bfd5ab8d0968679d17c603df85b46860ce2e27ced591cfe26649c017",
+      "plan_sha256": "06b155e17c8883ccc1d1a345927323cd6c97707bd59bb7f20dde2106b1125893",
+      "browser_missing_selector": null
+    },
+    {
+      "name": "owner-mismatch",
+      "plan_id": "m11-single-app-gatea-owner-mismatch",
+      "profile": "profile-owner-mismatch.json",
+      "profile_sha256": "cda2368b5098df954eb99bc52c44d69f77991f65442a4dbecacaf2ae74a50916",
+      "plan_sha256": "7612caa3ae976f7ad2ac23b7a39b8ed2e3bcadd4fc70d496db6cd22e17058481",
+      "browser_missing_selector": null
+    }
+  ]
+}

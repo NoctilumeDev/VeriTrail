@@ -12,7 +12,8 @@ from veritrail.jsonio import load_json_object as load_strict_json_object
 from veritrail.privacy import redact_value
 from veritrail.project_profile import verify_sealed_project_profile
 
-SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6"}
+SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7"}
+BOOTSTRAP_SCHEMA_VERSIONS = {"0.6", "0.7"}
 PLAN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 VARIABLE_ROLES = {"PRIMARY", "CONTROLLED", "NUISANCE"}
 ASSERTION_SEVERITIES = {
@@ -213,7 +214,7 @@ def _validate_resource_budget(value: Any, schema_version: Any, errors: list[str]
             errors.append("resource_budget.memory_hard_mb must be a positive integer")
         if _is_integer(soft) and _is_integer(hard) and hard < soft:
             errors.append("resource_budget.memory_hard_mb must be >= memory_soft_mb")
-    elif schema_version in {"0.2", "0.3", "0.4", "0.5", "0.6"}:
+    elif schema_version in {"0.2", "0.3", "0.4", "0.5", "0.6", "0.7"}:
         _reject_unknown_fields(
             value,
             {"max_artifact_bytes"},
@@ -763,8 +764,11 @@ def _validate_bootstrap_profile_binding(
     plan: dict[str, Any],
     errors: list[str],
 ) -> None:
+    plan_version = plan.get("schema_version")
     if not isinstance(value, dict):
-        errors.append("bootstrap_profile must be an object for schema_version '0.6'")
+        errors.append(
+            f"bootstrap_profile must be an object for schema_version {plan_version!r}"
+        )
         return
     _reject_unknown_fields(
         value,
@@ -782,7 +786,9 @@ def _validate_bootstrap_profile_binding(
     if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
         errors.append("bootstrap_profile.profile_sha256 must be a lowercase SHA-256 digest")
     if profile is None:
-        errors.append("schema_version '0.6' validation requires a sealed ProjectProfile")
+        errors.append(
+            f"schema_version {plan_version!r} validation requires a sealed ProjectProfile"
+        )
         return
     try:
         verify_sealed_project_profile(profile)
@@ -796,6 +802,11 @@ def _validate_bootstrap_profile_binding(
     }
     if value != expected_reference:
         errors.append("bootstrap_profile does not match the sealed ProjectProfile identity")
+    expected_profile_version = "0.1" if plan_version == "0.6" else "0.2"
+    if profile.get("schema_version") != expected_profile_version:
+        errors.append(
+            f"ExperimentPlan {plan_version} requires ProjectProfile {expected_profile_version}"
+        )
 
     nodes = {node["node_id"]: node for node in profile["nodes"]}
     application = nodes[profile["application_node_id"]]
@@ -860,7 +871,9 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
 
     schema_version = plan.get("schema_version")
     if schema_version not in SUPPORTED_SCHEMA_VERSIONS:
-        errors.append("schema_version must be '0.1', '0.2', '0.3', '0.4', '0.5', or '0.6'")
+        errors.append(
+            "schema_version must be '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', or '0.7'"
+        )
     plan_id = plan.get("plan_id")
     if not isinstance(plan_id, str) or not PLAN_ID_PATTERN.fullmatch(plan_id):
         errors.append("plan_id must be a 2-64 character lowercase identifier")
@@ -924,7 +937,7 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
                 errors.append(f"{prefix}.source must be a non-empty string")
         if primary_count != 1:
             errors.append("a SINGLE_VARIABLE plan must declare exactly one PRIMARY variable")
-        if schema_version == "0.6":
+        if schema_version in BOOTSTRAP_SCHEMA_VERSIONS:
             primary = next(
                 (
                     variable
@@ -933,20 +946,35 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
                 ),
                 None,
             )
-            if not isinstance(primary, dict) or primary.get("name") != "project_bootstrap_mode":
-                errors.append("schema_version '0.6' PRIMARY variable must be project_bootstrap_mode")
-            elif primary.get("value") != "veritrail_managed_windows_c1_two_node_services":
-                errors.append("schema_version '0.6' PRIMARY value must use the frozen bootstrap mode")
+            expected_primary = (
+                (
+                    "project_bootstrap_mode",
+                    "veritrail_managed_windows_c1_two_node_services",
+                )
+                if schema_version == "0.6"
+                else (
+                    "project_bootstrap_topology",
+                    "veritrail_managed_windows_c1_single_application",
+                )
+            )
+            if not isinstance(primary, dict) or primary.get("name") != expected_primary[0]:
+                errors.append(
+                    f"schema_version {schema_version!r} PRIMARY variable must be {expected_primary[0]}"
+                )
+            elif primary.get("value") != expected_primary[1]:
+                errors.append(
+                    f"schema_version {schema_version!r} PRIMARY value must use the frozen bootstrap topology"
+                )
 
     required_evidence = plan.get("required_evidence")
     _validate_string_list(required_evidence, "required_evidence", errors, non_empty=True)
     if isinstance(required_evidence, list) and len(required_evidence) != len(set(required_evidence)):
         errors.append("required_evidence must not contain duplicates")
-    if schema_version in {"0.2", "0.3", "0.4", "0.5", "0.6"} and (
+    if schema_version in {"0.2", "0.3", "0.4", "0.5", "0.6", "0.7"} and (
         not isinstance(required_evidence, list) or "runtime.preflight" not in required_evidence
     ):
         errors.append(f"schema_version {schema_version!r} must require runtime.preflight evidence")
-    if schema_version in {"0.3", "0.4", "0.5", "0.6"} and (
+    if schema_version in {"0.3", "0.4", "0.5", "0.6", "0.7"} and (
         not isinstance(required_evidence, list) or "browser.session" not in required_evidence
     ):
         errors.append(f"schema_version {schema_version!r} must require browser.session evidence")
@@ -961,16 +989,18 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
         not isinstance(required_evidence, list) or "runtime.command" not in required_evidence
     ):
         errors.append("schema_version '0.5' must require runtime.command evidence")
-    if schema_version == "0.6" and (
+    if schema_version in BOOTSTRAP_SCHEMA_VERSIONS and (
         not isinstance(required_evidence, list) or "runtime.bootstrap" not in required_evidence
     ):
-        errors.append("schema_version '0.6' must require runtime.bootstrap evidence")
-    if schema_version == "0.6" and isinstance(required_evidence, list) and any(
+        errors.append(
+            f"schema_version {schema_version!r} must require runtime.bootstrap evidence"
+        )
+    if schema_version in BOOTSTRAP_SCHEMA_VERSIONS and isinstance(required_evidence, list) and any(
         evidence in {"runtime.command", "runtime.orchestration"}
         for evidence in required_evidence
     ):
         errors.append(
-            "schema_version '0.6' must not require legacy runtime.command or runtime.orchestration evidence"
+            f"schema_version {schema_version!r} must not require legacy runtime.command or runtime.orchestration evidence"
         )
 
     assertions = plan.get("assertions")
@@ -1013,14 +1043,14 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
                 errors.append(f"{prefix}.expected is required")
         if decisive_count < 1:
             errors.append("at least one HARD or DEGRADATION_BOUNDARY assertion is required")
-        if schema_version in {"0.2", "0.3", "0.4", "0.5", "0.6"} and not any(
+        if schema_version in {"0.2", "0.3", "0.4", "0.5", "0.6", "0.7"} and not any(
             isinstance(assertion, dict) and assertion.get("evidence_type") == "runtime.preflight"
             for assertion in assertions
         ):
             errors.append(
                 f"schema_version {schema_version!r} must define an assertion over runtime.preflight"
             )
-        if schema_version in {"0.3", "0.4", "0.5", "0.6"} and not any(
+        if schema_version in {"0.3", "0.4", "0.5", "0.6", "0.7"} and not any(
             isinstance(assertion, dict)
             and assertion.get("evidence_type") == "browser.session"
             and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
@@ -1047,22 +1077,22 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
             errors.append(
                 "schema_version '0.5' must define a decisive assertion over runtime.command"
             )
-        if schema_version == "0.6" and not any(
+        if schema_version in BOOTSTRAP_SCHEMA_VERSIONS and not any(
             isinstance(assertion, dict)
             and assertion.get("evidence_type") == "runtime.bootstrap"
             and assertion.get("severity") in {"HARD", "DEGRADATION_BOUNDARY"}
             for assertion in assertions
         ):
             errors.append(
-                "schema_version '0.6' must define a decisive assertion over runtime.bootstrap"
+                f"schema_version {schema_version!r} must define a decisive assertion over runtime.bootstrap"
             )
-        if schema_version == "0.6" and any(
+        if schema_version in BOOTSTRAP_SCHEMA_VERSIONS and any(
             isinstance(assertion, dict)
             and assertion.get("evidence_type") in {"runtime.command", "runtime.orchestration"}
             for assertion in assertions
         ):
             errors.append(
-                "schema_version '0.6' must not assert over legacy command or orchestration evidence"
+                f"schema_version {schema_version!r} must not assert over legacy command or orchestration evidence"
             )
 
     random_seed = plan.get("random_seed")
@@ -1116,19 +1146,23 @@ def validate_plan(plan: dict[str, Any], profile: dict[str, Any] | None = None) -
             errors,
         )
         _validate_command(plan.get("command"), errors)
-    elif schema_version == "0.6":
+    elif schema_version in BOOTSTRAP_SCHEMA_VERSIONS:
         _validate_preflight(plan.get("preflight"), errors)
         _validate_browser(plan.get("browser"), errors, require_m10_safety=True)
         if "target" in plan:
-            errors.append("schema_version '0.6' does not accept the Plan 0.4 target")
+            errors.append(
+                f"schema_version {schema_version!r} does not accept the Plan 0.4 target"
+            )
         if "command" in plan:
-            errors.append("schema_version '0.6' does not accept the Plan 0.5 command")
+            errors.append(
+                f"schema_version {schema_version!r} does not accept the Plan 0.5 command"
+            )
         _validate_bootstrap_profile_binding(
             plan.get("bootstrap_profile"), profile, plan, errors
         )
 
-    if schema_version != "0.6" and "bootstrap_profile" in plan:
-        errors.append("bootstrap_profile requires schema_version '0.6'")
+    if schema_version not in BOOTSTRAP_SCHEMA_VERSIONS and "bootstrap_profile" in plan:
+        errors.append("bootstrap_profile requires schema_version '0.6' or '0.7'")
 
     _validate_load_model(plan.get("load_model"), errors)
 

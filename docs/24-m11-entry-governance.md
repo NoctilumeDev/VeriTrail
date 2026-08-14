@@ -88,3 +88,18 @@ M10 标签或先修改产品代码的稳定阻断项。
 因此允许先完成 README、个人主页和方法论文档等入口枝叶整理；这些整理公开读回后，才按 Contract
 0.2 从 Gate A 开始 M11 实现。直到 Gate A 代码提交真正出现，M11 必须保持
 `PLANNED / IMPLEMENTATION_NOT_STARTED`，本文件不得被引用为 M11 功能通过。
+
+## 8. 入口后的合同纠偏
+
+Gate A 编码开始后的严格 validator 测试证明，Contract 0.2 第 8.1 节让一个 sealed Plan 同时绑定四个
+不同 sealed Profile，与既有 `bootstrap_profile.profile_sha256` 权威关系矛盾。当前 Contract 0.3 已在
+任何 Gate A Run 之前把 early-exit、readiness-timeout 和 owner-mismatch Profile 分别绑定到独立 Plan；
+13 个出口、资源预算、裁决和 Gate A -> Gate B 门禁不变。本入口治理文档继续只证明进入 Gate A 时的
+M0-M10 状态，不证明纠偏后的实现或运行已经通过。
+
+## 9. 后继事实索引
+
+Gate A 后续已完成 Profile 0.2、Plan 0.7、Preview 0.2、单 APPLICATION 生命周期、collector 0.3 和
+全部公共消费者实现，并从 Run 1 重新完成 13 个预注册出口。该事实不回写本文件的历史入口结论；
+准确自动化、运行、失败候选、资源、安全与边界见
+[M11 Gate A 单应用能力验证](25-m11-gate-a-validation.md)。M11 仍为 `PLANNED`，Gate B 尚未开始。

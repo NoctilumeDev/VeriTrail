@@ -188,7 +188,7 @@ def _load_source(candidate: Path) -> _SourceRun:
         plan = load_json_object(candidate / "sealed-plan.json", label="Sealed Plan")
         report = load_json_object(candidate / "report.json", label="Report")
         profile_sha256: str | None = None
-        if plan.get("schema_version") == "0.6":
+        if plan.get("schema_version") in {"0.6", "0.7"}:
             if "sealed-profile.json" not in declared:
                 raise ValueError("missing sealed ProjectProfile")
             profile = load_json_object(

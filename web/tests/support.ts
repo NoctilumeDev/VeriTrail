@@ -197,6 +197,162 @@ export async function createBootstrapBundle(): Promise<Map<string, Blob>> {
   ])
 }
 
+export async function createSingleApplicationBootstrapBundle(): Promise<Map<string, Blob>> {
+  const runId = 'm11-single-application-workbench-readback'
+  const capturedAt = '2026-08-14T00:00:00Z'
+  const evidencePath = 'evidence/runtime.bootstrap.json'
+  const stdoutPath = 'attachments/bootstrap/application/stdout.txt'
+  const stderrPath = 'attachments/bootstrap/application/stderr.txt'
+  const stdoutBlob = new Blob(['single application ready\n'], {
+    type: 'text/plain; charset=utf-8',
+  })
+  const stderrBlob = new Blob([], { type: 'text/plain; charset=utf-8' })
+  const attachments = [
+    {
+      logical_name: 'bootstrap-application-stdout',
+      media_type: 'text/plain; charset=utf-8',
+      path: stdoutPath,
+      sha256: await sha256Hex(stdoutBlob),
+      size: stdoutBlob.size,
+    },
+    {
+      logical_name: 'bootstrap-application-stderr',
+      media_type: 'text/plain; charset=utf-8',
+      path: stderrPath,
+      sha256: await sha256Hex(stderrBlob),
+      size: stderrBlob.size,
+    },
+  ]
+  const evidenceBlob = new Blob([
+    JSON.stringify({
+      schema_version: '0.1',
+      evidence_type: 'runtime.bootstrap',
+      source: 'VeriTrail bootstrap-lifecycle/0.3',
+      captured_at: capturedAt,
+      facts: {
+        services_ready: true,
+        nodes: [{ node_id: 'application', role: 'APPLICATION' }],
+        start_order: { sealed: ['application'], actual: ['application'] },
+        teardown_order: {
+          sealed: ['application'],
+          attempted: ['application'],
+          completed: ['application'],
+        },
+        resource_observation: {
+          application_peak_rss_mb: 32,
+          dependency_peak_rss_mb: null,
+        },
+        cleanup_complete: true,
+      },
+      observed_variables: {
+        project_bootstrap_topology: 'veritrail_managed_windows_c1_single_application',
+      },
+      metadata: { bounded_fixture: true },
+    }),
+  ])
+  const artifact = {
+    evidence_type: 'runtime.bootstrap',
+    path: evidencePath,
+    sha256: await sha256Hex(evidenceBlob),
+    size: evidenceBlob.size,
+    redacted: false,
+    redacted_fields: 0,
+    redaction_rule_version: 'privacy/0.1',
+    parser_version: 'evidence-json/0.1',
+    captured_at: capturedAt,
+    source: 'VeriTrail bootstrap-lifecycle/0.3',
+    source_name: 'generated-bootstrap.json',
+    retention: 'BUNDLE',
+    attachments,
+    summary: { stop_reason: 'NONE', cleanup_complete: true },
+  }
+  const unsignedPlan = {
+    schema_version: '0.7',
+    plan_id: 'm11-single-application-workbench-plan',
+    version: 1,
+    variables: [
+      {
+        name: 'project_bootstrap_topology',
+        role: 'PRIMARY',
+        value: 'veritrail_managed_windows_c1_single_application',
+        source: 'sealed-plan',
+      },
+    ],
+  }
+  const planDigest = await sha256Hex(new Blob([canonicalJson(unsignedPlan)]))
+  const planBlob = new Blob([
+    JSON.stringify({
+      ...unsignedPlan,
+      seal: { algorithm: 'sha256', digest: planDigest },
+    }),
+  ])
+  const reportBlob = new Blob([
+    JSON.stringify(
+      minimalReport({
+        run_id: runId,
+        created_at: capturedAt,
+        plan: {
+          id: unsignedPlan.plan_id,
+          version: unsignedPlan.version,
+          sha256: planDigest,
+        },
+        evidence: [artifact],
+        assertions: [
+          {
+            id: 'm11-bootstrap-order',
+            severity: 'HARD',
+            status: 'PASS',
+            expected: ['application'],
+            actual: ['application'],
+            evidence_type: 'runtime.bootstrap',
+          },
+        ],
+        baseline: { id: 'm10-two-node-bootstrap-contract', status: 'VALID' },
+        primary_variable: {
+          name: 'project_bootstrap_topology',
+          role: 'PRIMARY',
+          value: 'veritrail_managed_windows_c1_single_application',
+          source: 'sealed-plan',
+        },
+      }),
+    ),
+  ])
+  const evidenceManifestBlob = new Blob([
+    JSON.stringify({
+      schema_version: '0.1',
+      run_id: runId,
+      artifacts: [artifact],
+      duplicate_inputs_ignored: [],
+    }),
+  ])
+  const files = await Promise.all(
+    [
+      [evidencePath, evidenceBlob],
+      [stdoutPath, stdoutBlob],
+      [stderrPath, stderrBlob],
+      ['evidence-manifest.json', evidenceManifestBlob],
+      ['report.json', reportBlob],
+      ['sealed-plan.json', planBlob],
+    ].map(async ([path, blob]) => ({
+      path: path as string,
+      sha256: await sha256Hex(blob as Blob),
+      size: (blob as Blob).size,
+    })),
+  )
+  const manifestBlob = new Blob([
+    JSON.stringify({ schema_version: '0.1', run_id: runId, files }),
+  ])
+  return new Map([
+    ['bundle-manifest.json', manifestBlob],
+    [evidencePath, evidenceBlob],
+    [stdoutPath, stdoutBlob],
+    [stderrPath, stderrBlob],
+    ['evidence-manifest.json', evidenceManifestBlob],
+    ['report.json', reportBlob],
+    ['sealed-plan.json', planBlob],
+  ])
+}
+
 export function installFetchForBundles(bundles: Record<string, Map<string, Blob>>) {
   return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
     const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url)

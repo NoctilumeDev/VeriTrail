@@ -1,12 +1,18 @@
-# M11 单节点能力与真实项目全链路合同 0.2
+# M11 单节点能力与真实项目全链路合同 0.3
 
-> 状态：`CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`
+> 状态：`CONTRACT_CORRECTED / TARGET_SELECTED / GATE_A_VALIDATED / GATE_B_NOT_STARTED`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`
 > 前置基线：`m10-v0.11.1` @ `f4efdd25c50b19077c61994bce3e2aca5244d5ec`
 > 固定真实目标：`InkNarratives main @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
 > 用户确认：2026-08-14，确认 `OPTION_B`、精确 ref、Gate A -> Gate B 严格串行与不适用项
-> 冻结引用：本文首次进入 `CONTRACT_FROZEN` 的 Git 提交；提交后必须从 GitHub 公开读回
+> 历史冻结引用：Contract 0.2 首次进入 `CONTRACT_FROZEN` 的提交 `eb39c0a`
+
+Contract 0.2 已在 `eb39c0a` 留下不可变历史。Gate A 实现前的严格 Plan/Profile 绑定测试证明，
+0.2 第 8.1 节让一个 sealed Plan 同时绑定四个不同 sealed Profile，在既有
+`bootstrap_profile.profile_sha256` 权威关系下不可实现。0.3 只把三个生命周期变体各自分配给独立
+Plan authority；不改变 Profile、Run 顺序、出口、资源预算、裁决、Gate A -> Gate B 门禁或真实目标。
+这项纠偏发生在任何 Gate A Run 之前，不能被解释为观察结果后移动标准。
 
 ## 1. 合同只解决什么
 
@@ -19,8 +25,9 @@ M11 要证明 VeriTrail 能验收一个不同于自身 fixture 的真实项目�
 因此固定 `OPTION_B`：先独立交付**通用单应用节点 C1 生命周期**，再锁定该能力去验证
 InkNarratives。不能通过给目标添加假依赖、统一入口、发布目录或 VeriTrail 专用脚本绕开能力缺口。
 
-本合同冻结只允许后续从 Gate A 开始实现，不证明任何 Profile 0.2、Plan 0.7、单节点生命周期或真实
-项目能力已经存在。冻结提交公开读回前，M11 继续保持 `PLANNED`，不得创建实现标签或运行结论。
+Contract 0.3 的 Gate A 已以 Profile 0.2、Plan 0.7、单节点生命周期、13 个公共出口、
+Catalog/Comparison、资源、安全和零残留事实关闭，详见文档 25。它仍不证明真实项目能力：Gate B
+尚未开始，M11 继续保持 `PLANNED`，不得创建 M11 标签或进入 M12。
 
 ## 2. 两道门必须严格串行
 
@@ -185,16 +192,19 @@ Gate A 必须新增一个脱敏、无业务含义的单应用 HTTP helper 与公
 
 | Authority | ID | Version | Use |
 | --- | --- | ---: | --- |
-| positive Plan | `m11-single-app-gatea-positive` | 1 | 两次正向及所有不改变 Browser 步骤的负向 |
+| positive Plan | `m11-single-app-gatea-positive` | 1 | 两次正向及使用 positive Profile 的预注册负向 |
 | Browser-negative Plan | `m11-single-app-gatea-browser-negative` | 1 | 只把一个已具名 selector 换成确定不存在的 selector |
+| early-exit Plan | `m11-single-app-gatea-early-exit` | 1 | 只绑定 early-exit Profile；Browser 步骤不改 |
+| readiness-timeout Plan | `m11-single-app-gatea-readiness-timeout` | 1 | 只绑定 timeout Profile；Browser 步骤不改 |
+| owner-mismatch Plan | `m11-single-app-gatea-owner-mismatch` | 1 | 只绑定 owner-mismatch Profile；Browser 步骤不改 |
 | positive Profile | `m11-single-app-helper` | 1 | 正向、Browser/collector/subject/cleanup/staging/memory 与外部端口竞争 |
 | early-exit Profile | `m11-single-app-helper-early-exit` | 1 | application 在 READY 前退出 |
 | timeout Profile | `m11-single-app-helper-readiness-timeout` | 1 | owned application 存活但不满足 readiness |
 | owner-mismatch Profile | `m11-single-app-helper-owner-mismatch` | 1 | owned application 不拥有被观察 listener |
 
 全部 Profile 只绑定同一个 Gate A helper；变体只用结构化参数选择已预注册行为，不增加第二个进程、
-隐藏节点、Shell 或运行时环境变量开关。Plan/Profile 必须在首个对应 Run 前 seal；观察结果后只能升
-版本，不能移动同 ID/version 的 authority。
+隐藏节点、Shell 或运行时环境变量开关。每个 Plan 只绑定表中唯一 Profile 的 ID、version 与摘要；
+Plan/Profile 必须在首个对应 Run 前 seal，观察结果后只能升版本，不能移动同 ID/version 的 authority。
 
 ### 8.2 冻结 HARD 断言
 
@@ -212,32 +222,39 @@ Gate A 必须新增一个脱敏、无业务含义的单应用 HTTP helper 与公
 | `m11-browser-http-clean` | unexpected HTTP errors | 正向为 `0` |
 | `m11-browser-write-clean` | duplicate write request groups | 全部 Browser Run 为 `0` |
 | `m11-browser-overflow-clean` | horizontal-overflow viewports | 正向为 `0` |
+| `m11-browser-viewport-coverage` | `browser.session:/facts/viewport_count` | 正向为 `2`；必须实际完成桌面与移动两个视口 |
+| `m11-browser-screenshot-coverage` | `browser.session:/facts/screenshot_count` | 正向为 `2`；每个固定视口各有一份已入清单截图 |
 | `m11-browser-cleanup-complete` | Browser cleanup fact | 启动 Browser 的 Run 为 `true`，除预注册 collector error 仍必须 best-effort 后准确记录 |
 | `m11-bootstrap-cleanup-complete` | bootstrap cleanup fact | 除 cleanup-failure 负向外为 `true`；负向必须为 `false` 并阻断 PASS |
 | `m11-subject-unchanged` | before/after Subject fingerprint | 非 drift Run 相同；drift Run 的 Evidence reason 为 `SUBJECT_DRIFT`，Verdict 断言代码为 `BOOTSTRAP_SUBJECT_DRIFT` |
 | `m11-catalog-rederivation` | sealed authorities -> Catalog | Catalog 重算后的 status/verdict、适用性与 Report 一致，损坏副本被隔离 |
 | `m11-zero-owned-residual` | owned process/Job/listener/Browser/staging/run-work | 每轮结束回到预注册起点；cleanup-failure 先保留失败事实，再完成独立恢复才允许下一 Run |
 
+表中指向单一 Evidence JSON path 的条目进入 sealed Plan 0.7 的 `assertions`。跨多个 path 的启动/清理
+顺序关系、bootstrap stdout/stderr 附件基数、Catalog 重算和外部残留属于 Gate A 验收关系断言：专用
+验收器必须从不可变 Bundle 与当前机器事实独立核对，不能用某个布尔汇总字段替代这些关系，也不能因
+它们不适合单 path 运算符就从门禁中删去。
+
 ### 8.3 冻结 Run 顺序与出口
 
 严格串行执行下表顺序；Run ID 不得复用，失败 Run 不删除。`stop / status / verdict` 中的 stop 是
 `runtime.bootstrap` 的既有 reason；预检期端口竞争不生成 bootstrap stop reason。
 
-| Order | Run ID | Frozen scenario | Expected stop / status / verdict |
-| ---: | --- | --- | --- |
-| 1 | `m11-gatea-positive-01` | 正向 READY、双视口 Browser、完整清理 | `NONE / COMPLETED / PASS` |
-| 2 | `m11-gatea-positive-02` | 同 sealed Plan/Profile 独立复跑 | `NONE / COMPLETED / PASS` |
-| 3 | `m11-gatea-early-exit-01` | application READY 前退出 | `NODE_EARLY_EXIT / COMPLETED / FAIL` |
-| 4 | `m11-gatea-readiness-timeout-01` | owned listener 永不满足 readiness | `READINESS_TIMEOUT / ABORTED / FAIL` |
-| 5 | `m11-gatea-owner-mismatch-01` | readiness 命中错误 listener owner | `LISTENER_OWNERSHIP_MISMATCH / ABORTED / FAIL` |
-| 6 | `m11-gatea-port-conflict-01` | Preview 后、live preflight 前外部进程占端口 | preflight-only / `ABORTED / PENDING` |
-| 7 | `m11-gatea-user-cancel-ready-01` | application READY 后 cooperative cancel，Browser 尚未创建 | `USER_CANCELLED / ABORTED / PENDING` |
-| 8 | `m11-gatea-browser-negative-01` | 独立 sealed Plan 的不存在 selector | `BROWSER_HARD_FAILURE / COMPLETED / FAIL` |
-| 9 | `m11-gatea-browser-collector-error-01` | 已具名 Browser observer/collector error | `COLLECTOR_ERROR / ERROR / PENDING` |
-| 10 | `m11-gatea-subject-drift-01` | Browser 后、after snapshot 前的已具名 Subject 变化 | `SUBJECT_DRIFT / COMPLETED / INCONCLUSIVE` |
-| 11 | `m11-gatea-cleanup-failure-01` | 已具名 cleanup 观测失败 | `CLEANUP_ERROR / ERROR / FAIL` |
-| 12 | `m11-gatea-staging-failure-01` | 显式 pre-teardown staging writer 失败 | `EVIDENCE_ERROR / ERROR / PENDING` |
-| 13 | `m11-gatea-memory-stop-01` | 运行期 soft memory stop，且没有更早的决定性失败 | `RESOURCE_MEMORY_SOFT_LIMIT / ABORTED / PENDING` |
+| Order | Run ID | Plan / Profile | Frozen scenario | Expected stop / status / verdict |
+| ---: | --- | --- | --- | --- |
+| 1 | `m11-gatea-positive-01` | positive / positive | 正向 READY、双视口 Browser、完整清理 | `NONE / COMPLETED / PASS` |
+| 2 | `m11-gatea-positive-02` | positive / positive | 同 sealed Plan/Profile 独立复跑 | `NONE / COMPLETED / PASS` |
+| 3 | `m11-gatea-early-exit-01` | early-exit / early-exit | application READY 前退出 | `NODE_EARLY_EXIT / COMPLETED / FAIL` |
+| 4 | `m11-gatea-readiness-timeout-01` | readiness-timeout / timeout | owned listener 永不满足 readiness | `READINESS_TIMEOUT / ABORTED / FAIL` |
+| 5 | `m11-gatea-owner-mismatch-01` | owner-mismatch / owner-mismatch | readiness 命中错误 listener owner | `LISTENER_OWNERSHIP_MISMATCH / ABORTED / FAIL` |
+| 6 | `m11-gatea-port-conflict-01` | positive / positive | Preview 后、live preflight 前外部进程占端口 | preflight-only / `ABORTED / PENDING` |
+| 7 | `m11-gatea-user-cancel-ready-01` | positive / positive | application READY 后 cooperative cancel，Browser 尚未创建 | `USER_CANCELLED / ABORTED / PENDING` |
+| 8 | `m11-gatea-browser-negative-01` | Browser-negative / positive | 独立 sealed Plan 的不存在 selector | `BROWSER_HARD_FAILURE / COMPLETED / FAIL` |
+| 9 | `m11-gatea-browser-collector-error-01` | positive / positive | 已具名 Browser observer/collector error | `COLLECTOR_ERROR / ERROR / PENDING` |
+| 10 | `m11-gatea-subject-drift-01` | positive / positive | Browser 后、after snapshot 前的已具名 Subject 变化 | `SUBJECT_DRIFT / COMPLETED / INCONCLUSIVE` |
+| 11 | `m11-gatea-cleanup-failure-01` | positive / positive | 已具名 cleanup 观测失败 | `CLEANUP_ERROR / ERROR / FAIL` |
+| 12 | `m11-gatea-staging-failure-01` | positive / positive | 显式 pre-teardown staging writer 失败 | `EVIDENCE_ERROR / ERROR / PENDING` |
+| 13 | `m11-gatea-memory-stop-01` | positive / positive | 运行期 soft memory stop，且没有更早的决定性失败 | `RESOURCE_MEMORY_SOFT_LIMIT / ABORTED / PENDING` |
 
 `m11-gatea-positive-01` 与 `m11-gatea-positive-02` 必须以 M6 Comparison 得到 `MATCH` 和 0 差异；
 任何其他 Run 都不得塞入该比较。旧 Plan 0.6 双节点公共出口、M0–M10 全回归和 Pairing/Batch 对 0.7
@@ -401,10 +418,12 @@ owned process、Job、Chromium、staging、run-work、Workbench/Catalog 服务�
 - [x] 成功、失败和状态归因在运行前具名；
 - [x] Gate A/Gate B 端口、资源线、精确步骤、断言、Run ID 和清理/残留规则已冻结；
 - [x] 新增版本以显式分派实现，不原地放宽 M10 冻结合同；
-- [x] 本次变更仅创建文档合同冻结提交，不创建实现代码、Schema、版本或 M11 标签。
+- [x] Contract 0.2 冻结提交只创建文档合同，没有创建实现代码、Schema、版本或 M11 标签；
+- [x] Contract 0.3 在任何 Gate A Run 前纠正 Plan/Profile 一对一绑定，不改变出口和判定标准；
+- [x] Gate A 实现与 13 个真实出口已从 Run 1 全量通过，并进入固定实现提交；事实见文档 25。
 
-这些勾选只说明合同内容已冻结，不说明条款已实现或运行。README 里 M11 在 Gate A 与 Gate B 均取得
-事实前必须继续显示 `PLANNED`；开始编码后也只能使用准确的内部阶段状态，不能提前写 `FROZEN`。
+前八项说明合同内容与 Gate A 事实已关闭，不说明 Gate B 或整个 M11 已实现。README 里 M11 在 Gate B
+取得事实前必须继续显示 `PLANNED`；开始编码后也只能使用准确的内部阶段状态，不能提前写 `FROZEN`。
 
 M11 只有在 Gate A 和 Gate B 均完成代码事实、自动化、真实 Chromium、Codex 内置浏览器、失败恢复、
 Catalog/Workbench、Comparison、敏感扫描、资源和零残留证据后，才能标记 `FROZEN` 并创建不可移动

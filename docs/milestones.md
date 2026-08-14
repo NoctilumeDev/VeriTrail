@@ -25,7 +25,7 @@
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2`；历史 `m10-v0.11.0` @ `0084443` |
-| M11 | 不同类型真实项目功能全链路 | `PLANNED`（Contract 0.2 frozen；implementation not started） | — |
+| M11 | 不同类型真实项目功能全链路 | `PLANNED`（Gate A validated；Gate B not started） | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
@@ -181,6 +181,6 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)
 - [M10 冻结后地基纠偏与重新验收](21-m10-post-freeze-foundation-remediation.md)
 - [M11 真实项目候选适配性与合同形成记录](22-m11-real-project-suitability-and-contract-draft.md)
-- [M11 单节点能力与真实项目双门 Contract 0.2](23-m11-single-node-real-project-contract.md)
+- [M11 单节点能力与真实项目双门 Contract 0.3](23-m11-single-node-real-project-contract.md)
 - [M11 入口治理与 M0-M10 当前复验](24-m11-entry-governance.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

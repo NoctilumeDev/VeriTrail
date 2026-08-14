@@ -114,8 +114,11 @@ def resolve_bootstrap(
 ) -> ResolvedBootstrap:
     verify_sealed_project_profile(profile)
     verify_sealed_plan(plan, profile)
-    if plan.get("schema_version") != "0.6":
-        raise ValidationError(["bootstrap-preview requires ExperimentPlan schema_version '0.6'"])
+    plan_version = plan.get("schema_version")
+    if plan_version not in {"0.6", "0.7"}:
+        raise ValidationError(
+            ["bootstrap-preview requires ExperimentPlan schema_version '0.6' or '0.7'"]
+        )
     _require_windows_bootstrap_capability()
 
     bindings = load_tool_bindings(tool_bindings_path)
@@ -187,7 +190,7 @@ def resolve_bootstrap(
 
     application = nodes_by_id[profile["application_node_id"]]
     preview: dict[str, Any] = {
-        "schema_version": "0.1",
+        "schema_version": "0.2" if plan_version == "0.7" else "0.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
@@ -220,6 +223,8 @@ def resolve_bootstrap(
             "docker": "NOT_SUPPORTED",
         },
     }
+    if plan_version == "0.7":
+        preview["topology"] = profile["topology"]
     preview["preview_sha256"] = sha256_json(preview)
     return ResolvedBootstrap(
         preview=preview,

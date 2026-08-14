@@ -59,13 +59,13 @@ class BootstrapNodeObservation:
 
 @dataclass(frozen=True)
 class BootstrapLifecycleObservation:
-    expected_start_order: tuple[str, str]
+    expected_start_order: tuple[str, ...]
     actual_start_order: tuple[str, ...]
-    expected_teardown_order: tuple[str, str]
+    expected_teardown_order: tuple[str, ...]
     actual_teardown_order: tuple[str, ...]
     teardown_attempt_order: tuple[str, ...]
     events: tuple[BootstrapLifecycleEvent, ...]
-    nodes: tuple[BootstrapNodeObservation, BootstrapNodeObservation]
+    nodes: tuple[BootstrapNodeObservation, ...]
     services_ready: bool
     ready_callback_started: bool
     ready_callback_completed: bool
@@ -77,11 +77,11 @@ class BootstrapLifecycleObservation:
 
 @dataclass(frozen=True)
 class BootstrapPreTeardownObservation:
-    expected_start_order: tuple[str, str]
+    expected_start_order: tuple[str, ...]
     actual_start_order: tuple[str, ...]
-    expected_teardown_order: tuple[str, str]
+    expected_teardown_order: tuple[str, ...]
     events: tuple[BootstrapLifecycleEvent, ...]
-    nodes: tuple[BootstrapNodeObservation, BootstrapNodeObservation]
+    nodes: tuple[BootstrapNodeObservation, ...]
     services_ready: bool
     ready_callback_started: bool
     ready_callback_completed: bool
@@ -117,7 +117,7 @@ def materialize_bootstrap_service_specs(
     resolved: ResolvedBootstrap,
     *,
     run_work: Path,
-) -> tuple[BootstrapServiceSpec, BootstrapServiceSpec]:
+) -> tuple[BootstrapServiceSpec, ...]:
     """Resolve typed Profile arguments into run-local, non-persistent values."""
 
     verify_sealed_project_profile(profile)
@@ -132,7 +132,7 @@ def materialize_bootstrap_service_specs(
     profile_nodes = {node["node_id"]: node for node in profile["nodes"]}
     resolved_nodes = {node.node_id: node for node in resolved.nodes}
     if (
-        len(resolved_nodes) != 2
+        len(resolved_nodes) != len(expected_order)
         or tuple(node.node_id for node in resolved.nodes) != expected_order
         or set(resolved_nodes) != set(expected_order)
     ):
@@ -186,17 +186,22 @@ def materialize_bootstrap_service_specs(
                 shutdown=deepcopy(policy["shutdown"]),
             )
         )
-    return specs[0], specs[1]
+    return tuple(specs)
 
 
 def _validate_specs(specs: Sequence[BootstrapServiceSpec]) -> None:
-    if len(specs) != 2:
-        raise SafetyError("M10 lifecycle requires exactly two service specifications")
-    dependency, application = specs
-    if dependency.role != "DEPENDENCY" or application.role != "APPLICATION":
-        raise SafetyError("M10 lifecycle requires dependency then application")
-    if dependency.node_id == application.node_id or dependency.port == application.port:
-        raise SafetyError("M10 lifecycle requires distinct nodes and ports")
+    if len(specs) == 1:
+        if specs[0].role != "APPLICATION":
+            raise SafetyError("single-node lifecycle requires exactly one APPLICATION")
+        return
+    if len(specs) == 2:
+        dependency, application = specs
+        if dependency.role != "DEPENDENCY" or application.role != "APPLICATION":
+            raise SafetyError("two-node lifecycle requires dependency then application")
+        if dependency.node_id == application.node_id or dependency.port == application.port:
+            raise SafetyError("two-node lifecycle requires distinct nodes and ports")
+        return
+    raise SafetyError("bootstrap lifecycle requires exactly one or two service specifications")
 
 
 def _stop_reason(error_type: str | None) -> str:
@@ -226,7 +231,7 @@ def run_bootstrap_lifecycle(
         probe_owned_http_readiness
     ),
 ) -> BootstrapLifecycleObservation:
-    """Run the two service lifecycle without creating public Evidence or a Bundle."""
+    """Run a sealed one- or two-node lifecycle without creating public Evidence."""
 
     _validate_specs(specs)
     if on_services_ready is not None and on_services_ready_with_deadline is not None:
@@ -345,7 +350,7 @@ def run_bootstrap_lifecycle(
                 event("ABORTING", trigger_reason)
                 break
             event(f"{node.spec.role}_READY", "READY")
-            if index == 1:
+            if index == len(mutable) - 1:
                 services_ready = True
                 event("SERVICES_READY", "READY")
         else:
@@ -414,11 +419,13 @@ def run_bootstrap_lifecycle(
             try:
                 on_evidence_finalize(
                     BootstrapPreTeardownObservation(
-                        expected_start_order=(specs[0].node_id, specs[1].node_id),
+                        expected_start_order=tuple(spec.node_id for spec in specs),
                         actual_start_order=tuple(actual_start_order),
-                        expected_teardown_order=(specs[1].node_id, specs[0].node_id),
+                        expected_teardown_order=tuple(
+                            spec.node_id for spec in reversed(specs)
+                        ),
                         events=tuple(events),
-                        nodes=(pre_teardown_nodes[0], pre_teardown_nodes[1]),
+                        nodes=pre_teardown_nodes,
                         services_ready=services_ready,
                         ready_callback_started=callback_started,
                         ready_callback_completed=callback_completed,
@@ -481,13 +488,13 @@ def run_bootstrap_lifecycle(
         for node in mutable
     )
     return BootstrapLifecycleObservation(
-        expected_start_order=(specs[0].node_id, specs[1].node_id),
+        expected_start_order=tuple(spec.node_id for spec in specs),
         actual_start_order=tuple(actual_start_order),
-        expected_teardown_order=(specs[1].node_id, specs[0].node_id),
+        expected_teardown_order=tuple(spec.node_id for spec in reversed(specs)),
         actual_teardown_order=tuple(actual_teardown_order),
         teardown_attempt_order=tuple(teardown_attempt_order),
         events=tuple(events),
-        nodes=(observations[0], observations[1]),
+        nodes=observations,
         services_ready=services_ready,
         ready_callback_started=callback_started,
         ready_callback_completed=callback_completed,

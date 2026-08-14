@@ -1398,6 +1398,12 @@ def verify_imported_evidence(artifact: ImportedEvidence) -> None:
                 )
     elif evidence_type == "runtime.bootstrap":
         nodes = artifact.document.get("facts", {}).get("nodes", [])
+        expected_attachment_count = (
+            2
+            if artifact.document.get("source")
+            == "VeriTrail bootstrap-lifecycle/0.3"
+            else 4
+        )
         referenced = {
             stream["attachment"]["path"]: stream["attachment"]
             for node in nodes
@@ -1405,9 +1411,14 @@ def verify_imported_evidence(artifact: ImportedEvidence) -> None:
             for stream in (node.get("stdout"), node.get("stderr"))
             if isinstance(stream, dict) and isinstance(stream.get("attachment"), dict)
         }
-        if len(referenced) != 4 or set(referenced) != set(attachment_by_path):
+        if (
+            len(referenced) != expected_attachment_count
+            or set(referenced) != set(attachment_by_path)
+        ):
             raise ValidationError(
-                ["bootstrap output references do not match exactly four generated attachments"]
+                [
+                    "bootstrap output references do not match the collector attachment cardinality"
+                ]
             )
         for path, reference in referenced.items():
             attachment = attachment_by_path[path]

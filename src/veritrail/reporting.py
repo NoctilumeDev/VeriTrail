@@ -185,14 +185,19 @@ def create_bundle(
     generated_evidence: list[ImportedEvidence] | None = None,
     project_profile: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    if plan.get("schema_version") == "0.6":
+    plan_version = plan.get("schema_version")
+    if plan_version in {"0.6", "0.7"}:
         if project_profile is None:
-            raise ValidationError(["ExperimentPlan 0.6 Bundle requires a sealed ProjectProfile"])
+            raise ValidationError(
+                [f"ExperimentPlan {plan_version} Bundle requires a sealed ProjectProfile"]
+            )
         verify_sealed_project_profile(project_profile)
         verify_sealed_plan(plan, project_profile)
     else:
         if project_profile is not None:
-            raise ValidationError(["sealed ProjectProfile is accepted only for ExperimentPlan 0.6"])
+            raise ValidationError(
+                ["sealed ProjectProfile is accepted only for ExperimentPlan 0.6 or 0.7"]
+            )
         verify_sealed_plan(plan)
     if not RUN_ID_PATTERN.fullmatch(run_id):
         raise ValidationError(["run_id must be a 2-64 character lowercase identifier"])
@@ -229,7 +234,9 @@ def create_bundle(
         ]
         if len(preflight) != 1:
             raise ValidationError(
-                ["ExperimentPlan 0.6 Bundle requires exactly one runtime.preflight artifact"]
+                [
+                    f"ExperimentPlan {plan_version} Bundle requires exactly one runtime.preflight artifact"
+                ]
             )
         bootstrap = [
             artifact
@@ -246,22 +253,22 @@ def create_bundle(
             errors: list[str] = []
             if execution_status != "ABORTED":
                 errors.append(
-                    "a preflight-stopped ExperimentPlan 0.6 Bundle must use execution_status ABORTED"
+                    f"a preflight-stopped ExperimentPlan {plan_version} Bundle must use execution_status ABORTED"
                 )
             if bootstrap:
                 errors.append(
-                    "a preflight-stopped ExperimentPlan 0.6 Bundle must not contain runtime.bootstrap"
+                    f"a preflight-stopped ExperimentPlan {plan_version} Bundle must not contain runtime.bootstrap"
                 )
             if browser_artifacts:
                 errors.append(
-                    "a preflight-stopped ExperimentPlan 0.6 Bundle must not contain browser.session"
+                    f"a preflight-stopped ExperimentPlan {plan_version} Bundle must not contain browser.session"
                 )
             if errors:
                 raise ValidationError(errors)
         elif len(bootstrap) != 1:
             raise ValidationError(
                 [
-                    "a PROCEED ExperimentPlan 0.6 Bundle requires exactly one "
+                    f"a PROCEED ExperimentPlan {plan_version} Bundle requires exactly one "
                     "runtime.bootstrap artifact"
                 ]
             )

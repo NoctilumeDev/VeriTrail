@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/project-profile-0.2.schema.json",
+  "title": "VeriTrail M11 Single-Application ProjectProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "topology",
+    "profile_id",
+    "version",
+    "platform",
+    "cold_state",
+    "nodes",
+    "start_order",
+    "teardown_order",
+    "application_node_id",
+    "subject_watch_roots",
+    "max_watch_files",
+    "max_watch_total_bytes",
+    "lifecycle_timeout_ms"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.2" },
+    "topology": { "const": "SINGLE_APPLICATION" },
+    "profile_id": { "$ref": "project-profile-0.1.schema.json#/$defs/identifier" },
+    "version": { "type": "integer", "minimum": 1 },
+    "platform": { "const": "WINDOWS_11" },
+    "cold_state": { "const": "C1_PROCESS_COLD" },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "#/$defs/applicationNode" }
+    },
+    "start_order": { "$ref": "#/$defs/oneNodeId" },
+    "teardown_order": { "$ref": "#/$defs/oneNodeId" },
+    "application_node_id": { "$ref": "project-profile-0.1.schema.json#/$defs/identifier" },
+    "subject_watch_roots": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "$ref": "project-profile-0.1.schema.json#/$defs/relativePath" }
+    },
+    "max_watch_files": { "type": "integer", "minimum": 1, "maximum": 2000 },
+    "max_watch_total_bytes": { "type": "integer", "minimum": 1, "maximum": 67108864 },
+    "lifecycle_timeout_ms": { "type": "integer", "minimum": 5000, "maximum": 900000 },
+    "seal": { "$ref": "project-profile-0.1.schema.json#/$defs/seal" }
+  },
+  "$defs": {
+    "oneNodeId": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "project-profile-0.1.schema.json#/$defs/identifier" }
+    },
+    "applicationNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "role",
+        "adapter",
+        "depends_on",
+        "tool_binding",
+        "arguments",
+        "working_directory",
+        "environment",
+        "port",
+        "readiness",
+        "limits",
+        "shutdown"
+      ],
+      "properties": {
+        "node_id": { "$ref": "project-profile-0.1.schema.json#/$defs/identifier" },
+        "role": { "const": "APPLICATION" },
+        "adapter": { "const": "TRUSTED_PROCESS_SERVICE" },
+        "depends_on": { "const": [] },
+        "tool_binding": { "$ref": "project-profile-0.1.schema.json#/$defs/identifier" },
+        "arguments": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": { "$ref": "project-profile-0.1.schema.json#/$defs/argument" }
+        },
+        "working_directory": { "$ref": "project-profile-0.1.schema.json#/$defs/relativePath" },
+        "environment": { "$ref": "project-profile-0.1.schema.json#/$defs/environment" },
+        "port": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "readiness": { "$ref": "project-profile-0.1.schema.json#/$defs/readiness" },
+        "limits": { "$ref": "project-profile-0.1.schema.json#/$defs/limits" },
+        "shutdown": { "$ref": "project-profile-0.1.schema.json#/$defs/shutdown" }
+      }
+    }
+  }
+}

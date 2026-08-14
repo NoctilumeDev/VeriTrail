@@ -269,7 +269,7 @@ Evidence 或 M11 实现。
 M10 地基已经稳定并可寻址，但它的固定两节点证明范围与现有候选项目的真实最小拓扑不完全重合。
 InkNarratives 已从“静态根目录不能被 M5 直接快照”进一步获得了真实的单节点 HTTP/代表页浏览器
 可运行事实；这说明独立单节点 Profile 合同具有实际目标，不等于 M10 边界已经扩展。基于现有事实，
-`OPTION_B` 与 InkNarratives 精确 ref 已进入[双门 Contract 0.2](23-m11-single-node-real-project-contract.md)，
+`OPTION_B` 与 InkNarratives 精确 ref 已进入[双门合同（首次 0.2，当前 0.3）](23-m11-single-node-real-project-contract.md)，
 状态为 `CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`。因此 M11 里程碑仍为
 `PLANNED`，尚未开始 Gate A 实现，更没有真实项目 Bundle 或冻结标签。这个边界防止 VeriTrail 为了
 证明自己“通用”而先扭曲真实项目。

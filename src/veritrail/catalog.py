@@ -440,7 +440,15 @@ def _validate_report_and_evidence(
                 for stream in (node["stdout"], node["stderr"])
             }
             indexed = {item["path"]: item for item in attachments}
-            if len(references) != 4 or set(references) != set(indexed):
+            expected_attachment_count = (
+                2
+                if document.get("source") == "VeriTrail bootstrap-lifecycle/0.3"
+                else 4
+            )
+            if (
+                len(references) != expected_attachment_count
+                or set(references) != set(indexed)
+            ):
                 raise _CandidateRejected("BOOTSTRAP_ATTACHMENT_MISMATCH")
             for path, reference in references.items():
                 item = indexed[path]
@@ -467,7 +475,7 @@ def _validate_sealed_authorities(
     except Exception as exc:
         raise _CandidateRejected("INVALID_SEALED_PLAN") from exc
     profile: dict[str, Any] | None = None
-    if plan.get("schema_version") == "0.6":
+    if plan.get("schema_version") in {"0.6", "0.7"}:
         if "sealed-profile.json" not in declared:
             raise _CandidateRejected("MISSING_SEALED_PROFILE")
         try:

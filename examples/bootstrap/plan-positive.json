@@ -1,0 +1,297 @@
+{
+  "schema_version": "0.7",
+  "plan_id": "m11-single-app-gatea-positive",
+  "version": 1,
+  "subject": {
+    "id": "m11-gatea-helper",
+    "version": "1",
+    "source_ref": "examples/bootstrap"
+  },
+  "question": "Can VeriTrail manage one owned application, collect browser evidence, and clean every owned resource?",
+  "baseline": {
+    "id": "m10-two-node-bootstrap-contract",
+    "status": "VALID",
+    "fingerprint": "ae2df57a80b46424a461e6bab2496f16621013f3c717ad435864d14421c098da",
+    "tolerances": {
+      "viewport_count": 2,
+      "unexpected_browser_errors": 0,
+      "cleanup_failures": 0
+    }
+  },
+  "experiment_type": "SINGLE_VARIABLE",
+  "variables": [
+    {
+      "name": "project_bootstrap_topology",
+      "role": "PRIMARY",
+      "value": "veritrail_managed_windows_c1_single_application",
+      "source": "sealed-plan"
+    },
+    {
+      "name": "browser_engine",
+      "role": "CONTROLLED",
+      "value": "chromium",
+      "source": "browser-adapter"
+    },
+    {
+      "name": "browser_headless",
+      "role": "CONTROLLED",
+      "value": true,
+      "source": "sealed-plan"
+    },
+    {
+      "name": "viewport_profile_count",
+      "role": "CONTROLLED",
+      "value": 2,
+      "unit": "profiles",
+      "source": "sealed-plan"
+    }
+  ],
+  "required_evidence": [
+    "runtime.preflight",
+    "runtime.bootstrap",
+    "browser.session"
+  ],
+  "assertions": [
+    {
+      "id": "m11-preflight-snapshot-complete",
+      "severity": "HARD",
+      "evidence_type": "runtime.preflight",
+      "path": "/facts/snapshot_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-bootstrap-service-ready",
+      "severity": "HARD",
+      "evidence_type": "runtime.bootstrap",
+      "path": "/facts/services_ready",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-bootstrap-order",
+      "severity": "HARD",
+      "evidence_type": "runtime.bootstrap",
+      "path": "/facts/cleanup/reverse_order_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-browser-capture-complete",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/capture_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-browser-steps-passed",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/all_steps_passed",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-browser-console-clean",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/unexpected_console_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "m11-browser-page-clean",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/page_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "m11-browser-request-clean",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/failed_request_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "m11-browser-http-clean",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/unexpected_http_error_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "m11-browser-write-clean",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/duplicate_write_request_group_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "m11-browser-overflow-clean",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/horizontal_overflow_viewport_count",
+      "operator": "eq",
+      "expected": 0
+    },
+    {
+      "id": "m11-browser-viewport-coverage",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/viewport_count",
+      "operator": "eq",
+      "expected": 2
+    },
+    {
+      "id": "m11-browser-screenshot-coverage",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/screenshot_count",
+      "operator": "eq",
+      "expected": 2
+    },
+    {
+      "id": "m11-browser-cleanup-complete",
+      "severity": "HARD",
+      "evidence_type": "browser.session",
+      "path": "/facts/cleanup_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-bootstrap-cleanup-complete",
+      "severity": "HARD",
+      "evidence_type": "runtime.bootstrap",
+      "path": "/facts/cleanup_complete",
+      "operator": "eq",
+      "expected": true
+    },
+    {
+      "id": "m11-subject-unchanged",
+      "severity": "HARD",
+      "evidence_type": "runtime.bootstrap",
+      "path": "/facts/subject_observation/changed",
+      "operator": "eq",
+      "expected": false
+    }
+  ],
+  "random_seed": 20260814,
+  "resource_budget": {
+    "max_artifact_bytes": 5242880
+  },
+  "preflight": {
+    "sample_count": 3,
+    "sampling_interval_ms": 50,
+    "hard_breach_grace_samples": 2,
+    "available_memory_soft_min_mb": 4096,
+    "available_memory_hard_min_mb": 2048,
+    "disk_free_hard_min_mb": 1024,
+    "collector_rss_hard_max_mb": 256,
+    "observer_rss_delta_soft_max_mb": 64,
+    "ports": [
+      {
+        "port": 18774,
+        "expected": "FREE"
+      }
+    ],
+    "require_clean_staging": true
+  },
+  "browser": {
+    "engine": "chromium",
+    "headless": true,
+    "start_url": "http://127.0.0.1:18774/",
+    "allowed_origins": ["http://127.0.0.1:18774"],
+    "timeout_ms": 10000,
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1440,
+        "height": 960,
+        "is_mobile": false
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "is_mobile": true
+      }
+    ],
+    "steps": [
+      {
+        "id": "enter-run-label",
+        "action": "fill",
+        "selector": "[data-testid='run-label']",
+        "value": "m11-gatea"
+      },
+      {
+        "id": "load-evidence",
+        "action": "click",
+        "selector": "[data-testid='load-evidence']"
+      },
+      {
+        "id": "wait-until-ready",
+        "action": "expect_text",
+        "selector": "[data-testid='status']",
+        "value": "evidence ready: m11-gatea"
+      },
+      {
+        "id": "evidence-list-visible",
+        "action": "expect_visible",
+        "selector": "[data-testid='evidence-list']"
+      },
+      {
+        "id": "capture-ready",
+        "action": "screenshot",
+        "name": "ready"
+      }
+    ],
+    "screenshot_safety": "UNREDACTED_OPERATOR_ACKNOWLEDGED",
+    "max_job_memory_mb": 1024
+  },
+  "bootstrap_profile": {
+    "profile_id": "m11-single-app-helper",
+    "profile_version": 1,
+    "profile_sha256": "da2aee1a73fade42d2c5efb6092817d2a91d60142d52915586a266b42261f5b7"
+  },
+  "load_model": {
+    "virtual_users": 1,
+    "in_flight_requests": 1
+  },
+  "change_scope": {
+    "level": "L3_SYSTEM",
+    "owner": "VeriTrail Core / Single-Application Bootstrap",
+    "expected_blast_radius": "Profile 0.2, Plan 0.7, Preview 0.2, bootstrap lifecycle, Evidence, Bundle, Verdict, Catalog and derived analyses",
+    "consumers": [
+      "project-profile-validator",
+      "plan-validator",
+      "bootstrap-preview",
+      "bootstrap-lifecycle",
+      "resource-monitor",
+      "browser-adapter",
+      "artifact-store",
+      "verdict-engine",
+      "catalog",
+      "comparison",
+      "pairing-rejection",
+      "batch-rejection",
+      "workbench"
+    ]
+  },
+  "reproduction_steps": [
+    "Seal the selected ProjectProfile 0.2 and verify its digest against bootstrap_profile.",
+    "Seal this Plan 0.7 before starting the Run.",
+    "Run the approved Preview on Windows 11 from a C1 process-cold state.",
+    "Validate the immutable Bundle through Catalog and compare the two positive Runs."
+  ],
+  "cleanup_steps": [
+    "Close Playwright contexts and Chromium.",
+    "Terminate the owned application Job and release stream readers.",
+    "Verify port 18774, run-work and staging are released before the next Run."
+  ]
+}

@@ -191,6 +191,34 @@ def sealed_bootstrap_profile() -> dict[str, Any]:
     return seal_project_profile(bootstrap_profile())
 
 
+def single_bootstrap_profile() -> dict[str, Any]:
+    profile = bootstrap_profile()
+    application = copy.deepcopy(profile["nodes"][1])
+    application["depends_on"] = []
+    application["arguments"] = [
+        {"literal": "-m"},
+        {"literal": "application_service"},
+        {"node_port": "application"},
+        {"run_work_path": ["application"]},
+    ]
+    application["port"] = 18774
+    profile.update(
+        {
+            "schema_version": "0.2",
+            "topology": "SINGLE_APPLICATION",
+            "profile_id": "single-application-python",
+            "nodes": [application],
+            "start_order": ["application"],
+            "teardown_order": ["application"],
+        }
+    )
+    return profile
+
+
+def sealed_single_bootstrap_profile() -> dict[str, Any]:
+    return seal_project_profile(single_bootstrap_profile())
+
+
 def bootstrap_plan(profile: dict[str, Any] | None = None) -> dict[str, Any]:
     sealed_profile = sealed_bootstrap_profile() if profile is None else profile
     plan = orchestration_plan()
@@ -255,6 +283,23 @@ def bootstrap_plan(profile: dict[str, Any] | None = None) -> dict[str, Any]:
         "profile_version": sealed_profile["version"],
         "profile_sha256": sealed_profile["seal"]["digest"],
     }
+    return plan
+
+
+def single_bootstrap_plan(profile: dict[str, Any] | None = None) -> dict[str, Any]:
+    sealed_profile = sealed_single_bootstrap_profile() if profile is None else profile
+    plan = bootstrap_plan(sealed_profile)
+    plan["schema_version"] = "0.7"
+    primary = next(item for item in plan["variables"] if item["role"] == "PRIMARY")
+    primary["name"] = "project_bootstrap_topology"
+    primary["value"] = "veritrail_managed_windows_c1_single_application"
+    plan["preflight"]["ports"] = [{"port": 18774, "expected": "FREE"}]
+    application_origin = "http://127.0.0.1:18774"
+    plan["browser"]["start_url"] = f"{application_origin}/"
+    plan["browser"]["allowed_origins"] = [application_origin]
+    for step in plan["browser"]["steps"]:
+        if step["action"] == "goto":
+            step["url"] = f"{application_origin}/"
     return plan
 
 
