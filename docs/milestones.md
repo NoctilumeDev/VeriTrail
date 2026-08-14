@@ -2,7 +2,7 @@
 
 ## 1. 用途
 
-本文件承接 README 不再展开的 M0–M9 冻结历史，并同步 M10–M14 当前路线状态。它记录每个冻结
+本文件承接 README 不再展开的 M0–M10 冻结历史，并同步 M11–M14 当前路线状态。它记录每个冻结
 基线回答的问题、真实取得的证据、明确没有证明的能力，以及必须继续保留的失败事实；未冻结行
 只表示当前门禁，不构成能力事实。
 
@@ -25,7 +25,7 @@
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2`；历史 `m10-v0.11.0` @ `0084443` |
-| M11 | 不同类型真实项目功能全链路 | `PLANNED` | — |
+| M11 | 不同类型真实项目功能全链路 | `PLANNED`（Contract 0.2 frozen；implementation not started） | — |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
@@ -73,7 +73,7 @@ M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 
 ## 5. 当前能力边界
 
-M0–M9 已冻结的是一条逐层增长的本地验收链：
+M0–M10 已冻结的是一条逐层增长的本地验收链：
 
 ```text
 Plan / Evidence / Verdict
@@ -86,6 +86,7 @@ Plan / Evidence / Verdict
   -> Four-role paired analysis
   -> Full-factorial batch analysis
   -> Controlled trusted one-shot process
+  -> Windows/C1 bounded two-node project bootstrap
 ```
 
 当前仍未实现：
@@ -93,7 +94,8 @@ Plan / Evidence / Verdict
 - 计划编辑器与在线写；
 - 任意或不可信项目命令、Shell、npm/Maven、Docker 或中间件生命周期；
 - wave 内真实微并行执行；
-- 完整 v0 自举与第二个不同类型项目证明；
+- 第二个不同类型项目证明，以及单 application Profile 0.2/Plan 0.7；
+- C2/C3、Docker、跨平台与不可信代码隔离；
 - 统计显著性、生产容量结论和 AI 裁决。
 
 后继里程碑可以提前规划，但只有当前冻结标签仍有效、且新实现没有越过其兼容容差时，才能
@@ -178,5 +180,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M10 第二轮 16 GB 有界压力审计](19-m10-bounded-stress-audit.md)
 - [M10 发布安全整改与冻结复验](20-m10-release-security-remediation.md)
 - [M10 冻结后地基纠偏与重新验收](21-m10-post-freeze-foundation-remediation.md)
-- [M11 真实项目候选适配性与合同草案](22-m11-real-project-suitability-and-contract-draft.md)
+- [M11 真实项目候选适配性与合同形成记录](22-m11-real-project-suitability-and-contract-draft.md)
+- [M11 单节点能力与真实项目双门 Contract 0.2](23-m11-single-node-real-project-contract.md)
+- [M11 入口治理与 M0-M10 当前复验](24-m11-entry-governance.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

@@ -64,6 +64,8 @@
   `CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`。M11 里程碑仍为 `PLANNED`；合同
   冻结提交完成 GitHub 公开读回后才允许从 Gate A 开始实现。不得增加假依赖、隐藏必要服务、使用
   Mock/Pages 替代真实链路，或在 Gate A 固定实现提交前进入 Gate B。
+- M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
+  Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

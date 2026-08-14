@@ -16,7 +16,7 @@
 | --- | --- | --- | --- |
 | M9 | 受控项目命令执行 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2` |
-| M11 | 真实项目功能全链路 | `PLANNED`（Contract 0.2 frozen；implementation not started） | 本文第 7 节与文档 23 |
+| M11 | 真实项目功能全链路 | `PLANNED`（Contract 0.2 frozen；implementation not started） | 本文第 7 节与文档 23、24 |
 | M12 | 故宫主题前端终稿 | `PLANNED` | 本文第 8 节 |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | 本文第 9 节 |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | 本文第 10 节 |
