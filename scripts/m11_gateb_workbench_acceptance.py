@@ -285,6 +285,41 @@ def main() -> int:
             expect(page.get_by_test_id("run-catalog")).to_contain_text("4 Runs")
             expect(page.get_by_test_id("catalog-issues")).to_contain_text("目录问题 1 项")
 
+            cross_axis = page.get_by_test_id("cross-axis-toggle")
+            expect(cross_axis).to_have_attribute("aria-expanded", "false")
+            cross_axis.click()
+            expect(page.get_by_test_id("cross-axis-runs")).to_be_visible()
+            page.get_by_test_id("cross-axis-runs").press("ArrowRight")
+            require(
+                page.evaluate("document.activeElement?.getAttribute('data-testid')")
+                == "cross-axis-batch",
+                "Workbench cross-axis ArrowRight did not follow its declared geometry.",
+            )
+            page.get_by_test_id("cross-axis-comparison").click()
+            expect(page.get_by_test_id("view-comparison-title")).to_be_focused()
+            expect(page.get_by_test_id("local-comparison-input")).to_be_visible()
+            expect(page.get_by_test_id("comparison-empty")).to_be_visible()
+            expect(page.get_by_test_id("run-catalog")).not_to_be_visible()
+            require(
+                page.url.endswith("?view=comparison"),
+                "Workbench cross-axis Comparison URL did not preserve the public view.",
+            )
+            cross_axis.click()
+            page.get_by_test_id("cross-axis-pairing").click()
+            expect(page.get_by_test_id("view-pairing-title")).to_be_focused()
+            expect(page.get_by_test_id("local-pairing-input")).to_be_visible()
+            expect(page.get_by_test_id("run-catalog")).not_to_be_visible()
+            cross_axis.click()
+            page.get_by_test_id("cross-axis-batch").click()
+            expect(page.get_by_test_id("view-batch-title")).to_be_focused()
+            expect(page.get_by_test_id("local-batch-input")).to_be_visible()
+            expect(page.get_by_test_id("run-catalog")).not_to_be_visible()
+            cross_axis.click()
+            page.get_by_test_id("cross-axis-runs").click()
+            expect(page.get_by_test_id("view-runs-title")).to_be_focused()
+            expect(page.get_by_test_id("run-catalog")).to_be_visible()
+            summary["checks"].append("desktop-cross-axis-four-public-views-and-focus")
+
             for run_id, (execution_status, verdict, browser_applicable) in EXPECTED_RUNS.items():
                 item = catalog_runs[run_id]
                 button = page.locator(f'[data-catalog-run-id="{item["catalog_run_id"]}"]')
@@ -335,6 +370,9 @@ def main() -> int:
             expect(page.get_by_test_id("run-summary")).to_contain_text(recovery_id)
             summary["checks"].append("desktop-catalog-history")
 
+            page.get_by_test_id("cross-axis-toggle").click()
+            page.get_by_test_id("cross-axis-comparison").click()
+            expect(page.get_by_test_id("local-comparison-input")).to_be_visible()
             comparison_input = page.get_by_test_id("local-comparison-input")
             comparison_input.set_input_files(str(comparison))
             expect(page.get_by_test_id("comparison-view")).to_be_visible()
@@ -370,6 +408,15 @@ def main() -> int:
             add_page_observers(mobile_page, summary)
             mobile_page.goto(origin, wait_until="load")
             expect(mobile_page.get_by_test_id("run-catalog")).to_be_visible()
+            mobile_page.get_by_test_id("cross-axis-toggle").click()
+            require(
+                mobile_page.evaluate(
+                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                )
+                == 0,
+                "Workbench mobile expanded cross-axis overflowed horizontally.",
+            )
+            mobile_page.get_by_test_id("cross-axis-runs").click()
             negative_id = "m11-gateb-v2-ink-browser-negative-01"
             negative_catalog_id = catalog_runs[negative_id]["catalog_run_id"]
             mobile_page.locator(f'[data-catalog-run-id="{negative_catalog_id}"]').click()
@@ -382,6 +429,9 @@ def main() -> int:
                 == 0,
                 "Workbench mobile negative detail overflowed horizontally.",
             )
+            mobile_page.get_by_test_id("cross-axis-toggle").click()
+            mobile_page.get_by_test_id("cross-axis-comparison").click()
+            expect(mobile_page.get_by_test_id("local-comparison-input")).to_be_visible()
             mobile_page.get_by_test_id("local-comparison-input").set_input_files(str(comparison))
             expect(mobile_page.get_by_test_id("comparison-status")).to_contain_text("MATCH")
             require(

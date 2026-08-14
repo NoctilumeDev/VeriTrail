@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 
 import BatchAnalysisView from './components/BatchAnalysisView.vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
 import ComparisonView from './components/ComparisonView.vue'
+import CrossAxisNavigation from './components/CrossAxisNavigation.vue'
 import PairedAnalysisView from './components/PairedAnalysisView.vue'
 import RunCatalog from './components/RunCatalog.vue'
 import SectionFrame from './components/SectionFrame.vue'
@@ -34,6 +35,7 @@ import type {
 } from './domain/types'
 
 type AssertionFilter = 'ALL' | 'PASS' | 'FAIL' | 'OTHER'
+type PublicView = 'runs' | 'comparison' | 'pairing' | 'batch'
 
 const bundle = shallowRef<LoadedBundle | null>(null)
 const comparison = shallowRef<LoadedComparison | null>(null)
@@ -42,6 +44,8 @@ const batchAnalysis = shallowRef<LoadedBatchAnalysis | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
 const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing' | 'batch'>('positive')
+const publicView = ref<PublicView>('runs')
+const crossAxisExpanded = ref(false)
 const assertionFilter = ref<AssertionFilter>('ALL')
 const liveMessage = ref('正在读取正向证据包。')
 const catalog = shallowRef<CatalogResponse | null>(null)
@@ -76,6 +80,61 @@ function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' | 'pairing
   return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison' || value === 'pairing' || value === 'batch'
     ? value
     : 'positive'
+}
+
+function publicViewFromLocation(): PublicView {
+  const params = new URLSearchParams(window.location.search)
+  const view = params.get('view')
+  if (view === 'runs' || view === 'comparison' || view === 'pairing' || view === 'batch') {
+    return view
+  }
+  const fixture = fixtureFromLocation()
+  if (fixture === 'comparison' || fixture === 'pairing' || fixture === 'batch') return fixture
+  return 'runs'
+}
+
+function clearLoadedAnalysis() {
+  comparison.value = null
+  pairedAnalysis.value = null
+  batchAnalysis.value = null
+}
+
+function resetPublicView(view: PublicView) {
+  ++loadSequence
+  releaseCurrentBundle()
+  clearLoadedAnalysis()
+  publicView.value = view
+  activeSource.value = view === 'runs' ? 'catalog' : view
+  selectedCatalogRunId.value = null
+  loading.value = false
+  error.value = null
+  catalogError.value = null
+  assertionFilter.value = 'ALL'
+  liveMessage.value = view === 'runs'
+    ? '本地 Run 目录已加载，请选择一项 Run。'
+    : `已进入${publicViewLabel(view)}，请选择本地分析文件。`
+}
+
+function publicViewLabel(view: PublicView): string {
+  if (view === 'runs') return 'Runs / Catalog'
+  if (view === 'comparison') return 'Rerun Comparison'
+  if (view === 'pairing') return 'Paired Analysis'
+  return 'Batch Analysis'
+}
+
+function selectPublicView(view: PublicView) {
+  crossAxisExpanded.value = false
+  if (publicView.value !== view) {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('fixture')
+    url.searchParams.delete('run')
+    url.searchParams.set('view', view)
+    window.history.pushState({ view }, '', url)
+    resetPublicView(view)
+  }
+  void nextTick(() => {
+    document.getElementById(`view-${view}-title`)?.focus()
+  })
 }
 
 function releaseCurrentBundle() {
@@ -129,6 +188,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   error.value = null
   assertionFilter.value = 'ALL'
   activeSource.value = id
+  publicView.value = 'runs'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -137,6 +197,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   if (pushHistory) {
     const url = new URL(window.location.href)
     url.searchParams.delete('run')
+    url.searchParams.delete('view')
     url.searchParams.set('fixture', id)
     window.history.pushState({ fixture: id }, '', url)
   }
@@ -166,6 +227,7 @@ async function importLocal(event: Event) {
   error.value = null
   assertionFilter.value = 'ALL'
   activeSource.value = 'local'
+  publicView.value = 'runs'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -173,6 +235,7 @@ async function importLocal(event: Event) {
   liveMessage.value = '正在本地内存中核验所选证据包。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
+  url.searchParams.delete('view')
   url.searchParams.set('fixture', 'local')
   window.history.pushState({ fixture: 'local' }, '', url)
   releaseCurrentBundle()
@@ -201,6 +264,7 @@ async function importComparison(event: Event) {
   loading.value = true
   error.value = null
   activeSource.value = 'comparison'
+  publicView.value = 'comparison'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -208,6 +272,7 @@ async function importComparison(event: Event) {
   liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
+  url.searchParams.delete('view')
   url.searchParams.set('fixture', 'comparison')
   window.history.pushState({ fixture: 'comparison' }, '', url)
   releaseCurrentBundle()
@@ -233,6 +298,7 @@ async function importPairedAnalysis(event: Event) {
   loading.value = true
   error.value = null
   activeSource.value = 'pairing'
+  publicView.value = 'pairing'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -240,6 +306,7 @@ async function importPairedAnalysis(event: Event) {
   liveMessage.value = '正在本地内存中核验 PairedAnalysis Manifest 与 PairingPlan seal。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
+  url.searchParams.delete('view')
   url.searchParams.set('fixture', 'pairing')
   window.history.pushState({ fixture: 'pairing' }, '', url)
   releaseCurrentBundle()
@@ -265,6 +332,7 @@ async function importBatchAnalysis(event: Event) {
   loading.value = true
   error.value = null
   activeSource.value = 'batch'
+  publicView.value = 'batch'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -272,6 +340,7 @@ async function importBatchAnalysis(event: Event) {
   liveMessage.value = '正在本地内存中核验 BatchAnalysis Manifest、BatchPlan seal 与完整矩阵。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
+  url.searchParams.delete('view')
   url.searchParams.set('fixture', 'batch')
   window.history.pushState({ fixture: 'batch' }, '', url)
   releaseCurrentBundle()
@@ -301,6 +370,7 @@ async function selectCatalogRun(
   catalogError.value = null
   assertionFilter.value = 'ALL'
   activeSource.value = 'catalog'
+  publicView.value = 'runs'
   selectedCatalogRunId.value = run.catalog_run_id
   comparison.value = null
   pairedAnalysis.value = null
@@ -310,6 +380,7 @@ async function selectCatalogRun(
   if (pushHistory) {
     const url = new URL(window.location.href)
     url.searchParams.delete('fixture')
+    url.searchParams.delete('view')
     url.searchParams.set('run', run.catalog_run_id)
     window.history.pushState({ run: run.catalog_run_id }, '', url)
   }
@@ -369,11 +440,13 @@ function returnToCatalog() {
   loading.value = false
   error.value = null
   activeSource.value = 'catalog'
+  publicView.value = 'runs'
   const runId = selectedCatalogRunId.value ?? lastCatalogTriggerId
   selectedCatalogRunId.value = null
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
   url.searchParams.delete('fixture')
+  url.searchParams.delete('view')
   window.history.pushState({}, '', url)
   liveMessage.value = '已返回本地 Run 目录。'
   void nextTick(() => {
@@ -389,6 +462,12 @@ function sourceLabel(id: DemoBundleId): string {
 }
 
 function onHistoryChange() {
+  const params = new URLSearchParams(window.location.search)
+  const requestedView = publicViewFromLocation()
+  if (requestedView !== 'runs' && params.has('view')) {
+    resetPublicView(requestedView)
+    return
+  }
   const catalogRunId = catalogRunIdFromLocation()
   if (catalogRunId) {
     const run = catalog.value?.runs.find((candidate) => candidate.catalog_run_id === catalogRunId)
@@ -402,6 +481,7 @@ function onHistoryChange() {
     pairedAnalysis.value = null
     batchAnalysis.value = null
     activeSource.value = 'catalog'
+    publicView.value = 'runs'
     selectedCatalogRunId.value = catalogRunId
     loading.value = false
     error.value = {
@@ -412,13 +492,14 @@ function onHistoryChange() {
     liveMessage.value = error.value.message
     return
   }
-  if (catalog.value && !new URLSearchParams(window.location.search).has('fixture')) {
+  if (catalog.value && !params.has('fixture')) {
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
     pairedAnalysis.value = null
     batchAnalysis.value = null
     activeSource.value = 'catalog'
+    publicView.value = 'runs'
     selectedCatalogRunId.value = null
     loading.value = false
     error.value = null
@@ -433,6 +514,7 @@ function onHistoryChange() {
     pairedAnalysis.value = null
     batchAnalysis.value = null
     activeSource.value = 'comparison'
+    publicView.value = 'comparison'
     loading.value = false
     error.value = {
       code: 'COMPARISON_RESELECT_REQUIRED',
@@ -448,6 +530,7 @@ function onHistoryChange() {
     pairedAnalysis.value = null
     batchAnalysis.value = null
     activeSource.value = 'pairing'
+    publicView.value = 'pairing'
     loading.value = false
     error.value = {
       code: 'PAIRING_RESELECT_REQUIRED',
@@ -463,6 +546,7 @@ function onHistoryChange() {
     pairedAnalysis.value = null
     batchAnalysis.value = null
     activeSource.value = 'batch'
+    publicView.value = 'batch'
     loading.value = false
     error.value = {
       code: 'BATCH_RESELECT_REQUIRED',
@@ -478,6 +562,7 @@ function onHistoryChange() {
     pairedAnalysis.value = null
     batchAnalysis.value = null
     activeSource.value = 'local'
+    publicView.value = 'runs'
     loading.value = false
     error.value = {
       code: 'LOCAL_RESELECT_REQUIRED',
@@ -540,78 +625,14 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
-        <nav class="source-switcher" aria-label="证据包来源">
-          <button
-            type="button"
-            :aria-pressed="activeSource === 'positive'"
-            data-testid="fixture-positive"
-            @click="selectDemo('positive')"
-          >
-            正向证据
-          </button>
-          <button
-            type="button"
-            :aria-pressed="activeSource === 'negative'"
-            data-testid="fixture-negative"
-            @click="selectDemo('negative')"
-          >
-            负向证据
-          </button>
-          <button
-            type="button"
-            :aria-pressed="activeSource === 'invalid'"
-            data-testid="fixture-invalid"
-            @click="selectDemo('invalid')"
-          >
-            校验损坏包
-          </button>
-          <label class="local-import" :class="{ 'is-active': activeSource === 'local' }">
-            <span>选择本地证据包</span>
-            <input
-              type="file"
-              multiple
-              webkitdirectory
-              aria-label="选择本地 VeriTrail 证据包目录"
-              data-testid="local-bundle-input"
-              @change="importLocal"
-            />
-          </label>
-          <label class="local-import" :class="{ 'is-active': activeSource === 'comparison' }">
-            <span>选择复跑比较包</span>
-            <input
-              type="file"
-              multiple
-              webkitdirectory
-              aria-label="选择本地 VeriTrail Comparison 目录"
-              data-testid="local-comparison-input"
-              @change="importComparison"
-            />
-          </label>
-          <label class="local-import" :class="{ 'is-active': activeSource === 'pairing' }">
-            <span>选择四角色配对文件</span>
-            <input
-              type="file"
-              multiple
-              accept=".json,.md,application/json,text/markdown"
-              aria-label="选择本地 VeriTrail PairedAnalysis 四个文件"
-              data-testid="local-pairing-input"
-              @change="importPairedAnalysis"
-            />
-          </label>
-          <label class="local-import" :class="{ 'is-active': activeSource === 'batch' }">
-            <span>选择全因子批次文件</span>
-            <input
-              type="file"
-              multiple
-              accept=".json,.md,application/json,text/markdown"
-              aria-label="选择本地 VeriTrail BatchAnalysis 四个文件"
-              data-testid="local-batch-input"
-              @change="importBatchAnalysis"
-            />
-          </label>
-        </nav>
+        <CrossAxisNavigation
+          :current-view="publicView"
+          :expanded="crossAxisExpanded"
+          @toggle="crossAxisExpanded = $event"
+          @select="selectPublicView"
+        />
 
-        <div v-if="report" class="status-gate" data-testid="status-gate">
+        <div v-if="report && publicView === 'runs'" class="status-gate" data-testid="status-gate">
           <StatusBadge dimension="execution" :value="report.execution_status" />
           <div class="status-gate__axis" aria-hidden="true"><span></span></div>
           <StatusBadge dimension="verdict" :value="report.verdict" />
@@ -628,6 +649,49 @@ onBeforeUnmount(() => {
     </header>
 
     <main id="main-content" class="evidence-axis">
+      <template v-if="publicView === 'runs'">
+        <section class="view-introduction" aria-labelledby="view-runs-title">
+          <p class="eyebrow">Public View · 北向</p>
+          <h2 id="view-runs-title" tabindex="-1" data-testid="view-runs-title">Runs / Catalog</h2>
+          <nav class="source-switcher" aria-label="Runs 证据包来源">
+            <button
+              type="button"
+              :aria-pressed="activeSource === 'positive'"
+              data-testid="fixture-positive"
+              @click="selectDemo('positive')"
+            >
+              正向证据
+            </button>
+            <button
+              type="button"
+              :aria-pressed="activeSource === 'negative'"
+              data-testid="fixture-negative"
+              @click="selectDemo('negative')"
+            >
+              负向证据
+            </button>
+            <button
+              type="button"
+              :aria-pressed="activeSource === 'invalid'"
+              data-testid="fixture-invalid"
+              @click="selectDemo('invalid')"
+            >
+              校验损坏包
+            </button>
+            <label class="local-import" :class="{ 'is-active': activeSource === 'local' }">
+              <span>选择本地证据包</span>
+              <input
+                type="file"
+                multiple
+                webkitdirectory
+                aria-label="选择本地 VeriTrail 证据包目录"
+                data-testid="local-bundle-input"
+                @change="importLocal"
+              />
+            </label>
+          </nav>
+        </section>
+
       <RunCatalog
         v-if="catalogLoading || catalog || catalogError"
         :catalog="catalog"
@@ -658,12 +722,6 @@ onBeforeUnmount(() => {
           {{ activeSource === 'catalog' ? '重新读取目录 Run' : '返回正向证据重试' }}
         </button>
       </section>
-
-      <ComparisonView v-else-if="comparison" :loaded="comparison" />
-
-      <PairedAnalysisView v-else-if="pairedAnalysis" :loaded="pairedAnalysis" />
-
-      <BatchAnalysisView v-else-if="batchAnalysis" :loaded="batchAnalysis" />
 
       <template v-else-if="report && bundle">
         <div class="run-plaque" data-testid="run-summary">
@@ -829,6 +887,103 @@ onBeforeUnmount(() => {
           </div>
         </SectionFrame>
       </template>
+      </template>
+
+      <section v-else-if="publicView === 'comparison'" class="analysis-view" aria-labelledby="view-comparison-title">
+        <header class="view-introduction">
+          <p class="eyebrow">Public View · 南向</p>
+          <h2 id="view-comparison-title" tabindex="-1" data-testid="view-comparison-title">Rerun Comparison</h2>
+          <label class="local-import" :class="{ 'is-active': activeSource === 'comparison' }">
+            <span>选择复跑比较包</span>
+            <input
+              type="file"
+              multiple
+              webkitdirectory
+              aria-label="选择本地 VeriTrail Comparison 目录"
+              data-testid="local-comparison-input"
+              @change="importComparison"
+            />
+          </label>
+        </header>
+        <div v-if="loading" class="loading-court" role="status" data-testid="loading-state">
+          <span class="loading-court__mark" aria-hidden="true"></span>
+          <p>正在沿清单核验复跑比较包</p>
+          <small>文件、大小、路径与 SHA-256 逐项比对</small>
+        </div>
+        <section v-else-if="error" class="error-court" aria-labelledby="comparison-error-title" data-testid="error-state">
+          <span class="error-court__seal" aria-hidden="true">止</span>
+          <p class="eyebrow">Comparison 未进入可信展示</p>
+          <h3 id="comparison-error-title">{{ error.message }}</h3>
+          <code>{{ error.code }}</code>
+          <p>请重新选择本地 Comparison 目录；文件不会上传，也不会持久化。</p>
+        </section>
+        <ComparisonView v-else-if="comparison" :loaded="comparison" />
+        <p v-else class="analysis-empty" data-testid="comparison-empty">请选择两个同计划 Run 的 Comparison 目录。</p>
+      </section>
+
+      <section v-else-if="publicView === 'pairing'" class="analysis-view" aria-labelledby="view-pairing-title">
+        <header class="view-introduction">
+          <p class="eyebrow">Public View · 西向</p>
+          <h2 id="view-pairing-title" tabindex="-1" data-testid="view-pairing-title">Paired Analysis</h2>
+          <label class="local-import" :class="{ 'is-active': activeSource === 'pairing' }">
+            <span>选择四角色配对文件</span>
+            <input
+              type="file"
+              multiple
+              accept=".json,.md,application/json,text/markdown"
+              aria-label="选择本地 VeriTrail PairedAnalysis 四个文件"
+              data-testid="local-pairing-input"
+              @change="importPairedAnalysis"
+            />
+          </label>
+        </header>
+        <div v-if="loading" class="loading-court" role="status" data-testid="loading-state">
+          <span class="loading-court__mark" aria-hidden="true"></span>
+          <p>正在核验四角色配对分析包</p>
+          <small>Manifest、PairingPlan seal 与来源交叉引用逐项比对</small>
+        </div>
+        <section v-else-if="error" class="error-court" aria-labelledby="pairing-error-title" data-testid="error-state">
+          <span class="error-court__seal" aria-hidden="true">止</span>
+          <p class="eyebrow">Paired Analysis 未进入可信展示</p>
+          <h3 id="pairing-error-title">{{ error.message }}</h3>
+          <code>{{ error.code }}</code>
+          <p>请重新选择四个本地文件；文件不会上传，也不会持久化。</p>
+        </section>
+        <PairedAnalysisView v-else-if="pairedAnalysis" :loaded="pairedAnalysis" />
+        <p v-else class="analysis-empty" data-testid="pairing-empty">请选择 PairedAnalysis 的四个本地文件。</p>
+      </section>
+
+      <section v-else class="analysis-view" aria-labelledby="view-batch-title">
+        <header class="view-introduction">
+          <p class="eyebrow">Public View · 东向</p>
+          <h2 id="view-batch-title" tabindex="-1" data-testid="view-batch-title">Batch Analysis</h2>
+          <label class="local-import" :class="{ 'is-active': activeSource === 'batch' }">
+            <span>选择全因子批次文件</span>
+            <input
+              type="file"
+              multiple
+              accept=".json,.md,application/json,text/markdown"
+              aria-label="选择本地 VeriTrail BatchAnalysis 四个文件"
+              data-testid="local-batch-input"
+              @change="importBatchAnalysis"
+            />
+          </label>
+        </header>
+        <div v-if="loading" class="loading-court" role="status" data-testid="loading-state">
+          <span class="loading-court__mark" aria-hidden="true"></span>
+          <p>正在核验全因子批次分析包</p>
+          <small>Manifest、BatchPlan seal 与完整矩阵逐项比对</small>
+        </div>
+        <section v-else-if="error" class="error-court" aria-labelledby="batch-error-title" data-testid="error-state">
+          <span class="error-court__seal" aria-hidden="true">止</span>
+          <p class="eyebrow">Batch Analysis 未进入可信展示</p>
+          <h3 id="batch-error-title">{{ error.message }}</h3>
+          <code>{{ error.code }}</code>
+          <p>请重新选择四个本地文件；文件不会上传，也不会持久化。</p>
+        </section>
+        <BatchAnalysisView v-else-if="batchAnalysis" :loaded="batchAnalysis" />
+        <p v-else class="analysis-empty" data-testid="batch-empty">请选择 BatchAnalysis 的四个本地文件。</p>
+      </section>
     </main>
 
     <footer class="site-footer">

@@ -18,6 +18,15 @@ async function waitFor(wrapper: ReturnType<typeof mount>, selector: string) {
   throw new Error(`Timed out waiting for ${selector}`)
 }
 
+async function selectPublicView(
+  wrapper: ReturnType<typeof mount>,
+  view: 'runs' | 'comparison' | 'pairing' | 'batch',
+) {
+  await wrapper.get('[data-testid="cross-axis-toggle"]').trigger('click')
+  await wrapper.get(`[data-testid="cross-axis-${view}"]`).trigger('click')
+  await flushPromises()
+}
+
 describe('App', () => {
   let bundles: Record<string, Map<string, Blob>>
 
@@ -73,16 +82,27 @@ describe('App', () => {
     wrapper.unmount()
   })
 
-  it('keeps every local import focus target aligned with its visible label', async () => {
+  it('keeps each local import focus target in its relevant public view', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
 
     const inputs = wrapper.findAll('.local-import input[type="file"]')
-    expect(inputs).toHaveLength(4)
+    expect(inputs).toHaveLength(1)
     for (const input of inputs) {
       expect(input.element.parentElement).toBeInstanceOf(HTMLLabelElement)
       expect(input.attributes('aria-label')).toMatch(/^选择本地 VeriTrail /)
     }
+
+    await selectPublicView(wrapper, 'comparison')
+    expect(wrapper.get('[data-testid="local-comparison-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
+    expect(window.location.search).toBe('?view=comparison')
+
+    await selectPublicView(wrapper, 'pairing')
+    expect(wrapper.get('[data-testid="local-pairing-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+
+    await selectPublicView(wrapper, 'batch')
+    expect(wrapper.get('[data-testid="local-batch-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
 
     wrapper.unmount()
   })
@@ -103,6 +123,7 @@ describe('App', () => {
   it('imports a local Comparison only after manifest verification', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await selectPublicView(wrapper, 'comparison')
     const entries = await createComparisonBundle('MATCH')
     const files = [...entries].map(([name, blob]) => {
       const file = new File([blob], name, { type: blob.type })
@@ -125,6 +146,7 @@ describe('App', () => {
   it('imports a local PairedAnalysis only after plan seal and manifest verification', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await selectPublicView(wrapper, 'pairing')
     const entries = await createPairedAnalysisBundle('SUPPORTED')
     const files = [...entries].map(([name, blob]) => {
       const file = new File([blob], name, { type: blob.type })
@@ -147,6 +169,7 @@ describe('App', () => {
   it('imports four explicit BatchAnalysis files and keeps local files ephemeral', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await selectPublicView(wrapper, 'batch')
     const entries = await createBatchAnalysisBundle('SUPPORTED')
     const files = [...entries].map(([name, blob]) => new File([blob], name, { type: blob.type }))
     const input = wrapper.get('[data-testid="local-batch-input"]')
