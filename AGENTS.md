@@ -82,7 +82,10 @@
   Catalog 行式目录与 Runs 主链，并通过 64/64 前端、真实 Gate B 生产 Chromium、优化模式门禁与 Codex 内置浏览器
   桌面/390/360 px 的真实交互补证，事实见文档 33。M12-D 派生分析视图计划 0.1 位于文档 34；D1 Comparison
   已在文档 35 形成真实 M11 MATCH、脱敏 DRIFT/INCONCLUSIVE、生产 Chromium、优化模式与内置浏览器事实，
-  D2 Pairing 和 D3 Batch 仍未开始。M12 仍是 `IMPLEMENTING / NOT_FROZEN`：
+  D2 Pairing 和 D3 Batch 仍未开始。M12-B/C 空间收束与 Runs 目录整改计划 0.1 已在
+  `docs/36-m12-bc-spatial-recomposition-plan.md` 确认：当前只允许实施 R1 公共外壳（Header、十字中枢与
+  过门），R2 必须等待 R1 运行事实，且 `StatusBadge.vue` 不得作为局部整改的全局入口。M12 仍是
+  `IMPLEMENTING / NOT_FROZEN`：
   不得提前把 Browser Evidence 终稿、全局状态、版本或 M12 标签混入该切片，也不得触及 L2/L3 数据、裁决或
   安全合同。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
