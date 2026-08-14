@@ -17,8 +17,13 @@ describe('Comparison Loader and View', () => {
     expect(loaded.integrity.verifiedFiles).toBe(2)
     expect(loaded.integrity.authorityVerified).toBe(false)
     expect(wrapper.get('[data-testid="comparison-status"]').attributes('aria-label')).toBe('复跑比较：MATCH')
+    expect(wrapper.get('[data-testid="comparison-status"]').classes()).toContain('comparison-mirror__verdict--match')
     expect(wrapper.get('[data-testid="comparison-sources"]').text()).toContain('unit-baseline')
     expect(wrapper.get('[data-testid="comparison-sources"]').text()).toContain('PASS')
+    expect(wrapper.findAll('[data-testid^="comparison-source-"]').map((item) => item.attributes('data-testid'))).toEqual([
+      'comparison-source-baseline',
+      'comparison-source-repeat',
+    ])
     expect(wrapper.get('[data-testid="comparison-no-differences"]').text()).toContain('没有差异')
     expect(wrapper.get('[data-testid="comparison-boundary"]').text()).toContain('不等于')
   })
@@ -28,14 +33,18 @@ describe('Comparison Loader and View', () => {
     const wrapper = mount(ComparisonView, { props: { loaded } })
 
     expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('DRIFT')
+    expect(wrapper.get('[data-testid="comparison-status"]').classes()).toContain('comparison-mirror__verdict--drift')
     expect(wrapper.get('[data-testid="comparison-differences"]').text()).toContain('/verdict')
     expect(wrapper.get('[data-testid="comparison-differences"]').text()).toContain('FAIL')
   })
 
   it('retains a non-comparable input as INCONCLUSIVE', async () => {
     const loaded = await loadComparisonFromBlobs(await createComparisonBundle('INCONCLUSIVE'))
+    const wrapper = mount(ComparisonView, { props: { loaded } })
+
     expect(loaded.comparison.comparable).toBe(false)
     expect(loaded.comparison.sources.repeat.execution_status).toBe('ABORTED')
+    expect(wrapper.get('[data-testid="comparison-status"]').classes()).toContain('comparison-mirror__verdict--inconclusive')
   })
 
   it('rejects a changed comparison before exposing partial facts', async () => {

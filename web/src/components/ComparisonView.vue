@@ -26,7 +26,7 @@ function statusMark(): string {
 </script>
 
 <template>
-  <section class="comparison-court" data-testid="comparison-view" aria-labelledby="comparison-title">
+  <section class="comparison-court comparison-court--rerun" data-testid="comparison-view" aria-labelledby="comparison-title">
     <header class="comparison-court__heading">
       <div>
         <p class="eyebrow">Rerun Comparison · 对照殿</p>
@@ -35,30 +35,17 @@ function statusMark(): string {
       <span>本地只读 · {{ loaded.integrity.verifiedFiles }} 文件已核验</span>
     </header>
 
-    <div
-      class="comparison-verdict"
-      :class="`comparison-verdict--${loaded.comparison.comparison_status.toLowerCase()}`"
-      :aria-label="`复跑比较：${loaded.comparison.comparison_status}`"
-      data-testid="comparison-status"
-    >
-      <span aria-hidden="true">{{ statusMark() }}</span>
-      <div>
-        <small>ComparisonStatus · 独立于 Run Verdict</small>
-        <strong>{{ loaded.comparison.comparison_status }}</strong>
-        <p>{{ loaded.comparison.reasons[0]?.message }}</p>
-      </div>
-      <dl>
-        <div><dt>可比较</dt><dd>{{ loaded.comparison.comparable ? '是' : '否' }}</dd></div>
-        <div><dt>差异</dt><dd>{{ loaded.comparison.differences.length }}</dd></div>
-        <div><dt>完整性</dt><dd>{{ formatBytes(loaded.integrity.totalBytes) }}</dd></div>
-      </dl>
-    </div>
-
-    <div class="comparison-sources" data-testid="comparison-sources">
-      <article v-for="source in [loaded.comparison.sources.baseline, loaded.comparison.sources.repeat]" :key="source.role">
+    <section class="comparison-mirror" aria-label="同计划复跑来源与比较结论" data-testid="comparison-sources">
+      <article
+        v-for="source in [loaded.comparison.sources.baseline, loaded.comparison.sources.repeat]"
+        :key="source.role"
+        class="comparison-mirror__source"
+        :class="`comparison-mirror__source--${source.role.toLowerCase()}`"
+        :data-testid="`comparison-source-${source.role.toLowerCase()}`"
+      >
         <header>
           <div><small>{{ source.role }}</small><h3>{{ source.run_id }}</h3></div>
-          <div class="comparison-source-status">
+          <div class="comparison-mirror__source-status">
             <StatusBadge dimension="execution" :value="source.execution_status" compact />
             <StatusBadge dimension="verdict" :value="source.verdict" compact />
           </div>
@@ -70,17 +57,36 @@ function statusMark(): string {
           <div><dt>Semantic</dt><dd><code :title="source.semantic_sha256">{{ shortHash(source.semantic_sha256) }}</code></dd></div>
         </dl>
       </article>
-    </div>
 
-    <section class="comparison-differences" aria-labelledby="difference-title">
+      <div
+        class="comparison-mirror__verdict"
+        :class="`comparison-mirror__verdict--${loaded.comparison.comparison_status.toLowerCase()}`"
+        :aria-label="`复跑比较：${loaded.comparison.comparison_status}`"
+        data-testid="comparison-status"
+      >
+        <span aria-hidden="true">{{ statusMark() }}</span>
+        <div>
+          <small>ComparisonStatus · 独立于 Run Verdict</small>
+          <strong>{{ loaded.comparison.comparison_status }}</strong>
+          <p>{{ loaded.comparison.reasons[0]?.message }}</p>
+        </div>
+        <dl>
+          <div><dt>可比较</dt><dd>{{ loaded.comparison.comparable ? '是' : '否' }}</dd></div>
+          <div><dt>差异</dt><dd>{{ loaded.comparison.differences.length }}</dd></div>
+          <div><dt>完整性</dt><dd>{{ formatBytes(loaded.integrity.totalBytes) }}</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="comparison-rerun-differences" aria-labelledby="difference-title">
       <header>
         <p class="eyebrow">Frozen Projection · 差异账</p>
         <h3 id="difference-title">语义差异 {{ loaded.comparison.differences.length }} 项</h3>
       </header>
-      <p v-if="loaded.comparison.differences.length === 0" class="comparison-empty" data-testid="comparison-no-differences">
+      <p v-if="loaded.comparison.differences.length === 0" class="comparison-rerun-empty" data-testid="comparison-no-differences">
         冻结投影内没有差异；来源文件哈希仍各自保留，不被伪装成同一个 Run。
       </p>
-      <div v-else class="comparison-difference-list" data-testid="comparison-differences">
+      <div v-else class="comparison-rerun-difference-list" data-testid="comparison-differences">
         <article v-for="difference in loaded.comparison.differences" :key="difference.path">
           <code>{{ difference.path }}</code>
           <div>
@@ -91,7 +97,7 @@ function statusMark(): string {
       </div>
     </section>
 
-    <aside class="comparison-boundary" data-testid="comparison-boundary">
+    <aside class="comparison-rerun-boundary" data-testid="comparison-boundary">
       <div><p class="eyebrow">Applicability · 边界</p><h3>这项比较没有越权裁决</h3></div>
       <ul><li v-for="item in loaded.comparison.limits" :key="item">{{ item }}</li></ul>
       <code>{{ loaded.comparison.comparison_id }} · {{ loaded.comparison.rule_version }}</code>

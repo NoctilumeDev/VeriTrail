@@ -33,8 +33,9 @@ Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链�
 读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13–M14 仍为 `PLANNED`。M12-A 已完成
 M11 控制组审计；M12-B 已完成四向公共视图、十字导航、URL/history、焦点与移动几何的生产运行验证。
 M12-C 已实现语义 token、Catalog 行式目录与 Runs 主链，并通过 64/64 前端回归、真实 Gate B 生产
-Chromium 和 Codex 内置浏览器的桌面/390/360 px 补证。M12-D 的 Comparison、Pairing 与 Batch 表现迁移
-仍处于计划阶段；M12 尚未冻结，也不得提前把 Browser Evidence 终稿、M13 审查或版本标签混入当前切片。
+Chromium 和 Codex 内置浏览器的桌面/390/360 px 补证。M12-D1 已迁移 Comparison，并通过真实 M11 MATCH、
+脱敏 DRIFT/INCONCLUSIVE、生产 Chromium、Codex 内置浏览器和优化模式门禁；Pairing 与 Batch 仍未开始。
+M12 尚未冻结，也不得提前把 Browser Evidence 终稿、M13 审查或版本标签混入当前切片。
 
 准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
@@ -220,6 +221,7 @@ M12 等待 M11 功能事实稳定；M13 不借“代码质量”重写合同；M
 - [M12-C 空间令牌与 Runs 主链计划](docs/32-m12-c-run-mainline-plan.md)
 - [M12-C 空间令牌与 Runs 主链运行事实](docs/33-m12-c-run-mainline-facts.md)
 - [M12-D 派生分析视图计划](docs/34-m12-d-derived-analysis-plan.md)
+- [M12-D1 Comparison 运行事实](docs/35-m12-d1-comparison-facts.md)
 
 ## 项目来源
 
