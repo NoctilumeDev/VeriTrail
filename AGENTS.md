@@ -57,12 +57,13 @@
   `HTTP_GET_LOOPBACK_OWNED_PID` readiness、既有 Browser Adapter 与逆序 Job 清理；C0 接管、
   C2/C3、Docker、跨平台、包管理器、第二类真实项目、不可信代码隔离和优雅停机均未证明。M11–M14
   继续保持 `PLANNED`，不得把 M10 冻结解释为允许跳过后继合同。
-- M11 只读候选盘点与合同草案位于 `docs/22-m11-real-project-suitability-and-contract-draft.md`。当前
-  探针已证明现有候选都不能直接装入 M10 两节点边界，并证明 InkNarratives 原始目录的单节点 HTTP/
-  代表页浏览器形态真实可运行。`docs/23-m11-single-node-real-project-contract.md` 已拟选 `OPTION_B` 与
-  InkNarratives 精确 ref，但状态仍为 `TARGET_PROPOSED / CONTRACT_NOT_FROZEN /
-  IMPLEMENTATION_NOT_AUTHORIZED`。不得增加假依赖、隐藏必要服务、使用 Mock/Pages 替代真实链路，
-  或在用户确认和独立能力合同冻结前开始 M11 实现。
+- M11 只读候选盘点与探索探针位于 `docs/22-m11-real-project-suitability-and-contract-draft.md`。探针已
+  证明现有候选不能直接装入 M10 两节点边界，并证明 InkNarratives 原始目录的单节点 HTTP/代表页
+  浏览器形态真实可运行。用户已确认 `OPTION_B`、精确 ref、Gate A -> Gate B 严格串行和不适用项；
+  `docs/23-m11-single-node-real-project-contract.md` 现为 Contract 0.2，状态
+  `CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`。M11 里程碑仍为 `PLANNED`；合同
+  冻结提交完成 GitHub 公开读回后才允许从 Gate A 开始实现。不得增加假依赖、隐藏必要服务、使用
+  Mock/Pages 替代真实链路，或在 Gate A 固定实现提交前进入 Gate B。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

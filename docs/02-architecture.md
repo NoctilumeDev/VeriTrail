@@ -74,7 +74,9 @@ Run-owned work/staging、封存并读回 teardown 前脱敏事实、比较 subje
 Core/dependency/application/browser 资源分账。公共 Plan 0.6 `run` 已串起 Preview 审批、`PROCEED`
 预检、真实 Browser、裁决、Bundle 和 Catalog 验真；`STOP_ESCALATION/ABORT` 在 bootstrap 前收束为
 仅含 preflight 的 `ABORTED/PENDING` Bundle，Plan 的完整必需证据与本次阶段适用证据分开解释。
-M10 冻结公共退出矩阵已经完成；冻结后的地基纠偏和重新验收见文档 21，M11 第二类真实项目仍未开始。
+M10 冻结公共退出矩阵已经完成；冻结后的地基纠偏和重新验收见文档 21。M11 Contract 0.2 已固定
+Profile 0.2/Plan 0.7 的单 application Gate A 与 InkNarratives Gate B 双门顺序，但实现和运行仍未开始，
+里程碑继续为 `PLANNED`；架构合同见文档 23。
 
 ### 2.5 Browser Adapter
 

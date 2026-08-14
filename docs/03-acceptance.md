@@ -26,7 +26,9 @@ Object trusted process runner 与 `runtime.command` 已通过双 Python、Python
 Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
-M10 有界完整项目自举已 `FROZEN`，M11–M14 为 `PLANNED`。ProjectProfile 0.1、Plan 0.6
+M10 有界完整项目自举已 `FROZEN`，M11–M14 为 `PLANNED`。M11 Contract 0.2 已冻结
+`OPTION_B`、InkNarratives 精确 ref 和 Gate A -> Gate B 严格串行，但 Profile 0.2、Plan 0.7、单节点
+生命周期与真实项目 Run 均未实现或验收；准确矩阵见文档 23。ProjectProfile 0.1、Plan 0.6
 跨文档 seal、BootstrapPreview 0.1、Windows listener 表、逐节点长运行 Job、owned HTTP readiness、
 双节点串行启动、pre-teardown fact-finalization 门禁和 best-effort 逆序清理已有代码与真实 helper
 自动化；严格 `runtime.bootstrap`、

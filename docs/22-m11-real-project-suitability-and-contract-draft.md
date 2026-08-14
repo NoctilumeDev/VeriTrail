@@ -1,20 +1,19 @@
-# M11 真实项目候选适配性与合同草案
+# M11 真实项目候选适配性与合同形成记录
 
-> 状态：`PLANNED / DRAFT / TARGET_PROPOSED / CONTRACT_NOT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED`
+> 状态：`PLANNED / HISTORICAL_PROBES / SUPERSEDED_BY_CONTRACT_0.2 / IMPLEMENTATION_NOT_STARTED`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`（候选盘点、已清理探索探针与合同规划；不修改代码、Schema 或目标仓库）
 > 前置地基：`m10-v0.11.1` @ `f4efdd25c50b19077c61994bce3e2aca5244d5ec`
-> 冻结引用：尚未创建
+> 后继合同：[文档 23 Contract 0.2](23-m11-single-node-real-project-contract.md)
 
 ## 1. 本阶段只回答一个问题
 
 > 能否在不扭曲被测项目真实拓扑、不为候选硬编码 Core、也不越过 16 GB 宿主机边界的前提下，
 > 选择并预注册一个不同于 VeriTrail fixture 的真实项目，完成 M11 代表性全链路？
 
-本文件先登记候选与能力差距，不选择“最容易通过”的项目，也不授权实现。探索事实已支持提出
-`OPTION_B` 与 InkNarratives 精确 ref，具体双门边界进入文档 23；这仍只是待用户确认的目标草案。
-观察结果后更换目标会破坏预注册；因此只有目标提交、运行形态、主变量、受控变量、断言、资源
-停止线、失败注入和清理边界全部固定后，M11 才能进入 `CONTRACT_FROZEN`。
+本文件登记候选、能力差距和已经清理的非验收探针，不授权实现。用户随后确认 `OPTION_B`、
+InkNarratives 精确 ref、Gate A -> Gate B 严格串行和不适用项；可执行边界已进入文档 23 Contract
+0.2。本文件保留当时的探索与决策历史，不再充当当前合同，也不能被引用为运行验收事实。
 
 ## 2. 当前 M10 可消费边界
 
@@ -59,9 +58,9 @@ Node 服务或浏览器目标。
 7. 16 GB 预算允许严格串行重复、失败恢复和最终清理；资源不足时保持 `PENDING`；
 8. 目标选择在运行前封存；失败后不得换成更容易通过的项目。
 
-## 5. 当前决策门与拟选项
+## 5. 当时决策门与拟选项（历史）
 
-M11 目前保持 `PLANNED`，三条候选路径的架构判断如下：
+在合同确认前，M11 保持 `PLANNED`，当时三条候选路径的架构判断如下：
 
 - `OPTION_A`：先独立扩展 ProjectProfile 为通用有向无环多节点本地进程拓扑，再另行验证版本化的
   非 HTTP readiness 与数据库进程/数据所有权；两项不能在同一实验中引入。全部前置能力分别冻结后，
@@ -74,20 +73,21 @@ M11 目前保持 `PLANNED`，三条候选路径的架构判断如下：
 这三个选项不能在同一实验中并行引入。选择顺序以“对通用模型的必要性、真实项目代表性、新增爆炸
 半径、16 GB 可重复验收成本”评分，而不是以实现快慢决定。DarkRoomLibrary 的外部效度最强，但
 前置能力不止一个；InkNarratives 的能力增量最小，却只能证明静态项目、浏览器与单节点生命周期，
-不能被包装成动态后端或数据库链路。基于已完成探针，当前只提出 `OPTION_B`，`OPTION_A/C` 延后；
-这个拟选结果必须经用户确认和合同冻结才能授权实现。
+不能被包装成动态后端或数据库链路。基于当时已完成探针，只提出 `OPTION_B`，`OPTION_A/C` 延后；
+该拟选结果后来已由用户确认并进入文档 23 Contract 0.2，但实现仍未开始。
 
-## 6. M11 合同冻结前必须补齐
+## 6. 后继合同已补齐的门禁
 
-- [ ] 用户确认草案中唯一主目标、精确 ref 与其余候选的延后边界；
-- [ ] 决定是否需要独立的 Profile/Schema 能力里程碑，并列出所有生产者与消费者；
-- [ ] 冻结成功链、业务失败链、基础设施失败链和恢复链；
-- [ ] 冻结浏览器桌面/移动、键盘、Console、Network 和用户可见最终状态；
-- [ ] 冻结目标业务权威事实，以及适用的重复副作用、一致性和恢复退出条件；
-- [ ] 冻结环境发现、工具版本、数据准备、端口、身份、资源 soft/hard 线和清理责任；
-- [ ] 决定 Comparison、PairedAnalysis、BatchAnalysis 中哪些具有真实语义；不为点亮能力而强用；
-- [ ] 定义失败保留、复跑、远端读回和不可移动标签规则；
-- [ ] 用户确认合同后再创建冻结提交与规划标签；冻结前不得进入实现。
+- [x] 用户确认唯一主目标、精确 ref 与其余候选的延后边界；
+- [x] 单节点 Profile/Schema 作为 Gate A 独立主要变量，并列出生产者与消费者；
+- [x] 成功、业务失败、基础设施失败、恢复和状态归因已冻结；
+- [x] 自动 Browser、Codex 内置浏览器补充验收和 Workbench 读回边界已分开；
+- [x] 不适用的写业务、数据库、中间件、多角色与一致性语义已明确；
+- [x] 工具、端口、Subject、资源停止线和清理责任已冻结；
+- [x] 只使用具有真实复跑语义的 Comparison；Paired/Batch 保持不适用；
+- [x] 失败保留、Run ID、复跑、远端读回和未来标签规则已进入文档 23。
+
+以上勾选是后继合同事实，不是实现或运行事实；M11 继续保持 `PLANNED`。
 
 ## 7. 预注册探索探针：InkNarratives 仓库根目录
 
@@ -269,7 +269,7 @@ Evidence 或 M11 实现。
 M10 地基已经稳定并可寻址，但它的固定两节点证明范围与现有候选项目的真实最小拓扑不完全重合。
 InkNarratives 已从“静态根目录不能被 M5 直接快照”进一步获得了真实的单节点 HTTP/代表页浏览器
 可运行事实；这说明独立单节点 Profile 合同具有实际目标，不等于 M10 边界已经扩展。基于现有事实，
-`OPTION_B` 与 InkNarratives 精确 ref 已进入[双门合同草案](23-m11-single-node-real-project-contract.md)，
-但仍是 `TARGET_PROPOSED / CONTRACT_NOT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED`。因此 M11 仍处于
-**合同规划**，尚未冻结合同或开始实现。这个暂停不是进度倒退，而是防止 VeriTrail 为了证明自己
-“通用”而先扭曲真实项目。
+`OPTION_B` 与 InkNarratives 精确 ref 已进入[双门 Contract 0.2](23-m11-single-node-real-project-contract.md)，
+状态为 `CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`。因此 M11 里程碑仍为
+`PLANNED`，尚未开始 Gate A 实现，更没有真实项目 Bundle 或冻结标签。这个边界防止 VeriTrail 为了
+证明自己“通用”而先扭曲真实项目。

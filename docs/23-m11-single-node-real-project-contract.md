@@ -1,11 +1,12 @@
-# M11 单节点能力与真实项目全链路合同草案 0.1
+# M11 单节点能力与真实项目全链路合同 0.2
 
-> 状态：`DRAFT / TARGET_PROPOSED / CONTRACT_NOT_FROZEN / IMPLEMENTATION_NOT_AUTHORIZED`
+> 状态：`CONTRACT_FROZEN / TARGET_SELECTED / IMPLEMENTATION_NOT_STARTED`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`
 > 前置基线：`m10-v0.11.1` @ `f4efdd25c50b19077c61994bce3e2aca5244d5ec`
-> 拟选真实目标：`InkNarratives main @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
-> 冻结引用：尚未创建
+> 固定真实目标：`InkNarratives main @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
+> 用户确认：2026-08-14，确认 `OPTION_B`、精确 ref、Gate A -> Gate B 严格串行与不适用项
+> 冻结引用：本文首次进入 `CONTRACT_FROZEN` 的 Git 提交；提交后必须从 GitHub 公开读回
 
 ## 1. 合同只解决什么
 
@@ -15,10 +16,11 @@ M11 要证明 VeriTrail 能验收一个不同于自身 fixture 的真实项目�
 - InkNarratives README 认可的 `python -m http.server` 单节点形态可由原始目录服务五页，五页均真实
   返回 HTTP 200，代表页也已通过 Codex 内置 Chromium 的桌面/移动加载、可见性、溢出和 Console 检查。
 
-因此拟选 `OPTION_B`：先独立交付**通用单应用节点 C1 生命周期**，再锁定该能力去验证
+因此固定 `OPTION_B`：先独立交付**通用单应用节点 C1 生命周期**，再锁定该能力去验证
 InkNarratives。不能通过给目标添加假依赖、统一入口、发布目录或 VeriTrail 专用脚本绕开能力缺口。
 
-本合同草案不授权实现。用户确认、合同一致性审查和冻结提交完成前，M11 保持 `PLANNED`。
+本合同冻结只允许后续从 Gate A 开始实现，不证明任何 Profile 0.2、Plan 0.7、单节点生命周期或真实
+项目能力已经存在。冻结提交公开读回前，M11 继续保持 `PLANNED`，不得创建实现标签或运行结论。
 
 ## 2. 两道门必须严格串行
 
@@ -64,7 +66,7 @@ Gate B 使用相同主要变量和值，另行冻结 Subject、Git ref、工具�
 
 ## 4. 公共版本策略
 
-不能放宽旧版本原地兼容。拟新增版本如下：
+不能放宽旧版本原地兼容。冻结新增版本如下：
 
 | Contract | New version | Exact scope | Old version remains |
 | --- | --- | --- | --- |
@@ -89,7 +91,7 @@ Pairing 与 Batch 继续显式拒绝 Plan 0.7。Comparison 只允许相同 seale
 
 ## 5. ProjectProfile 0.2 最小模型
 
-Profile 0.2 新增显式字段：
+Profile 0.2 固定新增显式字段：
 
 ```json
 {
@@ -155,56 +157,121 @@ ExecutionStatus/Verdict 不新增值。既有错误原因沿用其准确语义�
 | CLI | seal/preview/run 显式接受 0.7；错误信息区分 0.6/0.7 |
 | preflight/resource decision | 接受 0.7 的单端口、相同宿主机停止线与单节点预算，不伪造第二端口 |
 | `bootstrap_preview.py` | 生成 Preview 0.2；继续生成并验证 0.1 |
-| lifecycle/run | 只接受已验证的一节点 0.2 或两节点 0.1，不开放任意长度 |
+| `bootstrap_public_run.py` / `bootstrap_run.py` | 只接受已验证的一节点 0.2/0.7 或两节点 0.1/0.6，不开放任意长度 |
+| `bootstrap_lifecycle.py` / Windows adapters | 单节点复用既有 Job/listener/readiness 所有权，不弱化启动、停止或竞态检查 |
 | resource monitor | 单节点只记 application；不伪造 dependency 样本 |
 | subject snapshot | `.` 继续按既有有界语义包含隐藏目录；不得为目标新增隐式排除规则 |
 | Browser Adapter | 复用冻结适配器并消费 Plan 0.7 步骤；本里程碑不增加 reduced-motion 仿真 |
 | staging/Evidence | 版本化一节点顺序、两附件和 collector 0.3 |
+| `evidence.py` | 按 collector/Profile 版本验证两附件或四附件；旧四附件规则不原地放宽 |
 | Bundle/Verdict/reporting | 封存 Profile 0.2/Plan 0.7，并重推导 authority、Browser reference、cleanup 和污染 |
 | Catalog/API | 从 sealed Plan/Profile/Evidence 重算，不只信任 report 摘要 |
 | Comparison | 接受同 0.7/0.2，拒绝跨 Plan/Profile 版本比较 |
 | Pairing/Batch | 明确拒绝 Plan 0.7 |
-| Workbench | 继续只读显示权威 Report/Evidence；不自行推断缺失 dependency |
+| Workbench | 生产代码继续通用只读显示；新增单节点账册夹具，不自行推断缺失 dependency |
 | README/docs | 只在运行事实成立后更新能力与限制，不提前标记 M11 |
 
-任何实际 diff 触及列表外公共消费者时，影响面立即重新审查；不得以“只是数组从 2 变 1”降为 L1/L2。
+冻结审查已逐项搜索并读取 `0.6`、ProjectProfile、`runtime.bootstrap`、collector、sealed Profile 和
+附件基数消费者。生产 Workbench 当前没有双节点硬编码，只有 M10 通用账册测试夹具；它仍进入回归，
+但不借 M11 新增前端业务逻辑。任何实际 diff 触及列表外公共消费者时，影响面立即重新审查；不得以
+“只是数组从 2 变 1”降为 L1/L2。
 
 ## 8. Gate A：目标无关能力验收
 
 Gate A 必须新增一个脱敏、无业务含义的单应用 HTTP helper 与公开示例 Plan/Profile。它只证明通用
 生命周期，不得复制 InkNarratives 文件、路径、中文标题或页面结构。
 
-至少真实运行：
+### 8.1 冻结 authority
 
-1. 正向 READY -> 双视口 Browser -> `COMPLETED/PASS` -> 单节点 cleanup；
-2. application 提前退出 -> 可解释 FAIL 与零残留；
-3. readiness timeout 与 listener owner mismatch；外部 listener 不被接管或终止；
-4. READY 后 cooperative user cancel -> `ABORTED/PENDING`、Browser 不启动或按阶段准确适用；
-5. Browser 硬失败、subject drift、cleanup failure、staging failure和运行期内存停止；
-6. 相同 sealed Plan/Profile 连续两次正向 Run，首份 Bundle 不覆盖，Comparison 为 `MATCH`；
-7. 旧 Plan 0.6 双节点公共出口与 M0–M10 全回归不退化；
-8. 每个失败出口均由 Catalog 独立验真，并检查进程、Job、端口、浏览器、staging 与 run-work 残留。
+| Authority | ID | Version | Use |
+| --- | --- | ---: | --- |
+| positive Plan | `m11-single-app-gatea-positive` | 1 | 两次正向及所有不改变 Browser 步骤的负向 |
+| Browser-negative Plan | `m11-single-app-gatea-browser-negative` | 1 | 只把一个已具名 selector 换成确定不存在的 selector |
+| positive Profile | `m11-single-app-helper` | 1 | 正向、Browser/collector/subject/cleanup/staging/memory 与外部端口竞争 |
+| early-exit Profile | `m11-single-app-helper-early-exit` | 1 | application 在 READY 前退出 |
+| timeout Profile | `m11-single-app-helper-readiness-timeout` | 1 | owned application 存活但不满足 readiness |
+| owner-mismatch Profile | `m11-single-app-helper-owner-mismatch` | 1 | owned application 不拥有被观察 listener |
+
+全部 Profile 只绑定同一个 Gate A helper；变体只用结构化参数选择已预注册行为，不增加第二个进程、
+隐藏节点、Shell 或运行时环境变量开关。Plan/Profile 必须在首个对应 Run 前 seal；观察结果后只能升
+版本，不能移动同 ID/version 的 authority。
+
+### 8.2 冻结 HARD 断言
+
+| Assertion ID | Evidence path / relation | Expected and applicability |
+| --- | --- | --- |
+| `m11-preflight-snapshot-complete` | `runtime.preflight:/facts/snapshot_complete` | 所有 Run 为 `true`；live preflight 不能复用 Preview 摘要冒充 |
+| `m11-bootstrap-service-ready` | `runtime.bootstrap:/facts/services_ready` | 进入 Browser 的 Run 为 `true`；READY 前失败按阶段不适用 |
+| `m11-bootstrap-order` | sealed/attempted/completed order | 启动只有 application；清理也只有 application，且三者与 Profile 0.2 一致 |
+| `m11-bootstrap-stream-cardinality` | bootstrap attachments | collector 0.3 恰好 application stdout/stderr 两份；不得出现 dependency 占位附件 |
+| `m11-browser-capture-complete` | `browser.session:/facts/capture_complete` | Browser 适用且 collector 正常时为 `true` |
+| `m11-browser-steps-passed` | `browser.session:/facts/all_steps_passed` | 正向为 `true`；预注册 selector 负向为 `false` |
+| `m11-browser-console-clean` | unexpected Console errors | 正向为 `0` |
+| `m11-browser-page-clean` | page errors | 正向为 `0` |
+| `m11-browser-request-clean` | failed requests | 正向为 `0` |
+| `m11-browser-http-clean` | unexpected HTTP errors | 正向为 `0` |
+| `m11-browser-write-clean` | duplicate write request groups | 全部 Browser Run 为 `0` |
+| `m11-browser-overflow-clean` | horizontal-overflow viewports | 正向为 `0` |
+| `m11-browser-cleanup-complete` | Browser cleanup fact | 启动 Browser 的 Run 为 `true`，除预注册 collector error 仍必须 best-effort 后准确记录 |
+| `m11-bootstrap-cleanup-complete` | bootstrap cleanup fact | 除 cleanup-failure 负向外为 `true`；负向必须为 `false` 并阻断 PASS |
+| `m11-subject-unchanged` | before/after Subject fingerprint | 非 drift Run 相同；drift Run 的 Evidence reason 为 `SUBJECT_DRIFT`，Verdict 断言代码为 `BOOTSTRAP_SUBJECT_DRIFT` |
+| `m11-catalog-rederivation` | sealed authorities -> Catalog | Catalog 重算后的 status/verdict、适用性与 Report 一致，损坏副本被隔离 |
+| `m11-zero-owned-residual` | owned process/Job/listener/Browser/staging/run-work | 每轮结束回到预注册起点；cleanup-failure 先保留失败事实，再完成独立恢复才允许下一 Run |
+
+### 8.3 冻结 Run 顺序与出口
+
+严格串行执行下表顺序；Run ID 不得复用，失败 Run 不删除。`stop / status / verdict` 中的 stop 是
+`runtime.bootstrap` 的既有 reason；预检期端口竞争不生成 bootstrap stop reason。
+
+| Order | Run ID | Frozen scenario | Expected stop / status / verdict |
+| ---: | --- | --- | --- |
+| 1 | `m11-gatea-positive-01` | 正向 READY、双视口 Browser、完整清理 | `NONE / COMPLETED / PASS` |
+| 2 | `m11-gatea-positive-02` | 同 sealed Plan/Profile 独立复跑 | `NONE / COMPLETED / PASS` |
+| 3 | `m11-gatea-early-exit-01` | application READY 前退出 | `NODE_EARLY_EXIT / COMPLETED / FAIL` |
+| 4 | `m11-gatea-readiness-timeout-01` | owned listener 永不满足 readiness | `READINESS_TIMEOUT / ABORTED / FAIL` |
+| 5 | `m11-gatea-owner-mismatch-01` | readiness 命中错误 listener owner | `LISTENER_OWNERSHIP_MISMATCH / ABORTED / FAIL` |
+| 6 | `m11-gatea-port-conflict-01` | Preview 后、live preflight 前外部进程占端口 | preflight-only / `ABORTED / PENDING` |
+| 7 | `m11-gatea-user-cancel-ready-01` | application READY 后 cooperative cancel，Browser 尚未创建 | `USER_CANCELLED / ABORTED / PENDING` |
+| 8 | `m11-gatea-browser-negative-01` | 独立 sealed Plan 的不存在 selector | `BROWSER_HARD_FAILURE / COMPLETED / FAIL` |
+| 9 | `m11-gatea-browser-collector-error-01` | 已具名 Browser observer/collector error | `COLLECTOR_ERROR / ERROR / PENDING` |
+| 10 | `m11-gatea-subject-drift-01` | Browser 后、after snapshot 前的已具名 Subject 变化 | `SUBJECT_DRIFT / COMPLETED / INCONCLUSIVE` |
+| 11 | `m11-gatea-cleanup-failure-01` | 已具名 cleanup 观测失败 | `CLEANUP_ERROR / ERROR / FAIL` |
+| 12 | `m11-gatea-staging-failure-01` | 显式 pre-teardown staging writer 失败 | `EVIDENCE_ERROR / ERROR / PENDING` |
+| 13 | `m11-gatea-memory-stop-01` | 运行期 soft memory stop，且没有更早的决定性失败 | `RESOURCE_MEMORY_SOFT_LIMIT / ABORTED / PENDING` |
+
+`m11-gatea-positive-01` 与 `m11-gatea-positive-02` 必须以 M6 Comparison 得到 `MATCH` 和 0 差异；
+任何其他 Run 都不得塞入该比较。旧 Plan 0.6 双节点公共出口、M0–M10 全回归和 Pairing/Batch 对 0.7
+的显式拒绝必须同时通过。每个失败出口均由 Catalog 独立验真，并在下一轮前完成第 10.3 节的残留
+门禁；外部 listener 只能由它自己的测试 owner 结束，VeriTrail 不得接管或终止。
 
 Gate A 的自动化、真实运行和清理事实固定为一个提交后，Gate B 才可开始。资源压力只做受限微并行，
 不得同时运行其他项目技术栈；并发数字必须声明总请求、同时在途和实例数。
 
 ## 9. Gate B：InkNarratives 精确目标合同
 
-目标拟固定为提交 `b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`。运行前必须从远端读回该提交，
+目标固定为提交 `b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`。运行前必须从远端读回该提交，
 本地工作区干净；观察结果后不得换 ref。目标不新增 `index.html`、发布目录、依赖或适配代码。
 
-草案拟固定的运行形态：
+### 9.1 冻结 authority 与运行形态
+
+| Authority | ID | Version | Use |
+| --- | --- | ---: | --- |
+| positive Plan | `m11-ink-single-app-positive` | 1 | 正向、端口竞争和恢复正向 |
+| Browser-negative Plan | `m11-ink-single-app-browser-negative` | 1 | 只把一个具名 selector 换为 `#veritrail-m11-missing-selector` |
+| ProjectProfile | `m11-ink-single-app` | 1 | 全部 Gate B Run |
+
+固定运行形态：
 
 - Python 3.10.6，直接参数 `-m http.server <application-port> --bind 127.0.0.1`；
 - application 工作目录为 Subject 根，C1 起点没有目标服务运行；
 - `subject_watch_roots=["."]`，按现有指纹语义纳入 `.git`、治理文件、文档、脚本与五个 HTML；不得
   增加排除规则把 Subject 偷换成五页子集，且从运行前快照到运行后快照之间不得执行 Git 命令；
-- readiness 使用一个低于既有响应上限的百分号编码页面路径，Browser 入口使用
-  `/%E8%8B%8F%E8%BD%BC.html`；具体 readiness 页面和端口在冻结 Plan/Profile 时写死；
+- readiness 固定为 `/%E7%8E%8B%E7%BB%B4.html`，Browser 入口固定为
+  `/%E8%8B%8F%E8%BD%BC.html`；
 - Profile 只继承既有最小 Windows 环境，不读取 `.env`、凭据或浏览器 Profile；
 - Subject watch root 为仓库根；目标漂移只记录、不回滚。
 
-草案拟定的冻结预算如下；合同确认前仍可评审，运行观察后不得移动：
+冻结预算如下；变更必须升 Plan/Profile 版本，运行观察后不得移动原版本：
 
 | Policy | Gate A | Gate B |
 | --- | ---: | ---: |
@@ -224,37 +291,95 @@ Gate A 的自动化、真实运行和清理事实固定为一个提交后，Gate
 | virtual users / in-flight requests | 1 / 1 | 1 / 1 |
 
 两门都使用 3 次 preflight 样本、50 ms 间隔、连续 2 次 hard breach 停止；collector RSS 上限 256 MiB，
-observer RSS delta soft 线 64 MiB。Gate B readiness 页面已由 `002` 观察为 31,741 字节，低于拟定
+observer RSS delta soft 线 64 MiB。Gate B readiness 页面已由 `002` 观察为 31,741 字节，低于冻结
 65,536 字节上限；最终仍必须由受控 readiness 实际重测，不能继承探针结果。
 
-真实浏览器必须按固定顺序覆盖 `暗室.html`、`柳永.html`、`苏轼.html`、`王维.html`、`长卷.html`，
-并在桌面 `1440x960` 与移动 `390x844` 中检查：
+### 9.2 自动 Browser Plan 步骤
+
+positive Plan 在桌面 `1440x960` 与移动 `390x844` 上执行完全相同的下表步骤。`goto` 使用 Gate B
+application origin 与表中百分号编码 path；每次导航后均先验证文档 200、`main` 可见、`h1` 包含固定
+文本，再执行交互。总步骤不得超过既有 50 步上限，截图 action 不得超过 4 个。
+
+| Order | Page/path | Fixed H1 | Deterministic interaction and expected state |
+| ---: | --- | --- | --- |
+| 1 | `/%E8%8B%8F%E8%BD%BC.html` | `苏轼生平全记录` | click `a[href="#chapter11"]`; `#chapter11` visible |
+| 2 | `/%E6%9A%97%E5%AE%A4.html` | `暗室 · 藏书` | `#library` visible; click `.book[data-title="封装之书"]`; `#readerTitle` contains `封装之书` |
+| 3 | `/%E6%9F%B3%E6%B0%B8.html` | `乐章集` | click `a[href="#juan8"]`; `#juan8` visible |
+| 4 | `/%E7%8E%8B%E7%BB%B4.html` | `空山见王维` | click `a[href="#c6"]`; `#c6` visible |
+| 5 | `/%E9%95%BF%E5%8D%B7.html` | `夜航船` | click `a[href="#cabin"]`, then `.book[data-book="mountain"]`; `#reader-title` contains `空山之后` |
+
+固定截图放在苏轼章节、暗室读者层、王维末章和长卷读者层之后。Browser-negative Plan 与 positive Plan
+的 authority、Profile、目标、资源、页面顺序和其他步骤完全相同，只把苏轼 `#chapter11` 的
+`expect_visible` selector 换成 `#veritrail-m11-missing-selector`；它必须独立 seal，不能在正向 Plan
+中运行时改 selector。
+
+自动 Browser Evidence 必须断言：
 
 - 每页 HTTP 文档为 200，Console、page error、failed request 和未解释 4xx/5xx 为 0；
 - `main` 与关键标题可见，根视口无横向溢出；
 - 固定截图与步骤时间线进入 Bundle；
+- `capture_complete=true`、正向 `all_steps_passed=true`、重复写请求组为 0；
+- Browser cleanup 与 bootstrap cleanup 完整，preflight snapshot 完整且 application 曾进入 READY；
 - 默认动效按目标现有质量边界检查；当前 Browser Adapter 未声明 `prefers-reduced-motion` 仿真，M11
   不顺手扩展该公共能力，减少动效保持 `NOT_PROVEN`，只引用目标既有基线而不继承其 PASS；
-- Codex 内置浏览器再执行完整五页浏览、刷新/返回、物理键盘、桌面/移动与 Console/Network 复核。
+- Codex 内置浏览器验收按第 10.2 节独立执行，不能混入自动 Run 的 Bundle。
 
 目标不存在写业务、数据库、中间件、多角色或最终一致性语义；这些项必须标记 `NOT_APPLICABLE`，不能
 制造假请求、假身份或假多实例来点亮能力。
 
 ## 10. Gate B 失败、恢复与复跑
 
-至少保留：
+### 10.1 冻结 Run 顺序
 
-1. 一个预注册 Browser 负向 Run（例如不存在的 selector），形成真实 `COMPLETED/FAIL`，不能改目标
-   文件制造失败；
-2. 一个 owned service 中断或端口竞争负向，证明不误杀外部 listener；
-3. 负向清理后从同一 ref、同一 Plan/Profile 完成正向恢复 Run；
-4. 两次独立正向 Run 生成不可覆盖 Bundle，并以 M6 Comparison 得到可解释结果；
-5. Catalog 同时接纳正向、负向和恢复 Run，损坏副本被隔离；
-6. Workbench 从生产构建和只读 API 读回 Evidence，不重新裁决；
-7. 最终端口、owned process、Job、Chromium、staging、run-work 和目标 Git 状态全部回到起点。
+| Order | Run ID | Plan | Frozen scenario | Expected |
+| ---: | --- | --- | --- | --- |
+| 1 | `m11-gateb-ink-positive-01` | positive | 精确 ref、五页双视口正向 | `NONE / COMPLETED / PASS` |
+| 2 | `m11-gateb-ink-browser-negative-01` | Browser-negative | 苏轼页预注册不存在 selector | `BROWSER_HARD_FAILURE / COMPLETED / FAIL` |
+| 3 | `m11-gateb-ink-port-conflict-01` | positive | Preview 后、live preflight 前由外部 owner 占用 18775 | preflight-only / `ABORTED / PENDING` |
+| 4 | `m11-gateb-ink-recovery-positive-02` | positive | 外部 owner 自行结束并证明端口恢复后，同 ref 恢复正向 | `NONE / COMPLETED / PASS` |
 
-Comparison 若不是 `MATCH`，必须解释差异来源并决定 `DRIFT/INCONCLUSIVE`，不能为了 M11 完成而放宽
-比较规则。Pairing/Batch 在本目标没有真实反事实或组合语义，保持不适用。
+四个 Bundle 均保留且由 Catalog 独立验真。只比较
+`m11-gateb-ink-positive-01` 与 `m11-gateb-ink-recovery-positive-02`；两者必须绑定完全相同的 sealed
+positive Plan/Profile，并以 M6 Comparison 得到 `MATCH`。若实际为 `DRIFT/INCONCLUSIVE`，必须解释
+来源并停止冻结，不能放宽比较规则。Browser-negative 因 selector 不同而必须使用独立 sealed Plan，
+不得参加比较。Pairing/Batch 在本目标没有真实反事实或组合语义，保持 `NOT_APPLICABLE`。
+
+Catalog 必须同时接纳正向、负向和恢复 Run，损坏副本被隔离。Workbench 只从生产构建和只读 API
+读回 sealed Evidence、Report 与 Comparison，不重新裁决；这项 Workbench 读回是 Bundle 事实的独立
+浏览器验收，不替代目标项目的自动 Browser Evidence。
+
+### 10.2 Codex 内置浏览器补充验收边界
+
+自动 Gate B Run teardown 后，其 18775 listener 已经不存在，不能为了人工复核偷偷复用或延长
+Run-owned application。Codex 内置浏览器补充验收固定使用：
+
+- 同一目标 ref、同一 Python 3.10.6 module/参数形态和同一 Subject 根；
+- 独立 owned 临时进程与专用回环端口 `18776`；
+- 五页完整桌面/移动浏览、固定交互、刷新/返回、物理键盘，以及 F12 Console/Network 复核；
+- 单独的 acceptance record，明确进程 owner、开始/结束时间、页面结果、Console/Network 和残留；
+- 验收后只清理该独立进程并证明 18776 释放。
+
+该记录是用户可见补充验收，不进入、不修改也不替代任一 Gate B Bundle，不能把人工观察倒填为
+`browser.session`。Workbench 的生产读回再使用其自身独立受控服务；目标进程、Workbench 服务和
+Catalog API 不得同时留在后台。
+
+### 10.3 自动清理与只读残留门禁
+
+每个 Run 都必须先封存 pre-teardown 事实，再由 lifecycle 终止当前 Run 的 Browser Job（若适用）和
+application Job，关闭流 reader，等待 owned PID 与端口释放，最后原子发布或隔离 Bundle。验收器随后
+只读核对：
+
+1. Profile 的 application PID/进程树和 Job 不再存活；不得用进程名匹配或全局 `taskkill` 代替所有权；
+2. 当前 Run 端口不再 LISTEN；端口竞争夹具的外部 owner 不由 VeriTrail 关闭；
+3. Chromium/CDP observer、stdout/stderr reader 和临时 listener 无 owned handle 残留；
+4. staging 与 run-work 无未解释目录；不可变 Bundle 是产物，不算临时残留，也不得被后续 Run 覆盖；
+5. Subject after snapshot 已完成，且其前后指纹满足对应 Run 断言；两次 snapshot 之间没有 Git 命令；
+6. snapshot 完成后才允许只读确认目标 `HEAD` 仍为固定 ref、工作区干净；不执行 reset/checkout/clean；
+7. cleanup-failure 负向先保留 `CLEANUP_ERROR` Bundle，再通过独立、具名、owned 恢复步骤回到起点；
+   恢复证据成立前不得开始下一 Run。
+
+任何 residual 无法证明归属或清除时停止 Gate，不以人工口头说明标记通过。最终 18774、18775、18776、
+owned process、Job、Chromium、staging、run-work、Workbench/Catalog 服务与目标 Git 状态全部回到起点。
 
 ## 11. 安全、资源与适用边界
 
@@ -269,14 +394,17 @@ Comparison 若不是 `MATCH`，必须解释差异来源并决定 `DRIFT/INCONCLU
 
 ## 12. 冻结出口与停止条件
 
-合同冻结前必须：
+合同冻结门禁：
 
-- [ ] 用户确认拟选 `OPTION_B`、目标 ref、双门顺序和不适用项；
-- [ ] 列表中的所有公共消费者完成逐项审查；
-- [ ] 成功、失败和状态归因在运行前具名，不能再出现成功状态名遗漏；
-- [ ] 复核 Gate A 与 Gate B 的拟定端口、资源线，并补齐精确步骤、断言、Run ID 规则和清理命令；
-- [ ] 确认新增版本不原地放宽 M10 冻结合同；
-- [ ] 创建合同冻结提交；冻结前不创建实现代码或 M11 标签。
+- [x] 用户确认 `OPTION_B`、目标 ref、双门顺序和不适用项；
+- [x] 列表中的所有已知公共消费者完成逐项审查；
+- [x] 成功、失败和状态归因在运行前具名；
+- [x] Gate A/Gate B 端口、资源线、精确步骤、断言、Run ID 和清理/残留规则已冻结；
+- [x] 新增版本以显式分派实现，不原地放宽 M10 冻结合同；
+- [x] 本次变更仅创建文档合同冻结提交，不创建实现代码、Schema、版本或 M11 标签。
+
+这些勾选只说明合同内容已冻结，不说明条款已实现或运行。README 里 M11 在 Gate A 与 Gate B 均取得
+事实前必须继续显示 `PLANNED`；开始编码后也只能使用准确的内部阶段状态，不能提前写 `FROZEN`。
 
 M11 只有在 Gate A 和 Gate B 均完成代码事实、自动化、真实 Chromium、Codex 内置浏览器、失败恢复、
 Catalog/Workbench、Comparison、敏感扫描、资源和零残留证据后，才能标记 `FROZEN` 并创建不可移动
