@@ -192,4 +192,5 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M11 Gate B Plan v1 首次真实失败](26-m11-gate-b-plan-v1-failure.md)
 - [M11 Gate B 真实项目验证与冻结门禁](27-m11-gate-b-validation.md)
 - [M12 宫阙验迹表现系统重构设计计划 0.1](28-m12-palace-workbench-design-plan.md)
+- [M12-A 控制组与当前状态审计](29-m12-a-control-baseline-audit.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

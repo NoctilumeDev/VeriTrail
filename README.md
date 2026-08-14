@@ -30,7 +30,9 @@ Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链�
 出口；Gate B Plan v1 的移动端隐藏导航 `FAIL` 原样保留，Plan v2 则按预注册顺序取得
 `PASS / FAIL / PENDING / PASS` 四个 Bundle，正向恢复 Comparison 为 `MATCH`、0 differences。
 真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；冻结
-读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M12–M14 仍为 `PLANNED`。
+读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M12–M14 仍为 `PLANNED`。M12-A 已完成
+M11 控制组的自动化、真实浏览器、状态矩阵、响应式、DOM/CSS 所有权和清理审计，但没有修改生产前端；
+M12 仍是 `PRODUCTION_IMPLEMENTATION_NOT_STARTED`，下一入口只允许 M12-B 无装饰信息架构骨架。
 
 准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
@@ -210,6 +212,7 @@ M12 等待 M11 功能事实稳定；M13 不借“代码质量”重写合同；M
 - [M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)
 - [M11 Gate B 真实项目验证与冻结门禁](docs/27-m11-gate-b-validation.md)
 - [M12 宫阙验迹表现系统重构设计计划 0.1](docs/28-m12-palace-workbench-design-plan.md)
+- [M12-A 控制组与当前状态审计](docs/29-m12-a-control-baseline-audit.md)
 
 ## 项目来源
 

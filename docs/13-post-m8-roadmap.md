@@ -17,7 +17,7 @@
 | M9 | 受控项目命令执行 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2` |
 | M11 | 真实项目功能全链路 | `FROZEN` | `m11-v0.12.0` @ `b13e2fb`；本文第 7 节与文档 23、25、26、27 |
-| M12 | 故宫主题前端终稿 | `PLANNED`（design frozen；implementation not started） | 本文第 8 节与文档 28 |
+| M12 | 故宫主题前端终稿 | `PLANNED`（M12-A audited；production implementation not started） | 本文第 8 节与文档 28、29 |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | 本文第 9 节 |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | 本文第 10 节 |
 
@@ -305,9 +305,12 @@ M10 不自动安装系统级 Python、Node、Java、Maven、Docker 或中间件�
 
 ## 8. M12：故宫主题前端终稿
 
-独立冻结设计计划 0.1 见 [M12 宫阙验迹表现系统重构设计计划](28-m12-palace-workbench-design-plan.md)。
+独立冻结设计计划 0.1 见 [M12 宫阙验迹表现系统重构设计计划](28-m12-palace-workbench-design-plan.md)，
+M11 控制组的自动化、浏览器、状态/视口矩阵与 CSS/DOM 所有权事实见
+[M12-A 控制组与当前状态审计](29-m12-a-control-baseline-audit.md)。
 计划把原先笼统的纯 L0 美化纠正为 `L0 + bounded L1` 表现系统重构，并冻结十字中轴导航、北京中轴线
-与明清紫禁城的空间/色彩、院落式活留白和 M11 控制组边界。M12 仍未实现，必须从 M12-A 开始。
+与明清紫禁城的空间/色彩、院落式活留白和 M11 控制组边界。M12-A 已闭环且没有生产代码 diff；M12
+仍未实现，下一入口只允许 M12-B 无装饰信息架构与十字导航骨架。
 
 ### 8.1 实现原则
 
