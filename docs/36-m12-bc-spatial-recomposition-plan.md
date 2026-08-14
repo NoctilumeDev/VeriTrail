@@ -1,8 +1,8 @@
 # M12-B/C 空间收束与 Runs 目录整改计划 0.1
 
-> 状态：`R1_VALIDATED / R2_NOT_IMPLEMENTED`
+> 状态：`R1_VALIDATED / R2_VALIDATED`
 > 日期：2026-08-14
-> 当前实现基线：`04af34a`（M12-D1 Comparison 已形成事实）
+> 当前实现基线：`005ab1a`（R2 Runs 主链已形成事实）
 > 上游合同：[M12 宫阙验迹表现系统重构设计计划 0.1](28-m12-palace-workbench-design-plan.md)
 > 纠偏来源：M12 实页审美复核
 > 影响声明：`L0_PRESENTATION + BOUNDED_L1_COMPONENT`
@@ -132,8 +132,8 @@ R1/R2 不提前宣称 200% zoom、完整 forced-colors、色觉差异、Browser 
 ```text
 Plan confirmation
   -> R1 facts (closed: [document 37](37-m12-r1-compact-shell-facts.md))
-  -> R2 facts
-  -> D2 Pairing plan/implementation
+  -> R2 facts (closed: [document 38](38-m12-r2-runs-presentation-facts.md))
+  -> D2 Pairing plan/implementation (next)
 ```
 
 R1/R2 的事实只证明公共空间与 Runs 主链的表现纠偏，没有推翻 M11、M12-B/C 或 D1 的功能结论，也不代表
@@ -150,5 +150,7 @@ M12 已冻结。每项完成必须同步 README、`docs/milestones.md`、项目 
 - [x] 用户审阅并确认本计划 0.1；
 - [x] 计划先于任何 R1/R2 生产代码提交；
 - [x] R1 公共外壳已形成独立实现、生产 Chromium、内置浏览器与清理事实；
+- [x] R2 Runs 主链已形成独立实现、生产 Chromium、内置浏览器与清理事实；
 
-本文件是已确认的实施合同，不是运行事实。R1 的独立事实见文档 37；R2 与 D2 仍必须等待其各自的独立事实。
+本文件是已确认的实施合同，不替代运行事实。R1、R2 的独立事实见文档 37、38；下一步只有 D2，仍必须先形成
+自己的计划和运行事实。
