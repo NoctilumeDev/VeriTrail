@@ -65,8 +65,7 @@
     background:
       linear-gradient(90deg, color-mix(in srgb, var(--text-on-ink) 5%, transparent) 1px, transparent 1px) 0 0 / 4rem 100%,
       var(--surface-ink);
-    border-bottom: 3px double var(--structure-gold);
-    box-shadow: 0 8px 22px color-mix(in srgb, var(--surface-ink) 20%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--structure-gold) 65%, transparent);
   }
 
   .masthead__roofline {
@@ -92,8 +91,82 @@
 
   .masthead__inner {
     display: grid;
+    gap: var(--space-3);
+    padding-block: var(--space-4);
+  }
+
+  .masthead__primary {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(18rem, 1.2fr);
     gap: var(--space-5);
-    padding-block: var(--space-6) var(--space-7);
+    align-items: center;
+  }
+
+  .masthead__navigation {
+    display: grid;
+    min-width: 0;
+    justify-items: end;
+  }
+
+  .masthead .brand-lockup {
+    gap: var(--space-3);
+  }
+
+  .masthead .brand-seal {
+    flex-basis: 3.25rem;
+    width: 3.25rem;
+    font-size: 1.85rem;
+    outline-offset: -4px;
+  }
+
+  .masthead .brand-lockup p {
+    margin-bottom: 0.1rem;
+    font-size: 0.64rem;
+  }
+
+  .masthead .brand-lockup h1 {
+    margin-bottom: 0.1rem;
+    font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  }
+
+  .masthead .brand-lockup > div > span {
+    font-size: 0.78rem;
+  }
+
+  .masthead .status-gate {
+    max-width: 58rem;
+    margin-inline: auto;
+    padding-top: var(--space-3);
+    border-top: 1px solid color-mix(in srgb, var(--structure-gold) 42%, transparent);
+  }
+
+  .masthead .status-badge,
+  .masthead .integrity-seal {
+    min-height: 4.25rem;
+    padding: var(--space-3);
+    box-shadow: none;
+  }
+
+  .masthead .status-badge__icon,
+  .masthead .integrity-seal > span {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.15rem;
+  }
+
+  .court-threshold {
+    display: grid;
+    height: 1.25rem;
+    place-items: start center;
+    background: var(--surface-plinth);
+    border-bottom: 1px solid var(--structure-hairline);
+  }
+
+  .court-threshold span {
+    display: block;
+    width: min(12rem, 36vw);
+    height: 0.3rem;
+    background: var(--structure-gold);
   }
 
   .evidence-axis {
@@ -109,14 +182,7 @@
   }
 
   .evidence-axis::before {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    z-index: -1;
-    width: 1px;
-    content: "";
-    background: linear-gradient(var(--structure-vermilion), var(--structure-gold), transparent);
+    display: none;
   }
 
   .site-footer {
@@ -156,6 +222,15 @@
 
     .masthead__inner {
       padding-block: var(--space-5) var(--space-6);
+    }
+
+    .masthead__primary {
+      grid-template-columns: 1fr;
+      gap: var(--space-4);
+    }
+
+    .masthead__navigation {
+      justify-items: center;
     }
 
     .evidence-axis {

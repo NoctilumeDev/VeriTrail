@@ -616,21 +616,25 @@ onBeforeUnmount(() => {
     <header class="masthead">
       <div class="masthead__roofline" aria-hidden="true"><span></span></div>
       <div class="masthead__inner">
-        <div class="brand-lockup">
-          <span class="brand-seal" aria-hidden="true">迹</span>
-          <div>
-            <p>VeriTrail · Palace Evidence</p>
-            <h1>验迹证据工作台</h1>
-            <span>让每一项结论，都沿证据中轴归位。</span>
+        <div class="masthead__primary">
+          <div class="brand-lockup">
+            <span class="brand-seal" aria-hidden="true">迹</span>
+            <div>
+              <p>VeriTrail · Palace Evidence</p>
+              <h1>验迹证据工作台</h1>
+              <span>让每一项结论，都沿证据中轴归位。</span>
+            </div>
+          </div>
+
+          <div class="masthead__navigation">
+            <CrossAxisNavigation
+              :current-view="publicView"
+              :expanded="crossAxisExpanded"
+              @toggle="crossAxisExpanded = $event"
+              @select="selectPublicView"
+            />
           </div>
         </div>
-
-        <CrossAxisNavigation
-          :current-view="publicView"
-          :expanded="crossAxisExpanded"
-          @toggle="crossAxisExpanded = $event"
-          @select="selectPublicView"
-        />
 
         <div v-if="report && publicView === 'runs'" class="status-gate" data-testid="status-gate">
           <StatusBadge dimension="execution" :value="report.execution_status" />
@@ -647,6 +651,8 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </header>
+
+    <div class="court-threshold" aria-hidden="true"><span></span></div>
 
     <main id="main-content" class="evidence-axis">
       <template v-if="publicView === 'runs'">

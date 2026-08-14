@@ -26,7 +26,7 @@
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2`；历史 `m10-v0.11.0` @ `0084443` |
 | M11 | 不同类型真实项目功能全链路 | `FROZEN` | `m11-v0.12.0` @ `b13e2fb` |
-| M12 | 故宫主题前端终稿 | `IMPLEMENTING`（M12-A/B/C 与 D1 Comparison 已闭环；B/C 空间纠偏计划已确认且仅 R1 获准实施；D2 Pairing、D3 Batch 未开始） | — |
+| M12 | 故宫主题前端终稿 | `IMPLEMENTING`（M12-A/B/C、D1 Comparison 与 B/C 空间纠偏 R1 已闭环；R2 是唯一获准的下一切片；D2 Pairing、D3 Batch 未开始） | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
 
@@ -200,4 +200,5 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M12-D 派生分析视图计划](34-m12-d-derived-analysis-plan.md)
 - [M12-D1 Comparison 运行事实](35-m12-d1-comparison-facts.md)
 - [M12-B/C 空间收束与 Runs 目录整改计划](36-m12-bc-spatial-recomposition-plan.md)
+- [M12-R1 紧凑中枢与过门运行事实](37-m12-r1-compact-shell-facts.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

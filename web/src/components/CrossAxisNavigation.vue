@@ -142,24 +142,24 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
 
 <style scoped>
 .cross-axis-navigation {
-  padding: 1rem;
-  border: 1px solid color-mix(in srgb, var(--structure-gold) 70%, var(--surface-ink));
-  background: color-mix(in srgb, var(--surface-ink-raised) 88%, var(--surface-ink));
+  width: min(100%, 26rem);
+  padding-block: 0.35rem;
+  border-block: 1px solid color-mix(in srgb, var(--structure-gold) 58%, transparent);
   color: var(--text-on-ink);
 }
 
 .cross-axis-navigation__stage {
   position: relative;
-  block-size: 10.5rem;
+  block-size: 8.75rem;
 }
 
 .cross-axis-navigation__center,
 .cross-axis-navigation__target {
-  min-inline-size: 11rem;
+  min-inline-size: 0;
   min-block-size: 2.75rem;
   border: 1px solid var(--structure-gold);
   border-radius: 0;
-  background: var(--surface-ink-raised);
+  background: color-mix(in srgb, var(--surface-ink-raised) 84%, var(--surface-ink));
   color: var(--text-on-ink);
   font: inherit;
 }
@@ -171,9 +171,10 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+  inline-size: min(100%, 8.5rem);
   color: var(--text-primary);
   background: var(--surface-courtyard);
-  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--structure-gold) 18%, transparent);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--structure-gold) 18%, transparent);
 }
 
 .cross-axis-navigation__center span {
@@ -186,9 +187,9 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
 
 .cross-axis-navigation__targets {
   display: grid;
-  grid-template-columns: minmax(7rem, 1fr) minmax(11rem, 1.2fr) minmax(7rem, 1fr);
+  grid-template-columns: minmax(5.75rem, 1fr) minmax(7.5rem, 1.25fr) minmax(5.75rem, 1fr);
   grid-template-rows: repeat(3, minmax(2.75rem, auto));
-  gap: 0.5rem;
+  gap: 0.25rem;
   position: absolute;
   inset: 0;
 }
@@ -232,7 +233,7 @@ button[aria-current='page'] {
 .cross-axis-navigation__target:hover,
 .cross-axis-navigation__target[aria-current='page'] {
   color: var(--text-primary);
-  background: var(--structure-gold);
+  background: color-mix(in srgb, var(--structure-gold) 92%, var(--surface-courtyard));
 }
 
 @media (forced-colors: active) {
@@ -253,11 +254,11 @@ button[aria-current='page'] {
 
 @media (max-width: 32rem) {
   .cross-axis-navigation {
-    padding-inline: 0.5rem;
+    width: 100%;
   }
 
   .cross-axis-navigation__stage {
-    block-size: 12rem;
+    block-size: 9rem;
   }
 
   .cross-axis-navigation__center {
