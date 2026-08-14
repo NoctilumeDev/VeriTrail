@@ -33,8 +33,8 @@
   `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
   自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
-  规划基线。M10 Contract 0.2 已冻结，M11–M14 仍为 `PLANNED`；冻结合同不代表后继能力已经实现
-  或验收。
+  规划基线。M10 已冻结，M11 当前为 `FREEZE_CANDIDATE`，M12–M14 仍为 `PLANNED`；冻结合同不代表
+  后继能力已经实现或验收。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
@@ -55,20 +55,23 @@
   `m10-v0.11.1` 均不得移动。M10 只证明 Windows 11、
   `C1 PROCESS_COLD`、一个 Run-owned dependency、一个 application、
   `HTTP_GET_LOOPBACK_OWNED_PID` readiness、既有 Browser Adapter 与逆序 Job 清理；C0 接管、
-  C2/C3、Docker、跨平台、包管理器、第二类真实项目、不可信代码隔离和优雅停机均未证明。M11–M14
-  继续保持 `PLANNED`，不得把 M10 冻结解释为允许跳过后继合同。
+  C2/C3、Docker、跨平台、包管理器、第二类真实项目、不可信代码隔离和优雅停机均未证明。不得把
+  M10 冻结解释为允许跳过后继合同。
 - M11 只读候选盘点与探索探针位于 `docs/22-m11-real-project-suitability-and-contract-draft.md`。探针已
   证明现有候选不能直接装入 M10 两节点边界，并证明 InkNarratives 原始目录的单节点 HTTP/代表页
   浏览器形态真实可运行。用户已确认 `OPTION_B`、精确 ref、Gate A -> Gate B 严格串行和不适用项；
   `docs/23-m11-single-node-real-project-contract.md` 的 0.2 已在 `eb39c0a` 留下历史，Contract 0.3
   纠正 Plan/Profile 一对一权威绑定，当前 Contract 0.4 只版本化 Gate B 的响应式交互纠偏。Gate A 已完成 Profile 0.2、Plan 0.7、单 APPLICATION、
-  collector 0.3、双 Python 272/272、真实 Chromium、13 个预注册出口、Catalog/Comparison、资源、
-  安全、清理与 Workbench 60/60 验证，事实见 `docs/25-m11-gate-a-validation.md`。M11 里程碑仍为
-  `PLANNED`。Gate B Plan v1 已在预注册提交 `2c14393` 后启动；首个正向 Run 因移动视口长卷导航隐藏而
+  collector 0.3、双 Python、真实 Chromium、13 个预注册出口、Catalog/Comparison、资源、安全、
+  清理与 Workbench 验证，事实见 `docs/25-m11-gate-a-validation.md`。Gate B Plan v1 已在预注册提交
+  `2c14393` 后启动；首个正向 Run 因移动视口长卷导航隐藏而
   得到 `BROWSER_HARD_FAILURE / COMPLETED / FAIL`，失败目录
   `tmp/m11-gateb-contract03-20260814-160143` 必须保留，后续三个 v1 Run 未启动。Contract 0.4 将两个
-  Gate B Plan 升为 version 2、保留 Profile v1 与全部资源/裁决边界，并使用新 Run ID；事实见文档 26。
-  v2 未全量通过前不得增加假依赖、隐藏必要服务、使用 Mock/Pages 替代真实链路或进入 M12。
+  Gate B Plan 升为 version 2、保留 Profile v1 与全部资源/裁决边界，并使用新 Run ID；v2 已严格串行
+  取得 `PASS / FAIL / PENDING / PASS`、Comparison `MATCH`、Catalog/Workbench、内置浏览器物理键盘、
+  双 Python 277/277 与零残留事实。系统审查修复了 Workbench 验收脚本在 `python -O` 下会移除关键
+  `assert` 的门禁缺陷；优化模式完整 Workbench 复跑通过。事实见文档 26、27。最终发布门禁关闭前
+  M11 仍为 `FREEZE_CANDIDATE`，不得进入 M12。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。

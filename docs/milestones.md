@@ -25,7 +25,7 @@
 | M8 | 4–16 格全因子 Profile 与固定种子扰动分析 | `FROZEN` | `m8-v0.9.0` @ `c6fbd73` |
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2`；历史 `m10-v0.11.0` @ `0084443` |
-| M11 | 不同类型真实项目功能全链路 | `PLANNED`（Gate A validated；Gate B Plan v1 failed；v2 preregistered） | — |
+| M11 | 不同类型真实项目功能全链路 | `FREEZE_CANDIDATE` | `m11-v0.12.0` pending final gates |
 | M12 | 故宫主题前端终稿 | `PLANNED` | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
@@ -48,6 +48,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M8 | 8 个独立 M5 Run、四类批次状态、固定种子、来源 `FAIL` 保留与人工键盘终验 | 组件级多变量因果、真实并行、生产容量或任意项目命令 |
 | M9 | Python/Node 可信命令、重复 Run、非零/超时/漂移/后代负向、Job 回收、双视口、人工键盘与远端读回 | Shell、包管理器、服务、其他平台、不可信代码隔离或完整自举 |
 | M10 | 双节点长运行 Job/readiness/逆序清理、严格 `runtime.bootstrap` 四附件、Run-owned staging、subject 指纹/资源分账、真实 Browser、完整公共退出矩阵、重复/竞争/漂移/故障封存、Catalog/Workbench 读回、地基与安全整改、同候选严格串行复验、独立度 1/2/3、取消交错、1000 总请求压力审计及远端读回 | 正式通用并行、生产容量、第二类真实项目、C2/C3、Docker、跨平台或不可信代码隔离 |
+| M11 | Profile 0.2 / Plan 0.7 单 application、13 个 Gate A 公共出口、InkNarratives 精确 ref 四 Run、真实双视口 Chromium、v1 失败保留、恢复 Comparison `MATCH`、Catalog/Workbench、物理键盘、双 Python 与零残留 | 动态后端、数据库/中间件、多角色、多实例、最终一致性、C2/C3、Docker、跨平台或不可信代码隔离 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -70,10 +71,14 @@ M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 - M9：`r1` 错把非秘密 Authorization 字段名也当作必须消失，`r2` 读取了错误的 Comparison 字段；
   两轮均停止并以新目录完整复跑。浏览器服务的 Windows venv launcher/基础解释器在终端中断后曾
   残留，最终按 PID、父子关系和完整命令核验后清理，并以端口与进程残留为 0 作为退出事实。
+- M11：Gate B Plan v1 在移动长卷页引用了隐藏导航，首个正向 Run 得到 `COMPLETED/FAIL`，后续 v1
+  Run 未启动；Contract 0.4 只升 Plan 版本并使用新 Run ID。两次 Gate B v2 验收器失败和首次 Python
+  3.13 Playwright 关闭警告均保留。长卷页约 1280px 时已有 13px 根级测量溢出，归为目标 L0 延期，
+  不修改固定 Subject ref，也不倒填为预注册 1440/390 的失败。
 
 ## 5. 当前能力边界
 
-M0–M10 已冻结的是一条逐层增长的本地验收链：
+M0–M10 已冻结、M11 已形成冻结候选的是一条逐层增长的本地验收链：
 
 ```text
 Plan / Evidence / Verdict
@@ -87,6 +92,7 @@ Plan / Evidence / Verdict
   -> Full-factorial batch analysis
   -> Controlled trusted one-shot process
   -> Windows/C1 bounded two-node project bootstrap
+  -> Windows/C1 bounded single-application real-project validation
 ```
 
 当前仍未实现：
@@ -94,7 +100,6 @@ Plan / Evidence / Verdict
 - 计划编辑器与在线写；
 - 任意或不可信项目命令、Shell、npm/Maven、Docker 或中间件生命周期；
 - wave 内真实微并行执行；
-- 第二个不同类型项目证明，以及单 application Profile 0.2/Plan 0.7；
 - C2/C3、Docker、跨平台与不可信代码隔离；
 - 统计显著性、生产容量结论和 AI 裁决。
 
@@ -102,7 +107,8 @@ Plan / Evidence / Verdict
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
-`post-m8-plan-v1` 冻结为规划基线；M10 Contract 0.2 已冻结，M11–M14 仍为 `PLANNED`。M9 受控
+`post-m8-plan-v1` 冻结为规划基线；M10 已冻结，M11 为 `FREEZE_CANDIDATE`，M12–M14 仍为
+`PLANNED`。M9 受控
 项目命令执行合同 0.2 已在
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
@@ -185,4 +191,5 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M11 入口治理与 M0-M10 当前复验](24-m11-entry-governance.md)
 - [M11 Gate A 单应用能力验证](25-m11-gate-a-validation.md)
 - [M11 Gate B Plan v1 首次真实失败](26-m11-gate-b-plan-v1-failure.md)
+- [M11 Gate B 真实项目验证与冻结门禁](27-m11-gate-b-validation.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

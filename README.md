@@ -20,23 +20,22 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M8 | 全因子批次矩阵与固定种子扰动 | `FROZEN` |
 | M9 | 受控项目命令执行 | `FROZEN` |
 | M10 | 有界完整项目自举 | `FROZEN` |
-| M11 | 真实项目功能全链路 | `PLANNED` |
+| M11 | 真实项目功能全链路 | `FREEZE_CANDIDATE` |
 | M12 | 故宫主题前端终稿 | `PLANNED` |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
-当前可寻址地基为 `m10-v0.11.1`。它证明 Windows 11、`C1_PROCESS_COLD`、可信本地双节点进程、
-owned HTTP readiness、真实 Chromium、确定性 Bundle/Catalog 和逆序 Job 清理；不证明 C2/C3、
-Docker、跨平台、生产容量或不可信代码隔离。
+当前可寻址地基为 `m10-v0.11.1`；M11 `0.12.0.dev1` 冻结候选在其上增加严格的单 application
+Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链路。Gate A 已完成 13 个公共
+出口；Gate B Plan v1 的移动端隐藏导航 `FAIL` 原样保留，Plan v2 则按预注册顺序取得
+`PASS / FAIL / PENDING / PASS` 四个 Bundle，正向恢复 Comparison 为 `MATCH`、0 differences。
+真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；最终
+发布门禁关闭前仍不创建 M11 标签，也不进入 M12。
 
-M11 Contract 0.4 保持目标无关 Gate A 与 InkNarratives Gate B 的严格串行边界。Gate A 已通过目标
-无关单应用实现、双 Python、真实 Chromium、13 个公共出口、Catalog/Comparison、资源、安全、清理和
-Workbench 消费验证。Gate B Plan v1 首个真实 Run 因移动端隐藏导航得到 `COMPLETED/FAIL` 并保留；
-Plan v2 已使用新 authority 与 Run ID 预注册，尚未取得 v2 运行事实，所以 M11 继续为 `PLANNED`。准确合同见
-[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，运行事实见
-[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)。完整提交、失败事实和证明边界见
-[里程碑冻结历史](docs/milestones.md)，v1 失败分层见
-[M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)。
+准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
+事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
+[M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)，v2 与终审事实见
+[M11 Gate B 真实项目验证](docs/27-m11-gate-b-validation.md)。
 
 ## 快速开始
 
@@ -207,6 +206,8 @@ M12 等待 M11 功能事实稳定；M13 不借“代码质量”重写合同；M
 - [M11 单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)
 - [M11 入口治理与 M0-M10 当前复验](docs/24-m11-entry-governance.md)
 - [M11 Gate A 单应用能力验证](docs/25-m11-gate-a-validation.md)
+- [M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)
+- [M11 Gate B 真实项目验证与冻结门禁](docs/27-m11-gate-b-validation.md)
 
 ## 项目来源
 

@@ -6,7 +6,7 @@
 > 当前实施基线：M9 已以 `m9-v0.10.0` @ `3181d69` 冻结；M10 当前补丁基线为
 > `m10-v0.11.1` @ `f4efdd2`，历史 `m10-v0.11.0` @ `0084443` 保持不动
 > 冻结引用：`post-m8-plan-v1`
-> 当前实施门禁：M10 全部门禁与远端读回完成；M11–M14 仍为 `PLANNED`
+> 当前实施门禁：M10 全部门禁与远端读回完成；M11 为 `FREEZE_CANDIDATE`；M12–M14 仍为 `PLANNED`
 
 ## 0. 当前执行进度（冻结后注记）
 
@@ -16,7 +16,7 @@
 | --- | --- | --- | --- |
 | M9 | 受控项目命令执行 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2` |
-| M11 | 真实项目功能全链路 | `PLANNED`（Gate A validated；Gate B Plan v1 failed；v2 preregistered） | 本文第 7 节与文档 23、25、26 |
+| M11 | 真实项目功能全链路 | `FREEZE_CANDIDATE`（Gate A/B validated；final release gates running） | 本文第 7 节与文档 23、25、26、27 |
 | M12 | 故宫主题前端终稿 | `PLANNED` | 本文第 8 节 |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | 本文第 9 节 |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | 本文第 10 节 |
@@ -33,15 +33,15 @@ M10 地基审查已发现并修复报告重推导、readiness 所有权和只读
 已完成。随后 16 GB 有界压力轮从 Wave A 完整重跑，独立度 1/2/3、取消交错、1000 总请求、
 Bundle/Catalog 与零残留门禁全部成立。发布安全整改又封闭 11 条原攻击路径和资源硬限制，最终候选
 完成严格串行 13/13、双 Python 228/228、Workbench 58/58、最终压力与 Codex 内置浏览器复验；
-`0084443` 与 `m10-v0.11.0^{}` 已从 GitHub 读回一致，状态为 `FROZEN`。M11–M14 仍保持
-`PLANNED`，尚未进入实现。
+`0084443` 与 `m10-v0.11.0^{}` 已从 GitHub 读回一致，状态为 `FROZEN`。
 冻结后地基纠偏又完成双 Python 262/262、Workbench 59/59、公共出口、16 GB 有界压力、生产浏览器、
 Windows 原子发布和清理复验；首次补丁读回时 `main` 与 `m10-v0.11.1^{}` 均指向 `f4efdd2`。M11
 候选适配性盘点因此必须引用新补丁基线，不能继续继承旧标签的已知缺口。
 
 M11 的冻结后候选盘点与探索事实见文档 22；用户确认后的单节点能力与真实项目双门 Contract 0.3
-及 Gate B Plan v2 纠偏 Contract 0.4 见文档 23，Gate A 与 v1 失败事实见文档 25、26。Gate A 通过
-不反向改写本文第 7 节，也不把 M11 从 `PLANNED` 提前为已实现；Gate B v2 仍须严格串行执行。未来 M13 独立合同起草时，
+及 Gate B Plan v2 纠偏 Contract 0.4 见文档 23，Gate A、v1 失败与 v2 验证事实见文档 25–27。Gate B
+已严格串行形成四 Run、Comparison、Catalog/Workbench、内置浏览器与双 Python 证据；最终发布门禁
+关闭前只进入 `FREEZE_CANDIDATE`，不提前进入 M12。未来 M13 独立合同起草时，
 审查发现固定分为 `BLOCKER / MUST_FIX / DEFERRED`，禁止为了追求零 warning 或零 smell 进行无关
 全仓重写；该规则同样只作为后继合同门禁，不倒填为 Plan v1 冻结时已经存在的条款。
 
@@ -271,7 +271,8 @@ M10 不自动安装系统级 Python、Node、Java、Maven、Docker 或中间件�
 
 只读盘点完成后，M11 Contract 0.3 已固定先交付目标无关的 Windows/C1 单 application Gate A，再以
 固定实现验证 `InkNarratives @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb` 的 Gate B。Gate B v1 已
-保留首个真实失败，Contract 0.4 只把目标交互计划升为 v2；它不改变本文的通用目标，也不代表 v2 已通过。
+保留首个真实失败，Contract 0.4 只把目标交互计划升为 v2；v2 随后按原顺序完成四个真实 Run，
+两次正向 Comparison 为 `MATCH`，且没有为目标修改 Core、裁决或固定 Subject ref。
 
 ### 7.2 代表性完整链路
 

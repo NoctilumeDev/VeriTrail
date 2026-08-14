@@ -15,11 +15,16 @@ from scripts.m11_gateb_acceptance import (
     raw_positive_plan,
     raw_profile,
 )
+from scripts.m11_gateb_workbench_acceptance import require
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 
 
 class M11GateBAcceptanceContractTests(unittest.TestCase):
+    def test_workbench_gate_is_not_removed_by_python_optimization(self) -> None:
+        with self.assertRaisesRegex(AssertionError, "explicit gate"):
+            require(False, "explicit gate")
+
     def test_acceptance_record_uses_current_contract_version(self) -> None:
         self.assertEqual("0.4", CONTRACT_VERSION)
 

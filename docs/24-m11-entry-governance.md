@@ -1,11 +1,11 @@
 # M11 入口治理与 M0-M10 当前复验
 
-> 状态：`ENTRY_GOVERNANCE_COMPLETE / IMPLEMENTATION_NOT_STARTED`
+> 状态：`HISTORICAL_ENTRY_SNAPSHOT / ENTRY_GOVERNANCE_COMPLETE`
 > 日期：2026-08-14
 > 影响层级：`L3_SYSTEM`（只复核冻结地基、当前回归与入口文档；不修改代码、Schema 或标签）
 > M10 基线：`m10-v0.11.1` @ `f4efdd25c50b19077c61994bce3e2aca5244d5ec`
 > M11 合同：Contract 0.2 首次冻结于 `eb39c0aaaaa3fb878899ab2c8685b0dae4d303de`
-> 里程碑状态：M11 继续为 `PLANNED`
+> 快照时里程碑状态：`M11 PLANNED / IMPLEMENTATION_NOT_STARTED`
 
 ## 1. 目的
 
@@ -102,4 +102,6 @@ M0-M10 状态，不证明纠偏后的实现或运行已经通过。
 Gate A 后续已完成 Profile 0.2、Plan 0.7、Preview 0.2、单 APPLICATION 生命周期、collector 0.3 和
 全部公共消费者实现，并从 Run 1 重新完成 13 个预注册出口。该事实不回写本文件的历史入口结论；
 准确自动化、运行、失败候选、资源、安全与边界见
-[M11 Gate A 单应用能力验证](25-m11-gate-a-validation.md)。M11 仍为 `PLANNED`，Gate B 尚未开始。
+[M11 Gate A 单应用能力验证](25-m11-gate-a-validation.md)。在本快照时 M11 仍为 `PLANNED`，Gate B 尚未开始。
+后续 Gate B v1 失败与 v2 冻结候选事实见文档 26、27；它们不改写本文件在进入 Gate A 前记录的
+历史环境和失败事实。
