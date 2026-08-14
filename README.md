@@ -500,6 +500,9 @@ v0 不引入 Docker、微服务或云端必需依赖，不执行任意 Shell 字
 - [M10 第一轮严格串行完整复验（SERIAL_VALIDATED）](docs/18-m10-serial-validation.md)
 - [M10 第二轮 16 GB 有界压力审计（STRESS_AUDITED）](docs/19-m10-bounded-stress-audit.md)
 - [M10 发布安全整改与冻结复验（FROZEN）](docs/20-m10-release-security-remediation.md)
+- [M10 冻结后地基纠偏与重新验收（FROZEN）](docs/21-m10-post-freeze-foundation-remediation.md)
+- [M11 真实项目候选适配性与合同草案（TARGET_PROPOSED）](docs/22-m11-real-project-suitability-and-contract-draft.md)
+- [M11 单节点能力与真实项目双门合同草案 0.1（CONTRACT_NOT_FROZEN）](docs/23-m11-single-node-real-project-contract.md)
 
 ## 项目来源
 
