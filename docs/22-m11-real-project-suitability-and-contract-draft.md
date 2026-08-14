@@ -161,6 +161,40 @@ v24.14.0 返回：`Repository verification passed: 5 standalone HTML demos.`。�
 若继续，必须先成为独立、通用的 Profile 能力实验；它不能以当前 InkNarratives ref 作为“已经存在
 发布根”的事实前提。
 
+### 7.3 预注册探索探针：原始目录的单节点静态 HTTP 运行形态
+
+> 探针编号：`M11-FEASIBILITY-INK-SINGLE-NODE-002`
+> 状态：`PREREGISTERED / EXPLORATORY / NON_ACCEPTANCE`
+> 目标引用：`InkNarratives main @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
+> 工具引用：Python 3.10.6，标准库 `http.server`
+> 固定端口：`127.0.0.1:18773`
+
+这个探针只检验一项更窄的事实：在 InkNarratives README 已允许的“任意静态文件服务器”运行形态中，
+原始仓库目录能否作为**一个** loopback HTTP 应用节点服务五个现有页面。它不调用或修改 VeriTrail
+Core，不生成 Bundle，不证明 ProjectProfile 已支持单节点，也不构成 M11 用户链、验收或冻结。
+
+预注册边界：
+
+1. 只在目标 `HEAD`、VeriTrail 工作区与端口均通过运行前核验时执行；
+2. 由 Python 3.10.6 以 `-m http.server`、回环 bind 和 InkNarratives 原始目录启动一个临时只读服务；
+   不创建入口页、发布目录、依赖安装、数据文件或项目配置；
+3. 精确请求并预期 HTTP 200 的页面是 `暗室.html`、`柳永.html`、`苏轼.html`、`王维.html` 与
+   `长卷.html`；目录 listing、Git 路径可访问性、统一入口和远程部署均不属于该探针；
+4. 对 `苏轼.html` 执行一次真实 Chromium 桌面和移动加载，检查页面可见、根视口横向溢出、Console
+   与 Network 中未解释的加载错误；不把单页结果外推为五页完整可访问性或内容验收；
+5. 结束时只终止本探针创建且 PID 一致的 Python 进程，并核验端口释放；若所有权、端口或清理不成立，
+   记录 `PROBE_INVALID`，不尝试接管或终止外部进程。
+
+判定规则：
+
+- `SINGLE_NODE_TRANSPORT_OBSERVED`：五页均由原始目录的临时 loopback 服务返回预期状态，且代表性
+  浏览器加载与 owned cleanup 均成立；
+- `SINGLE_NODE_TRANSPORT_REJECTED`：目标服务、路由或浏览器事实未满足预注册条件；
+- `PROBE_INVALID`：运行前提、进程所有权、端口所有权或清理前提无法核验。
+
+即使获得第一种结果，它也只证明一个未来通用单节点 Profile 值得独立立项；它不改变 M10 两节点
+冻结语义，也不把外部 `http.server` 变成 VeriTrail 已实现的管理能力。
+
 ## 8. 当前准确结论
 
 M10 地基已经稳定并可寻址，但它的固定两节点证明范围与现有候选项目的真实最小拓扑不完全重合。
