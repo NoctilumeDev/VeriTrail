@@ -128,6 +128,28 @@ describe('Catalog API 0.1', () => {
     wrapper.unmount()
   })
 
+  it('keeps Run identity, execution, verdict, and plan facts in a stable visible column order', async () => {
+    installCatalogFetch(catalogResponse())
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="catalog-columns"]')
+
+    expect(wrapper.get('[data-testid="catalog-columns"]').text()).toBe(
+      'Run / 时间运行状态验收结论Plan / 目录事实',
+    )
+    const row = wrapper.get('[data-catalog-run-id]')
+    expect(row.find('.catalog-run__identity').text()).toContain('unit-run')
+    expect(row.find('.catalog-run__execution').text()).toContain('COMPLETED')
+    expect(row.find('.catalog-run__verdict').text()).toContain('PASS')
+    expect(row.find('.catalog-run__facts').text()).toContain('unit-plan · v1')
+    expect([...row.element.children].map((child) => child.className)).toEqual([
+      'catalog-run__identity',
+      'catalog-run__execution',
+      'catalog-run__verdict',
+      'catalog-run__facts',
+    ])
+    wrapper.unmount()
+  })
+
   it('selects a Catalog Run, fully revalidates its Bundle, and returns focus', async () => {
     installCatalogFetch(catalogResponse())
     const host = document.createElement('div')

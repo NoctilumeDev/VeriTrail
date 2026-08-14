@@ -60,6 +60,12 @@ function displayDate(value: string): string {
       </div>
 
       <div v-else class="catalog-runs" data-testid="catalog-runs">
+        <div class="catalog-runs__columns" data-testid="catalog-columns" aria-hidden="true">
+          <span>Run / 时间</span>
+          <span>运行状态</span>
+          <span>验收结论</span>
+          <span>Plan / 目录事实</span>
+        </div>
         <button
           v-for="run in catalog.runs"
           :key="run.catalog_run_id"
@@ -75,8 +81,10 @@ function displayDate(value: string): string {
             <strong>{{ run.run_id }}</strong>
             <em>{{ displayDate(run.created_at) }}</em>
           </span>
-          <span class="catalog-run__status">
+          <span class="catalog-run__execution">
             <StatusBadge dimension="execution" :value="run.execution_status" compact />
+          </span>
+          <span class="catalog-run__verdict">
             <StatusBadge dimension="verdict" :value="run.verdict" compact />
           </span>
           <span class="catalog-run__facts">

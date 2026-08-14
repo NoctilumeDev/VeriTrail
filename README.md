@@ -21,7 +21,7 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M9 | 受控项目命令执行 | `FROZEN` |
 | M10 | 有界完整项目自举 | `FROZEN` |
 | M11 | 真实项目功能全链路 | `FROZEN` |
-| M12 | 故宫主题前端终稿 | `PLANNED` |
+| M12 | 故宫主题前端终稿 | `IMPLEMENTING` |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
@@ -30,9 +30,11 @@ Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链�
 出口；Gate B Plan v1 的移动端隐藏导航 `FAIL` 原样保留，Plan v2 则按预注册顺序取得
 `PASS / FAIL / PENDING / PASS` 四个 Bundle，正向恢复 Comparison 为 `MATCH`、0 differences。
 真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；冻结
-读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M12–M14 仍为 `PLANNED`。M12-A 已完成
-M11 控制组的自动化、真实浏览器、状态矩阵、响应式、DOM/CSS 所有权和清理审计，但没有修改生产前端；
-M12 仍是 `PRODUCTION_IMPLEMENTATION_NOT_STARTED`，下一入口只允许 M12-B 无装饰信息架构骨架。
+读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13–M14 仍为 `PLANNED`。M12-A 已完成
+M11 控制组审计；M12-B 已完成四向公共视图、十字导航、URL/history、焦点与移动几何的生产运行验证。
+M12-C 已实现语义 token、Catalog 行式目录与 Runs 主链，并通过 64/64 前端回归及真实 Gate B 生产
+Chromium；Codex 内置浏览器的会话绑定补证仍为 `PENDING`，因此 M12 尚未冻结，也不得提前把派生分析、
+Browser Evidence 终稿、M13 审查或版本标签混入该切片。
 
 准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
@@ -157,9 +159,9 @@ sealed Plan / Profile
 - **SQLite Catalog**：可删除、可重建的只读 Run 索引，不拥有 Verdict 真相。
 - **Vue Workbench**：本地只读展示 Bundle、Comparison、PairedAnalysis 与 BatchAnalysis。
 
-当前 M11 Workbench 的“宫阙验迹 / Palace Evidence”使用纯 CSS 中轴、院落、格栅和状态令牌，不依赖
-装饰贴图、CDN、远程字体或统计脚本；其宫墙朱只表达 `FAIL`、`ERROR` 与异常。M12 冻结设计计划将其作为
-控制组，拟重构为空间结构朱与证据警示朱严格分层的表现系统；两者都不能让状态只依赖颜色传达。
+进行中的 M12 Workbench“宫阙验迹 / Palace Evidence”使用纯 CSS 中轴、院落、格栅和状态令牌，不依赖
+装饰贴图、CDN、远程字体或统计脚本；结构朱只表达固定空间，`FAIL`、`ERROR` 使用独立警示朱。两个层级
+都不能让状态只依赖颜色传达；M12 尚未冻结，完整事实以各切片运行文档为准。
 
 ## 安全边界
 
@@ -213,6 +215,10 @@ M12 等待 M11 功能事实稳定；M13 不借“代码质量”重写合同；M
 - [M11 Gate B 真实项目验证与冻结门禁](docs/27-m11-gate-b-validation.md)
 - [M12 宫阙验迹表现系统重构设计计划 0.1](docs/28-m12-palace-workbench-design-plan.md)
 - [M12-A 控制组与当前状态审计](docs/29-m12-a-control-baseline-audit.md)
+- [M12-B 四向公共视图与十字中轴骨架](docs/30-m12-b-cross-axis-navigation.md)
+- [M12-B 运行事实](docs/31-m12-b-cross-axis-navigation-facts.md)
+- [M12-C 空间令牌与 Runs 主链计划](docs/32-m12-c-run-mainline-plan.md)
+- [M12-C 空间令牌与 Runs 主链运行事实](docs/33-m12-c-run-mainline-facts.md)
 
 ## 项目来源
 

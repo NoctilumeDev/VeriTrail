@@ -33,7 +33,7 @@
   `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
   自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
-  规划基线。M10、M11 已冻结，M12–M14 仍为 `PLANNED`；冻结合同不代表
+  规划基线。M10、M11 已冻结，M12 为 `IMPLEMENTING`，M13–M14 仍为 `PLANNED`；冻结合同不代表
   后继能力已经实现或验收。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
@@ -72,18 +72,17 @@
   双 Python 277/277 与零残留事实。系统审查修复了 Workbench 验收脚本在 `python -O` 下会移除关键
   `assert` 的门禁缺陷；优化模式完整 Workbench 复跑通过。冻结提交
   `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40` 已推送；冻结读回时远端 `main` 和
-  `m11-v0.12.0^{}` 均精确指向该提交，M11 状态为 `FROZEN`。事实见文档 26、27；M12–M14 仍为
-  `PLANNED`。
+  `m11-v0.12.0^{}` 均精确指向该提交，M11 状态为 `FROZEN`。事实见文档 26、27；M12 为
+  `IMPLEMENTING`，M13–M14 仍为 `PLANNED`。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
-- M12 表现系统重构设计计划 0.1 位于 `docs/28-m12-palace-workbench-design-plan.md`，当前状态为
-  `DESIGN_FROZEN / PRODUCTION_IMPLEMENTATION_NOT_STARTED`。它把 M11 冻结界面作为控制组，允许 `L0 + bounded L1`
-  的信息空间、十字中轴导航和表现组件重构，但禁止触及任何 L2/L3 数据、裁决或安全合同。用户确认并
-  形成的本计划提交必须先于生产代码。M12-A 控制组审计已在
-  `docs/29-m12-a-control-baseline-audit.md` 闭环：`web/` 与 M11 标签 tree 一致，60/60 前端测试、lint、
-  type-check、production build、最终 Gate B 自动 Chromium、内置浏览器状态矩阵、计划视口控制组和零残留均有
-  事实；它没有修改生产前端，也不表示 M12 已实现。下一入口只允许 M12-B 无装饰信息架构与十字导航
-  骨架，不得跳到主题色、Catalog 视觉终稿、版本或 M12 标签。
+- M12 表现系统重构设计计划 0.1 位于 `docs/28-m12-palace-workbench-design-plan.md`。M12-A 控制组审计已在
+  `docs/29-m12-a-control-baseline-audit.md` 闭环；M12-B 已在提交 `7b8b72d` 完成四向公共视图、十字中轴导航、
+  URL/history、焦点与移动几何，事实见文档 30、31。M12-C 已实现语义 token、十字的 token-bound 视觉迁移、
+  Catalog 行式目录与 Runs 主链，且通过 64/64 前端、真实 Gate B 生产 Chromium 和优化模式门禁，运行事实见文档
+  33；但 Codex 内置浏览器会话绑定补证仍为 `PENDING`。M12 仍是 `IMPLEMENTING / NOT_FROZEN`：下一入口只允许
+  M12-C 的内置浏览器桌面/390/360 px、状态、返回焦点、history、Console/Network 复验；不得提前把派生分析、
+  Browser Evidence 终稿、版本或 M12 标签混入该切片，也不得触及 L2/L3 数据、裁决或安全合同。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

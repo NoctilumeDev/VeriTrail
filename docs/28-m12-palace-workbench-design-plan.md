@@ -1,6 +1,6 @@
 # M12 宫阙验迹表现系统重构设计计划 0.1
 
-> 状态：`DESIGN_FROZEN / IMPLEMENTATION_NOT_STARTED`
+> 状态：`DESIGN_FROZEN / IMPLEMENTATION_IN_PROGRESS`
 > 日期：2026-08-14
 > 前置冻结基线：`m11-v0.12.0` @ `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40`
 > 当前文档基线：`79dc17cabee677e2a3ef22da78b389d3a557fb9c`
@@ -367,7 +367,8 @@ M12 冻结仍不证明新的后端、执行器、数据模型、生产容量或�
 - [x] 已明确 `L0 + bounded L1` 与 L2/L3 禁区；
 - [x] 用户已审阅并确认本计划 0.1，只要求上述四处小修，不再扩展合同范围；
 - [x] 本次确认提交只包含计划与索引同步，先于任何 M12 生产代码；
-- [x] 计划冻结后，M12 仍为 `PLANNED / IMPLEMENTATION_NOT_STARTED`，不得把设计冻结写成实现完成。
+- [x] 计划冻结不构成实现完成；M12 当前仍为 `IMPLEMENTING / NOT_FROZEN`，准确切片事实以 README、
+  `docs/milestones.md` 与对应运行事实文档为准。
 
 本文件是已冻结的实施合同，不是运行事实。复选框、色名和设计文字都不能替代真实页面、浏览器、网络、
 键盘和用户验收。

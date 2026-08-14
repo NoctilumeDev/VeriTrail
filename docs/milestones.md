@@ -26,7 +26,7 @@
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2`；历史 `m10-v0.11.0` @ `0084443` |
 | M11 | 不同类型真实项目功能全链路 | `FROZEN` | `m11-v0.12.0` @ `b13e2fb` |
-| M12 | 故宫主题前端终稿 | `PLANNED`（design frozen；implementation not started） | — |
+| M12 | 故宫主题前端终稿 | `IMPLEMENTING`（M12-A/B 已闭环；M12-C 内置浏览器补证待完成） | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
 
@@ -107,7 +107,7 @@ Plan / Evidence / Verdict
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
-`post-m8-plan-v1` 冻结为规划基线；M10、M11 已冻结，M12–M14 仍为 `PLANNED`。M9 受控
+`post-m8-plan-v1` 冻结为规划基线；M10、M11 已冻结，M12 为 `IMPLEMENTING`，M13–M14 仍为 `PLANNED`。M9 受控
 项目命令执行合同 0.2 已在
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
@@ -193,4 +193,8 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M11 Gate B 真实项目验证与冻结门禁](27-m11-gate-b-validation.md)
 - [M12 宫阙验迹表现系统重构设计计划 0.1](28-m12-palace-workbench-design-plan.md)
 - [M12-A 控制组与当前状态审计](29-m12-a-control-baseline-audit.md)
+- [M12-B 四向公共视图与十字中轴骨架](30-m12-b-cross-axis-navigation.md)
+- [M12-B 运行事实](31-m12-b-cross-axis-navigation-facts.md)
+- [M12-C 空间令牌与 Runs 主链计划](32-m12-c-run-mainline-plan.md)
+- [M12-C 空间令牌与 Runs 主链运行事实](33-m12-c-run-mainline-facts.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

@@ -284,6 +284,34 @@ def main() -> int:
             expect(page.get_by_test_id("run-catalog")).to_be_visible()
             expect(page.get_by_test_id("run-catalog")).to_contain_text("4 Runs")
             expect(page.get_by_test_id("catalog-issues")).to_contain_text("目录问题 1 项")
+            catalog_columns = page.get_by_test_id("catalog-columns")
+            expect(catalog_columns).to_contain_text("Run / 时间")
+            expect(catalog_columns).to_contain_text("运行状态")
+            expect(catalog_columns).to_contain_text("验收结论")
+            expect(catalog_columns).to_contain_text("Plan / 目录事实")
+            for run_id, (execution_status, verdict, _) in EXPECTED_RUNS.items():
+                item = catalog_runs[run_id]
+                catalog_row = page.locator(
+                    f'[data-catalog-run-id="{item["catalog_run_id"]}"]'
+                )
+                expect(catalog_row.locator(".catalog-run__identity")).to_contain_text(run_id)
+                expect(catalog_row.locator(".catalog-run__execution")).to_contain_text(
+                    execution_status
+                )
+                expect(catalog_row.locator(".catalog-run__verdict")).to_contain_text(verdict)
+                expect(catalog_row.locator(".catalog-run__facts")).to_contain_text(
+                    item["plan"]["id"]
+                )
+            summary["checks"].append("desktop-catalog-stable-columns-and-separated-statuses")
+            catalog_desktop_shot = output / "catalog-desktop.png"
+            page.screenshot(path=str(catalog_desktop_shot), full_page=False)
+            summary["screenshots"].append(
+                {
+                    "path": "catalog-desktop.png",
+                    "sha256": sha256_file(catalog_desktop_shot),
+                    "size": catalog_desktop_shot.stat().st_size,
+                }
+            )
 
             cross_axis = page.get_by_test_id("cross-axis-toggle")
             expect(cross_axis).to_have_attribute("aria-expanded", "false")
@@ -324,8 +352,8 @@ def main() -> int:
                 item = catalog_runs[run_id]
                 button = page.locator(f'[data-catalog-run-id="{item["catalog_run_id"]}"]')
                 expect(button).to_contain_text(run_id)
-                expect(button).to_contain_text(execution_status)
-                expect(button).to_contain_text(verdict)
+                expect(button.locator(".catalog-run__execution")).to_contain_text(execution_status)
+                expect(button.locator(".catalog-run__verdict")).to_contain_text(verdict)
                 button.click()
                 expect(page.get_by_test_id("run-summary")).to_contain_text(run_id)
                 expect(page.get_by_test_id("status-gate")).to_contain_text(execution_status)
@@ -336,6 +364,10 @@ def main() -> int:
                     page.get_by_test_id("run-summary").locator("code").get_attribute("title")
                     == expected_plan_sha256[run_id],
                     f"Workbench detail Plan authority drifted for {run_id}.",
+                )
+                require(
+                    len(expected_plan_sha256[run_id]) == 64,
+                    f"Workbench detail Plan hash was not a full SHA-256 for {run_id}.",
                 )
                 ledger = page.get_by_test_id("evidence-ledger")
                 expect(ledger).to_contain_text("runtime.preflight")
@@ -408,6 +440,36 @@ def main() -> int:
             add_page_observers(mobile_page, summary)
             mobile_page.goto(origin, wait_until="load")
             expect(mobile_page.get_by_test_id("run-catalog")).to_be_visible()
+            require(
+                mobile_page.get_by_test_id("catalog-columns").evaluate(
+                    "element => getComputedStyle(element).display"
+                )
+                == "none",
+                "Workbench mobile Catalog did not collapse visual column labels.",
+            )
+            aborted_id = "m11-gateb-v2-ink-port-conflict-01"
+            aborted_catalog_id = catalog_runs[aborted_id]["catalog_run_id"]
+            aborted_row = mobile_page.locator(
+                f'[data-catalog-run-id="{aborted_catalog_id}"]'
+            )
+            expect(aborted_row.locator(".catalog-run__execution")).to_contain_text("ABORTED")
+            expect(aborted_row.locator(".catalog-run__verdict")).to_contain_text("PENDING")
+            require(
+                mobile_page.evaluate(
+                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                )
+                == 0,
+                "Workbench mobile Catalog overflowed horizontally.",
+            )
+            catalog_mobile_shot = output / "catalog-mobile.png"
+            mobile_page.screenshot(path=str(catalog_mobile_shot), full_page=False)
+            summary["screenshots"].append(
+                {
+                    "path": "catalog-mobile.png",
+                    "sha256": sha256_file(catalog_mobile_shot),
+                    "size": catalog_mobile_shot.stat().st_size,
+                }
+            )
             mobile_page.get_by_test_id("cross-axis-toggle").click()
             require(
                 mobile_page.evaluate(
@@ -450,7 +512,7 @@ def main() -> int:
                     "size": mobile_shot.stat().st_size,
                 }
             )
-            summary["checks"].append("mobile-negative-and-comparison-no-overflow")
+            summary["checks"].append("mobile-catalog-negative-and-comparison-no-overflow")
             mobile.close()
             browser.close()
             browser = None

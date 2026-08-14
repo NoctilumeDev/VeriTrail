@@ -143,9 +143,9 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
 <style scoped>
 .cross-axis-navigation {
   padding: 1rem;
-  border: 2px solid CanvasText;
-  background: Canvas;
-  color: CanvasText;
+  border: 1px solid color-mix(in srgb, var(--structure-gold) 70%, var(--surface-ink));
+  background: color-mix(in srgb, var(--surface-ink-raised) 88%, var(--surface-ink));
+  color: var(--text-on-ink);
 }
 
 .cross-axis-navigation__stage {
@@ -157,10 +157,10 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
 .cross-axis-navigation__target {
   min-inline-size: 11rem;
   min-block-size: 2.75rem;
-  border: 2px solid CanvasText;
+  border: 1px solid var(--structure-gold);
   border-radius: 0;
-  background: Canvas;
-  color: CanvasText;
+  background: var(--surface-ink-raised);
+  color: var(--text-on-ink);
   font: inherit;
 }
 
@@ -171,6 +171,9 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+  color: var(--text-primary);
+  background: var(--surface-courtyard);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--structure-gold) 18%, transparent);
 }
 
 .cross-axis-navigation__center span {
@@ -222,8 +225,30 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
 button:hover,
 button:focus-visible,
 button[aria-current='page'] {
-  outline: 3px solid Highlight;
+  outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
+}
+
+.cross-axis-navigation__target:hover,
+.cross-axis-navigation__target[aria-current='page'] {
+  color: var(--text-primary);
+  background: var(--structure-gold);
+}
+
+@media (forced-colors: active) {
+  .cross-axis-navigation,
+  .cross-axis-navigation__center,
+  .cross-axis-navigation__target {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+
+  button:hover,
+  button:focus-visible,
+  button[aria-current='page'] {
+    outline-color: Highlight;
+  }
 }
 
 @media (max-width: 32rem) {
