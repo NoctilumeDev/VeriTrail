@@ -117,6 +117,50 @@ M11 目前保持 `PLANNED`，下一步只能先做一项独立架构决策：
 任何结果都不授权立即改造 InkNarratives。若直接根目录被拒绝，下一步必须独立判断“目标自有的静态
 发布根”是否对 InkNarratives 本身成立，不能把 VeriTrail 专用适配包装成真实项目能力。
 
+### 7.1 运行事实（2026-08-14T09:35:28+08:00）
+
+预注册提交先于探针结果创建：`4f6e6b1 docs(m11): preregister Ink root feasibility probe`。有效调用前
+只读核对结果为：
+
+- VeriTrail 与 InkNarratives 工作区均干净；
+- InkNarratives `HEAD` 精确等于 `b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`；
+- `m10-v0.11.1^{}` 精确等于 `f4efdd25c50b19077c61994bce3e2aca5244d5ec`；
+- 当前 `src/veritrail/orchestration.py` 与 `examples/orchestration/plan.json` 相对该标签无差异。
+
+第一次临时调用在导入阶段返回 `ModuleNotFoundError: No module named 'veritrail'`，原因是仓库采用
+`src/` 布局而临时解释器未设置模块搜索路径；它没有进入 `prepare_static_target()`，因此登记为夹具
+失败，不作为目标准入结果。随后只补充 `PYTHONPATH=<VeriTrail>/src`，未改变 Plan、目标或判定规则。
+
+有效探针使用 Python 3.10.6，首次目标返回原文为：
+
+```json
+{"classification":"REJECTED_DIRECT_ROOT","errors":["target contains a hidden or control-character path"],"probe_id":"M11-FEASIBILITY-INK-ROOT-001","python":"3.10.6"}
+```
+
+因此本探针事实判定为 `REJECTED_DIRECT_ROOT`。冻结 M5 对原始仓库根目录执行 fail-fast 扫描时，首先
+被隐藏路径（仓库中的 `.git`/`.github` 类路径）阻断；它没有继续到 `index.html` 或文件后缀检查，
+所以本次运行**不能**把那些静态观察提升为同一探针的运行错误。
+
+运行后两个仓库仍无目标代码变化，未启动 HTTP、Chromium 或目标进程，也没有创建适配目录。M11
+继续保持 `PLANNED / TARGET_NOT_SELECTED / CONTRACT_NOT_FROZEN`；“冻结 M5 可直接验收
+InkNarratives 原始仓库根目录”的假设已被真实运行否定。
+
+### 7.2 目标自有发布根复核
+
+对目标精确提交执行 `git ls-tree -r --name-only b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
+确认：版本树只有五个仓库根级独立 HTML、仓库治理文件、`docs/`、`scripts/` 与 GitHub workflow；不存在
+`index.html`、统一展厅或独立静态发布目录。目标 README 也明确声明“当前没有统一入口页”，并把稳定
+英文目录、统一入口和 Pages 放在视觉与文章骨架稳定之后。
+
+补充运行 `D:\Node.js\node-v24.14.0-win-x64\node.exe scripts\verify-repository.mjs`，Node
+v24.14.0 返回：`Repository verification passed: 5 standalone HTML demos.`。该结果证明目标自己的五页
+仓库基线通过，不改变 M5 的准入拒绝，也不是 VeriTrail Bundle 或 M11 结论。
+
+因此当前 ref 没有可直接复用的目标自有发布根。此时仅为 VeriTrail 新建 `index.html`、复制选择文件
+或增加发布目录，会提前改变 InkNarratives 已声明的产品路线，属于目标扭曲而非中性适配。`OPTION_B`
+若继续，必须先成为独立、通用的 Profile 能力实验；它不能以当前 InkNarratives ref 作为“已经存在
+发布根”的事实前提。
+
 ## 8. 当前准确结论
 
 M10 地基已经稳定并可寻址，但它的固定两节点证明范围与现有候选项目的真实最小拓扑不完全重合。
