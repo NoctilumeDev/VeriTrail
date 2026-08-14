@@ -86,7 +86,38 @@ M11 目前保持 `PLANNED`，下一步只能先做一项独立架构决策：
 - [ ] 定义失败保留、复跑、远端读回和不可移动标签规则；
 - [ ] 用户确认合同后再创建冻结提交与规划标签；冻结前不得进入实现。
 
-## 7. 当前准确结论
+## 7. 预注册探索探针：InkNarratives 仓库根目录
+
+> 探针编号：`M11-FEASIBILITY-INK-ROOT-001`
+> 状态：`PREREGISTERED / EXPLORATORY / NON_ACCEPTANCE`
+> 目标引用：`InkNarratives main @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
+> 工具引用：`VeriTrail m10-v0.11.1 @ f4efdd25c50b19077c61994bce3e2aca5244d5ec`
+
+本探针只回答：**冻结的 M5 `STATIC_HTTP` 快照入口能否直接接受 InkNarratives 的真实仓库根目录，
+且无需修改 VeriTrail Core、Schema 或 InkNarratives？** 它不是 M11 合同、验收、目标选择或冻结依据。
+
+运行边界固定如下：
+
+1. 使用 `examples/orchestration/plan.json` 的 Plan 0.4 作为只读投影，仅把 `target.root` 改为 `.`；
+2. 以 InkNarratives 原始仓库根目录作为 `subject_root`，不排除 `.git`、文档、脚本或许可证；
+3. 只调用冻结的 `prepare_static_target()` 做路径与静态快照准入检查，不启动 HTTP 服务、Chromium
+   或任何目标进程；
+4. 不修改两个仓库，不创建适配目录，不复制/重命名五个 HTML，也不补造 `index.html`；
+5. 完整保留首次返回结果；失败后不得通过改变根目录、忽略规则或预处理文件重跑同一探针；
+6. 允许的预期拒绝事实包括隐藏路径、无 `index.html`、不受支持的静态文件类型；实际首先命中哪条
+   由冻结实现和原始目录顺序决定，不能事后改写成另一条；
+7. 若意外通过，只能说明快照准入成立，仍不能推出浏览器链路、内容完整性或 M11 验收成立。
+
+判定规则：
+
+- `ACCEPTED_DIRECT_ROOT`：冻结 M5 接受未经处理的仓库根目录；
+- `REJECTED_DIRECT_ROOT`：冻结 M5 返回确定性准入错误；必须原样记录首个错误；
+- `PROBE_INVALID`：目标 ref、工具 ref 或工作区状态与预注册不一致，或执行过程修改了任一仓库。
+
+任何结果都不授权立即改造 InkNarratives。若直接根目录被拒绝，下一步必须独立判断“目标自有的静态
+发布根”是否对 InkNarratives 本身成立，不能把 VeriTrail 专用适配包装成真实项目能力。
+
+## 8. 当前准确结论
 
 M10 地基已经稳定并可寻址，但它的固定两节点证明范围与现有候选项目的真实最小拓扑不完全重合。
 因此 M11 已进入**合同规划**，尚未选择目标、冻结合同或开始实现。这个暂停不是进度倒退，而是防止
