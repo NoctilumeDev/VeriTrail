@@ -36,6 +36,7 @@ from veritrail.resources import host_memory_bytes
 
 
 APPLICATION_PORT = 18775
+CONTRACT_VERSION = "0.4"
 EXPECTED_SUBJECT_REF = "b443a1c967bbc4c50f1bec7ece62abc4c4196fdb"
 EXPECTED_GATE_A_COMMIT = "36b24581549ab23503b710718cdab74358aa71cd"
 EXPECTED_PROFILE_SHA256 = "a9385a78a282e485d0cd7aa6f2970d51cf240ea3bc41324276ab5d59960fd7f4"
@@ -856,7 +857,7 @@ def main() -> int:
 
     summary = {
         "schema_version": "0.1",
-        "contract_version": "0.3",
+        "contract_version": CONTRACT_VERSION,
         "platform": "WINDOWS_11",
         "cold_state": "C1_PROCESS_COLD",
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
@@ -866,6 +867,9 @@ def main() -> int:
         "retained_plan_v1_failure": "tmp/m11-gateb-contract03-20260814-160143",
         "retained_catalog_harness_failure": (
             "tmp/m11-gateb-contract04-20260814-161147"
+        ),
+        "retained_contract_metadata_failure": (
+            "tmp/m11-gateb-contract04-20260814-161439"
         ),
         "subject": {
             "id": "inknarratives",

@@ -5,6 +5,7 @@ import unittest
 
 from scripts.m11_gateb_acceptance import (
     APPLICATION_PORT,
+    CONTRACT_VERSION,
     EXPECTED_NEGATIVE_PLAN_SHA256,
     EXPECTED_POSITIVE_PLAN_SHA256,
     EXPECTED_PROFILE_SHA256,
@@ -19,6 +20,9 @@ from veritrail.project_profile import seal_project_profile
 
 
 class M11GateBAcceptanceContractTests(unittest.TestCase):
+    def test_acceptance_record_uses_current_contract_version(self) -> None:
+        self.assertEqual("0.4", CONTRACT_VERSION)
+
     def test_frozen_profile_uses_exact_single_application_boundary(self) -> None:
         profile = seal_project_profile(raw_profile())
 
