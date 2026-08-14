@@ -195,6 +195,42 @@ Core，不生成 Bundle，不证明 ProjectProfile 已支持单节点，也不�
 即使获得第一种结果，它也只证明一个未来通用单节点 Profile 值得独立立项；它不改变 M10 两节点
 冻结语义，也不把外部 `http.server` 变成 VeriTrail 已实现的管理能力。
 
+### 7.4 `002` 已完成传输事实与收束
+
+运行前的目标 ref、工作区、可用内存和 `127.0.0.1:18773` 均通过预检；Python 3.10.6 创建了唯一
+回环监听进程，监听 PID 与创建 PID 一致。原始目录中五个页面均由该进程返回 HTTP `200`：
+
+| 页面 | 响应字节数 |
+| --- | ---: |
+| `暗室.html` | 38,727 |
+| `柳永.html` | 60,037 |
+| `苏轼.html` | 109,579 |
+| `王维.html` | 31,741 |
+| `长卷.html` | 55,612 |
+
+由于原 `002` 合同没有冻结精确桌面/移动视口，浏览器部分在产生任何页面观察前主动停止；因此本记录
+仅为 `TRANSPORT_OBSERVED / BROWSER_NOT_EXECUTED`，不满足 `SINGLE_NODE_TRANSPORT_OBSERVED` 的完整
+条件。随后只在确认创建 PID 为 Python `http.server` 且命令身份匹配后终止该 PID；进程与端口均已
+释放。没有生成 VeriTrail Bundle，也没有改动目标仓库。
+
+### 7.5 预注册探索探针：单节点 Chromium 代表页
+
+> 探针编号：`M11-FEASIBILITY-INK-SINGLE-NODE-BROWSER-003`
+> 状态：`PREREGISTERED / EXPLORATORY / NON_ACCEPTANCE`
+> 目标引用：`InkNarratives main @ b443a1c967bbc4c50f1bec7ece62abc4c4196fdb`
+> 工具引用：Python 3.10.6 标准库 `http.server`；Codex 内置 Chromium
+> 固定端口与路径：`127.0.0.1:18773`、`/苏轼.html`
+
+本探针重新创建一个同样受控的单节点回环服务，只验证已知最完整的 `苏轼.html` 在真实 Chromium 中的
+代表性加载。固定视口为桌面 `1440x960` 与移动 `390x844`；每个视口都必须满足：页面完成加载、
+`main` 存在且可见、根视口没有横向溢出、页面 title 非空，且 Console 中没有 `error`。页面网络
+入口的 HTTP `200` 由 `002` 的保留事实作独立交叉证据；本探针不把一页外推为其余四页的浏览器验收。
+
+服务的创建、PID/端口所有权、目标 ref、工作区与资源预检，以及结束时只清理 owned PID 并核验端口
+释放，均沿用 `002` 的同一限制。任一前置、浏览器断言或清理不成立均记录为
+`SINGLE_NODE_BROWSER_REJECTED` 或 `PROBE_INVALID`；无论结果如何，都不授权开始 ProjectProfile、Plan、
+Evidence 或 M11 实现。
+
 ## 8. 当前准确结论
 
 M10 地基已经稳定并可寻址，但它的固定两节点证明范围与现有候选项目的真实最小拓扑不完全重合。
