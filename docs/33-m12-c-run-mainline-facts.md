@@ -1,6 +1,6 @@
 # M12-C 空间令牌与 Runs 主链运行事实
 
-> 状态：`IMPLEMENTED_WITH_AUTOMATED_AND_PRODUCTION_CHROMIUM_EVIDENCE / IN_APP_BROWSER_PENDING / M12_NOT_FROZEN`
+> 状态：`IMPLEMENTED_WITH_AUTOMATED_AND_IN_APP_BROWSER_EVIDENCE / M12_NOT_FROZEN`
 > 日期：2026-08-14
 > 前置冻结基线：`m11-v0.12.0` @ `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40`
 > 施工合同：[M12-C 空间令牌与 Runs 主链计划 0.1](32-m12-c-run-mainline-plan.md)
@@ -74,22 +74,53 @@
 这些数值满足本切片涉及的普通文本最低 `4.5:1` 目标；状态同时保留文字、图形、位置和边界，不以色彩
 作为唯一渠道。`forced-colors` 的完整用户链、200% zoom 与色觉差异矩阵仍属于 M12-E/F，不在本切片冒充完成。
 
-## 4. 内置浏览器待补证
+## 4. Codex 内置浏览器补证
 
-本轮尝试在 Codex 内置浏览器连接同一只读生产工作台时，浏览器控制会话无法把新建或已有标签绑定为
-当前会话的可控 Tab。该失败发生在 Codex 浏览器会话层，不是页面 Console、Network、HTTP 或交互失败；
-它没有被归入产品 `PASS`。
+在同一份 `127.0.0.1:18778` 只读生产构建中，Codex 内置浏览器完成了以下真实用户可见交互；读取的
+仍是 M11 Gate B 的四个 Run、一个隔离损坏候选和同计划的本地 Comparison 目录，不是 Mock 或截图替代品。
 
-因此，本事实只证明自动化与生产 Chromium 已完成。下次 M12-C 继续前，必须在可正常绑定的 Codex 内置
-浏览器中重跑桌面和 390/360 px 的 Runs/Catalog：验证 Catalog 行、PASS/FAIL/ABORTED+PENDING、详情、
-返回焦点、后退/前进、Console 与同源 Network。完成这一事实后，才可将 M12-C 交接到 M12-D。
+### 4.1 桌面主链、焦点与历史
+
+- Catalog 显示四个真实 Run 和一个独立目录问题；每行都分开显示 execution 与 verdict：两个
+  `COMPLETED / PASS`、一个 `COMPLETED / FAIL`、一个 `ABORTED / PENDING`；
+- 十字展开后，北向 `Runs / Catalog` 上按 `ArrowRight` 真实进入东向 `Batch Analysis`；按 `Esc` 收拢并
+  把焦点返回中心；选择南向后 URL 为 `?view=comparison`，焦点进入 Comparison 标题且 Catalog 不在 DOM；
+- 浏览器 Back 返回 Catalog，Forward 返回 Comparison；再从北向回 Catalog 后，四个 Run 都逐一进入详情，
+  并由 `返回 Run 目录` 恢复到各自的原行焦点；
+- 正向和恢复 Run 均为 `COMPLETED / PASS` 且存在 Browser Evidence；负向 Run 为 `COMPLETED / FAIL` 且仍
+  存在 Browser Evidence；端口冲突 Run 为 `ABORTED / PENDING` 并明确显示 Browser Evidence 不适用；
+- 从恢复正向 Run 的 `?run=...` 详情 Back/Forward 后，分别真实回到 Catalog 与同一 Run 详情；所有上述
+  页面根级横向溢出均为 `0 px`；
+- 向本机工作台导入脱敏的真实 M11 Comparison 目录后，页面显示 `MATCH / 0 differences`，来源为
+  `m11-gateb-v2-ink-positive-01` 与 `m11-gateb-v2-ink-recovery-positive-02`，根级横向溢出为 `0 px`。
+
+### 4.2 窄屏内容压力
+
+内置浏览器以真实 CSS 视口而非缩放截图验证：
+
+| 视口 | Catalog 列头 | Catalog / 十字 / 详情溢出 | 已验证内容 | 结论 |
+| --- | --- | --- | --- | --- |
+| `390 x 844` | `display: none` | 均为 `0 px` | `ABORTED / PENDING` 行、十字展开、负向 `COMPLETED / FAIL` 详情 | PASS |
+| `360 x 844` | `display: none` | 均为 `0 px` | 十字展开、正向 `COMPLETED / PASS` 详情 | PASS |
+
+在 `360 px` 下，中心与东/西入口的实际间距均约为 `14.1 px`，三者不相交；触控目标没有靠缩小高度来换取
+宽度。该结论只覆盖本切片的 Runs/Catalog 主链和十字骨架，不提前替 M12-E/F 声称 200% zoom、完整
+forced-colors 或色觉差异矩阵已经通过。
+
+### 4.3 Console 与 Network 的证据边界
+
+- 内置浏览器的桌面与移动 Tab Console 读取到 `0` 条 `warning` 或 `error`；
+- 内置浏览器控制接口没有暴露 Network response 事件或资源时序读取，因此不把它伪称为 F12 Network 抓包；
+- 同一生产构建的 M11 Gate B Chromium 受控验收已记录 `113` 个请求、`0` HTTP error、`0` external origin、
+  `0` write request、`0` request failure，见第 2 节。这是本切片的完整同源只读 Network/CDP 证据；
+  内置浏览器在本节承担真实可见交互、焦点、历史和响应式验证。
 
 ## 5. 资源、边界与下一步
 
-本轮的临时 `127.0.0.1:18778` Catalog 服务在人工浏览器连接尝试后已显式停止；端口监听和 SQLite
-sidecar 均为 0。未修改 Docker、中间件、代理、防火墙、系统服务、Python Core、`web/src/domain/`、
-Schema、Verdict、Evidence、Catalog、Comparison 或本地只读 API。
+本轮在既有的本机回环只读服务上完成浏览器补证；未修改 Docker、中间件、代理、防火墙、系统服务、
+Python Core、`web/src/domain/`、Schema、Verdict、Evidence、Catalog、Comparison 或本地只读 API。服务
+与端口的最终释放仍须由 M12 后续切片各自的验收和最终 M12-F 统一复核，不能从本节的页面事实外推。
 
-M12 保持 `IMPLEMENTING / NOT_FROZEN`。在第 4 节补证前，下一入口仍然是 M12-C，不能开始 Comparison、
-Pairing、Batch 或 Browser Evidence 的最终表现迁移，也不能把现有生产 Chromium 事实包装为 Codex 内置浏览器
-事实。
+M12 保持 `IMPLEMENTING / NOT_FROZEN`。M12-C 的预注册范围和内置浏览器补证现已闭环，下一入口允许进入
+M12-D 的 Comparison、Pairing 与 Batch 表现迁移；Browser Evidence 与全局状态仍属于 M12-E，最终可访问性、
+系统和发布级复验仍不得提前完成。
