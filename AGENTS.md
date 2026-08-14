@@ -80,9 +80,10 @@
   `docs/29-m12-a-control-baseline-audit.md` 闭环；M12-B 已在提交 `7b8b72d` 完成四向公共视图、十字中轴导航、
   URL/history、焦点与移动几何，事实见文档 30、31。M12-C 已实现语义 token、十字的 token-bound 视觉迁移、
   Catalog 行式目录与 Runs 主链，并通过 64/64 前端、真实 Gate B 生产 Chromium、优化模式门禁与 Codex 内置浏览器
-  桌面/390/360 px 的真实交互补证，事实见文档 33。M12 仍是 `IMPLEMENTING / NOT_FROZEN`：下一入口只允许
-  M12-D 的 Comparison、Pairing 与 Batch 表现迁移；不得提前把 Browser Evidence 终稿、全局状态、版本或 M12
-  标签混入该切片，也不得触及 L2/L3 数据、裁决或安全合同。
+  桌面/390/360 px 的真实交互补证，事实见文档 33。M12-D 派生分析视图计划 0.1 位于文档 34，当前为
+  `DRAFT / NOT_IMPLEMENTED`；在计划确认前不得开始 D 的代码施工。M12 仍是 `IMPLEMENTING / NOT_FROZEN`：
+  不得提前把 Browser Evidence 终稿、全局状态、版本或 M12 标签混入该切片，也不得触及 L2/L3 数据、裁决或
+  安全合同。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 
