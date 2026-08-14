@@ -827,7 +827,12 @@ def main() -> int:
     with (corrupted / "report.json").open("ab") as stream:
         stream.write(b"\n")
     catalog = build_catalog(runs_root, output / "catalog")
-    if catalog.status != "COMPLETED" or catalog.run_count != 4 or catalog.issue_count != 1:
+    # The preregistered corrupt copy must make the successful scan issue-bearing.
+    if (
+        catalog.status != "COMPLETED_WITH_ISSUES"
+        or catalog.run_count != 4
+        or catalog.issue_count != 1
+    ):
         raise AssertionError("Catalog did not accept four Runs and isolate one corrupt copy")
 
     sensitive_files = scan_sensitive(
@@ -859,6 +864,9 @@ def main() -> int:
         "gate_b_harness_commit": gate_b_harness_commit,
         "plan_revision": 2,
         "retained_plan_v1_failure": "tmp/m11-gateb-contract03-20260814-160143",
+        "retained_catalog_harness_failure": (
+            "tmp/m11-gateb-contract04-20260814-161147"
+        ),
         "subject": {
             "id": "inknarratives",
             "ref": EXPECTED_SUBJECT_REF,
