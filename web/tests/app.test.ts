@@ -75,12 +75,17 @@ describe('App', () => {
     expect(wrapper.get('[aria-label="验收结论：PASS"]').text()).toContain('PASS')
     expect(wrapper.get('[data-testid="integrity-status"]').text()).toContain('自报 Verdict')
     expect(wrapper.get('[data-testid="browser-empty"]').text()).toContain('不等于浏览器检查通过')
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')
+    expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--inner')
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
     wrapper.unmount()
   })
 
   it('switches only the evidence bundle and exposes negative assertions', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="fixture-negative"]')
     await wrapper.get('[data-testid="fixture-negative"]').trigger('click')
     await waitFor(wrapper, '[aria-label="验收结论：FAIL"]')
 
@@ -93,6 +98,8 @@ describe('App', () => {
   it('keeps each local import focus target in its relevant public view', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="runs-toolstrip"]')
 
     const inputs = wrapper.findAll('.local-import input[type="file"]')
     expect(inputs).toHaveLength(1)
@@ -111,6 +118,8 @@ describe('App', () => {
 
     await selectPublicView(wrapper, 'batch')
     expect(wrapper.get('[data-testid="local-batch-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--batch')
+    expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--inner')
 
     wrapper.unmount()
   })
@@ -143,6 +152,8 @@ describe('App', () => {
 
   it('keeps demo fixtures and the local evidence directory as separate Runs source groups', async () => {
     const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
     await waitFor(wrapper, '[data-testid="runs-toolstrip"]')
 
     const toolstrip = wrapper.get('[data-testid="runs-toolstrip"]')
@@ -157,6 +168,8 @@ describe('App', () => {
   it('contains an invalid bundle and recovers through the explicit retry', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="fixture-invalid"]')
     await wrapper.get('[data-testid="fixture-invalid"]').trigger('click')
     await waitFor(wrapper, '[data-testid="error-state"]')
 
@@ -168,11 +181,55 @@ describe('App', () => {
     wrapper.unmount()
   })
 
+  it('keeps the Catalog owner visible while an invalid fixture is being verified', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="fixture-invalid"]')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fetchImplementation = fetchMock.getMockImplementation()!
+    let releaseInvalidFetch!: () => void
+    const invalidFetchGate = new Promise<void>((resolve) => {
+      releaseInvalidFetch = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (url.pathname.includes('/fixtures/m2-invalid/')) await invalidFetchGate
+      return fetchImplementation(input)
+    })
+
+    await wrapper.get('[data-testid="fixture-invalid"]').trigger('click')
+    await flushPromises()
+
+    const shellClasses = wrapper.get('.app-shell').classes()
+    const mainBusy = wrapper.get('#main-content').attributes('aria-busy')
+    const sourceBusy = wrapper.get('[data-testid="fixture-invalid"]').attributes('aria-busy')
+    const renderedLegacyLoading = wrapper.find('[data-testid="loading-state"]').exists()
+    const renderedLegacyCourt = wrapper.find('.state-court').exists()
+    releaseInvalidFetch()
+    await waitFor(wrapper, '[data-testid="error-state"]')
+
+    expect(shellClasses).toContain('app-shell--catalog')
+    expect(mainBusy).toBe('true')
+    expect(sourceBusy).toBe('true')
+    expect(renderedLegacyLoading).toBe(false)
+    expect(renderedLegacyCourt).toBe(false)
+    expect(wrapper.get('[data-testid="error-state"]').classes()).toContain('run-error-court')
+    expect(wrapper.find('.state-court').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
   it('closes the invalid bundle court from both the source toggle and stop seal', async () => {
     const host = document.createElement('div')
     document.body.append(host)
     const wrapper = mount(App, { attachTo: host })
     await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="fixture-invalid"]')
     const trigger = wrapper.get('[data-testid="fixture-invalid"]')
 
     await trigger.trigger('click')
@@ -229,6 +286,15 @@ describe('App', () => {
     expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('MATCH')
     expect(window.location.search).toBe('?fixture=comparison')
     expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--comparison')
+    expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--inner')
+
+    await wrapper.get('[data-testid="comparison-open-differences"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=comparison&panel=differences')
+    expect(wrapper.get('[data-testid="comparison-differences"]').text()).toContain('没有差异')
+    await wrapper.get('[data-testid="comparison-panel-return-bottom"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=comparison')
+    expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('MATCH')
     wrapper.unmount()
   })
 

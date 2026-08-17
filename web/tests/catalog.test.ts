@@ -169,6 +169,46 @@ describe('Catalog API 0.1', () => {
     host.remove()
   })
 
+  it('keeps the Catalog ledger stable while a selected Run is being verified', async () => {
+    installCatalogFetch(catalogResponse())
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-catalog-run-id]')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fetchImplementation = fetchMock.getMockImplementation()!
+    let releaseBundleFetch!: () => void
+    const bundleFetchGate = new Promise<void>((resolve) => {
+      releaseBundleFetch = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (url.pathname.startsWith(`/api/v1/runs/${catalogRunId}/bundle/`)) await bundleFetchGate
+      return fetchImplementation(input)
+    })
+
+    await wrapper.get('[data-catalog-run-id]').trigger('click')
+    await flushPromises()
+
+    const shellClasses = wrapper.get('.app-shell').classes()
+    const catalogBusy = wrapper.get('[data-testid="run-catalog"]').attributes('aria-busy')
+    const rowBusy = wrapper.get('[data-catalog-run-id]').attributes('aria-busy')
+    const renderedLegacyLoading = wrapper.find('[data-testid="loading-state"]').exists()
+    const renderedLegacyCourt = wrapper.find('.state-court').exists()
+    releaseBundleFetch()
+    await waitFor(wrapper, '[data-testid="catalog-return"]')
+
+    expect(shellClasses).toContain('app-shell--catalog')
+    expect(catalogBusy).toBe('true')
+    expect(rowBusy).toBe('true')
+    expect(renderedLegacyLoading).toBe(false)
+    expect(renderedLegacyCourt).toBe(false)
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')
+    wrapper.unmount()
+  })
+
   it('opens complete Run ledgers as page states instead of nested scroll regions', async () => {
     installCatalogFetch(catalogResponse())
     const wrapper = mount(App)

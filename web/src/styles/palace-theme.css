@@ -1,7 +1,6 @@
 @layer base {
   body {
     color: var(--text-primary);
-    background-color: var(--surface-plinth);
   }
 
   body::before {
@@ -257,60 +256,60 @@
   }
 }
 
-/* The inner routes use the compact lacquer hall from the M12 reference contract.
-   Catalog intentionally remains the larger public forecourt above. */
-@layer m12-inner-shell {
+/* Batch remains on the compact lacquer hall until its reference rebuild. The
+   other public views own their shells in page-specific reference styles. */
+@layer m12-batch-shell {
   @media (min-width: 901px) {
-    .app-shell--inner {
+    .app-shell--batch {
       position: relative;
     }
 
-    .app-shell--inner .masthead {
+    .app-shell--batch .masthead {
       min-height: 7.2rem;
     }
 
-    .app-shell--inner .masthead__inner,
-    .app-shell--inner .evidence-axis,
-    .app-shell--inner .site-footer {
+    .app-shell--batch .masthead__inner,
+    .app-shell--batch .evidence-axis,
+    .app-shell--batch .site-footer {
       width: min(calc(100% - 4rem), 1440px);
     }
 
-    .app-shell--inner .masthead__inner {
+    .app-shell--batch .masthead__inner {
       padding: 0.72rem 0 1.08rem;
     }
 
-    .app-shell--inner .masthead .brand-lockup {
+    .app-shell--batch .masthead .brand-lockup {
       gap: 0.85rem;
     }
 
-    .app-shell--inner .masthead .brand-seal {
+    .app-shell--batch .masthead .brand-seal {
       --brand-seal-size: 4.15rem;
       --brand-seal-font-size: 2.2rem;
     }
 
-    .app-shell--inner .masthead .brand-lockup p {
+    .app-shell--batch .masthead .brand-lockup p {
       margin-bottom: 0.18rem;
       font-size: 0.62rem;
       letter-spacing: 0.12em;
     }
 
-    .app-shell--inner .masthead .brand-lockup h1 {
+    .app-shell--batch .masthead .brand-lockup h1 {
       margin-bottom: 0.22rem;
       font-size: 1.72rem;
       line-height: 1.1;
     }
 
-    .app-shell--inner .masthead .brand-lockup > div > span {
+    .app-shell--batch .masthead .brand-lockup > div > span {
       font-size: 0.72rem;
     }
 
-    .app-shell--inner .masthead__scope {
+    .app-shell--batch .masthead__scope {
       gap: 0.85rem;
       margin-top: 1.42rem;
       font-size: 0.75rem;
     }
 
-    .app-shell--inner .navigation-courtyard {
+    .app-shell--batch .navigation-courtyard {
       position: absolute;
       top: 1.12rem;
       left: 53.5%;
@@ -320,23 +319,23 @@
       transform: translateX(-50%);
     }
 
-    .app-shell--inner .cross-axis-navigation {
+    .app-shell--batch .cross-axis-navigation {
       width: 100%;
       color: var(--text-on-ink);
     }
 
-    .app-shell--inner .cross-axis-navigation__waterline {
+    .app-shell--batch .cross-axis-navigation__waterline {
       align-items: center;
       gap: 0;
       padding: 0;
     }
 
-    .app-shell--inner .cross-axis-navigation__waterline::before,
-    .app-shell--inner .cross-axis-navigation__waterline::after {
+    .app-shell--batch .cross-axis-navigation__waterline::before,
+    .app-shell--batch .cross-axis-navigation__waterline::after {
       display: none;
     }
 
-    .app-shell--inner .cross-axis-navigation__target {
+    .app-shell--batch .cross-axis-navigation__target {
       min-height: 3.45rem;
       padding: 1.28rem 0.3rem 0.42rem 1.25rem;
       color: color-mix(in srgb, var(--text-on-ink) 78%, transparent);
@@ -346,19 +345,19 @@
       white-space: nowrap;
     }
 
-    .app-shell--inner .cross-axis-navigation__target:hover,
-    .app-shell--inner .cross-axis-navigation__target:focus-visible,
-    .app-shell--inner .cross-axis-navigation__target[aria-current='page'] {
+    .app-shell--batch .cross-axis-navigation__target:hover,
+    .app-shell--batch .cross-axis-navigation__target:focus-visible,
+    .app-shell--batch .cross-axis-navigation__target[aria-current='page'] {
       color: var(--structure-gold-soft);
     }
 
-    .app-shell--inner .cross-axis-navigation__target[aria-current='page']::after {
+    .app-shell--batch .cross-axis-navigation__target[aria-current='page']::after {
       bottom: 0;
       width: 4.35rem;
       background: var(--structure-gold-soft);
     }
 
-    .app-shell--inner .cross-axis-navigation__ordinal {
+    .app-shell--batch .cross-axis-navigation__ordinal {
       top: 1.16rem;
       left: 0.26rem;
       width: 0.74rem;
@@ -369,17 +368,17 @@
       border-radius: 0;
     }
 
-    .app-shell--inner .cross-axis-navigation__ordinal::before {
+    .app-shell--batch .cross-axis-navigation__ordinal::before {
       content: "◇";
       font-size: 0.68rem;
     }
 
-    .app-shell--inner .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
+    .app-shell--batch .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
       color: var(--structure-gold-soft);
       background: transparent;
     }
 
-    .app-shell--inner .cross-axis-navigation__glyph {
+    .app-shell--batch .cross-axis-navigation__glyph {
       top: 1.02rem;
       left: 0.55rem;
       width: 0.8rem;
@@ -388,17 +387,17 @@
       transform: none;
     }
 
-    .app-shell--inner .court-threshold {
+    .app-shell--batch .court-threshold {
       height: 0.9rem;
     }
 
-    .app-shell--inner .court-threshold span {
+    .app-shell--batch .court-threshold span {
       width: min(8rem, 22vw);
       height: 1.2rem;
       margin-top: -0.72rem;
     }
 
-    .app-shell--inner .evidence-axis {
+    .app-shell--batch .evidence-axis {
       gap: 0.9rem;
       padding-block: 1.45rem var(--space-7);
     }

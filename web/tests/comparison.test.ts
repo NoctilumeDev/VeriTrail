@@ -17,7 +17,7 @@ describe('Comparison Loader and View', () => {
     expect(loaded.integrity.verifiedFiles).toBe(2)
     expect(loaded.integrity.authorityVerified).toBe(false)
     expect(wrapper.get('[data-testid="comparison-status"]').attributes('aria-label')).toBe('复跑比较：MATCH')
-    expect(wrapper.get('[data-testid="comparison-status"]').classes()).toContain('comparison-mirror__verdict--match')
+    expect(wrapper.get('[data-testid="comparison-view"]').classes()).toContain('rerun-page--match')
     expect(wrapper.get('[data-testid="comparison-sources"]').text()).toContain('unit-baseline')
     expect(wrapper.get('[data-testid="comparison-sources"]').text()).toContain('PASS')
     expect(wrapper.findAll('[data-testid^="comparison-source-"]').map((item) => item.attributes('data-testid'))).toEqual([
@@ -33,9 +33,17 @@ describe('Comparison Loader and View', () => {
     const wrapper = mount(ComparisonView, { props: { loaded } })
 
     expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('DRIFT')
-    expect(wrapper.get('[data-testid="comparison-status"]').classes()).toContain('comparison-mirror__verdict--drift')
+    expect(wrapper.get('[data-testid="comparison-view"]').classes()).toContain('rerun-page--drift')
+    expect(wrapper.get('[data-testid="comparison-differences-preview"]').text()).toContain('/verdict')
+    expect(wrapper.get('[data-testid="comparison-differences-preview"]').text()).toContain('FAIL')
+
+    await wrapper.get('[data-testid="comparison-open-differences"]').trigger('click')
+    expect(wrapper.emitted('openPanel')).toEqual([['differences']])
+
+    await wrapper.setProps({ panel: 'differences' })
     expect(wrapper.get('[data-testid="comparison-differences"]').text()).toContain('/verdict')
-    expect(wrapper.get('[data-testid="comparison-differences"]').text()).toContain('FAIL')
+    await wrapper.get('[data-testid="comparison-panel-return-bottom"]').trigger('click')
+    expect(wrapper.emitted('closePanel')).toHaveLength(1)
   })
 
   it('retains a non-comparable input as INCONCLUSIVE', async () => {
@@ -44,7 +52,7 @@ describe('Comparison Loader and View', () => {
 
     expect(loaded.comparison.comparable).toBe(false)
     expect(loaded.comparison.sources.repeat.execution_status).toBe('ABORTED')
-    expect(wrapper.get('[data-testid="comparison-status"]').classes()).toContain('comparison-mirror__verdict--inconclusive')
+    expect(wrapper.get('[data-testid="comparison-view"]').classes()).toContain('rerun-page--inconclusive')
   })
 
   it('rejects a changed comparison before exposing partial facts', async () => {

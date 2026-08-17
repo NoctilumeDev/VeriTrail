@@ -167,10 +167,7 @@
 }
 
 .app-shell--catalog .cross-axis-navigation__target[aria-current='page']::after {
-  bottom: 18px;
-  width: 110px;
-  height: 2px;
-  background: var(--catalog-vermilion);
+  content: none;
 }
 
 .app-shell--catalog .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
@@ -484,6 +481,10 @@
   transform: none;
 }
 
+.app-shell--catalog .catalog-run[aria-busy='true'] {
+  cursor: progress;
+}
+
 .app-shell--catalog .catalog-run:focus-visible {
   z-index: 3;
   outline: 3px solid #76531d;
@@ -669,26 +670,28 @@
   margin: 28px;
 }
 
-/* Invalid bundles remain visibly blocked without falling back to the old
-   red-topped warning card.  This is part of the catalog court, not a card
-   pasted over it, so the paper continues through the state unchanged. */
-.app-shell--catalog .state-court--invalid {
+/* Runs errors belong to the Catalog owner. They use the same continuous paper
+   and back-garden boundary as the stable invalid state, never the historical
+   generic loading/error card. */
+.app-shell--catalog .run-error-court {
+  position: relative;
+  display: grid;
   width: min(calc(100% - 48px), 72rem);
   min-height: 27rem;
   margin-top: 32px;
+  margin-inline: auto;
   padding: 58px 40px 50px;
+  place-items: center;
+  align-content: center;
   color: #463c32;
+  text-align: center;
   background: transparent;
   border: 0;
   border-radius: 0;
   box-shadow: none;
 }
 
-.app-shell--catalog .state-court--invalid::before {
-  display: none;
-}
-
-.app-shell--catalog .state-court--invalid::after {
+.app-shell--catalog .run-error-court::after {
   position: absolute;
   inset: 0;
   content: '';
@@ -700,18 +703,24 @@
   border-image-repeat: stretch;
 }
 
-.app-shell--catalog .state-court--invalid > * {
+.app-shell--catalog .run-error-court > * {
   position: relative;
   z-index: 1;
 }
 
-.app-shell--catalog .state-court--invalid .error-court__seal {
+.app-shell--catalog .run-error-court__seal {
+  display: grid;
   box-sizing: border-box;
+  width: 3.5rem;
+  height: 3.5rem;
   padding: 0;
+  margin-bottom: var(--space-4);
   margin-inline: auto;
   appearance: none;
   place-self: center;
+  place-items: center;
   color: #173f43;
+  font-family: var(--font-display);
   font-size: 1.8rem;
   font-weight: 600;
   line-height: 1;
@@ -719,45 +728,65 @@
   text-indent: 0;
   cursor: pointer;
   background: transparent;
-  border-color: #244e50;
+  border: 2px solid #244e50;
 }
 
-.app-shell--catalog .state-court--invalid .error-court__seal:hover,
-.app-shell--catalog .state-court--invalid .error-court__seal:focus-visible {
+.app-shell--catalog .run-error-court__seal:hover,
+.app-shell--catalog .run-error-court__seal:focus-visible {
   color: #8b3f35;
   background: transparent;
   border-color: #8b3f35;
 }
 
-.app-shell--catalog .state-court--invalid code {
+.app-shell--catalog .run-error-court h2 {
+  max-width: 46rem;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+}
+
+.app-shell--catalog .run-error-court code {
   padding: 4px 0;
   color: #8b3f35;
   background: transparent;
   border-bottom: 1px solid rgba(139, 63, 53, 0.42);
 }
 
-.app-shell--catalog .state-court--invalid > button:not(.error-court__seal) {
+.app-shell--catalog .run-error-court--operational code,
+.app-shell--catalog .run-error-court--privacy code {
+  color: #315b5d;
+  border-bottom-color: rgba(49, 91, 93, 0.42);
+}
+
+.app-shell--catalog .run-error-court > p:not(.eyebrow) {
+  max-width: 46rem;
+  margin: var(--space-4) 0;
+  color: #5d5144;
+}
+
+.app-shell--catalog .run-error-court > button:not(.run-error-court__seal) {
   padding: 10px 18px 8px;
   color: #315b5d;
+  cursor: pointer;
   background: transparent;
   border: 0;
   border-bottom: 1px solid rgba(49, 91, 93, 0.68);
 }
 
-.app-shell--catalog .state-court--invalid > button:not(.error-court__seal):hover,
-.app-shell--catalog .state-court--invalid > button:not(.error-court__seal):focus-visible {
+.app-shell--catalog .run-error-court > button:not(.run-error-court__seal):hover,
+.app-shell--catalog .run-error-court > button:not(.run-error-court__seal):focus-visible {
   color: #7d4e35;
   border-bottom-color: #7d4e35;
 }
 
 @media (max-width: 720px) {
-  .app-shell--catalog .state-court--invalid {
+  .app-shell--catalog .run-error-court {
     width: calc(100% - 20px);
     min-height: 31rem;
     padding: 78px 32px 70px;
   }
 
-  .app-shell--catalog .state-court--invalid::after {
+  .app-shell--catalog .run-error-court::after {
     border-width: 64px;
     border-image-width: 64px 78px;
   }
@@ -949,11 +978,6 @@
     justify-self: center;
     text-align: center;
     white-space: normal;
-  }
-
-  .app-shell--catalog .cross-axis-navigation__target[aria-current='page']::after {
-    bottom: 7px;
-    width: 82px;
   }
 
   .app-shell--catalog .evidence-axis {

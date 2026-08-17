@@ -8,5 +8,7 @@ import './styles/reference-shared.css'
 import './styles/catalog-reference.css'
 import './styles/run-detail-reference.css'
 import './styles/pairing-reference.css'
+import './styles/comparison-reference.css'
+import './styles/batch-reference.css'
 
 createApp(App).mount('#app')

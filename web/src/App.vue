@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import BatchAnalysisView from './components/BatchAnalysisView.vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
+import ComparisonEntryState from './components/ComparisonEntryState.vue'
 import ComparisonView from './components/ComparisonView.vue'
 import CrossAxisNavigation from './components/CrossAxisNavigation.vue'
 import PairedAnalysisView from './components/PairedAnalysisView.vue'
@@ -10,6 +11,7 @@ import RunCatalog from './components/RunCatalog.vue'
 import RunBoundary from './components/RunBoundary.vue'
 import RunAssertions from './components/RunAssertions.vue'
 import RunEvidenceLedger from './components/RunEvidenceLedger.vue'
+import RunErrorState from './components/RunErrorState.vue'
 import RunOverview from './components/RunOverview.vue'
 import SectionFrame from './components/SectionFrame.vue'
 import StatusBadge from './components/StatusBadge.vue'
@@ -41,6 +43,7 @@ import type {
 type PublicView = 'runs' | 'comparison' | 'pairing' | 'batch'
 type RunDetailPanel = 'browser' | 'assertions' | 'ledger'
 type PairingPanel = 'sources' | 'outcomes'
+type ComparisonPanel = 'differences'
 
 const bundle = shallowRef<LoadedBundle | null>(null)
 const comparison = shallowRef<LoadedComparison | null>(null)
@@ -57,23 +60,14 @@ const catalogError = ref<{ code: string; message: string } | null>(null)
 const selectedCatalogRunId = ref<string | null>(null)
 const runDetailPanel = ref<RunDetailPanel | null>(null)
 const pairingPanel = ref<PairingPanel | null>(null)
+const comparisonPanel = ref<ComparisonPanel | null>(null)
 let lastCatalogTriggerId: string | null = null
 let loadSequence = 0
 
 const report = computed(() => bundle.value?.report ?? null)
 const browserSession = computed(() => (bundle.value ? browserEvidence(bundle.value) : null))
-const isCatalogRunDetail = computed(
-  () =>
-    publicView.value === 'runs' &&
-    activeSource.value === 'catalog' &&
-    selectedCatalogRunId.value !== null,
-)
-const usesInnerShell = computed(
-  () =>
-    isCatalogRunDetail.value ||
-    Boolean(report.value && bundle.value) ||
-    publicView.value === 'comparison' ||
-    publicView.value === 'batch',
+const isRunDetail = computed(
+  () => publicView.value === 'runs' && Boolean(report.value && bundle.value),
 )
 
 function runDetailPanelFromLocation(): RunDetailPanel | null {
@@ -94,6 +88,39 @@ function pairingPanelFromLocation(): PairingPanel | null {
 
 function pairingPanelLabel(panel: PairingPanel): string {
   return panel === 'sources' ? '四角色来源账册' : '预注册断言全貌'
+}
+
+function comparisonPanelFromLocation(): ComparisonPanel | null {
+  return new URLSearchParams(window.location.search).get('panel') === 'differences'
+    ? 'differences'
+    : null
+}
+
+function openComparisonPanel(panel: ComparisonPanel) {
+  comparisonPanel.value = panel
+  const url = new URL(window.location.href)
+  url.searchParams.delete('view')
+  url.searchParams.set('fixture', 'comparison')
+  url.searchParams.set('panel', panel)
+  window.history.pushState({ fixture: 'comparison', panel }, '', url)
+  liveMessage.value = '已进入完整语义差异账册。'
+  void nextTick(() => {
+    document.getElementById('view-comparison-title')?.focus()
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  })
+}
+
+function closeComparisonPanel() {
+  const panel = comparisonPanel.value
+  comparisonPanel.value = null
+  const url = new URL(window.location.href)
+  url.searchParams.delete('panel')
+  window.history.pushState({ fixture: 'comparison' }, '', url)
+  liveMessage.value = '已返回复跑比较总览。'
+  void nextTick(() => {
+    if (panel) document.querySelector<HTMLElement>(`[data-open-comparison-panel="${panel}"]`)?.focus()
+  })
 }
 
 function openPairingPanel(panel: PairingPanel) {
@@ -180,6 +207,7 @@ function resetPublicView(view: PublicView) {
   selectedCatalogRunId.value = null
   runDetailPanel.value = null
   pairingPanel.value = null
+  comparisonPanel.value = null
   loading.value = false
   error.value = null
   catalogError.value = null
@@ -202,7 +230,7 @@ function focusPublicViewTitle(view: PublicView) {
 }
 
 function selectPublicView(view: PublicView) {
-  if (view === 'runs' && isCatalogRunDetail.value) {
+  if (view === 'runs' && isRunDetail.value) {
     returnToCatalog()
     return
   }
@@ -384,10 +412,12 @@ async function importComparison(event: Event) {
   comparison.value = null
   pairedAnalysis.value = null
   batchAnalysis.value = null
+  comparisonPanel.value = null
   liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
   url.searchParams.delete('view')
+  url.searchParams.delete('panel')
   url.searchParams.set('fixture', 'comparison')
   window.history.pushState({ fixture: 'comparison' }, '', url)
   releaseCurrentBundle()
@@ -583,7 +613,7 @@ function returnToCatalog() {
 }
 
 function goToCatalogHome() {
-  if (isCatalogRunDetail.value) {
+  if (isRunDetail.value) {
     returnToCatalog()
     return
   }
@@ -610,7 +640,7 @@ function sourceLabel(id: DemoBundleId): string {
 function onHistoryChange(focusTarget = false) {
   const params = new URLSearchParams(window.location.search)
   const requestedView = publicViewFromLocation()
-  if (requestedView !== 'runs' && params.has('view')) {
+  if (requestedView !== 'runs' && params.has('view') && !params.has('fixture')) {
     resetPublicView(requestedView)
     if (focusTarget) focusPublicViewTitle(requestedView)
     return
@@ -693,6 +723,19 @@ function onHistoryChange(focusTarget = false) {
   }
   const fixture = fixtureFromLocation()
   if (fixture === 'comparison') {
+    if (comparison.value) {
+      const requestedPanel = comparisonPanelFromLocation()
+      const previousPanel = comparisonPanel.value
+      comparisonPanel.value = requestedPanel
+      if (focusTarget) {
+        void nextTick(() => {
+          if (requestedPanel) document.getElementById('view-comparison-title')?.focus()
+          else if (previousPanel) document.querySelector<HTMLElement>(`[data-open-comparison-panel="${previousPanel}"]`)?.focus()
+          else document.getElementById('view-comparison-title')?.focus()
+        })
+      }
+      return
+    }
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
@@ -807,10 +850,11 @@ onBeforeUnmount(() => {
     :class="[
       'app-shell',
       {
-        'app-shell--inner': usesInnerShell,
-        'app-shell--catalog': publicView === 'runs' && !usesInnerShell,
-        'app-shell--run-detail': isCatalogRunDetail,
+        'app-shell--catalog': publicView === 'runs' && !isRunDetail,
+        'app-shell--run-detail': isRunDetail,
         'app-shell--pairing': publicView === 'pairing',
+        'app-shell--comparison': publicView === 'comparison',
+        'app-shell--batch': publicView === 'batch',
       },
     ]"
   >
@@ -846,9 +890,13 @@ onBeforeUnmount(() => {
       />
     </section>
 
-    <main id="main-content" class="evidence-axis">
+    <main
+      id="main-content"
+      class="evidence-axis"
+      :aria-busy="publicView === 'runs' && loading ? 'true' : undefined"
+    >
       <template v-if="publicView === 'runs'">
-        <section v-if="!isCatalogRunDetail" class="view-introduction view-introduction--runs" aria-labelledby="view-runs-title">
+        <section v-if="!isRunDetail" class="view-introduction view-introduction--runs" aria-labelledby="view-runs-title">
           <div class="view-introduction__heading">
             <p class="eyebrow">Public View · 北向</p>
             <h2 id="view-runs-title" tabindex="-1" data-testid="view-runs-title">Runs / Catalog</h2>
@@ -859,6 +907,7 @@ onBeforeUnmount(() => {
               <button
                 type="button"
                 :aria-pressed="activeSource === 'positive'"
+                :aria-busy="loading && activeSource === 'positive' ? 'true' : undefined"
                 data-testid="fixture-positive"
                 @click="selectDemo('positive')"
               >
@@ -868,6 +917,7 @@ onBeforeUnmount(() => {
               <button
                 type="button"
                 :aria-pressed="activeSource === 'negative'"
+                :aria-busy="loading && activeSource === 'negative' ? 'true' : undefined"
                 data-testid="fixture-negative"
                 @click="selectDemo('negative')"
               >
@@ -878,6 +928,7 @@ onBeforeUnmount(() => {
                 type="button"
                 :aria-pressed="activeSource === 'invalid'"
                 :aria-expanded="activeSource === 'invalid' && Boolean(error)"
+                :aria-busy="loading && activeSource === 'invalid' ? 'true' : undefined"
                 aria-controls="run-error-state"
                 data-testid="fixture-invalid"
                 @click="toggleInvalidDemo"
@@ -886,7 +937,11 @@ onBeforeUnmount(() => {
                 <span>校验损坏包</span>
               </button>
             </div>
-            <label class="local-import runs-toolstrip__local" :class="{ 'is-active': activeSource === 'local' }">
+            <label
+              class="local-import runs-toolstrip__local"
+              :class="{ 'is-active': activeSource === 'local' }"
+              :aria-busy="loading && activeSource === 'local' ? 'true' : undefined"
+            >
               <img :src="'/textures/r3-command-upload.png'" alt="" aria-hidden="true" />
               <span>选择本地证据包</span>
               <input
@@ -902,9 +957,10 @@ onBeforeUnmount(() => {
         </section>
 
       <RunCatalog
-        v-if="!isCatalogRunDetail && (catalogLoading || catalog || catalogError)"
+        v-if="!isRunDetail && (catalogLoading || catalog || catalogError)"
         :catalog="catalog"
         :loading="catalogLoading"
+        :busy="loading"
         :error="catalogError"
         :selected-run-id="selectedCatalogRunId"
         @select="selectCatalogRun"
@@ -912,7 +968,7 @@ onBeforeUnmount(() => {
       />
 
       <nav
-        v-if="isCatalogRunDetail"
+        v-if="isRunDetail"
         class="run-detail-breadcrumb"
         aria-label="Run 详情路径与分区"
         data-testid="run-detail-breadcrumb"
@@ -948,41 +1004,14 @@ onBeforeUnmount(() => {
         </div>
       </nav>
 
-      <div v-if="loading" class="loading-court state-court state-court--loading" role="status" data-testid="loading-state" data-state-kind="loading">
-        <span class="loading-court__mark" aria-hidden="true"></span>
-        <p>正在沿清单核验证据包</p>
-        <small>文件、大小、路径与 SHA-256 逐项比对</small>
-      </div>
-
-      <section
-        v-else-if="error"
-        id="run-error-state"
-        :class="['error-court', 'state-court', `state-court--${stateCourtKind(error.code)}`]"
-        :data-state-kind="stateCourtKind(error.code)"
-        aria-labelledby="error-title"
-        data-testid="error-state"
-      >
-        <button
-          type="button"
-          class="error-court__seal"
-          aria-label="收起损坏证据提示"
-          data-testid="dismiss-invalid-state"
-          @click="dismissRunError(true)"
-        >
-          止
-        </button>
-        <p class="eyebrow">证据包未进入可信展示</p>
-        <h2 id="error-title">{{ error.message }}</h2>
-        <code>{{ error.code }}</code>
-        <p>工作台没有据此改写 Run 的 Verdict，也没有展示部分可信内容。</p>
-        <button
-          type="button"
-          :data-testid="activeSource === 'catalog' ? 'retry-catalog-run' : 'retry-positive'"
-          @click="activeSource === 'catalog' ? retryCatalog() : selectDemo('positive')"
-        >
-          {{ activeSource === 'catalog' ? '重新读取目录 Run' : '返回正向证据重试' }}
-        </button>
-      </section>
+      <RunErrorState
+        v-if="error"
+        :error="error"
+        :kind="stateCourtKind(error.code)"
+        :retry-mode="activeSource === 'catalog' ? 'catalog' : 'positive'"
+        @dismiss="dismissRunError(true)"
+        @retry="activeSource === 'catalog' ? retryCatalog() : selectDemo('positive')"
+      />
 
       <template v-else-if="report && bundle">
         <section v-if="!runDetailPanel" class="run-detail-header" aria-label="当前 Run 摘要">
@@ -1077,41 +1106,41 @@ onBeforeUnmount(() => {
       </template>
 
       <section v-else-if="publicView === 'comparison'" class="analysis-view" aria-labelledby="view-comparison-title">
-        <header class="view-introduction">
-          <p class="eyebrow">Public View · 南向</p>
-          <h2 id="view-comparison-title" tabindex="-1" data-testid="view-comparison-title">Rerun Comparison</h2>
-          <label class="local-import" :class="{ 'is-active': activeSource === 'comparison' }">
-            <span>选择复跑比较包</span>
-            <input
-              type="file"
-              multiple
-              webkitdirectory
-              aria-label="选择本地 VeriTrail Comparison 目录"
-              data-testid="local-comparison-input"
-              @change="importComparison"
-            />
-          </label>
-        </header>
-        <div v-if="loading" class="loading-court state-court state-court--loading" role="status" data-testid="loading-state" data-state-kind="loading">
-          <span class="loading-court__mark" aria-hidden="true"></span>
-          <p>正在沿清单核验复跑比较包</p>
-          <small>文件、大小、路径与 SHA-256 逐项比对</small>
-        </div>
-        <section
-          v-else-if="error"
-          :class="['error-court', 'state-court', `state-court--${stateCourtKind(error.code)}`]"
-          :data-state-kind="stateCourtKind(error.code)"
-          aria-labelledby="comparison-error-title"
-          data-testid="error-state"
+        <ComparisonEntryState v-if="!comparison" :mode="loading ? 'loading' : error ? 'error' : 'empty'" :error="error">
+          <template #action>
+            <label class="local-import rerun-reselect" :class="{ 'is-active': activeSource === 'comparison' }">
+              <span>{{ error ? '重新选择比较目录' : '选择复跑比较目录' }}</span>
+              <input
+                type="file"
+                multiple
+                webkitdirectory
+                aria-label="选择本地 VeriTrail Comparison 目录"
+                data-testid="local-comparison-input"
+                @change="importComparison"
+              />
+            </label>
+          </template>
+        </ComparisonEntryState>
+        <ComparisonView
+          v-else
+          :loaded="comparison"
+          :panel="comparisonPanel"
+          @open-panel="openComparisonPanel"
+          @close-panel="closeComparisonPanel"
         >
-          <span class="error-court__seal" aria-hidden="true">止</span>
-          <p class="eyebrow">Comparison 未进入可信展示</p>
-          <h3 id="comparison-error-title">{{ error.message }}</h3>
-          <code>{{ error.code }}</code>
-          <p>请重新选择本地 Comparison 目录；文件不会上传，也不会持久化。</p>
-        </section>
-        <ComparisonView v-else-if="comparison" :loaded="comparison" />
-        <p v-else class="analysis-empty state-court state-court--empty" data-testid="comparison-empty" data-state-kind="empty">请选择两个同计划 Run 的 Comparison 目录。</p>
+          <template #actions>
+            <label v-if="!comparisonPanel" class="local-import rerun-reselect" :class="{ 'is-active': activeSource === 'comparison' }">
+              <span>重新选择比较目录</span>
+              <input
+                type="file"
+                multiple
+                webkitdirectory
+                aria-label="重新选择本地 VeriTrail Comparison 目录"
+                @change="importComparison"
+              />
+            </label>
+          </template>
+        </ComparisonView>
       </section>
 
       <section v-else-if="publicView === 'pairing'" class="analysis-view" aria-labelledby="view-pairing-title">

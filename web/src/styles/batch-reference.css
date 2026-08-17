@@ -1,0 +1,108 @@
+/*
+ * Batch Analysis page owner.
+ *
+ * The Batch route owns its presentation explicitly. Its current reference
+ * surface remains stable while the page is rebuilt, and no rule in this file
+ * can affect another public view.
+ */
+
+.app-shell--batch {
+  min-height: 100vh;
+  background-color: var(--surface-plinth);
+}
+
+.app-shell--batch .batch-court,
+.app-shell--batch .analysis-view .state-court,
+.app-shell--batch .batch-state-gates,
+.app-shell--batch .batch-policy-ledger,
+.app-shell--batch .batch-matrix-court,
+.app-shell--batch .batch-wave-ledger,
+.app-shell--batch .batch-reason-ledger {
+  background-color: var(--surface-courtyard);
+  background-image: url('/textures/paper-fiber.png');
+  background-size: 384px 384px;
+}
+
+.app-shell--batch .analysis-view > .view-introduction {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-5);
+  align-items: end;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid color-mix(in srgb, var(--structure-gold) 55%, transparent);
+}
+
+.app-shell--batch .analysis-view > .view-introduction > .eyebrow,
+.app-shell--batch .analysis-view > .view-introduction > h2 {
+  grid-column: 1;
+}
+
+.app-shell--batch .analysis-view > .view-introduction > .local-import {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  min-width: 13rem;
+  align-self: center;
+  box-shadow: inset 0 0 0 1px rgba(246, 212, 145, 0.42);
+}
+
+@media (min-width: 921px) {
+  .app-shell--batch .batch-court {
+    padding-top: 0;
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .app-shell--batch .batch-court__heading {
+    min-height: 4.8rem;
+    margin: 0;
+    padding: var(--space-4) var(--space-5);
+    color: var(--text-primary);
+    background-color: var(--surface-courtyard);
+    background-image: none;
+    border: 1px solid var(--structure-hairline-strong);
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .app-shell--batch .batch-court__heading::before {
+    display: none;
+  }
+
+  .app-shell--batch .batch-court__heading .eyebrow {
+    color: var(--structure-dai);
+  }
+
+  .app-shell--batch .batch-court__heading > span {
+    color: var(--structure-dai);
+    border-color: color-mix(in srgb, var(--structure-dai) 46%, var(--structure-hairline));
+  }
+
+  .app-shell--batch .batch-state-gates,
+  .app-shell--batch .batch-policy-ledger {
+    border-color: var(--structure-hairline-strong);
+  }
+
+  .app-shell--batch .batch-section-heading {
+    padding-bottom: var(--space-3);
+    color: var(--text-primary);
+    background: transparent;
+    border-bottom: 1px solid var(--structure-hairline);
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell--batch .analysis-view > .view-introduction {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .app-shell--batch .analysis-view > .view-introduction > .local-import {
+    grid-column: 1;
+    grid-row: auto;
+    width: 100%;
+    min-width: 0;
+    margin-top: var(--space-3);
+  }
+}

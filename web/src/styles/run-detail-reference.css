@@ -3,8 +3,8 @@
  *
  * Like catalog-reference.css, this is an explicit, unlayered page owner. The
  * shared component layer remains the structural fallback, while every adopted
- * Run-detail visual decision is resolved here without depending on cascade
- * accidents from the historical .app-shell--inner composition.
+ * Run-detail visual decision is resolved here without depending on a generic
+ * page-shell cascade.
  */
   .app-shell--run-detail {
     --detail-paper: #eee5d9;
@@ -31,6 +31,10 @@
 
   .app-shell--run-detail .evidence-axis {
     position: relative;
+  }
+
+  .app-shell--run-detail .cross-axis-navigation__target[aria-current='page']::after {
+    content: none;
   }
 
   .app-shell--run-detail .site-footer {
@@ -276,6 +280,7 @@
     }
 
     .app-shell--run-detail .run-detail-header {
+      grid-column: 1 / -1;
       grid-row: 2;
       grid-template-columns: minmax(0, 1.18fr) minmax(25rem, 0.92fr);
       min-height: 9.6rem;
@@ -283,6 +288,7 @@
     }
 
     .app-shell--run-detail .run-section--overview {
+      grid-column: 1 / -1;
       grid-row: 3;
     }
 
@@ -293,11 +299,25 @@
       align-self: stretch;
     }
 
+    .app-shell--run-detail .run-section--browser {
+      grid-column: 1;
+    }
+
+    .app-shell--run-detail .run-section--assertions {
+      grid-column: 2;
+    }
+
+    .app-shell--run-detail .run-section--ledger {
+      grid-column: 3;
+    }
+
     .app-shell--run-detail .run-section--boundary {
+      grid-column: 1 / -1;
       grid-row: 5;
     }
 
     .app-shell--run-detail .run-detail-subview-header {
+      grid-column: 1 / -1;
       grid-row: 2;
     }
 

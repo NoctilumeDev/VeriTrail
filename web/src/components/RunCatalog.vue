@@ -5,6 +5,7 @@ import type { CatalogResponse, CatalogRunSummary } from '../domain/types'
 defineProps<{
   catalog: CatalogResponse | null
   loading: boolean
+  busy: boolean
   error: { code: string; message: string } | null
   selectedRunId: string | null
 }>()
@@ -32,6 +33,7 @@ function displayPlan(run: CatalogRunSummary): string {
   <section
     class="catalog-court"
     aria-labelledby="catalog-title"
+    :aria-busy="busy ? 'true' : undefined"
     data-testid="run-catalog"
   >
     <header class="catalog-court__heading">
@@ -77,6 +79,7 @@ function displayPlan(run: CatalogRunSummary): string {
           class="catalog-run"
           :class="{ 'is-selected': selectedRunId === run.catalog_run_id }"
           :aria-current="selectedRunId === run.catalog_run_id ? 'true' : undefined"
+          :aria-busy="busy && selectedRunId === run.catalog_run_id ? 'true' : undefined"
           :data-catalog-run-id="run.catalog_run_id"
           @click="selectRun(run, $event)"
         >
