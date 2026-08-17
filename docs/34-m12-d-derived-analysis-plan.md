@@ -1,6 +1,6 @@
 # M12-D 派生分析视图计划 0.1
 
-> 状态：`IMPLEMENTING / D1_COMPLETE / D2_PLAN_DRAFTED / D3_NOT_IMPLEMENTED`
+> 状态：`IMPLEMENTING / D1_COMPLETE / D2_COMPLETE / D3_COMPLETE / M12_NOT_FROZEN`
 > 日期：2026-08-14
 > 前置事实：[M12-C 空间令牌与 Runs 主链运行事实](33-m12-c-run-mainline-facts.md)
 > 当前提交基线：`0a6f789`（R2 Runs 主链事实已闭环）
@@ -112,13 +112,15 @@ M12-D 的运行事实必须明确区分自动化、真实 Chromium 与内置浏�
 Network/CDP 事实；内置浏览器负责真实可见操作、焦点、历史与响应式，若其控制接口不能提供 response
 事件，不得伪称其为 F12 Network 抓包。
 
-D1 的已取得事实见 [M12-D1 Comparison 运行事实](35-m12-d1-comparison-facts.md)。D2 的独立计划见
-[M12-D2 Pairing 四角色有向序列表现计划 0.1](39-m12-d2-pairing-presentation-plan.md)。它们均不为 D3 Batch
-预先提供完成结论。
+D1 的已取得事实见 [M12-D1 Comparison 运行事实](35-m12-d1-comparison-facts.md)。D2 的独立计划与运行事实见
+[M12-D2 Pairing 四角色有向序列表现计划 0.1](39-m12-d2-pairing-presentation-plan.md) 与
+[M12-D2 Pairing 运行事实](40-m12-d2-pairing-facts.md)。D3 已按其独立计划
+[M12-D3 Batch 双状态矩阵与 Wave 账册表现计划 0.1](41-m12-d3-batch-presentation-plan.md) 完成，事实见
+[M12-D3 Batch 运行事实](42-m12-d3-batch-facts.md)。这些事实只关闭 M12-D；不为后续 M12-E 预先提供完成结论。
 
 ## 6. 非目标与交接
 
 - Browser Evidence、loading/empty/error/invalid 全局收束、200% zoom、完整 forced-colors 与色觉差异矩阵
   属于 M12-E/F；D 中发现其阻断性缺陷只能记录和停止，不能偷偷实施 E；
 - 本文不是 M12-D 的运行事实，不提高版本，不创建 M12 标签，也不允许把 M12 标成 `FROZEN`；
-- D3 全部完成后，必须先形成独立事实文档、更新阶段记录并复核 diff/资源边界，下一入口才是 M12-E。
+- D3 已形成独立事实文档、更新阶段记录并复核 diff/资源边界；下一入口才是单独计划的 M12-E。

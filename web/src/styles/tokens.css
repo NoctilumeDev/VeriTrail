@@ -7,29 +7,31 @@
     text-rendering: optimizeLegibility;
 
     /* M12 semantic roles. Palette names stay below only as compatibility aliases. */
-    --surface-courtyard: #fffdf7;
-    --surface-plinth: #efe7d9;
-    --surface-recess: #e4dccd;
-    --surface-ink: #173d4b;
-    --surface-ink-raised: #215262;
-    --text-primary: #241b17;
-    --text-secondary: #62584e;
-    --text-on-ink: #fffaf0;
-    --structure-vermilion: #83362d;
-    --structure-gold: #ad8232;
-    --structure-gold-soft: #f3e5bb;
-    --structure-dai: #285a6c;
-    --structure-dai-soft: #dce9e8;
+    --surface-courtyard: #f3e7d2;
+    --surface-plinth: #e5d0ad;
+    --surface-recess: #d9bf94;
+    --surface-ink: #062f35;
+    --surface-ink-raised: #104149;
+    --text-primary: #2a241f;
+    --text-secondary: #665847;
+    --text-on-ink: #f8f0df;
+    --structure-vermilion: #9a301e;
+    --structure-gold: #aa701f;
+    --structure-gold-soft: #e8c56d;
+    --structure-dai: #1f5a63;
+    --structure-dai-soft: #cedfda;
+    --water-line: #7fa8aa;
+    --water-line-soft: #cbded9;
     --structure-jade: #35664e;
-    --structure-hairline: #cbbda6;
-    --structure-hairline-strong: #a89578;
+    --structure-hairline: #bea77f;
+    --structure-hairline-strong: #856334;
     --interaction-default: #1d4b59;
     --interaction-active: #153d4a;
     --interaction-on-active: #fffaf0;
     --status-pass-fg: #246442;
     --status-pass-bg: #e0eee2;
-    --status-fail-fg: #a62922;
-    --status-fail-bg: #f8ded7;
+    --status-fail-fg: #b82822;
+    --status-fail-bg: #f8d9d2;
     --status-running-fg: #5a3e0d;
     --status-running-bg: #f5e3ae;
     --status-inconclusive-fg: #285d77;
@@ -75,7 +77,7 @@
     --radius-sm: 0.25rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.875rem;
-    --content-width: 1180px;
+    --content-width: 1360px;
     --transition-fast: 150ms ease;
   }
 }

@@ -8,6 +8,13 @@ import {
 import { sha256Hex } from '../src/domain/bundle'
 import { createBatchAnalysisBundle } from './support'
 
+function rowOrder(wrapper: ReturnType<typeof mount>, selector: string, attribute: string): string[] {
+  return wrapper
+    .findAll(selector)
+    .map((node) => node.attributes(attribute))
+    .filter((value): value is string => value !== undefined)
+}
+
 function canonicalJson(value: unknown): string {
   if (value === null || typeof value !== 'object') return JSON.stringify(value)
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`
@@ -43,10 +50,21 @@ describe('BatchAnalysis Loader and View', () => {
     expect(wrapper.get('[data-testid="batch-coverage-status"]').attributes('aria-label')).toBe(
       '覆盖状态：COMPLETE',
     )
+    expect(wrapper.find('.batch-court').exists()).toBe(true)
+    expect(wrapper.find('.comparison-court').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="batch-status-gate"]').text()).toContain('CoverageStatus')
     expect(wrapper.get('[data-testid="batch-hypothesis-status"]').text()).toContain('SUPPORTED')
     expect(wrapper.get('[data-testid="batch-profile-matrix"]').text()).toContain('combined')
     expect(wrapper.get('[data-testid="batch-wave-list"]').text()).toContain('FAIL')
+    expect(wrapper.get('.batch-slot__identity-copy').text()).toContain('baseline')
+    expect(wrapper.get('.batch-slot__identity-copy').text()).toContain('coverage-01')
     expect(wrapper.get('[data-testid="batch-boundary"]').text()).toContain('不证明真实并行')
+    expect(
+      rowOrder(wrapper, '[data-testid="batch-profile-matrix"] tbody tr', 'data-batch-profile'),
+    ).toEqual(loaded.analysis.profiles.map((profile) => profile.id))
+    expect(rowOrder(wrapper, '[data-testid="batch-wave-list"] [data-batch-slot]', 'data-batch-slot')).toEqual(
+      loaded.analysis.slots.map((slot) => slot.slot_id),
+    )
   })
 
   it('retains stable mismatches as COMPLETE/CONTRADICTED', async () => {
@@ -59,6 +77,8 @@ describe('BatchAnalysis Loader and View', () => {
     expect(wrapper.get('[data-testid="batch-reasons"]').text()).toContain(
       'BATCH_HYPOTHESIS_CONTRADICTED',
     )
+    expect(wrapper.get('[data-testid="batch-status-gate"]').text()).toContain('COMPLETE')
+    expect(wrapper.get('[data-testid="batch-status-gate"]').text()).toContain('CONTRADICTED')
   })
 
   it('keeps missing and contaminated matrices distinct', async () => {
@@ -69,6 +89,30 @@ describe('BatchAnalysis Loader and View', () => {
     expect(incomplete.analysis.slots.some((slot) => slot.source === null)).toBe(true)
     expect(contaminated.analysis.coverage_status).toBe('INCONCLUSIVE')
     expect(contaminated.analysis.unplanned_differences).toHaveLength(1)
+
+    const incompleteWrapper = mount(BatchAnalysisView, { props: { loaded: incomplete } })
+    const contaminatedWrapper = mount(BatchAnalysisView, { props: { loaded: contaminated } })
+    expect(incompleteWrapper.get('[data-testid="batch-wave-list"]').text()).toContain('MISSING')
+    expect(incompleteWrapper.get('[data-testid="batch-wave-list"]').text()).toContain('来源 Run 未提供')
+    expect(contaminatedWrapper.get('[data-testid="batch-reasons"]').text()).toContain(
+      'UNDECLARED_OUTCOME_DRIFT',
+    )
+  })
+
+  it('keeps a long Profile ID, local matrix region, and native outcome details in their owned areas', async () => {
+    const loaded = await loadBatchAnalysisFromBlobs(await createBatchAnalysisBundle('SUPPORTED'))
+    loaded.analysis.profiles[0]!.id = `long-${'profile-id-'.repeat(20)}baseline`
+    const wrapper = mount(BatchAnalysisView, { props: { loaded } })
+
+    expect(wrapper.get('[data-testid="batch-profile-matrix"]').text()).toContain(
+      loaded.analysis.profiles[0]!.id,
+    )
+    const matrixRegion = wrapper.get('[aria-label="全因子 Profile 矩阵"]')
+    expect(matrixRegion.attributes('role')).toBe('region')
+    expect(matrixRegion.attributes('tabindex')).toBe('0')
+    expect(wrapper.get('[data-testid="batch-wave-list"] details').element).toBeInstanceOf(
+      HTMLDetailsElement,
+    )
   })
 
   it('accepts producer-declared incomplete source evidence without inventing boundary failures', async () => {

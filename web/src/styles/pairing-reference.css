@@ -1,0 +1,1281 @@
+/*
+ * M12 Paired-analysis reference owner.
+ *
+ * The pairing screen shares the accepted lacquer shell, paper ground and rule
+ * geometry with Catalog and Run detail. Its own composition stays here so the
+ * four-role experimental chain can evolve without leaking into other views.
+ */
+
+.app-shell--pairing {
+  --pairing-paper: #eee5d9;
+  --pairing-paper-raised: rgba(247, 241, 232, 0.7);
+  --pairing-ink: #2f2a25;
+  --pairing-muted: #6c6154;
+  --pairing-gold: #9d7a45;
+  --pairing-gold-soft: rgba(157, 122, 69, 0.28);
+  --pairing-rule: rgba(157, 122, 69, 0.34);
+  --pairing-rule-strong: rgba(132, 93, 42, 0.5);
+  --pairing-teal: #175858;
+  --pairing-vermilion: #9a2f1e;
+  min-height: 100vh;
+  color: var(--pairing-ink);
+  background-color: var(--pairing-paper);
+  background-image: url('/textures/r3-paper.png');
+  background-repeat: repeat;
+  background-size: 768px 768px;
+}
+
+.app-shell--pairing .evidence-axis,
+.app-shell--pairing .site-footer {
+  width: auto;
+  max-width: none;
+  margin-inline: clamp(1rem, 1.55vw, 1.5rem);
+}
+
+.app-shell--pairing .evidence-axis {
+  display: block;
+  padding: 18px 0 38px;
+}
+
+.app-shell--pairing .analysis-view {
+  display: block;
+}
+
+.app-shell--pairing .pairing-page {
+  position: relative;
+  overflow: hidden;
+  background: rgba(244, 237, 227, 0.46);
+  border: 1px solid var(--pairing-rule-strong);
+  border-radius: 2px;
+}
+
+.app-shell--pairing .pairing-page::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  height: 84px;
+  content: '';
+  pointer-events: none;
+  background: url('/textures/r3-cloud-water.png') center bottom / 100% 100% no-repeat;
+  opacity: 0.22;
+}
+
+.app-shell--pairing .pairing-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.app-shell--pairing .pairing-heading {
+  display: grid;
+  grid-template-columns: minmax(15rem, 0.8fr) minmax(30rem, 1.45fr) auto;
+  align-items: center;
+  min-height: 112px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-heading__title {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 16px;
+}
+
+.app-shell--pairing .pairing-heading__title > img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  filter: sepia(0.35) saturate(1.15) brightness(0.82) contrast(1.08);
+}
+
+.app-shell--pairing .pairing-heading .eyebrow,
+.app-shell--pairing .pairing-section-heading .eyebrow {
+  margin: 0 0 4px;
+  color: #315b5d;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.app-shell--pairing .pairing-heading h2,
+.app-shell--pairing .pairing-section-heading h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.app-shell--pairing .pairing-heading h2 {
+  font-size: clamp(1.45rem, 2.15vw, 2rem);
+  letter-spacing: 0.08em;
+}
+
+.app-shell--pairing .pairing-heading h2:focus {
+  outline: none;
+}
+
+.app-shell--pairing .pairing-heading__status dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+}
+
+.app-shell--pairing .pairing-heading__status dl > div {
+  min-width: 0;
+  padding: 2px 22px;
+  text-align: center;
+  border-inline-start: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-heading__status dt,
+.app-shell--pairing .pairing-heading__status span {
+  display: block;
+  color: var(--pairing-muted);
+  font-size: 0.68rem;
+}
+
+.app-shell--pairing .pairing-heading__status dd {
+  margin: 7px 0 4px;
+  color: var(--pairing-teal);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.app-shell--pairing .pairing-heading__actions {
+  min-width: 0;
+}
+
+.app-shell--pairing .pairing-reselect {
+  min-height: 40px;
+  padding: 9px 14px;
+  color: #5e4b2e;
+  background: rgba(247, 241, 232, 0.38);
+  border: 1px solid var(--pairing-rule-strong);
+}
+
+.app-shell--pairing .pairing-reselect:hover,
+.app-shell--pairing .pairing-reselect:focus-within {
+  color: #214f52;
+  background: rgba(247, 241, 232, 0.72);
+}
+
+.app-shell--pairing .pairing-page--entry {
+  min-height: min(40rem, calc(100vh - 21rem));
+}
+
+.app-shell--pairing .pairing-heading--entry {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.app-shell--pairing .pairing-heading--entry .pairing-heading__actions {
+  grid-column: 2;
+  justify-self: end;
+}
+
+.app-shell--pairing .pairing-entry-court {
+  display: grid;
+  min-height: 29rem;
+  padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 4.5rem);
+  place-items: center;
+  align-content: center;
+  gap: clamp(2.25rem, 5vw, 4rem);
+  text-align: center;
+}
+
+.app-shell--pairing .pairing-entry-court__opening {
+  width: min(100%, 44rem);
+}
+
+.app-shell--pairing .pairing-entry-court__opening .eyebrow {
+  margin: 0 0 10px;
+  color: var(--pairing-teal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.app-shell--pairing .pairing-entry-court__opening h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.app-shell--pairing .pairing-entry-court__opening > p:not(.eyebrow) {
+  max-width: 42rem;
+  margin: 14px auto 0;
+  color: var(--pairing-muted);
+  line-height: 1.8;
+}
+
+.app-shell--pairing .pairing-entry-court__opening code {
+  display: inline-block;
+  margin-top: 14px;
+  padding-bottom: 3px;
+  color: #7f3c32;
+  font-size: 0.78rem;
+  background: transparent;
+  border-bottom: 1px solid rgba(127, 60, 50, 0.38);
+}
+
+.app-shell--pairing .pairing-entry-roles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(100%, 68rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-entry-roles li {
+  display: grid;
+  min-width: 0;
+  min-height: 8.75rem;
+  padding: 18px 12px 16px;
+  place-items: center;
+  align-content: center;
+  gap: 3px;
+}
+
+.app-shell--pairing .pairing-entry-roles li + li {
+  border-inline-start: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-entry-roles span {
+  display: grid;
+  width: 1.55rem;
+  height: 1.55rem;
+  place-items: center;
+  color: var(--pairing-teal);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.app-shell--pairing .pairing-entry-roles img {
+  width: 72px;
+  height: 36px;
+  object-fit: contain;
+  opacity: 0.58;
+}
+
+.app-shell--pairing .pairing-entry-roles strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.app-shell--pairing .pairing-entry-roles small {
+  color: var(--pairing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+}
+
+.app-shell--pairing .pairing-entry-roles em {
+  margin-top: 5px;
+  color: var(--pairing-teal);
+  font-size: 0.66rem;
+  font-style: normal;
+}
+
+.app-shell--pairing .pairing-sequence {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: 184px;
+  margin: 0;
+  padding: 30px 24px 46px;
+  overflow: hidden;
+  list-style: none;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-sequence::before {
+  position: absolute;
+  right: 0;
+  bottom: -4px;
+  left: 0;
+  height: 112px;
+  content: '';
+  pointer-events: none;
+  background: url('/textures/r3-cloud-water.png') center bottom / 100% 100% no-repeat;
+  opacity: 0.42;
+}
+
+.app-shell--pairing .pairing-sequence__step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: 48px auto auto 24px;
+  justify-items: center;
+  min-width: 0;
+  padding-inline: 18px;
+  text-align: center;
+}
+
+.app-shell--pairing .pairing-sequence__step:not(:last-child)::after {
+  position: absolute;
+  top: 50px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  content: '';
+  background: var(--pairing-gold);
+  border-radius: 50%;
+}
+
+.app-shell--pairing .pairing-sequence__emblem {
+  display: flex;
+  width: 132px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.app-shell--pairing .pairing-sequence__ordinal {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  place-items: center;
+  color: #f8f1e6;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  background: #164f4e;
+  border-radius: 50%;
+}
+
+.app-shell--pairing .pairing-sequence__emblem > img {
+  width: 92px;
+  height: 45px;
+  flex: 0 0 92px;
+  object-fit: contain;
+  filter: none;
+}
+
+.app-shell--pairing .pairing-sequence__step > strong {
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 600;
+}
+
+.app-shell--pairing .pairing-sequence__step > small {
+  color: #24383a;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+}
+
+.app-shell--pairing .pairing-sequence__step > button {
+  max-width: 100%;
+  padding: 2px 4px;
+  overflow: hidden;
+  color: var(--pairing-muted);
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+}
+
+.app-shell--pairing .pairing-sequence__step > button:hover,
+.app-shell--pairing .pairing-sequence__step > button:focus-visible {
+  color: var(--pairing-teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.app-shell--pairing .pairing-court {
+  position: relative;
+  isolation: isolate;
+  margin: 18px 24px 24px;
+  padding: 24px 24px 18px;
+  background: rgba(247, 241, 232, 0.12);
+}
+
+.app-shell--pairing .pairing-court::after {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  box-sizing: border-box;
+  content: '';
+  pointer-events: none;
+  border: 42px 48px solid transparent;
+  border-image: url('/textures/r12-run-detail-frame-wide.png') 150 170 / 42px 48px stretch;
+  filter: saturate(0.4) brightness(0.92) contrast(0.94);
+  opacity: 0.46;
+}
+
+.app-shell--pairing .pairing-court > * {
+  position: relative;
+  z-index: 1;
+}
+
+.app-shell--pairing .pairing-outcome-summary,
+.app-shell--pairing .pairing-summary-grid > section {
+  background: transparent;
+}
+
+.app-shell--pairing .pairing-outcome-summary {
+  padding: 0 0 22px;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-section-heading {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.app-shell--pairing .pairing-section-heading h3 {
+  font-size: 1.04rem;
+}
+
+.app-shell--pairing .pairing-section-heading > span {
+  color: var(--pairing-muted);
+  font-size: 0.67rem;
+}
+
+.app-shell--pairing .pairing-section-heading--compact {
+  grid-template-columns: 1fr;
+  gap: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-outcome-summary__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-block: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-relationship {
+  min-width: 0;
+  min-height: 132px;
+  padding: 15px 18px;
+}
+
+.app-shell--pairing .pairing-relationship + .pairing-relationship {
+  border-inline-start: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-relationship h4 {
+  margin: 0 0 2px;
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.app-shell--pairing .pairing-relationship > small {
+  color: #385458;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+}
+
+.app-shell--pairing .pairing-relationship > div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.app-shell--pairing .pairing-relationship > div span {
+  font-size: 0.72rem;
+}
+
+.app-shell--pairing .pairing-relationship > div strong {
+  color: var(--pairing-teal);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.app-shell--pairing .pairing-relationship--negative > div strong {
+  color: var(--pairing-vermilion);
+}
+
+.app-shell--pairing .pairing-relationship p {
+  margin: 5px 0 0;
+  color: var(--pairing-muted);
+  font-size: 0.68rem;
+}
+
+.app-shell--pairing .pairing-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr) minmax(0, 0.75fr);
+  padding: 0;
+}
+
+.app-shell--pairing .pairing-summary-grid > section {
+  display: flex;
+  min-width: 0;
+  min-height: 270px;
+  padding: 20px 18px 8px;
+  flex-direction: column;
+}
+
+.app-shell--pairing .pairing-summary-grid > section:first-child {
+  padding-inline-start: 0;
+}
+
+.app-shell--pairing .pairing-summary-grid > section + section {
+  border-inline-start: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-summary-grid > section:last-child {
+  padding-inline-end: 0;
+}
+
+.app-shell--pairing .pairing-metrics__table-wrap {
+  overflow-x: auto;
+}
+
+.app-shell--pairing .pairing-metrics table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.app-shell--pairing .pairing-metrics th,
+.app-shell--pairing .pairing-metrics td {
+  padding: 8px 6px;
+  overflow: hidden;
+  font-size: 0.67rem;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-metrics th:first-child {
+  width: 24%;
+  text-align: left;
+}
+
+.app-shell--pairing .pairing-metrics td.is-pass {
+  color: #236348;
+}
+
+.app-shell--pairing .pairing-metrics td.is-fail {
+  color: var(--pairing-vermilion);
+}
+
+.app-shell--pairing .pairing-metrics > button,
+.app-shell--pairing .pairing-interpretation > button {
+  align-self: flex-end;
+  min-height: 36px;
+  padding: 8px 2px 4px 18px;
+  margin-top: auto;
+  color: #4f463b;
+  font-family: var(--font-display);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--pairing-rule-strong);
+}
+
+.app-shell--pairing .pairing-metrics > button:hover,
+.app-shell--pairing .pairing-metrics > button:focus-visible,
+.app-shell--pairing .pairing-interpretation > button:hover,
+.app-shell--pairing .pairing-interpretation > button:focus-visible {
+  color: var(--pairing-teal);
+  border-bottom-color: var(--pairing-teal);
+}
+
+.app-shell--pairing .pairing-interpretation ol {
+  display: grid;
+  gap: 9px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.app-shell--pairing .pairing-interpretation li {
+  padding-left: 13px;
+  border-inline-start: 2px solid rgba(27, 89, 84, 0.48);
+}
+
+.app-shell--pairing .pairing-interpretation li:first-child {
+  border-inline-start-color: var(--pairing-vermilion);
+}
+
+.app-shell--pairing .pairing-interpretation li span {
+  display: block;
+  color: #315b5d;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-interpretation li p {
+  margin: 2px 0 0;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+.app-shell--pairing .pairing-boundary dl {
+  display: grid;
+  margin: 0;
+}
+
+.app-shell--pairing .pairing-boundary dl > div {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 0.8fr) minmax(0, 1fr);
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-boundary dt,
+.app-shell--pairing .pairing-boundary dd {
+  margin: 0;
+  font-size: 0.65rem;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-boundary dt {
+  color: var(--pairing-muted);
+}
+
+.app-shell--pairing .pairing-boundary ul {
+  padding-left: 17px;
+  margin: 10px 0 0;
+  color: #27604b;
+  font-size: 0.65rem;
+}
+
+.app-shell--pairing .pairing-boundary details {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-boundary summary {
+  color: #4f463b;
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+
+.app-shell--pairing .pairing-boundary details code {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.58rem;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-page--panel .pairing-heading {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 96px;
+}
+
+.app-shell--pairing .pairing-page--panel .pairing-heading__actions {
+  grid-column: 2;
+}
+
+.app-shell--pairing .pairing-court--panel {
+  margin-top: 18px;
+  padding: 26px 28px 20px;
+}
+
+.app-shell--pairing .pairing-panel-introduction {
+  max-width: 78ch;
+  margin: 0;
+  padding: 0 0 16px;
+  color: var(--pairing-muted);
+  font-size: 0.74rem;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-source-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.app-shell--pairing .pairing-source {
+  min-width: 0;
+  padding: 22px 20px;
+}
+
+.app-shell--pairing .pairing-source:nth-child(2n) {
+  border-inline-start: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-source:nth-child(n + 3) {
+  border-top: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-source > header {
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-shell--pairing .pairing-source > header > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  place-items: center;
+  color: #f7f0e5;
+  font-family: var(--font-display);
+  background: var(--pairing-teal);
+  border-radius: 50%;
+}
+
+.app-shell--pairing .pairing-source > header > div {
+  min-width: 0;
+}
+
+.app-shell--pairing .pairing-source header p,
+.app-shell--pairing .pairing-source header h3,
+.app-shell--pairing .pairing-source header small {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-source header p {
+  color: #315b5d;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+}
+
+.app-shell--pairing .pairing-source header h3 {
+  margin-top: 4px;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+}
+
+.app-shell--pairing .pairing-source header small {
+  display: block;
+  margin-top: 4px;
+  color: var(--pairing-muted);
+  font-size: 0.62rem;
+}
+
+.app-shell--pairing .pairing-source__status {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 300px;
+  margin-top: 14px;
+}
+
+.app-shell--pairing .pairing-source__status .status-badge {
+  min-width: 0;
+  color: #375b5d;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--pairing-rule);
+  box-shadow: none;
+}
+
+.app-shell--pairing .pairing-source__status .status--pass {
+  color: #35664e;
+}
+
+.app-shell--pairing .pairing-source__status .status--fail,
+.app-shell--pairing .pairing-source__status .status--error {
+  color: var(--pairing-vermilion);
+  background: transparent;
+}
+
+.app-shell--pairing .pairing-source > dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-source > dl > div {
+  min-width: 0;
+}
+
+.app-shell--pairing .pairing-source dt,
+.app-shell--pairing .pairing-source dd {
+  margin: 0;
+  font-size: 0.67rem;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-source dt {
+  margin-bottom: 4px;
+  color: var(--pairing-muted);
+}
+
+.app-shell--pairing .pairing-source details summary {
+  cursor: pointer;
+}
+
+.app-shell--pairing .pairing-source details > code {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.58rem;
+}
+
+.app-shell--pairing .pairing-outcome-ledger {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.app-shell--pairing .pairing-outcome-ledger > article {
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-outcome-ledger > article > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-outcome-ledger > article > header > span {
+  color: var(--pairing-gold);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.app-shell--pairing .pairing-outcome-ledger header p,
+.app-shell--pairing .pairing-outcome-ledger header h3 {
+  margin: 0;
+}
+
+.app-shell--pairing .pairing-outcome-ledger header p {
+  color: #315b5d;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+}
+
+.app-shell--pairing .pairing-outcome-ledger header h3 {
+  margin-top: 3px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-outcome-ledger > article > header > strong {
+  color: #27604b;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles > section {
+  min-width: 0;
+  padding: 16px;
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles > section + section {
+  border-inline-start: 1px solid var(--pairing-rule);
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles > section.is-mismatch {
+  background: transparent;
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles section > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #315b5d;
+  font-size: 0.68rem;
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles section.is-mismatch > header {
+  color: var(--pairing-vermilion);
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles dl {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles dt,
+.app-shell--pairing .pairing-outcome-ledger__roles dd {
+  margin: 0;
+  font-size: 0.67rem;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--pairing .pairing-outcome-ledger__roles dt {
+  color: var(--pairing-muted);
+}
+
+.app-shell--pairing .pairing-panel-return {
+  display: grid;
+  place-items: center;
+  padding: 20px 0 2px;
+}
+
+.app-shell--pairing .pairing-panel-return button {
+  min-width: 210px;
+  min-height: 42px;
+  padding-inline: 18px;
+  color: #4d4134;
+  font-family: var(--font-display);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--pairing-rule-strong);
+}
+
+.app-shell--pairing .pairing-panel-return button:hover,
+.app-shell--pairing .pairing-panel-return button:focus-visible {
+  color: var(--pairing-teal);
+  background: transparent;
+  border-bottom-color: var(--pairing-teal);
+}
+
+.app-shell--pairing .site-footer {
+  position: relative;
+  border-top: 0;
+}
+
+.app-shell--pairing .site-footer::before,
+.app-shell--pairing .site-footer::after {
+  position: absolute;
+  top: 0;
+  width: calc(50% - 40px);
+  height: 1px;
+  content: '';
+  background: var(--pairing-rule);
+}
+
+.app-shell--pairing .site-footer::before {
+  left: 0;
+}
+
+.app-shell--pairing .site-footer::after {
+  right: 0;
+}
+
+/* Pairing is not an inner-shell consumer. It owns the full desktop navigation
+   contract here: three independent lanes on wide screens and a dedicated
+   lacquer navigation row on medium desktop screens. */
+@media (min-width: 901px) {
+  .app-shell--pairing {
+    position: relative;
+  }
+
+  .app-shell--pairing .navigation-courtyard {
+    position: absolute;
+    z-index: 4;
+    padding: 0;
+    transform: translateX(-50%);
+  }
+
+  .app-shell--pairing .cross-axis-navigation {
+    width: 100%;
+    color: var(--text-on-ink);
+  }
+
+  .app-shell--pairing .cross-axis-navigation__waterline {
+    align-items: center;
+    gap: 0;
+    padding: 0;
+  }
+
+  .app-shell--pairing .cross-axis-navigation__waterline::after,
+  .app-shell--pairing .cross-axis-navigation__target[aria-current='page']::after {
+    content: none;
+  }
+
+  .app-shell--pairing .cross-axis-navigation__target {
+    grid-template-columns: 1rem minmax(0, 1fr);
+    min-height: 55px;
+    padding: 20px 5px 7px 20px;
+    color: color-mix(in srgb, var(--text-on-ink) 78%, transparent);
+    font-family: var(--font-display);
+    font-size: 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .app-shell--pairing .cross-axis-navigation__target:hover,
+  .app-shell--pairing .cross-axis-navigation__target:focus-visible,
+  .app-shell--pairing .cross-axis-navigation__target[aria-current='page'] {
+    color: var(--structure-gold-soft);
+  }
+
+  .app-shell--pairing .cross-axis-navigation__ordinal {
+    width: 12px;
+    height: 12px;
+    color: var(--structure-gold-soft);
+    font-size: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .app-shell--pairing .cross-axis-navigation__ordinal::before {
+    content: '◇';
+    font-size: 11px;
+  }
+
+  .app-shell--pairing .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
+    color: var(--structure-gold-soft);
+    background: transparent;
+    border-color: transparent;
+  }
+}
+
+@media (min-width: 1321px) {
+  .app-shell--pairing .masthead .brand-lockup {
+    gap: 22px;
+  }
+
+  .app-shell--pairing .masthead .brand-seal {
+    --brand-seal-size: 88px;
+    --brand-seal-font-size: 43px;
+  }
+
+  .app-shell--pairing .masthead .brand-lockup h1 {
+    font-size: clamp(35px, 2.7vw, 42px);
+    letter-spacing: 0.1em;
+  }
+
+  .app-shell--pairing .navigation-courtyard {
+    top: 18px;
+    left: 55.5%;
+    width: min(31rem, 32vw);
+    height: auto;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1320px) {
+  .app-shell--pairing .masthead {
+    height: 220px;
+  }
+
+  .app-shell--pairing .masthead__inner {
+    height: 144px;
+  }
+
+  .app-shell--pairing .navigation-courtyard {
+    position: absolute;
+    top: 144px;
+    left: 50%;
+    width: calc(100% - 64px);
+    height: 64px;
+    padding: 0;
+    border-top: 1px solid rgba(213, 187, 119, 0.3);
+    transform: translateX(-50%);
+  }
+
+  .app-shell--pairing .cross-axis-navigation__target {
+    min-height: 63px;
+    padding-top: 17px;
+    padding-bottom: 10px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-shell--pairing .pairing-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .app-shell--pairing .pairing-summary-grid > section:last-child {
+    grid-column: 1 / -1;
+    min-height: auto;
+    padding-inline: 0;
+    border-top: 1px solid var(--pairing-rule);
+    border-inline-start: 0;
+  }
+}
+
+@media (max-width: 1020px) {
+  .app-shell--pairing .pairing-heading {
+    grid-template-columns: minmax(14rem, 0.7fr) minmax(0, 1.3fr);
+  }
+
+  .app-shell--pairing .pairing-heading__actions {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell--pairing .evidence-axis,
+  .app-shell--pairing .site-footer {
+    margin-inline: 10px;
+  }
+
+  .app-shell--pairing .pairing-heading {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+
+  .app-shell--pairing .pairing-heading--entry .pairing-heading__actions {
+    grid-column: 1;
+    justify-self: stretch;
+  }
+
+  .app-shell--pairing .pairing-heading__status dl {
+    border-block: 1px solid var(--pairing-rule);
+  }
+
+  .app-shell--pairing .pairing-heading__status dl > div {
+    padding: 10px 6px;
+  }
+
+  .app-shell--pairing .pairing-heading__actions,
+  .app-shell--pairing .pairing-page--panel .pairing-heading__actions {
+    grid-column: 1;
+    justify-self: stretch;
+  }
+
+  .app-shell--pairing .pairing-reselect {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .app-shell--pairing .pairing-entry-court {
+    min-height: 31rem;
+    padding: 3rem 16px;
+    gap: 2.5rem;
+  }
+
+  .app-shell--pairing .pairing-entry-roles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .app-shell--pairing .pairing-entry-roles li:nth-child(3) {
+    border-inline-start: 0;
+  }
+
+  .app-shell--pairing .pairing-entry-roles li:nth-child(n + 3) {
+    border-top: 1px solid var(--pairing-rule);
+  }
+
+  .app-shell--pairing .pairing-sequence {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 0;
+    min-height: 330px;
+    padding-inline: 10px;
+  }
+
+  .app-shell--pairing .pairing-sequence__step:not(:last-child)::after {
+    display: none;
+  }
+
+  .app-shell--pairing .pairing-court {
+    margin: 14px 10px 18px;
+    padding: 24px 18px 18px;
+  }
+
+  .app-shell--pairing .pairing-court::after {
+    border-width: 28px 24px;
+    border-image-width: 28px 24px;
+  }
+
+  .app-shell--pairing .pairing-section-heading {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .app-shell--pairing .pairing-outcome-summary__grid,
+  .app-shell--pairing .pairing-summary-grid,
+  .app-shell--pairing .pairing-source-grid,
+  .app-shell--pairing .pairing-outcome-ledger__roles {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--pairing .pairing-relationship + .pairing-relationship,
+  .app-shell--pairing .pairing-outcome-ledger__roles > section + section {
+    border-inline-start: 0;
+    border-top: 1px solid var(--pairing-rule);
+  }
+
+  .app-shell--pairing .pairing-summary-grid {
+    padding-inline: 0;
+  }
+
+  .app-shell--pairing .pairing-summary-grid > section,
+  .app-shell--pairing .pairing-summary-grid > section:last-child {
+    grid-column: auto;
+    min-height: auto;
+    padding: 18px 0;
+    border: 0;
+  }
+
+  .app-shell--pairing .pairing-summary-grid > section + section {
+    border-top: 1px solid var(--pairing-rule);
+  }
+
+  .app-shell--pairing .pairing-metrics__table-wrap {
+    margin-inline: -8px;
+    padding-inline: 8px;
+  }
+
+  .app-shell--pairing .pairing-panel-introduction {
+    padding-inline: 0;
+  }
+
+  .app-shell--pairing .pairing-source-grid,
+  .app-shell--pairing .pairing-outcome-ledger {
+    margin-inline: 0;
+  }
+
+  .app-shell--pairing .pairing-source:nth-child(2n) {
+    border-inline-start: 0;
+  }
+
+  .app-shell--pairing .pairing-source:nth-child(n + 2) {
+    border-top: 1px solid var(--pairing-rule);
+  }
+
+  .app-shell--pairing .pairing-source > dl {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 430px) {
+  .app-shell--pairing .pairing-heading__status dl {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--pairing .pairing-heading__status dl > div {
+    border-inline-start: 0;
+    border-top: 1px solid var(--pairing-rule);
+  }
+
+  .app-shell--pairing .pairing-heading__status dl > div:first-child {
+    border-top: 0;
+  }
+
+  .app-shell--pairing .pairing-metrics table {
+    min-width: 520px;
+  }
+
+  .app-shell--pairing .pairing-outcome-ledger > article > header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .app-shell--pairing .pairing-outcome-ledger > article > header > strong {
+    grid-column: 2;
+  }
+}

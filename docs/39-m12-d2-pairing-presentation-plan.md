@@ -1,6 +1,6 @@
 # M12-D2 Pairing 四角色有向序列表现计划 0.1
 
-> 状态：`DESIGN_DRAFT / NOT_IMPLEMENTED`
+> 状态：`IMPLEMENTED_WITH_AUTOMATED_AND_IN_APP_BROWSER_EVIDENCE / M12_NOT_FROZEN`
 > 日期：2026-08-14
 > 前置事实：[M12-R2 Runs 主链表现运行事实](38-m12-r2-runs-presentation-facts.md)、[M12-D1 Comparison 运行事实](35-m12-d1-comparison-facts.md)
 > 当前代码基线：`0a6f789`
@@ -143,7 +143,8 @@ D2 不证明 Pairing 的科学效度、统计显著性、真实多次运行、M1
 - [x] 四角色常量、来源/状态三层、历史 M7 三态输入和现有消费者已审计；
 - [x] 已明确 D2 不把历史 M7 材料表述成新的 M11 Pairing；
 - [x] 已明确生产验收不能复用带优化模式缺口的旧 M7 脚本；
-- [ ] 用户审阅并确认本计划 0.1；
-- [ ] 未确认前不修改 Pairing 生产代码、不启动 D2 生产验收、不进入 D3。
+- [x] 用户审阅并确认本计划 0.1；
+- [x] D2 已通过局部、全量、生产 Chromium（常规及 `-O`）与内置浏览器门禁；运行事实见文档 40。
+- [x] D2 已形成运行事实，D3 仍未实现且没有提前进入。
 
-本文件是 D2 的设计与验收合同，不是实现或运行事实。
+本文件仍是 D2 的设计与验收合同；实现与运行事实见[文档 40](40-m12-d2-pairing-facts.md)。

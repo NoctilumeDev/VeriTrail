@@ -22,8 +22,16 @@ async function selectPublicView(
   wrapper: ReturnType<typeof mount>,
   view: 'runs' | 'comparison' | 'pairing' | 'batch',
 ) {
-  await wrapper.get('[data-testid="cross-axis-toggle"]').trigger('click')
-  await wrapper.get(`[data-testid="cross-axis-${view}"]`).trigger('click')
+  const target = `[data-testid="cross-axis-${view}"]`
+  if (!wrapper.find(target).exists()) {
+    await wrapper.get('[data-testid="cross-axis-toggle"]').trigger('click')
+  }
+  const targetButton = wrapper.get(target)
+  if (targetButton.attributes('aria-current') === 'page') return
+  if (!targetButton.isVisible()) {
+    await wrapper.get('[data-testid="cross-axis-toggle"]').trigger('click')
+  }
+  await wrapper.get(target).trigger('click')
   await flushPromises()
 }
 
@@ -107,6 +115,32 @@ describe('App', () => {
     wrapper.unmount()
   })
 
+  it('moves focus to the history destination without stealing focus on initial load', async () => {
+    const host = document.createElement('div')
+    document.body.append(host)
+    const wrapper = mount(App, { attachTo: host })
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    expect(document.activeElement?.id).not.toBe('view-runs-title')
+
+    await selectPublicView(wrapper, 'comparison')
+    expect(document.activeElement?.id).toBe('view-comparison-title')
+
+    window.history.replaceState({}, '', '/')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    await waitFor(wrapper, '[data-testid="view-runs-title"]')
+    await flushPromises()
+    expect(document.activeElement?.id).toBe('view-runs-title')
+
+    window.history.replaceState({}, '', '/?view=comparison')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    await waitFor(wrapper, '[data-testid="view-comparison-title"]')
+    await flushPromises()
+    expect(document.activeElement?.id).toBe('view-comparison-title')
+
+    wrapper.unmount()
+    host.remove()
+  })
+
   it('keeps demo fixtures and the local evidence directory as separate Runs source groups', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="runs-toolstrip"]')
@@ -126,10 +160,52 @@ describe('App', () => {
     await wrapper.get('[data-testid="fixture-invalid"]').trigger('click')
     await waitFor(wrapper, '[data-testid="error-state"]')
 
+    expect(wrapper.get('[data-testid="error-state"]').attributes('data-state-kind')).toBe('invalid')
     expect(wrapper.get('[data-testid="error-state"]').text()).toContain('没有据此改写 Run 的 Verdict')
     await wrapper.get('[data-testid="retry-positive"]').trigger('click')
     await waitFor(wrapper, '[aria-label="验收结论：PASS"]')
     expect(wrapper.find('[aria-label="验收结论：PASS"]').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('closes the invalid bundle court from both the source toggle and stop seal', async () => {
+    const host = document.createElement('div')
+    document.body.append(host)
+    const wrapper = mount(App, { attachTo: host })
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    const trigger = wrapper.get('[data-testid="fixture-invalid"]')
+
+    await trigger.trigger('click')
+    await waitFor(wrapper, '[data-testid="error-state"]')
+    expect(trigger.attributes('aria-expanded')).toBe('true')
+
+    await trigger.trigger('click')
+    await flushPromises()
+    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(false)
+    expect(trigger.attributes('aria-expanded')).toBe('false')
+    expect(window.location.search).toBe('?view=runs')
+
+    await trigger.trigger('click')
+    await waitFor(wrapper, '[data-testid="dismiss-invalid-state"]')
+    await wrapper.get('[data-testid="dismiss-invalid-state"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(false)
+    expect(document.activeElement).toBe(trigger.element)
+    expect(window.location.search).toBe('?view=runs')
+    wrapper.unmount()
+    host.remove()
+  })
+
+  it('keeps local-file privacy reselect distinct from a corrupt evidence package', async () => {
+    window.history.replaceState({}, '', '/?fixture=batch')
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="error-state"]')
+
+    const state = wrapper.get('[data-testid="error-state"]')
+    expect(state.attributes('data-state-kind')).toBe('privacy')
+    expect(state.text()).toContain('BATCH_RESELECT_REQUIRED')
+    expect(state.text()).toContain('为保护隐私')
+    expect(state.find('[data-testid="batch-analysis-view"]').exists()).toBe(false)
     wrapper.unmount()
   })
 
@@ -160,6 +236,8 @@ describe('App', () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
     await selectPublicView(wrapper, 'pairing')
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--pairing')
+    expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--inner')
     const entries = await createPairedAnalysisBundle('SUPPORTED')
     const files = [...entries].map(([name, blob]) => {
       const file = new File([blob], name, { type: blob.type })
@@ -176,7 +254,41 @@ describe('App', () => {
     expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
     expect(window.location.search).toBe('?fixture=pairing')
     expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+    expect(wrapper.get('.site-footer__seal').text()).toContain('验')
+
+    await wrapper.get('[data-testid="pairing-open-sources"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=pairing&panel=sources')
+    expect(wrapper.get('[data-testid="paired-sources"]').text()).toContain('unit-treatment')
+    await wrapper.get('[data-testid="pairing-panel-return"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=pairing')
+    expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
+    await wrapper.get('.site-footer__seal').trigger('click')
+    expect(window.location.search).toBe('?view=runs')
     wrapper.unmount()
+  })
+
+  it('keeps Pairing empty and reselect states inside the Pairing visual owner', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await selectPublicView(wrapper, 'pairing')
+
+    expect(wrapper.find('[data-testid="pairing-entry-state"]').exists()).toBe(true)
+    expect(wrapper.get('[data-testid="pairing-empty"]').text()).toContain('四象待入册')
+    expect(wrapper.find('.view-introduction').exists()).toBe(false)
+    expect(wrapper.find('.state-court').exists()).toBe(false)
+    expect(wrapper.find('.error-court').exists()).toBe(false)
+    wrapper.unmount()
+
+    window.history.replaceState({}, '', '/?fixture=pairing')
+    const reloaded = mount(App)
+    await waitFor(reloaded, '[data-testid="error-state"]')
+
+    expect(reloaded.find('[data-testid="pairing-entry-state"]').exists()).toBe(true)
+    expect(reloaded.get('[data-testid="error-state"]').text()).toContain('PAIRING_RESELECT_REQUIRED')
+    expect(reloaded.find('.view-introduction').exists()).toBe(false)
+    expect(reloaded.find('.state-court').exists()).toBe(false)
+    expect(reloaded.find('.error-court').exists()).toBe(false)
+    reloaded.unmount()
   })
 
   it('imports four explicit BatchAnalysis files and keeps local files ephemeral', async () => {

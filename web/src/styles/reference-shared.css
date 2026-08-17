@@ -1,0 +1,302 @@
+/*
+ * Shared presentation primitives for the adopted Catalog, Run-detail and
+ * Paired-analysis references. Page composition stays in its page owner; only
+ * genuinely shared shell elements belong here.
+ */
+
+.app-shell--catalog,
+.app-shell--run-detail,
+.app-shell--pairing {
+  --reference-shell-edge: clamp(2rem, 3.05vw, 2.8rem);
+  --reference-shell-lacquer: #092b30;
+}
+
+/*
+ * Catalog and paired analysis share one court-axis ornament. Keeping its
+ * geometry here prevents page-specific height or spacing changes from making
+ * the visual centre drift when the public view changes.
+ */
+.app-shell--catalog .court-threshold,
+.app-shell--pairing .court-threshold {
+  position: relative;
+  z-index: 4;
+  height: 18px;
+  background: transparent;
+}
+
+.app-shell--catalog .court-threshold span,
+.app-shell--pairing .court-threshold span {
+  position: absolute;
+  top: -28px;
+  left: 50vw;
+  width: 128px;
+  height: 35px;
+  margin: 0;
+  background-color: transparent;
+  background-image: url('/textures/r3-axis-threshold-gilt-vermilion-v3.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter:
+    saturate(1.05)
+    brightness(1.06)
+    contrast(1.08)
+    drop-shadow(0 -1px 0 rgba(255, 233, 169, 0.32))
+    drop-shadow(0 1px 0 rgba(77, 49, 16, 0.36));
+  transform: translateX(-50%);
+}
+
+.app-shell--catalog .masthead,
+.app-shell--run-detail .masthead,
+.app-shell--pairing .masthead {
+  height: 154px;
+  overflow: visible;
+  color: #f4eee3;
+  background-color: var(--reference-shell-lacquer);
+  background-image: url('/textures/r3-lacquer.png');
+  background-repeat: repeat;
+  background-size: 768px 768px;
+  border-top: 3px solid #c9a85d;
+  border-bottom: 0;
+  box-shadow:
+    inset 0 1px 0 rgba(250, 225, 158, 0.5),
+    inset 0 -1px 0 #67481c,
+    inset 0 -2px 0 #d4b466,
+    inset 0 -3px 0 rgba(250, 228, 164, 0.48);
+}
+
+.app-shell--catalog .masthead__roofline,
+.app-shell--run-detail .masthead__roofline,
+.app-shell--pairing .masthead__roofline {
+  display: none;
+}
+
+.app-shell--catalog .masthead__inner,
+.app-shell--run-detail .masthead__inner,
+.app-shell--pairing .masthead__inner {
+  width: auto;
+  max-width: none;
+  height: 149px;
+  padding: 15px 0 16px;
+  margin-inline: var(--reference-shell-edge);
+}
+
+.app-shell--catalog .masthead__primary,
+.app-shell--run-detail .masthead__primary,
+.app-shell--pairing .masthead__primary {
+  height: 100%;
+  align-items: center;
+}
+
+.app-shell--catalog .masthead .brand-lockup,
+.app-shell--run-detail .masthead .brand-lockup,
+.app-shell--pairing .masthead .brand-lockup {
+  gap: 30px;
+  align-items: center;
+}
+
+.app-shell--catalog .masthead .brand-seal,
+.app-shell--run-detail .masthead .brand-seal,
+.app-shell--pairing .masthead .brand-seal {
+  --brand-seal-size: 94px;
+  --brand-seal-font-size: 46px;
+  color: #d9b75e;
+  background-image: url('/textures/r3-brand-frame.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 118% 118%;
+  border: 0;
+  outline: 0;
+  filter: saturate(1.24) brightness(1.06) contrast(1.12);
+  text-shadow: none;
+  transform: translateY(-9px);
+}
+
+.app-shell--catalog .masthead .brand-lockup p,
+.app-shell--run-detail .masthead .brand-lockup p,
+.app-shell--pairing .masthead .brand-lockup p {
+  margin: 0 0 8px;
+  color: #dec47d;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+}
+
+.app-shell--catalog .masthead .brand-lockup h1,
+.app-shell--run-detail .masthead .brand-lockup h1,
+.app-shell--pairing .masthead .brand-lockup h1 {
+  margin: 0 0 7px;
+  color: #f5efe5;
+  font-size: clamp(36px, 3.25vw, 47px);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: 0.13em;
+}
+
+.app-shell--catalog .masthead .brand-lockup > div > span,
+.app-shell--run-detail .masthead .brand-lockup > div > span,
+.app-shell--pairing .masthead .brand-lockup > div > span {
+  color: #d6e0de;
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.app-shell--catalog .masthead__scope,
+.app-shell--run-detail .masthead__scope,
+.app-shell--pairing .masthead__scope {
+  gap: clamp(22px, 3vw, 48px);
+  margin: 0 22px 0 auto;
+  color: #e3d3a2;
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+
+.app-shell--catalog .masthead__scope span,
+.app-shell--run-detail .masthead__scope span,
+.app-shell--pairing .masthead__scope span {
+  position: relative;
+  min-height: 42px;
+  padding: 12px 0 10px;
+}
+
+.app-shell--catalog .masthead__scope span:first-child,
+.app-shell--run-detail .masthead__scope span:first-child,
+.app-shell--pairing .masthead__scope span:first-child {
+  border-bottom: 2px solid #d1b56c;
+}
+
+.app-shell--catalog .site-footer__seal,
+.app-shell--run-detail .site-footer__seal,
+.app-shell--pairing .site-footer__seal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  display: grid;
+  box-sizing: border-box;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  color: #d9b75e;
+  font-family: var(--font-display);
+  font-size: 31px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  text-shadow: none;
+  transform: translate(-50%, -50%) rotate(-0.7deg);
+}
+
+.app-shell--catalog .site-footer__seal::before,
+.app-shell--run-detail .site-footer__seal::before,
+.app-shell--pairing .site-footer__seal::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: '';
+  background-image: url('/textures/r3-footer-seal-impression-cropped-v2.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: saturate(0.84) brightness(0.9);
+}
+
+.app-shell--catalog .site-footer__seal:hover::before,
+.app-shell--catalog .site-footer__seal:focus-visible::before,
+.app-shell--run-detail .site-footer__seal:hover::before,
+.app-shell--pairing .site-footer__seal:hover::before,
+.app-shell--run-detail .site-footer__seal:focus-visible::before,
+.app-shell--pairing .site-footer__seal:focus-visible::before {
+  filter: saturate(0.92) brightness(1);
+}
+
+.app-shell--catalog .site-footer__seal:focus-visible,
+.app-shell--run-detail .site-footer__seal:focus-visible,
+.app-shell--pairing .site-footer__seal:focus-visible {
+  outline: 2px solid #76531d;
+  outline-offset: 3px;
+}
+
+@media (max-width: 1120px) and (min-width: 921px) {
+  .app-shell--catalog .masthead__scope,
+  .app-shell--run-detail .masthead__scope,
+  .app-shell--pairing .masthead__scope {
+    gap: 20px;
+    margin-right: 0;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell--catalog .masthead__inner,
+  .app-shell--catalog .masthead__primary,
+  .app-shell--run-detail .masthead__inner,
+  .app-shell--pairing .masthead__inner,
+  .app-shell--run-detail .masthead__primary,
+  .app-shell--pairing .masthead__primary {
+    height: auto;
+  }
+
+  .app-shell--catalog .masthead__inner,
+  .app-shell--run-detail .masthead__inner,
+  .app-shell--pairing .masthead__inner {
+    padding: 14px 0 12px;
+  }
+
+  .app-shell--catalog .masthead__primary,
+  .app-shell--run-detail .masthead__primary,
+  .app-shell--pairing .masthead__primary {
+    gap: 10px;
+  }
+
+  .app-shell--catalog .masthead .brand-lockup,
+  .app-shell--run-detail .masthead .brand-lockup,
+  .app-shell--pairing .masthead .brand-lockup {
+    gap: 16px;
+  }
+
+  .app-shell--catalog .masthead .brand-seal,
+  .app-shell--run-detail .masthead .brand-seal,
+  .app-shell--pairing .masthead .brand-seal {
+    --brand-seal-size: 64px;
+    --brand-seal-font-size: 32px;
+    transform: none;
+  }
+
+  .app-shell--catalog .masthead .brand-lockup p,
+  .app-shell--run-detail .masthead .brand-lockup p,
+  .app-shell--pairing .masthead .brand-lockup p {
+    margin-bottom: 5px;
+    font-size: 10px;
+  }
+
+  .app-shell--catalog .masthead .brand-lockup h1,
+  .app-shell--run-detail .masthead .brand-lockup h1,
+  .app-shell--pairing .masthead .brand-lockup h1 {
+    margin-bottom: 0;
+    font-size: 30px;
+    line-height: 1.05;
+    letter-spacing: 0.08em;
+  }
+
+  .app-shell--catalog .masthead__scope,
+  .app-shell--run-detail .masthead__scope,
+  .app-shell--pairing .masthead__scope {
+    align-self: center;
+    gap: 18px;
+    margin: 0;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  .app-shell--catalog .masthead__scope span,
+  .app-shell--run-detail .masthead__scope span,
+  .app-shell--pairing .masthead__scope span {
+    min-height: 34px;
+    padding: 8px 0;
+  }
+}

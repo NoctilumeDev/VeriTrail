@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 54" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="glaze" x1="0" x2="0" y1="0" y2="1">
+      <stop stop-color="#f8e6a3"/>
+      <stop offset=".3" stop-color="#d39a35"/>
+      <stop offset=".72" stop-color="#a4651d"/>
+      <stop offset="1" stop-color="#633b15"/>
+    </linearGradient>
+    <pattern id="tiles" width="22" height="14" patternUnits="userSpaceOnUse">
+      <path d="M1 11C2 4 5 1 11 1s9 3 10 10" fill="url(#glaze)" stroke="#744613" stroke-width=".8"/>
+      <path d="M4 8c2-3 5-4 7-4s5 1 7 4" fill="none" stroke="#ffe8a1" stroke-opacity=".78" stroke-width=".8"/>
+    </pattern>
+  </defs>
+  <path d="M0 35c18 0 25-18 47-18h1106c22 0 29 18 47 18v6c-19 0-31-7-43-13H43C31 34 19 41 0 41Z" fill="#603910"/>
+  <path d="M7 30c17 0 27-19 48-19h1090c21 0 31 19 48 19v7c-17 0-30-6-43-14H50C37 31 24 37 7 37Z" fill="url(#glaze)" stroke="#714313" stroke-width="1.1"/>
+  <rect x="49" y="18" width="1102" height="18" fill="url(#tiles)"/>
+  <path d="M26 37h1148c10 0 19 5 26 12H0c7-7 16-12 26-12Z" fill="#8f5518" stroke="#f3cf70" stroke-width="1.1"/>
+  <path d="M0 50h1200" stroke="#5a330d" stroke-width="3"/>
+</svg>

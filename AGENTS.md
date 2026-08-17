@@ -81,15 +81,18 @@
   URL/history、焦点与移动几何，事实见文档 30、31。M12-C 已实现语义 token、十字的 token-bound 视觉迁移、
   Catalog 行式目录与 Runs 主链，并通过 64/64 前端、真实 Gate B 生产 Chromium、优化模式门禁与 Codex 内置浏览器
   桌面/390/360 px 的真实交互补证，事实见文档 33。M12-D 派生分析视图计划 0.1 位于文档 34；D1 Comparison
-  已在文档 35 形成真实 M11 MATCH、脱敏 DRIFT/INCONCLUSIVE、生产 Chromium、优化模式与内置浏览器事实，
-  D2 Pairing 和 D3 Batch 仍未开始。M12-B/C 空间收束与 Runs 目录整改计划 0.1 已在
+  已在文档 35 形成真实 M11 MATCH、脱敏 DRIFT/INCONCLUSIVE、生产 Chromium、优化模式与内置浏览器事实；D2 Pairing
+  已在文档 40 形成 M7 三态、四文件导入、生产 Chromium 常规/优化模式、内置浏览器和清理事实；D3 Batch 已在文档 42
+  形成 M8 四态、矩阵/slot 顺序、局部滚动、原生 details、损坏恢复、刷新隐私、生产 Chromium 常规/优化模式、用户物理键盘
+  和清理事实。M12-B/C 空间收束与 Runs 目录整改计划 0.1 已在
   `docs/36-m12-bc-spatial-recomposition-plan.md` 确认：R1 公共外壳（Header、十字中枢与过门）与 R2 Runs
-  主链均已在文档 37、38 通过生产 Chromium、内置浏览器和清理事实。D2 Pairing 的计划 0.1 位于文档 39，
-  当前尚待用户确认；确认前不得修改 Pairing 生产代码或进入 D3，且 `StatusBadge.vue` 不得作为局部整改的全局
-  入口。M12 仍是
-  `IMPLEMENTING / NOT_FROZEN`：
-  不得提前把 Browser Evidence 终稿、全局状态、版本或 M12 标签混入该切片，也不得触及 L2/L3 数据、裁决或
-  安全合同。
+  主链均已在文档 37、38 通过生产 Chromium、内置浏览器和清理事实。D2 Pairing 的计划 0.1 位于文档 39、事实位于
+  文档 40；D3 Batch 计划 0.1 位于文档 41、事实位于文档 42，已在其 `L0_PRESENTATION + BOUNDED_L1_COMPONENT`
+  边界内闭环。M12-E Browser Evidence 与全局状态计划 0.1 位于文档 43、运行事实位于文档 44，已在
+  `L0_PRESENTATION + BOUNDED_L1_COMPONENT` 边界内通过 70/70 Workbench、生产 Chromium 常规/优化模式、
+  360/390px、forced-colors、内置浏览器、物理键盘和清理门禁；`StatusBadge.vue` 仍未被用作局部整改的全局入口。
+  M12-F 总体验收与冻结计划 0.1 位于文档 45，当前为 `PLANNED / USER_REVIEW_REQUIRED`：不得在用户确认前启动
+  终验、创建版本或 M12 标签，也不得触及 L2/L3 数据、裁决或安全合同。M12 仍是 `IMPLEMENTING / NOT_FROZEN`。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

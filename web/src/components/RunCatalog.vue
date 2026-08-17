@@ -22,6 +22,10 @@ function displayDate(value: string): string {
   const date = new Date(value)
   return Number.isNaN(date.valueOf()) ? value : date.toLocaleString('zh-CN', { hour12: false })
 }
+
+function displayPlan(run: CatalogRunSummary): string {
+  return `${run.plan.id} · v${run.plan.version}`
+}
 </script>
 
 <template>
@@ -77,9 +81,15 @@ function displayDate(value: string): string {
           @click="selectRun(run, $event)"
         >
           <span class="catalog-run__identity">
-            <small>Run</small>
-            <strong>{{ run.run_id }}</strong>
-            <em>{{ displayDate(run.created_at) }}</em>
+            <img class="catalog-run__folder" :src="'/textures/r3-run-folder.png'" alt="" aria-hidden="true" />
+            <span class="catalog-run__identity-copy">
+              <small>Run</small>
+              <strong>{{ run.run_id }}</strong>
+              <em>{{ displayDate(run.created_at) }}</em>
+              <span class="catalog-run__id-tooltip" aria-hidden="true">
+                Run：{{ run.run_id }} · Plan：{{ displayPlan(run) }}
+              </span>
+            </span>
           </span>
           <span class="catalog-run__execution">
             <StatusBadge dimension="execution" :value="run.execution_status" compact />
@@ -88,8 +98,11 @@ function displayDate(value: string): string {
             <StatusBadge dimension="verdict" :value="run.verdict" compact />
           </span>
           <span class="catalog-run__facts">
-            <small>{{ run.plan.id }} · v{{ run.plan.version }}</small>
+            <small>{{ displayPlan(run) }}</small>
             <em>{{ run.bundle.file_count }} 文件 · {{ run.bundle.duplicate_count }} 重复</em>
+            <span class="catalog-run__plan-tooltip" aria-hidden="true">
+              {{ displayPlan(run) }}
+            </span>
           </span>
         </button>
       </div>

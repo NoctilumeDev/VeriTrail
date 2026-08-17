@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
-
 type PublicView = 'runs' | 'comparison' | 'pairing' | 'batch'
 
-const props = defineProps<{
+defineProps<{
   currentView: PublicView
-  expanded: boolean
 }>()
 
 const emit = defineEmits<{
-  toggle: [expanded: boolean]
   select: [view: PublicView]
 }>()
 
-const centerButton = ref<HTMLButtonElement | null>(null)
+const visualOrder: PublicView[] = ['pairing', 'runs', 'batch', 'comparison']
 const targets: Record<PublicView, HTMLButtonElement | null> = {
   runs: null,
   comparison: null,
@@ -28,12 +24,15 @@ const labels: Record<PublicView, string> = {
   batch: 'Batch Analysis',
 }
 
-function setTarget(view: PublicView, element: unknown) {
-  targets[view] = element instanceof HTMLButtonElement ? element : null
+const icons: Record<PublicView, string> = {
+  pairing: '/textures/r3-nav-pairing-thin.svg',
+  runs: '/textures/r3-nav-runs.png',
+  batch: '/textures/r3-nav-batch.png',
+  comparison: '/textures/r3-nav-comparison.png',
 }
 
-function toggle() {
-  emit('toggle', !props.expanded)
+function setTarget(view: PublicView, element: unknown) {
+  targets[view] = element instanceof HTMLButtonElement ? element : null
 }
 
 function select(view: PublicView) {
@@ -44,253 +43,167 @@ function moveFocus(view: PublicView) {
   targets[view]?.focus()
 }
 
-function handleCenterKeydown(event: KeyboardEvent) {
-  if (event.key !== 'Escape') return
-  if (props.expanded) {
-    event.preventDefault()
-    emit('toggle', false)
-  }
-}
-
 function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
-  if (event.key === 'Escape') {
+  const currentIndex = visualOrder.indexOf(view)
+  if (event.key === 'Home') {
     event.preventDefault()
-    emit('toggle', false)
-    void nextTick(() => centerButton.value?.focus())
+    moveFocus(visualOrder[0])
     return
   }
-
-  const directions: Record<PublicView, Partial<Record<string, PublicView>>> = {
-    runs: { ArrowRight: 'batch', ArrowDown: 'comparison', ArrowLeft: 'pairing' },
-    batch: { ArrowLeft: 'pairing', ArrowDown: 'comparison', ArrowUp: 'runs' },
-    comparison: { ArrowUp: 'runs', ArrowLeft: 'pairing', ArrowRight: 'batch' },
-    pairing: { ArrowRight: 'batch', ArrowUp: 'runs', ArrowDown: 'comparison' },
+  if (event.key === 'End') {
+    event.preventDefault()
+    moveFocus(visualOrder[visualOrder.length - 1])
+    return
   }
-  const destination = directions[view][event.key]
-  if (!destination) return
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
   event.preventDefault()
+  const delta = event.key === 'ArrowLeft' ? -1 : 1
+  const destination = visualOrder[(currentIndex + delta + visualOrder.length) % visualOrder.length]
   moveFocus(destination)
 }
 </script>
 
 <template>
-  <nav class="cross-axis-navigation" aria-label="公共分析视图">
-    <div class="cross-axis-navigation__stage">
-      <button
-        ref="centerButton"
-        type="button"
-        class="cross-axis-navigation__center"
-        data-testid="cross-axis-toggle"
-        :aria-expanded="expanded"
-        aria-controls="cross-axis-targets"
-        @click="toggle"
-        @keydown="handleCenterKeydown"
-      >
-        <span>目录</span>
-        <strong>{{ labels[currentView] }}</strong>
-      </button>
-
-      <div v-if="expanded" id="cross-axis-targets" class="cross-axis-navigation__targets">
+  <nav id="public-view-navigation" class="cross-axis-navigation" aria-label="公共分析视图">
+    <ol class="cross-axis-navigation__waterline">
+      <li v-for="(view, index) in visualOrder" :key="view">
         <button
-          :ref="(element) => setTarget('runs', element)"
+          :ref="(element) => setTarget(view, element)"
           type="button"
-          class="cross-axis-navigation__target cross-axis-navigation__target--north"
-          data-testid="cross-axis-runs"
-          :aria-current="currentView === 'runs' ? 'page' : undefined"
-          @click="select('runs')"
-          @keydown="handleTargetKeydown($event, 'runs')"
+          class="cross-axis-navigation__target"
+          :class="`cross-axis-navigation__target--${view}`"
+          :data-testid="`cross-axis-${view}`"
+          :aria-current="currentView === view ? 'page' : undefined"
+          @click="select(view)"
+          @keydown="handleTargetKeydown($event, view)"
         >
-          Runs / Catalog
+          <span class="cross-axis-navigation__ordinal" aria-hidden="true">{{ index + 1 }}</span>
+          <img class="cross-axis-navigation__mark" :src="icons[view]" alt="" aria-hidden="true" />
+          <span class="cross-axis-navigation__label">{{ labels[view] }}</span>
         </button>
-        <button
-          :ref="(element) => setTarget('batch', element)"
-          type="button"
-          class="cross-axis-navigation__target cross-axis-navigation__target--east"
-          data-testid="cross-axis-batch"
-          :aria-current="currentView === 'batch' ? 'page' : undefined"
-          @click="select('batch')"
-          @keydown="handleTargetKeydown($event, 'batch')"
-        >
-          Batch Analysis
-        </button>
-        <button
-          :ref="(element) => setTarget('comparison', element)"
-          type="button"
-          class="cross-axis-navigation__target cross-axis-navigation__target--south"
-          data-testid="cross-axis-comparison"
-          :aria-current="currentView === 'comparison' ? 'page' : undefined"
-          @click="select('comparison')"
-          @keydown="handleTargetKeydown($event, 'comparison')"
-        >
-          Rerun Comparison
-        </button>
-        <button
-          :ref="(element) => setTarget('pairing', element)"
-          type="button"
-          class="cross-axis-navigation__target cross-axis-navigation__target--west"
-          data-testid="cross-axis-pairing"
-          :aria-current="currentView === 'pairing' ? 'page' : undefined"
-          @click="select('pairing')"
-          @keydown="handleTargetKeydown($event, 'pairing')"
-        >
-          Paired Analysis
-        </button>
-      </div>
-    </div>
+      </li>
+    </ol>
   </nav>
 </template>
 
 <style scoped>
 .cross-axis-navigation {
-  width: min(100%, 26rem);
-  padding-block: 0.35rem;
-  border-block: 1px solid color-mix(in srgb, var(--structure-gold) 58%, transparent);
-  color: var(--text-on-ink);
-}
-
-.cross-axis-navigation__stage {
-  position: relative;
-  block-size: 8.75rem;
-}
-
-.cross-axis-navigation__center,
-.cross-axis-navigation__target {
-  min-inline-size: 0;
-  min-block-size: 2.75rem;
-  border: 1px solid var(--structure-gold);
-  border-radius: 0;
-  background: color-mix(in srgb, var(--surface-ink-raised) 84%, var(--surface-ink));
-  color: var(--text-on-ink);
-  font: inherit;
-}
-
-.cross-axis-navigation__center {
-  display: grid;
-  gap: 0.2rem;
-  position: absolute;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  inline-size: min(100%, 8.5rem);
+  width: min(100%, 86rem);
   color: var(--text-primary);
-  background: var(--surface-courtyard);
-  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--structure-gold) 18%, transparent);
 }
 
-.cross-axis-navigation__center span {
-  font-size: 0.78rem;
-}
-
-.cross-axis-navigation__center strong {
-  font-size: 0.95rem;
-}
-
-.cross-axis-navigation__targets {
+.cross-axis-navigation__waterline {
   display: grid;
-  grid-template-columns: minmax(5.75rem, 1fr) minmax(7.5rem, 1.25fr) minmax(5.75rem, 1fr);
-  grid-template-rows: repeat(3, minmax(2.75rem, auto));
-  gap: 0.25rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  position: relative;
+  margin: 0;
+  padding: 0 0 var(--space-4);
+  list-style: none;
+}
+
+.cross-axis-navigation__waterline::after {
   position: absolute;
-  inset: 0;
+  right: 0;
+  bottom: 0.35rem;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: color-mix(in srgb, var(--structure-hairline) 78%, transparent);
+}
+
+.cross-axis-navigation__waterline > li {
+  min-width: 0;
 }
 
 .cross-axis-navigation__target {
-  min-inline-size: 0;
-}
-
-.cross-axis-navigation__target--north {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.cross-axis-navigation__target--east {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.cross-axis-navigation__target--south {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.cross-axis-navigation__target--west {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.cross-axis-navigation__center {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-button:hover,
-button:focus-visible,
-button[aria-current='page'] {
-  outline: 3px solid var(--focus-ring);
-  outline-offset: 2px;
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  min-height: 4.65rem;
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-secondary);
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  text-align: left;
 }
 
 .cross-axis-navigation__target:hover,
+.cross-axis-navigation__target:focus-visible,
 .cross-axis-navigation__target[aria-current='page'] {
-  color: var(--text-primary);
-  background: color-mix(in srgb, var(--structure-gold) 92%, var(--surface-courtyard));
+  color: var(--structure-vermilion);
+}
+
+.cross-axis-navigation__target:focus-visible {
+  z-index: 1;
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -3px;
+}
+
+.cross-axis-navigation__target[aria-current='page']::after {
+  position: absolute;
+  bottom: 0.28rem;
+  left: 50%;
+  width: 4rem;
+  height: 2px;
+  content: "";
+  background: currentColor;
+  transform: translateX(-50%);
+}
+
+.cross-axis-navigation__ordinal {
+  display: grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  place-items: center;
+  color: var(--structure-gold);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.cross-axis-navigation__mark {
+  display: none;
+}
+
+.cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
+  color: var(--text-on-ink);
+  background: var(--structure-vermilion);
+  border-color: var(--structure-vermilion);
 }
 
 @media (forced-colors: active) {
-  .cross-axis-navigation,
-  .cross-axis-navigation__center,
-  .cross-axis-navigation__target {
+  .cross-axis-navigation__waterline::after {
+    background: CanvasText;
+  }
+
+  .cross-axis-navigation__target,
+  .cross-axis-navigation__ordinal {
     color: CanvasText;
-    background: Canvas;
     border-color: CanvasText;
   }
 
-  button:hover,
-  button:focus-visible,
-  button[aria-current='page'] {
-    outline-color: Highlight;
+  .cross-axis-navigation__target[aria-current='page'] {
+    color: HighlightText;
+    background: Highlight;
   }
 }
 
-@media (max-width: 32rem) {
-  .cross-axis-navigation {
-    width: 100%;
-  }
-
-  .cross-axis-navigation__stage {
-    block-size: 9rem;
-  }
-
-  .cross-axis-navigation__center {
-    box-sizing: border-box;
-    inline-size: 5.75rem;
-    min-inline-size: 0;
-    padding: 0.2rem;
-    gap: 0;
-  }
-
-  .cross-axis-navigation__center span {
-    font-size: 0.7rem;
-  }
-
-  .cross-axis-navigation__center strong {
-    font-size: 0.82rem;
-    line-height: 1.1;
-  }
-
-  .cross-axis-navigation__targets {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: 0.25rem;
+@media (max-width: 40rem) {
+  .cross-axis-navigation__waterline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-1);
   }
 
   .cross-axis-navigation__target {
-    font-size: 0.82rem;
+    min-height: 4.25rem;
+    padding-inline: var(--space-2);
+    font-size: 0.9rem;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition-duration: 0ms !important;
-  }
-}
 </style>

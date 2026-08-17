@@ -12,6 +12,11 @@ import type {
 const props = defineProps<{
   evidence: EvidenceDocument | null
   imageUrls: Record<string, string>
+  summary?: boolean
+}>()
+
+const emit = defineEmits<{
+  showAll: []
 }>()
 
 type TabId = 'steps' | 'console' | 'network' | 'screenshots'
@@ -39,9 +44,20 @@ const networkEntries = computed(() =>
 const screenshots = computed(() =>
   Array.isArray(facts.value.screenshots) ? (facts.value.screenshots as BrowserScreenshot[]) : [],
 )
+const visibleSteps = computed(() => (props.summary ? steps.value.slice(0, 3) : steps.value))
+const visibleConsoleEntries = computed(() =>
+  props.summary ? consoleEntries.value.slice(0, 3) : consoleEntries.value,
+)
+const visibleNetworkEntries = computed(() =>
+  props.summary ? networkEntries.value.slice(0, 3) : networkEntries.value,
+)
+const visibleScreenshots = computed(() =>
+  props.summary ? screenshots.value.slice(0, 3) : screenshots.value,
+)
 const viewports = computed(() =>
   Array.isArray(facts.value.viewport_runs) ? (facts.value.viewport_runs as BrowserViewportRun[]) : [],
 )
+const visibleViewports = computed(() => (props.summary ? viewports.value.slice(0, 2) : viewports.value))
 const errorCount = computed(
   () =>
     Number(facts.value.unexpected_console_error_count ?? 0) +
@@ -91,43 +107,53 @@ function compactUrl(value: string): string {
 </script>
 
 <template>
-  <div v-if="!evidence" class="empty-state" data-testid="browser-empty">
-    <span class="empty-state__mark" aria-hidden="true">—</span>
+  <div v-if="!evidence" class="browser-absence" data-testid="browser-empty" data-state-kind="no-browser">
+    <span class="browser-absence__mark" aria-hidden="true">—</span>
     <div>
+      <p class="browser-absence__kicker">Browser Evidence · 未适用</p>
       <strong>未包含浏览器证据</strong>
       <p>该 Report 0.1 没有声明 browser.session；这不等于浏览器检查通过。</p>
     </div>
   </div>
 
   <div v-else class="browser-evidence" data-testid="browser-evidence">
-    <div class="browser-metrics" aria-label="浏览器采集摘要">
-      <div>
-        <small>采集</small>
-        <strong>{{ facts.capture_complete ? '完整' : '不完整' }}</strong>
-      </div>
-      <div>
-        <small>清理</small>
-        <strong>{{ facts.cleanup_complete ? '完成' : '未完成' }}</strong>
-      </div>
-      <div>
-        <small>视口</small>
-        <strong>{{ viewports.length }}</strong>
-      </div>
-      <div :class="{ 'metric-alert': errorCount > 0 }">
-        <small>异常事实</small>
-        <strong>{{ errorCount }}</strong>
-      </div>
-    </div>
-
-    <div class="viewport-strip" aria-label="视口覆盖">
-      <article v-for="viewport in viewports" :key="viewport.name" class="viewport-chip">
-        <span aria-hidden="true">{{ viewport.is_mobile ? '▯' : '▭' }}</span>
+    <section class="browser-summary" aria-label="浏览器采集摘要" data-testid="browser-summary">
+      <header class="browser-summary__heading">
+        <p>Browser Evidence · 西庑账册</p>
+        <h3>浏览器采集摘要</h3>
+      </header>
+      <div class="browser-metrics">
         <div>
-          <strong>{{ viewport.name }}</strong>
-          <small>{{ viewport.width }}×{{ viewport.height }} · 溢出 {{ viewport.horizontal_overflow_px }}px</small>
+          <small>采集</small>
+          <strong>{{ facts.capture_complete ? '完整' : '不完整' }}</strong>
         </div>
-      </article>
-    </div>
+        <div>
+          <small>清理</small>
+          <strong>{{ facts.cleanup_complete ? '完成' : '未完成' }}</strong>
+        </div>
+        <div>
+          <small>视口</small>
+          <strong>{{ viewports.length }}</strong>
+        </div>
+        <div :class="{ 'metric-alert': errorCount > 0 }">
+          <small>异常事实</small>
+          <strong>{{ errorCount }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="viewport-ledger" aria-label="视口覆盖">
+      <p class="viewport-ledger__label">视口记录</p>
+      <div class="viewport-strip">
+        <article v-for="viewport in visibleViewports" :key="viewport.name" class="viewport-chip">
+          <span aria-hidden="true">{{ viewport.is_mobile ? '▯' : '▭' }}</span>
+          <div>
+            <strong>{{ viewport.name }}</strong>
+            <small>{{ viewport.width }}×{{ viewport.height }} · 溢出 {{ viewport.horizontal_overflow_px }}px</small>
+          </div>
+        </article>
+      </div>
+    </section>
 
     <div class="evidence-tabs">
       <div class="tab-list" role="tablist" aria-label="浏览器证据类型">
@@ -159,8 +185,12 @@ function compactUrl(value: string): string {
         role="tabpanel"
         aria-labelledby="tab-steps"
       >
-        <ol class="timeline">
-          <li v-for="step in steps" :key="`${step.viewport}-${step.step_id}`">
+          <ol class="timeline">
+            <li
+              v-for="step in visibleSteps"
+              :key="`${step.viewport}-${step.step_id}`"
+              :class="['timeline__entry', { 'timeline__entry--failed': step.status !== 'PASSED' }]"
+            >
             <span class="timeline__mark" aria-hidden="true">{{ step.status === 'PASSED' ? '✓' : '×' }}</span>
             <div>
               <strong>{{ step.step_id }}</strong>
@@ -180,7 +210,7 @@ function compactUrl(value: string): string {
       >
         <div v-if="consoleEntries.length === 0" class="empty-inline">Console 没有持久化条目。</div>
         <ul v-else class="log-list">
-          <li v-for="(entry, index) in consoleEntries" :key="`${entry.viewport}-${index}`" :class="`log--${entry.level}`">
+          <li v-for="(entry, index) in visibleConsoleEntries" :key="`${entry.viewport}-${index}`" :class="`log--${entry.level}`">
             <span>{{ entry.level }}</span>
             <code>{{ entry.text }}</code>
             <small>{{ entry.viewport }}</small>
@@ -197,7 +227,7 @@ function compactUrl(value: string): string {
       >
         <div class="network-list">
           <article
-            v-for="entry in networkEntries"
+            v-for="entry in visibleNetworkEntries"
             :key="`${entry.viewport}-${entry.sequence}`"
             :class="['network-row', { 'network-row--error': (entry.status ?? 0) >= 400 || entry.failure }]"
           >
@@ -218,11 +248,12 @@ function compactUrl(value: string): string {
       >
         <div class="screenshot-grid">
           <button
-            v-for="screenshot in screenshots"
+            v-for="screenshot in visibleScreenshots"
             :key="screenshot.path"
             type="button"
             class="screenshot-card"
             :aria-label="`放大 ${screenshot.viewport} 截图 ${screenshot.name}`"
+            data-testid="browser-screenshot-trigger"
             @click="openScreenshot(screenshot, $event)"
           >
             <img :src="imageUrls[screenshot.path]" :alt="`${screenshot.viewport} · ${screenshot.name}`" />
@@ -234,6 +265,16 @@ function compactUrl(value: string): string {
         </div>
       </div>
     </div>
+
+    <button
+      v-if="summary"
+      type="button"
+      class="run-section-show-all browser-show-all"
+      data-open-run-panel="browser"
+      @click="emit('showAll')"
+    >
+      查看全部浏览器事实
+    </button>
 
     <dialog ref="dialog" class="screenshot-dialog" @close="restoreFocus">
       <div v-if="selectedScreenshot" class="screenshot-dialog__body">

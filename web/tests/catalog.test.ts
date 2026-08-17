@@ -138,6 +138,7 @@ describe('Catalog API 0.1', () => {
     )
     const row = wrapper.get('[data-catalog-run-id]')
     expect(row.find('.catalog-run__identity').text()).toContain('unit-run')
+    expect(row.find('.catalog-run__id-tooltip').text()).toBe('Run：unit-run · Plan：unit-plan · v1')
     expect(row.find('.catalog-run__execution').text()).toContain('COMPLETED')
     expect(row.find('.catalog-run__verdict').text()).toContain('PASS')
     expect(row.find('.catalog-run__facts').text()).toContain('unit-plan · v1')
@@ -158,6 +159,7 @@ describe('Catalog API 0.1', () => {
     await waitFor(wrapper, '[data-catalog-run-id]')
     await wrapper.get('[data-catalog-run-id]').trigger('click')
     await waitFor(wrapper, '[data-testid="catalog-return"]')
+    expect(document.activeElement?.id).toBe('run-detail-title')
     expect(wrapper.get('[data-testid="run-summary"]').text()).toContain('本地目录 · unit-run')
     expect(window.location.search).toBe(`?run=${catalogRunId}`)
     await wrapper.get('[data-testid="catalog-return"]').trigger('click')
@@ -165,6 +167,62 @@ describe('Catalog API 0.1', () => {
     expect(document.activeElement?.getAttribute('data-catalog-run-id')).toBe(catalogRunId)
     wrapper.unmount()
     host.remove()
+  })
+
+  it('opens complete Run ledgers as page states instead of nested scroll regions', async () => {
+    installCatalogFetch(catalogResponse())
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-catalog-run-id]')
+    await wrapper.get('[data-catalog-run-id]').trigger('click')
+    await waitFor(wrapper, '[data-open-run-panel="assertions"]')
+
+    await wrapper.get('[data-open-run-panel="assertions"]').trigger('click')
+    await flushPromises()
+    expect(window.location.search).toBe(`?run=${catalogRunId}&panel=assertions`)
+    expect(wrapper.get('#run-detail-panel-title').text()).toBe('确定性断言')
+    expect(wrapper.find('[data-testid="run-summary"]').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="run-panel-return-bottom"]').text()).toContain('返回 Run 详情')
+
+    await wrapper.get('[data-testid="run-panel-return-bottom"]').trigger('click')
+    await flushPromises()
+    expect(window.location.search).toBe(`?run=${catalogRunId}`)
+    expect(wrapper.get('[data-testid="run-summary"]').text()).toContain('unit-run')
+    wrapper.unmount()
+  })
+
+  it('keeps applicability expansion reversible and labels both states', async () => {
+    installCatalogFetch(catalogResponse())
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-catalog-run-id]')
+    await wrapper.get('[data-catalog-run-id]').trigger('click')
+    await waitFor(wrapper, 'details.applicability')
+
+    const details = wrapper.get('details.applicability')
+    expect(details.get('summary').text()).toBe('展开适用边界与资源预算')
+
+    ;(details.element as HTMLDetailsElement).open = true
+    await details.trigger('toggle')
+    expect(details.get('summary').text()).toBe('收起适用边界与资源预算')
+
+    ;(details.element as HTMLDetailsElement).open = false
+    await details.trigger('toggle')
+    expect(details.get('summary').text()).toBe('展开适用边界与资源预算')
+    wrapper.unmount()
+  })
+
+  it('uses the footer seal as one consistent return-to-catalog action', async () => {
+    installCatalogFetch(catalogResponse())
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-catalog-run-id]')
+    await wrapper.get('[data-catalog-run-id]').trigger('click')
+    await waitFor(wrapper, '[data-testid="run-summary"]')
+
+    await wrapper.get('[aria-label="返回本地 Run 目录"]').trigger('click')
+    await flushPromises()
+    expect(window.location.search).toBe('')
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="run-summary"]').exists()).toBe(false)
+    wrapper.unmount()
   })
 
   it('reads M10 runtime.bootstrap through the generic evidence ledger without re-adjudication', async () => {
@@ -207,7 +265,7 @@ describe('Catalog API 0.1', () => {
     await wrapper.get('[data-catalog-run-id]').trigger('click')
     await waitFor(wrapper, '[data-testid="error-state"]')
     expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
-    expect(wrapper.get('[data-testid="catalog-error"]').text()).toContain('没有改写任何 Run 裁决')
+    expect(wrapper.get('[data-testid="error-state"]').text()).toContain('没有据此改写 Run 的 Verdict')
     wrapper.unmount()
   })
 
