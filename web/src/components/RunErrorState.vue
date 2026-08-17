@@ -3,6 +3,7 @@ defineProps<{
   error: { code: string; message: string }
   kind: 'invalid' | 'operational' | 'privacy'
   retryMode: 'catalog' | 'positive'
+  retryDisabled?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -35,6 +36,7 @@ const emit = defineEmits<{
     <button
       type="button"
       :data-testid="retryMode === 'catalog' ? 'retry-catalog-run' : 'retry-positive'"
+      :disabled="retryDisabled"
       @click="emit('retry')"
     >
       {{ retryMode === 'catalog' ? '重新读取目录 Run' : '返回正向证据重试' }}

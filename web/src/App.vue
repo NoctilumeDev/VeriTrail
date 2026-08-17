@@ -25,7 +25,6 @@ import {
   type DemoBundleId,
 } from './domain/bundle'
 import {
-  catalogRunIdFromLocation,
   CatalogLoadError,
   fetchCatalog,
 } from './domain/catalog'
@@ -40,6 +39,16 @@ import {
   loadPairedAnalysisReviewSample,
   PairingLoadError,
 } from './domain/pairing'
+import {
+  type ActiveSource,
+  type ComparisonPanel,
+  type PairingPanel,
+  type PublicView,
+  type RunDetailPanel,
+  type RunSurface,
+  type WorkbenchRouteTarget,
+} from './domain/workbenchRoute'
+import { createWorkbenchHistory } from './navigation/workbenchHistory'
 import type {
   CatalogResponse,
   CatalogRunSummary,
@@ -49,33 +58,30 @@ import type {
   LoadedPairedAnalysis,
 } from './domain/types'
 
-type PublicView = 'runs' | 'comparison' | 'pairing' | 'batch'
-type RunSurface = 'catalog' | 'detail'
-type RunDetailPanel = 'browser' | 'assertions' | 'ledger'
-type PairingPanel = 'sources' | 'outcomes'
-type ComparisonPanel = 'differences'
-type ActiveSource = DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing' | 'batch'
-
+const workbenchHistory = createWorkbenchHistory()
+const initialRoute = workbenchHistory.current()
 const bundle = shallowRef<LoadedBundle | null>(null)
 const comparison = shallowRef<LoadedComparison | null>(null)
 const pairedAnalysis = shallowRef<LoadedPairedAnalysis | null>(null)
 const batchAnalysis = shallowRef<LoadedBatchAnalysis | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
-const activeSource = ref<ActiveSource>(activeSourceFromLocation())
-const publicView = ref<PublicView>(publicViewFromLocation())
-const runSurface = ref<RunSurface>(runSurfaceFromLocation())
+const activeSource = ref<ActiveSource>(initialRoute.activeSource)
+const publicView = ref<PublicView>(initialRoute.publicView)
+const runSurface = ref<RunSurface>(initialRoute.runSurface)
 const liveMessage = ref('正在读取正向证据包。')
 const catalog = shallowRef<CatalogResponse | null>(null)
 const catalogLoading = ref(true)
 const catalogError = ref<{ code: string; message: string } | null>(null)
-const selectedCatalogRunId = ref<string | null>(catalogRunIdFromLocation())
-const runDetailPanel = ref<RunDetailPanel | null>(null)
-const pairingPanel = ref<PairingPanel | null>(null)
-const comparisonPanel = ref<ComparisonPanel | null>(null)
+const selectedCatalogRunId = ref<string | null>(initialRoute.catalogRunId)
+const runDetailPanel = ref<RunDetailPanel | null>(initialRoute.runDetailPanel)
+const pairingPanel = ref<PairingPanel | null>(initialRoute.pairingPanel)
+const comparisonPanel = ref<ComparisonPanel | null>(initialRoute.comparisonPanel)
 let lastCatalogTriggerId: string | null = null
 let loadSequence = 0
 let pendingPointerClickCleanup: (() => void) | null = null
+let unsubscribeHistory: (() => void) | null = null
+let appMounted = false
 
 const report = computed(() => bundle.value?.report ?? null)
 const browserSession = computed(() => (bundle.value ? browserEvidence(bundle.value) : null))
@@ -92,9 +98,12 @@ const isRunDetail = computed(
   () => publicView.value === 'runs' && runSurface.value === 'detail',
 )
 
-function runDetailPanelFromLocation(): RunDetailPanel | null {
-  const panel = new URLSearchParams(window.location.search).get('panel')
-  return panel === 'browser' || panel === 'assertions' || panel === 'ledger' ? panel : null
+function currentRoute() {
+  return workbenchHistory.current()
+}
+
+function pushRoute(target: WorkbenchRouteTarget) {
+  workbenchHistory.push(target)
 }
 
 function runDetailPanelLabel(panel: RunDetailPanel): string {
@@ -103,28 +112,29 @@ function runDetailPanelLabel(panel: RunDetailPanel): string {
   return '证据账册'
 }
 
-function pairingPanelFromLocation(): PairingPanel | null {
-  const panel = new URLSearchParams(window.location.search).get('panel')
-  return panel === 'sources' || panel === 'outcomes' ? panel : null
+function runDetailRouteTarget(panel: RunDetailPanel | null): WorkbenchRouteTarget | null {
+  const route = currentRoute()
+  if (route.kind === 'run' && route.catalogRunId) {
+    return { kind: 'run', catalogRunId: route.catalogRunId, panel }
+  }
+  if (
+    route.kind === 'demo' &&
+    (route.demoFixture === 'positive' || route.demoFixture === 'negative')
+  ) {
+    return { kind: 'demo', fixture: route.demoFixture, panel }
+  }
+  if (route.kind === 'local') return { kind: 'local', panel }
+  return null
 }
 
 function pairingPanelLabel(panel: PairingPanel): string {
   return panel === 'sources' ? '四角色来源账册' : '预注册断言全貌'
 }
 
-function comparisonPanelFromLocation(): ComparisonPanel | null {
-  return new URLSearchParams(window.location.search).get('panel') === 'differences'
-    ? 'differences'
-    : null
-}
-
 function openComparisonPanel(panel: ComparisonPanel) {
   comparisonPanel.value = panel
-  const url = new URL(window.location.href)
-  url.searchParams.delete('view')
-  url.searchParams.set('fixture', 'comparison')
-  url.searchParams.set('panel', panel)
-  window.history.pushState({ fixture: 'comparison', panel }, '', url)
+  const sample = currentRoute().comparisonSample
+  pushRoute({ kind: 'comparison', panel, sample })
   liveMessage.value = '已进入完整语义差异账册。'
   void nextTick(() => {
     document.getElementById('view-comparison-title')?.focus()
@@ -136,9 +146,8 @@ function openComparisonPanel(panel: ComparisonPanel) {
 function closeComparisonPanel() {
   const panel = comparisonPanel.value
   comparisonPanel.value = null
-  const url = new URL(window.location.href)
-  url.searchParams.delete('panel')
-  window.history.pushState({ fixture: 'comparison' }, '', url)
+  const sample = currentRoute().comparisonSample
+  pushRoute({ kind: 'comparison', sample })
   liveMessage.value = '已返回复跑比较总览。'
   void nextTick(() => {
     if (panel) document.querySelector<HTMLElement>(`[data-open-comparison-panel="${panel}"]`)?.focus()
@@ -147,10 +156,8 @@ function closeComparisonPanel() {
 
 function openPairingPanel(panel: PairingPanel) {
   pairingPanel.value = panel
-  const url = new URL(window.location.href)
-  url.searchParams.set('fixture', 'pairing')
-  url.searchParams.set('panel', panel)
-  window.history.pushState({ fixture: 'pairing', panel }, '', url)
+  const sample = currentRoute().pairingSample
+  pushRoute({ kind: 'pairing', panel, sample })
   liveMessage.value = `已进入${pairingPanelLabel(panel)}。`
   void nextTick(() => {
     document.getElementById('paired-title')?.focus()
@@ -162,9 +169,8 @@ function openPairingPanel(panel: PairingPanel) {
 function closePairingPanel() {
   const panel = pairingPanel.value
   pairingPanel.value = null
-  const url = new URL(window.location.href)
-  url.searchParams.delete('panel')
-  window.history.pushState({ fixture: 'pairing' }, '', url)
+  const sample = currentRoute().pairingSample
+  pushRoute({ kind: 'pairing', sample })
   liveMessage.value = '已返回配对实验总览。'
   void nextTick(() => {
     if (panel) document.querySelector<HTMLElement>(`[data-open-pairing-panel="${panel}"]`)?.focus()
@@ -172,10 +178,10 @@ function closePairingPanel() {
 }
 
 function openRunDetailPanel(panel: RunDetailPanel) {
+  const target = runDetailRouteTarget(panel)
+  if (!target) return
   runDetailPanel.value = panel
-  const url = new URL(window.location.href)
-  url.searchParams.set('panel', panel)
-  window.history.pushState({ run: selectedCatalogRunId.value, panel }, '', url)
+  pushRoute(target)
   liveMessage.value = `已进入${runDetailPanelLabel(panel)}完整视图。`
   void nextTick(() => {
     document.getElementById('run-detail-panel-title')?.focus()
@@ -186,59 +192,14 @@ function openRunDetailPanel(panel: RunDetailPanel) {
 
 function closeRunDetailPanel() {
   const panel = runDetailPanel.value
+  const target = runDetailRouteTarget(null)
+  if (!target) return
   runDetailPanel.value = null
-  const url = new URL(window.location.href)
-  url.searchParams.delete('panel')
-  window.history.pushState({ run: selectedCatalogRunId.value }, '', url)
+  pushRoute(target)
   liveMessage.value = '已返回 Run 详情总览。'
   void nextTick(() => {
     if (panel) document.querySelector<HTMLElement>(`[data-open-run-panel="${panel}"]`)?.focus()
   })
-}
-
-function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' | 'pairing' | 'batch' {
-  const value = new URLSearchParams(window.location.search).get('fixture')
-  return value === 'negative' || value === 'invalid' || value === 'local' || value === 'comparison' || value === 'pairing' || value === 'batch'
-    ? value
-    : 'positive'
-}
-
-function activeSourceFromLocation(): ActiveSource {
-  const params = new URLSearchParams(window.location.search)
-  if (params.has('run')) return 'catalog'
-  const fixture = params.get('fixture')
-  if (
-    fixture === 'positive' ||
-    fixture === 'negative' ||
-    fixture === 'invalid' ||
-    fixture === 'local' ||
-    fixture === 'comparison' ||
-    fixture === 'pairing' ||
-    fixture === 'batch'
-  ) {
-    return fixture
-  }
-  const view = params.get('view')
-  if (view === 'comparison' || view === 'pairing' || view === 'batch') return view
-  return 'catalog'
-}
-
-function runSurfaceFromLocation(): RunSurface {
-  const params = new URLSearchParams(window.location.search)
-  if (params.has('run')) return 'detail'
-  const fixture = params.get('fixture')
-  return fixture === 'positive' || fixture === 'negative' || fixture === 'local' ? 'detail' : 'catalog'
-}
-
-function publicViewFromLocation(): PublicView {
-  const params = new URLSearchParams(window.location.search)
-  const view = params.get('view')
-  if (view === 'runs' || view === 'comparison' || view === 'pairing' || view === 'batch') {
-    return view
-  }
-  const fixture = fixtureFromLocation()
-  if (fixture === 'comparison' || fixture === 'pairing' || fixture === 'batch') return fixture
-  return 'runs'
 }
 
 function clearLoadedAnalysis() {
@@ -285,13 +246,7 @@ function selectPublicView(view: PublicView) {
     return
   }
   if (publicView.value !== view) {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('fixture')
-    url.searchParams.delete('run')
-    url.searchParams.delete('panel')
-    url.searchParams.delete('sample')
-    url.searchParams.set('view', view)
-    window.history.pushState({ view }, '', url)
+    pushRoute({ kind: 'view', view })
     resetPublicView(view)
   }
   focusPublicViewTitle(view)
@@ -352,7 +307,11 @@ async function refreshCatalog() {
   }
 }
 
-async function selectDemo(id: DemoBundleId, pushHistory = true) {
+async function selectDemo(
+  id: DemoBundleId,
+  pushHistory = true,
+  panel: RunDetailPanel | null = null,
+): Promise<boolean> {
   const sequence = ++loadSequence
   loading.value = true
   error.value = null
@@ -360,29 +319,27 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   publicView.value = 'runs'
   runSurface.value = id === 'invalid' ? 'catalog' : 'detail'
   selectedCatalogRunId.value = null
+  runDetailPanel.value = id === 'invalid' ? null : panel
   clearLoadedAnalysis()
   liveMessage.value = `正在读取${sourceLabel(id)}。`
   if (pushHistory) {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('run')
-    url.searchParams.delete('view')
-    url.searchParams.delete('sample')
-    url.searchParams.set('fixture', id)
-    window.history.pushState({ fixture: id }, '', url)
+    pushRoute({ kind: 'demo', fixture: id, panel: runDetailPanel.value })
   }
   releaseCurrentBundle()
   try {
     const loaded = await loadDemoBundle(id)
     if (sequence !== loadSequence) {
       loaded.release()
-      return
+      return false
     }
     bundle.value = loaded
     liveMessage.value = `${sourceLabel(id)}已加载，完整性核验通过。`
+    return true
   } catch (cause) {
-    if (sequence !== loadSequence) return
+    if (sequence !== loadSequence) return false
     error.value = describeError(cause)
     liveMessage.value = `证据包读取失败：${error.value.message}`
+    return true
   } finally {
     if (sequence === loadSequence) loading.value = false
   }
@@ -396,12 +353,7 @@ function dismissRunError(restoreFocus = false) {
   publicView.value = 'runs'
   runSurface.value = 'catalog'
   releaseCurrentBundle()
-  const url = new URL(window.location.href)
-  url.searchParams.delete('fixture')
-  url.searchParams.delete('run')
-  url.searchParams.delete('sample')
-  url.searchParams.set('view', 'runs')
-  window.history.pushState({ view: 'runs' }, '', url)
+  pushRoute({ kind: 'view', view: 'runs' })
   liveMessage.value = '已收起损坏证据提示，返回本地 Run 目录。'
   if (restoreFocus) {
     void nextTick(() => document.querySelector<HTMLElement>('[data-testid="fixture-invalid"]')?.focus())
@@ -409,7 +361,7 @@ function dismissRunError(restoreFocus = false) {
 }
 
 function toggleInvalidDemo() {
-  if (activeSource.value === 'invalid' && error.value) {
+  if (activeSource.value === 'invalid' && (loading.value || error.value)) {
     dismissRunError()
     return
   }
@@ -428,12 +380,7 @@ async function importLocal(event: Event) {
   selectedCatalogRunId.value = null
   clearLoadedAnalysis()
   liveMessage.value = '正在本地内存中核验所选证据包。'
-  const url = new URL(window.location.href)
-  url.searchParams.delete('run')
-  url.searchParams.delete('view')
-  url.searchParams.delete('sample')
-  url.searchParams.set('fixture', 'local')
-  window.history.pushState({ fixture: 'local' }, '', url)
+  pushRoute({ kind: 'local' })
   releaseCurrentBundle()
   try {
     const loaded = await loadLocalBundle(input.files)
@@ -474,13 +421,7 @@ async function importComparison(event: Event) {
   if (!input.files?.length) return
   const sequence = beginAnalysisLoad('comparison')
   liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
-  const url = new URL(window.location.href)
-  url.searchParams.delete('run')
-  url.searchParams.delete('view')
-  url.searchParams.delete('panel')
-  url.searchParams.delete('sample')
-  url.searchParams.set('fixture', 'comparison')
-  window.history.pushState({ fixture: 'comparison' }, '', url)
+  pushRoute({ kind: 'comparison' })
   try {
     const loaded = await loadLocalComparison(input.files)
     if (sequence !== loadSequence) return
@@ -501,13 +442,7 @@ async function importPairedAnalysis(event: Event) {
   if (!input.files?.length) return
   const sequence = beginAnalysisLoad('pairing')
   liveMessage.value = '正在本地内存中核验 PairedAnalysis Manifest 与 PairingPlan seal。'
-  const url = new URL(window.location.href)
-  url.searchParams.delete('run')
-  url.searchParams.delete('view')
-  url.searchParams.delete('panel')
-  url.searchParams.delete('sample')
-  url.searchParams.set('fixture', 'pairing')
-  window.history.pushState({ fixture: 'pairing' }, '', url)
+  pushRoute({ kind: 'pairing' })
   try {
     const loaded = await loadLocalPairedAnalysis(input.files)
     if (sequence !== loadSequence) return
@@ -523,35 +458,39 @@ async function importPairedAnalysis(event: Event) {
   }
 }
 
-async function openComparisonReviewSample() {
+async function openComparisonReviewSample(): Promise<boolean> {
   const sequence = beginAnalysisLoad('comparison')
   liveMessage.value = '正在核验内置复跑比较审阅数据。'
   try {
     const loaded = await loadComparisonReviewSample()
-    if (sequence !== loadSequence) return
+    if (sequence !== loadSequence) return false
     comparison.value = loaded
     liveMessage.value = `复跑比较 ${loaded.comparison.comparison_status} 审阅数据已加载。`
+    return true
   } catch (cause) {
-    if (sequence !== loadSequence) return
+    if (sequence !== loadSequence) return false
     error.value = describeComparisonError(cause)
     liveMessage.value = `复跑比较审阅数据读取失败：${error.value.message}`
+    return true
   } finally {
     if (sequence === loadSequence) loading.value = false
   }
 }
 
-async function openPairingReviewSample() {
+async function openPairingReviewSample(): Promise<boolean> {
   const sequence = beginAnalysisLoad('pairing')
   liveMessage.value = '正在核验内置四角色配对审阅数据。'
   try {
     const loaded = await loadPairedAnalysisReviewSample()
-    if (sequence !== loadSequence) return
+    if (sequence !== loadSequence) return false
     pairedAnalysis.value = loaded
     liveMessage.value = `配对分析 ${loaded.analysis.analysis_status} 审阅数据已加载。`
+    return true
   } catch (cause) {
-    if (sequence !== loadSequence) return
+    if (sequence !== loadSequence) return false
     error.value = describePairingError(cause)
     liveMessage.value = `配对分析审阅数据读取失败：${error.value.message}`
+    return true
   } finally {
     if (sequence === loadSequence) loading.value = false
   }
@@ -562,12 +501,7 @@ async function importBatchAnalysis(event: Event) {
   if (!input.files?.length) return
   const sequence = beginAnalysisLoad('batch')
   liveMessage.value = '正在本地内存中核验 BatchAnalysis Manifest、BatchPlan seal 与完整矩阵。'
-  const url = new URL(window.location.href)
-  url.searchParams.delete('run')
-  url.searchParams.delete('view')
-  url.searchParams.delete('sample')
-  url.searchParams.set('fixture', 'batch')
-  window.history.pushState({ fixture: 'batch' }, '', url)
+  pushRoute({ kind: 'batch' })
   try {
     const loaded = await loadLocalBatchAnalysis(input.files)
     if (sequence !== loadSequence) return
@@ -587,7 +521,7 @@ async function selectCatalogRun(
   run: CatalogRunSummary,
   trigger?: HTMLElement,
   pushHistory = true,
-) {
+): Promise<boolean> {
   const sequence = ++loadSequence
   loading.value = true
   error.value = null
@@ -601,13 +535,7 @@ async function selectCatalogRun(
   lastCatalogTriggerId = trigger ? run.catalog_run_id : lastCatalogTriggerId
   liveMessage.value = `正在从只读目录核验 ${run.run_id}。`
   if (pushHistory) {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('fixture')
-    url.searchParams.delete('view')
-    url.searchParams.delete('panel')
-    url.searchParams.delete('sample')
-    url.searchParams.set('run', run.catalog_run_id)
-    window.history.pushState({ run: run.catalog_run_id }, '', url)
+    pushRoute({ kind: 'run', catalogRunId: run.catalog_run_id })
   }
   releaseCurrentBundle()
   try {
@@ -629,7 +557,7 @@ async function selectCatalogRun(
     }
     if (sequence !== loadSequence) {
       loaded.release()
-      return
+      return false
     }
     bundle.value = loaded
     liveMessage.value = `${run.run_id} 已从目录加载，完整性核验通过。`
@@ -640,12 +568,13 @@ async function selectCatalogRun(
         document.getElementById('run-detail-title')?.focus()
       })
     }
+    return true
   } catch (cause) {
-    if (sequence !== loadSequence) return
+    if (sequence !== loadSequence) return false
     const described = describeCatalogError(cause)
-    catalogError.value = described
     error.value = described
     liveMessage.value = `目录 Run 读取失败：${described.message}`
+    return true
   } finally {
     if (sequence === loadSequence) loading.value = false
   }
@@ -654,9 +583,10 @@ async function selectCatalogRun(
 async function retryCatalog() {
   const selected = selectedCatalogRunId.value
   await refreshCatalog()
-  if (selected && catalog.value) {
-    const run = catalog.value.runs.find((candidate) => candidate.catalog_run_id === selected)
-    if (run) await selectCatalogRun(run, undefined, false)
+  if (!appMounted) return
+  const route = currentRoute()
+  if (selected && catalog.value && route.kind === 'run' && route.catalogRunId === selected) {
+    onHistoryChange()
   }
 }
 
@@ -667,19 +597,14 @@ function returnToCatalog() {
   clearLoadedAnalysis()
   loading.value = false
   error.value = null
+  if (catalog.value) catalogError.value = null
   activeSource.value = 'catalog'
   publicView.value = 'runs'
   runSurface.value = 'catalog'
   const runId = selectedCatalogRunId.value ?? lastCatalogTriggerId
   selectedCatalogRunId.value = null
   runDetailPanel.value = null
-  const url = new URL(window.location.href)
-  url.searchParams.delete('run')
-  url.searchParams.delete('fixture')
-  url.searchParams.delete('view')
-  url.searchParams.delete('panel')
-  url.searchParams.delete('sample')
-  window.history.pushState({}, '', url)
+  pushRoute({ kind: 'catalog' })
   liveMessage.value = '已返回本地 Run 目录。'
   void nextTick(() => {
     document.documentElement.scrollTop = 0
@@ -734,6 +659,15 @@ function goToCatalogHome() {
     })
     return
   }
+  const route = currentRoute()
+  if (route.kind === 'demo' && route.demoFixture === 'invalid') {
+    dismissRunError()
+    return
+  }
+  if (route.requiresCanonicalization) {
+    pushRoute({ kind: 'catalog' })
+    applyCatalogFromHistory(false)
+  }
   document.documentElement.scrollTop = 0
   document.body.scrollTop = 0
   liveMessage.value = '已回到本地 Run 目录。'
@@ -752,36 +686,74 @@ function sourceLabel(id: DemoBundleId): string {
   return '损坏证据'
 }
 
+function applyRunPanelFromHistory(requestedPanel: RunDetailPanel | null, focusTarget: boolean) {
+  const previousPanel = runDetailPanel.value
+  runDetailPanel.value = requestedPanel
+  if (!focusTarget) return
+  void nextTick(() => {
+    if (requestedPanel) {
+      document.getElementById('run-detail-panel-title')?.focus()
+    } else if (previousPanel) {
+      document.querySelector<HTMLElement>(`[data-open-run-panel="${previousPanel}"]`)?.focus()
+    } else {
+      document.getElementById('run-detail-title')?.focus()
+    }
+  })
+}
+
+function applyCatalogFromHistory(focusTarget: boolean) {
+  const previousRunId = selectedCatalogRunId.value ?? lastCatalogTriggerId
+  ++loadSequence
+  releaseCurrentBundle()
+  clearLoadedAnalysis()
+  activeSource.value = 'catalog'
+  publicView.value = 'runs'
+  runSurface.value = 'catalog'
+  selectedCatalogRunId.value = null
+  runDetailPanel.value = null
+  loading.value = false
+  error.value = null
+  if (catalog.value) catalogError.value = null
+  liveMessage.value = '本地 Run 目录已加载，请选择一项 Run。'
+  if (!focusTarget) return
+  void nextTick(() => {
+    const row = previousRunId
+      ? document.querySelector<HTMLElement>(`[data-catalog-run-id="${previousRunId}"]`)
+      : null
+    if (row) row.focus()
+    else document.getElementById('view-runs-title')?.focus()
+  })
+}
+
 function onHistoryChange(focusTarget = false) {
-  const params = new URLSearchParams(window.location.search)
-  const requestedView = publicViewFromLocation()
-  if (requestedView !== 'runs' && params.has('view') && !params.has('fixture')) {
-    resetPublicView(requestedView)
-    if (focusTarget) focusPublicViewTitle(requestedView)
+  const route = currentRoute()
+
+  if (route.kind === 'analysis-view' && route.analysisView) {
+    resetPublicView(route.analysisView)
+    if (focusTarget) focusPublicViewTitle(route.analysisView)
     return
   }
-  const catalogRunId = catalogRunIdFromLocation()
-  if (catalogRunId) {
-    const requestedPanel = runDetailPanelFromLocation()
-    const previousPanel = runDetailPanel.value
-    runDetailPanel.value = requestedPanel
+
+  if (route.kind === 'run' && route.catalogRunId) {
+    const catalogRunId = route.catalogRunId
+    const requestedPanel = route.runDetailPanel
     if (selectedCatalogRunId.value === catalogRunId && bundle.value) {
-      if (focusTarget) {
-        void nextTick(() => {
-          if (requestedPanel) {
-            document.getElementById('run-detail-panel-title')?.focus()
-          } else if (previousPanel) {
-            document.querySelector<HTMLElement>(`[data-open-run-panel="${previousPanel}"]`)?.focus()
-          } else {
-            document.getElementById('run-detail-title')?.focus()
-          }
-        })
-      }
+      applyRunPanelFromHistory(requestedPanel, focusTarget)
       return
     }
+    runDetailPanel.value = requestedPanel
     const run = catalog.value?.runs.find((candidate) => candidate.catalog_run_id === catalogRunId)
     if (run) {
-      void selectCatalogRun(run, undefined, false).then(() => {
+      void selectCatalogRun(run, undefined, false).then((committed) => {
+        if (!committed) return
+        const current = currentRoute()
+        if (
+          current.kind !== 'run' ||
+          current.catalogRunId !== catalogRunId ||
+          current.runDetailPanel !== requestedPanel ||
+          selectedCatalogRunId.value !== catalogRunId ||
+          !bundle.value
+        ) return
         runDetailPanel.value = requestedPanel
         if (focusTarget) {
           void nextTick(() => {
@@ -817,40 +789,18 @@ function onHistoryChange(focusTarget = false) {
       code: 'RUN_NOT_FOUND',
       message: 'URL 中的 Catalog Run 不存在，请返回目录重新选择。',
     }
-    catalogError.value = error.value
     liveMessage.value = error.value.message
     return
   }
-  // `view=runs` is the public Catalog entry, not an implicit positive fixture.
-  // Keeping that distinction prevents a deep-link refresh from bypassing the
-  // ledger and dropping a user into an unrelated demo Run.
-  if (!params.has('fixture') && !params.has('run') && (params.get('view') === 'runs' || !params.has('view'))) {
-    const previousRunId = selectedCatalogRunId.value ?? lastCatalogTriggerId
-    ++loadSequence
-    releaseCurrentBundle()
-    clearLoadedAnalysis()
-    activeSource.value = 'catalog'
-    publicView.value = 'runs'
-    runSurface.value = 'catalog'
-    selectedCatalogRunId.value = null
-    loading.value = false
-    error.value = null
-    liveMessage.value = '本地 Run 目录已加载，请选择一项 Run。'
-    if (focusTarget) {
-      void nextTick(() => {
-        const row = previousRunId
-          ? document.querySelector<HTMLElement>(`[data-catalog-run-id="${previousRunId}"]`)
-          : null
-        if (row) row.focus()
-        else document.getElementById('view-runs-title')?.focus()
-      })
-    }
+
+  if (route.kind === 'catalog') {
+    applyCatalogFromHistory(focusTarget)
     return
   }
-  const fixture = fixtureFromLocation()
-  if (fixture === 'comparison') {
+
+  if (route.kind === 'comparison') {
     if (comparison.value) {
-      const requestedPanel = comparisonPanelFromLocation()
+      const requestedPanel = route.comparisonPanel
       const previousPanel = comparisonPanel.value
       comparisonPanel.value = requestedPanel
       if (focusTarget) {
@@ -862,8 +812,19 @@ function onHistoryChange(focusTarget = false) {
       }
       return
     }
-    if (params.get('sample') === 'drift') {
-      void openComparisonReviewSample()
+    if (route.comparisonSample === 'drift') {
+      void openComparisonReviewSample().then((committed) => {
+        if (!committed) return
+        const current = currentRoute()
+        if (
+          current.kind !== 'comparison' ||
+          current.comparisonSample !== 'drift' ||
+          current.comparisonPanel !== route.comparisonPanel ||
+          !comparison.value
+        ) return
+        comparisonPanel.value = route.comparisonPanel
+        if (focusTarget) focusPublicViewTitle('comparison')
+      })
       return
     }
     ++loadSequence
@@ -880,9 +841,10 @@ function onHistoryChange(focusTarget = false) {
     if (focusTarget) focusPublicViewTitle('comparison')
     return
   }
-  if (fixture === 'pairing') {
+
+  if (route.kind === 'pairing') {
     if (pairedAnalysis.value) {
-      const requestedPanel = pairingPanelFromLocation()
+      const requestedPanel = route.pairingPanel
       const previousPanel = pairingPanel.value
       pairingPanel.value = requestedPanel
       if (focusTarget) {
@@ -894,8 +856,19 @@ function onHistoryChange(focusTarget = false) {
       }
       return
     }
-    if (params.get('sample') === 'supported') {
-      void openPairingReviewSample()
+    if (route.pairingSample === 'supported') {
+      void openPairingReviewSample().then((committed) => {
+        if (!committed) return
+        const current = currentRoute()
+        if (
+          current.kind !== 'pairing' ||
+          current.pairingSample !== 'supported' ||
+          current.pairingPanel !== route.pairingPanel ||
+          !pairedAnalysis.value
+        ) return
+        pairingPanel.value = route.pairingPanel
+        if (focusTarget) focusPublicViewTitle('pairing')
+      })
       return
     }
     ++loadSequence
@@ -912,7 +885,8 @@ function onHistoryChange(focusTarget = false) {
     if (focusTarget) focusPublicViewTitle('pairing')
     return
   }
-  if (fixture === 'batch') {
+
+  if (route.kind === 'batch') {
     ++loadSequence
     releaseCurrentBundle()
     clearLoadedAnalysis()
@@ -927,13 +901,19 @@ function onHistoryChange(focusTarget = false) {
     if (focusTarget) focusPublicViewTitle('batch')
     return
   }
-  if (fixture === 'local') {
+
+  if (route.kind === 'local') {
+    if (activeSource.value === 'local' && bundle.value) {
+      applyRunPanelFromHistory(route.runDetailPanel, focusTarget)
+      return
+    }
     ++loadSequence
     releaseCurrentBundle()
     clearLoadedAnalysis()
     activeSource.value = 'local'
     publicView.value = 'runs'
     runSurface.value = 'detail'
+    runDetailPanel.value = route.runDetailPanel
     loading.value = false
     error.value = {
       code: 'LOCAL_RESELECT_REQUIRED',
@@ -943,8 +923,36 @@ function onHistoryChange(focusTarget = false) {
     if (focusTarget) focusPublicViewTitle('runs')
     return
   }
-  void selectDemo(fixture, false)
-  if (focusTarget) focusPublicViewTitle('runs')
+
+  if (route.kind === 'demo' && route.demoFixture) {
+    if (activeSource.value === route.demoFixture && bundle.value) {
+      applyRunPanelFromHistory(route.runDetailPanel, focusTarget)
+      return
+    }
+    const requestedFixture = route.demoFixture
+    const requestedPanel = route.runDetailPanel
+    void selectDemo(requestedFixture, false, requestedPanel).then((committed) => {
+      if (!committed) return
+      const current = currentRoute()
+      if (
+        current.kind !== 'demo' ||
+        current.demoFixture !== requestedFixture ||
+        current.runDetailPanel !== requestedPanel ||
+        activeSource.value !== requestedFixture ||
+        (requestedFixture === 'invalid' ? !error.value : !bundle.value)
+      ) return
+      if (focusTarget) {
+        if (requestedPanel) {
+          void nextTick(() => document.getElementById('run-detail-panel-title')?.focus())
+        } else {
+          focusPublicViewTitle('runs')
+        }
+      }
+    })
+    return
+  }
+
+  applyCatalogFromHistory(focusTarget)
 }
 
 function onPopState() {
@@ -961,18 +969,21 @@ function displayDate(value: string): string {
 }
 
 onMounted(() => {
-  window.addEventListener('popstate', onPopState)
+  appMounted = true
+  unsubscribeHistory = workbenchHistory.subscribe(onPopState)
   onHistoryChange()
   void refreshCatalog().then(() => {
-    if (catalogRunIdFromLocation()) onHistoryChange()
+    if (appMounted && currentRoute().kind === 'run') onHistoryChange()
   })
 })
 
 onBeforeUnmount(() => {
+  appMounted = false
   ++loadSequence
   pendingPointerClickCleanup?.()
+  unsubscribeHistory?.()
+  unsubscribeHistory = null
   releaseCurrentBundle()
-  window.removeEventListener('popstate', onPopState)
 })
 </script>
 
@@ -1143,6 +1154,7 @@ onBeforeUnmount(() => {
         :error="error"
         :kind="stateCourtKind(error.code)"
         :retry-mode="activeSource === 'catalog' ? 'catalog' : 'positive'"
+        :retry-disabled="activeSource === 'catalog' && catalogLoading"
         @dismiss="dismissRunError(true)"
         @retry="activeSource === 'catalog' ? retryCatalog() : selectDemo('positive')"
       />

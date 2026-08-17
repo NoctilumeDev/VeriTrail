@@ -169,7 +169,6 @@ export async function fetchCatalog(): Promise<CatalogResponse | null> {
   }
 }
 
-export function catalogRunIdFromLocation(): string | null {
-  const value = new URLSearchParams(window.location.search).get('run')
+export function parseCatalogRunId(value: string | null): string | null {
   return value && CATALOG_RUN_ID.test(value) ? value : null
 }

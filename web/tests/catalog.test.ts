@@ -259,6 +259,48 @@ describe('Catalog API 0.1', () => {
     wrapper.unmount()
   })
 
+  it('restores the URL-owned panel after a failed Catalog Run retry', async () => {
+    window.history.replaceState({}, '', `/?run=${catalogRunId}&panel=assertions`)
+    installCatalogFetch(catalogResponse())
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fetchImplementation = fetchMock.getMockImplementation()!
+    let failReport = true
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (
+        failReport &&
+        url.pathname === `/api/v1/runs/${catalogRunId}/bundle/report.json`
+      ) {
+        return {
+          ok: false,
+          status: 409,
+          blob: async () => new Blob([JSON.stringify({
+            schema_version: '0.1',
+            error: { code: 'BUNDLE_CHANGED', message: 'untrusted' },
+          })]),
+        } as Response
+      }
+      return fetchImplementation(input)
+    })
+
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="error-state"]')
+    expect(window.location.search).toBe(`?run=${catalogRunId}&panel=assertions`)
+
+    failReport = false
+    const retryButton = wrapper.get('[data-testid="retry-catalog-run"]')
+    await retryButton.trigger('click')
+    expect((retryButton.element as HTMLButtonElement).disabled).toBe(true)
+    await retryButton.trigger('click')
+    await waitFor(wrapper, '#run-detail-panel-title')
+    expect(wrapper.get('#run-detail-panel-title').text()).toBe('确定性断言')
+    expect(window.location.search).toBe(`?run=${catalogRunId}&panel=assertions`)
+    wrapper.unmount()
+  })
+
   it('keeps applicability expansion reversible and labels both states', async () => {
     installCatalogFetch(catalogResponse())
     const wrapper = mount(App)

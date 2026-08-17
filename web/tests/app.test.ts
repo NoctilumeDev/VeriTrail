@@ -529,4 +529,181 @@ describe('App', () => {
     expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
     wrapper.unmount()
   })
+
+  it('fails closed to Catalog for malformed or unknown managed routes', async () => {
+    const fetchMock = vi.mocked(globalThis.fetch)
+    for (const href of ['/?run=bad', '/?fixture=unknown', '/?view=unknown']) {
+      window.history.replaceState({}, '', href)
+      fetchMock.mockClear()
+      const wrapper = mount(App)
+      await waitFor(wrapper, '[data-testid="run-catalog"]')
+
+      expect(wrapper.get('.app-shell').classes()).toContain('app-shell--catalog')
+      expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+      const requestedPositiveFixture = fetchMock.mock.calls.some(([input]) => {
+        const url = new URL(
+          typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+          window.location.href,
+        )
+        return url.pathname.includes('/fixtures/m2-positive/')
+      })
+      expect(requestedPositiveFixture).toBe(false)
+      wrapper.unmount()
+    }
+  })
+
+  it('restores demo Run panels from History without reloading the evidence bundle', async () => {
+    window.history.replaceState({}, '', '/?fixture=positive&panel=assertions')
+    const wrapper = mount(App, { attachTo: document.body })
+    await waitFor(wrapper, '#run-detail-panel-title')
+    expect(wrapper.get('#run-detail-panel-title').text()).toBe('确定性断言')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const positiveRequestCount = () => fetchMock.mock.calls.filter(([input]) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      return url.pathname.includes('/fixtures/m2-positive/')
+    }).length
+    const requestsAfterLoad = positiveRequestCount()
+
+    window.history.replaceState({}, '', '/?fixture=positive')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    await flushPromises()
+    expect(wrapper.find('#run-detail-panel-title').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(true)
+
+    window.history.replaceState({}, '', '/?fixture=positive&panel=browser')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    await waitFor(wrapper, '#run-detail-panel-title')
+    expect(wrapper.get('#run-detail-panel-title').text()).toBe('浏览器事实')
+    expect(positiveRequestCount()).toBe(requestsAfterLoad)
+
+    await wrapper.get('[data-testid="run-panel-return-bottom"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=positive')
+    wrapper.unmount()
+  })
+
+  it('keeps review samples when opening and closing their complete ledgers', async () => {
+    window.history.replaceState({}, '', '/?fixture=pairing&sample=supported&panel=sources')
+    const pairing = mount(App)
+    await waitFor(pairing, '[data-testid="paired-sources"]')
+    await pairing.get('[data-testid="pairing-panel-return"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=pairing&sample=supported')
+    expect(pairing.find('[data-testid="paired-analysis-view"]').exists()).toBe(true)
+    pairing.unmount()
+
+    window.history.replaceState({}, '', '/?fixture=comparison&sample=drift&panel=differences')
+    const comparison = mount(App)
+    await waitFor(comparison, '[data-testid="comparison-differences"]')
+    await comparison.get('[data-testid="comparison-panel-return-bottom"]').trigger('click')
+    expect(window.location.search).toBe('?fixture=comparison&sample=drift')
+    expect(comparison.find('[data-testid="comparison-view"]').exists()).toBe(true)
+    comparison.unmount()
+  })
+
+  it('does not let a cancelled demo load restore its stale panel', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fixtureFetch = fetchMock.getMockImplementation()!
+    let continueNegative!: () => void
+    const negativeGate = new Promise<void>((resolve) => {
+      continueNegative = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (url.pathname.includes('/fixtures/m2-negative/')) await negativeGate
+      return fixtureFetch(input)
+    })
+
+    window.history.replaceState({}, '', '/?fixture=negative&panel=assertions')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    await flushPromises()
+    expect(wrapper.find('[data-testid="run-detail-loading"]').exists()).toBe(true)
+
+    window.history.replaceState({}, '', '/')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+    await waitFor(wrapper, '[data-testid="run-catalog"]')
+    continueNegative()
+    await flushPromises()
+
+    expect(wrapper.find('#run-detail-panel-title').exists()).toBe(false)
+    await wrapper.get('[data-testid="fixture-positive"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    expect(wrapper.find('#run-detail-panel-title').exists()).toBe(false)
+    expect(window.location.search).toBe('?fixture=positive')
+    wrapper.unmount()
+  })
+
+  it('returns from a missing Run without leaking the Run error into Catalog', async () => {
+    const missingRunId = `cr_${'f'.repeat(24)}`
+    window.history.replaceState({}, '', `/?run=${missingRunId}`)
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="error-state"]')
+    expect(wrapper.get('[data-testid="error-state"]').text()).toContain('RUN_NOT_FOUND')
+
+    await wrapper.get('[data-testid="dismiss-invalid-state"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="run-catalog"]')
+    expect(wrapper.find('[data-testid="catalog-error"]').exists()).toBe(false)
+    expect(window.location.search).toBe('?view=runs')
+    wrapper.unmount()
+  })
+
+  it('closes invalid evidence and canonicalizes malformed routes from the footer seal', async () => {
+    const invalid = mount(App)
+    await waitFor(invalid, '[data-testid="status-gate"]')
+    await invalid.get('[data-testid="catalog-return"]').trigger('click')
+    await invalid.get('[data-testid="fixture-invalid"]').trigger('click')
+    await waitFor(invalid, '[data-testid="error-state"]')
+    await invalid.get('.site-footer__seal').trigger('click')
+    await waitFor(invalid, '[data-testid="run-catalog"]')
+    expect(invalid.find('[data-testid="error-state"]').exists()).toBe(false)
+    expect(window.location.search).toBe('?view=runs')
+    invalid.unmount()
+
+    window.history.replaceState({}, '', '/?fixture=unknown')
+    const malformed = mount(App)
+    await waitFor(malformed, '[data-testid="run-catalog"]')
+    await malformed.get('.site-footer__seal').trigger('click')
+    expect(window.location.search).toBe('')
+    malformed.unmount()
+  })
+
+  it('cancels an invalid verification from the footer before its error resolves', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fixtureFetch = fetchMock.getMockImplementation()!
+    let continueInvalid!: () => void
+    const invalidGate = new Promise<void>((resolve) => {
+      continueInvalid = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (url.pathname.includes('/fixtures/m2-invalid/')) await invalidGate
+      return fixtureFetch(input)
+    })
+
+    await wrapper.get('[data-testid="fixture-invalid"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('[data-testid="fixture-invalid"]').attributes('aria-busy')).toBe('true')
+    await wrapper.get('.site-footer__seal').trigger('click')
+    expect(window.location.search).toBe('?view=runs')
+    continueInvalid()
+    await flushPromises()
+    expect(wrapper.find('[data-testid="error-state"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(true)
+    wrapper.unmount()
+  })
 })
