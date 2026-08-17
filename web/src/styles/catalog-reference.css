@@ -1,9 +1,10 @@
 /*
  * M12-R3 Catalog reference owner.
  *
- * This file owns only the public Catalog forecourt.  It intentionally sits
- * outside the exploratory component layers so the adopted 1448px reference
- * has one explicit composition owner instead of another appended patch stack.
+ * This file owns the public Catalog forecourt and the one shared Runs shell
+ * used by both Catalog and Run detail. It intentionally sits outside the
+ * exploratory component layers so the adopted 1448px reference has one
+ * explicit composition owner instead of another appended patch stack.
  */
 
 .app-shell--catalog {
@@ -22,7 +23,16 @@
   background-size: 768px 768px;
 }
 
-.app-shell--catalog .navigation-courtyard,
+.app-shell--runs {
+  --runs-shell-vermilion: #8a2919;
+}
+
+.app-shell--runs .navigation-courtyard {
+  width: auto;
+  max-width: none;
+  margin-inline: var(--reference-shell-edge);
+}
+
 .app-shell--catalog .evidence-axis,
 .app-shell--catalog .site-footer {
   width: auto;
@@ -53,7 +63,7 @@
   right: 0;
 }
 
-.app-shell--catalog .navigation-courtyard {
+.app-shell--runs .navigation-courtyard {
   position: relative;
   z-index: 1;
   display: block;
@@ -61,11 +71,11 @@
   padding: 0;
 }
 
-.app-shell--catalog .navigation-courtyard::after {
+.app-shell--runs .navigation-courtyard::after {
   position: absolute;
-  right: calc(-1 * var(--catalog-edge));
+  right: calc(-1 * var(--reference-shell-edge));
   bottom: -4px;
-  left: calc(-1 * var(--catalog-edge));
+  left: calc(-1 * var(--reference-shell-edge));
   z-index: -1;
   height: 86px;
   content: '';
@@ -77,26 +87,26 @@
   opacity: 0.48;
 }
 
-.app-shell--catalog .cross-axis-navigation {
+.app-shell--runs .cross-axis-navigation {
   width: 100%;
   height: 100%;
 }
 
-.app-shell--catalog .cross-axis-navigation__waterline {
+.app-shell--runs .cross-axis-navigation__waterline {
   height: 100%;
   padding: 0;
 }
 
-.app-shell--catalog .cross-axis-navigation__waterline::after {
+.app-shell--runs .cross-axis-navigation__waterline::after {
   display: none;
 }
 
-.app-shell--catalog .cross-axis-navigation__waterline > li {
+.app-shell--runs .cross-axis-navigation__waterline > li {
   display: grid;
   place-items: stretch;
 }
 
-.app-shell--catalog .cross-axis-navigation__target {
+.app-shell--runs .cross-axis-navigation__target {
   position: relative;
   display: grid;
   grid-template-columns: 38px 54px minmax(0, 1fr);
@@ -112,7 +122,7 @@
   text-align: left;
 }
 
-.app-shell--catalog .cross-axis-navigation__ordinal {
+.app-shell--runs .cross-axis-navigation__ordinal {
   grid-row: 1;
   grid-column: 1;
   width: 34px;
@@ -125,7 +135,7 @@
   transform: translateY(-10px);
 }
 
-.app-shell--catalog .cross-axis-navigation__mark {
+.app-shell--runs .cross-axis-navigation__mark {
   display: block;
   grid-row: 1;
   grid-column: 2;
@@ -135,7 +145,7 @@
   transform: translateY(-10px);
 }
 
-.app-shell--catalog .cross-axis-navigation__target:not([aria-current='page']) .cross-axis-navigation__mark {
+.app-shell--runs .cross-axis-navigation__target:not([aria-current='page']) .cross-axis-navigation__mark {
   filter:
     sepia(0.34)
     saturate(1.58)
@@ -143,37 +153,37 @@
     contrast(1.13);
 }
 
-.app-shell--catalog .cross-axis-navigation__target--pairing .cross-axis-navigation__mark {
+.app-shell--runs .cross-axis-navigation__target--pairing .cross-axis-navigation__mark {
   width: 44px;
   height: 44px;
 }
 
-.app-shell--catalog .cross-axis-navigation__label {
+.app-shell--runs .cross-axis-navigation__label {
   grid-row: 2;
   grid-column: 2 / span 2;
   align-self: start;
   white-space: nowrap;
 }
 
-.app-shell--catalog .cross-axis-navigation__target:hover,
-.app-shell--catalog .cross-axis-navigation__target:focus-visible,
-.app-shell--catalog .cross-axis-navigation__target[aria-current='page'] {
-  color: var(--catalog-vermilion);
+.app-shell--runs .cross-axis-navigation__target:hover,
+.app-shell--runs .cross-axis-navigation__target:focus-visible,
+.app-shell--runs .cross-axis-navigation__target[aria-current='page'] {
+  color: var(--runs-shell-vermilion);
 }
 
-.app-shell--catalog .cross-axis-navigation__target:focus-visible {
+.app-shell--runs .cross-axis-navigation__target:focus-visible {
   outline: 3px solid #7b5a22;
   outline-offset: -6px;
 }
 
-.app-shell--catalog .cross-axis-navigation__target[aria-current='page']::after {
+.app-shell--runs .cross-axis-navigation__target[aria-current='page']::after {
   content: none;
 }
 
-.app-shell--catalog .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
+.app-shell--runs .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
   color: #fff7eb;
-  background: var(--catalog-vermilion);
-  border-color: var(--catalog-vermilion);
+  background: var(--runs-shell-vermilion);
+  border-color: var(--runs-shell-vermilion);
 }
 
 .app-shell--catalog .evidence-axis {
@@ -852,13 +862,13 @@
 }
 
 @media (max-width: 1120px) and (min-width: 921px) {
-  .app-shell--catalog .cross-axis-navigation__target {
+  .app-shell--runs .cross-axis-navigation__target {
     grid-template-columns: 32px 44px minmax(0, 1fr);
     padding-inline: 8px;
     font-size: 14px;
   }
 
-  .app-shell--catalog .cross-axis-navigation__mark {
+  .app-shell--runs .cross-axis-navigation__mark {
     width: 42px;
     height: 42px;
   }
@@ -871,7 +881,7 @@
 }
 
 @media (max-width: 920px) {
-  .app-shell--catalog .cross-axis-navigation__mark {
+  .app-shell--runs .cross-axis-navigation__mark {
     display: block;
     width: 34px;
     height: 34px;
@@ -946,18 +956,18 @@
 }
 
 @media (max-width: 720px) {
-  .app-shell--catalog .navigation-courtyard {
+  .app-shell--runs .navigation-courtyard {
     height: auto;
     min-height: 220px;
   }
 
-  .app-shell--catalog .cross-axis-navigation__waterline {
+  .app-shell--runs .cross-axis-navigation__waterline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     height: auto;
     min-height: 220px;
   }
 
-  .app-shell--catalog .cross-axis-navigation__target {
+  .app-shell--runs .cross-axis-navigation__target {
     grid-template-columns: 32px 42px;
     grid-template-rows: 48px 28px;
     justify-content: center;
@@ -967,12 +977,12 @@
     font-size: 14px;
   }
 
-  .app-shell--catalog .cross-axis-navigation__ordinal,
-  .app-shell--catalog .cross-axis-navigation__mark {
+  .app-shell--runs .cross-axis-navigation__ordinal,
+  .app-shell--runs .cross-axis-navigation__mark {
     transform: none;
   }
 
-  .app-shell--catalog .cross-axis-navigation__label {
+  .app-shell--runs .cross-axis-navigation__label {
     grid-row: 2;
     grid-column: 1 / -1;
     justify-self: center;

@@ -690,8 +690,10 @@ function returnToCatalog() {
   window.history.pushState({}, '', url)
   liveMessage.value = '已返回本地 Run 目录。'
   void nextTick(() => {
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
     if (!runId) return
-    document.querySelector<HTMLElement>(`[data-catalog-run-id="${runId}"]`)?.focus()
+    document.querySelector<HTMLElement>(`[data-catalog-run-id="${runId}"]`)?.focus({ preventScroll: true })
   })
 }
 
@@ -960,6 +962,7 @@ onBeforeUnmount(() => {
     :class="[
       'app-shell',
       {
+        'app-shell--runs': publicView === 'runs',
         'app-shell--catalog': publicView === 'runs' && !isRunDetail,
         'app-shell--run-detail': isRunDetail,
         'app-shell--pairing': publicView === 'pairing',

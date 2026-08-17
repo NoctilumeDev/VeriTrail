@@ -77,6 +77,7 @@ describe('App', () => {
     expect(wrapper.get('[aria-label="验收结论：PASS"]').text()).toContain('PASS')
     expect(wrapper.get('[data-testid="integrity-status"]').text()).toContain('自报 Verdict')
     expect(wrapper.get('[data-testid="browser-empty"]').text()).toContain('不等于浏览器检查通过')
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--runs')
     expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')
     expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--inner')
     expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
@@ -116,12 +117,33 @@ describe('App', () => {
     await waitFor(wrapper, '[data-testid="status-gate"]')
     await wrapper.get('[data-testid="catalog-return"]').trigger('click')
     await waitFor(wrapper, '[data-testid="fixture-negative"]')
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--runs')
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--catalog')
     await wrapper.get('[data-testid="fixture-negative"]').trigger('click')
     await waitFor(wrapper, '[aria-label="验收结论：FAIL"]')
 
     expect(wrapper.get('[aria-label="验收结论：FAIL"]').text()).toContain('FAIL')
     expect(wrapper.get('[data-testid="assertion-list"]').text()).toContain('negative-assertion')
     expect(window.location.search).toBe('?fixture=negative')
+    wrapper.unmount()
+  })
+
+  it('keeps the shared Runs shell and viewport origin stable when returning to Catalog', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    document.documentElement.scrollTop = 120
+    document.body.scrollTop = 120
+
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await flushPromises()
+
+    expect(wrapper.get('.app-shell').classes()).toEqual(expect.arrayContaining([
+      'app-shell--runs',
+      'app-shell--catalog',
+    ]))
+    expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--run-detail')
+    expect(document.documentElement.scrollTop).toBe(0)
+    expect(document.body.scrollTop).toBe(0)
     wrapper.unmount()
   })
 

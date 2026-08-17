@@ -26,16 +26,8 @@
     background-size: 768px 768px;
   }
 
-  .app-shell--run-detail .court-threshold {
-    display: none;
-  }
-
   .app-shell--run-detail .evidence-axis {
     position: relative;
-  }
-
-  .app-shell--run-detail .cross-axis-navigation__target[aria-current='page']::after {
-    content: none;
   }
 
   .app-shell--run-detail .site-footer {
@@ -295,10 +287,6 @@
   }
 
   @media (min-width: 921px) {
-    .app-shell--run-detail .navigation-courtyard {
-      left: 58%;
-    }
-
     .app-shell--run-detail .evidence-axis {
       grid-template-columns: minmax(15.5rem, 0.92fr) minmax(23rem, 1.48fr) minmax(15.5rem, 0.92fr);
       gap: 0.72rem;

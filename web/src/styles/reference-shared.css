@@ -17,7 +17,7 @@
  * geometry here prevents page-specific height or spacing changes from making
  * the visual centre drift when the public view changes.
  */
-.app-shell--catalog .court-threshold,
+.app-shell--runs .court-threshold,
 .app-shell--pairing .court-threshold,
 .app-shell--comparison .court-threshold {
   position: relative;
@@ -26,7 +26,7 @@
   background: transparent;
 }
 
-.app-shell--catalog .court-threshold span,
+.app-shell--runs .court-threshold span,
 .app-shell--pairing .court-threshold span,
 .app-shell--comparison .court-threshold span {
   position: absolute;
