@@ -13,6 +13,7 @@
     --detail-gold: #a48558;
     --detail-gold-soft: #d3b775;
     --detail-lacquer: #092b30;
+    --detail-vermilion: #963e34;
     --detail-rule-color: rgba(164, 133, 88, 0.3);
     --detail-rule-strong: rgba(164, 133, 88, 0.44);
     --detail-rule: 1px solid var(--detail-rule-color);
@@ -431,8 +432,9 @@
     }
 
     .app-shell--run-detail .run-section--assertions .assertion-card {
-      grid-template-columns: 3.8rem minmax(0, 1fr);
+      grid-template-columns: 7.65rem minmax(0, 1fr);
       gap: 0.65rem;
+      align-items: start;
       padding: 0.8rem 0.35rem 0.8rem 0.6rem;
     }
 
@@ -443,10 +445,14 @@
 
     .app-shell--run-detail .run-section--assertions .assertion-card__status {
       gap: 0.35rem;
+      min-width: 0;
+      padding-top: 0.08rem;
     }
 
     .app-shell--run-detail .run-section--assertions .assertion-card__status strong {
       font-size: 0.65rem;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
     }
 
     .app-shell--run-detail .run-section--ledger .ledger-row {
@@ -461,7 +467,7 @@
     }
 
     .app-shell--run-detail .run-section--assertions.run-section--standalone .assertion-card {
-      grid-template-columns: 6.5rem minmax(0, 1.4fr) minmax(16rem, 0.8fr);
+      grid-template-columns: 8rem minmax(0, 1.4fr) minmax(16rem, 0.8fr);
       gap: 1rem;
       padding: 1rem 0 1rem 1rem;
     }
@@ -897,6 +903,12 @@
     flex: 1 1 auto;
   }
 
+  .app-shell--run-detail .run-section--assertions .assertion-list {
+    grid-template-rows: none;
+    grid-auto-rows: max-content;
+    align-content: start;
+  }
+
   .app-shell--run-detail .assertion-card,
   .app-shell--run-detail .ledger-row,
   .app-shell--run-detail .browser-summary,
@@ -1016,7 +1028,7 @@
   }
 
   .app-shell--run-detail .run-section--assertions .filter-group button[aria-pressed='true'] {
-    color: #7f2c20;
+    color: var(--detail-vermilion);
     background: transparent;
     box-shadow: inset 0 -2px #8f774e;
   }
@@ -1026,6 +1038,13 @@
     background: transparent;
     border-inline-start: 0;
     border-block-end: 1px solid rgba(164, 133, 88, 0.28);
+  }
+
+  .app-shell--run-detail .assertion--fail .assertion-card__status,
+  .app-shell--run-detail .reason-banner--fail,
+  .app-shell--run-detail .status-gate--detail .status--fail,
+  .app-shell--run-detail .status-gate--detail .status--error {
+    color: var(--detail-vermilion);
   }
 
   .app-shell--run-detail .browser-absence {
@@ -1134,7 +1153,7 @@
   }
 
   .app-shell--run-detail .tab-list button[aria-selected='true'] {
-    color: #7f2c20;
+    color: var(--detail-vermilion);
     background: transparent;
     box-shadow: inset 0 -2px #8f774e;
   }
@@ -1591,6 +1610,13 @@
       display: inline-flex;
       align-items: center;
       min-height: 2.75rem;
+    }
+  }
+
+  @media (min-width: 561px) and (max-width: 920px) {
+    .app-shell--run-detail .run-section--assertions .assertion-card {
+      grid-template-columns: 8.5rem minmax(0, 1fr);
+      align-items: start;
     }
   }
 
