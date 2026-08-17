@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import BatchAnalysisView from './components/BatchAnalysisView.vue'
+import BatchEntryState from './components/BatchEntryState.vue'
 import BrowserEvidence from './components/BrowserEvidence.vue'
 import ComparisonEntryState from './components/ComparisonEntryState.vue'
 import ComparisonView from './components/ComparisonView.vue'
@@ -74,6 +75,7 @@ const pairingPanel = ref<PairingPanel | null>(null)
 const comparisonPanel = ref<ComparisonPanel | null>(null)
 let lastCatalogTriggerId: string | null = null
 let loadSequence = 0
+let pendingPointerClickCleanup: (() => void) | null = null
 
 const report = computed(() => bundle.value?.report ?? null)
 const browserSession = computed(() => (bundle.value ? browserEvidence(bundle.value) : null))
@@ -358,9 +360,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   publicView.value = 'runs'
   runSurface.value = id === 'invalid' ? 'catalog' : 'detail'
   selectedCatalogRunId.value = null
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
+  clearLoadedAnalysis()
   liveMessage.value = `正在读取${sourceLabel(id)}。`
   if (pushHistory) {
     const url = new URL(window.location.href)
@@ -426,9 +426,7 @@ async function importLocal(event: Event) {
   publicView.value = 'runs'
   runSurface.value = 'detail'
   selectedCatalogRunId.value = null
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
+  clearLoadedAnalysis()
   liveMessage.value = '正在本地内存中核验所选证据包。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
@@ -599,9 +597,7 @@ async function selectCatalogRun(
   runSurface.value = 'detail'
   selectedCatalogRunId.value = run.catalog_run_id
   runDetailPanel.value = null
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
+  clearLoadedAnalysis()
   lastCatalogTriggerId = trigger ? run.catalog_run_id : lastCatalogTriggerId
   liveMessage.value = `正在从只读目录核验 ${run.run_id}。`
   if (pushHistory) {
@@ -614,9 +610,6 @@ async function selectCatalogRun(
     window.history.pushState({ run: run.catalog_run_id }, '', url)
   }
   releaseCurrentBundle()
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
   try {
     const loaded = await loadSameOriginBundle(
       run.bundle.base_url,
@@ -668,11 +661,10 @@ async function retryCatalog() {
 }
 
 function returnToCatalog() {
+  if (!isRunDetail.value) return
   ++loadSequence
   releaseCurrentBundle()
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
+  clearLoadedAnalysis()
   loading.value = false
   error.value = null
   activeSource.value = 'catalog'
@@ -697,6 +689,38 @@ function returnToCatalog() {
   })
 }
 
+function isPrimaryActivationPointer(event: PointerEvent): boolean {
+  return event.isPrimary !== false && (event.pointerType !== 'mouse' || event.button === 0)
+}
+
+function suppressNextPointerClick() {
+  pendingPointerClickCleanup?.()
+  let timeoutId: number | undefined
+  const cleanup = () => {
+    document.removeEventListener('click', consumePointerClick, true)
+    if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+    if (pendingPointerClickCleanup === cleanup) pendingPointerClickCleanup = null
+  }
+  const consumePointerClick = (event: MouseEvent) => {
+    // Keyboard activation emits a click with detail 0 and must retain the
+    // native click fallback. A pointer click can otherwise land on the newly
+    // rendered Catalog after pointerdown removes the source control.
+    if (event.detail === 0) return
+    event.preventDefault()
+    event.stopImmediatePropagation()
+    cleanup()
+  }
+  document.addEventListener('click', consumePointerClick, true)
+  timeoutId = window.setTimeout(cleanup, 800)
+  pendingPointerClickCleanup = cleanup
+}
+
+function returnToCatalogOnPrimaryPointer(event: PointerEvent) {
+  if (!isPrimaryActivationPointer(event)) return
+  suppressNextPointerClick()
+  returnToCatalog()
+}
+
 function goToCatalogHome() {
   if (isRunDetail.value) {
     returnToCatalog()
@@ -714,6 +738,12 @@ function goToCatalogHome() {
   document.body.scrollTop = 0
   liveMessage.value = '已回到本地 Run 目录。'
   focusPublicViewTitle('runs')
+}
+
+function goToCatalogHomeOnPrimaryPointer(event: PointerEvent) {
+  if (!isPrimaryActivationPointer(event)) return
+  suppressNextPointerClick()
+  goToCatalogHome()
 }
 
 function sourceLabel(id: DemoBundleId): string {
@@ -777,9 +807,7 @@ function onHistoryChange(focusTarget = false) {
     }
     ++loadSequence
     releaseCurrentBundle()
-    comparison.value = null
-    pairedAnalysis.value = null
-    batchAnalysis.value = null
+    clearLoadedAnalysis()
     activeSource.value = 'catalog'
     publicView.value = 'runs'
     runSurface.value = 'detail'
@@ -800,9 +828,7 @@ function onHistoryChange(focusTarget = false) {
     const previousRunId = selectedCatalogRunId.value ?? lastCatalogTriggerId
     ++loadSequence
     releaseCurrentBundle()
-    comparison.value = null
-    pairedAnalysis.value = null
-    batchAnalysis.value = null
+    clearLoadedAnalysis()
     activeSource.value = 'catalog'
     publicView.value = 'runs'
     runSurface.value = 'catalog'
@@ -842,9 +868,7 @@ function onHistoryChange(focusTarget = false) {
     }
     ++loadSequence
     releaseCurrentBundle()
-    comparison.value = null
-    pairedAnalysis.value = null
-    batchAnalysis.value = null
+    clearLoadedAnalysis()
     activeSource.value = 'comparison'
     publicView.value = 'comparison'
     loading.value = false
@@ -876,9 +900,7 @@ function onHistoryChange(focusTarget = false) {
     }
     ++loadSequence
     releaseCurrentBundle()
-    comparison.value = null
-    pairedAnalysis.value = null
-    batchAnalysis.value = null
+    clearLoadedAnalysis()
     activeSource.value = 'pairing'
     publicView.value = 'pairing'
     loading.value = false
@@ -893,9 +915,7 @@ function onHistoryChange(focusTarget = false) {
   if (fixture === 'batch') {
     ++loadSequence
     releaseCurrentBundle()
-    comparison.value = null
-    pairedAnalysis.value = null
-    batchAnalysis.value = null
+    clearLoadedAnalysis()
     activeSource.value = 'batch'
     publicView.value = 'batch'
     loading.value = false
@@ -910,9 +930,7 @@ function onHistoryChange(focusTarget = false) {
   if (fixture === 'local') {
     ++loadSequence
     releaseCurrentBundle()
-    comparison.value = null
-    pairedAnalysis.value = null
-    batchAnalysis.value = null
+    clearLoadedAnalysis()
     activeSource.value = 'local'
     publicView.value = 'runs'
     runSurface.value = 'detail'
@@ -952,6 +970,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   ++loadSequence
+  pendingPointerClickCleanup?.()
   releaseCurrentBundle()
   window.removeEventListener('popstate', onPopState)
 })
@@ -968,6 +987,7 @@ onBeforeUnmount(() => {
         'app-shell--pairing': publicView === 'pairing',
         'app-shell--comparison': publicView === 'comparison',
         'app-shell--batch': publicView === 'batch',
+        'app-shell--reference-analysis': publicView !== 'runs',
       },
     ]"
   >
@@ -1090,6 +1110,7 @@ onBeforeUnmount(() => {
           <button
             type="button"
             :data-testid="report && bundle ? 'catalog-return' : undefined"
+            @pointerdown="returnToCatalogOnPrimaryPointer"
             @click="returnToCatalog"
           >
             返回目录
@@ -1309,41 +1330,27 @@ onBeforeUnmount(() => {
       </section>
 
       <section v-else class="analysis-view" aria-labelledby="view-batch-title">
-        <header class="view-introduction">
-          <p class="eyebrow">Public View · 东向</p>
-          <h2 id="view-batch-title" tabindex="-1" data-testid="view-batch-title">Batch Analysis</h2>
-          <label class="local-import" :class="{ 'is-active': activeSource === 'batch' }">
-            <span>选择全因子批次文件</span>
-            <input
-              type="file"
-              multiple
-              accept=".json,.md,application/json,text/markdown"
-              aria-label="选择本地 VeriTrail BatchAnalysis 四个文件"
-              data-testid="local-batch-input"
-              @change="importBatchAnalysis"
-            />
-          </label>
-        </header>
-        <div v-if="loading" class="loading-court state-court state-court--loading" role="status" data-testid="loading-state" data-state-kind="loading">
-          <span class="loading-court__mark" aria-hidden="true"></span>
-          <p>正在核验全因子批次分析包</p>
-          <small>Manifest、BatchPlan seal 与完整矩阵逐项比对</small>
-        </div>
-        <section
-          v-else-if="error"
-          :class="['error-court', 'state-court', `state-court--${stateCourtKind(error.code)}`]"
-          :data-state-kind="stateCourtKind(error.code)"
-          aria-labelledby="batch-error-title"
-          data-testid="error-state"
+        <BatchEntryState
+          v-if="!batchAnalysis"
+          :mode="loading ? 'loading' : error ? 'error' : 'empty'"
+          :error="error"
+          :kind="error ? stateCourtKind(error.code) : undefined"
         >
-          <span class="error-court__seal" aria-hidden="true">止</span>
-          <p class="eyebrow">Batch Analysis 未进入可信展示</p>
-          <h3 id="batch-error-title">{{ error.message }}</h3>
-          <code>{{ error.code }}</code>
-          <p>请重新选择四个本地文件；文件不会上传，也不会持久化。</p>
-        </section>
-        <BatchAnalysisView v-else-if="batchAnalysis" :loaded="batchAnalysis" />
-        <p v-else class="analysis-empty state-court state-court--empty" data-testid="batch-empty" data-state-kind="empty">请选择 BatchAnalysis 的四个本地文件。</p>
+          <template #action>
+            <label class="local-import batch-entry__import" :class="{ 'is-active': activeSource === 'batch' }">
+              <span>{{ error ? '重新选择批次文件' : '选择全因子批次文件' }}</span>
+              <input
+                type="file"
+                multiple
+                accept=".json,.md,application/json,text/markdown"
+                aria-label="选择本地 VeriTrail BatchAnalysis 四个文件"
+                data-testid="local-batch-input"
+                @change="importBatchAnalysis"
+              />
+            </label>
+          </template>
+        </BatchEntryState>
+        <BatchAnalysisView v-else :loaded="batchAnalysis" />
       </section>
     </main>
 
@@ -1356,6 +1363,7 @@ onBeforeUnmount(() => {
         class="site-footer__seal"
         aria-label="返回本地 Run 目录"
         title="返回本地 Run 目录"
+        @pointerdown="goToCatalogHomeOnPrimaryPointer"
         @click="goToCatalogHome"
       >
         验

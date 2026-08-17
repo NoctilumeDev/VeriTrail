@@ -2008,165 +2008,11 @@
     color: var(--jade-green);
   }
 
-  .state-court {
-    position: relative;
-    display: grid;
-    width: min(100%, 44rem);
-    min-height: 20rem;
-    margin-inline: auto;
-    padding: var(--space-7);
-    place-items: center;
-    align-content: center;
-    text-align: center;
-    background: var(--surface-courtyard);
-    border: 1px solid var(--structure-hairline-strong);
-    border-top: 3px solid var(--structure-dai);
-    box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--structure-dai) 4%, transparent);
-  }
-
-  .state-court::before {
-    position: absolute;
-    top: -0.2rem;
-    left: 50%;
-    width: 3rem;
-    height: 0.28rem;
-    content: "";
-    background: var(--structure-gold);
-    transform: translateX(-50%);
-  }
-
-  .state-court--empty {
-    min-height: 12rem;
-    padding: var(--space-5);
-    place-items: center;
-    border-style: dashed;
-    border-top-style: solid;
-    color: var(--text-secondary);
-  }
-
-  .state-court--invalid {
-    border-top-color: var(--status-fail-fg);
-  }
-
-  .state-court--operational {
-    border-top-color: var(--status-inconclusive-fg);
-  }
-
-  .state-court--privacy {
-    border-top-color: var(--structure-dai);
-    background: color-mix(in srgb, var(--surface-courtyard) 84%, var(--structure-dai-soft));
-  }
-
-  .loading-court__mark {
-    width: 2.75rem;
-    height: 2.75rem;
-    margin-bottom: var(--space-4);
-    border: 3px solid var(--glaze-gold-soft);
-    border-top-color: var(--glaze-gold);
-    border-radius: 50%;
-    animation: loading-spin 0.9s linear infinite;
-  }
-
-  .loading-court p {
-    margin-bottom: var(--space-1);
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-  }
-
-  .loading-court small {
-    color: var(--brick-gray);
-  }
-
-  @keyframes loading-spin {
-    to { transform: rotate(360deg); }
-  }
-
-  .error-court {
-    border-inline-color: color-mix(in srgb, var(--status-fail-fg) 44%, var(--structure-hairline));
-    border-bottom-color: color-mix(in srgb, var(--status-fail-fg) 44%, var(--structure-hairline));
-  }
-
-  .error-court__seal {
-    display: grid;
-    width: 3.5rem;
-    height: 3.5rem;
-    margin-bottom: var(--space-4);
-    place-items: center;
-    color: var(--status-fail-fg);
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    border: 2px solid var(--status-fail-fg);
-  }
-
-  .state-court--operational .error-court__seal,
-  .state-court--privacy .error-court__seal {
-    color: var(--structure-dai);
-    border-color: var(--structure-dai);
-  }
-
-  .state-court--operational .error-court__seal {
-    color: var(--status-inconclusive-fg);
-    border-color: var(--status-inconclusive-fg);
-  }
-
-  .state-court--privacy .error-court__seal {
-    color: var(--structure-dai);
-    border-style: dashed;
-  }
-
-  .error-court h2,
-  .error-court h3 {
-    max-width: 34rem;
-    margin-bottom: var(--space-3);
-    font-family: var(--font-display);
-    font-size: 1.45rem;
-  }
-
-  .error-court code {
-    padding: var(--space-1) var(--space-2);
-    color: var(--status-fail-fg);
-    background: var(--status-fail-bg);
-  }
-
-  .state-court--operational .error-court code,
-  .state-court--privacy .error-court code {
-    color: var(--structure-dai);
-    background: var(--structure-dai-soft);
-  }
-
-  .error-court > p:not(.eyebrow) {
-    max-width: 34rem;
-    margin: var(--space-4) 0;
-    color: var(--text-secondary);
-  }
-
-  .error-court button {
-    padding: var(--space-3) var(--space-5);
-    color: var(--text-on-ink);
-    cursor: pointer;
-    background: var(--interaction-default);
-    border: 1px solid var(--interaction-default);
-  }
-
-  .state-court--privacy .error-court button {
-    color: var(--text-primary);
-    background: var(--surface-courtyard);
-    border-color: var(--structure-dai);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .loading-court__mark {
-      animation: none;
-      transform: none;
-    }
-  }
-
   @media (forced-colors: active) {
     .browser-summary,
     .viewport-ledger,
     .evidence-tabs,
     .browser-absence,
-    .state-court,
     .screenshot-dialog,
     .screenshot-card,
     .network-list {
@@ -2177,10 +2023,7 @@
     .tab-list button:focus-visible,
     .timeline__entry--failed,
     .log-list li.log--error,
-    .network-row--error,
-    .state-court--invalid,
-    .state-court--operational,
-    .state-court--privacy {
+    .network-row--error {
       outline: 2px solid CanvasText;
       outline-offset: -2px;
     }
@@ -2188,8 +2031,7 @@
     .timeline__entry,
     .log-list li,
     .network-row,
-    .browser-absence,
-    .state-court {
+    .browser-absence {
       border-left-color: CanvasText;
     }
   }
@@ -2447,11 +2289,6 @@
       height: 11rem;
     }
 
-    .loading-court,
-    .error-court {
-      min-height: 17rem;
-      padding: var(--space-5);
-    }
   }
 
   @media (max-width: 420px) {

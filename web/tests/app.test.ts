@@ -147,6 +147,44 @@ describe('App', () => {
     wrapper.unmount()
   })
 
+  it('commits the shared Catalog return on primary pointerdown and keeps click as the keyboard fallback', async () => {
+    const pointerWrapper = mount(App, { attachTo: document.body })
+    await waitFor(pointerWrapper, '[data-testid="status-gate"]')
+
+    const pointerDown = new Event('pointerdown', { bubbles: true })
+    Object.defineProperties(pointerDown, {
+      isPrimary: { value: true },
+      pointerType: { value: 'mouse' },
+      button: { value: 0 },
+    })
+    pointerWrapper.get('[data-testid="catalog-return"]').element.dispatchEvent(pointerDown)
+    await flushPromises()
+
+    expect(pointerWrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+    expect(pointerWrapper.find('[data-testid="run-catalog"]').exists()).toBe(true)
+    expect(window.location.search).toBe('')
+
+    const catalogAction = pointerWrapper.get('[data-testid="fixture-positive"]')
+    const clickThrough = new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 })
+    expect(catalogAction.element.dispatchEvent(clickThrough)).toBe(false)
+    await flushPromises()
+    expect(pointerWrapper.find('[data-testid="run-catalog"]').exists()).toBe(true)
+    expect(window.location.search).toBe('')
+    pointerWrapper.unmount()
+
+    window.history.replaceState({}, '', '/?fixture=negative')
+    const keyboardWrapper = mount(App)
+    await waitFor(keyboardWrapper, '[aria-label="验收结论：FAIL"]')
+
+    await keyboardWrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await flushPromises()
+
+    expect(keyboardWrapper.find('[aria-label="验收结论：FAIL"]').exists()).toBe(false)
+    expect(keyboardWrapper.find('[data-testid="run-catalog"]').exists()).toBe(true)
+    expect(window.location.search).toBe('')
+    keyboardWrapper.unmount()
+  })
+
   it('keeps the destination surface mounted while a Run is being verified', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
