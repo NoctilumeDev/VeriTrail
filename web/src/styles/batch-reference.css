@@ -17,7 +17,6 @@
   background-size: 768px 768px;
 }
 
-.app-shell--batch .navigation-courtyard,
 .app-shell--batch .evidence-axis,
 .app-shell--batch .site-footer {
   width: auto;
@@ -55,17 +54,6 @@
 
 .app-shell--batch .site-footer::after {
   right: 0;
-}
-
-.app-shell--batch .batch-court,
-.app-shell--batch .batch-state-gates,
-.app-shell--batch .batch-policy-ledger,
-.app-shell--batch .batch-matrix-court,
-.app-shell--batch .batch-wave-ledger,
-.app-shell--batch .batch-reason-ledger {
-  background-color: var(--surface-courtyard);
-  background-image: url('/textures/paper-fiber.png');
-  background-size: 384px 384px;
 }
 
 .app-shell--batch .batch-entry {
@@ -211,55 +199,517 @@
   letter-spacing: 0.08em;
 }
 
-@media (min-width: 921px) {
-  .app-shell--batch .batch-court {
-    padding-top: 0;
-    overflow: visible;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
+/*
+ * Loaded Batch Analysis is one continuous matrix court. The outer court owns
+ * the paper and frame; descendants contribute only rules and cells.
+ */
+.app-shell--batch .batch-court {
+  position: relative;
+  overflow: clip;
+  background-color: var(--surface-courtyard);
+  background-image: url('/textures/paper-fiber.png');
+  background-size: 384px 384px;
+  border: 1px solid var(--batch-rule-strong);
+  box-shadow: inset 0 3px 0 color-mix(in srgb, var(--batch-teal) 76%, transparent);
+}
+
+.app-shell--batch .batch-court > * {
+  position: relative;
+  min-width: 0;
+  background: transparent;
+}
+
+.app-shell--batch .batch-court__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 112px;
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-court__heading .eyebrow,
+.app-shell--batch .batch-section-heading .eyebrow,
+.app-shell--batch .batch-boundary .eyebrow {
+  margin: 0 0 5px;
+  color: var(--batch-teal);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.app-shell--batch .batch-court__heading h2,
+.app-shell--batch .batch-section-heading h3,
+.app-shell--batch .batch-boundary h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.app-shell--batch .batch-court__heading h2 {
+  font-size: clamp(1.75rem, 2.4vw, 2.35rem);
+  letter-spacing: 0.04em;
+}
+
+.app-shell--batch .batch-court__heading > span {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  color: var(--batch-teal);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  border: 1px solid color-mix(in srgb, var(--batch-teal) 44%, var(--batch-rule));
+}
+
+.app-shell--batch .batch-state-gates {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  align-items: stretch;
+  border-bottom: 1px solid var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-analysis-status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  min-width: 0;
+  padding: 24px 28px;
+  color: var(--batch-teal);
+}
+
+.app-shell--batch .batch-analysis-status--contradicted,
+.app-shell--batch .batch-analysis-status--incomplete {
+  color: #8b3f35;
+}
+
+.app-shell--batch .batch-analysis-status--inconclusive {
+  color: #53676b;
+}
+
+.app-shell--batch .batch-analysis-status__mark {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  border: 1px solid currentColor;
+}
+
+.app-shell--batch .batch-analysis-status__body {
+  min-width: 0;
+}
+
+.app-shell--batch .batch-analysis-status__body small,
+.app-shell--batch .batch-analysis-status__body strong,
+.app-shell--batch .batch-analysis-status__body p {
+  display: block;
+}
+
+.app-shell--batch .batch-analysis-status__body small {
+  color: var(--batch-muted);
+  font-size: 0.69rem;
+}
+
+.app-shell--batch .batch-analysis-status__body strong {
+  margin: 5px 0 3px;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 1.18rem;
+  letter-spacing: 0.025em;
+}
+
+.app-shell--batch .batch-analysis-status__body p {
+  margin: 0;
+  color: var(--batch-muted);
+  font-size: 0.8rem;
+}
+
+.app-shell--batch .batch-analysis-status__scope {
+  color: var(--batch-muted);
+  font-family: var(--font-mono);
+  font-size: 0.61rem;
+  letter-spacing: 0.08em;
+  writing-mode: vertical-rl;
+}
+
+.app-shell--batch .batch-state-gates__axis {
+  min-width: 0;
+  background: var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-state-gates__axis span {
+  display: none;
+}
+
+.app-shell--batch .batch-policy-ledger,
+.app-shell--batch .batch-matrix-court,
+.app-shell--batch .batch-wave-ledger,
+.app-shell--batch .batch-reason-ledger,
+.app-shell--batch .batch-boundary {
+  padding: 24px 28px 28px;
+  border-bottom: 1px solid var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-boundary {
+  border-bottom: 0;
+}
+
+.app-shell--batch .batch-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-section-heading h3 {
+  font-size: 1.18rem;
+  letter-spacing: 0.045em;
+}
+
+.app-shell--batch .batch-policy-ledger__facts {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  border-block: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-policy-ledger__facts > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 14px 12px;
+}
+
+.app-shell--batch .batch-policy-ledger__facts > div + div {
+  border-inline-start: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-policy-ledger__facts dt {
+  color: var(--batch-muted);
+  font-size: 0.66rem;
+}
+
+.app-shell--batch .batch-policy-ledger__facts dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.app-shell--batch .batch-matrix-court__scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-matrix-court__scroll:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.app-shell--batch .batch-matrix-court table {
+  width: 100%;
+  min-width: 44rem;
+  border-collapse: collapse;
+}
+
+.app-shell--batch .batch-matrix-court th,
+.app-shell--batch .batch-matrix-court td {
+  min-width: 0;
+  padding: 13px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-matrix-court th + th,
+.app-shell--batch .batch-matrix-court td + td {
+  border-inline-start: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-matrix-court thead th {
+  color: #ead9a7;
+  font-family: var(--font-mono);
+  font-size: 0.71rem;
+  background: var(--batch-teal);
+  border-bottom-color: #a4844d;
+}
+
+.app-shell--batch .batch-matrix-court tbody th {
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  background: color-mix(in srgb, var(--batch-teal) 6%, transparent);
+}
+
+.app-shell--batch .batch-matrix-court tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.app-shell--batch .batch-matrix-court .is-mismatch {
+  color: #8b3f35;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  background: color-mix(in srgb, #8b3f35 7%, transparent);
+}
+
+.app-shell--batch .batch-wave-ledger__list {
+  border: 1px solid var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-wave {
+  min-width: 0;
+}
+
+.app-shell--batch .batch-wave + .batch-wave {
+  border-top: 1px solid var(--batch-rule-strong);
+}
+
+.app-shell--batch .batch-wave__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+  background: color-mix(in srgb, var(--batch-teal) 5%, transparent);
+  border-bottom: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-wave__heading div {
+  display: grid;
+  gap: 3px;
+}
+
+.app-shell--batch .batch-wave__heading small,
+.app-shell--batch .batch-wave__heading > span {
+  color: var(--batch-muted);
+  font-family: var(--font-mono);
+  font-size: 0.69rem;
+}
+
+.app-shell--batch .batch-wave__heading strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.app-shell--batch .batch-wave__slots {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-shell--batch .batch-slot {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.8fr) minmax(11rem, 1fr) minmax(15rem, 1fr);
+  gap: 16px;
+  min-width: 0;
+  padding: 18px 16px;
+}
+
+.app-shell--batch .batch-slot + .batch-slot {
+  border-top: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-slot.is-missing {
+  color: #8b3f35;
+}
+
+.app-shell--batch .batch-slot__identity,
+.app-shell--batch .batch-slot__source {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.app-shell--batch .batch-slot__identity {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 10px;
+}
+
+.app-shell--batch .batch-slot__identity-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.app-shell--batch .batch-slot__position {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  color: var(--batch-teal);
+  font-family: var(--font-mono);
+  font-size: 0.71rem;
+  border: 1px solid var(--batch-teal);
+}
+
+.app-shell--batch .batch-slot__identity strong,
+.app-shell--batch .batch-slot__identity code,
+.app-shell--batch .batch-slot__source strong,
+.app-shell--batch .batch-slot__source code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--batch .batch-slot__source small {
+  color: var(--batch-muted);
+  font-size: 0.66rem;
+}
+
+.app-shell--batch .batch-slot__statuses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 0;
+  border: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-slot__statuses .status-badge {
+  min-height: 44px;
+  padding: 8px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.app-shell--batch .batch-slot__statuses .status-badge + .status-badge {
+  border-inline-start: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-slot__missing {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+}
+
+.app-shell--batch .batch-slot details {
+  grid-column: 1 / -1;
+  min-width: 0;
+  border-top: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-slot summary {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  padding-block: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.app-shell--batch .batch-slot details dl {
+  display: grid;
+  gap: 0;
+  margin: 12px 0 0;
+  border: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-slot__outcome {
+  min-width: 0;
+  padding: 12px;
+}
+
+.app-shell--batch .batch-slot__outcome + .batch-slot__outcome {
+  border-top: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-slot__outcome.is-mismatch {
+  color: #8b3f35;
+}
+
+.app-shell--batch .batch-slot__outcome dt {
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.app-shell--batch .batch-slot__outcome dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--batch .batch-reason-ledger__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-reason-ledger__list li {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.55fr) minmax(0, 1.45fr);
+  gap: 16px;
+  min-width: 0;
+  padding: 13px 12px;
+}
+
+.app-shell--batch .batch-reason-ledger__list li + li {
+  border-top: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-reason-ledger__list code,
+.app-shell--batch .batch-reason-ledger__list span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.app-shell--batch .batch-boundary {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.62fr) minmax(0, 1.38fr);
+  gap: 24px;
+}
+
+.app-shell--batch .batch-boundary ul {
+  margin: 0;
+  padding-left: 24px;
+  border-inline-start: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-boundary > code {
+  grid-column: 1 / -1;
+  padding-top: 12px;
+  overflow-wrap: anywhere;
+  color: var(--batch-muted);
+  border-top: 1px solid var(--batch-rule);
+}
+
+.app-shell--batch .batch-boundary strong {
+  color: var(--batch-teal);
+}
+
+@media (max-width: 920px) {
+  .app-shell--batch .batch-policy-ledger__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .app-shell--batch .batch-court__heading {
-    min-height: 4.8rem;
-    margin: 0;
-    padding: var(--space-4) var(--space-5);
-    color: var(--text-primary);
-    background-color: var(--surface-courtyard);
-    background-image: none;
-    border: 1px solid var(--structure-hairline-strong);
-    border-radius: 0;
-    box-shadow: none;
+  .app-shell--batch .batch-policy-ledger__facts > div:nth-child(odd) {
+    border-inline-start: 0;
   }
 
-  .app-shell--batch .batch-court__heading::before {
-    display: none;
+  .app-shell--batch .batch-policy-ledger__facts > div:nth-child(n + 3) {
+    border-top: 1px solid var(--batch-rule);
   }
 
-  .app-shell--batch .batch-court__heading .eyebrow {
-    color: var(--structure-dai);
+  .app-shell--batch .batch-slot {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .app-shell--batch .batch-court__heading > span {
-    color: var(--structure-dai);
-    border-color: color-mix(in srgb, var(--structure-dai) 46%, var(--structure-hairline));
-  }
-
-  .app-shell--batch .batch-state-gates,
-  .app-shell--batch .batch-policy-ledger {
-    border-color: var(--structure-hairline-strong);
-  }
-
-  .app-shell--batch .batch-section-heading {
-    padding-bottom: var(--space-3);
-    color: var(--text-primary);
-    background: transparent;
-    border-bottom: 1px solid var(--structure-hairline);
+  .app-shell--batch .batch-slot__statuses,
+  .app-shell--batch .batch-slot__missing {
+    grid-column: 1 / -1;
   }
 }
 
 @media (max-width: 720px) {
-  .app-shell--batch .navigation-courtyard,
   .app-shell--batch .evidence-axis,
   .app-shell--batch .site-footer {
     margin-inline: 10px;
@@ -288,5 +738,93 @@
 
   .app-shell--batch .batch-entry__files li {
     padding: 24px 12px;
+  }
+
+  .app-shell--batch .batch-court__heading,
+  .app-shell--batch .batch-section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .app-shell--batch .batch-court__heading {
+    gap: 18px;
+    min-height: 0;
+    padding: 24px 20px 20px;
+  }
+
+  .app-shell--batch .batch-court__heading > span {
+    align-self: flex-start;
+  }
+
+  .app-shell--batch .batch-state-gates {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--batch .batch-state-gates__axis {
+    display: none;
+  }
+
+  .app-shell--batch .batch-analysis-status {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 20px;
+  }
+
+  .app-shell--batch .batch-analysis-status--hypothesis {
+    border-top: 1px solid var(--batch-rule);
+  }
+
+  .app-shell--batch .batch-analysis-status__scope {
+    grid-column: 2;
+    writing-mode: horizontal-tb;
+  }
+
+  .app-shell--batch .batch-policy-ledger,
+  .app-shell--batch .batch-matrix-court,
+  .app-shell--batch .batch-wave-ledger,
+  .app-shell--batch .batch-reason-ledger,
+  .app-shell--batch .batch-boundary {
+    padding: 20px;
+  }
+
+  .app-shell--batch .batch-policy-ledger__facts,
+  .app-shell--batch .batch-slot,
+  .app-shell--batch .batch-reason-ledger__list li,
+  .app-shell--batch .batch-boundary {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--batch .batch-policy-ledger__facts > div + div {
+    border-top: 1px solid var(--batch-rule);
+    border-inline-start: 0;
+  }
+
+  .app-shell--batch .batch-slot__statuses {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--batch .batch-slot__statuses .status-badge + .status-badge {
+    border-top: 1px solid var(--batch-rule);
+    border-inline-start: 0;
+  }
+
+  .app-shell--batch .batch-slot__missing {
+    grid-column: auto;
+  }
+
+  .app-shell--batch .batch-wave__heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .app-shell--batch .batch-boundary ul {
+    padding-top: 16px;
+    padding-left: 20px;
+    border-top: 1px solid var(--batch-rule);
+    border-inline-start: 0;
+  }
+
+  .app-shell--batch .batch-boundary > code {
+    grid-column: auto;
   }
 }

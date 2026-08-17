@@ -180,61 +180,79 @@ function differenceImpact(difference: ComparisonDifference): string {
       </section>
 
       <section class="rerun-mirror" aria-label="同计划复跑来源与核心判定" data-testid="comparison-sources">
-        <article
-          v-for="source in sources"
-          :key="source.role"
-          class="rerun-source"
-          :class="`rerun-source--${source.role.toLowerCase()}`"
-          :data-testid="`comparison-source-${source.role.toLowerCase()}`"
-        >
-          <header>
-            <span>{{ sourceLabel(source) }}</span>
-            <strong>{{ source.role }}</strong>
-          </header>
-          <dl class="rerun-source__statuses">
-            <div><dt>Execution Status</dt><dd>{{ source.execution_status }}</dd></div>
-            <div><dt>Run Verdict</dt><dd :class="`is-${source.verdict.toLowerCase()}`">{{ source.verdict }}</dd></div>
-            <div><dt>Source Identity</dt><dd>PRESERVED</dd></div>
-          </dl>
-          <dl class="rerun-source__facts">
-            <div><dt>Run ID</dt><dd :title="source.run_id">{{ source.run_id }}</dd></div>
-            <div><dt>Plan</dt><dd>{{ source.plan.id }} · v{{ source.plan.version }}</dd></div>
-            <div><dt>Random Seed</dt><dd>{{ source.random_seed }}</dd></div>
-            <div>
-              <dt>Plan SHA-256</dt>
-              <dd>
-                <details>
-                  <summary><code>{{ shortHash(source.plan.sha256) }}</code></summary>
-                  <code>{{ source.plan.sha256 }}</code>
-                </details>
-              </dd>
-            </div>
-            <div>
-              <dt>Bundle SHA-256</dt>
-              <dd>
-                <details>
-                  <summary><code>{{ shortHash(source.bundle_sha256) }}</code></summary>
-                  <code>{{ source.bundle_sha256 }}</code>
-                </details>
-              </dd>
-            </div>
-          </dl>
-        </article>
+        <header class="rerun-mirror__beam" aria-hidden="true">
+          <div class="rerun-mirror__beam-source rerun-mirror__beam-source--baseline">
+            <span>基线 Run</span>
+            <strong>BASELINE</strong>
+          </div>
+          <div class="rerun-mirror__beam-axis">
+            <span>勘合</span>
+            <strong>JUDGMENT</strong>
+          </div>
+          <div class="rerun-mirror__beam-source rerun-mirror__beam-source--repeat">
+            <span>重复 Run</span>
+            <strong>REPEAT</strong>
+          </div>
+        </header>
 
-        <aside
-          class="rerun-judgment"
-          :class="`rerun-judgment--${loaded.comparison.comparison_status.toLowerCase()}`"
-          :aria-label="`复跑比较：${loaded.comparison.comparison_status}`"
-        >
-          <p class="eyebrow">Core Judgment · 中轴</p>
-          <img :src="'/textures/r3-nav-comparison.png'" alt="" aria-hidden="true" />
-          <dl>
-            <div><dt>核心判定</dt><dd>{{ loaded.comparison.comparison_status }}</dd></div>
-            <div><dt>适用性</dt><dd>{{ loaded.comparison.comparable ? '适用' : '不适用' }}</dd></div>
-            <div><dt>差异统计</dt><dd>{{ loaded.comparison.differences.length }} 项</dd></div>
-            <div><dt>比较文件</dt><dd>{{ formatBytes(loaded.integrity.totalBytes) }}</dd></div>
-          </dl>
-        </aside>
+        <template v-for="source in sources" :key="source.role">
+          <article
+            class="rerun-source"
+            :class="`rerun-source--${source.role.toLowerCase()}`"
+            :data-testid="`comparison-source-${source.role.toLowerCase()}`"
+            :aria-label="`${sourceLabel(source)} ${source.role}`"
+          >
+            <p class="rerun-source__mobile-title" aria-hidden="true">
+              <span>{{ sourceLabel(source) }}</span>
+              <strong>{{ source.role }}</strong>
+            </p>
+            <dl class="rerun-source__statuses">
+              <div><dt>Execution Status</dt><dd>{{ source.execution_status }}</dd></div>
+              <div><dt>Run Verdict</dt><dd :class="`is-${source.verdict.toLowerCase()}`">{{ source.verdict }}</dd></div>
+              <div><dt>Source Identity</dt><dd>PRESERVED</dd></div>
+            </dl>
+            <dl class="rerun-source__facts">
+              <div><dt>Run ID</dt><dd :title="source.run_id">{{ source.run_id }}</dd></div>
+              <div><dt>Plan</dt><dd>{{ source.plan.id }} · v{{ source.plan.version }}</dd></div>
+              <div><dt>Random Seed</dt><dd>{{ source.random_seed }}</dd></div>
+              <div>
+                <dt>Plan SHA-256</dt>
+                <dd>
+                  <details>
+                    <summary><code>{{ shortHash(source.plan.sha256) }}</code></summary>
+                    <code>{{ source.plan.sha256 }}</code>
+                  </details>
+                </dd>
+              </div>
+              <div>
+                <dt>Bundle SHA-256</dt>
+                <dd>
+                  <details>
+                    <summary><code>{{ shortHash(source.bundle_sha256) }}</code></summary>
+                    <code>{{ source.bundle_sha256 }}</code>
+                  </details>
+                </dd>
+              </div>
+            </dl>
+          </article>
+
+          <aside
+            v-if="source.role === 'BASELINE'"
+            class="rerun-judgment"
+            :class="`rerun-judgment--${loaded.comparison.comparison_status.toLowerCase()}`"
+            :aria-label="`复跑比较：${loaded.comparison.comparison_status}`"
+            data-testid="comparison-judgment"
+          >
+            <p class="eyebrow">Core Judgment · 中轴</p>
+            <img :src="'/textures/r3-nav-comparison.png'" alt="" aria-hidden="true" />
+            <dl>
+              <div><dt>核心判定</dt><dd>{{ loaded.comparison.comparison_status }}</dd></div>
+              <div><dt>适用性</dt><dd>{{ loaded.comparison.comparable ? '适用' : '不适用' }}</dd></div>
+              <div><dt>差异统计</dt><dd>{{ loaded.comparison.differences.length }} 项</dd></div>
+              <div><dt>比较文件</dt><dd>{{ formatBytes(loaded.integrity.totalBytes) }}</dd></div>
+            </dl>
+          </aside>
+        </template>
       </section>
 
       <div class="rerun-summary-grid">

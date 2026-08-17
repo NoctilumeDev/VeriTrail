@@ -24,6 +24,35 @@ describe('Comparison Loader and View', () => {
       'comparison-source-baseline',
       'comparison-source-repeat',
     ])
+    expect(
+      Array.from(wrapper.get('[data-testid="comparison-sources"]').element.children)
+        .map((element) => element.getAttribute('data-testid'))
+        .filter(Boolean),
+    ).toEqual([
+      'comparison-source-baseline',
+      'comparison-judgment',
+      'comparison-source-repeat',
+    ])
+    expect(wrapper.findAll('[data-testid="comparison-judgment"]')).toHaveLength(1)
+    expect(wrapper.findAll('.rerun-mirror__beam')).toHaveLength(1)
+    for (const source of [loaded.comparison.sources.baseline, loaded.comparison.sources.repeat]) {
+      const sourceView = wrapper.get(`[data-testid="comparison-source-${source.role.toLowerCase()}"]`)
+      const hashDetails = sourceView.findAll('details')
+      expect(hashDetails).toHaveLength(2)
+      expect(hashDetails[0].text()).toContain(source.plan.sha256.slice(0, 12))
+      expect(hashDetails[0].text()).toContain(source.plan.sha256.slice(-8))
+      expect(hashDetails[0].text()).toContain(source.plan.sha256)
+      expect(hashDetails[1].text()).toContain(source.bundle_sha256.slice(0, 12))
+      expect(hashDetails[1].text()).toContain(source.bundle_sha256.slice(-8))
+      expect(hashDetails[1].text()).toContain(source.bundle_sha256)
+
+      const firstHashDetails = hashDetails[0].element as HTMLDetailsElement
+      expect(firstHashDetails.open).toBe(false)
+      await hashDetails[0].get('summary').trigger('click')
+      expect(firstHashDetails.open).toBe(true)
+      await hashDetails[0].get('summary').trigger('click')
+      expect(firstHashDetails.open).toBe(false)
+    }
     expect(wrapper.get('[data-testid="comparison-no-differences"]').text()).toContain('没有差异')
     expect(wrapper.get('[data-testid="comparison-boundary"]').text()).toContain('不等于')
   })
