@@ -355,7 +355,31 @@ export async function createSingleApplicationBootstrapBundle(): Promise<Map<stri
 
 export function installFetchForBundles(bundles: Record<string, Map<string, Blob>>) {
   return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
-    const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url)
+    const url = new URL(
+      typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+      window.location.href,
+    )
+    if (url.pathname === '/api/v1/catalog') {
+      return {
+        ok: true,
+        status: 200,
+        blob: async () => new Blob([JSON.stringify({
+          schema_version: '0.1',
+          catalog: {
+            catalog_id: `cat_${'0'.repeat(24)}`,
+            build_status: 'COMPLETED',
+            read_only: true,
+            run_count: 0,
+            issue_count: 0,
+            duplicate_count: 0,
+          },
+          pagination: { page: 1, page_size: 50, total_items: 0, total_pages: 0 },
+          runs: [],
+          issues: [],
+          issues_truncated: false,
+        })]),
+      } as Response
+    }
     const fixture = Object.keys(bundles).find((name) => url.pathname.includes(`/fixtures/${name}/`))
     const path = url.pathname.split(`/fixtures/${fixture}/`)[1]
     const blob = fixture && path ? bundles[fixture]?.get(path) : undefined

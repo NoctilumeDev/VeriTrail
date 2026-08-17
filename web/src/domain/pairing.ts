@@ -1,4 +1,5 @@
 import { normalizeBundlePath, sha256Hex } from './bundle'
+import { fetchSameOriginFixture, SameOriginFixtureError } from './sameOriginFixture'
 import type {
   ExecutionStatus,
   LoadedPairedAnalysis,
@@ -37,6 +38,13 @@ const ANALYSIS_STATUSES = new Set<PairedAnalysisStatus>([
   'CONTRADICTED',
   'INCONCLUSIVE',
 ])
+const REVIEW_SAMPLE_BASE = '/fixtures/m7-paired-supported'
+const REVIEW_SAMPLE_FILES = [
+  'paired-analysis-manifest.json',
+  'paired-analysis.json',
+  'paired-analysis.md',
+  'sealed-pairing-plan.json',
+] as const
 
 export class PairingLoadError extends Error {
   readonly code: string
@@ -605,4 +613,18 @@ export async function loadLocalPairedAnalysis(
   const entries = new Map<string, Blob>()
   files.forEach((file, index) => entries.set(paths[index]!, file))
   return loadPairedAnalysisFromBlobs(entries)
+}
+
+export async function loadPairedAnalysisReviewSample(): Promise<LoadedPairedAnalysis> {
+  try {
+    return await loadPairedAnalysisFromBlobs(
+      await fetchSameOriginFixture(REVIEW_SAMPLE_BASE, REVIEW_SAMPLE_FILES),
+    )
+  } catch (cause) {
+    if (cause instanceof PairingLoadError) throw cause
+    if (cause instanceof SameOriginFixtureError) {
+      fail('PAIRING_SAMPLE_FETCH_FAILED', cause.message)
+    }
+    fail('PAIRING_SAMPLE_FETCH_FAILED', '配对分析审阅夹具读取失败。')
+  }
 }

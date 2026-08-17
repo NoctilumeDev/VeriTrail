@@ -57,7 +57,7 @@ describe('Catalog API 0.1', () => {
   let bundle: Map<string, Blob>
 
   beforeEach(async () => {
-    window.history.replaceState({}, '', '/?fixture=positive')
+    window.history.replaceState({}, '', '/?view=runs')
     bundle = await createMinimalBundle()
     catalogPlanSha = (JSON.parse(await bundle.get('report.json')!.text()) as {
       plan: { sha256: string }
@@ -169,7 +169,36 @@ describe('Catalog API 0.1', () => {
     host.remove()
   })
 
-  it('keeps the Catalog ledger stable while a selected Run is being verified', async () => {
+  it('keeps a direct Run URL on the detail surface while the Catalog is still loading', async () => {
+    window.history.replaceState({}, '', `/?run=${catalogRunId}`)
+    installCatalogFetch(catalogResponse())
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fetchImplementation = fetchMock.getMockImplementation()!
+    let releaseCatalogFetch!: () => void
+    const catalogFetchGate = new Promise<void>((resolve) => {
+      releaseCatalogFetch = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (url.pathname === '/api/v1/catalog') await catalogFetchGate
+      return fetchImplementation(input)
+    })
+
+    const wrapper = mount(App)
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')
+    expect(wrapper.find('[data-testid="run-detail-loading"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
+
+    releaseCatalogFetch()
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    expect(wrapper.get('[data-testid="run-summary"]').text()).toContain('unit-run')
+    wrapper.unmount()
+  })
+
+  it('enters the detail verification surface without retaining the Catalog ledger', async () => {
     installCatalogFetch(catalogResponse())
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-catalog-run-id]')
@@ -193,16 +222,16 @@ describe('Catalog API 0.1', () => {
     await flushPromises()
 
     const shellClasses = wrapper.get('.app-shell').classes()
-    const catalogBusy = wrapper.get('[data-testid="run-catalog"]').attributes('aria-busy')
-    const rowBusy = wrapper.get('[data-catalog-run-id]').attributes('aria-busy')
+    const renderedDetailLoading = wrapper.find('[data-testid="run-detail-loading"]').exists()
+    const renderedCatalog = wrapper.find('[data-testid="run-catalog"]').exists()
     const renderedLegacyLoading = wrapper.find('[data-testid="loading-state"]').exists()
     const renderedLegacyCourt = wrapper.find('.state-court').exists()
     releaseBundleFetch()
     await waitFor(wrapper, '[data-testid="catalog-return"]')
 
-    expect(shellClasses).toContain('app-shell--catalog')
-    expect(catalogBusy).toBe('true')
-    expect(rowBusy).toBe('true')
+    expect(shellClasses).toContain('app-shell--run-detail')
+    expect(renderedDetailLoading).toBe(true)
+    expect(renderedCatalog).toBe(false)
     expect(renderedLegacyLoading).toBe(false)
     expect(renderedLegacyCourt).toBe(false)
     expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')

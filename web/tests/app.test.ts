@@ -57,6 +57,8 @@ describe('App', () => {
         ],
       }),
       'm2-invalid': await createMinimalBundle(),
+      'm6-comparison-drift': await createComparisonBundle('DRIFT'),
+      'm7-paired-supported': await createPairedAnalysisBundle('SUPPORTED'),
     }
     const invalid = bundles['m2-invalid']!
     invalid.set('report.json', new Blob(['{}']))
@@ -81,6 +83,34 @@ describe('App', () => {
     wrapper.unmount()
   })
 
+  it('selects the URL-owned page before the Catalog API resolves', async () => {
+    window.history.replaceState({}, '', '/?fixture=pairing&sample=supported')
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fixtureFetch = fetchMock.getMockImplementation()!
+    let continueCatalog!: () => void
+    const catalogGate = new Promise<void>((resolve) => {
+      continueCatalog = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+        window.location.href,
+      )
+      if (url.pathname === '/api/v1/catalog') await catalogGate
+      return fixtureFetch(input)
+    })
+
+    const wrapper = mount(App)
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--pairing')
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
+    expect(wrapper.find('.view-introduction--runs').exists()).toBe(false)
+
+    continueCatalog()
+    await waitFor(wrapper, '[data-testid="paired-analysis-view"]')
+    expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
+    wrapper.unmount()
+  })
+
   it('switches only the evidence bundle and exposes negative assertions', async () => {
     const wrapper = mount(App)
     await waitFor(wrapper, '[data-testid="status-gate"]')
@@ -93,6 +123,53 @@ describe('App', () => {
     expect(wrapper.get('[data-testid="assertion-list"]').text()).toContain('negative-assertion')
     expect(window.location.search).toBe('?fixture=negative')
     wrapper.unmount()
+  })
+
+  it('keeps the destination surface mounted while a Run is being verified', async () => {
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="status-gate"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    await waitFor(wrapper, '[data-testid="fixture-negative"]')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fixtureFetch = fetchMock.getMockImplementation()!
+    let continueNegative!: () => void
+    const negativeGate = new Promise<void>((resolve) => {
+      continueNegative = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url)
+      if (url.pathname.includes('/fixtures/m2-negative/')) await negativeGate
+      return fixtureFetch(input)
+    })
+
+    await wrapper.get('[data-testid="fixture-negative"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')
+    expect(wrapper.find('[data-testid="run-detail-loading"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="fixture-negative"]').exists()).toBe(false)
+
+    continueNegative()
+    await waitFor(wrapper, '[aria-label="验收结论：FAIL"]')
+    await wrapper.get('[data-testid="catalog-return"]').trigger('click')
+    expect(wrapper.find('[data-testid="fixture-negative"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="status-gate"]').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
+  it('loads the explicit review samples without weakening local-file privacy routes', async () => {
+    window.history.replaceState({}, '', '/?fixture=pairing&sample=supported')
+    const pairing = mount(App)
+    await waitFor(pairing, '[data-testid="paired-analysis-view"]')
+    expect(pairing.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
+    pairing.unmount()
+
+    window.history.replaceState({}, '', '/?fixture=comparison&sample=drift')
+    const comparison = mount(App)
+    await waitFor(comparison, '[data-testid="comparison-view"]')
+    expect(comparison.get('[data-testid="comparison-status"]').text()).toContain('DRIFT')
+    comparison.unmount()
   })
 
   it('keeps each local import focus target in its relevant public view', async () => {
@@ -175,7 +252,25 @@ describe('App', () => {
 
     expect(wrapper.get('[data-testid="error-state"]').attributes('data-state-kind')).toBe('invalid')
     expect(wrapper.get('[data-testid="error-state"]').text()).toContain('没有据此改写 Run 的 Verdict')
+
+    const fetchMock = vi.mocked(globalThis.fetch)
+    const fixtureFetch = fetchMock.getMockImplementation()!
+    let continuePositive!: () => void
+    const positiveGate = new Promise<void>((resolve) => {
+      continuePositive = resolve
+    })
+    fetchMock.mockImplementation(async (input) => {
+      const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url)
+      if (url.pathname.includes('/fixtures/m2-positive/')) await positiveGate
+      return fixtureFetch(input)
+    })
+
     await wrapper.get('[data-testid="retry-positive"]').trigger('click')
+    await flushPromises()
+    expect(wrapper.get('.app-shell').classes()).toContain('app-shell--run-detail')
+    expect(wrapper.find('[data-testid="run-detail-loading"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
+    continuePositive()
     await waitFor(wrapper, '[aria-label="验收结论：PASS"]')
     expect(wrapper.find('[aria-label="验收结论：PASS"]').exists()).toBe(true)
     wrapper.unmount()

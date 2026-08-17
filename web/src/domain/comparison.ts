@@ -1,4 +1,5 @@
 import { normalizeBundlePath, sha256Hex } from './bundle'
+import { fetchSameOriginFixture, SameOriginFixtureError } from './sameOriginFixture'
 import type {
   ComparisonDifference,
   ComparisonManifest,
@@ -24,6 +25,12 @@ const EXECUTION_STATUSES = new Set<ExecutionStatus>([
 ])
 const VERDICTS = new Set<Verdict>(['PASS', 'FAIL', 'INCONCLUSIVE', 'PENDING'])
 const COMPARISON_STATUSES = new Set<ComparisonStatus>(['MATCH', 'DRIFT', 'INCONCLUSIVE'])
+const REVIEW_SAMPLE_BASE = '/fixtures/m6-comparison-drift'
+const REVIEW_SAMPLE_FILES = [
+  'comparison-manifest.json',
+  'comparison.json',
+  'comparison.md',
+] as const
 
 export class ComparisonLoadError extends Error {
   readonly code: string
@@ -303,4 +310,18 @@ export async function loadLocalComparison(input: FileList | File[]): Promise<Loa
   const entries = new Map<string, Blob>()
   files.forEach((file, index) => entries.set(paths[index]!, file))
   return loadComparisonFromBlobs(entries)
+}
+
+export async function loadComparisonReviewSample(): Promise<LoadedComparison> {
+  try {
+    return await loadComparisonFromBlobs(
+      await fetchSameOriginFixture(REVIEW_SAMPLE_BASE, REVIEW_SAMPLE_FILES),
+    )
+  } catch (cause) {
+    if (cause instanceof ComparisonLoadError) throw cause
+    if (cause instanceof SameOriginFixtureError) {
+      fail('COMPARISON_SAMPLE_FETCH_FAILED', cause.message)
+    }
+    fail('COMPARISON_SAMPLE_FETCH_FAILED', '复跑比较审阅夹具读取失败。')
+  }
 }

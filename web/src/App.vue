@@ -29,8 +29,16 @@ import {
   fetchCatalog,
 } from './domain/catalog'
 import { BatchLoadError, loadLocalBatchAnalysis } from './domain/batch'
-import { ComparisonLoadError, loadLocalComparison } from './domain/comparison'
-import { loadLocalPairedAnalysis, PairingLoadError } from './domain/pairing'
+import {
+  ComparisonLoadError,
+  loadComparisonReviewSample,
+  loadLocalComparison,
+} from './domain/comparison'
+import {
+  loadLocalPairedAnalysis,
+  loadPairedAnalysisReviewSample,
+  PairingLoadError,
+} from './domain/pairing'
 import type {
   CatalogResponse,
   CatalogRunSummary,
@@ -41,9 +49,11 @@ import type {
 } from './domain/types'
 
 type PublicView = 'runs' | 'comparison' | 'pairing' | 'batch'
+type RunSurface = 'catalog' | 'detail'
 type RunDetailPanel = 'browser' | 'assertions' | 'ledger'
 type PairingPanel = 'sources' | 'outcomes'
 type ComparisonPanel = 'differences'
+type ActiveSource = DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing' | 'batch'
 
 const bundle = shallowRef<LoadedBundle | null>(null)
 const comparison = shallowRef<LoadedComparison | null>(null)
@@ -51,13 +61,14 @@ const pairedAnalysis = shallowRef<LoadedPairedAnalysis | null>(null)
 const batchAnalysis = shallowRef<LoadedBatchAnalysis | null>(null)
 const loading = ref(true)
 const error = ref<{ code: string; message: string } | null>(null)
-const activeSource = ref<DemoBundleId | 'local' | 'catalog' | 'comparison' | 'pairing' | 'batch'>('positive')
-const publicView = ref<PublicView>('runs')
+const activeSource = ref<ActiveSource>(activeSourceFromLocation())
+const publicView = ref<PublicView>(publicViewFromLocation())
+const runSurface = ref<RunSurface>(runSurfaceFromLocation())
 const liveMessage = ref('正在读取正向证据包。')
 const catalog = shallowRef<CatalogResponse | null>(null)
 const catalogLoading = ref(true)
 const catalogError = ref<{ code: string; message: string } | null>(null)
-const selectedCatalogRunId = ref<string | null>(null)
+const selectedCatalogRunId = ref<string | null>(catalogRunIdFromLocation())
 const runDetailPanel = ref<RunDetailPanel | null>(null)
 const pairingPanel = ref<PairingPanel | null>(null)
 const comparisonPanel = ref<ComparisonPanel | null>(null)
@@ -66,8 +77,17 @@ let loadSequence = 0
 
 const report = computed(() => bundle.value?.report ?? null)
 const browserSession = computed(() => (bundle.value ? browserEvidence(bundle.value) : null))
+const runLocationLabel = computed(() => {
+  if (report.value) return report.value.run_id
+  if (selectedCatalogRunId.value) return selectedCatalogRunId.value
+  if (activeSource.value === 'local') return '本地证据包'
+  if (activeSource.value === 'positive' || activeSource.value === 'negative' || activeSource.value === 'invalid') {
+    return sourceLabel(activeSource.value)
+  }
+  return '正在核验'
+})
 const isRunDetail = computed(
-  () => publicView.value === 'runs' && Boolean(report.value && bundle.value),
+  () => publicView.value === 'runs' && runSurface.value === 'detail',
 )
 
 function runDetailPanelFromLocation(): RunDetailPanel | null {
@@ -181,6 +201,33 @@ function fixtureFromLocation(): DemoBundleId | 'local' | 'comparison' | 'pairing
     : 'positive'
 }
 
+function activeSourceFromLocation(): ActiveSource {
+  const params = new URLSearchParams(window.location.search)
+  if (params.has('run')) return 'catalog'
+  const fixture = params.get('fixture')
+  if (
+    fixture === 'positive' ||
+    fixture === 'negative' ||
+    fixture === 'invalid' ||
+    fixture === 'local' ||
+    fixture === 'comparison' ||
+    fixture === 'pairing' ||
+    fixture === 'batch'
+  ) {
+    return fixture
+  }
+  const view = params.get('view')
+  if (view === 'comparison' || view === 'pairing' || view === 'batch') return view
+  return 'catalog'
+}
+
+function runSurfaceFromLocation(): RunSurface {
+  const params = new URLSearchParams(window.location.search)
+  if (params.has('run')) return 'detail'
+  const fixture = params.get('fixture')
+  return fixture === 'positive' || fixture === 'negative' || fixture === 'local' ? 'detail' : 'catalog'
+}
+
 function publicViewFromLocation(): PublicView {
   const params = new URLSearchParams(window.location.search)
   const view = params.get('view')
@@ -203,6 +250,7 @@ function resetPublicView(view: PublicView) {
   releaseCurrentBundle()
   clearLoadedAnalysis()
   publicView.value = view
+  runSurface.value = 'catalog'
   activeSource.value = view === 'runs' ? 'catalog' : view
   selectedCatalogRunId.value = null
   runDetailPanel.value = null
@@ -239,6 +287,7 @@ function selectPublicView(view: PublicView) {
     url.searchParams.delete('fixture')
     url.searchParams.delete('run')
     url.searchParams.delete('panel')
+    url.searchParams.delete('sample')
     url.searchParams.set('view', view)
     window.history.pushState({ view }, '', url)
     resetPublicView(view)
@@ -307,6 +356,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
   error.value = null
   activeSource.value = id
   publicView.value = 'runs'
+  runSurface.value = id === 'invalid' ? 'catalog' : 'detail'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -316,6 +366,7 @@ async function selectDemo(id: DemoBundleId, pushHistory = true) {
     const url = new URL(window.location.href)
     url.searchParams.delete('run')
     url.searchParams.delete('view')
+    url.searchParams.delete('sample')
     url.searchParams.set('fixture', id)
     window.history.pushState({ fixture: id }, '', url)
   }
@@ -343,10 +394,12 @@ function dismissRunError(restoreFocus = false) {
   error.value = null
   activeSource.value = 'catalog'
   publicView.value = 'runs'
+  runSurface.value = 'catalog'
   releaseCurrentBundle()
   const url = new URL(window.location.href)
   url.searchParams.delete('fixture')
   url.searchParams.delete('run')
+  url.searchParams.delete('sample')
   url.searchParams.set('view', 'runs')
   window.history.pushState({ view: 'runs' }, '', url)
   liveMessage.value = '已收起损坏证据提示，返回本地 Run 目录。'
@@ -371,6 +424,7 @@ async function importLocal(event: Event) {
   error.value = null
   activeSource.value = 'local'
   publicView.value = 'runs'
+  runSurface.value = 'detail'
   selectedCatalogRunId.value = null
   comparison.value = null
   pairedAnalysis.value = null
@@ -379,6 +433,7 @@ async function importLocal(event: Event) {
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
   url.searchParams.delete('view')
+  url.searchParams.delete('sample')
   url.searchParams.set('fixture', 'local')
   window.history.pushState({ fixture: 'local' }, '', url)
   releaseCurrentBundle()
@@ -400,27 +455,34 @@ async function importLocal(event: Event) {
   }
 }
 
-async function importComparison(event: Event) {
-  const input = event.currentTarget as HTMLInputElement
-  if (!input.files?.length) return
+function beginAnalysisLoad(view: Exclude<PublicView, 'runs'>): number {
   const sequence = ++loadSequence
   loading.value = true
   error.value = null
-  activeSource.value = 'comparison'
-  publicView.value = 'comparison'
+  activeSource.value = view
+  publicView.value = view
+  runSurface.value = 'catalog'
   selectedCatalogRunId.value = null
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
+  runDetailPanel.value = null
   comparisonPanel.value = null
+  pairingPanel.value = null
+  releaseCurrentBundle()
+  clearLoadedAnalysis()
+  return sequence
+}
+
+async function importComparison(event: Event) {
+  const input = event.currentTarget as HTMLInputElement
+  if (!input.files?.length) return
+  const sequence = beginAnalysisLoad('comparison')
   liveMessage.value = '正在本地内存中核验复跑 Comparison Manifest。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
   url.searchParams.delete('view')
   url.searchParams.delete('panel')
+  url.searchParams.delete('sample')
   url.searchParams.set('fixture', 'comparison')
   window.history.pushState({ fixture: 'comparison' }, '', url)
-  releaseCurrentBundle()
   try {
     const loaded = await loadLocalComparison(input.files)
     if (sequence !== loadSequence) return
@@ -439,24 +501,15 @@ async function importComparison(event: Event) {
 async function importPairedAnalysis(event: Event) {
   const input = event.currentTarget as HTMLInputElement
   if (!input.files?.length) return
-  const sequence = ++loadSequence
-  loading.value = true
-  error.value = null
-  activeSource.value = 'pairing'
-  publicView.value = 'pairing'
-  selectedCatalogRunId.value = null
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
-  pairingPanel.value = null
+  const sequence = beginAnalysisLoad('pairing')
   liveMessage.value = '正在本地内存中核验 PairedAnalysis Manifest 与 PairingPlan seal。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
   url.searchParams.delete('view')
   url.searchParams.delete('panel')
+  url.searchParams.delete('sample')
   url.searchParams.set('fixture', 'pairing')
   window.history.pushState({ fixture: 'pairing' }, '', url)
-  releaseCurrentBundle()
   try {
     const loaded = await loadLocalPairedAnalysis(input.files)
     if (sequence !== loadSequence) return
@@ -472,25 +525,51 @@ async function importPairedAnalysis(event: Event) {
   }
 }
 
+async function openComparisonReviewSample() {
+  const sequence = beginAnalysisLoad('comparison')
+  liveMessage.value = '正在核验内置复跑比较审阅数据。'
+  try {
+    const loaded = await loadComparisonReviewSample()
+    if (sequence !== loadSequence) return
+    comparison.value = loaded
+    liveMessage.value = `复跑比较 ${loaded.comparison.comparison_status} 审阅数据已加载。`
+  } catch (cause) {
+    if (sequence !== loadSequence) return
+    error.value = describeComparisonError(cause)
+    liveMessage.value = `复跑比较审阅数据读取失败：${error.value.message}`
+  } finally {
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
+async function openPairingReviewSample() {
+  const sequence = beginAnalysisLoad('pairing')
+  liveMessage.value = '正在核验内置四角色配对审阅数据。'
+  try {
+    const loaded = await loadPairedAnalysisReviewSample()
+    if (sequence !== loadSequence) return
+    pairedAnalysis.value = loaded
+    liveMessage.value = `配对分析 ${loaded.analysis.analysis_status} 审阅数据已加载。`
+  } catch (cause) {
+    if (sequence !== loadSequence) return
+    error.value = describePairingError(cause)
+    liveMessage.value = `配对分析审阅数据读取失败：${error.value.message}`
+  } finally {
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
 async function importBatchAnalysis(event: Event) {
   const input = event.currentTarget as HTMLInputElement
   if (!input.files?.length) return
-  const sequence = ++loadSequence
-  loading.value = true
-  error.value = null
-  activeSource.value = 'batch'
-  publicView.value = 'batch'
-  selectedCatalogRunId.value = null
-  comparison.value = null
-  pairedAnalysis.value = null
-  batchAnalysis.value = null
+  const sequence = beginAnalysisLoad('batch')
   liveMessage.value = '正在本地内存中核验 BatchAnalysis Manifest、BatchPlan seal 与完整矩阵。'
   const url = new URL(window.location.href)
   url.searchParams.delete('run')
   url.searchParams.delete('view')
+  url.searchParams.delete('sample')
   url.searchParams.set('fixture', 'batch')
   window.history.pushState({ fixture: 'batch' }, '', url)
-  releaseCurrentBundle()
   try {
     const loaded = await loadLocalBatchAnalysis(input.files)
     if (sequence !== loadSequence) return
@@ -517,6 +596,7 @@ async function selectCatalogRun(
   catalogError.value = null
   activeSource.value = 'catalog'
   publicView.value = 'runs'
+  runSurface.value = 'detail'
   selectedCatalogRunId.value = run.catalog_run_id
   runDetailPanel.value = null
   comparison.value = null
@@ -529,6 +609,7 @@ async function selectCatalogRun(
     url.searchParams.delete('fixture')
     url.searchParams.delete('view')
     url.searchParams.delete('panel')
+    url.searchParams.delete('sample')
     url.searchParams.set('run', run.catalog_run_id)
     window.history.pushState({ run: run.catalog_run_id }, '', url)
   }
@@ -596,6 +677,7 @@ function returnToCatalog() {
   error.value = null
   activeSource.value = 'catalog'
   publicView.value = 'runs'
+  runSurface.value = 'catalog'
   const runId = selectedCatalogRunId.value ?? lastCatalogTriggerId
   selectedCatalogRunId.value = null
   runDetailPanel.value = null
@@ -604,6 +686,7 @@ function returnToCatalog() {
   url.searchParams.delete('fixture')
   url.searchParams.delete('view')
   url.searchParams.delete('panel')
+  url.searchParams.delete('sample')
   window.history.pushState({}, '', url)
   liveMessage.value = '已返回本地 Run 目录。'
   void nextTick(() => {
@@ -677,6 +760,19 @@ function onHistoryChange(focusTarget = false) {
       })
       return
     }
+    if (catalogLoading.value && !catalog.value) {
+      ++loadSequence
+      releaseCurrentBundle()
+      clearLoadedAnalysis()
+      activeSource.value = 'catalog'
+      publicView.value = 'runs'
+      runSurface.value = 'detail'
+      selectedCatalogRunId.value = catalogRunId
+      loading.value = true
+      error.value = null
+      liveMessage.value = `正在从本地 Run 目录读取 ${catalogRunId}。`
+      return
+    }
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
@@ -684,6 +780,7 @@ function onHistoryChange(focusTarget = false) {
     batchAnalysis.value = null
     activeSource.value = 'catalog'
     publicView.value = 'runs'
+    runSurface.value = 'detail'
     selectedCatalogRunId.value = catalogRunId
     loading.value = false
     error.value = {
@@ -697,7 +794,7 @@ function onHistoryChange(focusTarget = false) {
   // `view=runs` is the public Catalog entry, not an implicit positive fixture.
   // Keeping that distinction prevents a deep-link refresh from bypassing the
   // ledger and dropping a user into an unrelated demo Run.
-  if (catalog.value && !params.has('fixture') && !params.has('run') && (params.get('view') === 'runs' || !params.has('view'))) {
+  if (!params.has('fixture') && !params.has('run') && (params.get('view') === 'runs' || !params.has('view'))) {
     const previousRunId = selectedCatalogRunId.value ?? lastCatalogTriggerId
     ++loadSequence
     releaseCurrentBundle()
@@ -706,6 +803,7 @@ function onHistoryChange(focusTarget = false) {
     batchAnalysis.value = null
     activeSource.value = 'catalog'
     publicView.value = 'runs'
+    runSurface.value = 'catalog'
     selectedCatalogRunId.value = null
     loading.value = false
     error.value = null
@@ -736,6 +834,10 @@ function onHistoryChange(focusTarget = false) {
       }
       return
     }
+    if (params.get('sample') === 'drift') {
+      void openComparisonReviewSample()
+      return
+    }
     ++loadSequence
     releaseCurrentBundle()
     comparison.value = null
@@ -764,6 +866,10 @@ function onHistoryChange(focusTarget = false) {
           else document.getElementById('paired-title')?.focus()
         })
       }
+      return
+    }
+    if (params.get('sample') === 'supported') {
+      void openPairingReviewSample()
       return
     }
     ++loadSequence
@@ -807,6 +913,7 @@ function onHistoryChange(focusTarget = false) {
     batchAnalysis.value = null
     activeSource.value = 'local'
     publicView.value = 'runs'
+    runSurface.value = 'detail'
     loading.value = false
     error.value = {
       code: 'LOCAL_RESELECT_REQUIRED',
@@ -835,7 +942,10 @@ function displayDate(value: string): string {
 
 onMounted(() => {
   window.addEventListener('popstate', onPopState)
-  void refreshCatalog().then(() => onHistoryChange())
+  onHistoryChange()
+  void refreshCatalog().then(() => {
+    if (catalogRunIdFromLocation()) onHistoryChange()
+  })
 })
 
 onBeforeUnmount(() => {
@@ -986,8 +1096,8 @@ onBeforeUnmount(() => {
           <span aria-hidden="true">/</span>
           <span>Catalog</span>
           <span aria-hidden="true">/</span>
-          <strong :title="report?.run_id ?? selectedCatalogRunId ?? undefined">
-            {{ report?.run_id ?? selectedCatalogRunId }}
+          <strong :title="runLocationLabel">
+            {{ runLocationLabel }}
           </strong>
         </div>
         <div v-if="report && bundle && !runDetailPanel" class="run-detail-breadcrumb__sections" aria-label="详情分区导航">
@@ -1012,6 +1122,20 @@ onBeforeUnmount(() => {
         @dismiss="dismissRunError(true)"
         @retry="activeSource === 'catalog' ? retryCatalog() : selectDemo('positive')"
       />
+
+      <section
+        v-else-if="isRunDetail && loading"
+        class="run-detail-loading"
+        role="status"
+        aria-live="polite"
+        data-testid="run-detail-loading"
+      >
+        <div>
+          <p class="eyebrow">Evidence Verification · 核验中</p>
+          <h2>正在核验证据卷宗</h2>
+          <p>{{ liveMessage }}</p>
+        </div>
+      </section>
 
       <template v-else-if="report && bundle">
         <section v-if="!runDetailPanel" class="run-detail-header" aria-label="当前 Run 摘要">
