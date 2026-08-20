@@ -1,0 +1,66 @@
+name: Browser Smoke
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '23 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chromium:
+    name: Production Workbench smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install the browser adapter
+        run: python -m pip install --editable ".[browser]"
+
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+
+      - name: Build the production Workbench
+        working-directory: web
+        run: |
+          npm ci --registry=https://registry.npmjs.org
+          npm run build
+
+      - name: Run the bounded browser smoke
+        run: >-
+          python scripts/m3_workbench_acceptance.py
+          --local-bundle web/public/fixtures/m2-positive
+          --output artifacts/ci-m3-workbench
+          --port 18766
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: browser-smoke-evidence
+          path: artifacts/ci-m3-workbench
+          if-no-files-found: warn
+          retention-days: 7

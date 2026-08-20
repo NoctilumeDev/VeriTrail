@@ -176,7 +176,7 @@ def main() -> int:
             expect(page.get_by_test_id("status-gate")).to_contain_text("PASS")
             assert page.get_by_test_id("run-summary").locator("code").get_attribute("title") == args.expected_plan_sha256
             assert page.evaluate(
-                "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             ) == 0
             summary["checks"].append("desktop-self-run-readback")
 
@@ -241,7 +241,7 @@ def main() -> int:
             mobile_page.locator(f'[data-catalog-run-id="{catalog_run_id}"]').click()
             expect(mobile_page.get_by_test_id("status-gate")).to_contain_text("PASS")
             assert mobile_page.evaluate(
-                "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             ) == 0
             mobile_shot = output / "mobile.png"
             mobile_page.screenshot(path=str(mobile_shot), full_page=False)

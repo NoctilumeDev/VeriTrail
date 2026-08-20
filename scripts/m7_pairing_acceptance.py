@@ -180,7 +180,7 @@ def main() -> int:
                     "NEGATIVE_CONTROL"
                 )
                 assert page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 ) == 0
                 summary["checks"].append(f"desktop-{expected_status.lower()}-verified")
 
@@ -259,7 +259,7 @@ def main() -> int:
                 "SUPPORTED"
             )
             assert mobile_page.evaluate(
-                "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             ) == 0
             mobile_shot = output / "mobile.png"
             mobile_page.screenshot(path=str(mobile_shot), full_page=False)

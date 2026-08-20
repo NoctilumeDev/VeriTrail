@@ -1,0 +1,83 @@
+name: Public CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited]
+  merge_group:
+    types: [checks_requested]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python ${{ matrix.python-version }} on Windows
+    runs-on: windows-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install the Core test capabilities
+        run: python -m pip install --editable ".[browser,command-windows]"
+
+      - name: Install the frozen Chromium engine
+        run: python -m playwright install chromium
+
+      - name: Run Core regression tests
+        run: python -m unittest -v
+
+      - name: Build the wheel
+        run: python -m pip wheel --no-deps --wheel-dir dist .
+
+  workbench:
+    name: Workbench tests, lint, build, and audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Workbench dependencies
+        run: npm ci --registry=https://registry.npmjs.org
+
+      - name: Run Workbench regression tests
+        run: npm test
+
+      - name: Lint Workbench sources
+        run: npm run lint
+
+      - name: Type-check and build Workbench
+        run: npm run build
+
+      - name: Audit Workbench dependencies
+        run: npm audit --audit-level=moderate --registry=https://registry.npmjs.org
