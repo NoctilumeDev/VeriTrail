@@ -96,15 +96,17 @@ npm run build
 
 ## 公开 CI 与真实验收边界
 
-`Public CI` 在每次 main push、PR 更新与 merge queue 上运行双 Python Core 回归、wheel 构建，
-以及 Workbench test、lint、type-check、生产构建和 moderate 级依赖审计。PR 改 base 也会重新触发，
-避免堆叠分支只保留旧合并事实。
+`Public CI` 在每次 main push、PR 更新与 merge queue 上，以 Windows Runner 运行双 Python Core
+回归和 wheel 构建，并在独立 Linux Runner 上运行 Workbench test、lint、type-check、生产构建和
+moderate 级依赖审计。PR 改 base 也会重新触发，避免堆叠分支只保留旧合并事实。Core Runner
+与冻结的 Windows 命令、Job Object 和本地盘符能力边界保持一致；Workbench 则继续证明其独立的
+跨平台构建基线。
 
 `Browser Smoke` 在 main 与每周定时任务上使用仓库内公开、合成、脱敏的 M2 证据包运行真实
 Chromium，检查桌面与 390 px、Console、Network、失败重试、历史导航和根横向溢出，并上传短期证据。
 
-这些公开门禁证明跨平台快速基线可重复，但**不替代** Windows Job Object、物理键盘、完整真实项目、
-双解释器本机矩阵、资源停止线与清理读回。后者仍须按对应冻结合同在受控环境中执行；GitHub 的绿灯
+这些公开门禁证明平台对齐的快速基线可重复，但**不替代**物理键盘、完整真实项目、受控宿主机上的
+资源停止线与清理读回。后者仍须按对应冻结合同在受控环境中执行；GitHub 的绿灯
 不得被解释为整个里程碑的 `PASS`。
 
 每个 Run ID 必须唯一；sealed Plan、Run、Comparison、PairedAnalysis 和 BatchAnalysis 均拒绝覆盖。
