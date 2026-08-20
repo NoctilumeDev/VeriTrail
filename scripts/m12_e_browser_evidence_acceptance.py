@@ -143,7 +143,7 @@ def add_page_observers(page: Any, summary: dict[str, Any]) -> None:
 
 
 def require_no_root_overflow(page: Any, label: str) -> None:
-    overflow = page.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+    overflow = page.evaluate("Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)")
     offenders = page.locator("*").evaluate_all(
         """nodes => nodes
           .filter(node => node.scrollWidth > node.clientWidth + 1 && getComputedStyle(node).overflowX !== 'visible')

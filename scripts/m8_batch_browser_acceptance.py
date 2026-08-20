@@ -224,7 +224,7 @@ def main() -> int:
                             )
                         summary["checks"].append("desktop-keyboard-focus-order")
                     if page.evaluate(
-                        "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                        "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                     ) != 0:
                         raise AssertionError(f"desktop {name} produced document overflow")
                     if name == "INCOMPLETE":
@@ -296,7 +296,7 @@ def main() -> int:
                 )
                 expect(mobile_page.get_by_test_id("batch-wave-list")).to_contain_text("FAIL")
                 if mobile_page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 ) != 0:
                     raise AssertionError("mobile BatchAnalysis produced document overflow")
                 matrix_size = mobile_page.locator(".batch-matrix-scroll").evaluate(

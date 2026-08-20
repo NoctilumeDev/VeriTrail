@@ -378,7 +378,7 @@ def main() -> int:
                     expect(page.get_by_test_id("browser-empty")).to_be_visible()
                 require(
                     page.evaluate(
-                        "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                        "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                     )
                     == 0,
                     f"Workbench desktop detail overflowed for {run_id}.",
@@ -415,7 +415,7 @@ def main() -> int:
             expect(sources).to_contain_text("m11-gateb-v2-ink-recovery-positive-02")
             require(
                 page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 )
                 == 0,
                 "Workbench desktop Comparison overflowed horizontally.",
@@ -456,7 +456,7 @@ def main() -> int:
             expect(aborted_row.locator(".catalog-run__verdict")).to_contain_text("PENDING")
             require(
                 mobile_page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 )
                 == 0,
                 "Workbench mobile Catalog overflowed horizontally.",
@@ -473,7 +473,7 @@ def main() -> int:
             mobile_page.get_by_test_id("cross-axis-toggle").click()
             require(
                 mobile_page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 )
                 == 0,
                 "Workbench mobile expanded cross-axis overflowed horizontally.",
@@ -486,7 +486,7 @@ def main() -> int:
             expect(mobile_page.get_by_test_id("status-gate")).to_contain_text("FAIL")
             require(
                 mobile_page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 )
                 == 0,
                 "Workbench mobile negative detail overflowed horizontally.",
@@ -498,7 +498,7 @@ def main() -> int:
             expect(mobile_page.get_by_test_id("comparison-status")).to_contain_text("MATCH")
             require(
                 mobile_page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 )
                 == 0,
                 "Workbench mobile Comparison overflowed horizontally.",

@@ -175,7 +175,7 @@ def main() -> int:
                 expect(page.get_by_test_id("comparison-sources")).to_contain_text("BASELINE")
                 expect(page.get_by_test_id("comparison-sources")).to_contain_text("REPEAT")
                 assert page.evaluate(
-                    "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
                 ) == 0
                 summary["checks"].append(f"desktop-{expected_status.lower()}-verified")
 
@@ -247,7 +247,7 @@ def main() -> int:
             )
             expect(mobile_page.get_by_test_id("comparison-status")).to_contain_text("MATCH")
             assert mobile_page.evaluate(
-                "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             ) == 0
             mobile_shot = output / "mobile.png"
             mobile_page.screenshot(path=str(mobile_shot), full_page=False)

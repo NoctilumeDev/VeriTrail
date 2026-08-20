@@ -85,7 +85,7 @@ def add_page_observers(page: Any, summary: dict[str, Any]) -> None:
 
 
 def root_overflow(page: Any) -> int:
-    return page.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+    return page.evaluate("Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)")
 
 
 def save_screenshot(page: Any, output: Path, summary: dict[str, Any], name: str) -> None:

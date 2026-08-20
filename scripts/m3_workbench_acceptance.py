@@ -177,11 +177,13 @@ def main() -> int:
             expect(page.locator('[aria-label="验收结论：PASS"]')).to_be_visible()
             expect(page.get_by_test_id("integrity-status")).to_contain_text("8 个文件")
             desktop_overflow = page.evaluate(
-                "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             )
             assert desktop_overflow == 0, f"desktop horizontal overflow: {desktop_overflow}px"
             summary["checks"].append("desktop-positive")
 
+            page.get_by_test_id("catalog-return").press("Enter")
+            expect(page.get_by_test_id("fixture-negative")).to_be_visible()
             page.get_by_test_id("fixture-negative").click()
             expect(page.locator('[aria-label="验收结论：FAIL"]')).to_be_visible()
             page.get_by_test_id("filter-fail").click()
@@ -198,6 +200,8 @@ def main() -> int:
             page.keyboard.press("Escape")
             summary["checks"].append("desktop-negative-evidence")
 
+            page.get_by_test_id("catalog-return").press("Enter")
+            expect(page.get_by_test_id("fixture-invalid")).to_be_visible()
             page.get_by_test_id("fixture-invalid").click()
             expect(page.get_by_test_id("error-state")).to_contain_text("MISSING_ROOT_FILE")
             assert page.get_by_test_id("status-gate").count() == 0
@@ -209,6 +213,8 @@ def main() -> int:
             expect(page.locator('[aria-label="验收结论：PASS"]')).to_be_visible()
             summary["checks"].append("invalid-contained-retry-history")
 
+            page.get_by_test_id("catalog-return").press("Enter")
+            expect(page.get_by_test_id("local-bundle-input")).to_be_attached()
             requests_before_local = len(summary["network"])
             page.get_by_test_id("local-bundle-input").set_input_files(str(local_bundle))
             expect(page.get_by_test_id("run-summary")).to_contain_text("m2-freeze-pass")
@@ -261,9 +267,11 @@ def main() -> int:
             mobile_page.goto(f"{origin}/?fixture=positive", wait_until="load")
             expect(mobile_page.locator('[aria-label="验收结论：PASS"]')).to_be_visible()
             mobile_overflow = mobile_page.evaluate(
-                "document.documentElement.scrollWidth - document.documentElement.clientWidth"
+                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             )
             assert mobile_overflow == 0, f"mobile horizontal overflow: {mobile_overflow}px"
+            mobile_page.get_by_test_id("catalog-return").press("Enter")
+            expect(mobile_page.get_by_test_id("fixture-negative")).to_be_visible()
             mobile_page.get_by_test_id("fixture-negative").click()
             expect(mobile_page.locator('[aria-label="验收结论：FAIL"]')).to_be_visible()
             mobile_screenshot = output / "mobile.png"
