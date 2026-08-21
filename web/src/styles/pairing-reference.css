@@ -2,8 +2,8 @@
  * M12 Paired-analysis reference owner.
  *
  * The pairing screen shares the accepted lacquer shell, paper ground and rule
- * geometry with Catalog and Run detail. Its own composition stays here so the
- * four-role experimental chain can evolve without leaking into other views.
+ * geometry with Catalog and Run detail. This file owns the pairing-specific
+ * composition and preserves independent evolution of every public view.
  */
 
 .app-shell--pairing {

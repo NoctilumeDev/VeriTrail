@@ -3,8 +3,8 @@
  *
  * This file owns the public Catalog forecourt and the one shared Runs shell
  * used by both Catalog and Run detail. It intentionally sits outside the
- * exploratory component layers so the adopted 1448px reference has one
- * explicit composition owner instead of another appended patch stack.
+ * exploratory component layers. The adopted 1448px reference therefore has
+ * one explicit composition owner.
  */
 
 .app-shell--catalog {

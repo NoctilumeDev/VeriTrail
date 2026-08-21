@@ -1,10 +1,9 @@
 /*
  * M12 Run-detail reference owner.
  *
- * Like catalog-reference.css, this is an explicit, unlayered page owner. The
- * shared component layer remains the structural fallback, while every adopted
- * Run-detail visual decision is resolved here without depending on a generic
- * page-shell cascade.
+ * Like catalog-reference.css, this is the explicit, unlayered page owner.
+ * Shared components supply structural primitives; this file resolves every
+ * adopted Run-detail decision into the page-level composition.
  */
   .app-shell--run-detail {
     --detail-paper: #eee5d9;
