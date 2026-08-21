@@ -3,7 +3,7 @@
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
 [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml)
 [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
-[![Latest release](https://img.shields.io/github/v/release/NoctilumeDev/VeriTrail)](https://github.com/NoctilumeDev/VeriTrail/releases)
+[![M11 prerelease](https://img.shields.io/badge/M11%20prerelease-m11--v0.12.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/m11-v0.12.0)
 [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
 
 > 单变量证明因果，组合批次验证交互，固定种子寻找偶发故障，真实链路形成系统结论。
@@ -31,7 +31,9 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
-当前可寻址基线为 `m11-v0.12.0` @ `b13e2fb`；M11 `0.12.0.dev1` 在 `m10-v0.11.1` 地基上增加严格的单 application
+当前可寻址基线及 GitHub 预发布为 [`m11-v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/m11-v0.12.0)
+@ `b13e2fb`；包版本仍为 `0.12.0.dev1`，首个最终 Release 仍由 M14 发布门禁决定。M11 在
+`m10-v0.11.1` 地基上增加严格的单 application
 Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链路。Gate A 已完成 13 个公共
 出口；Gate B Plan v1 的移动端隐藏导航 `FAIL` 原样保留，Plan v2 则按预注册顺序取得
 `PASS / FAIL / PENDING / PASS` 四个 Bundle，正向恢复 Comparison 为 `MATCH`、0 differences。
