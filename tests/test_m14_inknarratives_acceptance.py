@@ -54,6 +54,7 @@ class M14InkNarrativesAcceptanceContractTests(unittest.TestCase):
         steps = plan["browser"]["steps"]
 
         self.assertEqual(EXPECTED_SUBJECT_REF, plan["subject"]["source_ref"])
+        self.assertEqual(1536, plan["browser"]["max_job_memory_mb"])
         self.assertEqual(2, len(plan["browser"]["viewports"]))
         self.assertEqual(50, len(steps))
         self.assertEqual(4, sum(step["action"] == "screenshot" for step in steps))

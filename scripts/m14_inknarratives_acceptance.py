@@ -40,8 +40,8 @@ CONTRACT_VERSION = "1.0"
 EXPECTED_SUBJECT_REF = "076be2f92194b90e31535d4583ac4d5e72922794"
 EXPECTED_M14_CONTRACT_COMMIT = "8147579825ebfe42a1f619a42bd7411c4931827d"
 EXPECTED_PROFILE_SHA256 = "afed07195c7d6285977109819bdbdaa9af7e1f967344cfa6c725038c4e5c45b0"
-EXPECTED_POSITIVE_PLAN_SHA256 = "61eca89cc6c6433ffadaa06e64ff36c930034ccb8bf8650beb135b824acd217a"
-EXPECTED_NEGATIVE_PLAN_SHA256 = "d8a0dcd32740bd6f453dccb141f55a451c86e11a5a5fb6040fc4c7661281d0c3"
+EXPECTED_POSITIVE_PLAN_SHA256 = "11c27beb4a3fbbb6635232f0944d5ba235d276ff287174bf3a3d610ba21714f3"
+EXPECTED_NEGATIVE_PLAN_SHA256 = "303fe6581c96c7094afaec32bd862ddb7371016371aeb69c165106654cddb475"
 MEBIBYTE = 1024 * 1024
 
 PUBLIC_PAGES = (
@@ -415,7 +415,7 @@ def raw_positive_plan(profile_sha256: str) -> dict[str, Any]:
         ],
         "steps": _browser_steps(origin),
         "screenshot_safety": "UNREDACTED_OPERATOR_ACKNOWLEDGED",
-        "max_job_memory_mb": 1024,
+        "max_job_memory_mb": 1536,
     }
     plan["bootstrap_profile"] = {
         "profile_id": "m14-inknarratives-single-app",
@@ -775,7 +775,7 @@ def verify_bootstrap(run_id: str, document: dict[str, Any]) -> int:
         or node["job"]["job_memory_limit_enforced"] is not True
         or node["job"]["active_process_limit"] != 8
         or node["job"]["active_process_limit_enforced"] is not True
-        or facts["browser_exercise"]["job_memory_limit_mb"] != 1024
+        or facts["browser_exercise"]["job_memory_limit_mb"] != 1536
         or facts["browser_exercise"]["job_memory_limit_enforced"] is not True
         or facts["browser_exercise"]["process_cleanup_complete"] is not True
         or facts["resource_observation"]["sampling_complete"] is not True
