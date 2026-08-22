@@ -28,7 +28,7 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M10 | 有界完整项目自举 | `FROZEN` |
 | M11 | 真实项目功能全链路 | `FROZEN` |
 | M12 | 故宫主题前端终稿 | `FROZEN` |
-| M13 | 系统思维与分层代码质量终审 | `PLANNED` |
+| M13 | 系统思维与分层代码质量终审 | `IMPLEMENTING` |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
 当前可寻址基线为 [`m12-v0.13.0`](https://github.com/NoctilumeDev/VeriTrail/tree/m12-v0.13.0)
@@ -39,14 +39,17 @@ Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链�
 出口；Gate B Plan v1 的移动端隐藏导航 `FAIL` 原样保留，Plan v2 则按预注册顺序取得
 `PASS / FAIL / PENDING / PASS` 四个 Bundle，正向恢复 Comparison 为 `MATCH`、0 differences。
 真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；冻结
-读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13–M14 仍为 `PLANNED`。M12-A 已完成
+读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13 已按
+[独立终审计划 0.1](docs/52-m13-system-and-layered-code-quality-audit-plan.md) 进入系统与 L0–L3 审查，
+M14 仍为 `PLANNED`。M12-A 已完成
 M11 控制组审计；M12-B 已完成四向公共视图、十字导航、URL/history、焦点与移动几何的生产运行验证。
 M12-A 至 E、R1 至 R3 已完成 Catalog、Run、Comparison、Pairing、Batch、Browser Evidence 与全局状态的表现迁移。
 M12-F 收口以 `156/156` Workbench、双 Python 各 `278/278`、D1/D2/D3 独立生产验收、常规与优化模式总验收、
 桌面/390/360 px、forced-colors、内置浏览器和用户逐页确认形成冻结候选；两轮总验收均为 13 组检查、636 个同源
 只读请求，外网/写请求/HTTP 错误均为 0，端口、线程与 SQLite sidecar 均已清理。冻结读回时，远端
 `main` 与 `m12-v0.13.0^{}` 均精确指向 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M12 已在
-既定 L0 / bounded L1 边界内 `FROZEN`，唯一后继入口为 M13，M13–M14 当前仍为 `PLANNED`。
+既定 L0 / bounded L1 边界内 `FROZEN`；M13 当前为 `IMPLEMENTING`，只执行已登记的审查与有界整改，
+不增加功能或静默修改冻结合同。
 
 准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见

@@ -33,7 +33,9 @@
   `FROZEN`。裸静态服务的 Catalog 404 失败事实、内置浏览器合成 `Tab` 限制、真实 Chromium
   自动化补证与内置浏览器人工 `Tab` 通过事实必须继续保留。
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
-  规划基线。M10、M11、M12 已冻结，M13–M14 仍为 `PLANNED`；冻结合同不代表
+  规划基线。M10、M11、M12 已冻结；M13 独立终审计划 0.1 位于
+  `docs/52-m13-system-and-layered-code-quality-audit-plan.md`，当前为 `IMPLEMENTING`；M14 仍为
+  `PLANNED`。冻结合同不代表
   后继能力已经实现或验收。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
@@ -73,7 +75,7 @@
   `assert` 的门禁缺陷；优化模式完整 Workbench 复跑通过。冻结提交
   `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40` 已推送；冻结读回时远端 `main` 和
   `m11-v0.12.0^{}` 均精确指向该提交，M11 状态为 `FROZEN`。事实见文档 26、27；M12 已以
-  `m12-v0.13.0` @ `5f32c33` 冻结，M13–M14 仍为 `PLANNED`。
+  `m12-v0.13.0` @ `5f32c33` 冻结；M13 已按文档 52 进入系统与 L0–L3 终审，M14 仍为 `PLANNED`。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
 - M12 表现系统重构设计计划 0.1 位于 `docs/28-m12-palace-workbench-design-plan.md`。M12-A 控制组审计已在
@@ -94,7 +96,8 @@
   M12-F 总体验收与冻结计划 0.1 位于文档 45，最终事实位于文档 51；Workbench 156/156、双 Python
   各 278/278、D1/D2/D3、常规与优化生产 Chromium、内置浏览器、用户逐页确认及零残留均已通过。
   冻结读回时远端 `main` 与 `m12-v0.13.0^{}` 均精确指向
-  `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M12 状态为 `FROZEN`，M13 只能另立合同进入。
+  `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M12 状态为 `FROZEN`。M13 已另立文档 52，审查
+  只能在该合同内进行；L2/L3 语义问题必须停止并另立整改合同，不能静默改写冻结基线。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

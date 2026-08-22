@@ -27,8 +27,8 @@ Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览�
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
 M10 有界完整项目自举、M11 真实项目功能全链路与 M12 故宫主题前端终稿均已 `FROZEN`；M12 冻结读回时
-远端 `main` 与 `m12-v0.13.0^{}` 均精确指向 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M13–M14
-为 `PLANNED`。M11 Contract 0.3 已冻结
+远端 `main` 与 `m12-v0.13.0^{}` 均精确指向 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M13 已按
+文档 52 进入 `IMPLEMENTING`，M14 为 `PLANNED`。M11 Contract 0.3 已冻结
 `OPTION_B`、InkNarratives 精确 ref 和 Gate A -> Gate B 严格串行，并纠正 Plan/Profile 一对一绑定；
 Profile 0.2、Plan 0.7、单节点生命周期和 collector 0.3 已通过 Gate A 的双 Python、真实 Chromium、
 13 个预注册出口、Catalog/Comparison、资源、安全、清理与 Workbench 消费验证；真实项目 Gate B
