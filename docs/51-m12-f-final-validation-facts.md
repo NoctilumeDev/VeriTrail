@@ -1,20 +1,21 @@
-# M12-F 总体验收与冻结候选运行事实 0.1
+# M12-F 总体验收与冻结运行事实 0.1
 
-> 状态：`VALIDATED_FREEZE_CANDIDATE / NOT_FROZEN`
+> 状态：`M12_FROZEN / TAG_READBACK_COMPLETE`
 >
 > 日期：2026-08-22
 >
 > 影响层级：`L0_PRESENTATION + BOUNDED_L1_COMPONENT`
 >
-> 候选基线：`HEAD ecc2d09` 加本文件记录的 M12 工作树；提交后必须重新记录候选 SHA
+> 冻结实现：`5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；前置表现提交 `ecc2d09` 保持独立可追溯
 
 ## 1. 结论
 
 M12 宫阙验迹表现候选已通过静态、双 Python、三个派生页独立生产验收、M12-F 常规/优化生产验收、
 Codex 内置浏览器与用户逐页审美确认。没有发现 L2/L3 合同、裁决、Catalog/API 或安全边界漂移。
 
-本结论只形成“可提交的冻结候选”，不等于 M12 已冻结。候选提交、`m12-v0.13.0`、远端 `main` 与 tag
-精确读回尚未执行；因此没有 GitHub Release，也没有提前进入 M13。
+冻结候选已提交并推送；冻结读回时，远端 `main` 与 `m12-v0.13.0^{}` 均精确指向
+`5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`。M12 已冻结；本里程碑没有 GitHub Release，M13 只能从
+该冻结基线另立合同进入。
 
 ## 2. 输入与环境
 
@@ -58,8 +59,8 @@ Python 3.13 回归曾打印 Playwright 关闭阶段的异步清理提示，但�
 
 最终候选输出：
 
-- 常规：`artifacts/m12-f-final-acceptance-closeout-final`
-- 优化：`artifacts/m12-f-final-acceptance-closeout-final-optimized`
+- 常规：`artifacts/m12-f-final-acceptance-postcommit-5f32c33`
+- 优化：`artifacts/m12-f-final-acceptance-postcommit-5f32c33-optimized`
 
 两轮均为：
 
@@ -82,5 +83,13 @@ Codex 内置浏览器逐一复核 16 个主路由、数据态与二级页；桌�
 - 没有修改 Python Core、Schema、Verdict、Catalog/API、Bundle 或确定性裁决。
 - bounded L1 只增加同源脱敏 Batch 审阅夹具读取和 `sample=supported` 路由；数据仍经既有 manifest/size/SHA
   校验器读取，不以组件内对象伪造事实。
-- `Blocker = 0`，`Must Fix = 0`；M13 建议不混入本候选。
-- 下一步只允许：复核最终 diff，形成单一 M12 候选提交，推送并读回，再创建并读回 `m12-v0.13.0`。
+- `Blocker = 0`，`Must Fix = 0`；M13 不混入本冻结实现。
+- 下一步只允许从冻结标签建立 M13 独立终审合同；不得移动 M12 标签或回写本里程碑事实。
+
+## 8. GitHub 冻结读回
+
+- 候选提交：`5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；提交后常规与 `python -O` 两轮均再次通过。
+- 分支推送：`a487639..5f32c33 main -> main`；冻结读回时远端 `main` 等于候选提交。
+- annotated tag 对象：`65abb58ff2a43ffbaf2327be20fde2f459d8eef7`。
+- 远端 `m12-v0.13.0^{}` 与本地 `m12-v0.13.0^{}` 均等于候选提交；标签未移动。
+- 冻结实现工作树干净；M12 未创建 GitHub Release，最终 Release 权限保留给 M14。

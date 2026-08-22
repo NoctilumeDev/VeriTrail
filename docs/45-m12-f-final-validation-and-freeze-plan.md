@@ -1,6 +1,6 @@
 # M12-F 总体验收与冻结计划 0.1
 
-> 状态：`M12_F_VALIDATED / FREEZE_CANDIDATE_NOT_COMMITTED`
+> 状态：`M12_FROZEN / REMOTE_READBACK_COMPLETE`
 >
 > 日期：2026-08-22
 >
@@ -19,8 +19,8 @@
 
 > 2026-08-22 收口更新：R3 重建后的 Catalog、Run、Comparison、Pairing 与 Batch 已取得用户逐页视觉和
 > 交互确认；M12-F 常规与 `python -O` 总体验收均通过。完整门禁、失败保留和清理事实见
-> [M12-F 总体验收与冻结候选运行事实](51-m12-f-final-validation-facts.md)。当前只剩候选提交、tag 与 GitHub
-> 精确读回，故 M12 仍不得写成 `FROZEN`。
+> [M12-F 总体验收与冻结运行事实](51-m12-f-final-validation-facts.md)。冻结读回时，远端 `main` 与
+> `m12-v0.13.0^{}` 均精确指向 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M12 已按本计划冻结。
 
 ## 1. 目标、唯一变量与非目标
 
@@ -135,7 +135,7 @@ M12 冻结仍只证明 M0-M11 已有事实在声明的 Windows 11、16 GB、单�
 - [x] 用户审阅并确认本计划 0.1；
 - [x] M12-F 候选、输入与资源预检已经开始；
 - [x] M12-F 已形成运行事实；
-- [ ] M12 已冻结。
+- [x] M12 已冻结。
 
-本文件仍是 M12-F 的执行合同；验收事实由文档 51 承担。计划和本地通过不能替代候选提交、标签、
-GitHub 精确读回或发布事实。
+本文件仍是 M12-F 的执行合同；验收与冻结读回事实由文档 51 承担。M12 不创建 GitHub Release；
+候选提交、标签与 GitHub 精确读回已经完成，M14 才拥有最终发布权限。
