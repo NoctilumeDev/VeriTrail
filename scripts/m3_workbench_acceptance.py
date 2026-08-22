@@ -20,6 +20,11 @@ DEFAULT_LOCAL_BUNDLE = REPOSITORY_ROOT / "artifacts" / "m2-freeze-pass"
 DEFAULT_OUTPUT = REPOSITORY_ROOT / "artifacts" / "m3-workbench-acceptance"
 
 
+def require(condition: object, message: str) -> None:
+    if not condition:
+        raise AssertionError(message)
+
+
 class QuietStaticHandler(SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:
         return
@@ -179,7 +184,10 @@ def main() -> int:
             desktop_overflow = page.evaluate(
                 "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             )
-            assert desktop_overflow == 0, f"desktop horizontal overflow: {desktop_overflow}px"
+            require(
+                desktop_overflow == 0,
+                f"desktop horizontal overflow: {desktop_overflow}px",
+            )
             summary["checks"].append("desktop-positive")
 
             page.get_by_test_id("catalog-return").press("Enter")
@@ -187,7 +195,10 @@ def main() -> int:
             page.get_by_test_id("fixture-negative").click()
             expect(page.locator('[aria-label="验收结论：FAIL"]')).to_be_visible()
             page.get_by_test_id("filter-fail").click()
-            assert page.locator(".assertion--fail").count() == 3
+            require(
+                page.locator(".assertion--fail").count() == 3,
+                "negative fixture must expose exactly three failed assertions",
+            )
             page.get_by_role("tab", name="Console 4").click()
             expect(page.locator('[aria-labelledby="tab-console"]')).to_contain_text(
                 "synthetic console failure"
@@ -204,7 +215,10 @@ def main() -> int:
             expect(page.get_by_test_id("fixture-invalid")).to_be_visible()
             page.get_by_test_id("fixture-invalid").click()
             expect(page.get_by_test_id("error-state")).to_contain_text("MISSING_ROOT_FILE")
-            assert page.get_by_test_id("status-gate").count() == 0
+            require(
+                page.get_by_test_id("status-gate").count() == 0,
+                "invalid fixture must not expose a status gate",
+            )
             page.get_by_test_id("retry-positive").click()
             expect(page.locator('[aria-label="验收结论：PASS"]')).to_be_visible()
             page.go_back(wait_until="load")
@@ -219,7 +233,10 @@ def main() -> int:
             page.get_by_test_id("local-bundle-input").set_input_files(str(local_bundle))
             expect(page.get_by_test_id("run-summary")).to_contain_text("m2-freeze-pass")
             expect(page.get_by_test_id("run-summary")).to_contain_text("本地目录 · 仅内存读取")
-            assert len(summary["network"]) == requests_before_local
+            require(
+                len(summary["network"]) == requests_before_local,
+                "local directory import must not issue network requests",
+            )
             summary["checks"].append("desktop-local-directory-no-upload")
 
             desktop_screenshot = output / "desktop.png"
@@ -269,7 +286,10 @@ def main() -> int:
             mobile_overflow = mobile_page.evaluate(
                 "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
             )
-            assert mobile_overflow == 0, f"mobile horizontal overflow: {mobile_overflow}px"
+            require(
+                mobile_overflow == 0,
+                f"mobile horizontal overflow: {mobile_overflow}px",
+            )
             mobile_page.get_by_test_id("catalog-return").press("Enter")
             expect(mobile_page.get_by_test_id("fixture-negative")).to_be_visible()
             mobile_page.get_by_test_id("fixture-negative").click()

@@ -24,6 +24,11 @@ DEFAULT_RUN_ID = "m4-self-bootstrap-run-v2"
 DEFAULT_PLAN_SHA256 = "d3a8cd4e1d7405e91fd7b0cdac0eef94772b09617a19d3dffcd473d8a05e3a08"
 
 
+def require(condition: object, message: str) -> None:
+    if not condition:
+        raise AssertionError(message)
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -112,28 +117,64 @@ def main() -> int:
     try:
         status, headers, body = http_request(args.port, "GET", "/api/v1/health")
         health = json.loads(body)
-        assert status == 200 and health["status"] == "READY" and health["read_only"] is True
-        assert headers["x-content-type-options"] == "nosniff"
-        assert "access-control-allow-origin" not in headers
+        require(
+            status == 200 and health["status"] == "READY" and health["read_only"] is True,
+            "catalog health endpoint must report a ready read-only service",
+        )
+        require(
+            headers["x-content-type-options"] == "nosniff",
+            "catalog health endpoint must emit nosniff",
+        )
+        require(
+            "access-control-allow-origin" not in headers,
+            "catalog API must not enable cross-origin access",
+        )
         summary["checks"].append("http-health-readonly-security")
 
         status, _, body = http_request(args.port, "GET", "/api/v1/catalog?page=1&page_size=100")
         catalog_response = json.loads(body)
-        assert status == 200 and catalog_response["catalog"]["run_count"] >= 3
+        require(
+            status == 200 and catalog_response["catalog"]["run_count"] >= 3,
+            "catalog endpoint must expose the seeded runs",
+        )
         expected = next(
             item for item in catalog_response["runs"] if item["run_id"] == args.expected_run_id
         )
-        assert expected["plan"]["sha256"] == args.expected_plan_sha256
+        require(
+            expected["plan"]["sha256"] == args.expected_plan_sha256,
+            "catalog plan digest must match the expected sealed plan",
+        )
         catalog_run_id = expected["catalog_run_id"]
         summary["catalog_id"] = catalog_response["catalog"]["catalog_id"]
         summary["catalog_run_id"] = catalog_run_id
         summary["checks"].append("http-catalog-self-run")
 
-        assert http_request(args.port, "HEAD", "/api/v1/catalog")[0] == 200
-        assert http_request(args.port, "POST", "/api/v1/catalog")[0] == 405
-        assert http_request(args.port, "GET", "/api/not-real")[0] == 404
-        assert http_request(args.port, "GET", "/api/v1/catalog?unknown=1")[0] == 400
-        assert http_request(args.port, "GET", "/api/v1/catalog", host="example.invalid")[0] == 400
+        require(
+            http_request(args.port, "HEAD", "/api/v1/catalog")[0] == 200,
+            "catalog endpoint must support HEAD",
+        )
+        require(
+            http_request(args.port, "POST", "/api/v1/catalog")[0] == 405,
+            "catalog endpoint must reject POST",
+        )
+        require(
+            http_request(args.port, "GET", "/api/not-real")[0] == 404,
+            "catalog API must reject unknown paths",
+        )
+        require(
+            http_request(args.port, "GET", "/api/v1/catalog?unknown=1")[0] == 400,
+            "catalog endpoint must reject unknown query parameters",
+        )
+        require(
+            http_request(
+                args.port,
+                "GET",
+                "/api/v1/catalog",
+                host="example.invalid",
+            )[0]
+            == 400,
+            "catalog API must reject an untrusted Host header",
+        )
         summary["checks"].append("http-negative-contract")
 
         from playwright.sync_api import expect, sync_playwright
@@ -167,23 +208,38 @@ def main() -> int:
             page.on("response", lambda response: summary["network"].append(response_fact(response)))
             page.goto(f"{origin}/", wait_until="load")
             expect(page.get_by_test_id("run-catalog")).to_be_visible()
-            assert page.get_by_test_id("status-gate").count() == 0
+            require(
+                page.get_by_test_id("status-gate").count() == 0,
+                "catalog landing page must not expose a run status gate",
+            )
             run_button = page.locator(f'[data-catalog-run-id="{catalog_run_id}"]')
             expect(run_button).to_contain_text(args.expected_run_id)
             run_button.click()
             expect(page.get_by_test_id("run-summary")).to_contain_text(args.expected_run_id)
             expect(page.get_by_test_id("status-gate")).to_contain_text("COMPLETED")
             expect(page.get_by_test_id("status-gate")).to_contain_text("PASS")
-            assert page.get_by_test_id("run-summary").locator("code").get_attribute("title") == args.expected_plan_sha256
-            assert page.evaluate(
-                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
-            ) == 0
+            require(
+                page.get_by_test_id("run-summary").locator("code").get_attribute("title")
+                == args.expected_plan_sha256,
+                "run summary must expose the full expected plan digest",
+            )
+            require(
+                page.evaluate(
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
+                )
+                == 0,
+                "desktop catalog detail must not overflow horizontally",
+            )
             summary["checks"].append("desktop-self-run-readback")
 
             page.get_by_test_id("catalog-return").click()
-            assert page.evaluate(
-                "document.activeElement?.getAttribute('data-catalog-run-id')"
-            ) == catalog_run_id
+            require(
+                page.evaluate(
+                    "document.activeElement?.getAttribute('data-catalog-run-id')"
+                )
+                == catalog_run_id,
+                "returning to the catalog must restore focus to the selected run",
+            )
             run_button.click()
             page.go_back(wait_until="load")
             expect(page.get_by_test_id("run-catalog")).to_be_visible()
@@ -193,7 +249,10 @@ def main() -> int:
 
             page.get_by_test_id("fixture-invalid").click()
             expect(page.get_by_test_id("error-state")).to_contain_text("MISSING_ROOT_FILE")
-            assert page.get_by_test_id("status-gate").count() == 0
+            require(
+                page.get_by_test_id("status-gate").count() == 0,
+                "invalid fixture must not expose a status gate",
+            )
             page.get_by_test_id("retry-positive").click()
             expect(page.get_by_test_id("status-gate")).to_contain_text("PASS")
             summary["checks"].append("m3-invalid-retry-compatibility")
@@ -240,9 +299,13 @@ def main() -> int:
             expect(mobile_page.get_by_test_id("run-catalog")).to_be_visible()
             mobile_page.locator(f'[data-catalog-run-id="{catalog_run_id}"]').click()
             expect(mobile_page.get_by_test_id("status-gate")).to_contain_text("PASS")
-            assert mobile_page.evaluate(
-                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
-            ) == 0
+            require(
+                mobile_page.evaluate(
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
+                )
+                == 0,
+                "mobile catalog detail must not overflow horizontally",
+            )
             mobile_shot = output / "mobile.png"
             mobile_page.screenshot(path=str(mobile_shot), full_page=False)
             summary["screenshots"].append(

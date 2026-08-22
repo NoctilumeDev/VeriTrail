@@ -1,3 +1,4 @@
+import ast
 from pathlib import Path
 import unittest
 
@@ -11,6 +12,20 @@ NORMALIZED_ROOT_OVERFLOW = f"Math.max(0, {RAW_ROOT_WIDTH_DELTA})"
 
 
 class BrowserAcceptanceMetricsTests(unittest.TestCase):
+    def test_acceptance_gates_survive_optimized_python(self) -> None:
+        offenders: list[str] = []
+
+        for path in sorted((ROOT / "scripts").glob("*acceptance.py")):
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            if any(isinstance(node, ast.Assert) for node in ast.walk(tree)):
+                offenders.append(path.name)
+
+        self.assertEqual(
+            [],
+            offenders,
+            "acceptance scripts must use explicit runtime gates because python -O removes assert",
+        )
+
     def test_root_overflow_checks_ignore_reserved_scrollbar_gutter(self) -> None:
         occurrences = 0
         offenders: list[str] = []

@@ -21,6 +21,11 @@ DEFAULT_DIST = REPOSITORY_ROOT / "web" / "dist"
 DEFAULT_OUTPUT = REPOSITORY_ROOT / "artifacts" / "m6-comparison-acceptance"
 
 
+def require(condition: object, message: str) -> None:
+    if not condition:
+        raise AssertionError(message)
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -166,7 +171,11 @@ def main() -> int:
             page.goto(origin, wait_until="load")
             comparison_input = page.get_by_test_id("local-comparison-input")
             comparison_input.focus()
-            assert page.evaluate("document.activeElement?.dataset.testid") == "local-comparison-input"
+            require(
+                page.evaluate("document.activeElement?.dataset.testid")
+                == "local-comparison-input",
+                "comparison file input must be keyboard focusable",
+            )
 
             for expected_status in ("MATCH", "DRIFT", "INCONCLUSIVE"):
                 comparison_input.set_input_files(str(comparisons[expected_status]))
@@ -174,9 +183,13 @@ def main() -> int:
                 expect(page.get_by_test_id("comparison-status")).to_contain_text(expected_status)
                 expect(page.get_by_test_id("comparison-sources")).to_contain_text("BASELINE")
                 expect(page.get_by_test_id("comparison-sources")).to_contain_text("REPEAT")
-                assert page.evaluate(
-                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
-                ) == 0
+                require(
+                    page.evaluate(
+                        "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
+                    )
+                    == 0,
+                    f"desktop {expected_status} comparison must not overflow horizontally",
+                )
                 summary["checks"].append(f"desktop-{expected_status.lower()}-verified")
 
             with tempfile.TemporaryDirectory() as directory:
@@ -186,7 +199,10 @@ def main() -> int:
                 changed.write_bytes(changed.read_bytes() + b" ")
                 comparison_input.set_input_files(str(corrupted))
                 expect(page.get_by_test_id("error-state")).to_contain_text("COMPARISON_SIZE_MISMATCH")
-                assert page.get_by_test_id("comparison-view").count() == 0
+                require(
+                    page.get_by_test_id("comparison-view").count() == 0,
+                    "corrupted comparison must not expose a partial comparison view",
+                )
                 page.get_by_test_id("retry-positive").click()
                 expect(page.get_by_test_id("status-gate")).to_contain_text("PASS")
                 summary["checks"].append("desktop-corruption-contained-and-recovered")
@@ -246,9 +262,13 @@ def main() -> int:
                 str(comparisons["MATCH"])
             )
             expect(mobile_page.get_by_test_id("comparison-status")).to_contain_text("MATCH")
-            assert mobile_page.evaluate(
-                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
-            ) == 0
+            require(
+                mobile_page.evaluate(
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
+                )
+                == 0,
+                "mobile comparison must not overflow horizontally",
+            )
             mobile_shot = output / "mobile.png"
             mobile_page.screenshot(path=str(mobile_shot), full_page=False)
             summary["screenshots"].append(

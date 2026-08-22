@@ -2,12 +2,12 @@
 
 ## Current status
 
-VeriTrail is a pre-release v0 implementation. M0 through M10 are frozen; the M10 implementation commit
-`008444319a4af54de3291fe5c0ab602001c30754` and annotated `m10-v0.11.0` tag have been read back from
+VeriTrail is a pre-release v0 implementation. M0 through M12 are frozen; the M12 implementation commit
+`5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9` and annotated `m12-v0.13.0` tag have been read back from
 GitHub. The repository includes the deterministic
 Python evidence core, bounded resource/browser adapters, a read-only Vue workbench, rebuildable SQLite
 Catalog and loopback API, deterministic Comparison/Pairing/Batch analysis, a trusted Windows ONESHOT
-runner, and the Windows 11/C1 two-node bootstrap candidate. It does not claim support for untrusted code,
+runner, and the Windows 11/C1 one-node and two-node bootstrap candidates. It does not claim support for untrusted code,
 arbitrary Shell, cross-platform bootstrap, accounts, cloud sync, or production isolation.
 
 ## Reporting a vulnerability
@@ -35,9 +35,10 @@ The project treats the following as security-sensitive by design:
   Job ownership and bounded time/process/memory/output resources; it remains limited to trusted code.
 - Sensitive headers and values must be redacted before persistence or export.
 - Reports must render imported content as data, not executable HTML.
-- The M3 workbench rejects absolute/traversal/confusable paths, undeclared or duplicate files, unknown
+- The M12 workbench rejects absolute/traversal/confusable paths, undeclared or duplicate files, unknown
   versions, size/count overrun, hash mismatch, missing references, and attachments other than verified
-  PNG/JPEG. It does not use `v-html`, remote URL import, CDN assets, or persistence for local selections.
+  PNG/JPEG or bounded UTF-8 text. It does not use `v-html`, remote URL import, CDN assets, or persistence
+  for local selections.
 - Attachment object URLs must be revoked on bundle switch, component teardown, and any later validation
   failure; invalid bundles must not expose a partial Report/Verdict view.
 - Local APIs must bind to loopback by default and must not silently expose evidence over the network.

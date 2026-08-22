@@ -27,6 +27,11 @@ PAIRING_FILES = (
 )
 
 
+def require(condition: object, message: str) -> None:
+    if not condition:
+        raise AssertionError(message)
+
+
 def pairing_files(path: Path) -> list[str]:
     return [str(path / name) for name in PAIRING_FILES]
 
@@ -167,7 +172,11 @@ def main() -> int:
             page.goto(origin, wait_until="load")
             pairing_input = page.get_by_test_id("local-pairing-input")
             pairing_input.focus()
-            assert page.evaluate("document.activeElement?.dataset.testid") == "local-pairing-input"
+            require(
+                page.evaluate("document.activeElement?.dataset.testid")
+                == "local-pairing-input",
+                "pairing file input must be keyboard focusable",
+            )
 
             for expected_status in ("SUPPORTED", "CONTRADICTED", "INCONCLUSIVE"):
                 pairing_input.set_input_files(pairing_files(analyses[expected_status]))
@@ -179,9 +188,13 @@ def main() -> int:
                 expect(page.get_by_test_id("paired-sequence")).to_contain_text(
                     "NEGATIVE_CONTROL"
                 )
-                assert page.evaluate(
-                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
-                ) == 0
+                require(
+                    page.evaluate(
+                        "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
+                    )
+                    == 0,
+                    f"desktop {expected_status} pairing must not overflow horizontally",
+                )
                 summary["checks"].append(f"desktop-{expected_status.lower()}-verified")
 
             with tempfile.TemporaryDirectory() as directory:
@@ -193,7 +206,10 @@ def main() -> int:
                 expect(page.get_by_test_id("error-state")).to_contain_text(
                     "PAIRING_SIZE_MISMATCH"
                 )
-                assert page.get_by_test_id("paired-analysis-view").count() == 0
+                require(
+                    page.get_by_test_id("paired-analysis-view").count() == 0,
+                    "corrupted pairing must not expose a partial pairing view",
+                )
                 page.get_by_test_id("retry-positive").click()
                 expect(page.get_by_test_id("status-gate")).to_contain_text("PASS")
                 summary["checks"].append("desktop-corruption-contained-and-recovered")
@@ -258,9 +274,13 @@ def main() -> int:
             expect(mobile_page.get_by_test_id("paired-analysis-status")).to_contain_text(
                 "SUPPORTED"
             )
-            assert mobile_page.evaluate(
-                "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
-            ) == 0
+            require(
+                mobile_page.evaluate(
+                    "Math.max(0, document.documentElement.scrollWidth - document.documentElement.clientWidth)"
+                )
+                == 0,
+                "mobile pairing must not overflow horizontally",
+            )
             mobile_shot = output / "mobile.png"
             mobile_page.screenshot(path=str(mobile_shot), full_page=False)
             summary["screenshots"].append(
