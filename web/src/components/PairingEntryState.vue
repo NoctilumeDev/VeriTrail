@@ -36,12 +36,12 @@ const stateRole = computed(() => {
 
 <template>
   <section
-    class="pairing-page pairing-page--entry"
+    class="analysis-entry-frame pairing-page pairing-page--entry"
     :class="`pairing-page--entry-${mode}`"
     aria-labelledby="view-pairing-title"
     data-testid="pairing-entry-state"
   >
-    <header class="pairing-heading pairing-heading--entry">
+    <header class="analysis-entry-frame__heading pairing-heading pairing-heading--entry">
       <div class="pairing-heading__title">
         <img :src="'/textures/r3-nav-pairing-thin.svg'" alt="" aria-hidden="true" />
         <div>
@@ -55,7 +55,7 @@ const stateRole = computed(() => {
     </header>
 
     <div
-      class="pairing-entry-court"
+      class="analysis-entry-frame__body pairing-entry-court"
       :role="stateRole"
       :data-testid="stateTestId"
       :data-state-kind="mode"

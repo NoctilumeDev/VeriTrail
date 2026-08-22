@@ -131,49 +131,20 @@ function handleTargetKeydown(event: KeyboardEvent, view: PublicView) {
   text-align: left;
 }
 
-.cross-axis-navigation__target:hover,
-.cross-axis-navigation__target:focus-visible,
-.cross-axis-navigation__target[aria-current='page'] {
-  color: var(--structure-vermilion);
-}
-
 .cross-axis-navigation__target:focus-visible {
   z-index: 1;
   outline: 3px solid var(--focus-ring);
   outline-offset: -3px;
 }
 
-.cross-axis-navigation__target[aria-current='page']::after {
-  position: absolute;
-  bottom: 0.28rem;
-  left: 50%;
-  width: 4rem;
-  height: 2px;
-  content: "";
-  background: currentColor;
-  transform: translateX(-50%);
-}
-
 .cross-axis-navigation__ordinal {
   display: grid;
-  width: 1.65rem;
-  height: 1.65rem;
   place-items: center;
-  color: var(--structure-gold);
   font-family: var(--font-display);
-  font-size: 0.95rem;
-  border: 1px solid currentColor;
-  border-radius: 50%;
 }
 
 .cross-axis-navigation__mark {
   display: none;
-}
-
-.cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
-  color: var(--text-on-ink);
-  background: var(--structure-vermilion);
-  border-color: var(--structure-vermilion);
 }
 
 @media (forced-colors: active) {

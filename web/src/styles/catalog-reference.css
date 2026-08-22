@@ -109,13 +109,14 @@
 .app-shell--runs .cross-axis-navigation__target {
   position: relative;
   display: grid;
-  grid-template-columns: 38px 54px minmax(0, 1fr);
-  grid-template-rows: 58px 34px;
-  column-gap: 8px;
+  grid-template-columns: 34px auto;
+  grid-template-rows: 1fr;
+  column-gap: 16px;
   align-content: center;
   align-items: center;
+  justify-content: start;
   min-height: 0;
-  padding: 14px clamp(10px, 2vw, 30px) 25px;
+  padding: 18px clamp(10px, 2vw, 30px) 30px;
   color: #4d4439;
   font-family: var(--font-display);
   font-size: 16px;
@@ -131,37 +132,18 @@
   color: #756247;
   font-size: 18px;
   background: color-mix(in srgb, var(--catalog-paper) 85%, transparent);
-  border-color: #b39a71;
-  transform: translateY(-10px);
+  border: 1px solid #b39a71;
+  border-radius: 50%;
 }
 
 .app-shell--runs .cross-axis-navigation__mark {
-  display: block;
-  grid-row: 1;
-  grid-column: 2;
-  width: 49px;
-  height: 49px;
-  object-fit: contain;
-  transform: translateY(-10px);
-}
-
-.app-shell--runs .cross-axis-navigation__target:not([aria-current='page']) .cross-axis-navigation__mark {
-  filter:
-    sepia(0.34)
-    saturate(1.58)
-    brightness(1.08)
-    contrast(1.13);
-}
-
-.app-shell--runs .cross-axis-navigation__target--pairing .cross-axis-navigation__mark {
-  width: 44px;
-  height: 44px;
+  display: none;
 }
 
 .app-shell--runs .cross-axis-navigation__label {
-  grid-row: 2;
-  grid-column: 2 / span 2;
-  align-self: start;
+  grid-row: 1;
+  grid-column: 2;
+  align-self: center;
   white-space: nowrap;
 }
 
@@ -174,10 +156,6 @@
 .app-shell--runs .cross-axis-navigation__target:focus-visible {
   outline: 3px solid #7b5a22;
   outline-offset: -6px;
-}
-
-.app-shell--runs .cross-axis-navigation__target[aria-current='page']::after {
-  content: none;
 }
 
 .app-shell--runs .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
@@ -968,8 +946,8 @@
   }
 
   .app-shell--runs .cross-axis-navigation__target {
-    grid-template-columns: 32px 42px;
-    grid-template-rows: 48px 28px;
+    grid-template-columns: 32px minmax(0, 1fr);
+    grid-template-rows: 1fr;
     justify-content: center;
     column-gap: 8px;
     min-height: 106px;
@@ -977,16 +955,15 @@
     font-size: 14px;
   }
 
-  .app-shell--runs .cross-axis-navigation__ordinal,
   .app-shell--runs .cross-axis-navigation__mark {
-    transform: none;
+    display: none;
   }
 
   .app-shell--runs .cross-axis-navigation__label {
-    grid-row: 2;
-    grid-column: 1 / -1;
-    justify-self: center;
-    text-align: center;
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: start;
+    text-align: left;
     white-space: normal;
   }
 

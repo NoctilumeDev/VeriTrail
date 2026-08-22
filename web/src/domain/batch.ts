@@ -1,4 +1,5 @@
 import { normalizeBundlePath, sha256Hex } from './bundle'
+import { fetchSameOriginFixture, SameOriginFixtureError } from './sameOriginFixture'
 import type {
   BatchAnalysis,
   BatchAnalysisManifest,
@@ -65,6 +66,13 @@ const CONTAMINATION_REASONS = new Set([
   'PERTURBATION_OUTCOME_DRIFT',
 ])
 const INCOMPLETE_REASONS = new Set(['SLOT_MISSING', 'RUN_NOT_COMPLETED', 'SOURCE_EVIDENCE_INCOMPLETE'])
+const REVIEW_SAMPLE_BASE = '/fixtures/m8-batch-supported'
+const REVIEW_SAMPLE_FILES = [
+  'batch-analysis-manifest.json',
+  'sealed-batch-plan.json',
+  'batch-analysis.json',
+  'batch-analysis.md',
+] as const
 
 export class BatchLoadError extends Error {
   readonly code: string
@@ -1011,4 +1019,18 @@ export async function loadLocalBatchAnalysis(
   const entries = new Map<string, Blob>()
   files.forEach((file, index) => entries.set(paths[index]!, file))
   return loadBatchAnalysisFromBlobs(entries)
+}
+
+export async function loadBatchAnalysisReviewSample(): Promise<LoadedBatchAnalysis> {
+  try {
+    return await loadBatchAnalysisFromBlobs(
+      await fetchSameOriginFixture(REVIEW_SAMPLE_BASE, REVIEW_SAMPLE_FILES),
+    )
+  } catch (cause) {
+    if (cause instanceof BatchLoadError) throw cause
+    if (cause instanceof SameOriginFixtureError) {
+      fail('BATCH_SAMPLE_FETCH_FAILED', cause.message)
+    }
+    fail('BATCH_SAMPLE_FETCH_FAILED', '全因子批次分析审阅夹具读取失败。')
+  }
 }

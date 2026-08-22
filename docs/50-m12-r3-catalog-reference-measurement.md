@@ -1,6 +1,6 @@
 # M12-R3 Catalog Reference Measurement 0.1
 
-> Status: `R3-A / MEASURED / PROOF_SHEET_PENDING`
+> Status: `R3-A / MEASURED / ADOPTED_AND_VALIDATED`
 >
 > Date: 2026-08-15
 >
@@ -9,6 +9,9 @@
 > Parent: [M12-R3 reference-first Catalog rebuild contract](49-m12-r3-reference-first-catalog-rebuild.md)
 >
 > Visual authority: `docs/design-references/m12/01-runs-catalog.png`
+>
+> Closeout: the measured geometry was adopted, implemented, and confirmed in the final browser review; integrated
+> evidence is recorded in [M12-F final validation facts](51-m12-f-final-validation-facts.md).
 
 ## 1. Purpose
 

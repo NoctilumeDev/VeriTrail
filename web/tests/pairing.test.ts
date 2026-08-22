@@ -32,6 +32,7 @@ describe('PairedAnalysis Loader and View', () => {
     )
     expect(wrapper.find('.pairing-page').exists()).toBe(true)
     expect(wrapper.find('.comparison-court').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="view-pairing-title"]').attributes('id')).toBe('view-pairing-title')
     expect(roleOrder(wrapper, '[data-testid="paired-sequence"]')).toEqual(ROLES)
     expect(wrapper.findAll('.pairing-sequence__emblem')).toHaveLength(4)
     expect(wrapper.get('[data-testid="pairing-open-sources"]').text()).toContain('来源账册')

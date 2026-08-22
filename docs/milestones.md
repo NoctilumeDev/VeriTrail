@@ -26,7 +26,7 @@
 | M9 | 可信一次性项目进程的受控执行与证据闭环 | `FROZEN` | `m9-v0.10.0` @ `3181d69` |
 | M10 | Windows 11/C1 有界完整项目自举 | `FROZEN` | `m10-v0.11.1` @ `f4efdd2`；历史 `m10-v0.11.0` @ `0084443` |
 | M11 | 不同类型真实项目功能全链路 | `FROZEN` | `m11-v0.12.0` @ `b13e2fb` |
-| M12 | 故宫主题前端终稿 | `IMPLEMENTING`（M12-A/B/C、D1 Comparison、D2 Pairing、D3 Batch、B/C 空间纠偏 R1/R2 与 E Browser Evidence/全局状态均已取得运行事实；M12-F 计划 0.1 待用户审阅） | — |
+| M12 | 故宫主题前端终稿 | `VALIDATED / NOT FROZEN`（M12-F 静态、双 Python、D1/D2/D3、常规/优化生产 Chromium、内置浏览器与用户审美确认已通过；等待候选提交、tag 与远端读回） | — |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` | — |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
 
@@ -107,7 +107,7 @@ Plan / Evidence / Verdict
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
-`post-m8-plan-v1` 冻结为规划基线；M10、M11 已冻结，M12 为 `IMPLEMENTING`，M13–M14 仍为 `PLANNED`。M9 受控
+`post-m8-plan-v1` 冻结为规划基线；M10、M11 已冻结，M12 为 `VALIDATED / NOT FROZEN`，M13–M14 仍为 `PLANNED`。M9 受控
 项目命令执行合同 0.2 已在
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
@@ -208,9 +208,10 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M12-D3 Batch 运行事实](42-m12-d3-batch-facts.md)
 - [M12-E Browser Evidence 与全局状态表现计划](43-m12-e-browser-evidence-and-global-state-plan.md)
 - [M12-E Browser Evidence 与全局状态运行事实](44-m12-e-browser-evidence-and-global-state-facts.md)
-- [M12-F 总体验收与冻结计划（待用户审阅）](45-m12-f-final-validation-and-freeze-plan.md)
+- [M12-F 总体验收与冻结计划](45-m12-f-final-validation-and-freeze-plan.md)
 - [M12 参考图驱动的空间重组计划](46-m12-reference-guided-recomposition-plan.md)
 - [M12 Visual Reference Contract 1.0](47-m12-visual-reference-contract.md)
-- [M12-R3 参考图优先的 Catalog 重建合同（待用户审阅）](49-m12-r3-reference-first-catalog-rebuild.md)
-- [M12-R3 Catalog 参考图测量记录（proof sheet 待审阅）](50-m12-r3-catalog-reference-measurement.md)
+- [M12-R3 参考图优先的 Catalog 重建合同](49-m12-r3-reference-first-catalog-rebuild.md)
+- [M12-R3 Catalog 参考图测量与采用记录](50-m12-r3-catalog-reference-measurement.md)
+- [M12-F 总体验收与冻结候选运行事实](51-m12-f-final-validation-facts.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

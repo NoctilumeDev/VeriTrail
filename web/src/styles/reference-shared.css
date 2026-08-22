@@ -188,14 +188,6 @@
   padding: 12px 0 10px;
 }
 
-.app-shell--catalog .masthead__scope span:first-child,
-.app-shell--run-detail .masthead__scope span:first-child,
-.app-shell--pairing .masthead__scope span:first-child,
-.app-shell--comparison .masthead__scope span:first-child,
-.app-shell--batch .masthead__scope span:first-child {
-  border-bottom: 2px solid #d1b56c;
-}
-
 .app-shell--catalog .site-footer__seal,
 .app-shell--run-detail .site-footer__seal,
 .app-shell--pairing .site-footer__seal,
@@ -261,6 +253,21 @@
   outline-offset: 3px;
 }
 
+/* Empty Pairing, Batch and Comparison states share one stable court geometry.
+   Their page owners keep the content and ornamentation, while this contract
+   prevents the frame from resizing when the public analysis view changes. */
+.app-shell--reference-analysis .analysis-entry-frame {
+  display: grid;
+  grid-template-rows: 112px minmax(0, 1fr);
+  min-height: clamp(37rem, calc(100vh - 19rem), 42rem);
+}
+
+.app-shell--reference-analysis .analysis-entry-frame__heading,
+.app-shell--reference-analysis .analysis-entry-frame__body {
+  min-width: 0;
+  min-height: 0;
+}
+
 /* The three non-Run analysis views share one desktop masthead-navigation
    contract. Keeping it here prevents their navigation from drifting as each
    page body evolves independently. */
@@ -287,8 +294,7 @@
     padding: 0;
   }
 
-  .app-shell--reference-analysis .cross-axis-navigation__waterline::after,
-  .app-shell--reference-analysis .cross-axis-navigation__target[aria-current='page']::after {
+  .app-shell--reference-analysis .cross-axis-navigation__waterline::after {
     content: none;
   }
 
@@ -324,10 +330,12 @@
     font-size: 11px;
   }
 
-  .app-shell--reference-analysis .cross-axis-navigation__target[aria-current='page'] .cross-axis-navigation__ordinal {
-    color: var(--structure-gold-soft);
-    background: transparent;
-    border-color: transparent;
+}
+
+@media (max-width: 720px) {
+  .app-shell--reference-analysis .analysis-entry-frame {
+    grid-template-rows: auto auto;
+    min-height: 0;
   }
 }
 

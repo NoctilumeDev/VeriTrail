@@ -59,6 +59,7 @@ describe('App', () => {
       'm2-invalid': await createMinimalBundle(),
       'm6-comparison-drift': await createComparisonBundle('DRIFT'),
       'm7-paired-supported': await createPairedAnalysisBundle('SUPPORTED'),
+      'm8-batch-supported': await createBatchAnalysisBundle('SUPPORTED'),
     }
     const invalid = bundles['m2-invalid']!
     invalid.set('report.json', new Blob(['{}']))
@@ -109,6 +110,17 @@ describe('App', () => {
     continueCatalog()
     await waitFor(wrapper, '[data-testid="paired-analysis-view"]')
     expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
+    wrapper.unmount()
+  })
+
+  it('opens the built-in full-factor batch review sample from its canonical URL', async () => {
+    window.history.replaceState({}, '', '/?fixture=batch&sample=supported')
+    const wrapper = mount(App)
+    await waitFor(wrapper, '[data-testid="batch-analysis-view"]')
+
+    expect(wrapper.get('[data-testid="batch-coverage-status"]').text()).toContain('COMPLETE')
+    expect(wrapper.get('[data-testid="batch-hypothesis-status"]').text()).toContain('SUPPORTED')
+    expect(window.location.search).toBe('?fixture=batch&sample=supported')
     wrapper.unmount()
   })
 
@@ -247,14 +259,17 @@ describe('App', () => {
 
     await selectPublicView(wrapper, 'comparison')
     expect(wrapper.get('[data-testid="local-comparison-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+    expect(wrapper.get('[data-testid="comparison-entry-state"]').classes()).toContain('analysis-entry-frame')
     expect(wrapper.find('[data-testid="run-catalog"]').exists()).toBe(false)
     expect(window.location.search).toBe('?view=comparison')
 
     await selectPublicView(wrapper, 'pairing')
     expect(wrapper.get('[data-testid="local-pairing-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+    expect(wrapper.get('[data-testid="pairing-entry-state"]').classes()).toContain('analysis-entry-frame')
 
     await selectPublicView(wrapper, 'batch')
     expect(wrapper.get('[data-testid="local-batch-input"]').element.parentElement).toBeInstanceOf(HTMLLabelElement)
+    expect(wrapper.get('[data-testid="batch-entry-state"]').classes()).toContain('analysis-entry-frame')
     expect(wrapper.get('.app-shell').classes()).toContain('app-shell--batch')
     expect(wrapper.get('.app-shell').classes()).not.toContain('app-shell--inner')
 

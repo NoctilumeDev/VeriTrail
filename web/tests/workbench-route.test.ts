@@ -75,6 +75,10 @@ describe('Workbench URL route state', () => {
       pairingSample: 'supported',
       pairingPanel: 'outcomes',
     })
+    expectRoute('/?fixture=batch&sample=supported', {
+      kind: 'batch',
+      batchSample: 'supported',
+    })
   })
 
   it('uses one deterministic authority order for conflicting managed keys', () => {
@@ -204,6 +208,11 @@ describe('Workbench URL construction', () => {
       target: { kind: 'batch' },
       expected: { kind: 'batch', publicView: 'batch' },
     },
+    {
+      name: 'Batch review sample',
+      target: { kind: 'batch', sample: 'supported' },
+      expected: { kind: 'batch', publicView: 'batch', batchSample: 'supported' },
+    },
   ]
 
   it.each(roundTrips)('round-trips $name without stale managed state', ({ target, expected }) => {
@@ -252,6 +261,10 @@ describe('Workbench History state', () => {
       { fixture: 'pairing', sample: 'supported', panel: 'outcomes' },
     ],
     [{ kind: 'batch' }, { fixture: 'batch' }],
+    [
+      { kind: 'batch', sample: 'supported' },
+      { fixture: 'batch', sample: 'supported' },
+    ],
   ] as Array<[WorkbenchRouteTarget, Record<string, string>]>) (
     'keeps History state aligned with canonical route %#',
     (target, expected) => {

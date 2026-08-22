@@ -107,7 +107,6 @@
   display: grid;
   grid-template-columns: minmax(18rem, 0.8fr) minmax(0, 1.2fr);
   gap: 0;
-  min-height: 360px;
   align-items: stretch;
 }
 
@@ -210,7 +209,6 @@
   background-image: url('/textures/paper-fiber.png');
   background-size: 384px 384px;
   border: 1px solid var(--batch-rule-strong);
-  box-shadow: inset 0 3px 0 color-mix(in srgb, var(--batch-teal) 76%, transparent);
 }
 
 .app-shell--batch .batch-court > * {
@@ -597,12 +595,19 @@
 }
 
 .app-shell--batch .batch-slot summary {
-  display: flex;
+  display: list-item;
+  box-sizing: border-box;
   min-height: 44px;
-  align-items: center;
   padding-block: 10px;
   cursor: pointer;
   font-weight: 700;
+  line-height: 24px;
+  list-style-position: inside;
+}
+
+.app-shell--batch .batch-slot summary::marker {
+  color: var(--batch-teal);
+  font-size: 0.78em;
 }
 
 .app-shell--batch .batch-slot details dl {

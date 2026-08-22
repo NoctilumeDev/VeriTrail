@@ -28,7 +28,11 @@ import {
   CatalogLoadError,
   fetchCatalog,
 } from './domain/catalog'
-import { BatchLoadError, loadLocalBatchAnalysis } from './domain/batch'
+import {
+  BatchLoadError,
+  loadBatchAnalysisReviewSample,
+  loadLocalBatchAnalysis,
+} from './domain/batch'
 import {
   ComparisonLoadError,
   loadComparisonReviewSample,
@@ -496,6 +500,25 @@ async function openPairingReviewSample(): Promise<boolean> {
   }
 }
 
+async function openBatchReviewSample(): Promise<boolean> {
+  const sequence = beginAnalysisLoad('batch')
+  liveMessage.value = '正在核验内置全因子批次分析审阅数据。'
+  try {
+    const loaded = await loadBatchAnalysisReviewSample()
+    if (sequence !== loadSequence) return false
+    batchAnalysis.value = loaded
+    liveMessage.value = `批次分析 ${loaded.analysis.coverage_status} / ${loaded.analysis.hypothesis_status} 审阅数据已加载。`
+    return true
+  } catch (cause) {
+    if (sequence !== loadSequence) return false
+    error.value = describeBatchError(cause)
+    liveMessage.value = `批次分析审阅数据读取失败：${error.value.message}`
+    return true
+  } finally {
+    if (sequence === loadSequence) loading.value = false
+  }
+}
+
 async function importBatchAnalysis(event: Event) {
   const input = event.currentTarget as HTMLInputElement
   if (!input.files?.length) return
@@ -618,12 +641,16 @@ function isPrimaryActivationPointer(event: PointerEvent): boolean {
   return event.isPrimary !== false && (event.pointerType !== 'mouse' || event.button === 0)
 }
 
-function suppressNextPointerClick() {
+function suppressNextPointerClick(pointerId?: number) {
   pendingPointerClickCleanup?.()
   let timeoutId: number | undefined
+  let releaseTimerId: number | undefined
   const cleanup = () => {
     document.removeEventListener('click', consumePointerClick, true)
+    document.removeEventListener('pointerup', releaseAfterPointer, true)
+    document.removeEventListener('pointercancel', cancelPointer, true)
     if (timeoutId !== undefined) window.clearTimeout(timeoutId)
+    if (releaseTimerId !== undefined) window.clearTimeout(releaseTimerId)
     if (pendingPointerClickCleanup === cleanup) pendingPointerClickCleanup = null
   }
   const consumePointerClick = (event: MouseEvent) => {
@@ -635,14 +662,25 @@ function suppressNextPointerClick() {
     event.stopImmediatePropagation()
     cleanup()
   }
+  const releaseAfterPointer = (event: PointerEvent) => {
+    if (pointerId !== undefined && event.pointerId !== pointerId) return
+    releaseTimerId = window.setTimeout(cleanup, 0)
+  }
+  const cancelPointer = (event: PointerEvent) => {
+    if (pointerId !== undefined && event.pointerId !== pointerId) return
+    cleanup()
+  }
   document.addEventListener('click', consumePointerClick, true)
+  document.addEventListener('pointerup', releaseAfterPointer, true)
+  document.addEventListener('pointercancel', cancelPointer, true)
   timeoutId = window.setTimeout(cleanup, 800)
   pendingPointerClickCleanup = cleanup
 }
 
 function returnToCatalogOnPrimaryPointer(event: PointerEvent) {
   if (!isPrimaryActivationPointer(event)) return
-  suppressNextPointerClick()
+  event.preventDefault()
+  suppressNextPointerClick(event.pointerId)
   returnToCatalog()
 }
 
@@ -676,7 +714,8 @@ function goToCatalogHome() {
 
 function goToCatalogHomeOnPrimaryPointer(event: PointerEvent) {
   if (!isPrimaryActivationPointer(event)) return
-  suppressNextPointerClick()
+  event.preventDefault()
+  suppressNextPointerClick(event.pointerId)
   goToCatalogHome()
 }
 
@@ -887,6 +926,20 @@ function onHistoryChange(focusTarget = false) {
   }
 
   if (route.kind === 'batch') {
+    if (batchAnalysis.value) return
+    if (route.batchSample === 'supported') {
+      void openBatchReviewSample().then((committed) => {
+        if (!committed) return
+        const current = currentRoute()
+        if (
+          current.kind !== 'batch' ||
+          current.batchSample !== 'supported' ||
+          !batchAnalysis.value
+        ) return
+        if (focusTarget) focusPublicViewTitle('batch')
+      })
+      return
+    }
     ++loadSequence
     releaseCurrentBundle()
     clearLoadedAnalysis()

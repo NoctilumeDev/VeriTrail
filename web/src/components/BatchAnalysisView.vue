@@ -49,11 +49,11 @@ function waveMemory(slots: BatchAnalysisSlot[]): number {
 </script>
 
 <template>
-  <section class="batch-court" data-testid="batch-analysis-view" aria-labelledby="batch-title">
+  <section class="batch-court" data-testid="batch-analysis-view" aria-labelledby="view-batch-title">
     <header class="batch-court__heading">
       <div>
         <p class="eyebrow">Full-factorial Batch · 万象院</p>
-        <h2 id="batch-title">预注册全因子批次分析</h2>
+        <h2 id="view-batch-title" tabindex="-1" data-testid="view-batch-title">预注册全因子批次分析</h2>
       </div>
       <span>本地只读 · {{ loaded.integrity.verifiedFiles }} 文件已核验</span>
     </header>

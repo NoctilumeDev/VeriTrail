@@ -26,7 +26,8 @@ Object trusted process runner 与 `runtime.command` 已通过双 Python、Python
 Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览器物理键盘、资源、安全、清理
 与 GitHub/tag 读回。它仍不证明 Shell、包管理器、长运行服务、完整自举、其他平台或不可信代码。
 
-M10 有界完整项目自举与 M11 真实项目功能全链路均已 `FROZEN`，M12 为 `IMPLEMENTING`，M13–M14 为 `PLANNED`。M11 Contract 0.3 已冻结
+M10 有界完整项目自举与 M11 真实项目功能全链路均已 `FROZEN`；M12 已完成总体验收，当前为
+`VALIDATED / NOT FROZEN`，等待候选提交、tag 与远端精确读回；M13–M14 为 `PLANNED`。M11 Contract 0.3 已冻结
 `OPTION_B`、InkNarratives 精确 ref 和 Gate A -> Gate B 严格串行，并纠正 Plan/Profile 一对一绑定；
 Profile 0.2、Plan 0.7、单节点生命周期和 collector 0.3 已通过 Gate A 的双 Python、真实 Chromium、
 13 个预注册出口、Catalog/Comparison、资源、安全、清理与 Workbench 消费验证；真实项目 Gate B

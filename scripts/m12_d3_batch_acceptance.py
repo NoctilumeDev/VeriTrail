@@ -206,12 +206,12 @@ def import_and_verify_batch(
         expect(page.get_by_test_id("batch-reasons")).to_contain_text("WAVE_ORDER_MISMATCH")
 
     if require_matrix_focus:
-        input_element = page.get_by_test_id("local-batch-input")
-        input_element.focus()
-        input_element.press("Tab")
+        view_title = page.get_by_test_id("view-batch-title")
+        view_title.focus()
+        view_title.press("Tab")
         require(
             page.evaluate("document.activeElement?.getAttribute('aria-label')") == "全因子 Profile 矩阵",
-            f"{label} did not advance from local input to the matrix region by keyboard.",
+            f"{label} did not advance from its stable view title to the matrix region by keyboard.",
         )
 
 
@@ -311,7 +311,6 @@ def main() -> int:
             desktop_page = desktop.new_page()
             add_page_observers(desktop_page, summary)
             open_batch_view(desktop_page, origin, expect)
-            desktop_page.get_by_test_id("cross-axis-toggle").click()
             desktop_page.get_by_test_id("cross-axis-runs").click()
             expect(desktop_page.get_by_test_id("run-catalog")).to_be_visible()
             desktop_page.go_back(wait_until="load")
@@ -320,9 +319,10 @@ def main() -> int:
             expect(desktop_page.get_by_test_id("run-catalog")).to_be_visible()
             desktop_page.go_back(wait_until="load")
             expect(desktop_page.get_by_test_id("local-batch-input")).to_be_visible()
-            summary["checks"].append("desktop-cross-axis-history-keeps-batch-entry")
+            summary["checks"].append("desktop-fixed-navigation-history-keeps-batch-entry")
 
             for status in ("SUPPORTED", "CONTRADICTED", "INCOMPLETE", "INCONCLUSIVE"):
+                open_batch_view(desktop_page, origin, expect)
                 import_and_verify_batch(
                     desktop_page,
                     expect,
@@ -332,6 +332,7 @@ def main() -> int:
                     status == "SUPPORTED",
                 )
                 summary["checks"].append(f"desktop-{status.lower()}-status-order-and-boundary")
+            open_batch_view(desktop_page, origin, expect)
             desktop_page.get_by_test_id("local-batch-input").set_input_files(batch_files(analyses["CONTRADICTED"]))
             save_screenshot(desktop_page, output, summary, "desktop-contradicted.png")
 
@@ -340,6 +341,7 @@ def main() -> int:
                 shutil.copytree(analyses["SUPPORTED"], corrupted)
                 changed = corrupted / "batch-analysis.json"
                 changed.write_bytes(changed.read_bytes() + b" ")
+                open_batch_view(desktop_page, origin, expect)
                 desktop_page.get_by_test_id("local-batch-input").set_input_files(batch_files(corrupted))
                 expect(desktop_page.get_by_test_id("error-state")).to_contain_text("BATCH_SIZE_MISMATCH")
                 require(
@@ -383,6 +385,7 @@ def main() -> int:
                 mobile_360_page, expect, analyses["INCOMPLETE"], "360px INCOMPLETE", "INCOMPLETE", False
             )
             require_local_matrix_scroll(mobile_360_page, "360px INCOMPLETE")
+            open_batch_view(mobile_360_page, origin, expect)
             import_and_verify_batch(
                 mobile_360_page, expect, analyses["INCONCLUSIVE"], "360px INCONCLUSIVE", "INCONCLUSIVE", False
             )

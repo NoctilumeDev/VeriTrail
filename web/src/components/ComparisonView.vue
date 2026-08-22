@@ -179,72 +179,117 @@ function differenceImpact(difference: ComparisonDifference): string {
         </div>
       </section>
 
-      <section class="rerun-mirror" aria-label="同计划复跑来源与核心判定" data-testid="comparison-sources">
-        <header class="rerun-mirror__beam" aria-hidden="true">
-          <div class="rerun-mirror__beam-source rerun-mirror__beam-source--baseline">
-            <span>基线 Run</span>
-            <strong>BASELINE</strong>
-          </div>
-          <div class="rerun-mirror__beam-axis">
-            <span>勘合</span>
-            <strong>JUDGMENT</strong>
-          </div>
-          <div class="rerun-mirror__beam-source rerun-mirror__beam-source--repeat">
-            <span>重复 Run</span>
-            <strong>REPEAT</strong>
-          </div>
-        </header>
+      <div class="rerun-data-court">
+        <section class="rerun-mirror" aria-label="同计划复跑来源与核心判定" data-testid="comparison-sources">
+          <header class="rerun-mirror__beam" aria-hidden="true">
+            <div class="rerun-mirror__beam-source rerun-mirror__beam-source--baseline">
+              <span>基线 Run</span>
+              <strong>BASELINE</strong>
+            </div>
+            <div class="rerun-mirror__beam-axis">
+              <span>勘合</span>
+              <strong>JUDGMENT</strong>
+            </div>
+            <div class="rerun-mirror__beam-source rerun-mirror__beam-source--repeat">
+              <span>重复 Run</span>
+              <strong>REPEAT</strong>
+            </div>
+          </header>
 
-        <template v-for="source in sources" :key="source.role">
-          <article
-            class="rerun-source"
-            :class="`rerun-source--${source.role.toLowerCase()}`"
-            :data-testid="`comparison-source-${source.role.toLowerCase()}`"
-            :aria-label="`${sourceLabel(source)} ${source.role}`"
-          >
-            <p class="rerun-source__mobile-title" aria-hidden="true">
-              <span>{{ sourceLabel(source) }}</span>
-              <strong>{{ source.role }}</strong>
+          <template v-for="source in sources" :key="source.role">
+            <article
+              class="rerun-source"
+              :class="`rerun-source--${source.role.toLowerCase()}`"
+              :data-testid="`comparison-source-${source.role.toLowerCase()}`"
+              :aria-label="`${sourceLabel(source)} ${source.role}`"
+            >
+              <p class="rerun-source__mobile-title" aria-hidden="true">
+                <span>{{ sourceLabel(source) }}</span>
+                <strong>{{ source.role }}</strong>
+              </p>
+              <dl class="rerun-source__statuses">
+                <div><dt>Execution Status</dt><dd>{{ source.execution_status }}</dd></div>
+                <div><dt>Run Verdict</dt><dd :class="`is-${source.verdict.toLowerCase()}`">{{ source.verdict }}</dd></div>
+                <div><dt>Source Identity</dt><dd>PRESERVED</dd></div>
+              </dl>
+              <dl class="rerun-source__facts">
+                <div><dt>Run ID</dt><dd :title="source.run_id">{{ source.run_id }}</dd></div>
+                <div><dt>Plan</dt><dd>{{ source.plan.id }} · v{{ source.plan.version }}</dd></div>
+                <div><dt>Random Seed</dt><dd>{{ source.random_seed }}</dd></div>
+                <div>
+                  <dt>Plan SHA-256</dt>
+                  <dd>
+                    <details>
+                      <summary><code>{{ shortHash(source.plan.sha256) }}</code></summary>
+                      <code>{{ source.plan.sha256 }}</code>
+                    </details>
+                  </dd>
+                </div>
+                <div>
+                  <dt>Bundle SHA-256</dt>
+                  <dd>
+                    <details>
+                      <summary><code>{{ shortHash(source.bundle_sha256) }}</code></summary>
+                      <code>{{ source.bundle_sha256 }}</code>
+                    </details>
+                  </dd>
+                </div>
+              </dl>
+            </article>
+
+            <aside
+              v-if="source.role === 'BASELINE'"
+              class="rerun-judgment"
+              aria-label="勘合中轴图案"
+              data-testid="comparison-judgment"
+            >
+              <p class="eyebrow">Core Judgment · 中轴</p>
+              <img :src="'/textures/r3-nav-comparison.png'" alt="" aria-hidden="true" />
+            </aside>
+          </template>
+        </section>
+
+        <div class="rerun-summary-grid">
+          <section class="rerun-difference-preview" aria-labelledby="difference-preview-title">
+            <header class="rerun-section-heading">
+              <div>
+                <p class="eyebrow">Semantic Differences · 差异预览</p>
+                <h3 id="difference-preview-title">语义差异账</h3>
+              </div>
+              <span>共 {{ loaded.comparison.differences.length }} 项</span>
+            </header>
+
+            <p v-if="differencePreview.length === 0" class="rerun-difference-preview__empty" data-testid="comparison-no-differences">
+              没有差异；冻结语义投影一致。
             </p>
-            <dl class="rerun-source__statuses">
-              <div><dt>Execution Status</dt><dd>{{ source.execution_status }}</dd></div>
-              <div><dt>Run Verdict</dt><dd :class="`is-${source.verdict.toLowerCase()}`">{{ source.verdict }}</dd></div>
-              <div><dt>Source Identity</dt><dd>PRESERVED</dd></div>
-            </dl>
-            <dl class="rerun-source__facts">
-              <div><dt>Run ID</dt><dd :title="source.run_id">{{ source.run_id }}</dd></div>
-              <div><dt>Plan</dt><dd>{{ source.plan.id }} · v{{ source.plan.version }}</dd></div>
-              <div><dt>Random Seed</dt><dd>{{ source.random_seed }}</dd></div>
-              <div>
-                <dt>Plan SHA-256</dt>
-                <dd>
-                  <details>
-                    <summary><code>{{ shortHash(source.plan.sha256) }}</code></summary>
-                    <code>{{ source.plan.sha256 }}</code>
-                  </details>
-                </dd>
+            <div v-else class="rerun-difference-table" data-testid="comparison-differences-preview">
+              <div class="rerun-difference-table__head" aria-hidden="true">
+                <span>类型</span><span>影响</span><span>路径</span><span>基线</span><span>重复</span>
               </div>
-              <div>
-                <dt>Bundle SHA-256</dt>
-                <dd>
-                  <details>
-                    <summary><code>{{ shortHash(source.bundle_sha256) }}</code></summary>
-                    <code>{{ source.bundle_sha256 }}</code>
-                  </details>
-                </dd>
-              </div>
-            </dl>
-          </article>
+              <article v-for="difference in differencePreview" :key="difference.path">
+                <strong>{{ differenceKind(difference) }}</strong>
+                <em>{{ differenceImpact(difference) }}</em>
+                <code :title="difference.path">{{ difference.path }}</code>
+                <span :title="pretty(difference.baseline)">{{ difference.baseline_present ? compactValue(difference.baseline) : '〈不存在〉' }}</span>
+                <span :title="pretty(difference.repeat)">{{ difference.repeat_present ? compactValue(difference.repeat) : '〈不存在〉' }}</span>
+              </article>
+            </div>
+
+            <button
+              type="button"
+              data-testid="comparison-open-differences"
+              data-open-comparison-panel="differences"
+              @click="emit('openPanel', 'differences')"
+            >
+              查看全部差异与判定依据
+            </button>
+          </section>
 
           <aside
-            v-if="source.role === 'BASELINE'"
-            class="rerun-judgment"
-            :class="`rerun-judgment--${loaded.comparison.comparison_status.toLowerCase()}`"
+            class="rerun-judgment-details"
+            :class="`rerun-judgment-details--${loaded.comparison.comparison_status.toLowerCase()}`"
             :aria-label="`复跑比较：${loaded.comparison.comparison_status}`"
-            data-testid="comparison-judgment"
           >
-            <p class="eyebrow">Core Judgment · 中轴</p>
-            <img :src="'/textures/r3-nav-comparison.png'" alt="" aria-hidden="true" />
             <dl>
               <div><dt>核心判定</dt><dd>{{ loaded.comparison.comparison_status }}</dd></div>
               <div><dt>适用性</dt><dd>{{ loaded.comparison.comparable ? '适用' : '不适用' }}</dd></div>
@@ -252,63 +297,26 @@ function differenceImpact(difference: ComparisonDifference): string {
               <div><dt>比较文件</dt><dd>{{ formatBytes(loaded.integrity.totalBytes) }}</dd></div>
             </dl>
           </aside>
-        </template>
-      </section>
 
-      <div class="rerun-summary-grid">
-        <section class="rerun-difference-preview" aria-labelledby="difference-preview-title">
-          <header class="rerun-section-heading">
-            <div>
-              <p class="eyebrow">Semantic Differences · 差异预览</p>
-              <h3 id="difference-preview-title">语义差异账</h3>
-            </div>
-            <span>共 {{ loaded.comparison.differences.length }} 项</span>
-          </header>
-
-          <p v-if="differencePreview.length === 0" class="rerun-difference-preview__empty" data-testid="comparison-no-differences">
-            没有差异；冻结语义投影一致。
-          </p>
-          <div v-else class="rerun-difference-table" data-testid="comparison-differences-preview">
-            <div class="rerun-difference-table__head" aria-hidden="true">
-              <span>类型</span><span>影响</span><span>路径</span><span>基线</span><span>重复</span>
-            </div>
-            <article v-for="difference in differencePreview" :key="difference.path">
-              <strong>{{ differenceKind(difference) }}</strong>
-              <em>{{ differenceImpact(difference) }}</em>
-              <code :title="difference.path">{{ difference.path }}</code>
-              <span :title="pretty(difference.baseline)">{{ difference.baseline_present ? compactValue(difference.baseline) : '〈不存在〉' }}</span>
-              <span :title="pretty(difference.repeat)">{{ difference.repeat_present ? compactValue(difference.repeat) : '〈不存在〉' }}</span>
-            </article>
-          </div>
-
-          <button
-            type="button"
-            data-testid="comparison-open-differences"
-            data-open-comparison-panel="differences"
-            @click="emit('openPanel', 'differences')"
-          >
-            查看全部差异与判定依据
-          </button>
-        </section>
-
-        <aside class="rerun-boundary" aria-labelledby="rerun-boundary-title" data-testid="comparison-boundary">
-          <header class="rerun-section-heading">
-            <div>
-              <p class="eyebrow">Applicability & Boundary · 边界</p>
-              <h3 id="rerun-boundary-title">适用性与限制</h3>
-            </div>
-          </header>
-          <dl>
-            <div><dt>计划一致</dt><dd>{{ loaded.comparison.sources.baseline.plan.sha256 === loaded.comparison.sources.repeat.plan.sha256 ? '一致' : '不一致' }}</dd></div>
-            <div><dt>随机种子</dt><dd>{{ loaded.comparison.sources.baseline.random_seed === loaded.comparison.sources.repeat.random_seed ? '一致' : '不一致' }}</dd></div>
-            <div><dt>比较规则</dt><dd>{{ loaded.comparison.rule_version }}</dd></div>
-            <div><dt>来源身份</dt><dd>分别保留</dd></div>
-          </dl>
-          <ul>
-            <li v-for="item in loaded.comparison.limits" :key="item">{{ item }}</li>
-          </ul>
-          <code>{{ loaded.comparison.comparison_id }}</code>
-        </aside>
+          <aside class="rerun-boundary" aria-labelledby="rerun-boundary-title" data-testid="comparison-boundary">
+            <header class="rerun-section-heading">
+              <div>
+                <p class="eyebrow">Applicability & Boundary · 边界</p>
+                <h3 id="rerun-boundary-title">适用性与限制</h3>
+              </div>
+            </header>
+            <dl>
+              <div><dt>计划一致</dt><dd>{{ loaded.comparison.sources.baseline.plan.sha256 === loaded.comparison.sources.repeat.plan.sha256 ? '一致' : '不一致' }}</dd></div>
+              <div><dt>随机种子</dt><dd>{{ loaded.comparison.sources.baseline.random_seed === loaded.comparison.sources.repeat.random_seed ? '一致' : '不一致' }}</dd></div>
+              <div><dt>比较规则</dt><dd>{{ loaded.comparison.rule_version }}</dd></div>
+              <div><dt>来源身份</dt><dd>分别保留</dd></div>
+            </dl>
+            <ul>
+              <li v-for="item in loaded.comparison.limits" :key="item">{{ item }}</li>
+            </ul>
+            <code>{{ loaded.comparison.comparison_id }}</code>
+          </aside>
+        </div>
       </div>
     </template>
   </section>

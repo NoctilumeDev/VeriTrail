@@ -27,7 +27,7 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M9 | 受控项目命令执行 | `FROZEN` |
 | M10 | 有界完整项目自举 | `FROZEN` |
 | M11 | 真实项目功能全链路 | `FROZEN` |
-| M12 | 故宫主题前端终稿 | `IMPLEMENTING` |
+| M12 | 故宫主题前端终稿 | `VALIDATED / NOT FROZEN` |
 | M13 | 系统思维与分层代码质量终审 | `PLANNED` |
 | M14 | 整改后终局复验与发布收束 | `PLANNED` |
 
@@ -40,15 +40,11 @@ Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链�
 真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；冻结
 读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13–M14 仍为 `PLANNED`。M12-A 已完成
 M11 控制组审计；M12-B 已完成四向公共视图、十字导航、URL/history、焦点与移动几何的生产运行验证。
-M12-C 已实现语义 token、Catalog 行式目录与 Runs 主链，并通过 64/64 前端回归、真实 Gate B 生产
-Chromium 和 Codex 内置浏览器的桌面/390/360 px 补证。M12-D1 已迁移 Comparison，并通过真实 M11 MATCH、
-脱敏 DRIFT/INCONCLUSIVE、生产 Chromium、Codex 内置浏览器和优化模式门禁；D2 Pairing 已使用 M7 三态四文件包完成
-生产 Chromium、内置浏览器、刷新重选、损坏拒绝、桌面/390/360 px 与清理门禁。D3 Batch 已用 M8 四态历史包完成
-双状态门、Profile 矩阵、wave/slot 账册、局部横滚、物理键盘、生产 Chromium 常规/优化模式、损坏恢复、刷新隐私与
-清理门禁。公共空间 R1 与 Runs/Catalog R2 也已各自通过独立生产、内置浏览器和清理事实。M12-E 已完成 Browser
-Evidence 摘要/视口/四门账册与既有全局状态的表现迁移，并通过 `70/70` Workbench、生产 Chromium 常规/优化模式、
-360/390px、forced-colors、内置浏览器和物理键盘；M12 尚未冻结。M12-F 总体验收与冻结计划 0.1 已建立，
-正等待用户审阅；不得在确认前启动终验，也不得提前把 M13 审查或版本标签混入当前切片。
+M12-A 至 E、R1 至 R3 已完成 Catalog、Run、Comparison、Pairing、Batch、Browser Evidence 与全局状态的表现迁移。
+M12-F 收口以 `156/156` Workbench、双 Python 各 `278/278`、D1/D2/D3 独立生产验收、常规与优化模式总验收、
+桌面/390/360 px、forced-colors、内置浏览器和用户逐页确认形成冻结候选；两轮总验收均为 13 组检查、636 个同源
+只读请求，外网/写请求/HTTP 错误均为 0，端口、线程与 SQLite sidecar 均已清理。M12 当前是
+`VALIDATED / NOT FROZEN`：候选提交、`m12-v0.13.0` 与 GitHub 精确读回尚未执行；M13–M14 仍为 `PLANNED`。
 
 准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
@@ -188,9 +184,9 @@ sealed Plan / Profile
 - **SQLite Catalog**：可删除、可重建的只读 Run 索引，不拥有 Verdict 真相。
 - **Vue Workbench**：本地只读展示 Bundle、Comparison、PairedAnalysis 与 BatchAnalysis。
 
-进行中的 M12 Workbench“宫阙验迹 / Palace Evidence”使用纯 CSS 中轴、院落、格栅和状态令牌，不依赖
-装饰贴图、CDN、远程字体或统计脚本；结构朱只表达固定空间，`FAIL`、`ERROR` 使用独立警示朱。两个层级
-都不能让状态只依赖颜色传达；M12 尚未冻结，完整事实以各切片运行文档为准。
+M12 Workbench“宫阙验迹 / Palace Evidence”使用 CSS 中轴、院落、格栅和状态令牌，并只引用仓库内受控的
+本地纹样、材质与图标资产；不依赖 CDN、远程字体或统计脚本。结构朱只表达固定空间，`FAIL`、`ERROR`
+使用独立警示朱，两个层级都不能让状态只依赖颜色传达；M12 当前为已验证冻结候选，尚未完成 Git/tag 读回。
 
 ## 安全边界
 
@@ -262,8 +258,9 @@ M12 等待 M11 功能事实稳定；M13 不借“代码质量”重写合同；M
 - [M12-F 总体验收与冻结计划](docs/45-m12-f-final-validation-and-freeze-plan.md)
 - [M12 参考图驱动的空间重组计划](docs/46-m12-reference-guided-recomposition-plan.md)
 - [M12 Visual Reference Contract 1.0](docs/47-m12-visual-reference-contract.md)
-- [M12-R3 参考图优先的 Catalog 重建合同（待用户审阅）](docs/49-m12-r3-reference-first-catalog-rebuild.md)
-- [M12-R3 Catalog 参考图测量记录（proof sheet 待审阅）](docs/50-m12-r3-catalog-reference-measurement.md)
+- [M12-R3 参考图优先的 Catalog 重建合同](docs/49-m12-r3-reference-first-catalog-rebuild.md)
+- [M12-R3 Catalog 参考图测量与采用记录](docs/50-m12-r3-catalog-reference-measurement.md)
+- [M12-F 总体验收与冻结候选运行事实](docs/51-m12-f-final-validation-facts.md)
 
 ## 项目来源
 

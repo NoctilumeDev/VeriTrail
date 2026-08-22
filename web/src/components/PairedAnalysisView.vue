@@ -94,14 +94,14 @@ const analysisStatusLabel = computed(() => {
     class="pairing-page"
     :class="[`pairing-page--${loaded.analysis.analysis_status.toLowerCase()}`, { 'pairing-page--panel': panel }]"
     data-testid="paired-analysis-view"
-    aria-labelledby="paired-title"
+    aria-labelledby="view-pairing-title"
   >
     <header class="pairing-heading">
       <div class="pairing-heading__title">
         <img :src="'/textures/r3-nav-pairing-thin.svg'" alt="" aria-hidden="true" />
         <div>
           <p class="eyebrow">Paired Analysis · 四象殿</p>
-          <h2 id="paired-title" tabindex="-1">{{ panel ? (panel === 'sources' ? '四角色来源账册' : '预注册断言全貌') : '配对实验' }}</h2>
+          <h2 id="view-pairing-title" tabindex="-1" data-testid="view-pairing-title">{{ panel ? (panel === 'sources' ? '四角色来源账册' : '预注册断言全貌') : '配对实验' }}</h2>
         </div>
       </div>
       <div

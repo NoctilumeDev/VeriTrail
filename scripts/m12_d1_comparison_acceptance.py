@@ -106,6 +106,13 @@ def open_comparison_view(page: Any, origin: str, expect: Any) -> None:
     expect(page.get_by_test_id("local-comparison-input")).to_be_visible()
 
 
+def comparison_input(page: Any) -> Any:
+    input_element = page.get_by_test_id("local-comparison-input")
+    if input_element.count() == 0:
+        input_element = page.get_by_label("重新选择本地 VeriTrail Comparison 目录")
+    return input_element
+
+
 def assert_comparison(
     page: Any,
     expect: Any,
@@ -113,16 +120,20 @@ def assert_comparison(
     status: str,
     label: str,
 ) -> None:
-    page.get_by_test_id("local-comparison-input").set_input_files(str(path))
-    expect(page.get_by_test_id("comparison-view")).to_be_visible()
+    input_element = comparison_input(page)
+    require(input_element.count() == 1, f"{label} lost its explicit local Comparison selector.")
+    input_element.set_input_files(str(path))
+    comparison_view = page.get_by_test_id("comparison-view")
+    expect(comparison_view).to_be_visible()
     status_gate = page.get_by_test_id("comparison-status")
     expect(status_gate).to_contain_text(status)
-    expected_class = f"comparison-mirror__verdict--{status.lower()}"
+    expect(status_gate).to_have_attribute("aria-label", f"复跑比较：{status}")
+    expected_class = f"rerun-page--{status.lower()}"
     require(
-        status_gate.evaluate(
+        comparison_view.evaluate(
             "(element, className) => element.classList.contains(className)", expected_class
         ),
-        f"{label} did not keep its independent ComparisonStatus class.",
+        f"{label} did not expose its independent ComparisonStatus presentation state.",
     )
     source_ids = page.locator('[data-testid^="comparison-source-"]').evaluate_all(
         "nodes => nodes.map(node => node.getAttribute('data-testid'))"
@@ -135,13 +146,12 @@ def assert_comparison(
     if status == "MATCH":
         expect(page.get_by_test_id("comparison-no-differences")).to_be_visible()
     elif status == "DRIFT":
-        differences = page.get_by_test_id("comparison-differences")
+        differences = page.get_by_test_id("comparison-differences-preview")
         expect(differences).to_be_visible()
-        expect(differences).to_contain_text("BASELINE")
-        expect(differences).to_contain_text("REPEAT")
+        expect(differences).to_contain_text("基线")
+        expect(differences).to_contain_text("重复")
     else:
-        expect(status_gate).to_contain_text("可比较")
-        expect(status_gate).to_contain_text("否")
+        expect(comparison_view).to_contain_text("不适用")
 
 
 def save_screenshot(page: Any, output: Path, summary: dict[str, Any], name: str) -> None:
@@ -232,7 +242,6 @@ def main() -> int:
             desktop_page = desktop.new_page()
             add_page_observers(desktop_page, summary)
             open_comparison_view(desktop_page, origin, expect)
-            desktop_page.get_by_test_id("cross-axis-toggle").click()
             desktop_page.get_by_test_id("cross-axis-runs").click()
             expect(desktop_page.get_by_test_id("run-catalog")).to_be_visible()
             desktop_page.go_back(wait_until="load")
@@ -241,7 +250,7 @@ def main() -> int:
             expect(desktop_page.get_by_test_id("run-catalog")).to_be_visible()
             desktop_page.go_back(wait_until="load")
             expect(desktop_page.get_by_test_id("local-comparison-input")).to_be_visible()
-            summary["checks"].append("desktop-cross-axis-history-keeps-comparison-entry")
+            summary["checks"].append("desktop-fixed-navigation-history-keeps-comparison-entry")
 
             assert_comparison(desktop_page, expect, match, "MATCH", "desktop M11 MATCH")
             sources = desktop_page.get_by_test_id("comparison-sources")
@@ -262,13 +271,13 @@ def main() -> int:
                 shutil.copytree(match, corrupted)
                 changed = corrupted / "comparison.json"
                 changed.write_bytes(changed.read_bytes() + b" ")
-                desktop_page.get_by_test_id("local-comparison-input").set_input_files(str(corrupted))
+                comparison_input(desktop_page).set_input_files(str(corrupted))
                 expect(desktop_page.get_by_test_id("error-state")).to_contain_text("COMPARISON_SIZE_MISMATCH")
                 require(
                     desktop_page.get_by_test_id("comparison-view").count() == 0,
                     "A corrupted Comparison exposed partial trusted facts.",
                 )
-                desktop_page.get_by_test_id("local-comparison-input").set_input_files(str(match))
+                comparison_input(desktop_page).set_input_files(str(match))
                 expect(desktop_page.get_by_test_id("comparison-status")).to_contain_text("MATCH")
             summary["checks"].append("desktop-corruption-contained-and-local-reselection-recovers")
             desktop.close()

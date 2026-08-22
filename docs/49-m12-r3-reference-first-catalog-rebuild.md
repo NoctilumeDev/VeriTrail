@@ -1,6 +1,6 @@
 # M12-R3 参考图优先的 Catalog 重建合同 0.1
 
-> 状态：`PLANNED / USER_REVIEW_REQUIRED / NO_CODE_STARTED`
+> 状态：`IMPLEMENTED / USER_VALIDATED / INCLUDED_IN_M12_F_CANDIDATE`
 >
 > 日期：2026-08-15
 >
@@ -10,6 +10,9 @@
 >
 > 视觉依据：[M12 Visual Reference Contract 1.0](47-m12-visual-reference-contract.md) 的
 > `design-references/m12/01-runs-catalog.png`
+>
+> 收口读回：实现、真实浏览器与用户逐页确认均已完成；总体验收见
+> [M12-F 总体验收与冻结候选运行事实](51-m12-f-final-validation-facts.md)
 
 ## 1. 触发事实
 

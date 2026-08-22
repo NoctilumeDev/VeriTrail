@@ -29,12 +29,12 @@ const stateTestId = computed(() => {
 
 <template>
   <section
-    class="rerun-page rerun-page--entry"
+    class="analysis-entry-frame rerun-page rerun-page--entry"
     :class="`rerun-page--entry-${mode}`"
     aria-labelledby="view-comparison-title"
     data-testid="comparison-entry-state"
   >
-    <header class="rerun-heading rerun-heading--entry">
+    <header class="analysis-entry-frame__heading rerun-heading rerun-heading--entry">
       <div class="rerun-heading__title">
         <img :src="'/textures/r3-nav-comparison.png'" alt="" aria-hidden="true" />
         <div>
@@ -48,7 +48,7 @@ const stateTestId = computed(() => {
     </header>
 
     <div
-      class="rerun-entry-court"
+      class="analysis-entry-frame__body rerun-entry-court"
       :role="mode === 'loading' ? 'status' : mode === 'error' ? 'alert' : undefined"
       :data-testid="stateTestId"
       :data-state-kind="mode"

@@ -11,6 +11,7 @@ export type WorkbenchFixture = DemoBundleId | 'local' | AnalysisView
 export type ActiveSource = WorkbenchFixture | 'catalog'
 export type ComparisonSample = 'drift'
 export type PairingSample = 'supported'
+export type BatchSample = 'supported'
 
 export type WorkbenchRouteKind =
   | 'catalog'
@@ -36,6 +37,7 @@ export interface WorkbenchRouteSnapshot {
   comparisonPanel: ComparisonPanel | null
   pairingSample: PairingSample | null
   comparisonSample: ComparisonSample | null
+  batchSample: BatchSample | null
 }
 
 export type WorkbenchRouteTarget =
@@ -46,7 +48,7 @@ export type WorkbenchRouteTarget =
   | { kind: 'run'; catalogRunId: string; panel?: RunDetailPanel | null }
   | { kind: 'comparison'; panel?: ComparisonPanel | null; sample?: ComparisonSample | null }
   | { kind: 'pairing'; panel?: PairingPanel | null; sample?: PairingSample | null }
-  | { kind: 'batch' }
+  | { kind: 'batch'; sample?: BatchSample | null }
 
 const MANAGED_QUERY_KEYS = ['fixture', 'run', 'view', 'panel', 'sample'] as const
 
@@ -79,6 +81,7 @@ function snapshot(overrides: Partial<WorkbenchRouteSnapshot>): WorkbenchRouteSna
     comparisonPanel: null,
     pairingSample: null,
     comparisonSample: null,
+    batchSample: null,
     ...overrides,
   }
 }
@@ -145,6 +148,7 @@ export function parseWorkbenchRoute(href: string | URL): WorkbenchRouteSnapshot 
       publicView: 'batch',
       activeSource: 'batch',
       analysisView: 'batch',
+      batchSample: params.get('sample') === 'supported' ? 'supported' : null,
     })
   }
 
@@ -191,6 +195,7 @@ export function buildWorkbenchUrl(currentHref: string | URL, target: WorkbenchRo
     if (target.panel) url.searchParams.set('panel', target.panel)
   } else if (target.kind === 'batch') {
     url.searchParams.set('fixture', 'batch')
+    if (target.sample) url.searchParams.set('sample', target.sample)
   }
 
   return url
@@ -219,6 +224,10 @@ export function historyStateForRoute(target: WorkbenchRouteTarget): Record<strin
     if (target.panel) state.panel = target.panel
     return state
   }
-  if (target.kind === 'batch') return { fixture: 'batch' }
+  if (target.kind === 'batch') {
+    return target.sample
+      ? { fixture: 'batch', sample: target.sample }
+      : { fixture: 'batch' }
+  }
   return {}
 }

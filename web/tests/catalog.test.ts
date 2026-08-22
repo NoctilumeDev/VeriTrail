@@ -169,6 +169,39 @@ describe('Catalog API 0.1', () => {
     host.remove()
   })
 
+  it('prevents the removed return control from overriding pointer focus restoration', async () => {
+    installCatalogFetch(catalogResponse())
+    const host = document.createElement('div')
+    document.body.append(host)
+    const wrapper = mount(App, { attachTo: host })
+    await waitFor(wrapper, '[data-catalog-run-id]')
+    await wrapper.get('[data-catalog-run-id]').trigger('click')
+    await waitFor(wrapper, '[data-testid="catalog-return"]')
+
+    const pointerDown = new Event('pointerdown', { bubbles: true, cancelable: true })
+    Object.defineProperties(pointerDown, {
+      isPrimary: { value: true },
+      pointerType: { value: 'mouse' },
+      button: { value: 0 },
+      pointerId: { value: 7 },
+    })
+    expect(wrapper.get('[data-testid="catalog-return"]').element.dispatchEvent(pointerDown)).toBe(false)
+    await flushPromises()
+
+    expect(document.activeElement?.getAttribute('data-catalog-run-id')).toBe(catalogRunId)
+
+    const pointerUp = new Event('pointerup', { bubbles: true })
+    Object.defineProperty(pointerUp, 'pointerId', { value: 7 })
+    document.dispatchEvent(pointerUp)
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    const nextClick = new MouseEvent('click', { bubbles: true, cancelable: true, detail: 1 })
+    expect(wrapper.get('[data-catalog-run-id]').element.dispatchEvent(nextClick)).toBe(true)
+    await waitFor(wrapper, '[data-testid="catalog-return"]')
+
+    wrapper.unmount()
+    host.remove()
+  })
+
   it('keeps a direct Run URL on the detail surface while the Catalog is still loading', async () => {
     window.history.replaceState({}, '', `/?run=${catalogRunId}`)
     installCatalogFetch(catalogResponse())

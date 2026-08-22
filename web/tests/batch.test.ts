@@ -52,6 +52,7 @@ describe('BatchAnalysis Loader and View', () => {
     )
     expect(wrapper.find('.batch-court').exists()).toBe(true)
     expect(wrapper.find('.comparison-court').exists()).toBe(false)
+    expect(wrapper.get('[data-testid="view-batch-title"]').attributes('id')).toBe('view-batch-title')
     expect(wrapper.get('[data-testid="batch-status-gate"]').text()).toContain('CoverageStatus')
     expect(wrapper.get('[data-testid="batch-hypothesis-status"]').text()).toContain('SUPPORTED')
     expect(wrapper.get('[data-testid="batch-profile-matrix"]').text()).toContain('combined')

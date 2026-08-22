@@ -30,12 +30,12 @@ const stateTestId = computed(() => {
 
 <template>
   <section
-    class="batch-entry"
+    class="analysis-entry-frame batch-entry"
     :class="`batch-entry--${mode}`"
     aria-labelledby="view-batch-title"
     data-testid="batch-entry-state"
   >
-    <header class="batch-entry__heading">
+    <header class="analysis-entry-frame__heading batch-entry__heading">
       <div class="batch-entry__title">
         <img :src="'/textures/r3-nav-batch.png'" alt="" aria-hidden="true" />
         <div>
@@ -47,7 +47,7 @@ const stateTestId = computed(() => {
     </header>
 
     <div
-      class="batch-entry__court"
+      class="analysis-entry-frame__body batch-entry__court"
       :role="mode === 'loading' ? 'status' : mode === 'error' ? 'alert' : undefined"
       :data-testid="stateTestId"
       :data-state-kind="mode === 'error' ? kind ?? 'invalid' : mode"

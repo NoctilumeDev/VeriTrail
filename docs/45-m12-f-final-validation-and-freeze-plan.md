@@ -1,8 +1,8 @@
 # M12-F 总体验收与冻结计划 0.1
 
-> 状态：`BLOCKED_BY_M12_R3_VISUAL_REBUILD / M12_NOT_FROZEN`
+> 状态：`M12_F_VALIDATED / FREEZE_CANDIDATE_NOT_COMMITTED`
 >
-> 日期：2026-08-15
+> 日期：2026-08-22
 >
 > 父合同：[M12 宫阙验迹表现系统重构设计计划 0.1](28-m12-palace-workbench-design-plan.md)
 >
@@ -12,10 +12,15 @@
 >
 > 预期影响：`L0_PRESENTATION + BOUNDED_L1_COMPONENT`；禁止越界 `L2_CONTRACT / L3_SYSTEM`
 
-> 2026-08-15 更新：用户在真实浏览器中否决了当前 M12 Catalog 表现候选。该否决不影响
+> 2026-08-15 历史阻断：用户在真实浏览器中否决了当时的 M12 Catalog 表现候选。该否决不影响
 > M0-M11 的功能事实，也不构成 M12-F 的失败运行；但它使本计划的候选前提不成立。M12-F
 > 不得继续启动或形成冻结候选，直到 [M12-R3 参考图优先的 Catalog 重建合同](49-m12-r3-reference-first-catalog-rebuild.md)
 > 取得新的用户视觉确认与适用浏览器事实。
+
+> 2026-08-22 收口更新：R3 重建后的 Catalog、Run、Comparison、Pairing 与 Batch 已取得用户逐页视觉和
+> 交互确认；M12-F 常规与 `python -O` 总体验收均通过。完整门禁、失败保留和清理事实见
+> [M12-F 总体验收与冻结候选运行事实](51-m12-f-final-validation-facts.md)。当前只剩候选提交、tag 与 GitHub
+> 精确读回，故 M12 仍不得写成 `FROZEN`。
 
 ## 1. 目标、唯一变量与非目标
 
@@ -62,7 +67,7 @@ Verdict、浏览器采集器、项目依赖锁定、生产构建过程、回环�
 
 | 代表链路 | 最低真实事实 | 主要视口/交互压力 |
 | --- | --- | --- |
-| 十字中轴与历史 | Runs -> Comparison -> Pairing -> Batch，中心展开/收拢、方向键、`Esc`、Back/Forward 与目标标题焦点 | `1440x960`、`1024x768`、`390x844` |
+| 四轴公共导航与历史 | Pairing / Runs / Batch / Comparison 固定同轴，方向键、`Home/End`、Back/Forward 与目标标题焦点 | `1440x960`、`1024x768`、`390x844` |
 | Runs 主链 | Catalog 四个 M11 Run；进入 `PASS`、`FAIL`、`ABORTED / PENDING` 后返回原目录记录 | `1440x960`、`360x800`、长 Run ID |
 | Comparison | `MATCH / 0 differences`、`DRIFT`、`INCONCLUSIVE` 与本地文件刷新重选 | `1440x960`、`390x844`、长差异文字 |
 | Pairing | 固定四角色顺序、代表性三态、四文件导入/损坏/刷新重选 | `1280x800`、`390x844` |
@@ -129,8 +134,8 @@ M12 冻结仍只证明 M0-M11 已有事实在声明的 Windows 11、16 GB、单�
 - [x] 唯一变量、固定输入、覆盖矩阵、资源边界、人工与自动化分工已预注册；
 - [x] 用户审阅并确认本计划 0.1；
 - [x] M12-F 候选、输入与资源预检已经开始；
-- [ ] M12-F 已形成运行事实；
+- [x] M12-F 已形成运行事实；
 - [ ] M12 已冻结。
 
-本文件是待确认的 M12-F 合同，不是验收、冻结、提交、标签或发布事实。计划不能替代真实 Workbench、
-CDP 网络证据、内置浏览器、用户物理键盘、人工审美、资源检查、清理或 GitHub 读回。
+本文件仍是 M12-F 的执行合同；验收事实由文档 51 承担。计划和本地通过不能替代候选提交、标签、
+GitHub 精确读回或发布事实。

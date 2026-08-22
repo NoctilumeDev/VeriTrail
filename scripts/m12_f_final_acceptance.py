@@ -57,7 +57,10 @@ PAIRING_INPUTS = {
 M12_ALLOWED_PATHS = {
     "AGENTS.md",
     "README.md",
+    "design-qa.md",
     "docs/34-m12-d-derived-analysis-plan.md",
+    "docs/03-acceptance.md",
+    "docs/13-post-m8-roadmap.md",
     "docs/39-m12-d2-pairing-presentation-plan.md",
     "docs/40-m12-d2-pairing-facts.md",
     "docs/41-m12-d3-batch-presentation-plan.md",
@@ -65,20 +68,43 @@ M12_ALLOWED_PATHS = {
     "docs/43-m12-e-browser-evidence-and-global-state-plan.md",
     "docs/44-m12-e-browser-evidence-and-global-state-facts.md",
     "docs/45-m12-f-final-validation-and-freeze-plan.md",
+    "docs/49-m12-r3-reference-first-catalog-rebuild.md",
+    "docs/50-m12-r3-catalog-reference-measurement.md",
+    "docs/51-m12-f-final-validation-facts.md",
     "docs/milestones.md",
+    "scripts/m12_d1_comparison_acceptance.py",
     "scripts/m12_d2_pairing_acceptance.py",
     "scripts/m12_d3_batch_acceptance.py",
     "scripts/m12_e_browser_evidence_acceptance.py",
     "scripts/m12_f_final_acceptance.py",
     "web/src/App.vue",
     "web/src/components/BatchAnalysisView.vue",
+    "web/src/components/BatchEntryState.vue",
     "web/src/components/BrowserEvidence.vue",
+    "web/src/components/ComparisonEntryState.vue",
+    "web/src/components/ComparisonView.vue",
+    "web/src/components/CrossAxisNavigation.vue",
     "web/src/components/PairedAnalysisView.vue",
+    "web/src/components/PairingEntryState.vue",
+    "web/src/domain/batch.ts",
+    "web/src/domain/workbenchRoute.ts",
+    "web/public/fixtures/m8-batch-supported/batch-analysis-manifest.json",
+    "web/public/fixtures/m8-batch-supported/batch-analysis.json",
+    "web/public/fixtures/m8-batch-supported/batch-analysis.md",
+    "web/public/fixtures/m8-batch-supported/sealed-batch-plan.json",
+    "web/public/textures/r3-comparison-court-frame-v1.png",
+    "web/src/styles/batch-reference.css",
+    "web/src/styles/catalog-reference.css",
+    "web/src/styles/comparison-reference.css",
     "web/src/styles/components.css",
+    "web/src/styles/pairing-reference.css",
+    "web/src/styles/reference-shared.css",
     "web/tests/app.test.ts",
     "web/tests/batch.test.ts",
     "web/tests/browser-evidence.test.ts",
+    "web/tests/catalog.test.ts",
     "web/tests/pairing.test.ts",
+    "web/tests/workbench-route.test.ts",
 }
 
 
@@ -245,30 +271,25 @@ def pairing_files(path: Path) -> list[str]:
     return [str(path / name) for name in pairing_checks.PAIRING_FILES]
 
 
-def verify_cross_axis(page: Any, expect: Any, origin: str) -> None:
+def verify_public_navigation(page: Any, expect: Any, origin: str) -> None:
     page.goto(origin, wait_until="load")
-    toggle = page.get_by_test_id("cross-axis-toggle")
-    expect(toggle).to_have_attribute("aria-expanded", "false")
-    toggle.click()
-    expect(toggle).to_have_attribute("aria-expanded", "true")
     targets = {
         "runs": page.get_by_test_id("cross-axis-runs"),
         "batch": page.get_by_test_id("cross-axis-batch"),
         "comparison": page.get_by_test_id("cross-axis-comparison"),
         "pairing": page.get_by_test_id("cross-axis-pairing"),
     }
-    require(sum(target.count() for target in targets.values()) == 4, "Cross axis lost a public view target.")
+    require(sum(target.count() for target in targets.values()) == 4, "Public navigation lost a fixed view target.")
+    for target in targets.values():
+        expect(target).to_be_visible()
+    expect(targets["runs"]).to_have_attribute("aria-current", "page")
     targets["runs"].press("ArrowRight")
     expect(targets["batch"]).to_be_focused()
-    targets["batch"].press("ArrowDown")
+    targets["batch"].press("End")
     expect(targets["comparison"]).to_be_focused()
-    targets["comparison"].press("ArrowLeft")
+    targets["comparison"].press("Home")
     expect(targets["pairing"]).to_be_focused()
-    targets["pairing"].press("Escape")
-    expect(toggle).to_be_focused()
-    expect(toggle).to_have_attribute("aria-expanded", "false")
 
-    toggle.click()
     targets["comparison"].click()
     expect(page.get_by_test_id("view-comparison-title")).to_be_focused()
     page.go_back(wait_until="load")
@@ -276,7 +297,7 @@ def verify_cross_axis(page: Any, expect: Any, origin: str) -> None:
     page.go_forward(wait_until="load")
     expect(page.get_by_test_id("view-comparison-title")).to_be_focused()
     page.goto(origin, wait_until="load")
-    require_no_root_overflow(page, "cross-axis navigation")
+    require_no_root_overflow(page, "fixed public navigation")
 
 
 def verify_catalog_runs(page: Any, expect: Any, origin: str, catalog_runs: dict[str, Any]) -> None:
@@ -295,22 +316,62 @@ def verify_catalog_runs(page: Any, expect: Any, origin: str, catalog_runs: dict[
         expect(page.get_by_test_id("status-gate")).to_contain_text(execution)
         expect(page.get_by_test_id("status-gate")).to_contain_text(verdict)
         page.get_by_test_id("catalog-return").click()
-        require(
-            page.evaluate("document.activeElement?.getAttribute('data-catalog-run-id')") == catalog_run_id,
-            f"Catalog return did not restore focus for {run_id}.",
-        )
+        expect(page.locator(f'[data-catalog-run-id="{catalog_run_id}"]')).to_be_focused()
     require_no_root_overflow(page, "M11 Run Catalog")
 
 
 def verify_comparisons(page: Any, expect: Any, origin: str, match: Path, drift: Path, inconclusive: Path) -> None:
     comparison_checks.open_comparison_view(page, origin, expect)
-    comparison_checks.assert_comparison(page, expect, match, "MATCH", "M12-F M11 MATCH")
-    comparison_checks.assert_comparison(page, expect, drift, "DRIFT", "M12-F DRIFT")
-    comparison_checks.assert_comparison(page, expect, inconclusive, "INCONCLUSIVE", "M12-F INCONCLUSIVE")
-    page.get_by_test_id("local-comparison-input").set_input_files(str(match))
+    verify_final_comparison(page, expect, match, "MATCH", "M12-F M11 MATCH")
+    verify_final_comparison(page, expect, drift, "DRIFT", "M12-F DRIFT")
+    verify_final_comparison(page, expect, inconclusive, "INCONCLUSIVE", "M12-F INCONCLUSIVE")
     page.reload(wait_until="load")
     expect(page.get_by_test_id("error-state")).to_contain_text("COMPARISON_RESELECT_REQUIRED")
     require(page.get_by_test_id("comparison-view").count() == 0, "Refresh retained local Comparison facts.")
+    verify_final_comparison(page, expect, match, "MATCH", "M12-F Comparison refresh recovery")
+
+
+def verify_final_comparison(
+    page: Any,
+    expect: Any,
+    path: Path,
+    status: str,
+    label: str,
+) -> None:
+    input_element = page.get_by_test_id("local-comparison-input")
+    if input_element.count() == 0:
+        input_element = page.get_by_label("重新选择本地 VeriTrail Comparison 目录")
+    require(input_element.count() == 1, f"{label} lost its explicit local Comparison selector.")
+    input_element.set_input_files(str(path))
+    comparison_view = page.get_by_test_id("comparison-view")
+    expect(comparison_view).to_be_visible()
+    status_gate = page.get_by_test_id("comparison-status")
+    expect(status_gate).to_contain_text(status)
+    expect(status_gate).to_have_attribute("aria-label", f"复跑比较：{status}")
+    require(
+        comparison_view.evaluate(
+            "(element, className) => element.classList.contains(className)",
+            f"rerun-page--{status.lower()}",
+        ),
+        f"{label} did not expose its independent ComparisonStatus presentation state.",
+    )
+    source_ids = page.locator('[data-testid^="comparison-source-"]').evaluate_all(
+        "nodes => nodes.map(node => node.getAttribute('data-testid'))"
+    )
+    require(
+        source_ids == ["comparison-source-baseline", "comparison-source-repeat"],
+        f"{label} changed the fixed BASELINE -> REPEAT source order.",
+    )
+    comparison_checks.require_no_root_overflow(page, label)
+    if status == "MATCH":
+        expect(page.get_by_test_id("comparison-no-differences")).to_be_visible()
+    elif status == "DRIFT":
+        differences = page.get_by_test_id("comparison-differences-preview")
+        expect(differences).to_be_visible()
+        expect(differences).to_contain_text("基线")
+        expect(differences).to_contain_text("重复")
+    else:
+        expect(comparison_view).to_contain_text("不适用")
 
 
 def verify_pairings(page: Any, expect: Any, origin: str, analyses: dict[str, Path]) -> None:
@@ -318,22 +379,35 @@ def verify_pairings(page: Any, expect: Any, origin: str, analyses: dict[str, Pat
     for status in ("SUPPORTED", "CONTRADICTED", "INCONCLUSIVE"):
         pairing_checks.assert_pairing(page, expect, analyses[status], status, f"M12-F {status}")
         pairing_checks.verify_status_specific_facts(page, expect, status)
-    page.get_by_test_id("local-pairing-input").set_input_files(pairing_files(analyses["SUPPORTED"]))
     page.reload(wait_until="load")
     expect(page.get_by_test_id("error-state")).to_contain_text("PAIRING_RESELECT_REQUIRED")
     require(page.get_by_test_id("paired-analysis-view").count() == 0, "Refresh retained local Pairing facts.")
+    pairing_checks.assert_pairing(
+        page,
+        expect,
+        analyses["SUPPORTED"],
+        "SUPPORTED",
+        "M12-F Pairing refresh recovery",
+    )
 
 
 def verify_batches(page: Any, expect: Any, origin: str, analyses: dict[str, Path]) -> None:
-    batch_checks.open_batch_view(page, origin, expect)
     for status in ("SUPPORTED", "CONTRADICTED", "INCOMPLETE", "INCONCLUSIVE"):
+        batch_checks.open_batch_view(page, origin, expect)
         batch_checks.import_and_verify_batch(
             page, expect, analyses[status], f"M12-F {status}", status, status == "SUPPORTED"
         )
-    page.get_by_test_id("local-batch-input").set_input_files(batch_files(analyses["SUPPORTED"]))
     page.reload(wait_until="load")
     expect(page.get_by_test_id("error-state")).to_contain_text("BATCH_RESELECT_REQUIRED")
     require(page.get_by_test_id("batch-analysis-view").count() == 0, "Refresh retained local Batch facts.")
+    batch_checks.import_and_verify_batch(
+        page,
+        expect,
+        analyses["SUPPORTED"],
+        "M12-F Batch refresh recovery",
+        "SUPPORTED",
+        False,
+    )
 
 
 def verify_corruption_boundary(page: Any, expect: Any, origin: str, comparison: Path, pairing: Path, batch: Path) -> None:
@@ -564,8 +638,8 @@ def main() -> int:
             desktop = browser.new_context(viewport={"width": 1440, "height": 960})
             page = desktop.new_page()
             add_page_observers(page, summary)
-            verify_cross_axis(page, expect, origin)
-            summary["checks"].append("desktop-cross-axis-keyboard-history-and-focus")
+            verify_public_navigation(page, expect, origin)
+            summary["checks"].append("desktop-fixed-public-navigation-keyboard-history-and-focus")
             verify_catalog_runs(page, expect, origin, catalog_runs)
             summary["checks"].append("desktop-m11-catalog-all-statuses-and-return-focus")
             verify_comparisons(page, expect, origin, match, drift, inconclusive)
@@ -584,11 +658,11 @@ def main() -> int:
             medium = browser.new_context(viewport={"width": 1024, "height": 768}, reduced_motion="reduce")
             medium_page = medium.new_page()
             add_page_observers(medium_page, summary)
-            verify_cross_axis(medium_page, expect, origin)
-            require_no_root_overflow(medium_page, "1024px cross axis")
-            save_screenshot(medium_page, output, summary, "medium-cross-axis.png")
+            verify_public_navigation(medium_page, expect, origin)
+            require_no_root_overflow(medium_page, "1024px fixed public navigation")
+            save_screenshot(medium_page, output, summary, "medium-fixed-navigation.png")
             medium.close()
-            summary["checks"].append("medium-1024-cross-axis-no-root-overflow")
+            summary["checks"].append("medium-1024-fixed-public-navigation-no-root-overflow")
 
             narrow_desktop = browser.new_context(viewport={"width": 1280, "height": 800})
             narrow_page = narrow_desktop.new_page()

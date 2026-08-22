@@ -118,7 +118,7 @@ def role_order(page: Any, selector: str) -> list[str]:
 
 
 def outcome_role_orders(page: Any) -> list[list[str]]:
-    return page.locator('[data-testid="paired-outcomes"] .paired-outcome').evaluate_all(
+    return page.locator('[data-testid="paired-outcomes"] > article').evaluate_all(
         """nodes => nodes.map(outcome => [...outcome.querySelectorAll('[data-pairing-role]')]
           .map(node => node.getAttribute('data-pairing-role')))"""
     )
@@ -139,30 +139,32 @@ def open_pairing_view(page: Any, origin: str, expect: Any) -> None:
     expect(page.get_by_test_id("local-pairing-input")).to_be_visible()
 
 
+def pairing_input(page: Any) -> Any:
+    input_element = page.get_by_test_id("local-pairing-input")
+    if input_element.count() == 0:
+        input_element = page.get_by_label("重新选择本地 VeriTrail PairedAnalysis 四个文件")
+    return input_element
+
+
 def assert_pairing(page: Any, expect: Any, path: Path, status: str, label: str) -> None:
-    page.get_by_test_id("local-pairing-input").set_input_files(pairing_files(path))
+    input_element = pairing_input(page)
+    require(input_element.count() == 1, f"{label} lost its explicit local PairedAnalysis selector.")
+    input_element.set_input_files(pairing_files(path))
     expect(page.get_by_test_id("paired-analysis-view")).to_be_visible()
     status_gate = page.get_by_test_id("paired-analysis-status")
     expect(status_gate).to_contain_text(status)
-    expected_class = f"paired-analysis-status--{status.lower()}"
+    expect(status_gate).to_have_attribute("aria-label", f"配对分析：{status}")
+    analysis_view = page.get_by_test_id("paired-analysis-view")
+    expected_class = f"pairing-page--{status.lower()}"
     require(
-        status_gate.evaluate(
+        analysis_view.evaluate(
             "(element, className) => element.classList.contains(className)", expected_class
         ),
-        f"{label} did not keep its independent AnalysisStatus class.",
+        f"{label} did not expose its independent AnalysisStatus presentation state.",
     )
-    expect(status_gate).to_contain_text("AnalysisStatus")
     require(
         role_order(page, '[data-testid="paired-sequence"]') == list(ROLES),
         f"{label} changed the sealed sequence order.",
-    )
-    require(
-        role_order(page, '[data-testid="paired-sources"]') == list(ROLES),
-        f"{label} changed the source-ledger order.",
-    )
-    require(
-        outcome_role_orders(page) and all(order == list(ROLES) for order in outcome_role_orders(page)),
-        f"{label} changed a preregistered outcome order.",
     )
     require_no_root_overflow(page, label)
 
@@ -176,27 +178,48 @@ def save_screenshot(page: Any, output: Path, summary: dict[str, Any], name: str)
 
 
 def verify_status_specific_facts(page: Any, expect: Any, status: str) -> None:
+    page.get_by_test_id("pairing-open-sources").click()
+    expect(page.get_by_test_id("paired-sources")).to_be_visible()
+    require(
+        role_order(page, '[data-testid="paired-sources"]') == list(ROLES),
+        f"{status} changed the source-ledger order.",
+    )
     if status == "SUPPORTED":
         expect(
             page.get_by_test_id("paired-sources").locator('[data-pairing-role="TREATMENT"]')
         ).to_contain_text("FAIL")
-        return
-    if status == "CONTRADICTED":
+    elif status == "CONTRADICTED":
         expect(
             page.get_by_test_id("paired-sources").locator('[data-pairing-role="TREATMENT"]')
         ).to_contain_text("PASS")
+    else:
+        expect(
+            page.get_by_test_id("paired-sources").locator('[data-pairing-role="NEGATIVE_CONTROL"]')
+        ).to_contain_text("FAIL")
+    require_no_root_overflow(page, f"{status} Pairing source ledger")
+    page.get_by_test_id("pairing-panel-return").click()
+    expect(page.get_by_test_id("paired-analysis-status")).to_be_visible()
+
+    page.get_by_test_id("pairing-open-outcomes").click()
+    expect(page.get_by_test_id("paired-outcomes")).to_be_visible()
+    orders = outcome_role_orders(page)
+    require(
+        orders and all(order == list(ROLES) for order in orders),
+        f"{status} changed a preregistered outcome order.",
+    )
+    if status == "CONTRADICTED":
         require(
             outcome_role_is_mismatch(page, "TREATMENT"),
             "CONTRADICTED TREATMENT did not remain visibly mismatched in every outcome.",
         )
-        return
-    expect(
-        page.get_by_test_id("paired-sources").locator('[data-pairing-role="NEGATIVE_CONTROL"]')
-    ).to_contain_text("FAIL")
-    require(
-        outcome_role_is_mismatch(page, "NEGATIVE_CONTROL"),
-        "INCONCLUSIVE NEGATIVE_CONTROL did not remain visibly mismatched in every outcome.",
-    )
+    elif status == "INCONCLUSIVE":
+        require(
+            outcome_role_is_mismatch(page, "NEGATIVE_CONTROL"),
+            "INCONCLUSIVE NEGATIVE_CONTROL did not remain visibly mismatched in every outcome.",
+        )
+    require_no_root_overflow(page, f"{status} Pairing outcome ledger")
+    page.get_by_test_id("pairing-panel-return").click()
+    expect(page.get_by_test_id("paired-analysis-status")).to_be_visible()
 
 
 def parse_args() -> argparse.Namespace:
@@ -289,7 +312,6 @@ def main() -> int:
             desktop_page = desktop.new_page()
             add_page_observers(desktop_page, summary)
             open_pairing_view(desktop_page, origin, expect)
-            desktop_page.get_by_test_id("cross-axis-toggle").click()
             desktop_page.get_by_test_id("cross-axis-runs").click()
             expect(desktop_page.get_by_test_id("run-catalog")).to_be_visible()
             desktop_page.go_back(wait_until="load")
@@ -298,7 +320,7 @@ def main() -> int:
             expect(desktop_page.get_by_test_id("run-catalog")).to_be_visible()
             desktop_page.go_back(wait_until="load")
             expect(desktop_page.get_by_test_id("local-pairing-input")).to_be_visible()
-            summary["checks"].append("desktop-cross-axis-history-keeps-pairing-entry")
+            summary["checks"].append("desktop-fixed-navigation-history-keeps-pairing-entry")
 
             assert_pairing(desktop_page, expect, supported, "SUPPORTED", "desktop SUPPORTED")
             verify_status_specific_facts(desktop_page, expect, "SUPPORTED")
@@ -319,13 +341,13 @@ def main() -> int:
                 shutil.copytree(supported, corrupted)
                 changed = corrupted / "paired-analysis.json"
                 changed.write_bytes(changed.read_bytes() + b" ")
-                desktop_page.get_by_test_id("local-pairing-input").set_input_files(pairing_files(corrupted))
+                pairing_input(desktop_page).set_input_files(pairing_files(corrupted))
                 expect(desktop_page.get_by_test_id("error-state")).to_contain_text("PAIRING_SIZE_MISMATCH")
                 require(
                     desktop_page.get_by_test_id("paired-analysis-view").count() == 0,
                     "A corrupted Pairing exposed partial trusted facts.",
                 )
-                desktop_page.get_by_test_id("local-pairing-input").set_input_files(pairing_files(supported))
+                pairing_input(desktop_page).set_input_files(pairing_files(supported))
                 expect(desktop_page.get_by_test_id("paired-analysis-status")).to_contain_text("SUPPORTED")
             summary["checks"].append("desktop-corruption-contained-and-explicit-reselection-recovers")
 

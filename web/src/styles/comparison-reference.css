@@ -180,18 +180,21 @@
   min-width: 0;
 }
 
-.app-shell--comparison .rerun-reselect {
+.app-shell--comparison .rerun-heading__actions .rerun-reselect.local-import {
   min-height: 44px;
   padding: 9px 14px;
-  color: #5e4b2e;
-  background: rgba(247, 241, 232, 0.34);
-  border: 1px solid var(--rerun-rule-strong);
+  color: #f0dfb5;
+  background: #194e50;
+  border: 1px solid rgba(154, 121, 72, 0.72);
+  box-shadow: none;
 }
 
-.app-shell--comparison .rerun-reselect:hover,
-.app-shell--comparison .rerun-reselect:focus-within {
-  color: #214f52;
-  background: rgba(247, 241, 232, 0.72);
+.app-shell--comparison .rerun-heading__actions .rerun-reselect.local-import:hover,
+.app-shell--comparison .rerun-heading__actions .rerun-reselect.local-import:focus-within {
+  color: #fff4d5;
+  background: #103d3f;
+  border-color: #b99455;
+  box-shadow: none;
 }
 
 .app-shell--comparison .rerun-overview {
@@ -285,13 +288,49 @@
   filter: sepia(0.36) saturate(1.18) brightness(0.82) contrast(1.08);
 }
 
+.app-shell--comparison .rerun-data-court {
+  --rerun-axis-width: clamp(8.5rem, 10vw, 10.5rem);
+  --rerun-court-gap: 26px;
+  position: relative;
+  padding: calc(var(--rerun-court-gap) * 2);
+  overflow: hidden;
+}
+
+.app-shell--comparison .rerun-data-court::before {
+  position: absolute;
+  inset: 22px 0;
+  z-index: 3;
+  content: '';
+  pointer-events: none;
+  border: 44px solid transparent;
+  border-image-source: url('/textures/r3-comparison-court-frame-v1.png');
+  border-image-slice: 218 356;
+  border-image-width: 44px;
+  border-image-repeat: stretch;
+  opacity: 0.76;
+}
+
+.app-shell--comparison .rerun-data-court::after {
+  position: absolute;
+  inset: calc(var(--rerun-court-gap) * 2);
+  z-index: 2;
+  content: '';
+  pointer-events: none;
+  border: 1px solid rgba(45, 87, 79, 0.72);
+}
+
+.app-shell--comparison .rerun-data-court > * {
+  position: relative;
+  z-index: 1;
+}
+
 .app-shell--comparison .rerun-mirror {
   position: relative;
   display: grid;
   grid-template-areas:
     'beam beam beam'
     'baseline axis repeat';
-  grid-template-columns: minmax(0, 1fr) clamp(8.5rem, 10vw, 10.5rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--rerun-axis-width) minmax(0, 1fr);
   gap: 0;
   margin: 0;
   padding: 0;
@@ -300,7 +339,7 @@
 .app-shell--comparison .rerun-mirror__beam {
   display: grid;
   grid-area: beam;
-  grid-template-columns: minmax(0, 1fr) clamp(8.5rem, 10vw, 10.5rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) var(--rerun-axis-width) minmax(0, 1fr);
   min-height: 46px;
   color: #e8d6a1;
   background: var(--rerun-lacquer) url('/textures/r3-lacquer.png') center / 768px 768px repeat;
@@ -372,7 +411,7 @@
 
 .app-shell--comparison .rerun-source__statuses dt,
 .app-shell--comparison .rerun-source__facts dt,
-.app-shell--comparison .rerun-judgment dt {
+.app-shell--comparison .rerun-judgment-details dt {
   color: var(--rerun-muted);
   font-size: 0.66rem;
 }
@@ -448,31 +487,42 @@
   grid-area: axis;
   align-content: center;
   justify-items: center;
-  padding: 18px 10px;
+  gap: 6px;
+  padding: 22px 10px;
   text-align: center;
   border-inline: 1px solid var(--rerun-rule-strong);
 }
 
 .app-shell--comparison .rerun-judgment > img {
-  width: 48px;
-  height: 48px;
-  margin: 5px 0 9px;
+  width: 58px;
+  height: 58px;
+  margin: 0;
   object-fit: contain;
   opacity: 0.68;
   filter: sepia(0.36) saturate(1.12) brightness(0.78) contrast(1.08);
 }
 
-.app-shell--comparison .rerun-judgment dl {
+.app-shell--comparison .rerun-judgment-details {
+  display: grid;
+  grid-column: 2;
+  align-content: start;
+  justify-items: center;
+  padding: 24px 12px;
+  text-align: center;
+  border-inline: 1px solid var(--rerun-rule-strong);
+}
+
+.app-shell--comparison .rerun-judgment-details dl {
   width: 100%;
   margin: 0;
 }
 
-.app-shell--comparison .rerun-judgment dl > div {
+.app-shell--comparison .rerun-judgment-details dl > div {
   padding: 10px 4px;
   border-top: 1px solid var(--rerun-rule);
 }
 
-.app-shell--comparison .rerun-judgment dd {
+.app-shell--comparison .rerun-judgment-details dd {
   margin: 4px 0 0;
   color: var(--rerun-teal);
   font-family: var(--font-mono);
@@ -481,13 +531,14 @@
   overflow-wrap: anywhere;
 }
 
-.app-shell--comparison .rerun-judgment--drift dd:first-of-type {
+.app-shell--comparison .rerun-judgment-details--drift dd:first-of-type {
   color: var(--rerun-vermilion);
 }
 
 .app-shell--comparison .rerun-summary-grid {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(20rem, 0.75fr);
+  grid-template-columns: minmax(0, 1fr) var(--rerun-axis-width) minmax(0, 1fr);
   margin: 0;
   border-top: 1px solid var(--rerun-rule-strong);
 }
@@ -498,7 +549,12 @@
   padding: 24px;
 }
 
+.app-shell--comparison .rerun-difference-preview {
+  grid-column: 1;
+}
+
 .app-shell--comparison .rerun-boundary {
+  grid-column: 3;
   border-inline-start: 1px solid var(--rerun-rule);
 }
 
@@ -524,7 +580,7 @@
 .app-shell--comparison .rerun-difference-table__head,
 .app-shell--comparison .rerun-difference-table article {
   display: grid;
-  grid-template-columns: 6.5rem 3.2rem minmax(10rem, 1.5fr) minmax(6rem, 0.7fr) minmax(6rem, 0.7fr);
+  grid-template-columns: 4.75rem 2.75rem minmax(6.5rem, 1fr) 4.25rem 4.25rem;
   align-items: center;
   min-width: 0;
 }
@@ -537,7 +593,13 @@
 .app-shell--comparison .rerun-difference-table__head > span,
 .app-shell--comparison .rerun-difference-table article > * {
   min-width: 0;
-  padding: 10px 9px;
+  padding: 10px 5px;
+}
+
+.app-shell--comparison .rerun-difference-table__head > span {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .app-shell--comparison .rerun-difference-table article {
@@ -549,13 +611,15 @@
 }
 
 .app-shell--comparison .rerun-difference-table strong {
-  font-size: 0.74rem;
+  font-size: 0.7rem;
+  white-space: nowrap;
 }
 
 .app-shell--comparison .rerun-difference-table em {
   color: var(--rerun-vermilion);
   font-size: 0.7rem;
   font-style: normal;
+  white-space: nowrap;
 }
 
 .app-shell--comparison .rerun-difference-table code,
@@ -759,17 +823,12 @@
   margin-inline: auto;
 }
 
-.app-shell--comparison .rerun-page--entry {
-  min-height: min(40rem, calc(100vh - 21rem));
-}
-
 .app-shell--comparison .rerun-heading--entry {
   grid-template-columns: minmax(0, 1fr) auto;
 }
 
 .app-shell--comparison .rerun-entry-court {
   display: grid;
-  min-height: 29rem;
   padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 4.5rem);
   place-items: center;
   align-content: center;
@@ -865,14 +924,6 @@
     margin-top: 12px;
   }
 
-  .app-shell--comparison .rerun-summary-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .app-shell--comparison .rerun-boundary {
-    border-top: 1px solid var(--rerun-rule);
-    border-inline-start: 0;
-  }
 }
 
 @media (max-width: 900px) {
@@ -888,12 +939,43 @@
   .app-shell--comparison .rerun-mirror__beam {
     grid-template-columns: minmax(0, 1fr) clamp(7.25rem, 13vw, 8.5rem) minmax(0, 1fr);
   }
+
+  .app-shell--comparison .rerun-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell--comparison .rerun-difference-preview,
+  .app-shell--comparison .rerun-judgment-details,
+  .app-shell--comparison .rerun-boundary {
+    grid-column: 1;
+  }
+
+  .app-shell--comparison .rerun-judgment-details {
+    border-top: 1px solid var(--rerun-rule);
+    border-inline: 0;
+  }
+
+  .app-shell--comparison .rerun-boundary {
+    border-top: 1px solid var(--rerun-rule);
+    border-inline-start: 0;
+  }
 }
 
 @media (max-width: 720px) {
   .app-shell--comparison .evidence-axis,
   .app-shell--comparison .site-footer {
     margin-inline: 0.75rem;
+  }
+
+  .app-shell--comparison .rerun-data-court {
+    --rerun-court-gap: 16px;
+    padding: calc(var(--rerun-court-gap) * 2);
+  }
+
+  .app-shell--comparison .rerun-data-court::before {
+    inset-block: 12px;
+    border-width: 34px;
+    border-image-width: 34px;
   }
 
   .app-shell--comparison .rerun-mirror,
@@ -1080,7 +1162,7 @@
     grid-column: auto;
   }
 
-  .app-shell--comparison .rerun-judgment dl {
+  .app-shell--comparison .rerun-judgment-details dl {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
