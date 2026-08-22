@@ -92,6 +92,19 @@ describe('reference page style ownership', () => {
     }
   })
 
+  it('keeps the valid empty Catalog on the Catalog-owned continuous paper', () => {
+    const sharedComponents = styleSource('components.css')
+    const catalog = styleSource('catalog-reference.css')
+    const emptyState = declarationBlocks(catalog, '.app-shell--catalog .catalog-empty').join('\n')
+
+    expect(sharedComponents, 'the historical generic empty card must not return').not.toMatch(
+      /\.catalog-empty/,
+    )
+    expect(emptyState).toMatch(/\bborder\s*:\s*0/)
+    expect(emptyState).not.toMatch(/\bborder-(?:radius|style)\s*:/)
+    expect(emptyState).not.toMatch(/\b(?:dashed|box-shadow|surface-plinth)\b/)
+  })
+
   it('keeps Rerun Comparison on one continuous frame', () => {
     const source = styleSource('comparison-reference.css')
     const page = declarationBlock(source, '.app-shell--comparison .rerun-page')

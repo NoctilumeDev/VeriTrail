@@ -396,8 +396,7 @@
     border: 1px solid color-mix(in srgb, var(--structure-gold-soft) 55%, transparent);
   }
 
-  .catalog-message,
-  .catalog-empty {
+  .catalog-message {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -415,8 +414,7 @@
     border-color: color-mix(in srgb, var(--status-fail-fg) 55%, var(--surface-courtyard));
   }
 
-  .catalog-message p,
-  .catalog-empty p {
+  .catalog-message p {
     margin: var(--space-1) 0 0;
   }
 
@@ -427,21 +425,6 @@
     cursor: pointer;
     background: var(--interaction-default);
     border: 1px solid var(--interaction-default);
-  }
-
-  .catalog-empty {
-    justify-content: flex-start;
-  }
-
-  .catalog-empty > span {
-    display: grid;
-    flex: 0 0 3rem;
-    width: 3rem;
-    height: 3rem;
-    place-items: center;
-    color: var(--structure-dai);
-    font-family: var(--font-display);
-    border: 1px solid currentColor;
   }
 
   .catalog-runs {

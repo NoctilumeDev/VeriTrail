@@ -653,9 +653,75 @@
   letter-spacing: 0.08em;
 }
 
-.app-shell--catalog .catalog-message,
+.app-shell--catalog .catalog-message {
+  min-height: 180px;
+  margin: 0;
+  padding: 44px 56px;
+  background: transparent;
+  border: 0;
+}
+
+/* The empty Catalog is a valid court state, not a warning card. Keep it on
+   the same continuous paper as the Run ledger so the palace frame remains
+   the sole visual owner of this region. */
 .app-shell--catalog .catalog-empty {
-  margin: 28px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px minmax(0, max-content);
+  gap: 20px;
+  min-height: 220px;
+  margin: 0;
+  padding: 48px 56px 54px;
+  place-content: center;
+  align-items: center;
+  color: #51483e;
+  background: radial-gradient(circle at 50% 54%, rgba(172, 139, 82, 0.08), transparent 52%);
+  border: 0;
+}
+
+.app-shell--catalog .catalog-empty::before,
+.app-shell--catalog .catalog-empty::after {
+  position: absolute;
+  right: 56px;
+  left: 56px;
+  height: 1px;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgba(151, 119, 70, 0.32) 18%, rgba(151, 119, 70, 0.32) 82%, transparent);
+}
+
+.app-shell--catalog .catalog-empty::before {
+  top: 34px;
+}
+
+.app-shell--catalog .catalog-empty::after {
+  bottom: 34px;
+}
+
+.app-shell--catalog .catalog-empty > span {
+  display: grid;
+  box-sizing: border-box;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  color: #315d60;
+  font-family: var(--font-display);
+  font-size: 22px;
+  background: transparent;
+  border: 1px solid rgba(49, 93, 96, 0.72);
+}
+
+.app-shell--catalog .catalog-empty strong {
+  display: block;
+  color: #40372e;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.app-shell--catalog .catalog-empty p {
+  margin: 6px 0 0;
+  color: #6a5c4e;
+  line-height: 1.65;
 }
 
 /* Runs errors belong to the Catalog owner. They use the same continuous paper
@@ -1011,6 +1077,28 @@
 
   .app-shell--catalog .catalog-court {
     margin-top: 34px;
+  }
+
+  .app-shell--catalog .catalog-message {
+    padding-inline: 28px;
+  }
+
+  .app-shell--catalog .catalog-empty {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    min-height: 230px;
+    padding: 48px 28px 52px;
+    text-align: center;
+  }
+
+  .app-shell--catalog .catalog-empty::before,
+  .app-shell--catalog .catalog-empty::after {
+    right: 28px;
+    left: 28px;
+  }
+
+  .app-shell--catalog .catalog-empty > span {
+    justify-self: center;
   }
 }
 
