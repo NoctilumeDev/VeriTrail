@@ -35,7 +35,8 @@
 - Post-M8 收束路线 Plan v1 位于 `docs/13-post-m8-roadmap.md`，已以 `post-m8-plan-v1` 冻结为
   规划基线。M10、M11、M12、M13 已冻结；M13 独立终审计划 0.1 位于
   `docs/52-m13-system-and-layered-code-quality-audit-plan.md`，事实位于
-  `docs/53-m13-system-and-layered-code-quality-audit-facts.md`；M14 入口已开放但仍为 `PLANNED`。
+  `docs/53-m13-system-and-layered-code-quality-audit-facts.md`；M14 合同 0.1 位于
+  `docs/54-m14-final-validation-and-release-contract.md`，当前为 `CONTRACT_FROZEN / VALIDATING`。
   冻结合同不代表
   后继能力已经实现或验收。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
@@ -77,7 +78,8 @@
   `b13e2fb20a3aa670d8daba1ea78b5f9f0f7bac40` 已推送；冻结读回时远端 `main` 和
   `m11-v0.12.0^{}` 均精确指向该提交，M11 状态为 `FROZEN`。事实见文档 26、27；M12 已以
   `m12-v0.13.0` @ `5f32c33` 冻结；M13 已按文档 52 完成系统与 L0–L3 终审，事实见文档 53，
-  M14 入口已开放但仍为 `PLANNED`。
+  M14 已按文档 54 冻结双目标、严格串行、版本与首个最终 Release 门禁，当前为
+  `CONTRACT_FROZEN / VALIDATING`。
 - M11 入口治理与 M0-M10 当前复验位于 `docs/24-m11-entry-governance.md`。它保留首次 Python 3.10
   Chromium 瞬态失败以及后续双解释器完整全绿事实，只允许继续入口枝叶整理；它不证明 M11 已实现。
 - M12 表现系统重构设计计划 0.1 位于 `docs/28-m12-palace-workbench-design-plan.md`。M12-A 控制组审计已在
@@ -101,7 +103,7 @@
   `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M12 状态为 `FROZEN`。M13 已在文档 52 边界内完成，
   关闭优化模式验收 fail-open、安全说明漂移、Catalog 旧空态和公共文档本机路径四项问题；双 Python
   279/279、Workbench 156/156、常规/优化生产总验收、安全、依赖、浏览器与清理事实见文档 53。
-  M13 状态为 `FROZEN`；M14 必须另立合同，不能静默改写冻结基线或继承本次定向证据为最终发布。
+  M13 状态为 `FROZEN`；M14 已另立文档 54，不能静默改写冻结基线或继承 M13 定向证据为最终发布。
 - 开始工作前依次阅读 `README.md`、`docs/00-product-brief.md`、`docs/01-evidence-model.md`、`docs/02-architecture.md` 和 `docs/03-acceptance.md`。
 - 产品事实与代码不一致时先停止并指出冲突；不得静默降低方法论或安全边界。
 

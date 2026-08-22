@@ -28,7 +28,7 @@
 | M11 | 不同类型真实项目功能全链路 | `FROZEN` | `m11-v0.12.0` @ `b13e2fb` |
 | M12 | 故宫主题前端终稿 | `FROZEN` | `m12-v0.13.0` @ `5f32c33` |
 | M13 | 系统思维与分层代码质量终审 | `FROZEN` | 计划/事实：文档 52、53；实现 `63e6354` |
-| M14 | 整改后终局复验与发布收束 | `PLANNED` | — |
+| M14 | 整改后终局复验与发布收束 | `CONTRACT_FROZEN / VALIDATING` | 合同：文档 54；最终事实与 Release 尚未形成 |
 
 `FROZEN` 只对该行声明的能力和对应文档中的环境、输入、资源及安全边界成立。代码、依赖、
 Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须标记过期并重新验收。
@@ -111,7 +111,8 @@ Plan / Evidence / Verdict
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
 `post-m8-plan-v1` 冻结为规划基线；M10、M11、M12、M13 已冻结，M13 事实见文档 53；M14 入口已
-开放但仍为 `PLANNED`。M9 受控
+开放并已按文档 54 冻结双目标、串行资源、版本与 Release 门禁，当前为
+`CONTRACT_FROZEN / VALIDATING`。M9 受控
 项目命令执行合同 0.2 已在
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper

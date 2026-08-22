@@ -29,7 +29,7 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M11 | 真实项目功能全链路 | `FROZEN` |
 | M12 | 故宫主题前端终稿 | `FROZEN` |
 | M13 | 系统思维与分层代码质量终审 | `FROZEN` |
-| M14 | 整改后终局复验与发布收束 | `PLANNED` |
+| M14 | 整改后终局复验与发布收束 | `CONTRACT_FROZEN / VALIDATING` |
 
 当前可寻址基线为 [`m12-v0.13.0`](https://github.com/NoctilumeDev/VeriTrail/tree/m12-v0.13.0)
 @ `5f32c33`；包版本按 M12 表现层合同仍为 `0.12.0.dev1`，M12 不创建 GitHub Release，首个最终
@@ -41,8 +41,9 @@ Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链�
 真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；冻结
 读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13 已按
 [独立终审计划 0.1](docs/52-m13-system-and-layered-code-quality-audit-plan.md) 完成系统与 L0–L3 审查；
-四项可观察问题已在原所有者内关闭，`BLOCKER = 0`、`MUST_FIX = 0`，M14 入口已开放但仍为
-`PLANNED`。M12-A 已完成
+四项可观察问题已在原所有者内关闭，`BLOCKER = 0`、`MUST_FIX = 0`。M14 已按
+[终局复验与发布合同 0.1](docs/54-m14-final-validation-and-release-contract.md) 冻结双目标、串行资源、
+稳定 `0.12.0` 与首个最终 Release 门禁，当前为 `CONTRACT_FROZEN / VALIDATING`。M12-A 已完成
 M11 控制组审计；M12-B 已完成四向公共视图、十字导航、URL/history、焦点与移动几何的生产运行验证。
 M12-A 至 E、R1 至 R3 已完成 Catalog、Run、Comparison、Pairing、Batch、Browser Evidence 与全局状态的表现迁移。
 M12-F 收口以 `156/156` Workbench、双 Python 各 `278/278`、D1/D2/D3 独立生产验收、常规与优化模式总验收、
@@ -271,6 +272,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 不借“代码质量�
 - [M12-F 总体验收与冻结运行事实](docs/51-m12-f-final-validation-facts.md)
 - [M13 系统思维与分层代码质量终审计划 0.1](docs/52-m13-system-and-layered-code-quality-audit-plan.md)
 - [M13 系统思维与分层代码质量终审事实 0.1](docs/53-m13-system-and-layered-code-quality-audit-facts.md)
+- [M14 整改后终局复验与发布收束合同 0.1](docs/54-m14-final-validation-and-release-contract.md)
 
 ## 项目来源
 

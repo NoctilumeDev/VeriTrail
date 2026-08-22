@@ -2,7 +2,8 @@
 
 ## Current status
 
-VeriTrail is a pre-release v0 implementation. M0 through M12 are frozen; the M12 implementation commit
+VeriTrail is a pre-release v0 implementation. M0 through M13 are frozen; M14 has a frozen final-validation
+and release contract and is currently validating, so no final stable Release claim exists yet. The M12 implementation commit
 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9` and annotated `m12-v0.13.0` tag have been read back from
 GitHub. The repository includes the deterministic
 Python evidence core, bounded resource/browser adapters, a read-only Vue workbench, rebuildable SQLite
