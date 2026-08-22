@@ -1,12 +1,20 @@
 # M13 系统思维与分层代码质量终审计划
 
-> 状态：`CONTRACT_FROZEN / AUDIT_IN_PROGRESS`
+> 状态：`M13_FROZEN / M14_ENTRY_OPEN`
 > 计划版本：`M13 System and Layered Code Quality Audit Plan 0.1`
 > 影响层级：`L0 / L1 / L2 / L3 REVIEW`；整改层级必须逐项另行声明
 > 冻结能力基线：`m12-v0.13.0^{}` @ `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`
 > 审查入口提交：`392e7608b7097aaae701ccb24524ba2dae868f73`
 > 依赖规划：[Post-M8 收束路线 Plan v1 第 9 节](13-post-m8-roadmap.md)
-> 后继门禁：M13 结论成立前，M14 只能保持 `PLANNED`
+> 运行事实：[M13 系统思维与分层代码质量终审事实 0.1](53-m13-system-and-layered-code-quality-audit-facts.md)
+> 后继门禁：M13 结论已成立；M14 可另立合同，仍不得继承为已验收或已发布
+
+## 0. 审查结果
+
+本计划已按既定顺序完成仓库、权威链、消费者、状态机、安全、资源、恢复和 L0–L3 审查。
+四项 `MUST_FIX` 已在所有者内关闭，`BLOCKER = 0`、`MUST_FIX = 0`；两个延期维护债均记录了所有者、
+当前边界和重新触发条件。M12 标签、包版本、Schema、Verdict、ExecutionStatus、API 权限与执行信任
+模型均未改变。完整来源、失败、整改、真实浏览器、常规/优化总验收和清理事实见文档 53。
 
 ## 1. 目标与问题
 

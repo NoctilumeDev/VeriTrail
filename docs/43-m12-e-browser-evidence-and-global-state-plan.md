@@ -130,7 +130,9 @@ Browser Evidence 保持在 Run 详情的“浏览器事实”区，但内部采�
 
 ## 6. 严格实施与生产验收顺序
 
-全部运行遵守 16 GB 单机串行策略。实际启动浏览器、Node、Python 或端口前，重新读取 `C:\Users\lenovo\.codex\machine-profile.md`，再检查当前可用内存、磁盘和回环端口；不启动 Docker、中间件、第二项目栈或 M11 新 Run。
+全部运行遵守 16 GB 单机串行策略。实际启动浏览器、Node、Python 或端口前，重新读取
+`%USERPROFILE%\.codex\machine-profile.md`，再检查当前可用内存、磁盘和回环端口；不启动 Docker、
+中间件、第二项目栈或 M11 新 Run。
 
 1. **输入与所有权审计**：记录第 2 节材料的只读 SHA/文件存在性、Browser 数据覆盖及当前 git diff；确认只触及本计划所有者。
 2. **局部自动化先行**：新增第 5 节断言，先让现有 semantics、dialog/focus、错误/重选区分失败，再写表现。
