@@ -28,8 +28,8 @@ Run、适用负向、桌面/移动 Chromium、Catalog/Workbench、内置浏览�
 
 M10 有界完整项目自举、M11 真实项目功能全链路与 M12 故宫主题前端终稿均已 `FROZEN`；M12 冻结读回时
 远端 `main` 与 `m12-v0.13.0^{}` 均精确指向 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M13 已按
-文档 52、53 完成并 `FROZEN`；M14 已按文档 54 冻结双目标、资源、版本和 Release 合同，当前为
-`CONTRACT_FROZEN / VALIDATING`。M11 Contract 0.3 已冻结
+文档 52、53 完成并 `FROZEN`；M14 已按文档 54–57 完成安全整改、双真实目标终局复验、稳定
+`0.12.0` 和首个最终 Release，状态为 `FROZEN / RELEASED`。M11 Contract 0.3 已冻结
 `OPTION_B`、InkNarratives 精确 ref 和 Gate A -> Gate B 严格串行，并纠正 Plan/Profile 一对一绑定；
 Profile 0.2、Plan 0.7、单节点生命周期和 collector 0.3 已通过 Gate A 的双 Python、真实 Chromium、
 13 个预注册出口、Catalog/Comparison、资源、安全、清理与 Workbench 消费验证；真实项目 Gate B

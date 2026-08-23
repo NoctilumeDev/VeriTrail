@@ -3,7 +3,7 @@
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
 [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml)
 [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
-[![M12 frozen baseline](https://img.shields.io/badge/M12%20frozen-m12--v0.13.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/tree/m12-v0.13.0)
+[![Release v0.12.0](https://img.shields.io/badge/release-v0.12.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)
 [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
 
 > 单变量证明因果，组合批次验证交互，固定种子寻找偶发故障，真实链路形成系统结论。
@@ -29,31 +29,24 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | M11 | 真实项目功能全链路 | `FROZEN` |
 | M12 | 故宫主题前端终稿 | `FROZEN` |
 | M13 | 系统思维与分层代码质量终审 | `FROZEN` |
-| M14 | 整改后终局复验与发布收束 | `CONTRACT_FROZEN / VALIDATING` |
+| M14 | 整改后终局复验与发布收束 | `FROZEN / RELEASED` |
 
-当前可寻址基线为 [`m12-v0.13.0`](https://github.com/NoctilumeDev/VeriTrail/tree/m12-v0.13.0)
-@ `5f32c33`；包版本按 M12 表现层合同仍为 `0.12.0.dev1`，M12 不创建 GitHub Release，首个最终
-Release 仍由 M14 发布门禁决定。M11 在
-`m10-v0.11.1` 地基上增加严格的单 application
-Profile 0.2 / Plan 0.7，以及 InkNarratives 精确 ref 的真实项目全链路。Gate A 已完成 13 个公共
-出口；Gate B Plan v1 的移动端隐藏导航 `FAIL` 原样保留，Plan v2 则按预注册顺序取得
-`PASS / FAIL / PENDING / PASS` 四个 Bundle，正向恢复 Comparison 为 `MATCH`、0 differences。
-真实 Chromium、物理键盘、生产 Workbench、双 Python、资源、安全和清理门禁均已有运行事实；冻结
-读回时，远端 `main` 与 `m11-v0.12.0^{}` 均精确指向冻结提交。M13 已按
-[独立终审计划 0.1](docs/52-m13-system-and-layered-code-quality-audit-plan.md) 完成系统与 L0–L3 审查；
-四项可观察问题已在原所有者内关闭，`BLOCKER = 0`、`MUST_FIX = 0`。M14 已按
-[终局复验与发布合同 0.1](docs/54-m14-final-validation-and-release-contract.md) 冻结双目标、串行资源、
-稳定 `0.12.0` 与首个最终 Release 门禁，当前为 `CONTRACT_FROZEN / VALIDATING`。M12-A 已完成
-M11 控制组审计；M12-B 已完成四向公共视图、十字导航、URL/history、焦点与移动几何的生产运行验证。
-M12-A 至 E、R1 至 R3 已完成 Catalog、Run、Comparison、Pairing、Batch、Browser Evidence 与全局状态的表现迁移。
-M12-F 收口以 `156/156` Workbench、双 Python 各 `278/278`、D1/D2/D3 独立生产验收、常规与优化模式总验收、
-桌面/390/360 px、forced-colors、内置浏览器和用户逐页确认形成冻结候选；两轮总验收均为 13 组检查、636 个同源
-只读请求，外网/写请求/HTTP 错误均为 0，端口、线程与 SQLite sidecar 均已清理。冻结读回时，远端
-`main` 与 `m12-v0.13.0^{}` 均精确指向 `5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9`；M12 已在
-既定 L0 / bounded L1 边界内 `FROZEN`。M13 未增加功能或静默修改冻结合同；双 Python 各
-`279/279`、Workbench `156/156`、常规与优化两轮 13 项/636 请求生产总验收、安全扫描、依赖、
-真实空态 Browser 与零残留均已通过，完整事实见
-[M13 终审事实 0.1](docs/53-m13-system-and-layered-code-quality-audit-facts.md)。
+当前稳定基线为 [`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)。M14 没有
+增加能力，而是在安全整改后对 VeriTrail 自证目标与 InkNarratives 精确提交完成常规/优化双轮真实
+复验，并形成首个稳定 Release。最终门禁包括：双 Python 各 `318/318`、Workbench `171/171`、
+lint/type-check/生产构建、依赖审计、wheel/sdist 独立安装运行、Release ZIP 逐文件复核、真实 Chromium、
+内置浏览器桌面/390/360 px、失败恢复、敏感扫描和零残留。
+
+自证目标的 13 个预注册出口覆盖 `PASS / FAIL / INCONCLUSIVE / PENDING` 与
+`COMPLETED / ABORTED / ERROR`，正向重复 Comparison 为 `MATCH`、0 differences；InkNarratives
+按预注册顺序取得 `PASS / FAIL / PENDING / PASS`，恢复 Comparison 同样为 `MATCH`。最终标准安全
+扫描覆盖 375 个文件、12 个攻击面，可报告发现为 0。准确环境、资源峰值、安全边界、资产摘要与
+读回规则见 [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)，安装和故障恢复见
+[0.12.0 Release Notes](docs/57-v0.12.0-release-notes.md)。
+
+M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标签；前者不是稳定 Release，
+后者仍使用 `0.12.0.dev1` 包版本。M13 的分层终审事实继续由
+[文档 53](docs/53-m13-system-and-layered-code-quality-audit-facts.md) 保存，不因 M14 发布而被改写。
 
 准确合同见[单节点能力与真实项目双门合同](docs/23-m11-single-node-real-project-contract.md)，Gate A
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
@@ -182,6 +175,10 @@ sealed Plan / Profile
 | M8 | batch | 4–16 格矩阵；wave 内真实重叠仍未证明 |
 | M9 | trusted ONESHOT command | Windows Job、无 Shell/stdin/TTY，不是沙箱 |
 | M10 | two-node project bootstrap | Windows/C1、dependency -> application、owned readiness/cleanup |
+| M11 | single-node real-project chain | InkNarratives 精确 ref、预注册 Gate A/B，不泛化到任意项目 |
+| M12 | Palace Evidence Workbench | L0 / bounded L1 表现系统，不重算 Verdict |
+| M13 | system and layered quality audit | L0–L3 所有者/消费者/失败/恢复审查，不增加功能 |
+| M14 | final rerun and stable release | 双真实目标、安装/浏览器/安全/资产读回，版本 `0.12.0` |
 
 所有详细 Schema、退出矩阵、保留失败和真实验收事实都在对应文档中；README 不复制其完整战争史。
 
@@ -227,7 +224,8 @@ M9 controlled command
   -> M14 final rerun and release
 ```
 
-M12 已在 M11 功能事实稳定后完成并冻结；M13 不借“代码质量”重写合同；M14 不增加能力，只复验、归档和发布。
+M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质量”重写合同；M14 没有增加能力，
+只完成整改后复验、归档和稳定发布。Post-M8 主线现已全部冻结。
 完整路线见 [Post-M8 收束路线](docs/13-post-m8-roadmap.md)。
 
 ## 文档
@@ -274,6 +272,8 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 不借“代码质量�
 - [M13 系统思维与分层代码质量终审事实 0.1](docs/53-m13-system-and-layered-code-quality-audit-facts.md)
 - [M14 整改后终局复验与发布收束合同 0.1](docs/54-m14-final-validation-and-release-contract.md)
 - [M14 安全整改与重新基线合同 0.1](docs/55-m14-security-remediation-and-rebaseline-contract.md)
+- [M14 整改后终局复验与发布事实 1.0](docs/56-m14-final-validation-and-release-facts.md)
+- [VeriTrail 0.12.0 Release Notes](docs/57-v0.12.0-release-notes.md)
 
 ## 项目来源
 

@@ -2,13 +2,13 @@
 
 ## 1. 用途
 
-本文件承接 README 不再展开的 M0–M13 冻结历史，并同步 M14 当前路线状态。它记录每个冻结
-基线回答的问题、真实取得的证据、明确没有证明的能力，以及必须继续保留的失败事实；未冻结行
-只表示当前门禁，不构成能力事实。
+本文件承接 README 不再展开的 M0–M14 冻结历史。它记录每个冻结基线回答的问题、真实取得的
+证据、明确没有证明的能力，以及必须继续保留的失败事实。
 
 里程碑标签实际指向的 Git 提交是版本寻址权威；实现提交、合同提交、运行哈希和完整退出条件
 仍以对应的里程碑文档为准。M0–M9 已于 2026-08-11 从 `origin` 核验；M10 当前补丁基线与 M11
-冻结基线于 2026-08-14 核验；M12 冻结基线于 2026-08-22 核验。
+冻结基线于 2026-08-14 核验；M12 冻结基线于 2026-08-22 核验；M13 与 M14 最终发布基线于
+2026-08-23 核验。
 
 ## 2. 冻结与当前路线索引
 
@@ -28,7 +28,7 @@
 | M11 | 不同类型真实项目功能全链路 | `FROZEN` | `m11-v0.12.0` @ `b13e2fb` |
 | M12 | 故宫主题前端终稿 | `FROZEN` | `m12-v0.13.0` @ `5f32c33` |
 | M13 | 系统思维与分层代码质量终审 | `FROZEN` | 计划/事实：文档 52、53；实现 `63e6354` |
-| M14 | 整改后终局复验与发布收束 | `CONTRACT_FROZEN / VALIDATING` | 合同：文档 54；最终事实与 Release 尚未形成 |
+| M14 | 整改后终局复验与发布收束 | `FROZEN / RELEASED` | `v0.12.0`；合同/整改/事实：文档 54–57 |
 
 `FROZEN` 只对该行声明的能力和对应文档中的环境、输入、资源及安全边界成立。代码、依赖、
 Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须标记过期并重新验收。
@@ -51,6 +51,7 @@ Schema、数据、拓扑、浏览器或规则越过容差时，旧结论必须�
 | M11 | Profile 0.2 / Plan 0.7 单 application、13 个 Gate A 公共出口、InkNarratives 精确 ref 四 Run、真实双视口 Chromium、v1 失败保留、恢复 Comparison `MATCH`、Catalog/Workbench、物理键盘、双 Python 与零残留 | 动态后端、数据库/中间件、多角色、多实例、最终一致性、C2/C3、Docker、跨平台或不可信代码隔离 |
 | M12 | 156/156 Workbench、双 Python 278/278、D1/D2/D3、两轮 13 项生产 Chromium、636 个同源只读请求、桌面/390/360 px、内置浏览器、逐页用户确认、零外网/写请求/HTTP 错误与零残留 | 新后端、Schema、执行器、裁决能力、跨平台、生产容量、M13 代码质量结论或 M14 最终发布 |
 | M13 | 权威/消费者/失败/恢复矩阵、双 Python 279/279、Workbench 156/156、常规/优化两轮 13 项/636 请求、标准安全扫描、依赖审计、真实空态 Browser、四项整改与零残留 | M14 双真实目标终局复验、最终版本/Release、生产容量、C2/C3、Docker、跨平台、恶意代码隔离或新增能力 |
+| M14 | 双 Python 318/318、Workbench 171/171、wheel/sdist 独立安装运行、Release ZIP 63/63、双真实目标常规/优化复验、桌面/390/360 px 内置浏览器、375 文件/12 攻击面零发现、安全/依赖/资产/远端读回与零残留 | 生产容量、C0/C2/C3、Docker、跨平台、多服务、恶意代码隔离、通用脚手架、AI 裁决或新增能力 |
 
 M8 的 wave 仍由验收脚本串行执行，冻结结论固定为
 `runtime_overlap_claim=NOT_PROVEN`。它证明有界调度、Assignment 和分析语义，不证明同一 wave
@@ -110,9 +111,8 @@ Plan / Evidence / Verdict
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
 
 后继阶段的 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 已以
-`post-m8-plan-v1` 冻结为规划基线；M10、M11、M12、M13 已冻结，M13 事实见文档 53；M14 入口已
-开放并已按文档 54 冻结双目标、串行资源、版本与 Release 门禁，当前为
-`CONTRACT_FROZEN / VALIDATING`。M9 受控
+`post-m8-plan-v1` 冻结为规划基线；M10–M14 均已冻结。M13 事实见文档 53；M14 已按文档
+54–57 完成安全整改、双目标终局复验、稳定 `0.12.0` 与首个最终 Release。M9 受控
 项目命令执行合同 0.2 已在
 `290b618` 进入 `CONTRACT_FROZEN`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1
 与只读 CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和真实 helper
@@ -223,4 +223,6 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M13 系统思维与分层代码质量终审事实](53-m13-system-and-layered-code-quality-audit-facts.md)
 - [M14 整改后终局复验与发布收束合同](54-m14-final-validation-and-release-contract.md)
 - [M14 安全整改与重新基线合同](55-m14-security-remediation-and-rebaseline-contract.md)
+- [M14 整改后终局复验与发布事实](56-m14-final-validation-and-release-facts.md)
+- [VeriTrail 0.12.0 Release Notes](57-v0.12.0-release-notes.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
