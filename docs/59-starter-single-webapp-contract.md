@@ -1,6 +1,6 @@
 # VeriTrail Starter 0.1 `single-webapp` Contract
 
-> 状态：`CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`
+> 状态：`CONTRACT_FROZEN / S0_COMPLETE / S1_COMPLETE`
 >
 > 消费基线：`VeriTrail Core >=0.12,<0.13`
 >
@@ -15,18 +15,18 @@ Profile/Plan 草案。它解决“怎么正确开始写合同”，不解决“�
 
 `init` 的唯一权威输入是显式 Answers 0.1 JSON。自动发现只写入 doctor 候选报告，不能静默进入草案。
 
-Answers 至少包含：
+Answers 采用严格嵌套字段；至少包含：
 
-- `subject_root`：用户选择的项目根目录；
-- `executable`：可信可执行文件的本机引用；
-- `arguments`：逐项分隔的参数数组；
-- `working_directory`：受 subject root 约束的目录；
-- `port`、`health_path` 和预期 HTTP 状态；
-- `start_url` 与 `allowed_origin`；
-- 桌面和移动 viewport；
+- `subject.root`：用户选择的项目根目录；
+- `application.executable`：可信可执行文件的本机引用；
+- `application.arguments`：逐项分隔的结构化参数数组；
+- `subject.working_directory`：受 subject root 约束的目录；
+- `application.port`、`application.health_path` 和预期 HTTP 状态；
+- `browser.start_url` 与 `browser.allowed_origin`；
+- `browser.viewports` 中精确的桌面和移动 viewport；
 - 至少一个用户确认的业务断言；
-- subject watch roots、输出上限、进程/内存预算和生命周期超时；
-- 明确的 screenshot safety 选择。
+- `subject.watch_roots`、输出上限、进程/内存预算和生命周期超时；
+- 明确的 `browser.screenshot_safety` 选择。
 
 答案文件不得包含 Token、Cookie、Authorization、私钥、数据库密码或 `.env` 值。需要秘密才能启动的
 项目在 0.1 中为 `UNSUPPORTED`。
@@ -51,6 +51,7 @@ Answers 至少包含：
 - `starter-manifest.json` 固定 `authoring_state=DRAFT`、`seal_state=NOT_SEALED`、Preset 版本和输入摘要；
 - Profile/Plan 严格符合 Core Schema，但不包含 `seal`；
 - ToolBindings 保存本机映射，默认建议加入 `.gitignore`，不得复制到公共 Bundle；
+- `answers.snapshot.json` 同样可能包含绝对本机路径；推荐忽略整个 `.veritrail/`，而不是只忽略一个文件；
 - `REVIEW.md` 区分 `USER_SUPPLIED`、`DISCOVERED_CANDIDATE`、`DERIVED_FROM_PRESET` 和
   `NOT_PROVEN`；
 - `handoff.ps1` 只打印经用户确认后可手工执行的 Core seal/preview/run 命令；它本身不调用 Core，
@@ -83,8 +84,8 @@ Answers 至少包含：
 
 ### `review`
 
-生成稳定的人类复核摘要，列出全部用户输入、Preset 派生项、环境候选、未知项、拒绝项和 Core handoff
-前停止线。
+验证并指向 `init` 时逐字节稳定生成的人类复核摘要；该摘要列出全部用户输入、Preset 派生项、环境
+候选、未知项、拒绝项和 Core handoff 前停止线。`review` 不原地重写 workspace。
 
 ### `handoff`
 
@@ -139,4 +140,6 @@ Starter 生成的 Core Plan 使用 0.7，Profile 使用 0.2；确切字段必须
 - Catalog/Workbench 桌面、390 px、Console/Network；
 - 中止、端口竞争、重复 init、半写入故障和最终零残留。
 
-完成全部矩阵前，Starter 保持 `0.1.0.dev`，不得写成开箱即用正式版。
+S1 已完成固定合成 Subject 的真实双 Run、Catalog 与生产 Workbench 验收；准确步骤和事实见
+[十分钟 PASS/FAIL 黄金路径](61-starter-single-webapp-golden-path.md)。独立安装、Release、公共下载
+读回和 A0 Skill 尚未完成，因此 Starter 仍保持 `0.1.0.dev0`，不得写成开箱即用正式版。

@@ -2,8 +2,8 @@
 
 > 当前稳定内核：`VeriTrail Core 0.12.0`
 >
-> 当前入口层状态：`VeriTrail Starter 0.1` 正在按独立合同实现，尚未发布；本页不会把尚未存在的
-> 命令写成可用功能。
+> 当前入口层状态：`VeriTrail Starter 0.1` 的 S0 确定性 DRAFT 链与 S1 真实 PASS/FAIL 黄金路径
+> 已在源码中完成；独立发布仍未完成，因此它还不是开箱即用正式版。
 
 VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次软件验收拆成预先冻结的计划、真实运行、
 结构化证据、确定性裁决、不可变证据包和可比较的复跑结果。
@@ -21,9 +21,9 @@ VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次�
 
 ### 第一次认识 VeriTrail
 
-先走十分钟黄金路径。它会包含一次明确的 `PASS` 和一次故意制造的 `FAIL`，让你看到同一份预注册
-标准如何保留成功与反例。黄金路径将在 `VeriTrail Starter 0.1` 中提供；实现进度与边界见
-[Post-Core 入口层路线](docs/58-post-core-entry-layer-plan.md)。
+先走[十分钟 PASS/FAIL 黄金路径](docs/61-starter-single-webapp-golden-path.md)。它包含一次明确的
+`PASS` 和一次故意制造的 `FAIL`，让你看到同一份预注册标准如何保留成功与反例。两次 Run 使用
+同一 Profile、同一 Plan，只改变一个受控业务事实；它们是独立验收对，不冒充因果 Comparison。
 
 在 Starter 发布前，可以先运行 Core 的最小证据示例：
 
@@ -49,7 +49,7 @@ python -m venv .venv
 ### 已有一个本地 Web 项目
 
 Starter 0.1 只支持一个有限预设：`single-webapp`。它面向 Windows 11、C1 进程冷状态、一个可信本地
-应用进程、固定回环端口、HTTP 就绪探针和可选 Chromium 证据。
+应用进程、固定回环端口、HTTP 就绪探针和必需的真实 Chromium 证据。
 
 它会询问并保存这些显式答案：
 

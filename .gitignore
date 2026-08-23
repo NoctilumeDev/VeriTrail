@@ -30,6 +30,7 @@ web/dist/
 *.tsbuildinfo
 
 # Runtime evidence and local data
+.veritrail/
 artifacts/
 runs/
 *.db

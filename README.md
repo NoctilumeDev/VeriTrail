@@ -56,7 +56,8 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 ## 快速开始
 
 第一次接触验迹，请先阅读 [从这里开始](START_HERE.md)。它按“第一次认识、已有本地 Web 项目、
-高级合同作者”分开入口，并明确哪些 Starter／AI 功能仍在实现，避免把最小示例误解成完整项目验收。
+高级合同作者”分开入口，并链接已完成的 Starter PASS/FAIL 黄金路径；Starter 独立发布与 Authoring
+Skill 仍在实现，不能把源码验收误解成正式版已经开箱即用。
 
 核心需要 Python 3.10+；浏览器采集和 Windows 受控进程能力使用可选依赖：
 
@@ -99,11 +100,11 @@ npm run build
 
 ## 公开 CI 与真实验收边界
 
-`Public CI` 在每次 main push、PR 更新与 merge queue 上，以 Windows Runner 运行双 Python Core
-回归和 wheel 构建，并在独立 Linux Runner 上运行 Workbench test、lint、type-check、生产构建和
-moderate 级依赖审计。PR 改 base 也会重新触发，避免堆叠分支只保留旧合并事实。Core Runner
-与冻结的 Windows 命令、Job Object 和本地盘符能力边界保持一致；Workbench 则继续证明其独立的
-跨平台构建基线。
+`Public CI` 在每次 main push、PR 更新与 merge queue 上，以 Windows Runner 运行双 Python Core／
+Starter 回归和 wheel/sdist 构建，并在独立 Linux Runner 上运行 Workbench test、lint、type-check、
+生产构建和 moderate 级依赖审计。两个基础门禁通过后，独立 Windows Runner 还会运行 Starter 的
+真实 PASS/FAIL 双 Bundle、Catalog 与生产 Workbench 黄金路径。PR 改 base 也会重新触发，避免堆叠
+分支只保留旧合并事实。
 
 `Browser Smoke` 在 main 与每周定时任务上使用仓库内公开、合成、脱敏的 M2 证据包运行真实
 Chromium，检查桌面与 390 px、Console、Network、失败重试、历史导航和根横向溢出，并上传短期证据。
@@ -280,6 +281,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Post-Core 独立入口层 Plan v1](docs/58-post-core-entry-layer-plan.md)
 - [VeriTrail Starter 0.1 single-webapp 合同](docs/59-starter-single-webapp-contract.md)
 - [VeriTrail Authoring Skill 0.1 合同](docs/60-authoring-skill-contract.md)
+- [VeriTrail Starter 0.1 十分钟 PASS/FAIL 黄金路径](docs/61-starter-single-webapp-golden-path.md)
 
 ## 项目来源
 

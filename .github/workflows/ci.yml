@@ -35,10 +35,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-          cache-dependency-path: pyproject.toml
+          cache-dependency-path: |
+            pyproject.toml
+            starter/pyproject.toml
 
       - name: Install the Core test capabilities
         run: python -m pip install --editable ".[browser,command-windows]"
+
+      - name: Install the independent Starter entry layer
+        run: python -m pip install --editable ./starter
 
       - name: Install the frozen Chromium engine
         run: python -m playwright install chromium
@@ -46,8 +51,21 @@ jobs:
       - name: Run Core regression tests
         run: python -m unittest -v
 
+      - name: Run Starter contract tests
+        run: python -m unittest discover -s starter/tests -v
+
+      - name: Run Starter contract tests with assertions disabled
+        run: python -O -m unittest discover -s starter/tests -v
+
       - name: Build the wheel
         run: python -m pip wheel --no-deps --wheel-dir dist .
+
+      - name: Build the independent Starter wheel
+        run: python -m pip wheel --no-deps --wheel-dir dist ./starter
+
+      - name: Build the independent Starter source distribution
+        working-directory: starter
+        run: python -c "from setuptools import build_meta; print(build_meta.build_sdist('../dist'))"
 
   workbench:
     name: Workbench tests, lint, build, and audit
@@ -81,3 +99,45 @@ jobs:
 
       - name: Audit Workbench dependencies
         run: npm audit --audit-level=moderate --registry=https://registry.npmjs.org
+
+  starter-golden-path:
+    name: Starter PASS/FAIL golden path
+    needs: [python, workbench]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: |
+            pyproject.toml
+            starter/pyproject.toml
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Core, Starter, and Chromium
+        run: |
+          python -m pip install --editable ".[browser,command-windows]"
+          python -m pip install --editable ./starter
+          python -m playwright install chromium
+
+      - name: Build the production Workbench
+        working-directory: web
+        run: |
+          npm ci --registry=https://registry.npmjs.org
+          npm run build
+
+      - name: Run the real Starter PASS/FAIL chain
+        run: >-
+          python scripts/starter_single_webapp_acceptance.py
+          --output "${{ runner.temp }}\starter-single-webapp-s1"

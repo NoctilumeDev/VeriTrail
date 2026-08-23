@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veritrail-starter"
+version = "0.1.0.dev0"
+description = "Fail-closed DRAFT authoring entry for VeriTrail Core"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "NoctilumeDev" },
+]
+dependencies = [
+  "veritrail>=0.12,<0.13",
+]
+
+[project.scripts]
+veritrail-starter = "veritrail_starter.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+veritrail_starter = ["schemas/*.json"]

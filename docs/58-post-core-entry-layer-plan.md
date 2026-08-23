@@ -1,6 +1,6 @@
 # Post-Core 独立入口层 Plan v1
 
-> 状态：`FROZEN / E0_COMPLETE / S0_READY`
+> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_READY`
 >
 > 基线：`VeriTrail Core 0.12.0` @ `v0.12.0`
 >
@@ -127,7 +127,7 @@ A0 只能在 Starter 0.1 的命令、输入输出和错误码冻结后开始。S
 - 直接可执行文件加结构化参数，不经过 Shell；
 - IPv4 loopback 固定端口；
 - `HTTP_GET_LOOPBACK_OWNED_PID` readiness；
-- 可选 Chromium，同源入口；
+- 必需的真实 Chromium，同源入口；
 - 明确的 subject watch root、预算、停止线和逆序清理；
 - 用户显式声明业务断言。
 
@@ -174,4 +174,36 @@ E0 完成要求：
 - Starter／Skill 均明确标记为尚未发布，未来命令没有被写成当前可用能力；
 - Core 安装示例指向 GitHub Release `v0.12.0` 的实际 wheel 资产；
 - 本地 Markdown 链接、敏感文本、冻结标签语言和 `git diff --check` 均通过；
-- 下一授权阶段为 S0，只能实现 `single-webapp` 的确定性 DRAFT 链。
+- E0 冻结时的下一阶段为 S0，且只能实现 `single-webapp` 的确定性 DRAFT 链。
+
+## 9. S0 冻结事实
+
+- 独立包 `veritrail-starter 0.1.0.dev0` 已实现 `doctor`、`init`、`validate`、`review` 与 `handoff`；
+- 五条命令的 stdout 固定为一个版本化 JSON，`handoff.ps1` 只打印命令，不执行 Core；
+- `single-webapp` Answers 0.1、严格 Schema、确定性 DRAFT、原子创建、无覆盖、路径与重解析点边界、
+  秘密／Shell／非回环拒绝、workspace 双快照和稳定错误码均已有自动化负例；
+- Starter 合同测试为 18 项，并在 Python 3.10/3.13 的普通模式与 `python -O` 下各通过一次，共 72 次；
+- Core 318/318 回归通过；Workbench 171/171、lint、类型检查和生产构建通过；
+- Core wheel、Starter wheel 与 Starter sdist 已分别完成 clean install，包内 Answers Schema 和真实
+  Windows 11 `doctor` 均完成读回；
+- S0 没有修改 Core Schema、Seal、Verdict 或 Workbench；版本仍为开发版，不能发布；
+- 下一阶段为 S1：在仓库内合成单应用上完成真实 doctor/init/review/handoff、人工 Core handoff、
+  独立 PASS/FAIL Bundle 与 Workbench 读回。
+
+## 10. S1 冻结事实
+
+- 固定合成 Subject 位于 `examples/starter/single-webapp`，不包含秘密、远程依赖或本机路径；
+- PASS 与 FAIL Subject 只在 `app/fact.json` 的 `status` 上不同，预注册期望始终为
+  `evidence ready: starter-demo`；
+- 两次 Run 共用同一 sealed Profile 与 Plan，但分别重新生成并批准 BootstrapPreview；它们是独立
+  验收对，不创建或暗示因果 Comparison；
+- 真实链以 `COMPLETED/PASS` 与 `COMPLETED/FAIL` 各生成一份可验证 Bundle；FAIL 的一个根业务
+  事实同时派生出 business steps、capture complete 与 screenshot coverage 三项 HARD 失败；
+- Catalog 精确读回 2 个 Run、0 个 issue；生产 Workbench 在 1440×960 与 390×844 下完成目录、
+  PASS 详情和 FAIL 详情读回，Console、page error、request failure 与 HTTP error 均为 0；
+- 两个 Preview、Profile、Plan 与 Bundle 均有 SHA-256 权威；应用与 Catalog 固定端口最终释放，
+  owned bootstrap 临时目录为 0；公开验收摘要不包含本机绝对路径；
+- `scripts/starter_single_webapp_acceptance.py` 是真实链验收器，不替代 Starter 的人工复核边界；
+  Public CI 只在 Core、Starter 与 Workbench 门禁通过后运行它；
+- S1 没有修改 Core Schema、Seal、Verdict 或 Workbench。下一阶段为 A0：只把冻结的 Starter
+  命令合同包装成 DRAFT-only Authoring Skill。
