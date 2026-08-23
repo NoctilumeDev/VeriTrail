@@ -1,0 +1,5 @@
+interface:
+  display_name: "VeriTrail Authoring"
+  short_description: "Draft fail-closed VeriTrail single-webapp contracts"
+  brand_color: "#0B4F52"
+  default_prompt: "Use $veritrail-authoring to inspect this repository and prepare a DRAFT-only VeriTrail Starter candidate."

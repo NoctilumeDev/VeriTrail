@@ -57,6 +57,15 @@ jobs:
       - name: Run Starter contract tests with assertions disabled
         run: python -O -m unittest discover -s starter/tests -v
 
+      - name: Run Authoring Skill contract tests
+        run: python -m unittest discover -s skills/veritrail-authoring/tests -v
+
+      - name: Run Authoring Skill contract tests with assertions disabled
+        run: python -O -m unittest discover -s skills/veritrail-authoring/tests -v
+
+      - name: Run the real Authoring Skill DRAFT chain
+        run: python scripts/authoring_skill_acceptance.py
+
       - name: Build the wheel
         run: python -m pip wheel --no-deps --wheel-dir dist .
 
