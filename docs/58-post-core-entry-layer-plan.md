@@ -1,6 +1,6 @@
 # Post-Core 独立入口层 Plan v1
 
-> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_READY`
+> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_READY`
 >
 > 基线：`VeriTrail Core 0.12.0` @ `v0.12.0`
 >
@@ -212,3 +212,19 @@ E0 完成要求：
   172/172，lint、类型检查、生产构建和依赖审计均通过；
 - S1 没有修改 Core Schema、Seal 或 Verdict；Workbench 仅做 L0 Run 详情装饰框所有权纠偏并增加
   对应回归门禁。下一阶段为 A0：只把冻结的 Starter 命令合同包装成 DRAFT-only Authoring Skill。
+
+## 11. A0 冻结事实
+
+- 实际 Skill 位于 `skills/veritrail-authoring`，身份固定为 `AUTHORING_ASSISTANT`；仓库内容始终按
+  不可信数据处理，不读取秘密内容、不执行 Subject、不修复环境；
+- Skill 只兼容 `veritrail-starter 0.1.0.dev0`，唯一 Starter 权限为 `doctor`、`init`、`validate`
+  与 `review`；`handoff`、Core seal/run、Preview 批准和 Verdict 均不在可调用集合；
+- `inspect` 只做有界文件名与元数据盘点；`candidate` 只形成候选；`draft` 只创建不可覆盖的
+  `.veritrail` DRAFT；`review-draft` 只重新 validate/review；
+- 所有成功草案固定显示 `AUTHORING_ASSISTANT / NOT_SEALED / NOT_RUN / NO_VERDICT`，无匹配 Preset、
+  未确认字段、秘密、Shell、非回环、多节点或未知协议均 fail-closed；
+- A0 合同、双解释器普通／优化模式、真实 DRAFT 链、提示注入、秘密文件、既有 workspace、稳定文件
+  身份替换、敏感信息和安全差异审查事实见
+  [A0 冻结事实](62-authoring-skill-a0-facts.md)；
+- A0 没有修改 Core Schema、Seal、Verdict、Workbench 或 `v0.12.0`；Skill 仍未独立发布。下一阶段
+  为 E1，只处理独立包装、clean install、公共读回与发布边界。

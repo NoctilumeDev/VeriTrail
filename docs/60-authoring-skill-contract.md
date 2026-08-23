@@ -1,6 +1,6 @@
 # VeriTrail Authoring Skill 0.1 Contract
 
-> 状态：`CONTRACT_FROZEN / A0_READY / IMPLEMENTATION_NOT_STARTED`
+> 状态：`CONTRACT_FROZEN / A0_COMPLETE / IMPLEMENTATION_FROZEN`
 >
 > 身份：`AUTHORING_ASSISTANT`，不是 Evaluator、Judge 或 Operator
 >
@@ -103,6 +103,10 @@ Starter 输出是权威的 authoring 产物；模型生成的自由文本不是�
 4. 用户可在没有 AI 的情况下完成同一条入口链；
 5. 文档明确 AI 是可选层，而不是 VeriTrail 的必需运行时。
 
-S0/S1 已满足以上入口前提，因此 A0 可以开始实现；当前仓库仍没有实际 Skill，且实现必须继续以本合同
-为硬边界。A0 只能包装冻结的 Starter 命令和错误码，不能临场发明入口，也不能获得 Core seal/run、
-Preview 批准或 Verdict 权限。
+S0/S1 已满足以上入口前提。A0 已在 `skills/veritrail-authoring` 形成实际 DRAFT-only Skill，并继续以
+本合同为硬边界。它只能包装冻结的 Starter 命令和错误码，不能临场发明入口，也不能获得 Core
+seal/run、Preview 批准或 Verdict 权限。
+
+实现、自动化、真实 DRAFT 链、稳定文件身份加固和安全审查的冻结读回见
+[A0 冻结事实](62-authoring-skill-a0-facts.md)。这只证明仓库源码已经完成 A0；它不表示 Skill 已经
+独立发布，也不改变 VeriTrail Core 0.12.0 的能力声明。

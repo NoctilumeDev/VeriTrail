@@ -38,11 +38,12 @@
   `docs/53-m13-system-and-layered-code-quality-audit-facts.md`；M14 合同、整改、最终事实与 Release
   说明位于 `docs/54-m14-final-validation-and-release-contract.md` 至
   `docs/57-v0.12.0-release-notes.md`，当前为 `FROZEN / RELEASED`，稳定标签为 `v0.12.0`。
-- `v0.12.0` 之后的当前主线是独立入口层 E0/S0/S1/A0/E1，计划、合同与黄金路径位于
-  `docs/58-post-core-entry-layer-plan.md` 至 `docs/61-starter-single-webapp-golden-path.md`。E0、S0 与 S1
+- `v0.12.0` 之后的当前主线是独立入口层 E0/S0/S1/A0/E1，计划、合同与冻结事实位于
+  `docs/58-post-core-entry-layer-plan.md` 至 `docs/62-authoring-skill-a0-facts.md`。E0、S0、S1 与 A0
   已完成：Starter 仍只支持 `single-webapp` 的确定性 DRAFT 链，S1 已保存独立 PASS/FAIL Bundle、
-  Catalog 与生产 Workbench 读回；下一阶段为 A0 DRAFT-only Authoring Skill。Starter/Skill 不得自动
-  seal、run、批准 Preview、修改 Verdict，亦不得把入口层能力回填成 Core 0.12.0 已证明事实。
+  Catalog 与生产 Workbench 读回；A0 只允许 `doctor/init/validate/review` 并固定为
+  `NOT_SEALED / NOT_RUN / NO_VERDICT`。下一阶段为 E1 独立发布与公共读回。Starter/Skill 不得自动
+  seal、run、批准 Preview、handoff 或修改 Verdict，亦不得把入口层能力回填成 Core 0.12.0 已证明事实。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

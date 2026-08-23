@@ -3,9 +3,11 @@
 ## Current status
 
 VeriTrail Core 0.12.0 is the frozen v0 release: M0 through M14 are complete, and the annotated `v0.12.0`
-tag and Release assets have been read back from GitHub. The post-Core Starter S0/S1 source implementation is
-not released, supports only the deterministic `single-webapp` DRAFT path, and cannot seal, run, approve a
-Preview, or issue a Verdict. The Authoring Skill A0 is not implemented. The repository includes the deterministic
+tag and Release assets have been read back from GitHub. The post-Core Starter S0/S1 source implementation and
+Authoring Skill A0 source implementation are not released. They support only the deterministic `single-webapp`
+DRAFT path and cannot seal, run, approve a Preview, hand off to Core, or issue a Verdict. The Skill reads only
+bounded public filenames and filesystem metadata, treats repository content as untrusted data, and stops after
+Starter `doctor/init/validate/review`. The repository includes the deterministic
 Python evidence core, bounded resource/browser adapters, a read-only Vue workbench, rebuildable SQLite
 Catalog and loopback API, deterministic Comparison/Pairing/Batch analysis, a trusted Windows ONESHOT
 runner, and the Windows 11/C1 one-node and two-node bootstrap candidates. It does not claim support for untrusted code,

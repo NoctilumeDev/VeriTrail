@@ -3,7 +3,8 @@
 > 当前稳定内核：`VeriTrail Core 0.12.0`
 >
 > 当前入口层状态：`VeriTrail Starter 0.1` 的 S0 确定性 DRAFT 链与 S1 真实 PASS/FAIL 黄金路径
-> 已在源码中完成；独立发布仍未完成，因此它还不是开箱即用正式版。
+> 以及 `VeriTrail Authoring Skill 0.1` 的 A0 DRAFT-only 包装已在源码中完成；独立发布仍未完成，
+> 因此它们还不是开箱即用正式版。
 
 VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次软件验收拆成预先冻结的计划、真实运行、
 结构化证据、确定性裁决、不可变证据包和可比较的复跑结果。
@@ -86,7 +87,8 @@ Starter 0.1 只支持一个有限预设：`single-webapp`。它面向 Windows 11
 3. Verdict 只由 VeriTrail Core 根据 sealed 合同和证据确定。
 
 AI 可以帮助阅读仓库、推荐最接近的有限预设、解释字段和整理缺失信息。AI 不能充当裁决器。完整
-权限边界见 [VeriTrail Authoring Skill 合同](docs/60-authoring-skill-contract.md)。
+权限边界见 [VeriTrail Authoring Skill 合同](docs/60-authoring-skill-contract.md)，已实现门禁与验收见
+[A0 冻结事实](docs/62-authoring-skill-a0-facts.md)。
 
 ## 当前支持边界
 
