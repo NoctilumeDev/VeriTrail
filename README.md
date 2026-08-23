@@ -273,6 +273,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 不借“代码质量�
 - [M13 系统思维与分层代码质量终审计划 0.1](docs/52-m13-system-and-layered-code-quality-audit-plan.md)
 - [M13 系统思维与分层代码质量终审事实 0.1](docs/53-m13-system-and-layered-code-quality-audit-facts.md)
 - [M14 整改后终局复验与发布收束合同 0.1](docs/54-m14-final-validation-and-release-contract.md)
+- [M14 安全整改与重新基线合同 0.1](docs/55-m14-security-remediation-and-rebaseline-contract.md)
 
 ## 项目来源
 

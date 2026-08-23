@@ -363,7 +363,7 @@ def _detect_orchestration_contamination(
                     "message": "The orchestration policy differs from the sealed Plan 0.4 policy.",
                 }
             )
-        expected_origin = f"http://localhost:{plan['target']['port']}"
+        expected_origin = f"http://127.0.0.1:{plan['target']['port']}"
         if facts["origin"] != expected_origin:
             contamination.append(
                 {

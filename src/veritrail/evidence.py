@@ -10,8 +10,10 @@ from urllib.parse import parse_qsl, urlsplit
 
 from veritrail.canonical import canonical_json_bytes, sha256_bytes
 from veritrail.errors import ValidationError
+from veritrail.image_geometry import ImageGeometryError, parse_image_geometry
 from veritrail.jsonio import load_json_object
 from veritrail.privacy import redact_string, redact_value
+from veritrail.resource_limits import MAX_BUNDLE_BYTES, MAX_EVIDENCE_COMPONENT_FILES
 
 EVIDENCE_TYPE_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 ATTACHMENT_NAME_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,127}$")
@@ -67,8 +69,10 @@ def create_attachment(
 ) -> EvidenceAttachment:
     if media_type != "image/png":
         raise ValidationError(["M2 evidence attachments must use image/png"])
-    if not content.startswith(b"\x89PNG\r\n\x1a\n"):
-        raise ValidationError(["image/png evidence attachment is missing the PNG signature"])
+    try:
+        parse_image_geometry(content, media_type)
+    except ImageGeometryError as exc:
+        raise ValidationError([f"image/png evidence attachment is invalid: {exc}"]) from exc
     return _create_attachment(
         path=path,
         content=content,
@@ -133,7 +137,7 @@ def _browser_url_is_sanitized(value: Any, *, origin_only: bool = False) -> bool:
         return False
     if (
         parsed.scheme != "http"
-        or parsed.hostname != "localhost"
+        or parsed.hostname not in {"localhost", "127.0.0.1"}
         or port is None
         or parsed.username is not None
         or parsed.password is not None
@@ -1318,10 +1322,21 @@ def verify_imported_evidence(artifact: ImportedEvidence) -> None:
     for attachment in artifact.attachments:
         _validate_attachment_path(attachment.path)
         if attachment.media_type == "image/png":
-            if not attachment.path.endswith(".png") or not attachment.content.startswith(
-                b"\x89PNG\r\n\x1a\n"
+            if (
+                sha256_bytes(attachment.content) != attachment.sha256
+                or len(attachment.content) != attachment.size
             ):
+                raise ValidationError(
+                    [f"evidence attachment {attachment.path} changed after hashing"]
+                )
+            if not attachment.path.endswith(".png"):
                 raise ValidationError([f"evidence attachment {attachment.path} is not a PNG"])
+            try:
+                parse_image_geometry(attachment.content, attachment.media_type)
+            except ImageGeometryError as exc:
+                raise ValidationError(
+                    [f"evidence attachment {attachment.path} is an invalid PNG: {exc}"]
+                ) from exc
         elif attachment.media_type == "text/plain; charset=utf-8":
             if not attachment.path.endswith(".txt"):
                 raise ValidationError([f"evidence attachment {attachment.path} is not text"])
@@ -1437,21 +1452,51 @@ def verify_imported_evidence(artifact: ImportedEvidence) -> None:
         raise ValidationError(["this evidence type does not support generated attachments"])
 
 
+def validate_evidence_collection_budget(evidence: list[ImportedEvidence]) -> None:
+    component_count = sum(1 + len(artifact.attachments) for artifact in evidence)
+    if component_count > MAX_EVIDENCE_COMPONENT_FILES:
+        raise ValidationError(
+            [
+                "evidence collection exceeds the fixed bundle component limit of "
+                f"{MAX_EVIDENCE_COMPONENT_FILES} files"
+            ]
+        )
+    retained_bytes = sum(
+        artifact.size + sum(attachment.size for attachment in artifact.attachments)
+        for artifact in evidence
+    )
+    if retained_bytes > MAX_BUNDLE_BYTES:
+        raise ValidationError(
+            [
+                "evidence collection exceeds the fixed retained-byte limit of "
+                f"{MAX_BUNDLE_BYTES} bytes"
+            ]
+        )
+
+
 def import_evidence_files(paths: list[Path], max_artifact_bytes: int) -> tuple[list[ImportedEvidence], list[str]]:
+    if len(paths) > MAX_EVIDENCE_COMPONENT_FILES:
+        raise ValidationError(
+            [
+                "evidence input count exceeds the fixed bundle component limit of "
+                f"{MAX_EVIDENCE_COMPONENT_FILES} files"
+            ]
+        )
     imported: list[ImportedEvidence] = []
     duplicates: list[str] = []
     seen_hashes: set[str] = set()
     for path in paths:
         input_name, _ = redact_string(path.name)
         try:
-            size = path.stat().st_size
-        except OSError as exc:
-            raise ValidationError([f"cannot inspect evidence {input_name}: {exc}"]) from exc
-        if size > max_artifact_bytes:
-            raise ValidationError(
-                [f"evidence {input_name} is {size} bytes; limit is {max_artifact_bytes} bytes"]
+            document = load_json_object(
+                path,
+                label="evidence",
+                max_bytes=max_artifact_bytes,
             )
-        document = load_json_object(path, label="evidence")
+        except ValidationError as exc:
+            raise ValidationError(
+                [f"cannot safely import evidence {input_name}: {exc}"]
+            ) from exc
         artifact = import_evidence_document(document, input_name)
         verify_imported_evidence(artifact)
         if artifact.sha256 in seen_hashes:
@@ -1459,4 +1504,5 @@ def import_evidence_files(paths: list[Path], max_artifact_bytes: int) -> tuple[l
             continue
         seen_hashes.add(artifact.sha256)
         imported.append(artifact)
+        validate_evidence_collection_budget(imported)
     return imported, duplicates

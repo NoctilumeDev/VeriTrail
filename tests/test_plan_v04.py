@@ -52,6 +52,10 @@ class PlanV04Tests(unittest.TestCase):
                 start_url="http://localhost:18768/index.html",
                 allowed_origins=["http://localhost:18768"],
             ),
+            "hostname alias": lambda plan: plan["browser"].update(
+                start_url="http://localhost:18769/index.html",
+                allowed_origins=["http://localhost:18769"],
+            ),
             "ready query": lambda plan: plan["target"].update(
                 ready_path="/index.html?secret=value"
             ),

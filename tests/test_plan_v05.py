@@ -10,9 +10,9 @@ from tests.support import command_plan, orchestration_plan
 
 
 class PlanV05Tests(unittest.TestCase):
-    def test_frozen_plan_v04_hash_remains_compatible(self) -> None:
+    def test_hardened_plan_v04_hash_is_stable(self) -> None:
         self.assertEqual(
-            "658955b08cd56902e376e4db7d5716572374b1cb0a21283b1cc55ac8a0efc10a",
+            "6cdf3bdf15fe8572d756dee43d7431a81d61a7eb6547af696110e45c24cd120a",
             seal_plan(orchestration_plan())["seal"]["digest"],
         )
 
@@ -81,6 +81,23 @@ class PlanV05Tests(unittest.TestCase):
                 plan = command_plan()
                 mutate(plan)
                 with self.assertRaises(ValidationError):
+                    validate_plan(plan)
+
+    def test_command_policy_rejects_attached_inline_programs(self) -> None:
+        for binding, literal in (
+            ("python", "-cprint('bypass')"),
+            ("python", "-icprint('cluster bypass')"),
+            ("python", "-qcprint('cluster bypass')"),
+            ("node", "-econsole.log('bypass')"),
+            ("node", "--eval=1+1"),
+            ("node", "--loader"),
+            ("node", "--experimental-loader"),
+        ):
+            with self.subTest(binding=binding, literal=literal):
+                plan = command_plan()
+                plan["command"]["tool_binding"] = binding
+                plan["command"]["arguments"].append({"literal": literal})
+                with self.assertRaisesRegex(ValidationError, "forbidden inline"):
                     validate_plan(plan)
 
     def test_typed_run_work_path_is_sealed_without_an_absolute_value(self) -> None:

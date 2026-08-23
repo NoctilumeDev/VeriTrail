@@ -18,6 +18,7 @@ from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
 from veritrail.catalog import _CandidateRejected, validate_bundle
 from veritrail.errors import VeriTrailError
 from veritrail.jsonio import load_json_object
+from veritrail.markdown import markdown_code, markdown_text
 from veritrail.plan import verify_sealed_plan
 from veritrail.privacy import redact_value
 
@@ -490,9 +491,7 @@ def verify_sealed_batch_plan(plan: dict[str, Any]) -> None:
 
 def _load_document(path: Path, label: str, unreadable_code: str) -> dict[str, Any]:
     try:
-        if path.stat().st_size > MAX_DOCUMENT_BYTES:
-            raise BatchError(unreadable_code, f"{label} 超过 1 MiB 上限。")
-        return load_json_object(path, label=label)
+        return load_json_object(path, label=label, max_bytes=MAX_DOCUMENT_BYTES)
     except BatchError:
         raise
     except Exception as exc:
@@ -636,7 +635,7 @@ def _control_projection(plan: dict[str, Any], primary_name: str) -> dict[str, An
 
 def _load_source(candidate: Path, runs_root: Path, primary_name: str) -> _SourceRun:
     try:
-        validated = validate_bundle(candidate, runs_root)
+        validated = validate_bundle(candidate, runs_root, retain_snapshot=True)
     except (_CandidateRejected, OSError, ValueError) as exc:
         code = exc.code if isinstance(exc, _CandidateRejected) else "SOURCE_BUNDLE_UNREADABLE"
         raise BatchError(code, "来源 Run Bundle 未通过完整性校验。") from exc
@@ -644,8 +643,10 @@ def _load_source(candidate: Path, runs_root: Path, primary_name: str) -> _Source
     if "sealed-plan.json" not in file_paths:
         raise BatchError("SOURCE_SEALED_PLAN_MISSING", "来源 Run Bundle 没有 sealed-plan.json。")
     try:
-        plan = load_json_object(candidate / "sealed-plan.json", label="Sealed ExperimentPlan")
-        report = load_json_object(candidate / "report.json", label="Report")
+        plan = validated.load_owned_json(
+            "sealed-plan.json", label="Sealed ExperimentPlan"
+        )
+        report = validated.load_owned_json("report.json", label="Report")
         if plan.get("schema_version") in {"0.6", "0.7"}:
             raise BatchError(
                 "SOURCE_PLAN_VERSION_UNSUPPORTED",
@@ -664,9 +665,15 @@ def _load_source(candidate: Path, runs_root: Path, primary_name: str) -> _Source
         evidence_type = entry["evidence_type"]
         if evidence_type in evidence:
             continue
-        evidence[evidence_type] = load_json_object(
-            candidate / Path(*entry["path"].split("/")), label="Evidence"
-        )
+        try:
+            evidence[evidence_type] = validated.load_owned_json(
+                entry["path"], label="Evidence"
+            )
+        except KeyError as exc:
+            raise BatchError(
+                "SOURCE_EVIDENCE_REFERENCE_INVALID",
+                "来源 Run 的 Evidence 引用不属于已验证快照。",
+            ) from exc
     return _SourceRun(
         report=report,
         plan=plan,
@@ -728,38 +735,25 @@ def _wave_key(slot: dict[str, Any]) -> tuple[int, int, int]:
     return (0 if slot["phase"] == "COVERAGE" else 1, slot["repetition"], slot["wave"])
 
 
-def _markdown_text(value: Any) -> str:
-    rendered = str(value)
-    for source, replacement in (
-        ("\\", "\\\\"),
-        ("`", "\\`"),
-        ("<", "&lt;"),
-        (">", "&gt;"),
-        ("!", "\\!"),
-        ("[", "\\["),
-        ("]", "\\]"),
-        ("(", "\\("),
-        (")", "\\)"),
-    ):
-        rendered = rendered.replace(source, replacement)
-    return rendered.replace("\r", " ").replace("\n", " ")
-
-
 def _render_markdown(analysis: dict[str, Any]) -> str:
     lines = [
         "# VeriTrail Full-factorial Batch Analysis",
         "",
-        f"- Analysis: `{analysis['analysis_id']}`",
-        f"- Batch plan: `{analysis['batch_plan']['id']}` / `{analysis['batch_plan']['sha256']}`",
-        f"- Coverage: **{analysis['coverage_status']}**",
-        f"- Hypothesis: **{analysis['hypothesis_status']}**",
-        f"- Rule: `{analysis['rule_version']}`",
+        f"- Analysis: {markdown_code(analysis['analysis_id'])}",
+        f"- Batch plan: {markdown_code(analysis['batch_plan']['id'])} / "
+        f"{markdown_code(analysis['batch_plan']['sha256'])}",
+        f"- Coverage: **{markdown_text(analysis['coverage_status'])}**",
+        f"- Hypothesis: **{markdown_text(analysis['hypothesis_status'])}**",
+        f"- Rule: {markdown_code(analysis['rule_version'])}",
         "- Wave membership is a sealed schedule envelope; it does not prove real runtime overlap.",
         "",
         "## Reasons",
         "",
     ]
-    lines.extend(f"- `{item['code']}` — {item['message']}" for item in analysis["reasons"])
+    lines.extend(
+        f"- {markdown_code(item['code'])} — {markdown_text(item['message'])}"
+        for item in analysis["reasons"]
+    )
     lines.extend(
         [
             "",
@@ -772,25 +766,30 @@ def _render_markdown(analysis: dict[str, Any]) -> str:
     for slot in analysis["slots"]:
         source = slot["source"]
         lines.append(
-            f"| {slot['slot_id']} | {slot['phase']} | {slot['repetition']} | {slot['wave']} | "
-            f"{slot['profile_id']} | {source['run_id'] if source else 'MISSING'} | "
-            f"{source['execution_status'] if source else 'MISSING'} | "
-            f"{source['verdict'] if source else 'MISSING'} |"
+            f"| {markdown_text(slot['slot_id'])} | {markdown_text(slot['phase'])} | "
+            f"{slot['repetition']} | {slot['wave']} | {markdown_text(slot['profile_id'])} | "
+            f"{markdown_text(source['run_id'] if source else 'MISSING')} | "
+            f"{markdown_text(source['execution_status'] if source else 'MISSING')} | "
+            f"{markdown_text(source['verdict'] if source else 'MISSING')} |"
         )
     lines.extend(["", "## Profile outcomes", ""])
     for profile in analysis["profiles"]:
         lines.append(
-            f"- `{profile['id']}` — occurrences `{profile['occurrence_count']}`, "
-            f"completed `{profile['completed_count']}`, mismatches `{profile['mismatch_count']}`"
+            f"- {markdown_code(profile['id'])} — occurrences "
+            f"{markdown_code(profile['occurrence_count'])}, completed "
+            f"{markdown_code(profile['completed_count'])}, mismatches "
+            f"{markdown_code(profile['mismatch_count'])}"
         )
     lines.extend(["", "## Unplanned assertion drift", ""])
     if analysis["unplanned_differences"]:
         for item in analysis["unplanned_differences"]:
-            lines.append(f"- `{item['slot_id']}` / `{item['assertion_id']}`")
+            lines.append(
+                f"- {markdown_code(item['slot_id'])} / {markdown_code(item['assertion_id'])}"
+            )
     else:
         lines.append("- None.")
     lines.extend(["", "## Boundary", ""])
-    lines.extend(f"- {_markdown_text(item)}" for item in analysis["limits"])
+    lines.extend(f"- {markdown_text(item)}" for item in analysis["limits"])
     lines.append("")
     return "\n".join(lines)
 

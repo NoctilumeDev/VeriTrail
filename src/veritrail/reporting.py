@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import json
+import hashlib
 import re
 import shutil
 import tempfile
@@ -9,11 +9,18 @@ from pathlib import Path
 from typing import Any
 
 from veritrail.atomic_publish import publish_staged_directory
-from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
+from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.errors import SafetyError, ValidationError
-from veritrail.evidence import ImportedEvidence, import_evidence_files, verify_imported_evidence
+from veritrail.evidence import (
+    ImportedEvidence,
+    import_evidence_files,
+    validate_evidence_collection_budget,
+    verify_imported_evidence,
+)
+from veritrail.markdown import markdown_code, markdown_json, markdown_text
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
+from veritrail.resource_limits import MAX_BUNDLE_BYTES, MAX_BUNDLE_FILES
 from veritrail.verdict import evaluate
 
 RUN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
@@ -24,45 +31,48 @@ def _write_json(path: Path, value: Any) -> None:
 
 
 def _hash_file(path: Path, relative_path: Path) -> dict[str, Any]:
-    content = path.read_bytes()
+    digest = hashlib.sha256()
+    size = 0
+    with path.open("rb") as handle:
+        while chunk := handle.read(1024 * 1024):
+            digest.update(chunk)
+            size += len(chunk)
     return {
         "path": relative_path.as_posix(),
-        "sha256": sha256_bytes(content),
-        "size": len(content),
+        "sha256": digest.hexdigest(),
+        "size": size,
     }
-
-
-def _markdown_value(value: Any) -> str:
-    rendered = json.dumps(value, ensure_ascii=False, sort_keys=True)
-    return rendered.replace("|", "\\|").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def render_markdown(report: dict[str, Any]) -> str:
     lines = [
-        f"# VeriTrail run `{_markdown_value(report['run_id']).strip(chr(34))}`",
+        f"# VeriTrail run {markdown_code(report['run_id'])}",
         "",
-        f"- Execution status: `{report['execution_status']}`",
-        f"- Verdict: `{report['verdict']}`",
-        f"- Plan: `{report['plan']['id']}@{report['plan']['version']}`",
-        f"- Plan SHA-256: `{report['plan']['sha256']}`",
-        f"- Baseline: `{report['baseline']['id']}` (`{report['baseline']['status']}`)",
-        f"- Random seed: `{report['random_seed']}`",
-        f"- Created at: `{report['created_at']}`",
+        f"- Execution status: {markdown_code(report['execution_status'])}",
+        f"- Verdict: {markdown_code(report['verdict'])}",
+        f"- Plan: {markdown_code(str(report['plan']['id']) + '@' + str(report['plan']['version']))}",
+        f"- Plan SHA-256: {markdown_code(report['plan']['sha256'])}",
+        f"- Baseline: {markdown_code(report['baseline']['id'])} "
+        f"({markdown_code(report['baseline']['status'])})",
+        f"- Random seed: {markdown_code(report['random_seed'])}",
+        f"- Created at: {markdown_code(report['created_at'])}",
         "",
         "## Reasons",
         "",
     ]
     for reason in report["reasons"]:
-        lines.append(f"- `{reason['code']}` — {_markdown_value(reason['message'])}")
+        lines.append(
+            f"- {markdown_code(reason['code'])} — {markdown_text(reason['message'])}"
+        )
     lines.extend(["", "## Assertions", "", "| ID | Severity | Status | Actual | Expected |", "| --- | --- | --- | --- | --- |"])
     for assertion in report["assertions"]:
         lines.append(
             "| {id} | {severity} | {status} | {actual} | {expected} |".format(
-                id=_markdown_value(assertion["id"]),
-                severity=assertion["severity"],
-                status=assertion["status"],
-                actual=_markdown_value(assertion["actual"]),
-                expected=_markdown_value(assertion["expected"]),
+                id=markdown_text(assertion["id"]),
+                severity=markdown_text(assertion["severity"]),
+                status=markdown_text(assertion["status"]),
+                actual=markdown_json(assertion["actual"]),
+                expected=markdown_json(assertion["expected"]),
             )
         )
     lines.extend(["", "## Evidence", ""])
@@ -80,7 +90,7 @@ def render_markdown(report: dict[str, Any]) -> str:
                 else ""
             )
             lines.append(
-                f"- `{artifact['evidence_type']}` — `{artifact['sha256']}` "
+                f"- {markdown_code(artifact['evidence_type'])} — {markdown_code(artifact['sha256'])} "
                 f"({artifact['size']} bytes, redactions: {artifact['redacted_fields']}"
                 f"{attachment_note}{decision})"
             )
@@ -88,10 +98,12 @@ def render_markdown(report: dict[str, Any]) -> str:
         lines.append("- No evidence was imported.")
     lines.extend(["", "## Evidence gaps and contamination", ""])
     if report["missing_evidence"]:
-        lines.append(f"- Missing evidence: {_markdown_value(report['missing_evidence'])}")
+        lines.append(f"- Missing evidence: {markdown_json(report['missing_evidence'])}")
     if report["contamination"]:
         for item in report["contamination"]:
-            lines.append(f"- `{item['code']}` — {_markdown_value(item['message'])}")
+            lines.append(
+                f"- {markdown_code(item['code'])} — {markdown_text(item['message'])}"
+            )
     if not report["missing_evidence"] and not report["contamination"]:
         lines.append("- None detected by the active deterministic rule set.")
     lines.extend(
@@ -99,21 +111,21 @@ def render_markdown(report: dict[str, Any]) -> str:
             "",
             "## Applicability boundary",
             "",
-            f"- Subject: `{_markdown_value(report['subject'])}`",
-            f"- Primary variable: `{_markdown_value(report['primary_variable'])}`",
-            f"- Load model: `{_markdown_value(report['load_model'])}`",
-            f"- Resource budget: `{_markdown_value(report['resource_budget'])}`",
-            f"- Change scope: `{_markdown_value(report['change_scope'])}`",
+            f"- Subject: {markdown_code(report['subject'], json_value=True)}",
+            f"- Primary variable: {markdown_code(report['primary_variable'], json_value=True)}",
+            f"- Load model: {markdown_code(report['load_model'], json_value=True)}",
+            f"- Resource budget: {markdown_code(report['resource_budget'], json_value=True)}",
+            f"- Change scope: {markdown_code(report['change_scope'], json_value=True)}",
             "",
             "## Reproduction and cleanup",
             "",
         ]
     )
     for index, step in enumerate(report["reproduction_steps"], start=1):
-        lines.append(f"{index}. {_markdown_value(step)}")
+        lines.append(f"{index}. {markdown_text(step)}")
     lines.extend(["", "Cleanup:", ""])
     for index, step in enumerate(report["cleanup_steps"], start=1):
-        lines.append(f"{index}. {_markdown_value(step)}")
+        lines.append(f"{index}. {markdown_text(step)}")
     lines.append("")
     return "\n".join(lines)
 
@@ -314,6 +326,7 @@ def create_bundle(
     ]
     if len(attachment_paths) != len(set(attachment_paths)):
         raise ValidationError(["generated evidence contains duplicate attachment paths"])
+    validate_evidence_collection_budget(imported)
     stage = Path(tempfile.mkdtemp(prefix=".veritrail-", dir=output.parent))
     try:
         _write_json(stage / "sealed-plan.json", plan)
@@ -351,12 +364,24 @@ def create_bundle(
             for path in stage.rglob("*")
             if path.is_file()
         )
+        if len(bundle_files) + 1 > MAX_BUNDLE_FILES:
+            raise ValidationError(
+                [f"Bundle exceeds the fixed file-count limit of {MAX_BUNDLE_FILES} files"]
+            )
         bundle_manifest = {
             "schema_version": "0.1",
             "run_id": run_id,
             "files": [_hash_file(stage / relative, relative) for relative in bundle_files],
         }
-        _write_json(stage / "bundle-manifest.json", bundle_manifest)
+        manifest_bytes = canonical_json_bytes(bundle_manifest) + b"\n"
+        retained_bytes = sum(item["size"] for item in bundle_manifest["files"]) + len(
+            manifest_bytes
+        )
+        if retained_bytes > MAX_BUNDLE_BYTES:
+            raise ValidationError(
+                [f"Bundle exceeds the fixed retained-byte limit of {MAX_BUNDLE_BYTES} bytes"]
+            )
+        (stage / "bundle-manifest.json").write_bytes(manifest_bytes)
         publish_staged_directory(stage, output)
         return report
     except Exception:

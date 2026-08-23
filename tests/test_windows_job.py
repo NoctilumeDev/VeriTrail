@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -10,11 +11,13 @@ import unittest
 from unittest import mock
 from pathlib import Path
 
+from veritrail.errors import ValidationError
 from veritrail.windows_job import (
     _PinnedLaunchPaths,
     _WindowsBackend,
     inspect_executable_identity,
     run_owned_process,
+    validate_resolved_runtime_arguments,
 )
 
 
@@ -127,6 +130,79 @@ class WindowsJobTests(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
         self.assertEqual(values, json.loads(result.stdout.content.decode()))
         self.assertTrue(result.cleanup_complete)
+
+    def test_final_python_argv_rejects_attached_inline_code_and_preserves_module_mode(self) -> None:
+        for argument in (
+            "-cprint('bypass')",
+            "-c",
+            "-c=print('bypass')",
+            "-icprint('cluster bypass')",
+            "-qcprint('cluster bypass')",
+            "-Iqcprint('cluster bypass')",
+        ):
+            with self.subTest(argument=argument):
+                with self.assertRaisesRegex(ValidationError, "alternate program entry point"):
+                    validate_resolved_runtime_arguments(
+                        Path(sys.executable).resolve(),
+                        [argument],
+                    )
+
+        validate_resolved_runtime_arguments(
+            Path(sys.executable).resolve(),
+            ["-m", "tests.fixtures.m10_service_helper", "--help"],
+        )
+        for arguments in (
+            ["-mcalendar", "-c", "ordinary-module-argument"],
+            ["-Wdefault::Warning:c", "-m", "tests.fixtures.m10_service_helper"],
+            ["-Xcpu_count=4", "-m", "tests.fixtures.m10_service_helper"],
+            ["--", "-c", "ordinary-stdin-argument"],
+        ):
+            with self.subTest(arguments=arguments):
+                validate_resolved_runtime_arguments(
+                    Path(sys.executable).resolve(),
+                    arguments,
+                )
+
+        with tempfile.TemporaryDirectory() as directory:
+            renamed = Path(directory) / "trusted-tool.exe"
+            shutil.copy2(Path(sys.executable).resolve(), renamed)
+            with self.assertRaisesRegex(ValidationError, "alternate program entry point"):
+                validate_resolved_runtime_arguments(renamed, ["-cprint('renamed bypass')"])
+
+    def test_final_node_argv_rejects_alternate_entry_points_and_preserves_script_mode(self) -> None:
+        node = Path(r"D:\Node.js\current\node.exe")
+        if not node.is_file():
+            self.skipTest("Node.js is not installed in the frozen workstation runtime")
+        for argument in (
+            "--eval=1+1",
+            "-econsole.log(1)",
+            "--print=1+1",
+            "-p1+1",
+            "--import=data:text/javascript,console.log(1)",
+            "--loader",
+            "--experimental-loader",
+        ):
+            with self.subTest(argument=argument):
+                with self.assertRaisesRegex(ValidationError, "alternate program entry point"):
+                    validate_resolved_runtime_arguments(node, [argument])
+
+        validate_resolved_runtime_arguments(node, ["scripts/server.js", "--port", "18771"])
+
+    def test_owned_process_rejects_inline_code_before_job_creation(self) -> None:
+        with mock.patch("veritrail.windows_job._create_job") as create_job:
+            with self.assertRaisesRegex(ValidationError, "alternate program entry point"):
+                run_owned_process(
+                    executable=Path(sys.executable).resolve(),
+                    arguments=["-cprint('must not run')"],
+                    working_directory=Path.cwd().resolve(),
+                    environment=self._environment(),
+                    timeout_ms=1_000,
+                    descendant_exit_grace_ms=100,
+                    max_stdout_bytes=1_024,
+                    max_stderr_bytes=1_024,
+                    max_processes=1,
+                )
+        create_job.assert_not_called()
 
     def test_assignment_failure_terminates_suspended_target_before_marker(self) -> None:
         class FailingAssignmentBackend(_WindowsBackend):

@@ -332,7 +332,7 @@ class StaticRequestHandler(BaseHTTPRequestHandler):
         method = "HEAD" if head_only else "GET"
         application = self.server.application
         host = self.headers.get("Host", "")
-        if host not in {f"127.0.0.1:{application.port}", f"localhost:{application.port}"}:
+        if host != f"127.0.0.1:{application.port}":
             self._reply(HTTPStatus.BAD_REQUEST, head_only=head_only)
             application.recorder.record(method, "[REJECTED]", HTTPStatus.BAD_REQUEST, 0)
             return
@@ -635,7 +635,7 @@ def collect_orchestrated_evidence(
         "static_root_fingerprint": snapshot.fingerprint,
         "file_count": len(snapshot.files),
         "total_bytes": snapshot.total_bytes,
-        "origin": f"http://localhost:{policy['port']}",
+        "origin": f"http://127.0.0.1:{policy['port']}",
         "started_at": started_at,
         "ended_at": ended_at,
         "server_started": server_started,

@@ -22,8 +22,9 @@ from veritrail.windows_job import (
     _wait_for_tree_release,
     _WindowsBackend,
     require_windows_command_capability,
+    validate_resolved_runtime_arguments,
 )
-from veritrail.windows_tcp import list_ipv4_tcp_listeners
+from veritrail.windows_tcp import list_tcp_listeners
 
 
 @dataclass(frozen=True)
@@ -92,7 +93,7 @@ def _wait_for_port_release(port: int, timeout_ms: int) -> tuple[bool, bool]:
     while True:
         try:
             occupied = any(
-                listener.local_port == port for listener in list_ipv4_tcp_listeners()
+                listener.local_port == port for listener in list_tcp_listeners()
             )
         except SafetyError:
             return False, False
@@ -187,6 +188,7 @@ class OwnedServiceSession:
 
         require_windows_command_capability()
         backend = _WindowsBackend() if _backend is None else _backend
+        validate_resolved_runtime_arguments(executable, arguments, _backend=backend)
         started = time.monotonic()
         try:
             job, parent_in_job, limit_enforced, memory_limit_enforced = _create_job(

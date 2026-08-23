@@ -1,6 +1,56 @@
 import { sha256Hex } from '../src/domain/bundle'
 import { vi } from 'vitest'
 
+function u32(value: number): Uint8Array {
+  return new Uint8Array([
+    (value >>> 24) & 0xff,
+    (value >>> 16) & 0xff,
+    (value >>> 8) & 0xff,
+    value & 0xff,
+  ])
+}
+
+function concatBytes(...parts: Uint8Array[]): Uint8Array {
+  const result = new Uint8Array(parts.reduce((total, part) => total + part.length, 0))
+  let offset = 0
+  for (const part of parts) {
+    result.set(part, offset)
+    offset += part.length
+  }
+  return result
+}
+
+function crc32(bytes: Uint8Array): number {
+  let crc = 0xffffffff
+  for (const byte of bytes) {
+    crc ^= byte
+    for (let bit = 0; bit < 8; bit += 1) {
+      crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0)
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0
+}
+
+function pngChunk(type: string, payload: Uint8Array): Uint8Array {
+  const typeBytes = new TextEncoder().encode(type)
+  const checked = concatBytes(typeBytes, payload)
+  return concatBytes(u32(payload.length), checked, u32(crc32(checked)))
+}
+
+export function createTestPng(width = 1, height = 1): Uint8Array {
+  const ihdr = concatBytes(
+    u32(width),
+    u32(height),
+    new Uint8Array([8, 6, 0, 0, 0]),
+  )
+  return concatBytes(
+    new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]),
+    pngChunk('IHDR', ihdr),
+    pngChunk('IDAT', new Uint8Array([0])),
+    pngChunk('IEND', new Uint8Array()),
+  )
+}
+
 export function minimalReport(overrides: Record<string, unknown> = {}) {
   return {
     schema_version: '0.1',

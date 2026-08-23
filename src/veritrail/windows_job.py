@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.metadata
 import hashlib
 import os
+import re
 import stat
 import threading
 import time
@@ -10,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from veritrail.argument_policy import forbidden_runtime_argument
 from veritrail.errors import SafetyError, ValidationError
 
 EXPECTED_PYWIN32_VERSION = "312"
@@ -47,6 +49,7 @@ FORBIDDEN_EXECUTABLE_DESCRIPTIONS = {
     "windows command processor",
     "windows powershell",
 }
+PYTHON_EXECUTABLE_PATTERN = re.compile(r"pythonw?(?:\d+(?:\.\d+)*)?\.exe")
 
 
 @dataclass(frozen=True)
@@ -176,14 +179,7 @@ def _is_reparse(metadata: os.stat_result) -> bool:
     return bool(getattr(metadata, "st_file_attributes", 0) & REPARSE_POINT)
 
 
-def assert_allowed_executable_family(
-    executable: Path, *, _backend: _WindowsBackend | None = None
-) -> None:
-    """Reject forbidden interpreter families by PE identity, not only pathname."""
-
-    if executable.name.casefold() in FORBIDDEN_EXECUTABLES:
-        raise SafetyError("selected executable family is outside the frozen no-Shell boundary")
-    backend = _WindowsBackend() if _backend is None else _backend
+def _executable_identity_names(executable: Path, backend: _WindowsBackend) -> set[str]:
     names: set[str] = set()
     try:
         translations = backend.win32api.GetFileVersionInfo(
@@ -202,8 +198,49 @@ def assert_allowed_executable_family(
                     names.add(value.strip().casefold())
     except Exception:
         pass
+    names.add(executable.name.casefold())
+    return names
+
+
+def assert_allowed_executable_family(
+    executable: Path, *, _backend: _WindowsBackend | None = None
+) -> None:
+    """Reject forbidden interpreter families by PE identity, not only pathname."""
+
+    backend = _WindowsBackend() if _backend is None else _backend
+    names = _executable_identity_names(executable, backend)
     if names & FORBIDDEN_EXECUTABLES or names & FORBIDDEN_EXECUTABLE_DESCRIPTIONS:
         raise SafetyError("selected executable PE family is outside the frozen no-Shell boundary")
+
+
+def validate_resolved_runtime_arguments(
+    executable: Path,
+    arguments: Sequence[str],
+    *,
+    _backend: _WindowsBackend | None = None,
+) -> None:
+    """Enforce interpreter entry-point policy on the final resolved argv."""
+
+    backend = _WindowsBackend() if _backend is None else _backend
+    names = _executable_identity_names(executable, backend)
+    family: str | None = None
+    if any(
+        PYTHON_EXECUTABLE_PATTERN.fullmatch(name) or name == "python"
+        for name in names
+    ):
+        family = "python"
+    elif names & {"node", "node.exe", "node.js javascript runtime"}:
+        family = "node"
+    if family is None:
+        return
+    forbidden = forbidden_runtime_argument(family, arguments)
+    if forbidden is not None:
+        raise ValidationError(
+            [
+                f"resolved {family} argv uses forbidden alternate program entry point: "
+                f"{forbidden!r}"
+            ]
+        )
 
 
 def inspect_executable_identity(
@@ -642,6 +679,7 @@ def run_owned_process(
     )
     require_windows_command_capability()
     backend = _WindowsBackend() if _backend is None else _backend
+    validate_resolved_runtime_arguments(executable, arguments, _backend=backend)
     started = time.monotonic()
     job, parent_in_job, limit_enforced, memory_limit_enforced = _create_job(
         backend, max_processes, max_job_memory_mb

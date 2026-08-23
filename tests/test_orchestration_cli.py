@@ -272,12 +272,15 @@ class OrchestrationCliTests(unittest.TestCase):
             web.mkdir()
             (web / "index.html").write_text("<!doctype html>", encoding="utf-8")
             application = CatalogApplication(root / "catalog", artifacts, web)
-            catalog_run_id = application.catalog(1, 50)["runs"][0]["catalog_run_id"]
-            _, _, _, content_type = application.bundle_file(
-                catalog_run_id,
-                "attachments/command/stdout.txt",
-            )
-            self.assertEqual("text/plain; charset=utf-8", content_type)
+            try:
+                catalog_run_id = application.catalog(1, 50)["runs"][0]["catalog_run_id"]
+                _, _, _, content_type = application.bundle_file(
+                    catalog_run_id,
+                    "attachments/command/stdout.txt",
+                )
+                self.assertEqual("text/plain; charset=utf-8", content_type)
+            finally:
+                application.close()
 
     def test_plan_v05_approval_mismatch_rejects_before_process_and_bundle(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

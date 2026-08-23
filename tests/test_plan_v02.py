@@ -85,6 +85,12 @@ class PlanV02Tests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, "unsupported fields: memory_soft_mb"):
             validate_plan(plan)
 
+    def test_plan_cannot_raise_the_fixed_artifact_ceiling(self) -> None:
+        plan = preflight_plan()
+        plan["resource_budget"]["max_artifact_bytes"] = 10 * 1024 * 1024 + 1
+        with self.assertRaisesRegex(ValidationError, "verifier ceiling"):
+            validate_plan(plan)
+
 
 if __name__ == "__main__":
     unittest.main()

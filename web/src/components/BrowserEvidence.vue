@@ -256,7 +256,12 @@ function compactUrl(value: string): string {
             data-testid="browser-screenshot-trigger"
             @click="openScreenshot(screenshot, $event)"
           >
-            <img :src="imageUrls[screenshot.path]" :alt="`${screenshot.viewport} · ${screenshot.name}`" />
+            <img
+              :src="imageUrls[screenshot.path]"
+              :alt="`${screenshot.viewport} · ${screenshot.name}`"
+              loading="lazy"
+              decoding="async"
+            />
             <span>
               <strong>{{ screenshot.viewport }}</strong>
               <small>{{ screenshot.name }} · {{ Math.ceil(screenshot.size / 1024) }} KiB</small>

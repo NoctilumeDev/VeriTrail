@@ -53,13 +53,13 @@ class PlanV06Tests(unittest.TestCase):
             set(schema["required"]),
         )
 
-    def test_frozen_plan_v04_and_v05_hashes_remain_compatible(self) -> None:
+    def test_hardened_plan_v04_and_v05_hashes_are_stable(self) -> None:
         self.assertEqual(
-            "658955b08cd56902e376e4db7d5716572374b1cb0a21283b1cc55ac8a0efc10a",
+            "6cdf3bdf15fe8572d756dee43d7431a81d61a7eb6547af696110e45c24cd120a",
             seal_plan(orchestration_plan())["seal"]["digest"],
         )
         self.assertEqual(
-            "89e95c3e9da708f8a6fc5555439a4c460a1943eab27b0535902b5df58f3b7a62",
+            "ccae38efe3e6425e50a924634e8e507dced6b1e108a76ed3ca6f563788c9f5d6",
             seal_plan(command_plan())["seal"]["digest"],
         )
 

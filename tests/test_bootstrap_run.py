@@ -452,6 +452,55 @@ class BootstrapObservedRunTests(unittest.TestCase):
             )
             self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
 
+    def test_real_browser_popup_is_rejected_and_cannot_claim_complete_capture(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(
+                subject, application_mode="browser-application"
+            )
+            raw_plan = copy.deepcopy(plan)
+            raw_plan.pop("seal")
+            raw_plan["browser"]["steps"] = [
+                {
+                    "id": "open-unexpected-popup",
+                    "action": "click",
+                    "selector": "[data-testid='open-popup']",
+                }
+            ]
+            plan = seal_plan(raw_plan, profile)
+            preview = copy.deepcopy(resolved.preview)
+            preview["plan_sha256"] = plan["seal"]["digest"]
+            preview.pop("preview_sha256")
+            preview["preview_sha256"] = sha256_json(preview)
+            resolved = ResolvedBootstrap(
+                preview=preview,
+                subject_root=resolved.subject_root,
+                nodes=resolved.nodes,
+            )
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+            )
+
+            self.assertIsNone(result.error_type)
+            self.assertIsNotNone(result.browser)
+            browser = result.browser.document["facts"]
+            self.assertFalse(browser["capture_complete"])
+            self.assertEqual(
+                [
+                    {"collector": "page-set:desktop", "error_type": "UnexpectedPage"},
+                    {"collector": "page-set:mobile", "error_type": "UnexpectedPage"},
+                ],
+                browser["collection_errors"],
+            )
+            self.assertEqual("COLLECTOR_ERROR", result.lifecycle.stop_reason)
+            self.assertTrue(result.lifecycle.cleanup_complete)
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
     def test_real_browser_hard_failure_keeps_evidence_and_cleans_resources(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -1,16 +1,26 @@
 from __future__ import annotations
 
 import copy
+import gc
 import hashlib
+import io
 import json
+import struct
 import tempfile
 import threading
 import unittest
+import zlib
+from contextlib import redirect_stderr
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
-from veritrail.browser import _collect_browser_evidence, sanitize_url
+from veritrail.browser import (
+    _collect_browser_evidence,
+    _origin,
+    _websocket_origin,
+    sanitize_url,
+)
 from veritrail.canonical import sha256_json
 from veritrail.evidence import (
     EvidenceAttachment,
@@ -19,7 +29,7 @@ from veritrail.evidence import (
     import_evidence_files,
     verify_imported_evidence,
 )
-from veritrail.errors import ValidationError
+from veritrail.errors import SafetyError, ValidationError
 from veritrail.plan import seal_plan
 from veritrail.reporting import create_bundle
 from veritrail.resources import collect_preflight_evidence
@@ -29,7 +39,22 @@ from veritrail.verdict import evaluate
 from tests.support import browser_plan
 
 
-PNG_BYTES = b"\x89PNG\r\n\x1a\nsynthetic-test-png"
+def _png_chunk(chunk_type: bytes, payload: bytes) -> bytes:
+    crc = zlib.crc32(chunk_type + payload) & 0xFFFFFFFF
+    return struct.pack(">I", len(payload)) + chunk_type + payload + struct.pack(">I", crc)
+
+
+def _test_png(marker: int = 0) -> bytes:
+    ihdr = struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0)
+    return b"".join(
+        (
+            b"\x89PNG\r\n\x1a\n",
+            _png_chunk(b"IHDR", ihdr),
+            _png_chunk(b"tEXt", f"marker={marker}".encode("ascii")),
+            _png_chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00")),
+            _png_chunk(b"IEND", b""),
+        )
+    )
 
 
 def _safe_runtime_plan() -> dict:
@@ -58,7 +83,7 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
         path = f"attachments/browser/{viewport['name']}/001-ready.png"
         attachment = create_attachment(
             path=path,
-            content=PNG_BYTES + bytes([index]),
+            content=_test_png(index),
             media_type="image/png",
             logical_name=f"{viewport['name']}-ready",
         )
@@ -189,6 +214,48 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
 
 
 class BrowserEvidenceTests(unittest.TestCase):
+    def test_real_playwright_ownership_failure_leaves_no_pending_start_task(
+        self,
+    ) -> None:
+        try:
+            import playwright.sync_api  # noqa: F401
+        except ImportError:
+            self.skipTest("Playwright browser extra is not installed")
+
+        plan = _safe_runtime_plan()
+
+        class Observer:
+            def playwright_started(self, value: object) -> None:
+                raise RuntimeError("ownership failed")
+
+            def failed(self, method: str, error_type: str) -> None:
+                return None
+
+        captured = io.StringIO()
+        with redirect_stderr(captured):
+            with self.assertRaisesRegex(ValidationError, "Playwright could not start"):
+                _collect_browser_evidence(plan, lifecycle_observer=Observer())
+            gc.collect()
+
+        self.assertNotIn("Task was destroyed", captured.getvalue())
+        self.assertNotIn("TargetClosedError", captured.getvalue())
+
+    def test_listener_integrity_is_checked_before_playwright_can_start(self) -> None:
+        plan = _safe_runtime_plan()
+        playwright_factory = Mock()
+
+        def reject_replaced_listener() -> None:
+            raise SafetyError("owned listener identity changed during Browser exercise")
+
+        with patch("playwright.sync_api.sync_playwright", playwright_factory):
+            with self.assertRaisesRegex(SafetyError, "listener identity changed"):
+                _collect_browser_evidence(
+                    plan,
+                    integrity_check=reject_replaced_listener,
+                )
+
+        playwright_factory.assert_not_called()
+
     def test_cancel_arriving_during_playwright_start_is_observed_after_ownership_hook(
         self,
     ) -> None:
@@ -250,16 +317,28 @@ class BrowserEvidenceTests(unittest.TestCase):
                     cancel_event=cancellation,
                 )
 
-    def test_url_sanitizer_removes_query_values_userinfo_and_loopback_ip(self) -> None:
+    def test_url_sanitizer_removes_query_values_and_userinfo_without_aliasing_host(self) -> None:
         value = sanitize_url(
             "http://demo:secret@127.0.0.1:18765/data.json?token=secret&mode=test#part"
         )
         self.assertEqual(
-            "http://localhost:18765/data.json?token=%5BREDACTED%5D&mode=%5BREDACTED%5D",
+            "http://127.0.0.1:18765/data.json?token=%5BREDACTED%5D&mode=%5BREDACTED%5D",
             value,
         )
         self.assertNotIn("secret", value)
         self.assertNotIn("demo", value)
+
+    def test_loopback_aliases_remain_distinct_authorization_origins(self) -> None:
+        self.assertEqual("http://127.0.0.1:18765", _origin("http://127.0.0.1:18765/a"))
+        self.assertEqual("http://localhost:18765", _origin("http://localhost:18765/a"))
+        self.assertNotEqual(
+            _origin("http://127.0.0.1:18765/a"),
+            _origin("http://localhost:18765/a"),
+        )
+        self.assertNotEqual(
+            _websocket_origin("ws://127.0.0.1:18765/socket"),
+            _websocket_origin("ws://localhost:18765/socket"),
+        )
 
     def test_browser_attachment_is_hashed_written_and_manifested(self) -> None:
         plan = _safe_runtime_plan()
@@ -310,7 +389,7 @@ class BrowserEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValidationError, "stay under attachments"):
             create_attachment(
                 path="attachments/../escape.png",
-                content=PNG_BYTES,
+                content=_test_png(),
                 media_type="image/png",
                 logical_name="escape",
             )

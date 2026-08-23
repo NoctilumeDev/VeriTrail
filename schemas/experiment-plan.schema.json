@@ -98,7 +98,7 @@
       "properties": {
         "memory_soft_mb": { "type": "integer", "minimum": 1 },
         "memory_hard_mb": { "type": "integer", "minimum": 1 },
-        "max_artifact_bytes": { "type": "integer", "minimum": 1 }
+        "max_artifact_bytes": { "type": "integer", "minimum": 1, "maximum": 10485760 }
       }
     },
     "load_model": {

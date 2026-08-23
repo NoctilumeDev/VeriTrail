@@ -9,8 +9,103 @@ import {
   createMinimalBundle,
   createSealedPlan,
   createSingleApplicationBootstrapBundle,
+  createTestPng,
   minimalReport,
 } from './support'
+
+async function createImageAttachmentBundle(
+  dimensions: Array<[number, number]>,
+  duplicateFirstReference = false,
+): Promise<Map<string, Blob>> {
+  const authority = await createSealedPlan('unit-plan', 1)
+  const images = dimensions.map(([width, height], index) => ({
+    path: `attachments/image-${index}.png`,
+    blob: new Blob([createTestPng(width, height).buffer as ArrayBuffer], {
+      type: 'image/png',
+    }),
+  }))
+  const attachments = await Promise.all(
+    images.map(async ({ path, blob }, index) => ({
+      logical_name: `unit-image-${index}`,
+      media_type: 'image/png',
+      path,
+      sha256: await sha256Hex(blob),
+      size: blob.size,
+    })),
+  )
+  if (duplicateFirstReference && attachments[0]) {
+    attachments.push({ ...attachments[0], logical_name: 'unit-image-duplicate' })
+  }
+  const evidencePath = 'evidence/browser.json'
+  const evidenceBlob = new Blob([
+    JSON.stringify({
+      schema_version: '0.1',
+      evidence_type: 'browser.session',
+      source: 'unit',
+      captured_at: '2026-08-09T00:00:00Z',
+      facts: {
+        viewport_runs: [],
+        steps: [],
+        console: [],
+        page_errors: [],
+        network: [],
+        screenshots: [],
+        viewport_count: 0,
+        screenshot_count: 0,
+      },
+    }),
+  ])
+  const artifact = {
+    evidence_type: 'browser.session',
+    path: evidencePath,
+    sha256: await sha256Hex(evidenceBlob),
+    size: evidenceBlob.size,
+    redacted: true,
+    redacted_fields: 0,
+    redaction_rule_version: '0.1',
+    parser_version: '0.1',
+    captured_at: '2026-08-09T00:00:00Z',
+    source: 'unit',
+    source_name: 'unit',
+    retention: 'ephemeral',
+    attachments,
+  }
+  const reportBlob = new Blob([
+    JSON.stringify(
+      minimalReport({
+        plan: { id: 'unit-plan', version: 1, sha256: authority.digest },
+        evidence: [artifact],
+      }),
+    ),
+  ])
+  const evidenceManifestBlob = new Blob([
+    JSON.stringify({
+      schema_version: '0.1',
+      run_id: 'unit-run',
+      artifacts: [artifact],
+      duplicate_inputs_ignored: [],
+    }),
+  ])
+  const entries = new Map<string, Blob>([
+    ['report.json', reportBlob],
+    ['evidence-manifest.json', evidenceManifestBlob],
+    [evidencePath, evidenceBlob],
+    ['sealed-plan.json', authority.blob],
+    ...images.map(({ path, blob }) => [path, blob] as [string, Blob]),
+  ])
+  const files = await Promise.all(
+    [...entries].map(async ([path, blob]) => ({
+      path,
+      sha256: await sha256Hex(blob),
+      size: blob.size,
+    })),
+  )
+  entries.set(
+    'bundle-manifest.json',
+    new Blob([JSON.stringify({ schema_version: '0.1', run_id: 'unit-run', files })]),
+  )
+  return entries
+}
 
 describe('Bundle Loader', () => {
   it('verifies a Report 0.1 bundle without browser evidence', async () => {
@@ -313,9 +408,9 @@ describe('Bundle Loader', () => {
     loaded.release()
   })
 
-  it('revokes attachment object URLs when a later evidence document is invalid', async () => {
+  it('does not create attachment object URLs before every evidence document is valid', async () => {
     const authority = await createSealedPlan('unit-plan', 1)
-    const attachmentBlob = new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' })
+    const attachmentBlob = new Blob([createTestPng().buffer as ArrayBuffer], { type: 'image/png' })
     const firstEvidenceBlob = new Blob([
       JSON.stringify({
         schema_version: '0.1',
@@ -408,8 +503,37 @@ describe('Bundle Loader', () => {
     await expect(loadBundleFromBlobs(dataFiles, 'unit')).rejects.toMatchObject({
       code: 'REFERENCE_MISMATCH',
     })
+    expect(createUrl).not.toHaveBeenCalled()
+    expect(revokeUrl).not.toHaveBeenCalled()
+    createUrl.mockRestore()
+    revokeUrl.mockRestore()
+  })
+
+  it('rejects an excessive aggregate image working set before creating object URLs', async () => {
+    const entries = await createImageAttachmentBundle([
+      [3000, 3000],
+      [3000, 3000],
+    ])
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:unit')
+
+    await expect(loadBundleFromBlobs(entries, 'unit')).rejects.toMatchObject({
+      code: 'IMAGE_BUDGET_LIMIT',
+    })
+    expect(createUrl).not.toHaveBeenCalled()
+    createUrl.mockRestore()
+  })
+
+  it('charges a repeated image attachment path once and creates one object URL', async () => {
+    const entries = await createImageAttachmentBundle([[4096, 4096]], true)
+    const createUrl = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:unit')
+    const revokeUrl = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined)
+
+    const loaded = await loadBundleFromBlobs(entries, 'unit')
+
     expect(createUrl).toHaveBeenCalledTimes(1)
-    expect(revokeUrl).toHaveBeenCalledWith('blob:unit')
+    expect(loaded.imageUrls).toEqual({ 'attachments/image-0.png': 'blob:unit' })
+    loaded.release()
+    expect(revokeUrl).toHaveBeenCalledTimes(1)
     createUrl.mockRestore()
     revokeUrl.mockRestore()
   })

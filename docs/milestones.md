@@ -221,4 +221,6 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [M12-F 总体验收与冻结运行事实](51-m12-f-final-validation-facts.md)
 - [M13 系统思维与分层代码质量终审计划](52-m13-system-and-layered-code-quality-audit-plan.md)
 - [M13 系统思维与分层代码质量终审事实](53-m13-system-and-layered-code-quality-audit-facts.md)
+- [M14 整改后终局复验与发布收束合同](54-m14-final-validation-and-release-contract.md)
+- [M14 安全整改与重新基线合同](55-m14-security-remediation-and-rebaseline-contract.md)
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

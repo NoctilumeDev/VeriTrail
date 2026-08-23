@@ -189,9 +189,9 @@
   "browser": {
     "engine": "chromium",
     "headless": true,
-    "start_url": "http://localhost:18769/index.html",
+    "start_url": "http://127.0.0.1:18769/index.html",
     "allowed_origins": [
-      "http://localhost:18769"
+      "http://127.0.0.1:18769"
     ],
     "timeout_ms": 10000,
     "viewports": [

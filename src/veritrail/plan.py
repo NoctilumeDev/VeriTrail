@@ -6,11 +6,13 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+from veritrail.argument_policy import is_forbidden_inline_literal
 from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object as load_strict_json_object
 from veritrail.privacy import redact_value
 from veritrail.project_profile import verify_sealed_project_profile
+from veritrail.resource_limits import MAX_ARTIFACT_BYTES
 
 SUPPORTED_SCHEMA_VERSIONS = {"0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7"}
 BOOTSTRAP_SCHEMA_VERSIONS = {"0.6", "0.7"}
@@ -224,6 +226,11 @@ def _validate_resource_budget(value: Any, schema_version: Any, errors: list[str]
     maximum = value.get("max_artifact_bytes")
     if not _is_integer(maximum) or maximum <= 0:
         errors.append("resource_budget.max_artifact_bytes must be a positive integer")
+    elif maximum > MAX_ARTIFACT_BYTES:
+        errors.append(
+            "resource_budget.max_artifact_bytes must not exceed "
+            f"the verifier ceiling of {MAX_ARTIFACT_BYTES} bytes"
+        )
 
 
 def _validate_preflight(value: Any, errors: list[str]) -> None:
@@ -566,9 +573,14 @@ def _validate_target(
             if not isinstance(url, str):
                 continue
             try:
-                url_port = urlsplit(url).port
+                parsed_url = urlsplit(url)
+                url_port = parsed_url.port
             except ValueError:
                 continue
+            if parsed_url.scheme != "http" or parsed_url.hostname != "127.0.0.1":
+                errors.append(
+                    f"managed target browser URL must use literal http://127.0.0.1 (mismatch at item {index})"
+                )
             if url_port != port:
                 errors.append(f"target.port must match every browser URL port (mismatch at item {index})")
 
@@ -650,7 +662,7 @@ def _validate_command(value: Any, errors: list[str]) -> None:
                     errors.append(f"{prefix}.literal must be a control-free string up to 4096 characters")
                 elif redact_value(literal)[1]:
                     errors.append(f"{prefix}.literal must not contain secrets or personal identifiers")
-                elif literal.casefold() in {"-c", "/c", "-e", "--eval", "-command"}:
+                elif is_forbidden_inline_literal(literal, value.get("tool_binding")):
                     errors.append(f"{prefix}.literal uses a forbidden inline or Shell entry point")
             else:
                 segments = argument.get("run_work_path")

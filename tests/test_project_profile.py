@@ -106,6 +106,23 @@ class ProjectProfileTests(unittest.TestCase):
                 with self.assertRaises(ValidationError):
                     validate_project_profile(profile)
 
+    def test_profile_rejects_attached_inline_programs(self) -> None:
+        for binding, literal in (
+            ("python-dependency", "-cprint('bypass')"),
+            ("python-dependency", "-icprint('cluster bypass')"),
+            ("python-dependency", "-qcprint('cluster bypass')"),
+            ("node-dependency", "-econsole.log('bypass')"),
+            ("node-dependency", "--eval=1+1"),
+            ("node-dependency", "--loader"),
+            ("node-dependency", "--experimental-loader"),
+        ):
+            with self.subTest(binding=binding, literal=literal):
+                profile = bootstrap_profile()
+                profile["nodes"][0]["tool_binding"] = binding
+                profile["nodes"][0]["arguments"].append({"literal": literal})
+                with self.assertRaisesRegex(ValidationError, "forbidden inline"):
+                    validate_project_profile(profile)
+
     def test_profile_seal_cli_writes_canonical_new_file_and_refuses_overwrite(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

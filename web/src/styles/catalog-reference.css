@@ -184,21 +184,6 @@
   padding: 20px 0 24px;
 }
 
-.app-shell--catalog .view-introduction__heading::before {
-  bottom: 14px;
-  left: 5px;
-  width: 8px;
-  height: 8px;
-}
-
-.app-shell--catalog .view-introduction__heading::after {
-  bottom: 17px;
-  left: 0;
-  width: 72px;
-  height: 1px;
-  background: var(--catalog-vermilion);
-}
-
 .app-shell--catalog .view-introduction__heading .eyebrow {
   margin: 0 0 10px;
   color: #1c5b69;

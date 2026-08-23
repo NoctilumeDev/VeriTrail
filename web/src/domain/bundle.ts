@@ -9,10 +9,15 @@ import type {
   Verdict,
   VerdictReport,
 } from './types'
+import { ImageGeometryError, validateImageGeometry } from './image-geometry'
 
 const MAX_FILES = 256
 const MAX_FILE_BYTES = 10 * 1024 * 1024
 const MAX_BUNDLE_BYTES = 64 * 1024 * 1024
+// Account for the decoded RGBA surface plus one renderer/compositor copy. This
+// is an aggregate budget across unique attachment paths, not a per-file limit.
+export const MAX_BUNDLE_IMAGE_WORKING_SET_BYTES = 128 * 1024 * 1024
+const IMAGE_RENDER_SURFACE_MULTIPLIER = 2
 const SHA256_PATTERN = /^[0-9a-f]{64}$/
 const EXECUTION_STATUSES = new Set<ExecutionStatus>([
   'PLANNED',
@@ -429,7 +434,9 @@ export async function loadBundleFromBlobs(
 
   const evidenceByPath: Record<string, EvidenceDocument> = {}
   const imageUrls: Record<string, string> = {}
+  const validatedImages = new Map<string, { blob: Blob; mediaType: string }>()
   const createdUrls: string[] = []
+  let imageWorkingSetBytes = 0
   try {
     for (const artifact of evidenceManifest.artifacts) {
       const manifestEntry = bundleByPath.get(artifact.path)
@@ -456,13 +463,43 @@ export async function loadBundleFromBlobs(
           fail('REFERENCE_MISMATCH', '附件与清单索引不一致。')
         }
         if (attachment.media_type === 'image/png' || attachment.media_type === 'image/jpeg') {
-          const objectUrl = URL.createObjectURL(
-            new Blob([attachmentBlob], { type: attachment.media_type }),
-          )
-          imageUrls[attachment.path] = objectUrl
-          createdUrls.push(objectUrl)
+          const existingImage = validatedImages.get(attachment.path)
+          if (existingImage) {
+            if (existingImage.mediaType !== attachment.media_type) {
+              fail('REFERENCE_MISMATCH', '同一路径的图片附件声明了不同媒体类型。')
+            }
+            continue
+          }
+          try {
+            const geometry = await validateImageGeometry(attachmentBlob, attachment.media_type)
+            const estimatedWorkingSet = geometry.decodedBytes * IMAGE_RENDER_SURFACE_MULTIPLIER
+            if (
+              estimatedWorkingSet >
+              MAX_BUNDLE_IMAGE_WORKING_SET_BYTES - imageWorkingSetBytes
+            ) {
+              fail('IMAGE_BUDGET_LIMIT', '图片附件的合计解码工作集超过 128 MiB。')
+            }
+            imageWorkingSetBytes += estimatedWorkingSet
+          } catch (error) {
+            if (error instanceof ImageGeometryError) fail(error.code, error.message)
+            throw error
+          }
+          validatedImages.set(attachment.path, {
+            blob: attachmentBlob,
+            mediaType: attachment.media_type,
+          })
         }
       }
+    }
+    // URL creation is deliberately a second phase. No browser-decodable handle
+    // is exposed until every evidence document and the aggregate image budget
+    // have passed validation.
+    for (const [path, image] of validatedImages) {
+      const objectUrl = URL.createObjectURL(
+        new Blob([image.blob], { type: image.mediaType }),
+      )
+      imageUrls[path] = objectUrl
+      createdUrls.push(objectUrl)
     }
   } catch (error) {
     for (const url of createdUrls) URL.revokeObjectURL(url)

@@ -3,8 +3,13 @@ from __future__ import annotations
 import unittest
 from unittest.mock import patch
 
-from veritrail.windows_readiness import probe_owned_http_readiness
-from veritrail.windows_tcp import Ipv4TcpListener
+from veritrail.errors import SafetyError
+from veritrail.windows_readiness import (
+    OwnedListenerIdentity,
+    probe_owned_http_readiness,
+    verify_owned_listener_identity,
+)
+from veritrail.windows_tcp import Ipv4TcpListener, Ipv6TcpListener
 
 
 class _Response:
@@ -58,7 +63,7 @@ class WindowsReadinessTests(unittest.TestCase):
         owned = Ipv4TcpListener("127.0.0.1", _Session.port, 41)
         external = Ipv4TcpListener("127.0.0.1", _Session.port, 99)
         with patch(
-            "veritrail.windows_readiness.list_ipv4_tcp_listeners",
+            "veritrail.windows_readiness.list_tcp_listeners",
             side_effect=[(owned,), (external,)],
         ):
             result = probe_owned_http_readiness(_Session(), READINESS)
@@ -72,7 +77,7 @@ class WindowsReadinessTests(unittest.TestCase):
     def test_stable_owned_listener_can_become_ready(self) -> None:
         owned = Ipv4TcpListener("127.0.0.1", _Session.port, 41)
         with patch(
-            "veritrail.windows_readiness.list_ipv4_tcp_listeners",
+            "veritrail.windows_readiness.list_tcp_listeners",
             side_effect=[(owned,), (owned,)],
         ):
             result = probe_owned_http_readiness(_Session(), READINESS)
@@ -81,6 +86,32 @@ class WindowsReadinessTests(unittest.TestCase):
         self.assertIsNone(result.error_type)
         self.assertEqual("SUCCESS", result.attempts[0].result)
         self.assertTrue(result.attempts[0].listener_owner_in_job)
+        self.assertEqual(
+            OwnedListenerIdentity(_Session.port, 41, frozenset({41})),
+            result.listener_identity,
+        )
+
+    def test_browser_boundary_rejects_listener_replacement_after_readiness(self) -> None:
+        external = Ipv4TcpListener("127.0.0.1", _Session.port, 99)
+        expected = OwnedListenerIdentity(_Session.port, 41, frozenset({41}))
+        with patch(
+            "veritrail.windows_readiness.list_tcp_listeners",
+            return_value=(external,),
+        ):
+            with self.assertRaisesRegex(SafetyError, "not stable|changed"):
+                verify_owned_listener_identity(_Session(), expected)
+
+    def test_ipv6_listener_on_sealed_port_is_not_accepted_as_ipv4_readiness(self) -> None:
+        ipv6 = Ipv6TcpListener("::1", _Session.port, 41, 0)
+        with patch(
+            "veritrail.windows_readiness.list_tcp_listeners",
+            return_value=(ipv6,),
+        ):
+            result = probe_owned_http_readiness(_Session(), READINESS)
+
+        self.assertFalse(result.ready)
+        self.assertEqual("LISTENER_OWNERSHIP_MISMATCH", result.error_type)
+        self.assertEqual("LISTENER_ADDRESS_MISMATCH", result.attempts[0].result)
 
 
 if __name__ == "__main__":

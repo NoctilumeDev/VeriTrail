@@ -105,6 +105,34 @@ describe('reference page style ownership', () => {
     expect(emptyState).not.toMatch(/\b(?:dashed|box-shadow|surface-plinth)\b/)
   })
 
+  it('does not reintroduce the retired vermilion intro rule', () => {
+    const sharedComponents = styleSource('components.css')
+    const catalogReference = styleSource('catalog-reference.css')
+
+    for (const selector of [
+      '.view-introduction__heading::before',
+      '.view-introduction__heading::after',
+    ]) {
+      expect(sharedComponents).not.toContain(selector)
+      expect(catalogReference).not.toContain(selector)
+    }
+  })
+
+  it('gives the mobile Run status ledger enough width for complete labels', () => {
+    const source = styleSource('run-detail-reference.css')
+    const statusGate = declarationBlocks(
+      source,
+      '.app-shell--run-detail .status-gate--detail',
+    ).join('\n')
+    const integritySeal = declarationBlocks(
+      source,
+      '.app-shell--run-detail .status-gate--detail .integrity-seal',
+    ).join('\n')
+
+    expect(statusGate).toMatch(/grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/)
+    expect(integritySeal).toMatch(/grid-column:\s*1\s*\/\s*-1/)
+  })
+
   it('keeps Rerun Comparison on one continuous frame', () => {
     const source = styleSource('comparison-reference.css')
     const page = declarationBlock(source, '.app-shell--comparison .rerun-page')

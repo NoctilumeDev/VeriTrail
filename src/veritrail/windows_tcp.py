@@ -9,11 +9,13 @@ from dataclasses import dataclass
 from veritrail.errors import SafetyError
 
 AF_INET = 2
+AF_INET6 = 23
 TCP_TABLE_OWNER_PID_LISTENER = 3
 NO_ERROR = 0
 ERROR_INSUFFICIENT_BUFFER = 122
 MAX_TCP_TABLE_BYTES = 16 * 1024 * 1024
 ROW_STRUCT = struct.Struct("<LLLLLL")
+IPV6_ROW_STRUCT = struct.Struct("<16sLL16sLLLL")
 
 
 @dataclass(frozen=True)
@@ -21,6 +23,17 @@ class Ipv4TcpListener:
     local_address: str
     local_port: int
     owning_pid: int
+
+
+@dataclass(frozen=True)
+class Ipv6TcpListener:
+    local_address: str
+    local_port: int
+    owning_pid: int
+    scope_id: int
+
+
+TcpListener = Ipv4TcpListener | Ipv6TcpListener
 
 
 def _parse_ipv4_tcp_listener_table(content: bytes) -> tuple[Ipv4TcpListener, ...]:
@@ -53,7 +66,46 @@ def _parse_ipv4_tcp_listener_table(content: bytes) -> tuple[Ipv4TcpListener, ...
     return tuple(listeners)
 
 
-def _read_ipv4_tcp_listener_table() -> bytes:
+def _parse_ipv6_tcp_listener_table(content: bytes) -> tuple[Ipv6TcpListener, ...]:
+    if len(content) < 4:
+        raise SafetyError("Windows IPv6 TCP listener table returned a truncated header")
+    (count,) = struct.unpack_from("<L", content, 0)
+    required = 4 + count * IPV6_ROW_STRUCT.size
+    if required > len(content) or any(content[required:]):
+        raise SafetyError(
+            "Windows IPv6 TCP listener table returned an inconsistent row count"
+        )
+    listeners: list[Ipv6TcpListener] = []
+    offset = 4
+    for _ in range(count):
+        (
+            local_address,
+            local_scope_id,
+            local_port,
+            _remote_address,
+            _remote_scope_id,
+            _remote_port,
+            state,
+            owning_pid,
+        ) = IPV6_ROW_STRUCT.unpack_from(content, offset)
+        offset += IPV6_ROW_STRUCT.size
+        if state != 2:
+            raise SafetyError("Windows IPv6 TCP listener table returned a non-LISTEN row")
+        port = socket.ntohs(local_port & 0xFFFF)
+        if not 1 <= port <= 65535 or owning_pid <= 0:
+            raise SafetyError("Windows IPv6 TCP listener table returned an invalid owner row")
+        listeners.append(
+            Ipv6TcpListener(
+                local_address=socket.inet_ntop(socket.AF_INET6, local_address),
+                local_port=port,
+                owning_pid=owning_pid,
+                scope_id=local_scope_id,
+            )
+        )
+    return tuple(listeners)
+
+
+def _read_tcp_listener_table(address_family: int) -> bytes:
     if os.name != "nt":
         raise SafetyError("Windows TCP listener ownership is available only on Windows")
     iphlpapi = ctypes.WinDLL("iphlpapi", use_last_error=True)
@@ -74,7 +126,7 @@ def _read_ipv4_tcp_listener_table() -> bytes:
             None,
             ctypes.byref(size),
             0,
-            AF_INET,
+            address_family,
             TCP_TABLE_OWNER_PID_LISTENER,
             0,
         )
@@ -92,7 +144,7 @@ def _read_ipv4_tcp_listener_table() -> bytes:
                 buffer,
                 ctypes.byref(size),
                 0,
-                AF_INET,
+                address_family,
                 TCP_TABLE_OWNER_PID_LISTENER,
                 0,
             )
@@ -109,15 +161,33 @@ def _read_ipv4_tcp_listener_table() -> bytes:
     raise SafetyError("Windows TCP listener table changed beyond the bounded retry limit")
 
 
+def _read_ipv4_tcp_listener_table() -> bytes:
+    return _read_tcp_listener_table(AF_INET)
+
+
+def _read_ipv6_tcp_listener_table() -> bytes:
+    return _read_tcp_listener_table(AF_INET6)
+
+
 def list_ipv4_tcp_listeners() -> tuple[Ipv4TcpListener, ...]:
     return _parse_ipv4_tcp_listener_table(_read_ipv4_tcp_listener_table())
+
+
+def list_ipv6_tcp_listeners() -> tuple[Ipv6TcpListener, ...]:
+    return _parse_ipv6_tcp_listener_table(_read_ipv6_tcp_listener_table())
+
+
+def list_tcp_listeners() -> tuple[TcpListener, ...]:
+    # Both tables are mandatory. A partial inventory could incorrectly declare a
+    # sealed port FREE or attribute readiness to the wrong address family.
+    return (*list_ipv4_tcp_listeners(), *list_ipv6_tcp_listeners())
 
 
 def assert_loopback_ports_free(ports: list[int] | tuple[int, ...]) -> None:
     requested = set(ports)
     conflicts = [
         listener
-        for listener in list_ipv4_tcp_listeners()
+        for listener in list_tcp_listeners()
         if listener.local_port in requested
     ]
     if conflicts:

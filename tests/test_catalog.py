@@ -13,7 +13,10 @@ from veritrail.catalog import (
     CatalogError,
     build_catalog,
     load_catalog_manifest,
+    load_catalog_snapshot,
+    open_catalog_snapshot_bytes,
     open_catalog_readonly,
+    validate_bundle,
 )
 from veritrail.reporting import create_bundle
 
@@ -171,6 +174,21 @@ class CatalogTests(unittest.TestCase):
             with self.assertRaisesRegex(CatalogError, "Manifest"):
                 load_catalog_manifest(output)
 
+    def test_retained_bundle_snapshot_is_unchanged_after_source_mutation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "bundles"
+            root.mkdir()
+            bundle = self._bundle(root, "one", "snapshot-run")
+            validated = validate_bundle(bundle, root, retain_snapshot=True)
+            original = validated.load_owned_json("report.json", label="Report")
+
+            (bundle / "report.json").write_text('{"run_id":"replacement"}', encoding="utf-8")
+
+            retained = validated.load_owned_json("report.json", label="Report")
+            self.assertEqual("snapshot-run", retained["run_id"])
+            self.assertEqual(original, retained)
+
     def test_database_contains_no_absolute_paths_or_evidence_bodies(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
@@ -201,6 +219,18 @@ class CatalogTests(unittest.TestCase):
                 lambda value: value.update(
                     files=[entry for entry in value["files"] if entry["path"] != "report.json"]
                 ),
+            ),
+            "overlong-run-id": (
+                "INVALID_BUNDLE_STRUCTURE",
+                lambda value: value.update(run_id="r" * 65),
+            ),
+            "overlong-path": (
+                "BUNDLE_PATH_TOO_LONG",
+                lambda value: value["files"][0].update(path="p" * 1025),
+            ),
+            "invalid-unicode": (
+                "INVALID_BUNDLE_STRUCTURE",
+                lambda value: value["files"][0].update(path="evidence/\ud800.json"),
             ),
         }
         for name, (expected, mutate) in mutations.items():
@@ -261,9 +291,64 @@ class CatalogTests(unittest.TestCase):
                     """
                 ).fetchall()
                 self.assertIn("catalog_runs_order", " ".join(str(row[3]) for row in plan))
+                database_list = connection.execute("PRAGMA database_list").fetchall()
+                self.assertEqual("", database_list[0][2])
             finally:
                 connection.close()
             self.assertFalse(list(output.glob("catalog.sqlite3-*")))
+
+    def test_database_logical_digest_rejects_valid_schema_row_tampering(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "bundles"
+            root.mkdir()
+            self._bundle(root, "one", "logical-digest-run")
+            output = base / "catalog"
+            build_catalog(root, output)
+            database = output / "catalog.sqlite3"
+            connection = sqlite3.connect(database)
+            try:
+                connection.execute(
+                    "UPDATE catalog_runs SET source_relative = 'changed-source'"
+                )
+                connection.commit()
+            finally:
+                connection.close()
+            manifest_path = output / "catalog-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["database"]["size"] = database.stat().st_size
+            manifest["database"]["sha256"] = hashlib.sha256(database.read_bytes()).hexdigest()
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            with self.assertRaisesRegex(CatalogError, "逻辑摘要"):
+                open_catalog_readonly(output)
+
+    def test_database_exact_schema_rejects_extra_view_before_queries(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "bundles"
+            root.mkdir()
+            self._bundle(root, "one", "schema-allowlist-run")
+            output = base / "catalog"
+            build_catalog(root, output)
+            database = output / "catalog.sqlite3"
+            connection = sqlite3.connect(database)
+            try:
+                connection.execute(
+                    "CREATE VIEW unexpected_amplifier AS SELECT * FROM catalog_runs"
+                )
+                connection.commit()
+            finally:
+                connection.close()
+            manifest_path = output / "catalog-manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["database"]["size"] = database.stat().st_size
+            manifest["database"]["sha256"] = hashlib.sha256(database.read_bytes()).hexdigest()
+            manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+
+            manifest, database_bytes = load_catalog_snapshot(output)
+            with self.assertRaisesRegex(CatalogError, "精确允许清单"):
+                open_catalog_snapshot_bytes(database_bytes, manifest=manifest)
 
     def test_internal_database_failure_leaves_no_output_or_staging(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

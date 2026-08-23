@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+from veritrail.argument_policy import is_forbidden_inline_literal
 from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object
@@ -180,6 +181,7 @@ def _validate_arguments(
     *,
     prefix: str,
     node_id: str | None,
+    tool_binding: object,
     allowed_node_refs: set[str],
     errors: list[str],
 ) -> None:
@@ -213,7 +215,7 @@ def _validate_arguments(
                 errors.append(
                     f"{item_path}.literal must not contain secrets or personal identifiers"
                 )
-            elif literal.casefold() in {"-c", "/c", "-e", "--eval", "-command"}:
+            elif is_forbidden_inline_literal(literal, tool_binding):
                 errors.append(f"{item_path}.literal uses a forbidden inline or Shell entry point")
         elif field == "run_work_path":
             segments = argument[field]
@@ -411,6 +413,7 @@ def validate_project_profile(profile: dict[str, Any]) -> None:
                 application.get("arguments"),
                 prefix=f"nodes[{nodes.index(application)}].arguments",
                 node_id=application_id,
+                tool_binding=application.get("tool_binding"),
                 allowed_node_refs={application_id},
                 errors=errors,
             )
@@ -430,6 +433,7 @@ def validate_project_profile(profile: dict[str, Any]) -> None:
                 dependency.get("arguments"),
                 prefix=f"nodes[{nodes.index(dependency)}].arguments",
                 node_id=dependency_id,
+                tool_binding=dependency.get("tool_binding"),
                 allowed_node_refs={dependency_id},
                 errors=errors,
             )
@@ -441,6 +445,7 @@ def validate_project_profile(profile: dict[str, Any]) -> None:
                 application.get("arguments"),
                 prefix=f"nodes[{nodes.index(application)}].arguments",
                 node_id=application_id,
+                tool_binding=application.get("tool_binding"),
                 allowed_node_refs={dependency_id, application_id},
                 errors=errors,
             )

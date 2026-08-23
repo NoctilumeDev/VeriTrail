@@ -134,28 +134,6 @@
     padding-bottom: var(--space-5);
   }
 
-  .view-introduction__heading::after {
-    position: absolute;
-    bottom: 0.42rem;
-    left: 0;
-    width: 4.5rem;
-    height: 1px;
-    content: "";
-    background: linear-gradient(90deg, var(--structure-vermilion), color-mix(in srgb, var(--structure-vermilion) 20%, transparent));
-  }
-
-  .view-introduction__heading::before {
-    position: absolute;
-    bottom: 0.22rem;
-    left: 0.7rem;
-    z-index: 1;
-    width: 0.34rem;
-    height: 0.34rem;
-    content: "";
-    background: var(--structure-vermilion);
-    transform: rotate(45deg);
-  }
-
   .runs-toolstrip {
     position: relative;
     display: grid;

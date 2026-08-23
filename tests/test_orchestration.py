@@ -45,7 +45,7 @@ def _runtime_plan(port: int) -> dict:
     plan["target"]["root"] = "site"
     plan["target"]["port"] = port
     plan["preflight"]["ports"] = [{"port": port, "expected": "FREE"}]
-    origin = f"http://localhost:{port}"
+    origin = f"http://127.0.0.1:{port}"
     plan["browser"]["start_url"] = f"{origin}/index.html"
     plan["browser"]["allowed_origins"] = [origin]
     plan["preflight"].update(
@@ -111,6 +111,15 @@ class OrchestrationTests(unittest.TestCase):
                 self.assertEqual(
                     400,
                     _request(port, "GET", "/index.html", headers={"Host": "example.test"})[0],
+                )
+                self.assertEqual(
+                    400,
+                    _request(
+                        port,
+                        "GET",
+                        "/index.html",
+                        headers={"Host": f"localhost:{port}"},
+                    )[0],
                 )
                 self.assertEqual(400, _request(port, "GET", "/%2e%2e/secret.txt")[0])
                 self.assertEqual(404, _request(port, "GET", "/missing.txt")[0])

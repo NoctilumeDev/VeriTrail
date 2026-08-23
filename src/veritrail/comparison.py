@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import json
 import shutil
 import tempfile
 from dataclasses import dataclass
@@ -13,7 +12,7 @@ from veritrail.atomic_publish import publish_staged_directory
 from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.catalog import _CandidateRejected, validate_bundle
 from veritrail.errors import VeriTrailError
-from veritrail.jsonio import load_json_object
+from veritrail.markdown import markdown_code, markdown_text
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 
@@ -174,7 +173,7 @@ def _validate_report_plan_cross_reference(report: dict[str, Any], plan: dict[str
 def _load_source(candidate: Path) -> _SourceRun:
     candidate = candidate.absolute()
     try:
-        validated = validate_bundle(candidate, candidate.parent)
+        validated = validate_bundle(candidate, candidate.parent, retain_snapshot=True)
     except (_CandidateRejected, OSError, ValueError) as exc:
         code = exc.code if isinstance(exc, _CandidateRejected) else "SOURCE_BUNDLE_UNREADABLE"
         raise ComparisonError(code, "来源 Run Bundle 未通过完整性校验。") from exc
@@ -185,14 +184,14 @@ def _load_source(candidate: Path) -> _SourceRun:
             "来源 Run Bundle 没有声明 sealed-plan.json。",
         )
     try:
-        plan = load_json_object(candidate / "sealed-plan.json", label="Sealed Plan")
-        report = load_json_object(candidate / "report.json", label="Report")
+        plan = validated.load_owned_json("sealed-plan.json", label="Sealed Plan")
+        report = validated.load_owned_json("report.json", label="Report")
         profile_sha256: str | None = None
         if plan.get("schema_version") in {"0.6", "0.7"}:
             if "sealed-profile.json" not in declared:
                 raise ValueError("missing sealed ProjectProfile")
-            profile = load_json_object(
-                candidate / "sealed-profile.json", label="Sealed ProjectProfile"
+            profile = validated.load_owned_json(
+                "sealed-profile.json", label="Sealed ProjectProfile"
             )
             verify_sealed_project_profile(profile)
             verify_sealed_plan(plan, profile)
@@ -285,39 +284,39 @@ def _render_markdown(comparison: dict[str, Any]) -> str:
     lines = [
         "# VeriTrail Rerun Comparison",
         "",
-        f"- Comparison: `{comparison['comparison_id']}`",
-        f"- Rule: `{comparison['rule_version']}`",
-        f"- Status: **{comparison['comparison_status']}**",
-        f"- Comparable: `{str(comparison['comparable']).lower()}`",
+        f"- Comparison: {markdown_code(comparison['comparison_id'])}",
+        f"- Rule: {markdown_code(comparison['rule_version'])}",
+        f"- Status: **{markdown_text(comparison['comparison_status'])}**",
+        f"- Comparable: {markdown_code(str(comparison['comparable']).lower())}",
         "",
         "## Sources",
         "",
-        f"- Baseline: `{baseline['run_id']}` — `{baseline['execution_status']}` / `{baseline['verdict']}`",
-        f"- Repeat: `{repeat['run_id']}` — `{repeat['execution_status']}` / `{repeat['verdict']}`",
-        f"- Plan: `{baseline['plan']['id']}` / `{baseline['plan']['sha256']}`",
+        f"- Baseline: {markdown_code(baseline['run_id'])} — "
+        f"{markdown_code(baseline['execution_status'])} / {markdown_code(baseline['verdict'])}",
+        f"- Repeat: {markdown_code(repeat['run_id'])} — "
+        f"{markdown_code(repeat['execution_status'])} / {markdown_code(repeat['verdict'])}",
+        f"- Plan: {markdown_code(baseline['plan']['id'])} / "
+        f"{markdown_code(baseline['plan']['sha256'])}",
         "",
         "## Reasons",
         "",
     ]
     lines.extend(
-        f"- `{reason['code']}` — {reason['message']}" for reason in comparison["reasons"]
+        f"- {markdown_code(reason['code'])} — {markdown_text(reason['message'])}"
+        for reason in comparison["reasons"]
     )
     lines.extend(["", "## Differences", ""])
     if comparison["differences"]:
         for difference in comparison["differences"]:
-            baseline_value = json.dumps(
-                difference["baseline"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
-            )
-            repeat_value = json.dumps(
-                difference["repeat"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
-            )
             lines.append(
-                f"- `{difference['path']}` — baseline `{baseline_value}`; repeat `{repeat_value}`"
+                f"- {markdown_code(difference['path'])} — baseline "
+                f"{markdown_code(difference['baseline'], json_value=True)}; repeat "
+                f"{markdown_code(difference['repeat'], json_value=True)}"
             )
     else:
         lines.append("- No differences in the frozen M6 semantic projection.")
     lines.extend(["", "## Boundary", ""])
-    lines.extend(f"- {item}" for item in comparison["limits"])
+    lines.extend(f"- {markdown_text(item)}" for item in comparison["limits"])
     lines.append("")
     return "\n".join(lines)
 

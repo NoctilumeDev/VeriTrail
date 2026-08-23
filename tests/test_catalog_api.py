@@ -181,6 +181,17 @@ class CatalogApiTests(unittest.TestCase):
         self._request("GET", "/api/v1/catalog")
         self.assertFalse(list(self.catalog.glob("catalog.sqlite3-*")))
 
+    def test_service_keeps_the_verified_database_snapshot_after_public_file_changes(self) -> None:
+        database = self.catalog / "catalog.sqlite3"
+        database.write_bytes(b"replaced after server startup")
+
+        status, _, body = self._request("GET", "/api/v1/catalog")
+
+        self.assertEqual(200, status)
+        payload = json.loads(body)
+        self.assertEqual("api-run", payload["runs"][0]["run_id"])
+        self.assertEqual(self.server.application.manifest["catalog_id"], payload["catalog"]["catalog_id"])
+
     def test_static_hardlink_is_not_served(self) -> None:
         outside = self.base / "outside.js"
         outside.write_text("globalThis.outside = true", encoding="utf-8")

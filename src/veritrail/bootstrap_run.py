@@ -8,7 +8,7 @@ import threading
 import uuid
 from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Mapping
 
 from veritrail.bootstrap_browser import (
     ObservedBrowserCollectionError,
@@ -42,8 +42,10 @@ from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.resources import MEBIBYTE, host_memory_bytes, process_rss_bytes
 from veritrail.stop_control import StopRequested, StopSignal
 from veritrail.windows_readiness import (
+    OwnedListenerIdentity,
     OwnedReadinessObservation,
     probe_owned_http_readiness,
+    verify_owned_listener_identity,
 )
 from veritrail.windows_service import OwnedServiceSession
 
@@ -702,12 +704,36 @@ def run_observed_bootstrap(
         )
 
     roles = {node["node_id"]: node["role"] for node in profile["nodes"]}
+    tracked_sessions: dict[str, Any] = {}
+    tracked_session_nodes: dict[int, str] = {}
+    readiness_identities: dict[str, OwnedListenerIdentity] = {}
 
     def tracked_session_factory(**values: Any) -> Any:
         session = session_factory(**values)
         node_id = str(values["node_id"])
+        tracked_sessions[node_id] = session
+        tracked_session_nodes[id(session)] = node_id
         monitor.register(node_id, roles[node_id], session)
         return session
+
+    def tracked_readiness_probe(
+        session: Any,
+        readiness: Mapping[str, Any],
+        **values: Any,
+    ) -> OwnedReadinessObservation:
+        observation = readiness_probe(session, readiness, **values)
+        node_id = tracked_session_nodes.get(id(session))
+        if node_id is None:
+            raise SafetyError("readiness observation does not belong to an owned session")
+        if observation.ready:
+            identity = observation.listener_identity
+            if identity is None and browser_runner is None:
+                raise SafetyError(
+                    "readiness did not preserve owned listener identity for Browser exercise"
+                )
+            if identity is not None:
+                readiness_identities[node_id] = identity
+        return observation
 
     def exercise(lifecycle_deadline: float) -> str | None:
         nonlocal browser_artifact, browser_peak_rss_mb, browser_sampling_complete
@@ -716,6 +742,25 @@ def run_observed_bootstrap(
             raise StopRequested(stop_reason)
         browser_exercise["started"] = True
         runner = browser_runner or collect_observed_browser_evidence
+        listener_identities: dict[str, OwnedListenerIdentity] = {}
+
+        def verify_service_ownership() -> None:
+            for node_id, expected in listener_identities.items():
+                verify_owned_listener_identity(tracked_sessions[node_id], expected)
+
+        if browser_runner is None:
+            expected_nodes = tuple(resolved.preview["start_order"])
+            missing = [
+                node_id for node_id in expected_nodes if node_id not in readiness_identities
+            ]
+            if missing:
+                raise SafetyError(
+                    "readiness listener identity is unavailable for Browser exercise"
+                )
+            listener_identities = {
+                node_id: readiness_identities[node_id] for node_id in expected_nodes
+            }
+            verify_service_ownership()
         try:
             observed = (
                 runner(plan)
@@ -724,6 +769,7 @@ def run_observed_bootstrap(
                     plan,
                     cancel_event=stop_signal,
                     lifecycle_deadline=lifecycle_deadline,
+                    integrity_check=verify_service_ownership,
                 )
             )
         except ObservedBrowserInterrupted as exc:
@@ -757,6 +803,8 @@ def run_observed_bootstrap(
             raise SafetyError(
                 f"M10 Browser collection failed ({exc.error_type})"
             ) from exc
+        if browser_runner is None:
+            verify_service_ownership()
         if (
             not isinstance(observed, ObservedBrowserEvidence)
             or isinstance(observed.peak_rss_mb, bool)
@@ -839,7 +887,7 @@ def run_observed_bootstrap(
             on_services_ready_with_deadline=exercise,
             on_evidence_finalize=stage_pre_teardown,
             session_factory=tracked_session_factory,
-            readiness_probe=readiness_probe,
+            readiness_probe=tracked_readiness_probe,
         )
         finalization_failure = next(
             (

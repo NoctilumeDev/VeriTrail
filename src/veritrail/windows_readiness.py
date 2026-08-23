@@ -9,7 +9,7 @@ from typing import Any, Mapping
 from veritrail.errors import SafetyError
 from veritrail.stop_control import requested_stop_reason
 from veritrail.windows_service import OwnedServiceSession
-from veritrail.windows_tcp import list_ipv4_tcp_listeners
+from veritrail.windows_tcp import list_tcp_listeners
 
 
 @dataclass(frozen=True)
@@ -24,11 +24,55 @@ class ReadinessAttempt:
 
 
 @dataclass(frozen=True)
+class OwnedListenerIdentity:
+    """In-memory listener identity that must survive every browser request boundary."""
+
+    port: int
+    owning_pid: int
+    process_ids: frozenset[int]
+
+
+@dataclass(frozen=True)
 class OwnedReadinessObservation:
     ready: bool
     attempts: tuple[ReadinessAttempt, ...]
     error_type: str | None
     elapsed_ms: float
+    listener_identity: OwnedListenerIdentity | None = None
+
+
+def capture_owned_listener_identity(
+    session: OwnedServiceSession,
+) -> OwnedListenerIdentity:
+    stream_error = session.stream_error_type()
+    if stream_error is not None or session.root_exit_code() is not None:
+        raise SafetyError("owned service is not live before Browser exercise")
+    before = session.active_process_ids()
+    listeners = list_tcp_listeners()
+    after = session.active_process_ids()
+    port_rows = [item for item in listeners if item.local_port == session.port]
+    if (
+        before != after
+        or len(port_rows) != 1
+        or port_rows[0].local_address != "127.0.0.1"
+        or port_rows[0].owning_pid not in before
+    ):
+        raise SafetyError("owned listener identity is not stable before Browser exercise")
+    return OwnedListenerIdentity(
+        port=session.port,
+        owning_pid=port_rows[0].owning_pid,
+        process_ids=frozenset(after),
+    )
+
+
+def verify_owned_listener_identity(
+    session: OwnedServiceSession, expected: OwnedListenerIdentity
+) -> None:
+    if session.port != expected.port:
+        raise SafetyError("owned listener port changed during Browser exercise")
+    observed = capture_owned_listener_identity(session)
+    if observed != expected:
+        raise SafetyError("owned listener identity changed during Browser exercise")
 
 
 def _attempt(
@@ -59,7 +103,7 @@ def _post_response_ownership(
     expected_processes: frozenset[int],
 ) -> tuple[str, int]:
     before = session.active_process_ids()
-    listeners = list_ipv4_tcp_listeners()
+    listeners = list_tcp_listeners()
     after = session.active_process_ids()
     port_rows = [
         listener for listener in listeners if listener.local_port == session.port
@@ -128,7 +172,7 @@ def probe_owned_http_readiness(
 
         try:
             before = session.active_process_ids()
-            listeners = list_ipv4_tcp_listeners()
+            listeners = list_tcp_listeners()
             after = session.active_process_ids()
         except SafetyError:
             attempts.append(
@@ -312,6 +356,11 @@ def probe_owned_http_readiness(
                             attempts=tuple(attempts),
                             error_type=None,
                             elapsed_ms=round((time.monotonic() - started) * 1000, 3),
+                            listener_identity=OwnedListenerIdentity(
+                                port=session.port,
+                                owning_pid=owner,
+                                process_ids=frozenset(after),
+                            ),
                         )
             except (OSError, http.client.HTTPException):
                 attempts.append(
@@ -342,4 +391,5 @@ def probe_owned_http_readiness(
         attempts=tuple(attempts),
         error_type=terminal_error,
         elapsed_ms=round((time.monotonic() - started) * 1000, 3),
+        listener_identity=None,
     )

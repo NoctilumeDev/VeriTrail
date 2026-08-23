@@ -44,6 +44,7 @@ class _Handler(BaseHTTPRequestHandler):
   <main>
     <label>Run <input data-testid="run-label" autocomplete="off"></label>
     <button data-testid="load-evidence" type="button">Load evidence</button>
+    <button data-testid="open-popup" type="button">Open popup</button>
     <p data-testid="status">waiting</p>
     <ul data-testid="evidence-list"></ul>
   </main>
@@ -58,6 +59,9 @@ class _Handler(BaseHTTPRequestHandler):
         textContent: `dependency: ${evidence.dependency_status}`
       }));
       status.textContent = `evidence ready: ${label.value}`;
+    });
+    document.querySelector('[data-testid="open-popup"]').addEventListener('click', () => {
+      window.open('/popup', '_blank');
     });
   </script>
 </body>
@@ -86,6 +90,14 @@ class _Handler(BaseHTTPRequestHandler):
             ).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+        if self.browser_application and self.path == "/popup":
+            content = b"<!doctype html><title>Unexpected popup</title><p>popup</p>"
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(content)))
             self.end_headers()
             self.wfile.write(content)

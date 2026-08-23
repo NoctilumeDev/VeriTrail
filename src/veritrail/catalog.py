@@ -8,7 +8,7 @@ import shutil
 import sqlite3
 import stat
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -18,7 +18,7 @@ from veritrail.atomic_publish import publish_staged_directory
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
 from veritrail.evidence import ImportedEvidence, validate_evidence
 from veritrail.errors import VeriTrailError
-from veritrail.jsonio import load_json_object, load_json_object_bytes
+from veritrail.jsonio import load_json_object, load_json_object_bytes, read_stable_bytes
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.verdict import evaluate
@@ -29,7 +29,14 @@ MAX_CANDIDATES = 1000
 MAX_FILES = 256
 MAX_FILE_BYTES = 10 * 1024 * 1024
 MAX_BUNDLE_BYTES = 64 * 1024 * 1024
+MAX_IMPORTED_STRING_BYTES = 16 * 1024
+MAX_BUNDLE_PATH_BYTES = 1024
+MAX_PATH_SEGMENT_BYTES = 255
+MAX_METADATA_ITEMS = 4096
+MAX_CATALOG_RETAINED_BYTES = 16 * 1024 * 1024
+MAX_CATALOG_DATABASE_BYTES = 128 * 1024 * 1024
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+RUN_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9._-]{1,63}$")
 EXECUTION_STATUSES = {"PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"}
 VERDICTS = {"PASS", "FAIL", "INCONCLUSIVE", "PENDING"}
 SAFE_ATTACHMENT_TYPES = {
@@ -38,6 +45,53 @@ SAFE_ATTACHMENT_TYPES = {
     "text/plain; charset=utf-8",
 }
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+
+CATALOG_SCHEMA_SQL = """
+PRAGMA page_size = 4096;
+PRAGMA journal_mode = OFF;
+PRAGMA synchronous = OFF;
+PRAGMA temp_store = MEMORY;
+PRAGMA foreign_keys = ON;
+CREATE TABLE catalog_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+) WITHOUT ROWID;
+CREATE TABLE catalog_runs (
+    catalog_run_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL UNIQUE CHECK (length(run_id) BETWEEN 2 AND 64),
+    created_at TEXT NOT NULL,
+    execution_status TEXT NOT NULL CHECK (execution_status IN ('PLANNED','RUNNING','COMPLETED','ABORTED','ERROR')),
+    verdict TEXT NOT NULL CHECK (verdict IN ('PASS','FAIL','INCONCLUSIVE','PENDING')),
+    plan_id TEXT NOT NULL CHECK (length(plan_id) BETWEEN 2 AND 64),
+    plan_version INTEGER NOT NULL CHECK (plan_version >= 0),
+    plan_sha256 TEXT NOT NULL CHECK (length(plan_sha256) = 64),
+    bundle_sha256 TEXT NOT NULL CHECK (length(bundle_sha256) = 64),
+    file_count INTEGER NOT NULL CHECK (file_count > 0 AND file_count <= 256),
+    total_bytes INTEGER NOT NULL CHECK (total_bytes >= 0 AND total_bytes <= 67108864),
+    duplicate_count INTEGER NOT NULL CHECK (duplicate_count >= 0),
+    source_relative TEXT NOT NULL UNIQUE CHECK (length(source_relative) BETWEEN 1 AND 1024)
+) WITHOUT ROWID;
+CREATE TABLE catalog_files (
+    catalog_run_id TEXT NOT NULL,
+    path TEXT NOT NULL,
+    sha256 TEXT NOT NULL CHECK (length(sha256) = 64),
+    size INTEGER NOT NULL CHECK (size >= 0 AND size <= 10485760),
+    PRIMARY KEY (catalog_run_id, path),
+    FOREIGN KEY (catalog_run_id) REFERENCES catalog_runs(catalog_run_id)
+) WITHOUT ROWID;
+CREATE TABLE catalog_issues (
+    issue_id TEXT PRIMARY KEY,
+    code TEXT NOT NULL,
+    candidate_id TEXT NOT NULL,
+    run_id TEXT,
+    bundle_digests_json TEXT NOT NULL,
+    occurrence_count INTEGER NOT NULL CHECK (occurrence_count > 0)
+) WITHOUT ROWID;
+CREATE INDEX catalog_runs_order
+    ON catalog_runs(created_at DESC, run_id ASC, catalog_run_id ASC);
+CREATE INDEX catalog_issues_order
+    ON catalog_issues(code ASC, run_id ASC, issue_id ASC);
+"""
 
 
 class CatalogError(VeriTrailError):
@@ -76,6 +130,18 @@ class ValidatedBundle:
     bundle_sha256: str
     files: tuple[BundleFile, ...]
     total_bytes: int
+    owned_files: tuple[tuple[str, bytes], ...] = field(default=(), repr=False)
+
+    def read_owned_file(self, path: str) -> bytes:
+        for owned_path, content in self.owned_files:
+            if owned_path == path:
+                return content
+        raise KeyError(path)
+
+    def load_owned_json(self, path: str, *, label: str) -> dict[str, Any]:
+        return load_json_object_bytes(
+            self.read_owned_file(path), label=label, name=path
+        )
 
 
 @dataclass(frozen=True)
@@ -136,11 +202,31 @@ def _safe_bundle_path(value: Any) -> str:
     parts = value.split("/")
     if any(part in {"", ".", ".."} for part in parts):
         raise _CandidateRejected("UNSAFE_BUNDLE_PATH")
+    try:
+        value_bytes = len(value.encode("utf-8"))
+        segment_bytes = [len(part.encode("utf-8")) for part in parts]
+    except UnicodeError as exc:
+        raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE") from exc
+    if value_bytes > MAX_BUNDLE_PATH_BYTES or any(
+        size > MAX_PATH_SEGMENT_BYTES for size in segment_bytes
+    ):
+        raise _CandidateRejected("BUNDLE_PATH_TOO_LONG")
     return "/".join(parts)
 
 
-def _required_string(value: Any) -> str:
+def _required_string(
+    value: Any,
+    *,
+    max_bytes: int = MAX_IMPORTED_STRING_BYTES,
+    pattern: re.Pattern[str] | None = None,
+) -> str:
     if not isinstance(value, str) or not value:
+        raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
+    try:
+        encoded_size = len(value.encode("utf-8"))
+    except UnicodeError as exc:
+        raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE") from exc
+    if encoded_size > max_bytes or (pattern is not None and not pattern.fullmatch(value)):
         raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
     return value
 
@@ -202,7 +288,7 @@ def _read_stable_file(path: Path) -> bytes:
 
 
 def _candidate_id(source_relative: str) -> str:
-    return "cand_" + sha256_bytes(source_relative.encode("utf-8"))[:20]
+    return "cand_" + sha256_bytes(os.fsencode(source_relative))[:20]
 
 
 def _root_binding(root: Path) -> str:
@@ -261,7 +347,7 @@ def _collect_regular_files(candidate: Path, root: Path) -> dict[str, Path]:
 def _parse_bundle_manifest(value: dict[str, Any]) -> tuple[str, tuple[BundleFile, ...]]:
     if value.get("schema_version") != "0.1":
         raise _CandidateRejected("BUNDLE_VERSION_UNSUPPORTED")
-    run_id = _required_string(value.get("run_id"))
+    run_id = _required_string(value.get("run_id"), max_bytes=64, pattern=RUN_ID_PATTERN)
     raw_files = value.get("files")
     if not isinstance(raw_files, list):
         raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
@@ -297,8 +383,12 @@ def _validate_report_and_evidence(
 ) -> tuple[str, str, str, str, int, str]:
     if report.get("schema_version") != "0.1" or evidence.get("schema_version") != "0.1":
         raise _CandidateRejected("BUNDLE_VERSION_UNSUPPORTED")
-    report_run_id = _required_string(report.get("run_id"))
-    evidence_run_id = _required_string(evidence.get("run_id"))
+    report_run_id = _required_string(
+        report.get("run_id"), max_bytes=64, pattern=RUN_ID_PATTERN
+    )
+    evidence_run_id = _required_string(
+        evidence.get("run_id"), max_bytes=64, pattern=RUN_ID_PATTERN
+    )
     if report_run_id != manifest_run_id or evidence_run_id != manifest_run_id:
         raise _CandidateRejected("RUN_ID_MISMATCH")
     execution_status = _required_string(report.get("execution_status"))
@@ -315,7 +405,7 @@ def _validate_report_and_evidence(
     plan = report.get("plan")
     if not isinstance(plan, dict):
         raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
-    plan_id = _required_string(plan.get("id"))
+    plan_id = _required_string(plan.get("id"), max_bytes=64, pattern=RUN_ID_PATTERN)
     plan_version = _required_nonnegative_int(plan.get("version"))
     plan_sha256 = _required_sha256(plan.get("sha256"))
     reasons = report.get("reasons")
@@ -330,6 +420,11 @@ def _validate_report_and_evidence(
         or not isinstance(contamination, list)
     ):
         raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
+    if any(
+        len(items) > MAX_METADATA_ITEMS
+        for items in (reasons, assertions, missing_evidence, contamination)
+    ):
+        raise _CandidateRejected("BUNDLE_METADATA_LIMIT")
     for reason in reasons:
         if not isinstance(reason, dict):
             raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
@@ -349,11 +444,15 @@ def _validate_report_and_evidence(
     evidence_artifacts = evidence.get("artifacts")
     if not isinstance(report_artifacts, list) or not isinstance(evidence_artifacts, list):
         raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
+    if len(report_artifacts) > MAX_FILES or len(evidence_artifacts) > MAX_FILES:
+        raise _CandidateRejected("BUNDLE_METADATA_LIMIT")
     if canonical_json_bytes(report_artifacts) != canonical_json_bytes(evidence_artifacts):
         raise _CandidateRejected("EVIDENCE_INDEX_MISMATCH")
     duplicates = evidence.get("duplicate_inputs_ignored")
     if not isinstance(duplicates, list):
         raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE")
+    if len(duplicates) > MAX_FILES:
+        raise _CandidateRejected("BUNDLE_METADATA_LIMIT")
     for duplicate in duplicates:
         _required_string(duplicate)
     seen_artifacts: set[str] = set()
@@ -645,7 +744,9 @@ def _validate_sealed_authorities(
     return profile["seal"]["digest"]
 
 
-def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
+def validate_bundle(
+    candidate: Path, artifact_root: Path, *, retain_snapshot: bool = False
+) -> ValidatedBundle:
     root = artifact_root.resolve(strict=True)
     source_relative = candidate.relative_to(artifact_root).as_posix()
     metadata = os.lstat(candidate)
@@ -729,7 +830,30 @@ def validate_bundle(candidate: Path, artifact_root: Path) -> ValidatedBundle:
         bundle_sha256=bundle_sha256,
         files=tuple(sorted(all_files, key=lambda item: item.path)),
         total_bytes=sum(item.size for item in all_files),
+        owned_files=(
+            tuple(sorted(file_bytes.items())) if retain_snapshot else ()
+        ),
     )
+
+
+def _retained_bundle_bytes(bundle: ValidatedBundle) -> int:
+    strings = (
+        bundle.source_relative,
+        bundle.run_id,
+        bundle.created_at,
+        bundle.execution_status,
+        bundle.verdict,
+        bundle.plan_id,
+        bundle.plan_sha256,
+        bundle.profile_sha256 or "",
+        bundle.bundle_sha256,
+        *(item.path for item in bundle.files),
+        *(item.sha256 for item in bundle.files),
+    )
+    try:
+        return sum(len(value.encode("utf-8")) for value in strings)
+    except UnicodeError as exc:
+        raise _CandidateRejected("INVALID_BUNDLE_STRUCTURE") from exc
 
 
 def _scan_bundles(artifact_root: Path) -> tuple[list[ValidatedBundle], list[CatalogIssue]]:
@@ -751,10 +875,18 @@ def _scan_bundles(artifact_root: Path) -> tuple[list[ValidatedBundle], list[Cata
         raise CatalogError("CATALOG_CANDIDATE_LIMIT", "候选 Bundle 数量超过 1000 个上限。")
     bundles: list[ValidatedBundle] = []
     issues: list[CatalogIssue] = []
+    retained_bytes = 0
     for candidate in candidates:
         source_relative = candidate.relative_to(artifact_root).as_posix()
         try:
-            bundles.append(validate_bundle(candidate, artifact_root))
+            bundle = validate_bundle(candidate, artifact_root)
+            retained_bytes += _retained_bundle_bytes(bundle)
+            if retained_bytes > MAX_CATALOG_RETAINED_BYTES:
+                raise CatalogError(
+                    "CATALOG_METADATA_BUDGET",
+                    "Catalog 保留元数据超过安全预算。",
+                )
+            bundles.append(bundle)
         except _CandidateRejected as exc:
             issues.append(CatalogIssue(exc.code, _candidate_id(source_relative)))
         except OSError:
@@ -841,54 +973,7 @@ def _create_database(
 ) -> None:
     connection = sqlite3.connect(path)
     try:
-        connection.executescript(
-            """
-            PRAGMA page_size = 4096;
-            PRAGMA journal_mode = OFF;
-            PRAGMA synchronous = OFF;
-            PRAGMA temp_store = MEMORY;
-            PRAGMA foreign_keys = ON;
-            CREATE TABLE catalog_meta (
-                key TEXT PRIMARY KEY,
-                value TEXT NOT NULL
-            ) WITHOUT ROWID;
-            CREATE TABLE catalog_runs (
-                catalog_run_id TEXT PRIMARY KEY,
-                run_id TEXT NOT NULL UNIQUE,
-                created_at TEXT NOT NULL,
-                execution_status TEXT NOT NULL CHECK (execution_status IN ('PLANNED','RUNNING','COMPLETED','ABORTED','ERROR')),
-                verdict TEXT NOT NULL CHECK (verdict IN ('PASS','FAIL','INCONCLUSIVE','PENDING')),
-                plan_id TEXT NOT NULL,
-                plan_version INTEGER NOT NULL CHECK (plan_version >= 0),
-                plan_sha256 TEXT NOT NULL CHECK (length(plan_sha256) = 64),
-                bundle_sha256 TEXT NOT NULL CHECK (length(bundle_sha256) = 64),
-                file_count INTEGER NOT NULL CHECK (file_count > 0 AND file_count <= 256),
-                total_bytes INTEGER NOT NULL CHECK (total_bytes >= 0 AND total_bytes <= 67108864),
-                duplicate_count INTEGER NOT NULL CHECK (duplicate_count >= 0),
-                source_relative TEXT NOT NULL UNIQUE
-            ) WITHOUT ROWID;
-            CREATE TABLE catalog_files (
-                catalog_run_id TEXT NOT NULL,
-                path TEXT NOT NULL,
-                sha256 TEXT NOT NULL CHECK (length(sha256) = 64),
-                size INTEGER NOT NULL CHECK (size >= 0 AND size <= 10485760),
-                PRIMARY KEY (catalog_run_id, path),
-                FOREIGN KEY (catalog_run_id) REFERENCES catalog_runs(catalog_run_id)
-            ) WITHOUT ROWID;
-            CREATE TABLE catalog_issues (
-                issue_id TEXT PRIMARY KEY,
-                code TEXT NOT NULL,
-                candidate_id TEXT NOT NULL,
-                run_id TEXT,
-                bundle_digests_json TEXT NOT NULL,
-                occurrence_count INTEGER NOT NULL CHECK (occurrence_count > 0)
-            ) WITHOUT ROWID;
-            CREATE INDEX catalog_runs_order
-                ON catalog_runs(created_at DESC, run_id ASC, catalog_run_id ASC);
-            CREATE INDEX catalog_issues_order
-                ON catalog_issues(code ASC, run_id ASC, issue_id ASC);
-            """
-        )
+        connection.executescript(CATALOG_SCHEMA_SQL)
         metadata = {
             "schema_version": CATALOG_SCHEMA_VERSION,
             "api_version": CATALOG_API_VERSION,
@@ -957,6 +1042,329 @@ def _create_database(
         connection.close()
 
 
+CATALOG_META_KEYS = {
+    "schema_version",
+    "api_version",
+    "catalog_id",
+    "bundle_set_sha256",
+    "artifact_root_binding",
+    "tool_version",
+}
+CATALOG_TABLE_QUERIES = {
+    "meta": "SELECT key, value FROM catalog_meta ORDER BY key",
+    "runs": """
+        SELECT catalog_run_id, run_id, created_at, execution_status, verdict,
+               plan_id, plan_version, plan_sha256, bundle_sha256, file_count,
+               total_bytes, duplicate_count, source_relative
+        FROM catalog_runs ORDER BY catalog_run_id
+    """,
+    "files": """
+        SELECT catalog_run_id, path, sha256, size
+        FROM catalog_files ORDER BY catalog_run_id, path
+    """,
+    "issues": """
+        SELECT issue_id, code, candidate_id, run_id, bundle_digests_json,
+               occurrence_count
+        FROM catalog_issues ORDER BY issue_id
+    """,
+}
+
+
+def _normalized_schema_sql(value: str | None) -> str | None:
+    return None if value is None else " ".join(value.split())
+
+
+def _schema_signature(connection: sqlite3.Connection) -> tuple[tuple[Any, ...], ...]:
+    return tuple(
+        (row[0], row[1], row[2], _normalized_schema_sql(row[3]))
+        for row in connection.execute(
+            "SELECT type, name, tbl_name, sql FROM sqlite_schema ORDER BY type, name, tbl_name"
+        )
+    )
+
+
+def _expected_schema_signature() -> tuple[tuple[Any, ...], ...]:
+    expected = sqlite3.connect(":memory:")
+    try:
+        expected.executescript(CATALOG_SCHEMA_SQL)
+        return _schema_signature(expected)
+    finally:
+        expected.close()
+
+
+def _catalog_rows(connection: sqlite3.Connection) -> dict[str, list[tuple[Any, ...]]]:
+    return {
+        name: [tuple(row) for row in connection.execute(query)]
+        for name, query in CATALOG_TABLE_QUERIES.items()
+    }
+
+
+def _catalog_logical_sha256(rows: dict[str, list[tuple[Any, ...]]]) -> str:
+    return sha256_json(
+        {
+            "schema_version": CATALOG_SCHEMA_VERSION,
+            "meta": rows["meta"],
+            "runs": rows["runs"],
+            "files": rows["files"],
+            "issues": rows["issues"],
+        }
+    )
+
+
+def _database_logical_sha256(path: Path) -> str:
+    connection = sqlite3.connect(f"file:{path.as_posix()}?mode=ro&immutable=1", uri=True)
+    try:
+        return _catalog_logical_sha256(_catalog_rows(connection))
+    finally:
+        connection.close()
+
+
+def _catalog_text(value: Any, *, maximum: int, optional: bool = False) -> str | None:
+    if value is None and optional:
+        return None
+    if not isinstance(value, str) or not value:
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库包含无效文本字段。")
+    try:
+        size = len(value.encode("utf-8"))
+    except UnicodeError as exc:
+        raise CatalogError(
+            "CATALOG_DATABASE_INVALID", "Catalog 数据库包含无效 Unicode 文本。"
+        ) from exc
+    if size > maximum:
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库文本字段超过安全上限。")
+    return value
+
+
+def _catalog_nonnegative_int(value: Any, *, maximum: int) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= maximum:
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库包含无效数值字段。")
+    return value
+
+
+def _validate_catalog_database(
+    connection: sqlite3.Connection, manifest: dict[str, Any]
+) -> dict[str, list[tuple[Any, ...]]]:
+    expected_schema = _expected_schema_signature()
+    schema_count = connection.execute("SELECT COUNT(*) FROM sqlite_schema").fetchone()[0]
+    if schema_count != len(expected_schema) or _schema_signature(connection) != expected_schema:
+        raise CatalogError(
+            "CATALOG_DATABASE_SCHEMA_REJECTED",
+            "Catalog 数据库结构不在精确允许清单中。",
+        )
+    integrity = connection.execute("PRAGMA integrity_check(1)").fetchone()
+    if integrity is None or integrity[0] != "ok":
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库完整性校验失败。")
+    if connection.execute("PRAGMA foreign_key_check").fetchone() is not None:
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库引用完整性校验失败。")
+
+    counts = {
+        "meta": connection.execute("SELECT COUNT(*) FROM catalog_meta").fetchone()[0],
+        "runs": connection.execute("SELECT COUNT(*) FROM catalog_runs").fetchone()[0],
+        "files": connection.execute("SELECT COUNT(*) FROM catalog_files").fetchone()[0],
+        "issues": connection.execute("SELECT COUNT(*) FROM catalog_issues").fetchone()[0],
+    }
+    if (
+        counts["meta"] != len(CATALOG_META_KEYS)
+        or counts["runs"] != manifest["run_count"]
+        or counts["issues"] != manifest["issue_count"]
+        or counts["runs"] > MAX_CANDIDATES
+        or counts["issues"] > MAX_CANDIDATES
+        or counts["files"] > MAX_CANDIDATES * MAX_FILES
+    ):
+        raise CatalogError("CATALOG_DATABASE_LIMIT", "Catalog 数据库行数或声明计数无效。")
+
+    length_checks = (
+        (
+            "SELECT MAX(length(CAST(key AS BLOB))), "
+            "MAX(length(CAST(value AS BLOB))) FROM catalog_meta",
+            (64, MAX_IMPORTED_STRING_BYTES),
+        ),
+        (
+            """
+            SELECT MAX(length(CAST(catalog_run_id AS BLOB))),
+                   MAX(length(CAST(run_id AS BLOB))),
+                   MAX(length(CAST(created_at AS BLOB))),
+                   MAX(length(CAST(execution_status AS BLOB))),
+                   MAX(length(CAST(verdict AS BLOB))),
+                   MAX(length(CAST(plan_id AS BLOB))),
+                   MAX(length(CAST(plan_sha256 AS BLOB))),
+                   MAX(length(CAST(bundle_sha256 AS BLOB))),
+                   MAX(length(CAST(source_relative AS BLOB)))
+            FROM catalog_runs
+            """,
+            (27, 64, 128, 16, 16, 64, 64, 64, MAX_BUNDLE_PATH_BYTES),
+        ),
+        (
+            "SELECT MAX(length(CAST(catalog_run_id AS BLOB))), "
+            "MAX(length(CAST(path AS BLOB))), "
+            "MAX(length(CAST(sha256 AS BLOB))) FROM catalog_files",
+            (27, MAX_BUNDLE_PATH_BYTES, 64),
+        ),
+        (
+            """
+            SELECT MAX(length(CAST(issue_id AS BLOB))),
+                   MAX(length(CAST(code AS BLOB))),
+                   MAX(length(CAST(candidate_id AS BLOB))),
+                   MAX(length(CAST(run_id AS BLOB))),
+                   MAX(length(CAST(bundle_digests_json AS BLOB)))
+            FROM catalog_issues
+            """,
+            (27, 128, 25, 64, MAX_IMPORTED_STRING_BYTES),
+        ),
+    )
+    for query, limits in length_checks:
+        observed = connection.execute(query).fetchone()
+        if observed is None or any(
+            value is not None and (not isinstance(value, int) or value > limit)
+            for value, limit in zip(observed, limits)
+        ):
+            raise CatalogError(
+                "CATALOG_DATABASE_LIMIT", "Catalog 数据库字段长度超过安全上限。"
+            )
+
+    rows = _catalog_rows(connection)
+    metadata = dict(rows["meta"])
+    expected_metadata = {
+        "schema_version": CATALOG_SCHEMA_VERSION,
+        "api_version": CATALOG_API_VERSION,
+        "catalog_id": manifest["catalog_id"],
+        "bundle_set_sha256": manifest["bundle_set_sha256"],
+        "artifact_root_binding": manifest["artifact_root_binding"],
+        "tool_version": manifest["tool_version"],
+    }
+    if set(metadata) != CATALOG_META_KEYS or metadata != expected_metadata:
+        raise CatalogError("CATALOG_DATABASE_METADATA_MISMATCH", "Catalog 数据库元数据不一致。")
+    for key, value in rows["meta"]:
+        _catalog_text(key, maximum=64)
+        _catalog_text(value, maximum=MAX_IMPORTED_STRING_BYTES)
+
+    run_files: dict[str, tuple[int, int]] = {}
+    duplicate_count = 0
+    for row in rows["runs"]:
+        (
+            catalog_run_id,
+            run_id,
+            created_at,
+            execution_status,
+            verdict,
+            plan_id,
+            plan_version,
+            plan_sha256,
+            bundle_sha256,
+            file_count,
+            total_bytes,
+            duplicates,
+            source_relative,
+        ) = row
+        if not isinstance(catalog_run_id, str) or not re.fullmatch(r"cr_[0-9a-f]{24}", catalog_run_id):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Run 标识无效。")
+        if not isinstance(run_id, str) or not RUN_ID_PATTERN.fullmatch(run_id):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Run ID 无效。")
+        _catalog_text(created_at, maximum=128)
+        try:
+            datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Run 时间无效。") from exc
+        if execution_status not in EXECUTION_STATUSES or verdict not in VERDICTS:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Run 状态无效。")
+        if not isinstance(plan_id, str) or not RUN_ID_PATTERN.fullmatch(plan_id):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Plan ID 无效。")
+        _catalog_nonnegative_int(plan_version, maximum=2**31 - 1)
+        if not isinstance(plan_sha256, str) or not SHA256_PATTERN.fullmatch(plan_sha256):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Plan 摘要无效。")
+        if not isinstance(bundle_sha256, str) or not SHA256_PATTERN.fullmatch(bundle_sha256):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Bundle 摘要无效。")
+        file_count = _catalog_nonnegative_int(file_count, maximum=MAX_FILES)
+        if file_count == 0:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Bundle 文件计数无效。")
+        total_bytes = _catalog_nonnegative_int(total_bytes, maximum=MAX_BUNDLE_BYTES)
+        duplicates = _catalog_nonnegative_int(duplicates, maximum=MAX_CANDIDATES)
+        try:
+            _safe_bundle_path(_catalog_text(source_relative, maximum=MAX_BUNDLE_PATH_BYTES))
+        except _CandidateRejected as exc:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 来源路径无效。") from exc
+        run_files[catalog_run_id] = (file_count, total_bytes)
+        duplicate_count += duplicates
+
+    observed_files: dict[str, tuple[int, int]] = {
+        catalog_run_id: (0, 0) for catalog_run_id in run_files
+    }
+    for catalog_run_id, path, digest, size in rows["files"]:
+        if catalog_run_id not in observed_files:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 文件引用未知 Run。")
+        try:
+            _safe_bundle_path(path)
+        except _CandidateRejected as exc:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 文件路径无效。") from exc
+        if not isinstance(digest, str) or not SHA256_PATTERN.fullmatch(digest):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 文件摘要无效。")
+        size = _catalog_nonnegative_int(size, maximum=MAX_FILE_BYTES)
+        count, total = observed_files[catalog_run_id]
+        observed_files[catalog_run_id] = (count + 1, total + size)
+    if observed_files != run_files or duplicate_count != manifest["duplicate_count"]:
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 文件或重复项计数不一致。")
+
+    for issue_id, code, candidate_id, run_id, digests_json, occurrence_count in rows["issues"]:
+        if not isinstance(issue_id, str) or not re.fullmatch(r"ci_[0-9a-f]{24}", issue_id):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Issue 标识无效。")
+        if not isinstance(candidate_id, str) or not re.fullmatch(r"cand_[0-9a-f]{20}", candidate_id):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Candidate 标识无效。")
+        _catalog_text(code, maximum=128)
+        if run_id is not None and (not isinstance(run_id, str) or not RUN_ID_PATTERN.fullmatch(run_id)):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Issue Run ID 无效。")
+        _catalog_text(digests_json, maximum=MAX_IMPORTED_STRING_BYTES)
+        try:
+            digests = json.loads(digests_json)
+        except (TypeError, ValueError) as exc:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Issue 摘要列表无效。") from exc
+        if (
+            not isinstance(digests, list)
+            or len(digests) > MAX_CANDIDATES
+            or any(not isinstance(item, str) or not SHA256_PATTERN.fullmatch(item) for item in digests)
+            or canonical_json_bytes(digests).decode("utf-8") != digests_json
+        ):
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Issue 摘要列表无效。")
+        occurrence_count = _catalog_nonnegative_int(occurrence_count, maximum=MAX_CANDIDATES)
+        if occurrence_count == 0:
+            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog Issue 次数无效。")
+
+    expected_logical = manifest["database"]["logical_sha256"]
+    if _catalog_logical_sha256(rows) != expected_logical:
+        raise CatalogError(
+            "CATALOG_DATABASE_LOGICAL_MISMATCH", "Catalog 数据库逻辑摘要与 Manifest 不一致。"
+        )
+    return rows
+
+
+def _copy_catalog_rows(
+    destination: sqlite3.Connection, rows: dict[str, list[tuple[Any, ...]]]
+) -> None:
+    destination.executemany("INSERT INTO catalog_meta(key, value) VALUES (?, ?)", rows["meta"])
+    destination.executemany(
+        """
+        INSERT INTO catalog_runs(
+            catalog_run_id, run_id, created_at, execution_status, verdict,
+            plan_id, plan_version, plan_sha256, bundle_sha256, file_count,
+            total_bytes, duplicate_count, source_relative
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        rows["runs"],
+    )
+    destination.executemany(
+        "INSERT INTO catalog_files(catalog_run_id, path, sha256, size) VALUES (?, ?, ?, ?)",
+        rows["files"],
+    )
+    destination.executemany(
+        """
+        INSERT INTO catalog_issues(
+            issue_id, code, candidate_id, run_id, bundle_digests_json, occurrence_count
+        ) VALUES (?, ?, ?, ?, ?, ?)
+        """,
+        rows["issues"],
+    )
+    destination.commit()
+
+
 def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
     artifact_root = artifact_root.absolute()
     output = output.absolute()
@@ -983,6 +1391,7 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
         )
         database_size = database.stat().st_size
         database_sha256 = _sha256_file(database)
+        database_logical_sha256 = _database_logical_sha256(database)
         manifest = {
             "schema_version": CATALOG_SCHEMA_VERSION,
             "api_version": CATALOG_API_VERSION,
@@ -996,6 +1405,7 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
             "database": {
                 "name": "catalog.sqlite3",
                 "sha256": database_sha256,
+                "logical_sha256": database_logical_sha256,
                 "size": database_size,
             },
             "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
@@ -1019,10 +1429,12 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
     )
 
 
-def load_catalog_manifest(catalog_root: Path) -> dict[str, Any]:
+def load_catalog_snapshot(catalog_root: Path) -> tuple[dict[str, Any], bytes]:
     manifest_path = catalog_root / "catalog-manifest.json"
     try:
-        manifest = load_json_object(manifest_path, label="Catalog Manifest")
+        manifest = load_json_object(
+            manifest_path, label="Catalog Manifest", max_bytes=1024 * 1024
+        )
     except Exception as exc:
         raise CatalogError("CATALOG_MANIFEST_INVALID", "Catalog Manifest 不可读取或无效。") from exc
     if manifest.get("schema_version") != CATALOG_SCHEMA_VERSION:
@@ -1041,34 +1453,121 @@ def load_catalog_manifest(catalog_root: Path) -> dict[str, Any]:
     for field in ("run_count", "issue_count", "duplicate_count"):
         if isinstance(manifest.get(field), bool) or not isinstance(manifest.get(field), int) or manifest[field] < 0:
             raise CatalogError("CATALOG_MANIFEST_INVALID", "Catalog Manifest 计数无效。")
+        if manifest[field] > MAX_CANDIDATES:
+            raise CatalogError("CATALOG_MANIFEST_INVALID", "Catalog Manifest 计数超过安全上限。")
     if not isinstance(manifest.get("generated_at"), str) or not isinstance(
         manifest.get("tool_version"), str
     ):
         raise CatalogError("CATALOG_MANIFEST_INVALID", "Catalog Manifest 构建事实无效。")
     database = manifest.get("database")
-    if not isinstance(database, dict) or database.get("name") != "catalog.sqlite3":
+    if (
+        not isinstance(database, dict)
+        or set(database) != {"name", "sha256", "logical_sha256", "size"}
+        or database.get("name") != "catalog.sqlite3"
+    ):
         raise CatalogError("CATALOG_MANIFEST_INVALID", "Catalog Manifest 数据库声明无效。")
     if (
         not isinstance(database.get("sha256"), str)
         or not SHA256_PATTERN.fullmatch(database["sha256"])
+        or not isinstance(database.get("logical_sha256"), str)
+        or not SHA256_PATTERN.fullmatch(database["logical_sha256"])
         or isinstance(database.get("size"), bool)
         or not isinstance(database.get("size"), int)
         or database["size"] <= 0
+        or database["size"] > MAX_CATALOG_DATABASE_BYTES
     ):
         raise CatalogError("CATALOG_MANIFEST_INVALID", "Catalog Manifest 数据库摘要无效。")
-    database_path = catalog_root / "catalog.sqlite3"
     try:
-        size = database_path.stat().st_size
-    except OSError as exc:
+        database_bytes = read_stable_bytes(
+            catalog_root / "catalog.sqlite3",
+            label="Catalog database",
+            max_bytes=MAX_CATALOG_DATABASE_BYTES,
+        )
+    except Exception as exc:
         raise CatalogError("CATALOG_DATABASE_UNAVAILABLE", "Catalog 数据库不可用。") from exc
-    if size != database.get("size") or _sha256_file(database_path) != database.get("sha256"):
+    if len(database_bytes) != database.get("size") or sha256_bytes(database_bytes) != database.get(
+        "sha256"
+    ):
         raise CatalogError("CATALOG_DATABASE_CHANGED", "Catalog 数据库与 Manifest 不一致。")
+    return manifest, database_bytes
+
+
+def load_catalog_manifest(catalog_root: Path) -> dict[str, Any]:
+    manifest, _ = load_catalog_snapshot(catalog_root)
     return manifest
 
 
+class CatalogSnapshotConnection(sqlite3.Connection):
+    """Query-only connection containing only copied, validated Catalog rows."""
+
+    _snapshot_path: Path | None = None
+
+    def close(self) -> None:
+        snapshot = self._snapshot_path
+        self._snapshot_path = None
+        try:
+            super().close()
+        finally:
+            if snapshot is not None:
+                try:
+                    snapshot.unlink(missing_ok=True)
+                    snapshot.parent.rmdir()
+                except OSError:
+                    shutil.rmtree(snapshot.parent, ignore_errors=True)
+
+
+def open_catalog_snapshot_bytes(
+    database_bytes: bytes,
+    *,
+    manifest: dict[str, Any],
+    check_same_thread: bool = True,
+) -> CatalogSnapshotConnection:
+    if not database_bytes or len(database_bytes) > MAX_CATALOG_DATABASE_BYTES:
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库快照大小无效。")
+    directory = Path(tempfile.mkdtemp(prefix="veritrail-catalog-snapshot-"))
+    database = directory / "catalog.sqlite3"
+    source: sqlite3.Connection | None = None
+    trusted: CatalogSnapshotConnection | None = None
+    try:
+        with database.open("xb") as handle:
+            handle.write(database_bytes)
+            handle.flush()
+            os.fsync(handle.fileno())
+        source = sqlite3.connect(
+            f"file:{database.as_posix()}?mode=ro&immutable=1",
+            uri=True,
+        )
+        source.execute("PRAGMA query_only = ON")
+        rows = _validate_catalog_database(source, manifest)
+
+        trusted = sqlite3.connect(
+            ":memory:",
+            check_same_thread=check_same_thread,
+            factory=CatalogSnapshotConnection,
+        )
+        trusted.executescript(CATALOG_SCHEMA_SQL)
+        _copy_catalog_rows(trusted, rows)
+        trusted.row_factory = sqlite3.Row
+        trusted.execute("PRAGMA query_only = ON")
+        return trusted
+    except CatalogError:
+        if trusted is not None:
+            trusted.close()
+        raise
+    except sqlite3.Error as exc:
+        if trusted is not None:
+            trusted.close()
+        raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库内容无效。") from exc
+    except Exception:
+        if trusted is not None:
+            trusted.close()
+        raise
+    finally:
+        if source is not None:
+            source.close()
+        shutil.rmtree(directory, ignore_errors=True)
+
+
 def open_catalog_readonly(catalog_root: Path) -> sqlite3.Connection:
-    database = (catalog_root / "catalog.sqlite3").resolve(strict=True)
-    connection = sqlite3.connect(f"file:{database.as_posix()}?mode=ro&immutable=1", uri=True)
-    connection.row_factory = sqlite3.Row
-    connection.execute("PRAGMA query_only = ON")
-    return connection
+    manifest, database_bytes = load_catalog_snapshot(catalog_root)
+    return open_catalog_snapshot_bytes(database_bytes, manifest=manifest)

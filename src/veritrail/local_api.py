@@ -8,10 +8,11 @@ import socket
 import sqlite3
 import stat
 import threading
+from contextlib import contextmanager
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 from urllib.parse import parse_qs, unquote, urlsplit
 
 from veritrail.catalog import (
@@ -21,8 +22,8 @@ from veritrail.catalog import (
     _is_relative_to,
     _is_reparse,
     _root_binding,
-    load_catalog_manifest,
-    open_catalog_readonly,
+    load_catalog_snapshot,
+    open_catalog_snapshot_bytes,
 )
 from veritrail.canonical import canonical_json_bytes, sha256_bytes
 
@@ -31,6 +32,7 @@ MAX_PAGE_SIZE = 100
 DEFAULT_PAGE_SIZE = 50
 MAX_ISSUES_IN_RESPONSE = 100
 MAX_STATIC_FILE_BYTES = 16 * 1024 * 1024
+MAX_JSON_RESPONSE_BYTES = 8 * 1024 * 1024
 SOCKET_TIMEOUT_SECONDS = 5
 MAX_CONNECTIONS = 8
 CATALOG_RUN_ID_PATTERN = re.compile(r"^cr_[0-9a-f]{24}$")
@@ -108,9 +110,18 @@ class CatalogApplication:
         self.catalog_root = catalog_root.absolute()
         self.artifact_root = artifact_root.absolute()
         self.web_root = web_root.absolute()
-        self.manifest = load_catalog_manifest(self.catalog_root)
+        self.manifest, database_bytes = load_catalog_snapshot(self.catalog_root)
         self._validate_roots()
-        self._validate_database()
+        self._database_lock = threading.RLock()
+        self._connection: sqlite3.Connection | None = None
+        try:
+            self._connection = open_catalog_snapshot_bytes(
+                database_bytes, manifest=self.manifest, check_same_thread=False
+            )
+            self._validate_database()
+        except Exception:
+            self.close()
+            raise
 
     def _validate_roots(self) -> None:
         for root, code, message in (
@@ -135,19 +146,19 @@ class CatalogApplication:
             raise CatalogError("WEB_BUILD_INVALID", "Workbench 生产构建缺少安全的入口文件。") from exc
 
     def _validate_database(self) -> None:
-        try:
-            connection = open_catalog_readonly(self.catalog_root)
-        except (OSError, sqlite3.Error) as exc:
-            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库无法只读打开。") from exc
-        try:
-            integrity = connection.execute("PRAGMA integrity_check").fetchone()
-            if integrity is None or integrity[0] != "ok":
-                raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库完整性检查失败。")
-            metadata = dict(connection.execute("SELECT key, value FROM catalog_meta"))
-        except sqlite3.Error as exc:
-            raise CatalogError("CATALOG_DATABASE_INVALID", "Catalog 数据库结构无效。") from exc
-        finally:
-            connection.close()
+        with self.connection() as connection:
+            try:
+                integrity = connection.execute("PRAGMA integrity_check").fetchone()
+                if integrity is None or integrity[0] != "ok":
+                    raise CatalogError(
+                        "CATALOG_DATABASE_INVALID",
+                        "Catalog 数据库完整性检查失败。",
+                    )
+                metadata = dict(connection.execute("SELECT key, value FROM catalog_meta"))
+            except sqlite3.Error as exc:
+                raise CatalogError(
+                    "CATALOG_DATABASE_INVALID", "Catalog 数据库结构无效。"
+                ) from exc
         expected = {
             "schema_version": CATALOG_SCHEMA_VERSION,
             "api_version": CATALOG_API_VERSION,
@@ -158,8 +169,24 @@ class CatalogApplication:
         if any(metadata.get(key) != value for key, value in expected.items()):
             raise CatalogError("CATALOG_MANIFEST_MISMATCH", "Catalog Manifest 与数据库元数据不一致。")
 
-    def connection(self) -> sqlite3.Connection:
-        return open_catalog_readonly(self.catalog_root)
+    @contextmanager
+    def connection(self) -> Iterator[sqlite3.Connection]:
+        with self._database_lock:
+            if self._connection is None:
+                raise CatalogError(
+                    "CATALOG_DATABASE_CLOSED", "Catalog 数据库快照已经关闭。"
+                )
+            yield self._connection
+
+    def close(self) -> None:
+        lock = getattr(self, "_database_lock", None)
+        if lock is None:
+            return
+        with lock:
+            connection = self._connection
+            self._connection = None
+            if connection is not None:
+                connection.close()
 
     def health(self) -> dict[str, Any]:
         return {
@@ -174,8 +201,7 @@ class CatalogApplication:
 
     def catalog(self, page: int, page_size: int) -> dict[str, Any]:
         offset = (page - 1) * page_size
-        connection = self.connection()
-        try:
+        with self.connection() as connection:
             rows = connection.execute(
                 """
                 SELECT catalog_run_id, run_id, created_at, execution_status, verdict,
@@ -196,8 +222,6 @@ class CatalogApplication:
                 """,
                 (MAX_ISSUES_IN_RESPONSE,),
             ).fetchall()
-        finally:
-            connection.close()
         total_items = int(self.manifest["run_count"])
         total_pages = (total_items + page_size - 1) // page_size
         return {
@@ -261,8 +285,7 @@ class CatalogApplication:
             normalized = _safe_relative_path(relative_path)
         except ValueError as exc:
             raise ApiError(HTTPStatus.BAD_REQUEST, "UNSAFE_PATH", "Bundle 路径不安全。") from exc
-        connection = self.connection()
-        try:
+        with self.connection() as connection:
             row = connection.execute(
                 """
                 SELECT r.source_relative, f.sha256, f.size
@@ -275,8 +298,6 @@ class CatalogApplication:
             run_exists = connection.execute(
                 "SELECT 1 FROM catalog_runs WHERE catalog_run_id = ?", (catalog_run_id,)
             ).fetchone()
-        finally:
-            connection.close()
         if run_exists is None:
             raise ApiError(HTTPStatus.NOT_FOUND, "RUN_NOT_FOUND", "Catalog Run 不存在。")
         if row is None:
@@ -483,6 +504,17 @@ class CatalogRequestHandler(BaseHTTPRequestHandler):
 
     def _send_json(self, status: HTTPStatus, payload: dict[str, Any], *, head_only: bool) -> None:
         body = canonical_json_bytes(payload) + b"\n"
+        if len(body) > MAX_JSON_RESPONSE_BYTES:
+            status = HTTPStatus.INTERNAL_SERVER_ERROR
+            body = canonical_json_bytes(
+                {
+                    "schema_version": CATALOG_API_VERSION,
+                    "error": {
+                        "code": "RESPONSE_TOO_LARGE",
+                        "message": "Catalog 响应超过固定安全上限。",
+                    },
+                }
+            ) + b"\n"
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -594,6 +626,12 @@ class BoundedCatalogServer(ThreadingHTTPServer):
         finally:
             self._slots.release()
 
+    def server_close(self) -> None:
+        try:
+            super().server_close()
+        finally:
+            self.application.close()
+
 
 def create_catalog_server(
     *, catalog_root: Path, artifact_root: Path, web_root: Path, port: int
@@ -604,4 +642,5 @@ def create_catalog_server(
     try:
         return BoundedCatalogServer(("127.0.0.1", port), application)
     except OSError as exc:
+        application.close()
         raise CatalogError("PORT_UNAVAILABLE", "指定回环端口不可用。") from exc

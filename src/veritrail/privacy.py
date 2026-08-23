@@ -66,6 +66,9 @@ def _is_sensitive_key(key: str) -> bool:
         or normalized.endswith("-secret")
         or normalized.endswith("-password")
         or normalized.endswith("-private-key")
+        or normalized.endswith("-api-key")
+        or normalized.endswith("-authorization")
+        or normalized.endswith("-auth-token")
     )
 
 
@@ -95,8 +98,17 @@ def redact_value(value: Any) -> tuple[Any, int]:
     if isinstance(value, dict):
         redacted: dict[str, Any] = {}
         count = 0
+        semantic_header_is_sensitive = any(
+            _is_sensitive_key(item)
+            for key, item in value.items()
+            if _normalized_key(str(key)) in {"name", "header", "header-name"}
+            and isinstance(item, str)
+        )
         for key, item in value.items():
-            if _is_sensitive_key(str(key)):
+            normalized_key = _normalized_key(str(key))
+            if _is_sensitive_key(str(key)) or (
+                semantic_header_is_sensitive and normalized_key in {"value", "values"}
+            ):
                 redacted[str(key)] = "[REDACTED]"
                 count += 1
             else:

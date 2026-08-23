@@ -1637,6 +1637,27 @@
   }
 
   @media (max-width: 560px) {
+    .app-shell--run-detail .status-gate--detail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .app-shell--run-detail .status-gate--detail .status-badge,
+    .app-shell--run-detail .status-gate--detail .integrity-seal {
+      gap: 0.5rem;
+      padding: 0.7rem 0.5rem;
+    }
+
+    .app-shell--run-detail .status-gate--detail .integrity-seal {
+      grid-column: 1 / -1;
+      border-block-start: var(--detail-rule);
+      border-inline-start: 0;
+    }
+
+    .app-shell--run-detail .status-gate--detail .status-badge__copy,
+    .app-shell--run-detail .status-gate--detail .integrity-seal div {
+      min-width: 0;
+    }
+
     .app-shell--run-detail .run-plaque dl {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }

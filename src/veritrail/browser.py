@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import importlib.metadata
 import math
 from collections import Counter
@@ -40,6 +41,30 @@ class _BrowserLifecycleObserver(Protocol):
     def failed(self, stage: str, error_type: str) -> None: ...
 
 
+def _settle_playwright_start(playwright: Any) -> None:
+    """Finish Playwright's pinned sync-start handshake before ownership hooks run.
+
+    Playwright 1.62 yields its sync API object to the caller before the private
+    connection initialization task has returned. If an ownership hook rejects
+    the driver at that exact boundary, ``stop()`` can close the owned event loop
+    with the task still pending. Draining that already-started task keeps the
+    early-failure path deterministic and prevents a later test or Run from
+    receiving the previous lifecycle's ``Task was destroyed`` warning.
+
+    The project pins Playwright and already needs its private connection for the
+    Windows Job ownership proof. Lightweight test doubles deliberately omit
+    those internals, so there is nothing to settle for them.
+    """
+
+    sync_wait = getattr(playwright, "_sync", None)
+    implementation = getattr(playwright, "_impl_obj", None)
+    connection = getattr(implementation, "_connection", None)
+    init_task = getattr(connection, "_init_task", None)
+    if sync_wait is None or init_task is None or init_task.done():
+        return
+    sync_wait(asyncio.wait_for(asyncio.shield(init_task), timeout=1.0))
+
+
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -52,8 +77,7 @@ def _origin(url: str) -> str | None:
         return None
     if parsed.scheme != "http" or parsed.hostname not in {"localhost", "127.0.0.1"} or port is None:
         return None
-    host = "localhost" if parsed.hostname == "127.0.0.1" else parsed.hostname
-    return f"http://{host}:{port}"
+    return f"http://{parsed.hostname}:{port}"
 
 
 def _websocket_origin(url: str) -> str | None:
@@ -64,8 +88,7 @@ def _websocket_origin(url: str) -> str | None:
         return None
     if parsed.scheme != "ws" or parsed.hostname not in {"localhost", "127.0.0.1"} or port is None:
         return None
-    host = "localhost" if parsed.hostname == "127.0.0.1" else parsed.hostname
-    return f"ws://{host}:{port}"
+    return f"ws://{parsed.hostname}:{port}"
 
 
 def sanitize_url(url: str) -> str:
@@ -78,7 +101,7 @@ def sanitize_url(url: str) -> str:
         return f"{parsed.scheme}:[OMITTED]" if parsed.scheme else "[INVALID_URL]"
     if parsed.hostname not in {"localhost", "127.0.0.1"}:
         return "[BLOCKED_NON_LOOPBACK_URL]"
-    hostname = "localhost" if parsed.hostname == "127.0.0.1" else (parsed.hostname or "")
+    hostname = parsed.hostname or ""
     netloc = hostname
     if port is not None:
         netloc = f"{hostname}:{port}"
@@ -188,6 +211,7 @@ def _collect_browser_evidence(
     lifecycle_observer: _BrowserLifecycleObserver | None = None,
     cancel_event: object | None = None,
     lifecycle_deadline: float | None = None,
+    integrity_check: Callable[[], None] | None = None,
 ) -> ImportedEvidence:
     try:
         from playwright.sync_api import sync_playwright
@@ -204,6 +228,8 @@ def _collect_browser_evidence(
             raise StopRequested(reason)
         if lifecycle_deadline is not None and monotonic() >= lifecycle_deadline:
             raise StopRequested("LIFECYCLE_TIMEOUT")
+        if integrity_check is not None:
+            integrity_check()
 
     def operation_timeout_ms() -> int:
         check_stop()
@@ -260,6 +286,7 @@ def _collect_browser_evidence(
         playwright_context = sync_playwright()
         playwright = playwright_context.start()
         try:
+            _settle_playwright_start(playwright)
             # M10 uses this required hook to place the Playwright driver in the
             # owned Job before it is allowed to create Chromium descendants.
             observe("playwright_started", playwright, required=True)
@@ -313,6 +340,7 @@ def _collect_browser_evidence(
                 )
 
                 def route_request(route: Any, request: Any) -> None:
+                    check_stop()
                     if (
                         _origin(request.url) not in allowed_origins
                         or len(network) >= MAX_NETWORK_EVENTS
@@ -324,6 +352,7 @@ def _collect_browser_evidence(
                 context.route("**/*", route_request)
 
                 def route_web_socket(route: Any) -> None:
+                    check_stop()
                     if _websocket_origin(route.url) not in allowed_websocket_origins:
                         route.close()
                     else:
@@ -331,6 +360,38 @@ def _collect_browser_evidence(
 
                 context.route_web_socket("**/*", route_web_socket)
                 page = context.new_page()
+
+                def reject_unexpected_page(candidate: Any) -> None:
+                    nonlocal cleanup_complete
+                    if candidate is page:
+                        return
+                    record_collection_error(
+                        f"page-set:{viewport_name}",
+                        "UnexpectedPage",
+                    )
+                    try:
+                        candidate.close()
+                    except Exception as exc:
+                        cleanup_complete = False
+                        record_collection_error(
+                            f"unexpected-page-close:{viewport_name}",
+                            type(exc).__name__,
+                        )
+
+                def settle_and_enforce_page_set() -> None:
+                    # Page creation is delivered through Playwright's event queue.
+                    # Yield briefly at every sealed step boundary, then inspect the
+                    # context as a second line of defence against a delayed callback.
+                    page.wait_for_timeout(min(10, operation_timeout_ms()))
+                    for candidate in list(context.pages):
+                        if candidate is not page:
+                            reject_unexpected_page(candidate)
+
+                # The frozen browser evidence contract is deliberately single-page.
+                # Register after creating the owned primary page so every later popup
+                # is rejected at the BrowserContext boundary, before it can silently
+                # escape the primary page's console/network/error listeners.
+                context.on("page", reject_unexpected_page)
                 observe("checkpoint", browser)
                 page.set_default_timeout(operation_timeout_ms())
                 page.set_default_navigation_timeout(operation_timeout_ms())
@@ -455,6 +516,7 @@ def _collect_browser_evidence(
                             if attachment is not None and reference is not None:
                                 attachments.append(attachment)
                                 screenshots.append(reference)
+                            settle_and_enforce_page_set()
                             _finish_step(entry, step_started)
                         except StopRequested as exc:
                             _finish_step(entry, step_started, error=exc)
@@ -468,6 +530,7 @@ def _collect_browser_evidence(
                             observe("checkpoint", browser)
                 if page is not None:
                     check_stop()
+                    settle_and_enforce_page_set()
                     overflow_px = max(
                         0,
                         int(

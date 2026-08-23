@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 from veritrail.browser import _collect_browser_evidence
 from veritrail.evidence import ImportedEvidence
@@ -397,6 +397,7 @@ def collect_observed_browser_evidence(
     *,
     cancel_event: object | None = None,
     lifecycle_deadline: float | None = None,
+    integrity_check: Callable[[], None] | None = None,
 ) -> ObservedBrowserEvidence:
     """Collect frozen M2 Evidence plus M10-only Chromium resource ownership facts."""
 
@@ -410,6 +411,7 @@ def collect_observed_browser_evidence(
             lifecycle_observer=observer,
             cancel_event=cancel_event,
             lifecycle_deadline=lifecycle_deadline,
+            integrity_check=integrity_check,
         )
     except StopRequested as exc:
         raise observer.interrupted(exc.reason) from None

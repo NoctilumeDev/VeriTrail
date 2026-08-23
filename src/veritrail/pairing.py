@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-import json
 import re
 import shutil
 import tempfile
@@ -16,6 +15,7 @@ from veritrail.canonical import canonical_json_bytes, sha256_json
 from veritrail.catalog import _CandidateRejected, validate_bundle
 from veritrail.errors import VeriTrailError
 from veritrail.jsonio import load_json_object
+from veritrail.markdown import markdown_code, markdown_text
 from veritrail.plan import verify_sealed_plan
 from veritrail.privacy import redact_value
 
@@ -233,9 +233,9 @@ def verify_sealed_pairing_plan(plan: dict[str, Any]) -> None:
 
 def load_and_seal_pairing_plan(path: Path) -> dict[str, Any]:
     try:
-        if path.stat().st_size > MAX_PAIRING_PLAN_BYTES:
-            raise PairingError("PAIRING_PLAN_TOO_LARGE", "PairingPlan 超过 1 MiB 上限。")
-        plan = load_json_object(path, label="PairingPlan")
+        plan = load_json_object(
+            path, label="PairingPlan", max_bytes=MAX_PAIRING_PLAN_BYTES
+        )
     except PairingError:
         raise
     except Exception as exc:
@@ -248,9 +248,9 @@ def load_and_seal_pairing_plan(path: Path) -> dict[str, Any]:
 
 def load_sealed_pairing_plan(path: Path) -> dict[str, Any]:
     try:
-        if path.stat().st_size > MAX_PAIRING_PLAN_BYTES:
-            raise PairingError("PAIRING_PLAN_TOO_LARGE", "PairingPlan 超过 1 MiB 上限。")
-        plan = load_json_object(path, label="PairingPlan")
+        plan = load_json_object(
+            path, label="PairingPlan", max_bytes=MAX_PAIRING_PLAN_BYTES
+        )
     except PairingError:
         raise
     except Exception as exc:
@@ -333,7 +333,7 @@ def _control_projection(plan: dict[str, Any], primary_name: str) -> dict[str, An
 def _load_source(candidate: Path, primary_name: str) -> _SourceRun:
     candidate = candidate.absolute()
     try:
-        validated = validate_bundle(candidate, candidate.parent)
+        validated = validate_bundle(candidate, candidate.parent, retain_snapshot=True)
     except (_CandidateRejected, OSError, ValueError) as exc:
         code = exc.code if isinstance(exc, _CandidateRejected) else "SOURCE_BUNDLE_UNREADABLE"
         raise PairingError(code, "来源 Run Bundle 未通过完整性校验。") from exc
@@ -342,8 +342,10 @@ def _load_source(candidate: Path, primary_name: str) -> _SourceRun:
             "SOURCE_SEALED_PLAN_MISSING", "来源 Run Bundle 没有声明 sealed-plan.json。"
         )
     try:
-        plan = load_json_object(candidate / "sealed-plan.json", label="Sealed ExperimentPlan")
-        report = load_json_object(candidate / "report.json", label="Report")
+        plan = validated.load_owned_json(
+            "sealed-plan.json", label="Sealed ExperimentPlan"
+        )
+        report = validated.load_owned_json("report.json", label="Report")
         if plan.get("schema_version") in {"0.6", "0.7"}:
             raise PairingError(
                 "SOURCE_PLAN_VERSION_UNSUPPORTED",
@@ -394,32 +396,16 @@ def _assertion_projection(assertion: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _markdown_text(value: Any) -> str:
-    rendered = str(value)
-    for source, replacement in (
-        ("\\", "\\\\"),
-        ("`", "\\`"),
-        ("<", "&lt;"),
-        (">", "&gt;"),
-        ("!", "\\!"),
-        ("[", "\\["),
-        ("]", "\\]"),
-        ("(", "\\("),
-        (")", "\\)"),
-    ):
-        rendered = rendered.replace(source, replacement)
-    return rendered.replace("\r", " ").replace("\n", " ")
-
-
 def _render_markdown(analysis: dict[str, Any]) -> str:
     lines = [
         "# VeriTrail Paired Counterfactual Analysis",
         "",
-        f"- Analysis: `{analysis['analysis_id']}`",
-        f"- Pairing plan: `{analysis['pairing_plan']['id']}` / `{analysis['pairing_plan']['sha256']}`",
-        f"- Rule: `{analysis['rule_version']}`",
-        f"- Status: **{analysis['analysis_status']}**",
-        f"- Attributable: `{str(analysis['attributable']).lower()}`",
+        f"- Analysis: {markdown_code(analysis['analysis_id'])}",
+        f"- Pairing plan: {markdown_code(analysis['pairing_plan']['id'])} / "
+        f"{markdown_code(analysis['pairing_plan']['sha256'])}",
+        f"- Rule: {markdown_code(analysis['rule_version'])}",
+        f"- Status: **{markdown_text(analysis['analysis_status'])}**",
+        f"- Attributable: {markdown_code(str(analysis['attributable']).lower())}",
         "",
         "## Sources",
         "",
@@ -427,42 +413,38 @@ def _render_markdown(analysis: dict[str, Any]) -> str:
     for role in PAIRING_ROLES:
         source = analysis["sources"][role]
         lines.append(
-            f"- {role}: `{source['run_id']}` — `{source['execution_status']}` / "
-            f"`{source['verdict']}` — primary `{json.dumps(source['primary_variable']['value'], ensure_ascii=False, sort_keys=True)}`"
+            f"- {markdown_text(role)}: {markdown_code(source['run_id'])} — "
+            f"{markdown_code(source['execution_status'])} / {markdown_code(source['verdict'])} — "
+            f"primary {markdown_code(source['primary_variable']['value'], json_value=True)}"
         )
     lines.extend(["", "## Reasons", ""])
-    lines.extend(f"- `{item['code']}` — {item['message']}" for item in analysis["reasons"])
+    lines.extend(
+        f"- {markdown_code(item['code'])} — {markdown_text(item['message'])}"
+        for item in analysis["reasons"]
+    )
     lines.extend(["", "## Outcomes", ""])
     for outcome in analysis["outcomes"]:
-        lines.append(f"### `{outcome['assertion_id']}`")
+        lines.append(f"### {markdown_code(outcome['assertion_id'])}")
         lines.append("")
         for role in PAIRING_ROLES:
             observation = outcome["roles"][role]
-            expected = json.dumps(
-                observation["expected_actual"],
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            )
-            actual = json.dumps(
-                observation["actual"],
-                ensure_ascii=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            )
             lines.append(
-                f"- {role}: expected `{expected}`; actual `{actual}`; "
-                f"match `{str(observation['matches']).lower()}`"
+                f"- {markdown_text(role)}: expected "
+                f"{markdown_code(observation['expected_actual'], json_value=True)}; actual "
+                f"{markdown_code(observation['actual'], json_value=True)}; match "
+                f"{markdown_code(str(observation['matches']).lower())}"
             )
         lines.append("")
     lines.extend(["## Unplanned assertion drift", ""])
     if analysis["unplanned_differences"]:
         for item in analysis["unplanned_differences"]:
-            lines.append(f"- `{item['role']}` / `{item['assertion_id']}`")
+            lines.append(
+                f"- {markdown_code(item['role'])} / {markdown_code(item['assertion_id'])}"
+            )
     else:
         lines.append("- None.")
     lines.extend(["", "## Boundary", ""])
-    lines.extend(f"- {_markdown_text(item)}" for item in analysis["limits"])
+    lines.extend(f"- {markdown_text(item)}" for item in analysis["limits"])
     lines.append("")
     return "\n".join(lines)
 
