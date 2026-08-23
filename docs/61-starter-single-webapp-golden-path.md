@@ -105,4 +105,21 @@ AI、Starter 和验收脚本都不能在观察结果后修改 sealed Plan，也�
 - 应用与 Catalog 固定端口释放，owned 临时 workspace 残留为 0；
 - Bundle 与公开 acceptance 摘要中无 Subject、输出目录或仓库绝对路径。
 
-这些摘要是一次可复核冻结事实，不替代未来 Public CI、clean install、Release 和下载资产读回。
+这些摘要是一次可复核冻结事实，不替代未来 clean install、Release 和下载资产读回。
+
+### Public CI 事实链
+
+S1 的公共 CI 没有只保留最终绿色结果：
+
+- 首轮 Public CI `32657949654`（提交 `a87d17f`）如实失败：Python 3.10 的一次 Core repeat
+  出现 `COMPLETED -> ERROR` 瞬态；Python 3.13 在构建 Starter sdist 时缺少显式
+  `setuptools` 构建后端。Workbench 任务通过，真实 PASS/FAIL golden path 因上游失败未运行；
+- 修复提交 `ae91b9e` 固定 `setuptools==80.9.0`、更新 Starter license 元数据，并让 repeat
+  断言在失败时输出完整 payload；本地同一 repeat 用 Python 3.10 与 3.13 各运行 10 次，合计
+  `20/20` 通过，未复现瞬态；
+- 后续 Public CI `32658836061` 在同一提交上完整通过：Python 3.10、Python 3.13、Workbench、
+  Core regression、Starter normal/`-O`、Core wheel、Starter wheel、Starter sdist，以及真实
+  Starter PASS/FAIL golden path 全部为 `success`。
+
+首轮失败仍保留在 GitHub Actions 历史中；后续绿色运行是对显式修复的复核，不把已发现问题
+改写成“从未发生”。
