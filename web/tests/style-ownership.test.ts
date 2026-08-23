@@ -133,6 +133,28 @@ describe('reference page style ownership', () => {
     expect(integritySeal).toMatch(/grid-column:\s*1\s*\/\s*-1/)
   })
 
+  it('keeps the Run summary on one ornamental frame at every viewport', () => {
+    const source = styleSource('run-detail-reference.css')
+    const plaque = declarationBlocks(
+      source,
+      '.app-shell--run-detail .run-plaque',
+    ).join('\n')
+    const mobileFrame = declarationBlocks(
+      source,
+      '.app-shell--run-detail .run-detail-header::after',
+    ).join('\n')
+
+    expect(plaque, 'the summary plaque must not draw a second right edge').not.toMatch(
+      /border-(?:inline-end|right)\s*:/,
+    )
+    expect(mobileFrame, 'the narrow frame must own an explicit readable opacity').toMatch(
+      /opacity:\s*0\.88/,
+    )
+    expect(mobileFrame, 'the narrow frame must not inherit the pale wide-screen filter').toMatch(
+      /filter:\s*saturate\(0\.68\)\s*brightness\(0\.7\)\s*contrast\(1\.16\)/,
+    )
+  })
+
   it('keeps Rerun Comparison on one continuous frame', () => {
     const source = styleSource('comparison-reference.css')
     const page = declarationBlock(source, '.app-shell--comparison .rerun-page')

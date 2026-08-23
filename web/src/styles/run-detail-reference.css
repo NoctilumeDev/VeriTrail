@@ -147,10 +147,6 @@
     border-color: rgba(164, 133, 88, 0.52);
   }
 
-  .app-shell--run-detail .run-detail-header {
-    border-top: 2px solid #a87121;
-  }
-
   .app-shell--run-detail .run-plaque > div > p,
   .app-shell--run-detail .run-plaque dt,
   .app-shell--run-detail .courtyard__kicker {
@@ -1378,7 +1374,6 @@
     gap: 0;
     padding: 0;
     border: 0;
-    border-inline-end: var(--detail-rule);
   }
 
   .app-shell--run-detail .run-plaque > div {
@@ -1604,7 +1599,6 @@
     .app-shell--run-detail .run-detail-subview-header::after {
       border-width: 14px 20px;
       border-image-width: 14px 20px;
-      opacity: 0.78;
     }
 
     .app-shell--run-detail .run-detail-header::after,
@@ -1614,6 +1608,8 @@
       border: 14px 20px solid transparent;
       border-image: url('/textures/r10-run-detail-frame-cloud.png') 120 150 / 14px 20px stretch;
       background: none;
+      filter: saturate(0.68) brightness(0.7) contrast(1.16);
+      opacity: 0.88;
     }
 
     .app-shell--run-detail .courtyard__heading,
