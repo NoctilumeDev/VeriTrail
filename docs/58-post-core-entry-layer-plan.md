@@ -205,5 +205,10 @@ E0 完成要求：
   owned bootstrap 临时目录为 0；公开验收摘要不包含本机绝对路径；
 - `scripts/starter_single_webapp_acceptance.py` 是真实链验收器，不替代 Starter 的人工复核边界；
   Public CI 只在 Core、Starter 与 Workbench 门禁通过后运行它；
-- S1 没有修改 Core Schema、Seal、Verdict 或 Workbench。下一阶段为 A0：只把冻结的 Starter
-  命令合同包装成 DRAFT-only Authoring Skill。
+- S1 冻结轮中 Core 在 Python 3.10 下为 321/321；Python 3.13 首轮为 320/321，其中唯一失败是
+  `sampling_complete=false` 的瞬态资源采样检查，定向 10/10 与第二次完整 321/321 均通过；该首轮事实
+  继续保留，不能被后续成功覆盖；
+- Starter 合同矩阵在 Python 3.10/3.13 的普通模式与 `python -O` 下共 72/72；Workbench 为
+  172/172，lint、类型检查、生产构建和依赖审计均通过；
+- S1 没有修改 Core Schema、Seal 或 Verdict；Workbench 仅做 L0 Run 详情装饰框所有权纠偏并增加
+  对应回归门禁。下一阶段为 A0：只把冻结的 Starter 命令合同包装成 DRAFT-only Authoring Skill。

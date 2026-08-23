@@ -2,10 +2,10 @@
 
 ## Current status
 
-VeriTrail is a pre-release v0 implementation. M0 through M13 are frozen; M14 has a frozen final-validation
-and release contract and is currently validating, so no final stable Release claim exists yet. The M12 implementation commit
-`5f32c33ab3dac076151a4fcd9a93a74ccafcfaa9` and annotated `m12-v0.13.0` tag have been read back from
-GitHub. The repository includes the deterministic
+VeriTrail Core 0.12.0 is the frozen v0 release: M0 through M14 are complete, and the annotated `v0.12.0`
+tag and Release assets have been read back from GitHub. The post-Core Starter S0/S1 source implementation is
+not released, supports only the deterministic `single-webapp` DRAFT path, and cannot seal, run, approve a
+Preview, or issue a Verdict. The Authoring Skill A0 is not implemented. The repository includes the deterministic
 Python evidence core, bounded resource/browser adapters, a read-only Vue workbench, rebuildable SQLite
 Catalog and loopback API, deterministic Comparison/Pairing/Batch analysis, a trusted Windows ONESHOT
 runner, and the Windows 11/C1 one-node and two-node bootstrap candidates. It does not claim support for untrusted code,
