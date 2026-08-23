@@ -65,7 +65,9 @@ jobs:
 
       - name: Build the independent Starter source distribution
         working-directory: starter
-        run: python -c "from setuptools import build_meta; print(build_meta.build_sdist('../dist'))"
+        run: |
+          python -m pip install "setuptools==80.9.0"
+          python -c "from setuptools import build_meta; print(build_meta.build_sdist('../dist'))"
 
   workbench:
     name: Workbench tests, lint, build, and audit

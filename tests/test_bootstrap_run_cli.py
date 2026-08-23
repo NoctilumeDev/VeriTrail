@@ -397,9 +397,11 @@ class BootstrapRunCliTests(unittest.TestCase):
                 self.assertEqual("", stderr)
                 self.assertEqual(0, code)
                 self.assertEqual("PROCEED", payload["resource_decision"])
-                self.assertEqual("COMPLETED", payload["execution_status"])
-                self.assertEqual("PASS", payload["verdict"])
-                self.assertTrue(payload["cleanup_complete"])
+                self.assertEqual(
+                    "COMPLETED", payload["execution_status"], msg=payload
+                )
+                self.assertEqual("PASS", payload["verdict"], msg=payload)
+                self.assertTrue(payload["cleanup_complete"], msg=payload)
                 validated = validate_bundle(output, root)
                 self.assertEqual(f"m10-public-repeat-{ordinal}", validated.run_id)
                 self.assertEqual("PASS", validated.verdict)
