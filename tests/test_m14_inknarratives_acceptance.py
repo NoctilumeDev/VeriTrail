@@ -4,7 +4,10 @@ import copy
 import unittest
 
 from scripts.m14_inknarratives_acceptance import (
+    ALLOWED_POST_REMEDIATION_CORE_PATHS,
     APPLICATION_PORT,
+    EXPECTED_M14_CONTRACT_COMMIT,
+    EXPECTED_M14_REMEDIATION_COMMIT,
     EXPECTED_NEGATIVE_PLAN_SHA256,
     EXPECTED_POSITIVE_PLAN_SHA256,
     EXPECTED_PROFILE_SHA256,
@@ -22,6 +25,20 @@ from veritrail.project_profile import seal_project_profile
 
 
 class M14InkNarrativesAcceptanceContractTests(unittest.TestCase):
+    def test_contract_and_remediation_coordinates_are_frozen(self) -> None:
+        self.assertEqual(
+            "8147579825ebfe42a1f619a42bd7411c4931827d",
+            EXPECTED_M14_CONTRACT_COMMIT,
+        )
+        self.assertEqual(
+            "30d5544baa6e4d07e2c91e73e1c5b80612e90097",
+            EXPECTED_M14_REMEDIATION_COMMIT,
+        )
+        self.assertEqual(
+            ("src/veritrail/__init__.py",),
+            ALLOWED_POST_REMEDIATION_CORE_PATHS,
+        )
+
     def test_profile_and_plans_are_digest_frozen(self) -> None:
         profile = seal_project_profile(raw_profile())
         positive = seal_plan(raw_positive_plan(profile["seal"]["digest"]), profile)

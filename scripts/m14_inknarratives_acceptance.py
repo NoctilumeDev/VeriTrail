@@ -39,6 +39,8 @@ APPLICATION_PORT = 18776
 CONTRACT_VERSION = "1.0"
 EXPECTED_SUBJECT_REF = "076be2f92194b90e31535d4583ac4d5e72922794"
 EXPECTED_M14_CONTRACT_COMMIT = "8147579825ebfe42a1f619a42bd7411c4931827d"
+EXPECTED_M14_REMEDIATION_COMMIT = "30d5544baa6e4d07e2c91e73e1c5b80612e90097"
+ALLOWED_POST_REMEDIATION_CORE_PATHS = ("src/veritrail/__init__.py",)
 EXPECTED_PROFILE_SHA256 = "afed07195c7d6285977109819bdbdaa9af7e1f967344cfa6c725038c4e5c45b0"
 EXPECTED_POSITIVE_PLAN_SHA256 = "11c27beb4a3fbbb6635232f0944d5ba235d276ff287174bf3a3d610ba21714f3"
 EXPECTED_NEGATIVE_PLAN_SHA256 = "303fe6581c96c7094afaec32bd862ddb7371016371aeb69c165106654cddb475"
@@ -800,16 +802,47 @@ def main() -> int:
         EXPECTED_M14_CONTRACT_COMMIT,
         "HEAD",
     )
+    _git(
+        REPOSITORY_ROOT,
+        "merge-base",
+        "--is-ancestor",
+        EXPECTED_M14_REMEDIATION_COMMIT,
+        "HEAD",
+    )
+    changed_core_paths = tuple(
+        path
+        for path in _git(
+            REPOSITORY_ROOT,
+            "diff",
+            "--name-only",
+            EXPECTED_M14_REMEDIATION_COMMIT,
+            "--",
+            "src",
+            "schemas",
+        ).splitlines()
+        if path
+    )
+    unexpected_core_paths = tuple(
+        path
+        for path in changed_core_paths
+        if path not in ALLOWED_POST_REMEDIATION_CORE_PATHS
+    )
+    if unexpected_core_paths:
+        unexpected = ", ".join(unexpected_core_paths)
+        raise AssertionError(
+            f"M14 changed the remediated Core or public schemas: {unexpected}"
+        )
     if _git(
         REPOSITORY_ROOT,
         "diff",
         "--name-only",
-        EXPECTED_M14_CONTRACT_COMMIT,
+        EXPECTED_M14_REMEDIATION_COMMIT,
         "--",
-        "src",
-        "schemas",
+        *ALLOWED_POST_REMEDIATION_CORE_PATHS,
     ):
-        raise AssertionError("M14 changed the candidate Core or public schemas")
+        stable_version_difference = True
+    else:
+        stable_version_difference = False
     if _git(REPOSITORY_ROOT, "status", "--porcelain=v1"):
         raise AssertionError("VeriTrail worktree must be clean before M14 acceptance")
     harness_commit = _git(REPOSITORY_ROOT, "rev-parse", "HEAD")
@@ -982,6 +1015,9 @@ def main() -> int:
         "cold_state": "C1_PROCESS_COLD",
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "m14_contract_commit": EXPECTED_M14_CONTRACT_COMMIT,
+        "m14_remediation_commit": EXPECTED_M14_REMEDIATION_COMMIT,
+        "post_remediation_core_differences": list(changed_core_paths),
+        "stable_version_difference": stable_version_difference,
         "m14_harness_commit": harness_commit,
         "subject": {
             "id": "inknarratives",

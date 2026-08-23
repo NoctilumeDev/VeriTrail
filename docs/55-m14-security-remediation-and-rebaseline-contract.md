@@ -1,6 +1,6 @@
 # M14 安全整改与重新基线合同 0.1
 
-> 状态：`REMEDIATION_IMPLEMENTED / BASELINE_PENDING`
+> 状态：`REMEDIATION_BASELINE_BOUND / VALIDATING`
 >
 > 日期：2026-08-23
 >
@@ -108,11 +108,10 @@ SQLite 快照。测试现通过 `finally` 关闭应用；全量 3.13 以 `-W err
 - 稳定版号提交后仍须重新运行完整门禁，不能把开发候选的绿色直接外推；
 - 任一边界再次失败时，状态退回 `VALIDATING`，不创建或移动 `v0.12.0`。
 
-## 6. 待绑定坐标
+## 6. 已绑定坐标
 
-本节由下一提交一次性写入：
-
-- 安全整改实现基线：`PENDING`；
-- 基线绑定提交：由推送后远端读回记录；
+- 安全整改实现基线：`30d5544baa6e4d07e2c91e73e1c5b80612e90097`；
+- 基线绑定提交：由包含本节与 M14 验收器固定值的提交建立，精确 SHA 在推送后从远端读回，并由后继
+  M14 事实文档记录，避免提交试图在自身内容中预写自身 SHA；
 - 允许的稳定版 Core 差异：仅 `src/veritrail/__init__.py`；
 - 最终 Release 提交、标签对象和 GitHub Release URL：由后继事实文档记录。
