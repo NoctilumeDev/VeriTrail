@@ -55,6 +55,9 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 
 ## 快速开始
 
+第一次接触验迹，请先阅读 [从这里开始](START_HERE.md)。它按“第一次认识、已有本地 Web 项目、
+高级合同作者”分开入口，并明确哪些 Starter／AI 功能仍在实现，避免把最小示例误解成完整项目验收。
+
 核心需要 Python 3.10+；浏览器采集和 Windows 受控进程能力使用可选依赖：
 
 ```powershell
@@ -274,6 +277,9 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [M14 安全整改与重新基线合同 0.1](docs/55-m14-security-remediation-and-rebaseline-contract.md)
 - [M14 整改后终局复验与发布事实 1.0](docs/56-m14-final-validation-and-release-facts.md)
 - [VeriTrail 0.12.0 Release Notes](docs/57-v0.12.0-release-notes.md)
+- [Post-Core 独立入口层 Plan v1](docs/58-post-core-entry-layer-plan.md)
+- [VeriTrail Starter 0.1 single-webapp 合同](docs/59-starter-single-webapp-contract.md)
+- [VeriTrail Authoring Skill 0.1 合同](docs/60-authoring-skill-contract.md)
 
 ## 项目来源
 
