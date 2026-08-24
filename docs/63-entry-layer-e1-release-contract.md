@@ -1,10 +1,10 @@
 # Post-Core 入口层 E1 独立发布合同 0.1
 
-> 状态：`CONTRACT_FROZEN / IMPLEMENTED / VALIDATING`
+> 状态：`CONTRACT_FROZEN / IMPLEMENTED / RELEASED`
 >
 > 影响层级：入口层 `L3_SYSTEM`；Core 0.12.0、Schema、Seal、Preview、Run、Verdict 与 Workbench 只读
 >
-> 发布候选：`VeriTrail Starter 0.1.0` 与 `VeriTrail Authoring Skill 0.1.0`
+> 已发布：`VeriTrail Starter 0.1.0` 与 `VeriTrail Authoring Skill 0.1.0`
 
 ## 1. 目标与停止线
 
@@ -117,3 +117,8 @@ Skill 可以增加来源分类和自然语言解释，但这些内容没有权�
 E1 只有在代码、自动化、双 Python clean install、官方 Skill 校验、真实 DRAFT、公共 CI、GitHub
 Release、下载读回、安全与零残留全部闭环后才能标记 `FROZEN / RELEASED`。完成后只更新入口层
 当前事实；A0 的 `0.1.0.dev0` 历史事实继续保留。
+
+该出口已于 2026-08-24 闭环。`starter-v0.1.0` 与 `authoring-skill-v0.1.0` 均指向不可变提交
+`c7d3c8d2484899b150f47320acafa6553187de5a`；两个 GitHub Release 的 7 个公共资产经重新下载后，
+与上传候选逐字节一致，并再次通过 Python 3.10.6/3.13.13 clean install、官方 Skill 校验和 DRAFT
+等价门禁。确切公开事实见[入口层 E1 0.1.0 发布说明](64-entry-layer-e1-release-notes.md)。

@@ -57,8 +57,10 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 
 第一次接触验迹，请先阅读 [从这里开始](START_HERE.md)。它按“第一次认识、已有本地 Web 项目、
 高级合同作者”分开入口，并链接已完成的 Starter PASS/FAIL 黄金路径。Starter S0/S1 与 Authoring
-Skill A0 已进入 E1 `0.1.0` 发布候选；本地双 Python clean-install、DRAFT 等价、Skill 结构校验和
-真实 PASS/FAIL 黄金路径已经通过，但 GitHub Release 与公开下载读回尚未完成，不能提前写成已发布。
+Skill A0 已作为独立的 E1 `0.1.0` 产品发布：[Starter 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0)
+与 [Authoring Skill 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0)。
+两个标签共同钉在提交 `c7d3c8d`；GitHub 公共下载副本已通过 Python 3.10/3.13 clean-install、官方
+Skill 结构校验、DRAFT 逐字节等价与真实 PASS/FAIL 黄金路径门禁。
 
 核心需要 Python 3.10+；浏览器采集和 Windows 受控进程能力使用可选依赖：
 

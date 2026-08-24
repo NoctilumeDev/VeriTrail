@@ -2,9 +2,10 @@
 
 > 当前稳定内核：`VeriTrail Core 0.12.0`
 >
-> 当前入口层状态：`VeriTrail Starter 0.1.0` 与 `VeriTrail Authoring Skill 0.1.0` 的 E1
-> 发布候选已通过本地双 Python clean-install、DRAFT 等价和真实 PASS/FAIL 黄金路径门禁；GitHub
-> Release 与公开下载读回仍未完成，因此此刻还不能把候选写成已发布事实。
+> 当前入口层状态：[`VeriTrail Starter 0.1.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0)
+> 与 [`VeriTrail Authoring Skill 0.1.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0)
+> 已独立发布。两个标签共同钉在提交 `c7d3c8d`；GitHub 公共下载副本已通过 Python 3.10/3.13
+> clean-install、官方 Skill 结构校验、DRAFT 逐字节等价与真实 PASS/FAIL 黄金路径门禁。
 
 VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次软件验收拆成预先冻结的计划、真实运行、
 结构化证据、确定性裁决、不可变证据包和可比较的复跑结果。
@@ -26,7 +27,7 @@ VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次�
 `PASS` 和一次故意制造的 `FAIL`，让你看到同一份预注册标准如何保留成功与反例。两次 Run 使用
 同一 Profile、同一 Plan，只改变一个受控业务事实；它们是独立验收对，不冒充因果 Comparison。
 
-在 Starter 的 GitHub Release 完成前，可以先运行 Core 的最小证据示例：
+如果只想先认识 Core 的 Plan、Evidence、Verdict 与 Bundle，可以运行最小证据示例：
 
 ```powershell
 python -m venv .venv

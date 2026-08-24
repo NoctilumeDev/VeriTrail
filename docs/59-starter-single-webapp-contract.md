@@ -141,5 +141,8 @@ Starter 生成的 Core Plan 使用 0.7，Profile 使用 0.2；确切字段必须
 - 中止、端口竞争、重复 init、半写入故障和最终零残留。
 
 S1 已完成固定合成 Subject 的真实双 Run、Catalog 与生产 Workbench 验收；准确步骤和事实见
-[十分钟 PASS/FAIL 黄金路径](61-starter-single-webapp-golden-path.md)。独立安装、Release、公共下载
-读回和 A0 Skill 尚未完成，因此 Starter 仍保持 `0.1.0.dev0`，不得写成开箱即用正式版。
+[十分钟 PASS/FAIL 黄金路径](61-starter-single-webapp-golden-path.md)。在 S1 冻结时，独立安装、Release、
+公共下载读回和 A0 Skill 尚未完成，因此当时的 Starter 保持 `0.1.0.dev0`，不得写成开箱即用正式版。
+后续 E1 已独立发布 `0.1.0` 并完成公开读回；该后续事实见
+[E1 发布合同](63-entry-layer-e1-release-contract.md)和[E1 发布说明](64-entry-layer-e1-release-notes.md)，
+不回写或抹除 S1 的阶段事实。
