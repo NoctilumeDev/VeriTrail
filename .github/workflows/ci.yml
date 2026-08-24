@@ -124,6 +124,71 @@ jobs:
           --core-wheel "${{ env.VERITRAIL_CORE_WHEEL }}"
           --from-assets "${{ env.VERITRAIL_E1_ASSETS }}"
 
+  entry-layer-e3-release:
+    name: E3 0.2 release download acceptance
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python 3.10
+        id: py310
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.10'
+
+      - name: Set up Python 3.13
+        id: py313
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+
+      - name: Download and verify the frozen Core and E3 release assets
+        shell: pwsh
+        run: |
+          $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.0-py3-none-any.whl'
+          curl.exe --fail --location --retry 3 --output $coreWheel `
+            'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.0/veritrail-0.12.0-py3-none-any.whl'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $coreExpected = 'd0293f06e6a2b0271870ce032b2197c6ef7956db0ff3889230ca48234ff2fa45'
+          $coreObserved = (Get-FileHash -Algorithm SHA256 -LiteralPath $coreWheel).Hash.ToLowerInvariant()
+          if ($coreObserved -ne $coreExpected) { throw "Core release wheel digest drifted: $coreObserved" }
+
+          $assetRoot = Join-Path '${{ runner.temp }}' 'entry-layer-e3-assets'
+          New-Item -ItemType Directory -Path $assetRoot | Out-Null
+          $assets = @(
+            @('starter-v0.2.0', 'veritrail_starter-0.2.0-py3-none-any.whl', 'ce6e9ea0730adc891aba97f8148fdb861fffdd5164989c980b5cbbaaa950771f'),
+            @('starter-v0.2.0', 'veritrail_starter-0.2.0.tar.gz', 'd86b836cad6f5b0bf2fbe17ce3d86fb309fa1fb1f2e592b757ef4b0f5f48188d'),
+            @('starter-v0.2.0', 'starter-e3-validation-summary.json', '147ca81269b30eb93e56d4cd42526c9c9aedd26747643d724ad8aaf36c3ca979'),
+            @('starter-v0.2.0', 'SHA256SUMS-starter.txt', '44ab7b1292e6170cad531bad906081b68848241cb36099b25a13f71a3b394791'),
+            @('authoring-skill-v0.2.0', 'veritrail-authoring-0.2.0.zip', '591b064d4fb6f7e66083124939c1ffb21daa5a0f2e2c3b51267e738b203640b6'),
+            @('authoring-skill-v0.2.0', 'authoring-skill-e3-validation-summary.json', 'a8cfc0c33fdb2520dbc26b0338acd5d5bb2afcfe5bf18a9b9bb01fcaedccb45a'),
+            @('authoring-skill-v0.2.0', 'SHA256SUMS-authoring-skill.txt', 'e744512b3f8560f779a70c71ea6b5891554bb14ced6688ea865b2ad2a28a8456')
+          )
+          foreach ($asset in $assets) {
+            $tag = $asset[0]
+            $name = $asset[1]
+            $expected = $asset[2]
+            $target = Join-Path $assetRoot $name
+            $url = "https://github.com/NoctilumeDev/VeriTrail/releases/download/$tag/$name"
+            curl.exe --fail --location --retry 3 --output $target $url
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            $observed = (Get-FileHash -Algorithm SHA256 -LiteralPath $target).Hash.ToLowerInvariant()
+            if ($observed -ne $expected) { throw "$name digest drifted: $observed" }
+          }
+          "VERITRAIL_CORE_WHEEL_E3=$coreWheel" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "VERITRAIL_E3_ASSETS=$assetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Run E3 release clean-install acceptance
+        run: >-
+          python scripts/entry_layer_e3_acceptance.py
+          --output "${{ runner.temp }}\entry-layer-e3-readback"
+          --python "${{ steps.py310.outputs.python-path }}"
+          --python "${{ steps.py313.outputs.python-path }}"
+          --core-wheel "${{ env.VERITRAIL_CORE_WHEEL_E3 }}"
+          --from-assets "${{ env.VERITRAIL_E3_ASSETS }}"
+
   workbench:
     name: Workbench tests, lint, build, and audit
     runs-on: ubuntu-latest

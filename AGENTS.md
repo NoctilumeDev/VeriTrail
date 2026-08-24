@@ -39,14 +39,15 @@
   说明位于 `docs/54-m14-final-validation-and-release-contract.md` 至
   `docs/57-v0.12.0-release-notes.md`，当前为 `FROZEN / RELEASED`，稳定标签为 `v0.12.0`。
 - `v0.12.0` 之后的当前主线是独立入口层 E0/S0/S1/A0/E1/E2/E3，计划、合同与事实位于
-  `docs/58-post-core-entry-layer-plan.md` 至 `docs/69-entry-layer-e3-0.2-release-contract.md`。E1 已将
-  Starter/Authoring Skill `0.1.0` 独立发布并固定到提交 `c7d3c8d`；E2 已在源码中实现 Starter/Skill
-  `0.2.0` 与第二个有限 Preset `static-site`，当前为 `IMPLEMENTED / NOT_RELEASED`，不得写成已有
-  0.2 Release。E3 发布合同已经冻结，但标签、资产、Release 和公共读回仍待执行。`single-webapp`
+  `docs/58-post-core-entry-layer-plan.md` 至 `docs/70-entry-layer-e3-0.2-release-notes.md`。E1 已将
+  Starter/Authoring Skill `0.1.0` 独立发布并固定到提交 `c7d3c8d`；E2 在源码中实现 Starter/Skill
+  `0.2.0` 与第二个有限 Preset `static-site`；E3 已将两个 `0.2.0` 带注释标签固定到提交 `c9592e1`，
+  完成两个非 Latest Release、七个资产、双 Python 公共下载读回与 GitHub 展示收口。`single-webapp`
   0.1 合同与标签事实不被重解释；`static-site` 只允许显式 CPython、
   现存普通 HTML、固定回环、无需构建和无需远程资源。Starter/Skill 仍不得自动 seal、run、批准
   Preview、handoff 或修改 Verdict，亦不得把入口层能力回填成 Core 0.12.0 已证明事实。Codex Security
-  深度扫描、攻击路径验证和极端环境攻击继续封存，普通质量审查不得冒充这些安全工作流。
+  深度扫描、攻击路径验证和极端环境攻击继续封存，普通质量审查不得冒充这些安全工作流。Core
+  `v0.12.0` 必须继续保持仓库 Latest，E1 `0.1.0` Release 不得移动或静默改写。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

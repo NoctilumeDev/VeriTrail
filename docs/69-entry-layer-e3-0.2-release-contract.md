@@ -1,12 +1,14 @@
 # Post-Core 入口层 E3 0.2.0 独立发布合同 0.1
 
-> 状态：`CONTRACT_FROZEN / IMPLEMENTATION_PENDING / RELEASE_PENDING`
+> 状态：`CONTRACT_FROZEN / IMPLEMENTATION_COMPLETE / RELEASED / PUBLIC_READBACK_PASS`
 >
 > 日期：`2026-08-24`
 >
 > 影响层级：`L2 public contract + bounded L3 release path`
 >
 > 只读基线：VeriTrail Core `0.12.0`、Starter/Authoring Skill `0.1.0` Release 与全部既有标签
+>
+> 完成事实：[VeriTrail 入口层 E3 0.2.0 发布说明](70-entry-layer-e3-0.2-release-notes.md)
 
 ## 1. 目标与边界
 

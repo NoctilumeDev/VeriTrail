@@ -1,4 +1,4 @@
-# VeriTrail Starter 0.2.0 (development)
+# VeriTrail Starter 0.2.0
 
 `veritrail-starter` is the independent, fail-closed DRAFT authoring entry for
 VeriTrail Core 0.12.x. Version 0.2.0 keeps the frozen `single-webapp`
@@ -11,9 +11,8 @@ second evaluator.
 
 ## Released installation
 
-Starter 0.1.0 remains the latest published release while 0.2.0 is developed in
-source. The released wheel is distributed from the GitHub Release named
-`VeriTrail Starter 0.1.0`; it is not published to PyPI. Verify the downloaded
+Starter 0.2.0 is distributed from the GitHub Release named
+`VeriTrail Starter 0.2.0`; it is not published to PyPI. Verify the downloaded
 files against `SHA256SUMS-starter.txt`, then install the frozen Core wheel and
 the Starter wheel into a clean virtual environment:
 
@@ -21,7 +20,7 @@ the Starter wheel into a clean virtual environment:
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install `
   https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.0/veritrail-0.12.0-py3-none-any.whl `
-  https://github.com/NoctilumeDev/VeriTrail/releases/download/starter-v0.1.0/veritrail_starter-0.1.0-py3-none-any.whl
+  https://github.com/NoctilumeDev/VeriTrail/releases/download/starter-v0.2.0/veritrail_starter-0.2.0-py3-none-any.whl
 ```
 
 The source distribution is provided for independent build verification. It is
@@ -62,4 +61,5 @@ Release packaging and readback are governed by
 [`docs/63-entry-layer-e1-release-contract.md`](../docs/63-entry-layer-e1-release-contract.md)
 for the frozen 0.1 release and
 [`docs/69-entry-layer-e3-0.2-release-contract.md`](../docs/69-entry-layer-e3-0.2-release-contract.md)
-for the pending 0.2 release.
+and [`docs/70-entry-layer-e3-0.2-release-notes.md`](../docs/70-entry-layer-e3-0.2-release-notes.md)
+for the released 0.2 boundary and public readback.

@@ -1,6 +1,6 @@
 # Post-Core 独立入口层 Plan v1
 
-> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_COMPLETE / RELEASED / E2_IMPLEMENTED_NOT_RELEASED / E3_CONTRACT_FROZEN_RELEASE_PENDING`
+> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_RELEASED / E2_COMPLETE / E3_RELEASED_PUBLIC_READBACK_PASS`
 >
 > 基线：`VeriTrail Core 0.12.0` @ `v0.12.0`
 >
@@ -259,19 +259,23 @@ E2 在不改写 E1 Release 的前提下增加第二个有限入口：
   路由；授权集合仍只有 `doctor/init/validate/review`；
 - 两个 Preset 已在 Python 3.10/3.13 的源码环境和 clean-install 环境完成普通/优化 DRAFT 链；
 - Core 0.12.0、Seal、Preview 批准、Run、Verdict、Workbench 与已发布的 0.1.0 标签均未改变；
-- 当前状态是 `IMPLEMENTED / NOT_RELEASED`，不得写成 Starter/Skill 0.2 已公开发布。
+- E2 出口状态为 `IMPLEMENTED / NOT_RELEASED`；该历史停止线已由后续 E3 独立发布闭环解除，不能倒写成
+  E2 自身已经完成发布。
 
 合同、权限与验收事实见 [Starter 0.2 static-site 合同](66-starter-static-site-contract.md)、
 [Authoring Skill 0.2 合同](67-authoring-skill-0.2-contract.md)和
 [E2 实现事实](68-entry-layer-e2-static-site-facts.md)。Codex Security 深度扫描、攻击路径验证和极端环境
 攻击继续封存，不属于 E2 当前完成证据。
 
-## 14. E3 `0.2.0` 独立发布门禁
+## 14. E3 `0.2.0` 独立发布事实
 
-E3 不再扩大 Preset，只把 E2 已实现的 Starter/Authoring Skill `0.2.0` 按独立产品发布。当前已冻结
-[E3 0.2.0 独立发布合同](69-entry-layer-e3-0.2-release-contract.md)，但尚未创建 `starter-v0.2.0`、
-`authoring-skill-v0.2.0` 或对应 GitHub Release，因此状态保持 `RELEASE_PENDING`。
+E3 没有扩大 Preset，只把 E2 已实现的 Starter/Authoring Skill `0.2.0` 按独立产品发布。两个带注释
+标签 `starter-v0.2.0`、`authoring-skill-v0.2.0` 共同指向提交
+`c9592e1ac8aaf6c88a2b3cb067073c6a1dd6aa72`；两个非 Latest GitHub Release 共包含 7 个固定资产。
 
-E3 必须重做双 Python、双 Preset、wheel/sdist/Skill ZIP、官方 Skill 校验、公共下载读回、Core Latest
-身份和 GitHub 展示面门禁。E1 的 0.1.0 标签与 Release 保持不可变；Codex Security 深度扫描、攻击路径
-验证和极端环境攻击继续封存，不进入本发布阶段。
+GitHub 下载副本已经在 Python 3.10.6/3.13.13 上重做双 Preset、wheel/sdist/Skill ZIP、普通/优化
+DRAFT 等价和官方 Skill 校验；上传候选、GitHub digest、清单与下载副本逐字节一致，Core `v0.12.0`
+继续保持 Latest。E1 的 0.1.0 标签与 Release 保持不可变。完整合同与事实见
+[E3 0.2.0 独立发布合同](69-entry-layer-e3-0.2-release-contract.md)和
+[E3 0.2.0 发布说明](70-entry-layer-e3-0.2-release-notes.md)。Codex Security 深度扫描、攻击路径验证和
+极端环境攻击继续封存，不进入本发布阶段。

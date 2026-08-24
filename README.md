@@ -4,8 +4,8 @@
 [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml)
 [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
 [![Core v0.12.0](https://img.shields.io/badge/Core-v0.12.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)
-[![Starter v0.1.0](https://img.shields.io/badge/Starter-v0.1.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0)
-[![Authoring Skill v0.1.0](https://img.shields.io/badge/Authoring%20Skill-v0.1.0-A22D1F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0)
+[![Starter v0.2.0](https://img.shields.io/badge/Starter-v0.2.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
+[![Authoring Skill v0.2.0](https://img.shields.io/badge/Authoring%20Skill-v0.2.0-A22D1F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)
 [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
 
 ![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
@@ -22,19 +22,22 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | 我现在要做什么 | 从这里进入 | 你会得到什么 |
 | --- | --- | --- |
 | 十分钟认识验迹 | [从这里开始](START_HERE.md) | 同一预注册标准下的一次真实 `PASS` 和一次故意 `FAIL` |
-| 接入一个本地 Web 项目 | [Starter 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0) | 有界 `single-webapp` 草案；保持 `DRAFT / NOT SEALED` |
-| 用 AI 协助填写合同 | [Authoring Skill 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0) | 仓库识别、缺失信息追问和候选草案；不封存、不裁决 |
+| 接入一个本地 Web 项目 | [Starter 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0) | 有界 `single-webapp` / `static-site` 草案；保持 `DRAFT / NOT SEALED` |
+| 用 AI 协助填写合同 | [Authoring Skill 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0) | 有限 Preset 识别、缺失信息追问和候选草案；不封存、不裁决 |
 | 直接使用稳定内核 | [Core 0.12.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0) | Plan、Evidence、Verdict、Bundle 与本地只读 Workbench |
 
 ## 发布状态
 
-Core `0.12.0` 已稳定发布；Starter 与 Authoring Skill 以独立 `0.1.0` 坐标发布。入口层只能降低合同
-填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与 Browser Smoke 当前共同守住可重复基线。
+Core `0.12.0` 已稳定发布；Starter 与 Authoring Skill 以独立 `0.2.0` 坐标发布，历史 `0.1.0`
+Release 继续保留。入口层只能降低合同填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与
+Browser Smoke 当前共同守住可重复基线。
 
-> **源码开发说明（未发布）**：`main` 已实现 Starter/Authoring Skill `0.2.0` 的第二个有限 Preset
-> `static-site`，只面向无需构建、无需远程资源的现存静态 HTML，并始终保持
-> `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。它没有 0.2 Release 或新标签，不能替代上面的稳定
-> 0.1.0 下载坐标。合同与实测事实见[文档 66–68](docs/66-starter-static-site-contract.md)。
+Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：它面向无需构建、无需远程
+资源的现存静态 HTML，并始终保持 `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。两个带注释标签共同
+钉在提交 `c9592e1`；七个 GitHub 下载资产已通过 Python 3.10/3.13 clean install、双 Preset、普通/
+优化模式、官方 Skill 校验与逐字节公开读回。Preset 合同见[文档 66](docs/66-starter-static-site-contract.md)与
+[文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
+[文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -85,11 +88,12 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 ## 快速开始
 
 第一次接触验迹，请先阅读 [从这里开始](START_HERE.md)。它按“第一次认识、已有本地 Web 项目、
-高级合同作者”分开入口，并链接已完成的 Starter PASS/FAIL 黄金路径。Starter S0/S1 与 Authoring
-Skill A0 已作为独立的 E1 `0.1.0` 产品发布：[Starter 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0)
-与 [Authoring Skill 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0)。
-两个标签共同钉在提交 `c7d3c8d`；GitHub 公共下载副本已通过 Python 3.10/3.13 clean-install、官方
-Skill 结构校验、DRAFT 逐字节等价与真实 PASS/FAIL 黄金路径门禁。
+高级合同作者”分开入口，并链接已完成的 Starter PASS/FAIL 黄金路径。当前稳定入口是
+[Starter 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0) 与
+[Authoring Skill 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)。
+两个标签共同钉在提交 `c9592e1`；GitHub 公共下载副本已通过 Python 3.10.6/3.13.13、双 Preset、
+官方 Skill 结构校验和 DRAFT 逐字节等价门禁。E1 `0.1.0` Release 及其提交 `c7d3c8d` 保持不可变，
+继续作为历史复现坐标。
 
 核心需要 Python 3.10+；浏览器采集和 Windows 受控进程能力使用可选依赖：
 
@@ -323,6 +327,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail Authoring Skill 0.2 合同](docs/67-authoring-skill-0.2-contract.md)
 - [Post-Core 入口层 E2 static-site 实现事实](docs/68-entry-layer-e2-static-site-facts.md)
 - [Post-Core 入口层 E3 0.2.0 独立发布合同](docs/69-entry-layer-e3-0.2-release-contract.md)
+- [VeriTrail 入口层 E3 0.2.0 发布说明](docs/70-entry-layer-e3-0.2-release-notes.md)
 
 ## 项目来源
 
