@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability privately
+    url: https://github.com/NoctilumeDev/VeriTrail/security/advisories/new
+    about: Do not disclose vulnerabilities or sensitive evidence in a public issue.
+  - name: First-use and support boundaries
+    url: https://github.com/NoctilumeDev/VeriTrail/blob/main/START_HERE.md
+    about: Check the supported presets, golden path, and explicit non-goals before filing.

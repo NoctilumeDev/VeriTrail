@@ -1,0 +1,74 @@
+name: Bounded capability proposal
+description: Propose one explicitly scoped capability without silently broadening a frozen contract.
+title: "proposal: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        VeriTrail favors finite contracts over automatic guessing. A proposal must preserve fail-closed behavior and the separation between DRAFT authoring, Core execution, deterministic Verdicts, and read-only presentation.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the concrete blocked workflow, not a preferred implementation.
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Proposed change level
+      options:
+        - L0_DOCS
+        - L1_COMPONENT
+        - L2_CONTRACT
+        - L3_SYSTEM
+    validations:
+      required: true
+  - type: textarea
+    id: bounded_scope
+    attributes:
+      label: Bounded scope
+      description: State supported inputs, platform/topology, resource budget, and explicit non-goals.
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Authority and trust boundary
+      description: Explain who may draft, review, seal, run, and determine the Verdict. AI assistance must remain advisory.
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: Failure and stop behavior
+      description: Define fail-closed conditions, stop reasons, cleanup, and what must remain INCONCLUSIVE or unsupported.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Acceptance evidence
+      description: List positive, negative, boundary, real-run, and public readback evidence required before the capability may be claimed.
+    validations:
+      required: true
+  - type: textarea
+    id: versioning
+    attributes:
+      label: Compatibility and versioning
+      description: Explain why this fits an existing contract or identify the separate version coordinate required. Frozen tags cannot move.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: The proposal has one primary capability and names its non-goals.
+          required: true
+        - label: The proposal does not let Starter, an AI Skill, or the Workbench seal, run, or modify a Verdict.
+          required: true
+        - label: The proposal does not reinterpret Core v0.12.0 or historical entry-layer releases.
+          required: true
