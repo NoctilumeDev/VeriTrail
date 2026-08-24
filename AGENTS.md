@@ -38,11 +38,12 @@
   `docs/53-m13-system-and-layered-code-quality-audit-facts.md`；M14 合同、整改、最终事实与 Release
   说明位于 `docs/54-m14-final-validation-and-release-contract.md` 至
   `docs/57-v0.12.0-release-notes.md`，当前为 `FROZEN / RELEASED`，稳定标签为 `v0.12.0`。
-- `v0.12.0` 之后的当前主线是独立入口层 E0/S0/S1/A0/E1/E2，计划、合同与事实位于
-  `docs/58-post-core-entry-layer-plan.md` 至 `docs/68-entry-layer-e2-static-site-facts.md`。E1 已将
+- `v0.12.0` 之后的当前主线是独立入口层 E0/S0/S1/A0/E1/E2/E3，计划、合同与事实位于
+  `docs/58-post-core-entry-layer-plan.md` 至 `docs/69-entry-layer-e3-0.2-release-contract.md`。E1 已将
   Starter/Authoring Skill `0.1.0` 独立发布并固定到提交 `c7d3c8d`；E2 已在源码中实现 Starter/Skill
   `0.2.0` 与第二个有限 Preset `static-site`，当前为 `IMPLEMENTED / NOT_RELEASED`，不得写成已有
-  0.2 Release。`single-webapp` 0.1 合同与标签事实不被重解释；`static-site` 只允许显式 CPython、
+  0.2 Release。E3 发布合同已经冻结，但标签、资产、Release 和公共读回仍待执行。`single-webapp`
+  0.1 合同与标签事实不被重解释；`static-site` 只允许显式 CPython、
   现存普通 HTML、固定回环、无需构建和无需远程资源。Starter/Skill 仍不得自动 seal、run、批准
   Preview、handoff 或修改 Verdict，亦不得把入口层能力回填成 Core 0.12.0 已证明事实。Codex Security
   深度扫描、攻击路径验证和极端环境攻击继续封存，普通质量审查不得冒充这些安全工作流。

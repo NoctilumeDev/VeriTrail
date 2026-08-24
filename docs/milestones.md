@@ -236,10 +236,12 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [VeriTrail Starter 0.2 static-site 合同](66-starter-static-site-contract.md)
 - [VeriTrail Authoring Skill 0.2 合同](67-authoring-skill-0.2-contract.md)
 - [Post-Core 入口层 E2 static-site 实现事实](68-entry-layer-e2-static-site-facts.md)
+- [Post-Core 入口层 E3 0.2.0 独立发布合同](69-entry-layer-e3-0.2-release-contract.md)
 
-文档 58–68 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示与第二 Preset 实现事实，不是 M15，也不改变 M0–M14 的
+文档 58–69 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布合同，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
 clean install、公共入口、GitHub Release 与下载读回，两个入口产品现在可以准确描述为已发布的
 `0.1.0`。E2 又以独立合同在 `main` 实现 Starter/Skill `0.2.0` 与有限 `static-site`，状态仍为
-`IMPLEMENTED / NOT_RELEASED`；它没有新 Release 或标签，也不能继承 E1 未证明的发布边界。
+`IMPLEMENTED / NOT_RELEASED`；E3 已冻结独立发布门禁，但尚未创建新 Release 或标签，也不能继承
+E1 未证明的发布边界。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

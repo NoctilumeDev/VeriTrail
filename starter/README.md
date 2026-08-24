@@ -59,4 +59,7 @@ The normative preset contracts are
 [`docs/59-starter-single-webapp-contract.md`](../docs/59-starter-single-webapp-contract.md)
 and [`docs/66-starter-static-site-contract.md`](../docs/66-starter-static-site-contract.md).
 Release packaging and readback are governed by
-[`docs/63-entry-layer-e1-release-contract.md`](../docs/63-entry-layer-e1-release-contract.md).
+[`docs/63-entry-layer-e1-release-contract.md`](../docs/63-entry-layer-e1-release-contract.md)
+for the frozen 0.1 release and
+[`docs/69-entry-layer-e3-0.2-release-contract.md`](../docs/69-entry-layer-e3-0.2-release-contract.md)
+for the pending 0.2 release.

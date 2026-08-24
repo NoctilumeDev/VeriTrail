@@ -322,6 +322,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail Starter 0.2 static-site 合同](docs/66-starter-static-site-contract.md)
 - [VeriTrail Authoring Skill 0.2 合同](docs/67-authoring-skill-0.2-contract.md)
 - [Post-Core 入口层 E2 static-site 实现事实](docs/68-entry-layer-e2-static-site-facts.md)
+- [Post-Core 入口层 E3 0.2.0 独立发布合同](docs/69-entry-layer-e3-0.2-release-contract.md)
 
 ## 项目来源
 
