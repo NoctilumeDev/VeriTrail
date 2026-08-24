@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import argparse
+import copy
+import gzip
 import json
+import os
 import shutil
 import sys
+import tarfile
 import tempfile
 from pathlib import Path
 from typing import Any, Sequence
@@ -19,6 +23,7 @@ STARTER_VERSION = "0.2.0"
 SKILL_VERSION = "0.2.0"
 CORE_VERSION = common.CORE_VERSION
 CORE_RELEASE_WHEEL_SHA256 = common.CORE_RELEASE_WHEEL_SHA256
+RELEASE_SOURCE_DATE_EPOCH = 1787529600  # 2026-08-24T00:00:00Z
 PRESETS = ("single-webapp", "static-site")
 STARTER_ASSET_NAMES = (
     "veritrail_starter-0.2.0-py3-none-any.whl",
@@ -35,6 +40,45 @@ FROZEN_E3_OFFICIAL_SKILL_VALIDATION = {
     "status": "PASS",
     "validator": "skill-creator/quick_validate.py",
 }
+
+
+def normalize_sdist(path: Path) -> None:
+    """Rewrite a setuptools sdist with frozen, host-independent archive metadata."""
+
+    normalized = path.with_name(f".{path.name}.normalized")
+    try:
+        with tarfile.open(path, mode="r:gz") as source:
+            members = sorted(source.getmembers(), key=lambda item: item.name)
+            with normalized.open("wb") as raw_output:
+                with gzip.GzipFile(
+                    filename="",
+                    mode="wb",
+                    compresslevel=9,
+                    fileobj=raw_output,
+                    mtime=RELEASE_SOURCE_DATE_EPOCH,
+                ) as compressed_output:
+                    with tarfile.open(
+                        fileobj=compressed_output,
+                        mode="w",
+                        format=tarfile.PAX_FORMAT,
+                    ) as target:
+                        for original in members:
+                            member = copy.copy(original)
+                            member.uid = 0
+                            member.gid = 0
+                            member.uname = ""
+                            member.gname = ""
+                            member.mtime = RELEASE_SOURCE_DATE_EPOCH
+                            member.pax_headers = {}
+                            payload = source.extractfile(original) if original.isreg() else None
+                            try:
+                                target.addfile(member, payload)
+                            finally:
+                                if payload is not None:
+                                    payload.close()
+        normalized.replace(path)
+    finally:
+        normalized.unlink(missing_ok=True)
 
 
 def installed_versions(python_executable: Path) -> dict[str, str]:
@@ -103,52 +147,61 @@ def build_artifacts(
         "public Core v0.12.0 wheel digest drifted",
     )
 
-    common.run_command(
-        [
-            str(build_python),
-            "-I",
-            "-m",
-            "pip",
-            "wheel",
-            "--no-deps",
-            "--no-build-isolation",
-            "--wheel-dir",
-            str(output),
-            str(starter_source),
-        ],
-        cwd=temp_root,
-    )
-    starter_wheel = common.single_match(
-        output, f"veritrail_starter-{STARTER_VERSION}-*.whl", "Starter wheel"
-    )
-
-    sdist_command = (
-        "from setuptools import build_meta; "
-        f"print(build_meta.build_sdist({str(output)!r}))"
-    )
-    common.run_command(
-        [str(build_python), "-I", "-c", sdist_command],
-        cwd=starter_source,
-    )
-    starter_sdist = common.single_match(
-        output, f"veritrail_starter-{STARTER_VERSION}.tar.gz", "Starter sdist"
-    )
-
-    skill_zip = output / f"veritrail-authoring-{SKILL_VERSION}.zip"
-    skill_result = common.one_json_line(
+    previous_source_date_epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    os.environ["SOURCE_DATE_EPOCH"] = str(RELEASE_SOURCE_DATE_EPOCH)
+    try:
         common.run_command(
             [
                 str(build_python),
                 "-I",
-                str(common.SKILL_BUILDER),
-                "--build",
-                "--output",
-                str(skill_zip),
+                "-m",
+                "pip",
+                "wheel",
+                "--no-deps",
+                "--no-build-isolation",
+                "--wheel-dir",
+                str(output),
+                str(starter_source),
             ],
-            cwd=REPOSITORY_ROOT,
-        ),
-        "Skill builder",
-    )
+            cwd=temp_root,
+        )
+        starter_wheel = common.single_match(
+            output, f"veritrail_starter-{STARTER_VERSION}-*.whl", "Starter wheel"
+        )
+
+        sdist_command = (
+            "from setuptools import build_meta; "
+            f"print(build_meta.build_sdist({str(output)!r}))"
+        )
+        common.run_command(
+            [str(build_python), "-I", "-c", sdist_command],
+            cwd=starter_source,
+        )
+        starter_sdist = common.single_match(
+            output, f"veritrail_starter-{STARTER_VERSION}.tar.gz", "Starter sdist"
+        )
+        normalize_sdist(starter_sdist)
+
+        skill_zip = output / f"veritrail-authoring-{SKILL_VERSION}.zip"
+        skill_result = common.one_json_line(
+            common.run_command(
+                [
+                    str(build_python),
+                    "-I",
+                    str(common.SKILL_BUILDER),
+                    "--build",
+                    "--output",
+                    str(skill_zip),
+                ],
+                cwd=REPOSITORY_ROOT,
+            ),
+            "Skill builder",
+        )
+    finally:
+        if previous_source_date_epoch is None:
+            os.environ.pop("SOURCE_DATE_EPOCH", None)
+        else:
+            os.environ["SOURCE_DATE_EPOCH"] = previous_source_date_epoch
     common.require(skill_result.get("state") == "PASS", "Skill builder did not pass")
     common.require(skill_result.get("version") == SKILL_VERSION, "Skill version drifted")
     return {
@@ -320,6 +373,7 @@ def starter_summary(
         "product": "veritrail-starter",
         "version": STARTER_VERSION,
         "state": "PASS",
+        "source_date_epoch": RELEASE_SOURCE_DATE_EPOCH,
         "core_version": CORE_VERSION,
         "core_wheel_sha256": common.sha256_file(core_wheel),
         "core_wheel_provenance": "PUBLIC_V0.12.0_RELEASE",
@@ -337,6 +391,7 @@ def skill_summary(
         "product": "veritrail-authoring",
         "version": SKILL_VERSION,
         "state": "PASS",
+        "source_date_epoch": RELEASE_SOURCE_DATE_EPOCH,
         "archive_sha256": common.sha256_file(skill_zip),
         "official_validation": dict(FROZEN_E3_OFFICIAL_SKILL_VALIDATION),
         "authority": ["doctor", "init", "validate", "review"],
@@ -470,6 +525,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "schema_version": "0.1",
                     "acceptance": "entry-layer-e3",
                     "state": "PASS",
+                    "source_date_epoch": RELEASE_SOURCE_DATE_EPOCH,
                     "python_versions": labels,
                     "presets": list(PRESETS),
                     "official_skill_validation": official_validation["status"],
@@ -489,6 +545,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "schema_version": "0.1",
                     "acceptance": "entry-layer-e3-release-readback",
                     "state": "PASS",
+                    "source_date_epoch": RELEASE_SOURCE_DATE_EPOCH,
                     "python_versions": labels,
                     "presets": list(PRESETS),
                     "official_skill_validation": official_validation["status"],
