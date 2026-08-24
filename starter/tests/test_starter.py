@@ -257,9 +257,10 @@ class StarterContractTests(unittest.TestCase):
         from veritrail_starter import contract as contract_module
 
         original = contract_module._is_reparse
+        nested_resolved = nested.resolve(strict=True)
 
         def mark_nested_as_reparse(path: Path) -> bool:
-            return path == nested or original(path)
+            return path.resolve(strict=True) == nested_resolved or original(path)
 
         with mock.patch(
             "veritrail_starter.contract._is_reparse", side_effect=mark_nested_as_reparse
