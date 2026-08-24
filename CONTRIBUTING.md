@@ -9,6 +9,9 @@ Contributions are welcome when they fix a reproducible defect, strengthen a decl
 reproducibility, or propose a separately versioned bounded capability. Do not silently broaden a frozen
 contract or describe planned, mocked, or advisory behavior as implemented evidence.
 
+All participation is governed by the repository's [Code of Conduct](CODE_OF_CONDUCT.md). Security findings
+must follow the private reporting path in [SECURITY.md](SECURITY.md), not a public Issue.
+
 ## Before proposing code
 
 1. Read `README.md`, `START_HERE.md`, and the numbered documents relevant to the change. Automated
