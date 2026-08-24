@@ -854,23 +854,31 @@ def run_observed_bootstrap(
         return None
 
     def stage_pre_teardown(observation: BootstrapPreTeardownObservation) -> None:
-        nonlocal staged_sha256
-        document = _stage_document(
-            plan,
-            profile,
-            resolved.preview,
-            observation,
-            browser_exercise=browser_exercise,
-            subject_before=before,
-            resource_peaks=monitor.current_peaks(),
-            replacements=path_replacements,
-        )
+        nonlocal staged_sha256, monitor_stopped
         try:
-            staged_sha256 = workspace.stage(document, writer=staging_writer)
-        except Exception as exc:
-            raise BootstrapEvidenceFinalizationError(
-                "EVIDENCE_STAGING_FAILED"
-            ) from exc
+            document = _stage_document(
+                plan,
+                profile,
+                resolved.preview,
+                observation,
+                browser_exercise=browser_exercise,
+                subject_before=before,
+                resource_peaks=monitor.current_peaks(),
+                replacements=path_replacements,
+            )
+            try:
+                staged_sha256 = workspace.stage(document, writer=staging_writer)
+            except Exception as exc:
+                raise BootstrapEvidenceFinalizationError(
+                    "EVIDENCE_STAGING_FAILED"
+                ) from exc
+        finally:
+            # Resource sampling covers the active experiment, not the intentional
+            # destruction of its owned Jobs.  Stop at the existing pre-teardown
+            # boundary so a normal process-tree disappearance cannot race the
+            # sampler and be misclassified as COLLECTOR_ERROR.
+            if not monitor_stopped:
+                monitor_stopped = monitor.stop()
 
     try:
         specs = materialize_bootstrap_service_specs(

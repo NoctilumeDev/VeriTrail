@@ -25,6 +25,7 @@ from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 from veritrail.stop_control import StopSignal
 from veritrail.windows_job import inspect_executable_identity
+from veritrail.windows_service import OwnedServiceSession
 
 from tests.support import bootstrap_plan, bootstrap_profile
 from tests.test_browser_evidence import _browser_artifact
@@ -360,6 +361,56 @@ class BootstrapObservedRunTests(unittest.TestCase):
             self.assertTrue(result.run_work_released)
             self.assertTrue(result.staging_released)
             self.assertTrue(result.owned_root_released)
+            self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
+
+    def test_resource_monitor_stops_before_owned_service_teardown(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(subject)
+            application_port = next(
+                node["port"] for node in profile["nodes"] if node["role"] == "APPLICATION"
+            )
+            teardown_started = threading.Event()
+
+            class TeardownSamplingGuard:
+                def __init__(self, session: OwnedServiceSession) -> None:
+                    self._session = session
+
+                def __getattr__(self, name: str):
+                    return getattr(self._session, name)
+
+                def sample_rss_bytes(self) -> int:
+                    if teardown_started.is_set():
+                        raise OSError("resource sampling crossed into teardown")
+                    return self._session.sample_rss_bytes()
+
+                def terminate(self):
+                    teardown_started.set()
+                    time.sleep(0.15)
+                    return self._session.terminate()
+
+            def guarded_session_factory(**values):
+                return TeardownSamplingGuard(OwnedServiceSession.start(**values))
+
+            result = run_observed_bootstrap(
+                plan,
+                profile,
+                resolved,
+                output_parent=root / "artifacts",
+                browser_runner=lambda active_plan: _exercise(
+                    active_plan, application_port
+                ),
+                session_factory=guarded_session_factory,
+            )
+
+            self.assertTrue(teardown_started.is_set())
+            self.assertIsNone(result.error_type)
+            self.assertIsNotNone(result.evidence)
+            self.assertEqual("COMPLETED", result.evidence.execution_status)
+            self.assertTrue(result.resource_observation["sampling_complete"])
+            self.assertEqual("NONE", result.lifecycle.stop_reason)
+            self.assertTrue(result.lifecycle.cleanup_complete)
             self.assertEqual([], list((root / "artifacts").glob(".veritrail-*")))
 
     def test_browser_observer_failure_is_collector_error_not_business_failure(self) -> None:
