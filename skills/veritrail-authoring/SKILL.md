@@ -1,6 +1,9 @@
 ---
 name: veritrail-authoring
 description: Prepare a fail-closed, DRAFT-only VeriTrail Starter 0.1 candidate for an explicitly selected local repository. Use when a user wants help assessing whether a Windows 11 single-process local web app fits the frozen single-webapp preset, collecting explicit authoring answers, creating a Starter workspace, or explaining Starter validation errors. Do not use this skill to seal, run, evaluate, compare, pair, batch-analyze, approve a Preview, install dependencies, repair the environment, or issue a Verdict.
+metadata:
+  version: "0.1.0"
+  compatible_starter: "0.1.0"
 ---
 
 # VeriTrail Authoring

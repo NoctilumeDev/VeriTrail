@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -11,10 +12,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from starter_single_webapp_acceptance import FIXTURE_ROOT, build_answers
-
-
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+FIXTURE_ROOT = REPOSITORY_ROOT / "examples" / "starter" / "single-webapp"
 AUTHORING_SCRIPT = (
     REPOSITORY_ROOT / "skills" / "veritrail-authoring" / "scripts" / "authoring.py"
 )
@@ -60,12 +59,122 @@ def reserve_port() -> int:
         return int(probe.getsockname()[1])
 
 
-def run_authoring(arguments: list[str]) -> dict[str, Any]:
+def build_answers(
+    subject_root: Path, port: int, *, python_executable: Path
+) -> dict[str, Any]:
+    origin = f"http://127.0.0.1:{port}"
+    return {
+        "schema_version": "0.1",
+        "preset": "single-webapp",
+        "workspace_id": "starter-single-webapp-golden",
+        "question": "Does the application return the preregistered ready evidence fact?",
+        "subject": {
+            "root": str(subject_root),
+            "id": "starter-single-webapp",
+            "version": "1.0",
+            "source_ref": ".",
+            "working_directory": ".",
+            "watch_roots": ["app"],
+        },
+        "application": {
+            "executable": str(python_executable),
+            "arguments": [
+                {"literal": "app/server.py"},
+                {"literal": "serve"},
+                {"node_port": "application"},
+            ],
+            "port": port,
+            "health_path": "/health",
+            "expected_status": 200,
+        },
+        "browser": {
+            "start_url": origin + "/",
+            "allowed_origin": origin,
+            "headless": True,
+            "timeout_ms": 3000,
+            "viewports": [
+                {"name": "desktop", "width": 1440, "height": 960, "is_mobile": False},
+                {"name": "mobile", "width": 390, "height": 844, "is_mobile": True},
+            ],
+            "steps": [
+                {
+                    "id": "starter-title-visible",
+                    "action": "expect_visible",
+                    "selector": "[data-testid='starter-title']",
+                },
+                {
+                    "id": "starter-label-fill",
+                    "action": "fill",
+                    "selector": "[data-testid='run-label']",
+                    "value": "starter-demo",
+                },
+                {
+                    "id": "starter-load-evidence",
+                    "action": "click",
+                    "selector": "[data-testid='load-evidence']",
+                },
+                {
+                    "id": "starter-ready-fact",
+                    "action": "expect_text",
+                    "selector": "[data-testid='status']",
+                    "value": "evidence ready: starter-demo",
+                },
+            ],
+            "screenshot_safety": "UNREDACTED_OPERATOR_ACKNOWLEDGED",
+        },
+        "budgets": {
+            "max_artifact_bytes": 8 * 1024 * 1024,
+            "max_watch_files": 100,
+            "max_watch_total_bytes": 8 * 1024 * 1024,
+            "lifecycle_timeout_ms": 120000,
+            "max_stdout_bytes": 262144,
+            "max_stderr_bytes": 262144,
+            "max_processes": 8,
+            "application_memory_mb": 512,
+            "browser_memory_mb": 1024,
+        },
+        "timeouts": {
+            "readiness_attempt_ms": 500,
+            "readiness_total_ms": 10000,
+            "readiness_interval_ms": 100,
+            "shutdown_process_ms": 5000,
+            "shutdown_port_ms": 5000,
+            "shutdown_reader_ms": 5000,
+        },
+        "random_seed": 20260823,
+    }
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Exercise the Authoring Skill against the real Starter DRAFT boundary."
+    )
+    parser.add_argument(
+        "--python",
+        type=Path,
+        default=Path(sys.executable),
+        help="Python executable that owns the installed Core and Starter packages.",
+    )
+    parser.add_argument(
+        "--authoring-script",
+        type=Path,
+        default=AUTHORING_SCRIPT,
+        help="Authoring Skill script to exercise; may point into an extracted release ZIP.",
+    )
+    parser.add_argument(
+        "--optimized",
+        action="store_true",
+        help="Invoke the installed product under python -O.",
+    )
+    return parser.parse_args()
+
+
+def run_json_command(command: list[str], *, cwd: Path) -> dict[str, Any]:
     environment = dict(os.environ)
     environment["PYTHONUTF8"] = "1"
     completed = subprocess.run(
-        [sys.executable, str(AUTHORING_SCRIPT), *arguments],
-        cwd=REPOSITORY_ROOT,
+        command,
+        cwd=cwd,
         env=environment,
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
@@ -77,19 +186,43 @@ def run_authoring(arguments: list[str]) -> dict[str, Any]:
         timeout=60,
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
     )
-    require(not completed.stderr, f"Authoring Skill wrote stderr: {completed.stderr}")
+    require(not completed.stderr, f"command wrote stderr: {completed.stderr}")
     lines = completed.stdout.splitlines()
-    require(len(lines) == 1, "Authoring Skill must emit exactly one JSON document")
+    require(len(lines) == 1, "command must emit exactly one JSON document")
     try:
         document = json.loads(lines[0])
     except json.JSONDecodeError as exc:
-        raise RuntimeError("Authoring Skill emitted invalid JSON") from exc
-    require(isinstance(document, dict), "Authoring Skill output must be one object")
-    require(completed.returncode in {0, 2}, "Authoring Skill used an unknown exit code")
+        raise RuntimeError("command emitted invalid JSON") from exc
+    require(isinstance(document, dict), "command output must be one object")
+    require(completed.returncode in {0, 2}, "command used an unknown exit code")
     return document
 
 
+def run_authoring(
+    arguments: list[str], *, python_executable: Path, authoring_script: Path, optimized: bool
+) -> dict[str, Any]:
+    prefix = [str(python_executable), "-I", *(["-O"] if optimized else [])]
+    return run_json_command(
+        [*prefix, str(authoring_script), *arguments],
+        cwd=REPOSITORY_ROOT,
+    )
+
+
+def run_starter(
+    arguments: list[str], *, python_executable: Path, optimized: bool
+) -> dict[str, Any]:
+    prefix = [str(python_executable), "-I", *(["-O"] if optimized else [])]
+    return run_json_command(
+        [*prefix, "-m", "veritrail_starter.cli", *arguments],
+        cwd=REPOSITORY_ROOT,
+    )
+
+
 def main() -> int:
+    args = parse_args()
+    python_executable = args.python.resolve(strict=True)
+    authoring_script = args.authoring_script.resolve(strict=True)
+    optimized = bool(args.optimized)
     with tempfile.TemporaryDirectory(prefix="veritrail-authoring-a0-") as raw_temp:
         acceptance_root = Path(raw_temp).resolve()
         subject_root = acceptance_root / "subject"
@@ -103,7 +236,12 @@ def main() -> int:
             newline="\n",
         )
 
-        inspected = run_authoring(["inspect", "--repository", str(subject_root)])
+        inspected = run_authoring(
+            ["inspect", "--repository", str(subject_root)],
+            python_executable=python_executable,
+            authoring_script=authoring_script,
+            optimized=optimized,
+        )
         require(inspected.get("state") == "NEEDS_USER_INPUT", "inspect state drifted")
         require(
             inspected.get("repository", {}).get("secret_entries_ignored") == 1,
@@ -111,7 +249,9 @@ def main() -> int:
         )
         require(not (subject_root / ".veritrail").exists(), "inspect wrote a workspace")
 
-        answers = build_answers(subject_root, reserve_port())
+        answers = build_answers(
+            subject_root, reserve_port(), python_executable=python_executable
+        )
         intake = {
             "schema_version": "0.1",
             "repository_root": str(subject_root),
@@ -128,12 +268,22 @@ def main() -> int:
         intake_path = acceptance_root / "intake.json"
         write_json(intake_path, intake)
 
-        candidate = run_authoring(["candidate", "--intake", str(intake_path)])
+        candidate = run_authoring(
+            ["candidate", "--intake", str(intake_path)],
+            python_executable=python_executable,
+            authoring_script=authoring_script,
+            optimized=optimized,
+        )
         require(candidate.get("state") == "CANDIDATE_READY", "candidate was not ready")
         require(len(candidate.get("answers_sha256", "")) == 64, "candidate digest missing")
         require(not (subject_root / ".veritrail").exists(), "candidate wrote a workspace")
 
-        drafted = run_authoring(["draft", "--intake", str(intake_path)])
+        drafted = run_authoring(
+            ["draft", "--intake", str(intake_path)],
+            python_executable=python_executable,
+            authoring_script=authoring_script,
+            optimized=optimized,
+        )
         require(
             drafted.get("state") == "DRAFT_READY_FOR_HUMAN_REVIEW",
             f"draft did not reach human review: {drafted}",
@@ -160,21 +310,62 @@ def main() -> int:
             "transient Answers file survived",
         )
 
-        reviewed = run_authoring(["review-draft", "--workspace", str(workspace)])
+        reviewed = run_authoring(
+            ["review-draft", "--workspace", str(workspace)],
+            python_executable=python_executable,
+            authoring_script=authoring_script,
+            optimized=optimized,
+        )
         require(
             reviewed.get("state") == "DRAFT_READY_FOR_HUMAN_REVIEW",
             "review-draft state drifted",
         )
         require(set(reviewed.get("starter", {})) == {"validate", "review"}, "review escaped")
 
-        before = workspace_digests(workspace)
-        conflict = run_authoring(["draft", "--intake", str(intake_path)])
+        skill_digests = workspace_digests(workspace)
+        conflict = run_authoring(
+            ["draft", "--intake", str(intake_path)],
+            python_executable=python_executable,
+            authoring_script=authoring_script,
+            optimized=optimized,
+        )
         require(conflict.get("state") == "STARTER_VALIDATION_FAILED", "conflict was hidden")
         require(
             conflict.get("starter_error", {}).get("code") == "OUTPUT_CONFLICT",
             "existing workspace did not fail closed",
         )
-        require(workspace_digests(workspace) == before, "existing workspace was overwritten")
+        require(
+            workspace_digests(workspace) == skill_digests,
+            "existing workspace was overwritten",
+        )
+
+        shutil.rmtree(workspace)
+        direct_answers_path = acceptance_root / "direct-answers.json"
+        write_json(direct_answers_path, answers)
+        direct = run_starter(
+            [
+                "init",
+                "--preset",
+                "single-webapp",
+                "--answers",
+                str(direct_answers_path),
+            ],
+            python_executable=python_executable,
+            optimized=optimized,
+        )
+        require(direct.get("outcome") == "OK", "direct Starter init failed")
+        for command in ("validate", "review"):
+            result = run_starter(
+                [command, "--workspace", str(workspace)],
+                python_executable=python_executable,
+                optimized=optimized,
+            )
+            require(result.get("outcome") == "OK", f"direct Starter {command} failed")
+        direct_digests = workspace_digests(workspace)
+        require(
+            direct_digests == skill_digests,
+            "Skill and direct Starter generated different DRAFT files",
+        )
 
         print(
             json.dumps(
@@ -186,6 +377,9 @@ def main() -> int:
                     "draft": drafted["state"],
                     "review": reviewed["state"],
                     "conflict": conflict["starter_error"]["code"],
+                    "draft_equivalence": "BYTE_IDENTICAL",
+                    "draft_file_count": len(skill_digests),
+                    "optimized": optimized,
                     "authority": ["doctor", "init", "validate", "review"],
                     "boundary": boundary,
                 },

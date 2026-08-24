@@ -2,9 +2,9 @@
 
 > 当前稳定内核：`VeriTrail Core 0.12.0`
 >
-> 当前入口层状态：`VeriTrail Starter 0.1` 的 S0 确定性 DRAFT 链与 S1 真实 PASS/FAIL 黄金路径
-> 以及 `VeriTrail Authoring Skill 0.1` 的 A0 DRAFT-only 包装已在源码中完成；独立发布仍未完成，
-> 因此它们还不是开箱即用正式版。
+> 当前入口层状态：`VeriTrail Starter 0.1.0` 与 `VeriTrail Authoring Skill 0.1.0` 的 E1
+> 发布候选已通过本地双 Python clean-install、DRAFT 等价和真实 PASS/FAIL 黄金路径门禁；GitHub
+> Release 与公开下载读回仍未完成，因此此刻还不能把候选写成已发布事实。
 
 VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次软件验收拆成预先冻结的计划、真实运行、
 结构化证据、确定性裁决、不可变证据包和可比较的复跑结果。
@@ -26,7 +26,7 @@ VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次�
 `PASS` 和一次故意制造的 `FAIL`，让你看到同一份预注册标准如何保留成功与反例。两次 Run 使用
 同一 Profile、同一 Plan，只改变一个受控业务事实；它们是独立验收对，不冒充因果 Comparison。
 
-在 Starter 发布前，可以先运行 Core 的最小证据示例：
+在 Starter 的 GitHub Release 完成前，可以先运行 Core 的最小证据示例：
 
 ```powershell
 python -m venv .venv
@@ -88,7 +88,9 @@ Starter 0.1 只支持一个有限预设：`single-webapp`。它面向 Windows 11
 
 AI 可以帮助阅读仓库、推荐最接近的有限预设、解释字段和整理缺失信息。AI 不能充当裁决器。完整
 权限边界见 [VeriTrail Authoring Skill 合同](docs/60-authoring-skill-contract.md)，已实现门禁与验收见
-[A0 冻结事实](docs/62-authoring-skill-a0-facts.md)。
+[A0 冻结事实](docs/62-authoring-skill-a0-facts.md)。独立发布坐标、资产集合和公开读回停止线见
+[E1 发布合同](docs/63-entry-layer-e1-release-contract.md)与
+[E1 0.1.0 发布说明](docs/64-entry-layer-e1-release-notes.md)。
 
 ## 当前支持边界
 

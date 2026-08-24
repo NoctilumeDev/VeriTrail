@@ -1,28 +1,44 @@
-# VeriTrail Starter 0.1
+# VeriTrail Starter 0.1.0
 
 `veritrail-starter` is the independent, fail-closed DRAFT authoring entry for
-VeriTrail Core 0.12.x. The first development slice supports only the frozen
+VeriTrail Core 0.12.x. Version 0.1.0 supports only the frozen
 `single-webapp` preset on Windows 11.
 
 It can inspect explicit answers, create deterministic unsealed Profile/Plan drafts,
 validate a local authoring workspace, and print a manual Core handoff. It never seals,
-runs, approves a Preview, or decides a Verdict.
+runs, approves a Preview, or decides a Verdict. It is an authoring entry, not a
+second evaluator.
 
-## Development usage
+## Release installation
+
+Starter is distributed from the GitHub Release named
+`VeriTrail Starter 0.1.0`; it is not published to PyPI. Verify the downloaded
+files against `SHA256SUMS-starter.txt`, then install the frozen Core wheel and
+the Starter wheel into a clean virtual environment:
 
 ```powershell
-python -m pip install --editable .
-python -m pip install --editable .\starter
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install `
+  https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.0/veritrail-0.12.0-py3-none-any.whl `
+  https://github.com/NoctilumeDev/VeriTrail/releases/download/starter-v0.1.0/veritrail_starter-0.1.0-py3-none-any.whl
+```
+
+The source distribution is provided for independent build verification. It is
+not a reason to install the repository in editable mode.
+
+## Authoring usage
+
+```powershell
 veritrail-starter doctor --answers C:\absolute\path\answers.json
 veritrail-starter init --preset single-webapp --answers C:\absolute\path\answers.json
 veritrail-starter validate --workspace C:\absolute\subject\.veritrail
 veritrail-starter review --workspace C:\absolute\subject\.veritrail
-veritrail-starter handoff --workspace C:\absolute\subject\.veritrail
 ```
 
-Every command writes exactly one versioned JSON result to stdout. `handoff` validates
-the DRAFT and points at a PowerShell file that only **prints** manual Core commands.
-It does not execute those commands.
+Every command writes exactly one versioned JSON result to stdout. `handoff` is
+available for an advanced human operator after review; it only validates the
+DRAFT and points at a PowerShell file that **prints** manual Core commands. It
+does not execute those commands. The Authoring Skill cannot call `handoff`.
 
 The input contract is packaged at
 `veritrail_starter/schemas/answers-0.1.schema.json`. Runtime validation is stricter
@@ -36,3 +52,5 @@ bindings. Copying it into a Bundle or treating it as a sealed contract is unsupp
 
 The normative contract is
 [`docs/59-starter-single-webapp-contract.md`](../docs/59-starter-single-webapp-contract.md).
+Release packaging and readback are governed by
+[`docs/63-entry-layer-e1-release-contract.md`](../docs/63-entry-layer-e1-release-contract.md).

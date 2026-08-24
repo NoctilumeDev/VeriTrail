@@ -57,7 +57,8 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 
 第一次接触验迹，请先阅读 [从这里开始](START_HERE.md)。它按“第一次认识、已有本地 Web 项目、
 高级合同作者”分开入口，并链接已完成的 Starter PASS/FAIL 黄金路径。Starter S0/S1 与 Authoring
-Skill A0 的源码验收已经完成，但两者仍未独立发布，不能把源码冻结误解成正式版已经开箱即用。
+Skill A0 已进入 E1 `0.1.0` 发布候选；本地双 Python clean-install、DRAFT 等价、Skill 结构校验和
+真实 PASS/FAIL 黄金路径已经通过，但 GitHub Release 与公开下载读回尚未完成，不能提前写成已发布。
 
 核心需要 Python 3.10+；浏览器采集和 Windows 受控进程能力使用可选依赖：
 
@@ -283,6 +284,8 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail Authoring Skill 0.1 合同](docs/60-authoring-skill-contract.md)
 - [VeriTrail Starter 0.1 十分钟 PASS/FAIL 黄金路径](docs/61-starter-single-webapp-golden-path.md)
 - [VeriTrail Authoring Skill A0 冻结事实](docs/62-authoring-skill-a0-facts.md)
+- [Post-Core 入口层 E1 独立发布合同 0.1](docs/63-entry-layer-e1-release-contract.md)
+- [VeriTrail 入口层 E1 0.1.0 发布说明](docs/64-entry-layer-e1-release-notes.md)
 
 ## 项目来源
 

@@ -15,7 +15,7 @@ from typing import Any, Iterable
 
 
 PROTOCOL_VERSION = "0.1"
-SUPPORTED_STARTER_VERSIONS = frozenset({"0.1.0.dev0"})
+SUPPORTED_STARTER_VERSIONS = frozenset({"0.1.0"})
 ALLOWED_STARTER_COMMANDS = frozenset({"doctor", "init", "validate", "review"})
 MAX_INTAKE_BYTES = 256 * 1024
 MAX_SCAN_ENTRIES = 2048

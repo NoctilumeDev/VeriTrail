@@ -78,6 +78,25 @@ jobs:
           python -m pip install "setuptools==80.9.0"
           python -c "from setuptools import build_meta; print(build_meta.build_sdist('../dist'))"
 
+      - name: Download and verify the frozen Core release wheel
+        shell: pwsh
+        run: |
+          $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.0-py3-none-any.whl'
+          curl.exe --fail --location --retry 3 --output $coreWheel `
+            'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.0/veritrail-0.12.0-py3-none-any.whl'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $expected = 'd0293f06e6a2b0271870ce032b2197c6ef7956db0ff3889230ca48234ff2fa45'
+          $observed = (Get-FileHash -Algorithm SHA256 -LiteralPath $coreWheel).Hash.ToLowerInvariant()
+          if ($observed -ne $expected) { throw "Core release wheel digest drifted: $observed" }
+          "VERITRAIL_CORE_WHEEL=$coreWheel" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Run E1 release clean-install acceptance
+        run: >-
+          python scripts/entry_layer_e1_acceptance.py
+          --output "${{ runner.temp }}\entry-layer-e1-${{ matrix.python-version }}"
+          --python "${{ env.pythonLocation }}\python.exe"
+          --core-wheel "${{ env.VERITRAIL_CORE_WHEEL }}"
+
   workbench:
     name: Workbench tests, lint, build, and audit
     runs-on: ubuntu-latest
