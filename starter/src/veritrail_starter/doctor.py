@@ -27,7 +27,7 @@ def _version_tuple(value: str) -> tuple[int, int, int]:
 
 def require_compatible_core() -> None:
     if not (0, 12, 0) <= _version_tuple(core_version) < (0, 13, 0):
-        raise incompatible("Starter 0.1 requires VeriTrail Core >=0.12,<0.13")
+        raise incompatible("Starter 0.2 requires VeriTrail Core >=0.12,<0.13")
 
 
 def supported_host() -> bool:
@@ -39,7 +39,7 @@ def supported_host() -> bool:
 
 def require_supported_host() -> None:
     if not supported_host():
-        raise unsupported("single-webapp 0.1 supports only Windows 11")
+        raise unsupported("Starter 0.2 presets support only Windows 11")
 
 
 def _port_is_free(port: int) -> bool:
@@ -130,10 +130,17 @@ def doctor_report(answers: dict[str, Any] | None) -> dict[str, Any]:
         )
         return {"status": status, "checks": checks}
     checks.append(
-        {"id": "explicit-answers", "status": "READY", "detail": "explicit Answers 0.1 validated"}
+        {
+            "id": "explicit-answers",
+            "status": "READY",
+            "detail": f"explicit Answers {normalized['schema_version']} validated for {normalized['preset']}",
+        }
     )
 
-    port_ready = _port_is_free(normalized["application"]["port"])
+    runtime = normalized.get("application") or normalized.get("static_site")
+    if not isinstance(runtime, dict):
+        raise RuntimeError("normalized preset is missing its runtime block")
+    port_ready = _port_is_free(runtime["port"])
     checks.append(
         {
             "id": "fixed-loopback-port",

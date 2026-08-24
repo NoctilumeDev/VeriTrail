@@ -53,6 +53,22 @@ def _review_markdown(answers: dict[str, Any], profile: dict[str, Any], plan: dic
         f"- `{_markdown_text(step['id'])}`: `{step['action']}`"
         for step in answers["browser"]["steps"]
     )
+    if answers["preset"] == "static-site":
+        runtime = answers["static_site"]
+        runtime_lines = f"""- Preset: `static-site` / `0.2`
+- Python executable: recorded only in `tool-bindings.local.json`
+- Fixed port: `{runtime['port']}`
+- Entry file: `{_markdown_text(runtime['entry_file'])}`
+- Build required: `false` (explicitly confirmed)
+- Required remote assets: `false` (explicitly confirmed)"""
+        preset_version = "0.2"
+    else:
+        runtime = answers["application"]
+        runtime_lines = f"""- Preset: `single-webapp` / `0.1`
+- Executable: recorded only in `tool-bindings.local.json`
+- Fixed port: `{runtime['port']}`
+- Health path: `{_markdown_text(runtime['health_path'])}`"""
+        preset_version = "0.1"
     text = f"""# VeriTrail Starter Review
 
 > `DRAFT / NOT_SEALED`
@@ -65,9 +81,7 @@ def _review_markdown(answers: dict[str, Any], profile: dict[str, Any], plan: dic
 - Question: {_markdown_text(answers['question'])}
 - Subject: `{answers['subject']['id']}` version `{_markdown_text(answers['subject']['version'])}`
 - Subject root: recorded only in `answers.snapshot.json`
-- Executable: recorded only in `tool-bindings.local.json`
-- Fixed port: `{answers['application']['port']}`
-- Health path: `{_markdown_text(answers['application']['health_path'])}`
+{runtime_lines}
 - Browser origin: `{_markdown_text(answers['browser']['allowed_origin'])}`
 - Screenshot safety: `{answers['browser']['screenshot_safety']}`
 
@@ -81,7 +95,7 @@ def _review_markdown(answers: dict[str, Any], profile: dict[str, Any], plan: dic
 - ExperimentPlan: `{plan['plan_id']}` / Schema 0.7
 - Prospective Profile digest: `{project_profile_digest(profile)}`
 - Runtime evidence: `runtime.preflight`, `runtime.bootstrap`, `browser.session`
-- Lifecycle, browser-integrity, screenshot-coverage, subject-integrity, and cleanup assertions are fixed by preset 0.1.
+- Lifecycle, browser-integrity, screenshot-coverage, subject-integrity, and cleanup assertions are fixed by preset {preset_version}.
 
 ## DISCOVERED_CANDIDATE
 
@@ -127,7 +141,10 @@ def render_workspace(answers: dict[str, Any]) -> dict[str, bytes]:
     manifest = {
         "schema_version": "0.1",
         "starter_version": __version__,
-        "preset": {"id": "single-webapp", "version": "0.1"},
+        "preset": {
+            "id": answers["preset"],
+            "version": "0.2" if answers["preset"] == "static-site" else "0.1",
+        },
         "workspace_id": answers["workspace_id"],
         "authoring_state": "DRAFT",
         "seal_state": "NOT_SEALED",
@@ -173,8 +190,8 @@ def _safe_remove_temp(temp: Path, subject_root: Path) -> None:
 def initialize_workspace(answers_document: dict[str, Any], preset: str) -> dict[str, Any]:
     require_compatible_core()
     require_supported_host()
-    if preset != "single-webapp":
-        raise invalid("--preset must be single-webapp")
+    if preset not in {"single-webapp", "static-site"}:
+        raise invalid("--preset must be single-webapp or static-site")
     answers = normalize_answers(answers_document)
     if answers["preset"] != preset:
         raise invalid("--preset must match Answers.preset")
@@ -225,7 +242,7 @@ def _read_workspace(workspace: Path) -> tuple[Path, dict[str, Any], dict[str, by
     except OSError as exc:
         raise workspace_invalid("workspace could not be enumerated safely") from exc
     if names != EXPECTED_NAMES:
-        raise workspace_invalid("workspace file set does not match Starter 0.1")
+        raise workspace_invalid("workspace file set does not match Starter 0.2")
     content = {
         name: read_stable_bytes(
             resolved / name,
@@ -246,6 +263,10 @@ def _validate_workspace(workspace: Path) -> tuple[dict[str, Any], Path, dict[str
         resolved, manifest, actual = _read_workspace(workspace)
     except ValidationError as exc:
         raise workspace_invalid("workspace could not be read as one safe snapshot") from exc
+    if manifest.get("schema_version") != "0.1" or manifest.get("starter_version") != __version__:
+        raise workspace_invalid(
+            "workspace must be validated by the exact Starter version that created it"
+        )
     if manifest.get("authoring_state") != "DRAFT" or manifest.get("seal_state") != "NOT_SEALED":
         raise workspace_invalid("workspace must remain DRAFT / NOT_SEALED")
     try:

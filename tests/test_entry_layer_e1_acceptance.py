@@ -9,6 +9,7 @@ from scripts.entry_layer_e1_acceptance import (
     AcceptanceFailure,
     checksums,
     extract_skill,
+    verify_release_summary,
     verify_checksum_manifest,
 )
 
@@ -70,6 +71,35 @@ class EntryLayerE1AcceptanceTests(unittest.TestCase):
             with self.assertRaises(AcceptanceFailure):
                 extract_skill(archive, destination)
             self.assertEqual(list(destination.iterdir()), [])
+
+    def test_release_summary_accepts_new_patch_in_the_same_python_series(self) -> None:
+        released = {
+            "state": "PASS",
+            "python_matrix": [{"python": "3.10.6", "draft": "BYTE_IDENTICAL"}],
+        }
+        current = {
+            "state": "PASS",
+            "python_matrix": [{"python": "3.10.18", "draft": "BYTE_IDENTICAL"}],
+        }
+        verify_release_summary(released, current, "fixture")
+
+    def test_release_summary_rejects_fact_drift_and_unknown_python_series(self) -> None:
+        released = {
+            "state": "PASS",
+            "python_matrix": [{"python": "3.10.6", "draft": "BYTE_IDENTICAL"}],
+        }
+        drifted = {
+            "state": "PASS",
+            "python_matrix": [{"python": "3.10.18", "draft": "DIFFERENT"}],
+        }
+        unknown = {
+            "state": "PASS",
+            "python_matrix": [{"python": "3.11.9", "draft": "BYTE_IDENTICAL"}],
+        }
+        with self.assertRaises(AcceptanceFailure):
+            verify_release_summary(released, drifted, "fixture")
+        with self.assertRaises(AcceptanceFailure):
+            verify_release_summary(released, unknown, "fixture")
 
 if __name__ == "__main__":
     unittest.main()

@@ -31,6 +31,11 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 Core `0.12.0` 已稳定发布；Starter 与 Authoring Skill 以独立 `0.1.0` 坐标发布。入口层只能降低合同
 填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与 Browser Smoke 当前共同守住可重复基线。
 
+> **源码开发说明（未发布）**：`main` 已实现 Starter/Authoring Skill `0.2.0` 的第二个有限 Preset
+> `static-site`，只面向无需构建、无需远程资源的现存静态 HTML，并始终保持
+> `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。它没有 0.2 Release 或新标签，不能替代上面的稳定
+> 0.1.0 下载坐标。合同与实测事实见[文档 66–68](docs/66-starter-static-site-contract.md)。
+
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
 
@@ -128,10 +133,11 @@ npm run build
 ## 公开 CI 与真实验收边界
 
 `Public CI` 在每次 main push、PR 更新与 merge queue 上，以 Windows Runner 运行双 Python Core／
-Starter 回归和 wheel/sdist 构建，并在独立 Linux Runner 上运行 Workbench test、lint、type-check、
-生产构建和 moderate 级依赖审计。两个基础门禁通过后，独立 Windows Runner 还会运行 Starter 的
-真实 PASS/FAIL 双 Bundle、Catalog 与生产 Workbench 黄金路径。PR 改 base 也会重新触发，避免堆叠
-分支只保留旧合并事实。
+Starter／Authoring Skill 回归、`single-webapp` 与 `static-site` 两条真实 DRAFT 链、wheel/sdist 构建，
+并从 GitHub Release 下载冻结的 E1 0.1.0 资产做 checksum 与 clean-install 回读；独立 Linux Runner
+运行 Workbench test、lint、type-check、生产构建和 moderate 级依赖审计。两个基础门禁通过后，独立
+Windows Runner 还会运行 Starter 的真实 PASS/FAIL 双 Bundle、Catalog 与生产 Workbench 黄金路径。
+PR 改 base 也会重新触发，避免堆叠分支只保留旧合并事实。
 
 `Browser Smoke` 在 main 与每周定时任务上使用仓库内公开、合成、脱敏的 M2 证据包运行真实
 Chromium，检查桌面与 390 px、Console、Network、失败重试、历史导航和根横向溢出，并上传短期证据。
@@ -313,6 +319,9 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Post-Core 入口层 E1 独立发布合同 0.1](docs/63-entry-layer-e1-release-contract.md)
 - [VeriTrail 入口层 E1 0.1.0 发布说明](docs/64-entry-layer-e1-release-notes.md)
 - [GitHub 公共展示面收束事实](docs/65-github-public-presentation-facts.md)
+- [VeriTrail Starter 0.2 static-site 合同](docs/66-starter-static-site-contract.md)
+- [VeriTrail Authoring Skill 0.2 合同](docs/67-authoring-skill-0.2-contract.md)
+- [Post-Core 入口层 E2 static-site 实现事实](docs/68-entry-layer-e2-static-site-facts.md)
 
 ## 项目来源
 

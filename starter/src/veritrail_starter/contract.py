@@ -49,6 +49,7 @@ TOP_LEVEL_FIELDS = {
     "question",
     "subject",
     "application",
+    "static_site",
     "browser",
     "budgets",
     "timeouts",
@@ -68,6 +69,14 @@ APPLICATION_FIELDS = {
     "port",
     "health_path",
     "expected_status",
+}
+STATIC_SITE_FIELDS = {
+    "python_executable",
+    "entry_file",
+    "port",
+    "expected_status",
+    "requires_build",
+    "requires_remote_assets",
 }
 BROWSER_FIELDS = {
     "start_url",
@@ -153,7 +162,12 @@ def _ordinary_directory(path: Path, label: str) -> Path:
         raise invalid(f"{label} must be an existing ordinary directory") from exc
 
 
-def _ordinary_executable(path: Path) -> Path:
+def _ordinary_executable(
+    path: Path,
+    *,
+    label: str = "application.executable",
+    preset: str = "single-webapp 0.1",
+) -> Path:
     try:
         if (
             (os.name == "nt" and (not path.drive or str(path).startswith(("\\\\", "//"))))
@@ -166,9 +180,9 @@ def _ordinary_executable(path: Path) -> Path:
             raise OSError("unsafe executable")
         resolved = path.resolve(strict=True)
     except OSError as exc:
-        raise invalid("application.executable must be an existing ordinary local .exe file") from exc
+        raise invalid(f"{label} must be an existing ordinary local .exe file") from exc
     if resolved.name.casefold() in SHELL_EXECUTABLES:
-        raise unsupported("Shell and script-host executables are outside single-webapp 0.1")
+        raise unsupported(f"Shell and script-host executables are outside {preset}")
     return resolved
 
 
@@ -211,6 +225,30 @@ def _resolve_inside(root: Path, relative: str, label: str) -> None:
             raise ValueError("outside root")
     except (OSError, ValueError) as exc:
         raise invalid(f"{label} must remain inside subject.root") from exc
+
+
+def _resolve_file_inside(root: Path, working: str, relative: str, label: str) -> None:
+    try:
+        working_root = root if working == "." else root.joinpath(*working.split("/"))
+        working_root = working_root.resolve(strict=True)
+        if os.path.commonpath((str(root), str(working_root))) != str(root):
+            raise ValueError("working directory outside root")
+        current = working_root
+        segments = relative.split("/")
+        for index, segment in enumerate(segments):
+            current = current / segment
+            if not current.exists() or _is_reparse(current):
+                raise OSError("unsafe path segment")
+            if index < len(segments) - 1:
+                if not current.is_dir():
+                    raise OSError("non-directory path segment")
+            elif not current.is_file():
+                raise OSError("unsafe file")
+        resolved = current.resolve(strict=True)
+        if os.path.commonpath((str(working_root), str(resolved))) != str(working_root):
+            raise ValueError("outside root")
+    except (OSError, ValueError) as exc:
+        raise invalid(f"{label} must resolve to an ordinary file inside the working directory") from exc
 
 
 def _scan_for_secrets(value: Any, label: str = "answers") -> None:
@@ -332,7 +370,7 @@ def _normalize_steps(value: Any) -> list[dict[str, Any]]:
         action = obj.get("action")
         allowed = STEP_FIELDS.get(action)
         if allowed is None:
-            raise invalid(f"browser.steps[{index}].action is unsupported by Starter 0.1")
+            raise invalid(f"browser.steps[{index}].action is unsupported by Starter 0.2")
         _reject_unknown(obj, allowed, f"browser.steps[{index}]")
         step_id = _require_identifier(obj.get("id"), f"browser.steps[{index}].id")
         if step_id in ids:
@@ -349,16 +387,20 @@ def _normalize_steps(value: Any) -> list[dict[str, Any]]:
                 raise invalid(f"browser.steps[{index}].value must be a string up to 4096 characters")
         result.append(copy.deepcopy(obj))
     if decisive < 1:
-        raise unsupported("single-webapp requires at least one explicit expect_visible or expect_text business check")
+        raise unsupported("the selected preset requires at least one explicit expect_visible or expect_text business check")
     return result
 
 
 def normalize_answers(document: dict[str, Any], *, inspect_paths: bool = True) -> dict[str, Any]:
     _reject_unknown(document, TOP_LEVEL_FIELDS, "Answers")
-    if document.get("schema_version") != "0.1":
-        raise invalid("Answers.schema_version must be '0.1'")
-    if document.get("preset") != "single-webapp":
-        raise unsupported("Starter 0.1 supports only the single-webapp preset")
+    schema_version = document.get("schema_version")
+    preset = document.get("preset")
+    if schema_version not in {"0.1", "0.2"}:
+        raise invalid("Answers.schema_version must be '0.1' or '0.2'")
+    if preset not in {"single-webapp", "static-site"}:
+        raise unsupported("Starter 0.2 supports only single-webapp and static-site")
+    if schema_version == "0.1" and preset != "single-webapp":
+        raise unsupported("Answers 0.1 supports only the single-webapp preset")
     workspace_id = _require_identifier(document.get("workspace_id"), "workspace_id")
     question = document.get("question")
     if not isinstance(question, str) or not question.strip() or len(question) > 512:
@@ -390,41 +432,101 @@ def normalize_answers(document: dict[str, Any], *, inspect_paths: bool = True) -
         for index, item in enumerate(watch_roots):
             _resolve_inside(root, item, f"subject.watch_roots[{index}]")
 
-    application = _require_object(document.get("application"), "application")
-    _reject_unknown(application, APPLICATION_FIELDS, "application")
-    executable_raw = application.get("executable")
-    if not isinstance(executable_raw, str):
-        raise invalid("application.executable must be an absolute local .exe path")
-    executable = _ordinary_executable(Path(executable_raw)) if inspect_paths else Path(executable_raw)
-    arguments = _normalize_arguments(application.get("arguments"))
-    port = _require_int(application.get("port"), "application.port", 1024, 65535)
-    health_path = application.get("health_path")
-    try:
-        parsed_health = urlsplit(health_path) if isinstance(health_path, str) else None
-    except ValueError as exc:
-        raise invalid(
-            "application.health_path must be an absolute URL path without query or fragment"
-        ) from exc
-    if (
-        parsed_health is None
-        or not health_path.startswith("/")
-        or health_path.startswith("//")
-        or len(health_path) > 1024
-        or parsed_health.scheme
-        or parsed_health.netloc
-        or parsed_health.query
-        or parsed_health.fragment
-    ):
-        raise invalid("application.health_path must be an absolute URL path without query or fragment")
-    if application.get("expected_status") != 200:
-        raise invalid("application.expected_status must be 200")
+    application_result: dict[str, Any] | None = None
+    static_site_result: dict[str, Any] | None = None
+    if preset == "single-webapp":
+        if document.get("static_site") is not None:
+            raise invalid("single-webapp must not contain static_site")
+        application = _require_object(document.get("application"), "application")
+        _reject_unknown(application, APPLICATION_FIELDS, "application")
+        executable_raw = application.get("executable")
+        if not isinstance(executable_raw, str):
+            raise invalid("application.executable must be an absolute local .exe path")
+        executable = (
+            _ordinary_executable(Path(executable_raw)) if inspect_paths else Path(executable_raw)
+        )
+        arguments = _normalize_arguments(application.get("arguments"))
+        port = _require_int(application.get("port"), "application.port", 1024, 65535)
+        health_path = application.get("health_path")
+        try:
+            parsed_health = urlsplit(health_path) if isinstance(health_path, str) else None
+        except ValueError as exc:
+            raise invalid(
+                "application.health_path must be an absolute URL path without query or fragment"
+            ) from exc
+        if (
+            parsed_health is None
+            or not health_path.startswith("/")
+            or health_path.startswith("//")
+            or len(health_path) > 1024
+            or parsed_health.scheme
+            or parsed_health.netloc
+            or parsed_health.query
+            or parsed_health.fragment
+        ):
+            raise invalid(
+                "application.health_path must be an absolute URL path without query or fragment"
+            )
+        if application.get("expected_status") != 200:
+            raise invalid("application.expected_status must be 200")
+        application_result = {
+            "executable": str(executable),
+            "arguments": arguments,
+            "port": port,
+            "health_path": health_path,
+            "expected_status": 200,
+        }
+    else:
+        if document.get("application") is not None:
+            raise invalid("static-site must not contain application")
+        static_site = _require_object(document.get("static_site"), "static_site")
+        _reject_unknown(static_site, STATIC_SITE_FIELDS, "static_site")
+        executable_raw = static_site.get("python_executable")
+        if not isinstance(executable_raw, str):
+            raise invalid("static_site.python_executable must be an absolute local .exe path")
+        executable = (
+            _ordinary_executable(
+                Path(executable_raw),
+                label="static_site.python_executable",
+                preset="static-site 0.2",
+            )
+            if inspect_paths
+            else Path(executable_raw)
+        )
+        if not re.fullmatch(r"python(?:3(?:\.\d+)?)?\.exe", executable.name, re.IGNORECASE):
+            raise unsupported("static-site requires an explicit CPython console executable")
+        entry_file = _safe_relative(
+            static_site.get("entry_file"), "static_site.entry_file", allow_root=False
+        )
+        if Path(entry_file).suffix.casefold() not in {".html", ".htm"}:
+            raise unsupported("static-site entry_file must be an HTML document")
+        if static_site.get("requires_build") is not False:
+            raise unsupported("static-site requires an explicit no-build confirmation")
+        if static_site.get("requires_remote_assets") is not False:
+            raise unsupported("static-site does not support required remote assets")
+        port = _require_int(static_site.get("port"), "static_site.port", 1024, 65535)
+        if static_site.get("expected_status") != 200:
+            raise invalid("static_site.expected_status must be 200")
+        if inspect_paths:
+            _resolve_file_inside(root, working, entry_file, "static_site.entry_file")
+        health_path = f"/{entry_file}"
+        static_site_result = {
+            "python_executable": str(executable),
+            "entry_file": entry_file,
+            "port": port,
+            "expected_status": 200,
+            "requires_build": False,
+            "requires_remote_assets": False,
+        }
 
     browser = _require_object(document.get("browser"), "browser")
     _reject_unknown(browser, BROWSER_FIELDS, "browser")
-    start_origin, _ = _loopback_origin(browser.get("start_url"), "browser.start_url")
+    start_origin, start_path = _loopback_origin(browser.get("start_url"), "browser.start_url")
     allowed_origin, allowed_path = _loopback_origin(browser.get("allowed_origin"), "browser.allowed_origin")
     if allowed_path != "/" or start_origin != allowed_origin or urlsplit(start_origin).port != port:
         raise unsupported("browser URLs must use the application IPv4 loopback origin and port")
+    if preset == "static-site" and start_path != health_path:
+        raise unsupported("static-site browser.start_url must target the confirmed entry_file")
     if not isinstance(browser.get("headless"), bool):
         raise invalid("browser.headless must be a boolean")
     if browser.get("screenshot_safety") != "UNREDACTED_OPERATOR_ACKNOWLEDGED":
@@ -469,8 +571,8 @@ def normalize_answers(document: dict[str, Any], *, inspect_paths: bool = True) -
 
     source_ref = _safe_relative(subject.get("source_ref"), "subject.source_ref", allow_root=True)
     normalized = {
-        "schema_version": "0.1",
-        "preset": "single-webapp",
+        "schema_version": schema_version,
+        "preset": preset,
         "workspace_id": workspace_id,
         "question": question.strip(),
         "subject": {
@@ -480,13 +582,6 @@ def normalize_answers(document: dict[str, Any], *, inspect_paths: bool = True) -
             "source_ref": source_ref,
             "working_directory": working,
             "watch_roots": watch_roots,
-        },
-        "application": {
-            "executable": str(executable),
-            "arguments": arguments,
-            "port": port,
-            "health_path": health_path,
-            "expected_status": 200,
         },
         "browser": {
             "start_url": browser["start_url"],
@@ -501,6 +596,10 @@ def normalize_answers(document: dict[str, Any], *, inspect_paths: bool = True) -
         "timeouts": normalized_timeouts,
         "random_seed": _require_int(document.get("random_seed"), "random_seed", 0, 2_147_483_647),
     }
+    if application_result is not None:
+        normalized["application"] = application_result
+    if static_site_result is not None:
+        normalized["static_site"] = static_site_result
     if not normalized["subject"]["version"]:
         raise invalid("subject.version must be a non-empty string")
     return normalized
@@ -515,6 +614,38 @@ def _tool_binding_id(executable: str) -> str:
     return "application-tool"
 
 
+def _runtime_config(answers: dict[str, Any]) -> dict[str, Any]:
+    if answers["preset"] == "static-site":
+        static_site = answers["static_site"]
+        return {
+            "executable": static_site["python_executable"],
+            "tool_binding": "python-static-site",
+            "arguments": [
+                {"literal": "-m"},
+                {"literal": "http.server"},
+                {"node_port": "application"},
+                {"literal": "--bind"},
+                {"literal": "127.0.0.1"},
+            ],
+            "port": static_site["port"],
+            "health_path": f"/{static_site['entry_file']}",
+            "preset_version": "0.2",
+            "baseline_id": "starter-static-site-0.2",
+            "owner": "VeriTrail Starter / static-site operator-confirmed draft",
+        }
+    application = answers["application"]
+    return {
+        "executable": application["executable"],
+        "tool_binding": _tool_binding_id(application["executable"]),
+        "arguments": copy.deepcopy(application["arguments"]),
+        "port": application["port"],
+        "health_path": application["health_path"],
+        "preset_version": "0.1",
+        "baseline_id": "starter-single-webapp-0.1",
+        "owner": "VeriTrail Starter / single-webapp operator-confirmed draft",
+    }
+
+
 def _derived_identifier(base: str, suffix: str) -> str:
     candidate = f"{base}-{suffix}"
     if len(candidate) <= 64:
@@ -526,7 +657,7 @@ def _derived_identifier(base: str, suffix: str) -> str:
 
 def build_profile(answers: dict[str, Any]) -> dict[str, Any]:
     subject = answers["subject"]
-    application = answers["application"]
+    runtime = _runtime_config(answers)
     budgets = answers["budgets"]
     timeouts = answers["timeouts"]
     profile = {
@@ -542,17 +673,17 @@ def build_profile(answers: dict[str, Any]) -> dict[str, Any]:
                 "role": "APPLICATION",
                 "adapter": "TRUSTED_PROCESS_SERVICE",
                 "depends_on": [],
-                "tool_binding": _tool_binding_id(application["executable"]),
-                "arguments": copy.deepcopy(application["arguments"]),
+                "tool_binding": runtime["tool_binding"],
+                "arguments": copy.deepcopy(runtime["arguments"]),
                 "working_directory": subject["working_directory"],
                 "environment": {
                     "inherit": ["SYSTEMROOT", "WINDIR"],
                     "set": {"PYTHONDONTWRITEBYTECODE": "1"},
                 },
-                "port": application["port"],
+                "port": runtime["port"],
                 "readiness": {
                     "adapter": "HTTP_GET_LOOPBACK_OWNED_PID",
-                    "path": application["health_path"],
+                    "path": runtime["health_path"],
                     "expected_status": 200,
                     "attempt_timeout_ms": timeouts["readiness_attempt_ms"],
                     "total_timeout_ms": timeouts["readiness_total_ms"],
@@ -623,11 +754,12 @@ def build_plan(answers: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
     sealed_for_validation = copy.deepcopy(profile)
     sealed_for_validation["seal"] = {"algorithm": "sha256", "digest": digest}
     browser = answers["browser"]
+    runtime = _runtime_config(answers)
     assertions = _assertions(len(browser["viewports"]))
     baseline_fingerprint = sha256_json(
         {
-            "preset": "single-webapp",
-            "preset_version": "0.1",
+            "preset": answers["preset"],
+            "preset_version": runtime["preset_version"],
             "assertions": assertions,
         }
     )
@@ -642,7 +774,7 @@ def build_plan(answers: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
         },
         "question": answers["question"],
         "baseline": {
-            "id": "starter-single-webapp-0.1",
+            "id": runtime["baseline_id"],
             "status": "VALID",
             "fingerprint": baseline_fingerprint,
             "tolerances": {
@@ -692,7 +824,7 @@ def build_plan(answers: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
             "disk_free_hard_min_mb": 1024,
             "collector_rss_hard_max_mb": 256,
             "observer_rss_delta_soft_max_mb": 64,
-            "ports": [{"port": answers["application"]["port"], "expected": "FREE"}],
+            "ports": [{"port": runtime["port"], "expected": "FREE"}],
             "require_clean_staging": True,
         },
         "browser": {
@@ -715,7 +847,7 @@ def build_plan(answers: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
         "load_model": {"virtual_users": 1, "in_flight_requests": 1},
         "change_scope": {
             "level": "L3_SYSTEM",
-            "owner": "VeriTrail Starter / single-webapp operator-confirmed draft",
+            "owner": runtime["owner"],
             "expected_blast_radius": "One managed application, browser evidence, cleanup evidence, Bundle and read-only analyses",
             "consumers": [
                 "project-profile-validator",
@@ -757,11 +889,12 @@ def build_plan(answers: dict[str, Any], profile: dict[str, Any]) -> dict[str, An
 def build_documents(answers: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     profile = build_profile(answers)
     plan = build_plan(answers, profile)
+    runtime = _runtime_config(answers)
     bindings = {
         "schema_version": "0.1",
         "bindings": {
             profile["nodes"][0]["tool_binding"]: {
-                "executable": answers["application"]["executable"]
+                "executable": runtime["executable"]
             }
         },
     }

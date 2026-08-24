@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=65"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "veritrail-starter"
-version = "0.1.0"
+version = "0.2.0"
 description = "Fail-closed DRAFT authoring entry for VeriTrail Core"
 readme = "README.md"
 requires-python = ">=3.10"

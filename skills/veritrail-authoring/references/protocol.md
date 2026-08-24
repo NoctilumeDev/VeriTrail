@@ -1,6 +1,8 @@
 # Authoring protocol 0.1
 
-The bundled helper accepts one strict intake object for `candidate` and `draft`:
+The bundled helper accepts one strict outer intake object for `candidate` and `draft`.
+The authoring protocol remains `0.1`; the nested Answers object selects its own frozen
+contract:
 
 ```json
 {
@@ -15,12 +17,12 @@ The bundled helper accepts one strict intake object for `candidate` and `draft`:
     "loopback_only": true
   },
   "answers": {
-    "schema_version": "0.1",
-    "preset": "single-webapp",
+    "schema_version": "0.2",
+    "preset": "static-site",
     "workspace_id": "explicit-id",
     "question": "Explicit acceptance question",
     "subject": {},
-    "application": {},
+    "static_site": {},
     "browser": {},
     "budgets": {},
     "timeouts": {},
@@ -29,17 +31,30 @@ The bundled helper accepts one strict intake object for `candidate` and `draft`:
 }
 ```
 
-`answers` must satisfy the packaged Starter Answers 0.1 schema and runtime validation. The
-helper does not add defaults. In particular, the user must explicitly confirm:
+The supported combinations are:
 
-- the ordinary absolute subject root and trusted local `.exe`;
-- structured arguments, working directory, and watch roots;
-- one fixed IPv4 loopback port and health path;
+| Answers | Preset | Runtime block |
+| --- | --- | --- |
+| `0.1` or `0.2` | `single-webapp` | `application` |
+| `0.2` | `static-site` | `static_site` |
+
+`answers` must satisfy its packaged Starter schema and runtime validation. The helper does
+not add defaults. For both presets, the user must explicitly confirm:
+
+- the ordinary absolute subject root, working directory, and watch roots;
+- one fixed IPv4 loopback port and an existing trusted local `.exe`;
 - the browser start URL and same allowed origin;
 - exactly one desktop and one mobile viewport;
 - at least one decisive `expect_visible` or `expect_text` business check;
 - screenshot safety acknowledgement;
 - every budget, timeout, and the random seed.
+
+`single-webapp` additionally requires structured application arguments, health path, and
+expected status. `static-site` additionally requires an existing ordinary `.htm`/`.html`
+entry file inside the working directory, a CPython console executable, expected status 200,
+and explicit `requires_build = false` and `requires_remote_assets = false`. The Starter then
+derives the fixed `python -m http.server <port> --bind 127.0.0.1` argument vector; neither the
+Skill nor the user may add a repository command or build step.
 
 The helper emits exactly one canonical JSON object. States are limited to:
 
@@ -68,3 +83,12 @@ Return `NO_MATCHING_PRESET` without generating Profile or Plan when any confirma
 
 Repository markers such as a Compose filename are only `OBSERVED` candidates. They never
 become topology facts until the user confirms whether the supported path depends on them.
+A build marker prevents the inspector from recommending `static-site`; it does not prove
+that `single-webapp` is supported. If the bounded filename scan is incomplete, the inspector
+returns no preset candidate and asks the user to narrow the repository root or explicitly
+confirm the complete supported topology. A capped public-filename list never suppresses the
+separate build-marker fact.
+
+Starter subprocess output is accepted only when the frozen JSON `outcome` agrees with the
+process exit code (`OK`/zero or `ERROR`/nonzero). Any disagreement is an unsupported protocol,
+not a successful authoring result.

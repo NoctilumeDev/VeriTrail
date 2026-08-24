@@ -6,6 +6,9 @@
 > 与 [`VeriTrail Authoring Skill 0.1.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0)
 > 已独立发布。两个标签共同钉在提交 `c7d3c8d`；GitHub 公共下载副本已通过 Python 3.10/3.13
 > clean-install、官方 Skill 结构校验、DRAFT 逐字节等价与真实 PASS/FAIL 黄金路径门禁。
+>
+> `main` 源码另有 `IMPLEMENTED / NOT_RELEASED` 的 Starter/Authoring Skill 0.2：增加严格受限的
+> `static-site`，但没有 0.2 Release 或公共安装承诺。稳定用户仍应使用上面的 0.1.0 坐标。
 
 VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次软件验收拆成预先冻结的计划、真实运行、
 结构化证据、确定性裁决、不可变证据包和可比较的复跑结果。
@@ -50,7 +53,7 @@ python -m venv .venv
 
 ### 已有一个本地 Web 项目
 
-Starter 0.1 只支持一个有限预设：`single-webapp`。它面向 Windows 11、C1 进程冷状态、一个可信本地
+稳定发布的 Starter 0.1 只支持一个有限预设：`single-webapp`。它面向 Windows 11、C1 进程冷状态、一个可信本地
 应用进程、固定回环端口、HTTP 就绪探针和必需的真实 Chromium 证据。
 
 它会询问并保存这些显式答案：
@@ -69,6 +72,18 @@ Starter 0.1 只支持一个有限预设：`single-webapp`。它面向 Windows 11
 
 如果项目包含多个服务、Docker Compose、远程数据库、登录凭据、非回环网络、来源不明的既有进程
 或无法确定的资源所有权，Starter 0.1 会返回 `UNSUPPORTED`，不会猜测一个“看起来能跑”的方案。
+
+### 源码开发中的 `static-site`（尚未发布）
+
+Starter/Authoring Skill 0.2 在 `main` 中增加 `static-site`，只接受现存普通 `.html/.htm`、显式
+CPython console executable、固定回环地址、`requires_build = false` 与
+`requires_remote_assets = false`。它不运行 npm、构建脚本、包管理器、Shell 或远程资源，也不封存、
+不运行、不裁决。
+
+它适合开发者审阅源码或参与下一轮发布准备，不是稳定下载入口。合同、权限和双 Python clean-install
+事实见 [Starter 0.2 合同](docs/66-starter-static-site-contract.md)、
+[Authoring Skill 0.2 合同](docs/67-authoring-skill-0.2-contract.md)与
+[E2 实现事实](docs/68-entry-layer-e2-static-site-facts.md)。
 
 ### 已经理解完整合同
 
@@ -91,7 +106,8 @@ AI 可以帮助阅读仓库、推荐最接近的有限预设、解释字段和�
 权限边界见 [VeriTrail Authoring Skill 合同](docs/60-authoring-skill-contract.md)，已实现门禁与验收见
 [A0 冻结事实](docs/62-authoring-skill-a0-facts.md)。独立发布坐标、资产集合和公开读回停止线见
 [E1 发布合同](docs/63-entry-layer-e1-release-contract.md)与
-[E1 0.1.0 发布说明](docs/64-entry-layer-e1-release-notes.md)。
+[E1 0.1.0 发布说明](docs/64-entry-layer-e1-release-notes.md)。源码开发中的 0.2 权限增量与不变停止线另见
+[Authoring Skill 0.2 合同](docs/67-authoring-skill-0.2-contract.md)。
 
 ## 当前支持边界
 

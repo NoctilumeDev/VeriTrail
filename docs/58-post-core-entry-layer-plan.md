@@ -1,6 +1,6 @@
 # Post-Core 独立入口层 Plan v1
 
-> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_COMPLETE / RELEASED`
+> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_COMPLETE / RELEASED / E2_IMPLEMENTED_NOT_RELEASED`
 >
 > 基线：`VeriTrail Core 0.12.0` @ `v0.12.0`
 >
@@ -246,3 +246,22 @@ E0 完成要求：
 
 E1 至此闭环。后续有限 Preset 必须另立合同、独立验收；不得把 E1 的 `single-webapp` 事实外推为
 `static-site`、`two-process-app` 或通用项目探测已经受支持。
+
+## 13. E2 `static-site` 源码实现事实
+
+E2 在不改写 E1 Release 的前提下增加第二个有限入口：
+
+- Starter 源码开发版本为 `0.2.0`，继续接受 Answers 0.1 `single-webapp`，并新增 Answers 0.2
+  `static-site`；
+- `static-site` 只支持 Windows 11 / C1、显式 CPython console executable、现存普通 HTML、
+  固定回环端口、无需构建、无需远程资源和显式双视口检查；
+- Authoring Skill 源码开发版本同步为 `0.2.0`，外层协议仍为 0.1，只增加有限候选识别与 Answers 0.2
+  路由；授权集合仍只有 `doctor/init/validate/review`；
+- 两个 Preset 已在 Python 3.10/3.13 的源码环境和 clean-install 环境完成普通/优化 DRAFT 链；
+- Core 0.12.0、Seal、Preview 批准、Run、Verdict、Workbench 与已发布的 0.1.0 标签均未改变；
+- 当前状态是 `IMPLEMENTED / NOT_RELEASED`，不得写成 Starter/Skill 0.2 已公开发布。
+
+合同、权限与验收事实见 [Starter 0.2 static-site 合同](66-starter-static-site-contract.md)、
+[Authoring Skill 0.2 合同](67-authoring-skill-0.2-contract.md)和
+[E2 实现事实](68-entry-layer-e2-static-site-facts.md)。Codex Security 深度扫描、攻击路径验证和极端环境
+攻击继续封存，不属于 E2 当前完成证据。

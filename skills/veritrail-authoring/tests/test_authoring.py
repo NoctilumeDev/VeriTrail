@@ -134,6 +134,31 @@ class AuthoringSkillTests(unittest.TestCase):
             "random_seed": 20260824,
         }
 
+    @classmethod
+    def _static_answers(cls, root: Path) -> dict[str, object]:
+        (root / "index.html").write_text(
+            "<!doctype html><title>Static subject</title><main>ready</main>\n",
+            encoding="utf-8",
+        )
+        answers = cls._answers(root)
+        executable = answers["application"]["executable"]
+        answers["schema_version"] = "0.2"
+        answers["preset"] = "static-site"
+        answers["workspace_id"] = "authoring-static-demo"
+        answers["question"] = "Does the explicit static page fact hold?"
+        del answers["application"]
+        answers["static_site"] = {
+            "python_executable": executable,
+            "entry_file": "index.html",
+            "port": 18778,
+            "expected_status": 200,
+            "requires_build": False,
+            "requires_remote_assets": False,
+        }
+        answers["browser"]["start_url"] = "http://127.0.0.1:18778/index.html"
+        answers["browser"]["allowed_origin"] = "http://127.0.0.1:18778"
+        return answers
+
     @staticmethod
     def _starter_success(command: str) -> dict[str, object]:
         result: dict[str, object] = {
@@ -162,6 +187,33 @@ class AuthoringSkillTests(unittest.TestCase):
         self.assertNotIn(".env.local", result["repository"]["public_files"])
         run.assert_not_called()
         self.assertFalse((self.root / ".veritrail").exists())
+
+    def test_inspection_recommends_static_site_only_for_build_free_entry(self) -> None:
+        (self.root / "index.html").write_text("<main>ready</main>\n", encoding="utf-8")
+        static_result = authoring.inspect_repository(str(self.root))
+        self.assertEqual(static_result["preset_candidate"], "static-site")
+        self.assertIn("index.html", static_result["repository"]["static_entry_files"])
+
+        (self.root / "package.json").write_text("{}\n", encoding="utf-8")
+        build_result = authoring.inspect_repository(str(self.root))
+        self.assertEqual(build_result["preset_candidate"], "single-webapp")
+        self.assertIn("package.json", build_result["repository"]["public_files"])
+
+    def test_incomplete_bounded_scan_does_not_recommend_a_preset(self) -> None:
+        (self.root / "index.html").write_text("<main>ready</main>\n", encoding="utf-8")
+        with mock.patch.object(authoring, "MAX_SCAN_ENTRIES", 1):
+            result = authoring.inspect_repository(str(self.root))
+        self.assertTrue(result["repository"]["scan_truncated"])
+        self.assertIsNone(result["preset_candidate"])
+        self.assertIn("no preset candidate", result["provenance"]["INFERRED"][0])
+
+    def test_build_marker_detection_is_independent_of_public_file_cap(self) -> None:
+        (self.root / "index.html").write_text("<main>ready</main>\n", encoding="utf-8")
+        (self.root / "package.json").write_text("{}\n", encoding="utf-8")
+        with mock.patch.object(authoring, "MAX_PUBLIC_FILES", 1):
+            result = authoring.inspect_repository(str(self.root))
+        self.assertTrue(result["repository"]["build_marker_detected"])
+        self.assertEqual(result["preset_candidate"], "single-webapp")
 
     def test_skill_package_metadata_and_authority_surface_are_frozen(self) -> None:
         skill_root = SCRIPT.parents[1]
@@ -195,6 +247,33 @@ class AuthoringSkillTests(unittest.TestCase):
         self.assertEqual(len(first["answers_sha256"]), 64)
         self.assertEqual(first["boundary"]["seal_state"], "NOT_SEALED")
         self.assertFalse((self.root / ".veritrail").exists())
+
+    def test_static_site_candidate_is_validated_by_starter_0_2(self) -> None:
+        static_intake = copy.deepcopy(self.intake)
+        static_intake["answers"] = self._static_answers(self.root)
+        result = authoring.candidate(static_intake)
+        self.assertEqual(result["state"], "CANDIDATE_READY")
+        self.assertEqual(result["preset_candidate"], "static-site")
+        self.assertEqual(result["starter_version"], "0.2.0")
+        self.assertEqual(result["answers"]["static_site"]["entry_file"], "index.html")
+        self.assertEqual(result["boundary"]["verdict_state"], "NO_VERDICT")
+
+    def test_static_site_missing_or_unsupported_facts_fail_closed(self) -> None:
+        static_intake = copy.deepcopy(self.intake)
+        static_intake["answers"] = self._static_answers(self.root)
+        del static_intake["answers"]["static_site"]["requires_build"]
+        missing = authoring.candidate(static_intake)
+        self.assertEqual(missing["state"], "NEEDS_USER_INPUT")
+        self.assertIn(
+            "/answers/static_site/requires_build", missing["missing_fields"]
+        )
+
+        unsupported_intake = copy.deepcopy(self.intake)
+        unsupported_intake["answers"] = self._static_answers(self.root)
+        unsupported_intake["answers"]["static_site"]["requires_remote_assets"] = True
+        unsupported = authoring.candidate(unsupported_intake)
+        self.assertEqual(unsupported["state"], "STARTER_VALIDATION_FAILED")
+        self.assertEqual(unsupported["starter_error"]["code"], "UNSUPPORTED")
 
     def test_missing_fields_require_user_input(self) -> None:
         incomplete = copy.deepcopy(self.intake)
@@ -275,8 +354,25 @@ class AuthoringSkillTests(unittest.TestCase):
         self.assertEqual(result["state"], "DRAFT_READY_FOR_HUMAN_REVIEW")
         self.assertEqual([command for command, _ in calls], ["doctor", "init", "validate", "review"])
         self.assertNotIn("handoff", [command for command, _ in calls])
+        self.assertEqual(calls[1][1][0:2], ["--preset", "single-webapp"])
         self.assertEqual(list(self.root.glob(".veritrail-authoring-*.answers.json")), [])
         self.assertEqual(result["boundary"]["execution_state"], "NOT_RUN")
+
+    def test_static_site_draft_passes_the_selected_preset_to_starter(self) -> None:
+        static_intake = copy.deepcopy(self.intake)
+        static_intake["answers"] = self._static_answers(self.root)
+        calls: list[tuple[str, list[str]]] = []
+
+        def invoke(command: str, arguments: list[str]) -> dict[str, object]:
+            calls.append((command, arguments))
+            return self._starter_success(command)
+
+        with mock.patch.object(authoring, "_invoke_starter", side_effect=invoke):
+            result = authoring.create_draft(static_intake)
+        self.assertEqual(result["state"], "DRAFT_READY_FOR_HUMAN_REVIEW")
+        self.assertEqual(calls[1][0], "init")
+        self.assertEqual(calls[1][1][0:2], ["--preset", "static-site"])
+        self.assertEqual(list(self.root.glob(".veritrail-authoring-*.answers.json")), [])
 
     def test_transient_answers_are_removed_when_starter_fails(self) -> None:
         with mock.patch.object(authoring, "_invoke_starter", side_effect=RuntimeError("stop")):
@@ -314,6 +410,23 @@ class AuthoringSkillTests(unittest.TestCase):
                         authoring._invoke_starter(command, [])
                 self.assertEqual(caught.exception.code, "STARTER_COMMAND_FORBIDDEN")
                 run.assert_not_called()
+
+    def test_starter_outcome_must_match_process_exit_code(self) -> None:
+        payload = {
+            "schema_version": "0.1",
+            "command": "doctor",
+            "outcome": "OK",
+            "status": "READY",
+        }
+        completed = SimpleNamespace(
+            stdout=(json.dumps(payload) + "\n").encode("utf-8"),
+            stderr=b"",
+            returncode=2,
+        )
+        with mock.patch.object(subprocess, "run", return_value=completed):
+            with self.assertRaises(authoring.AuthoringFailure) as caught:
+                authoring._invoke_starter("doctor", [])
+        self.assertEqual(caught.exception.code, "STARTER_PROTOCOL_UNSUPPORTED")
 
     def test_review_draft_only_validates_and_reviews(self) -> None:
         calls: list[str] = []

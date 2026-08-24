@@ -13,7 +13,10 @@ from pathlib import Path
 from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE_ROOT = REPOSITORY_ROOT / "examples" / "starter" / "single-webapp"
+FIXTURE_ROOTS = {
+    "single-webapp": REPOSITORY_ROOT / "examples" / "starter" / "single-webapp",
+    "static-site": REPOSITORY_ROOT / "examples" / "starter" / "static-site",
+}
 AUTHORING_SCRIPT = (
     REPOSITORY_ROOT / "skills" / "veritrail-authoring" / "scripts" / "authoring.py"
 )
@@ -145,6 +148,73 @@ def build_answers(
     }
 
 
+def build_static_answers(
+    subject_root: Path, port: int, *, python_executable: Path
+) -> dict[str, Any]:
+    origin = f"http://127.0.0.1:{port}"
+    return {
+        "schema_version": "0.2",
+        "preset": "static-site",
+        "workspace_id": "starter-static-site-golden",
+        "question": "Does the build-free static page expose the preregistered ready fact?",
+        "subject": {
+            "root": str(subject_root),
+            "id": "starter-static-site",
+            "version": "1.0",
+            "source_ref": ".",
+            "working_directory": "site",
+            "watch_roots": ["site"],
+        },
+        "static_site": {
+            "python_executable": str(python_executable),
+            "entry_file": "index.html",
+            "port": port,
+            "expected_status": 200,
+            "requires_build": False,
+            "requires_remote_assets": False,
+        },
+        "browser": {
+            "start_url": origin + "/index.html",
+            "allowed_origin": origin,
+            "headless": True,
+            "timeout_ms": 3000,
+            "viewports": [
+                {"name": "desktop", "width": 1440, "height": 960, "is_mobile": False},
+                {"name": "mobile", "width": 390, "height": 844, "is_mobile": True},
+            ],
+            "steps": [
+                {
+                    "id": "static-ready-fact",
+                    "action": "expect_text",
+                    "selector": "[data-testid='static-status']",
+                    "value": "static evidence ready",
+                }
+            ],
+            "screenshot_safety": "UNREDACTED_OPERATOR_ACKNOWLEDGED",
+        },
+        "budgets": {
+            "max_artifact_bytes": 8 * 1024 * 1024,
+            "max_watch_files": 100,
+            "max_watch_total_bytes": 8 * 1024 * 1024,
+            "lifecycle_timeout_ms": 120000,
+            "max_stdout_bytes": 262144,
+            "max_stderr_bytes": 262144,
+            "max_processes": 8,
+            "application_memory_mb": 512,
+            "browser_memory_mb": 1024,
+        },
+        "timeouts": {
+            "readiness_attempt_ms": 500,
+            "readiness_total_ms": 10000,
+            "readiness_interval_ms": 100,
+            "shutdown_process_ms": 5000,
+            "shutdown_port_ms": 5000,
+            "shutdown_reader_ms": 5000,
+        },
+        "random_seed": 20260824,
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Exercise the Authoring Skill against the real Starter DRAFT boundary."
@@ -165,6 +235,12 @@ def parse_args() -> argparse.Namespace:
         "--optimized",
         action="store_true",
         help="Invoke the installed product under python -O.",
+    )
+    parser.add_argument(
+        "--preset",
+        choices=tuple(FIXTURE_ROOTS),
+        default="single-webapp",
+        help="Frozen preset whose DRAFT boundary is exercised.",
     )
     return parser.parse_args()
 
@@ -223,10 +299,11 @@ def main() -> int:
     python_executable = args.python.resolve(strict=True)
     authoring_script = args.authoring_script.resolve(strict=True)
     optimized = bool(args.optimized)
-    with tempfile.TemporaryDirectory(prefix="veritrail-authoring-a0-") as raw_temp:
+    preset = str(args.preset)
+    with tempfile.TemporaryDirectory(prefix=f"veritrail-authoring-{preset}-") as raw_temp:
         acceptance_root = Path(raw_temp).resolve()
         subject_root = acceptance_root / "subject"
-        shutil.copytree(FIXTURE_ROOT, subject_root)
+        shutil.copytree(FIXTURE_ROOTS[preset], subject_root)
         (subject_root / ".env.local").write_text(
             "TOKEN=acceptance-must-not-read\n", encoding="utf-8", newline="\n"
         )
@@ -247,11 +324,14 @@ def main() -> int:
             inspected.get("repository", {}).get("secret_entries_ignored") == 1,
             "secret filename was not ignored",
         )
+        require(
+            inspected.get("preset_candidate") == preset,
+            "inspector preset recommendation drifted",
+        )
         require(not (subject_root / ".veritrail").exists(), "inspect wrote a workspace")
 
-        answers = build_answers(
-            subject_root, reserve_port(), python_executable=python_executable
-        )
+        answers_builder = build_static_answers if preset == "static-site" else build_answers
+        answers = answers_builder(subject_root, reserve_port(), python_executable=python_executable)
         intake = {
             "schema_version": "0.1",
             "repository_root": str(subject_root),
@@ -346,7 +426,7 @@ def main() -> int:
             [
                 "init",
                 "--preset",
-                "single-webapp",
+                preset,
                 "--answers",
                 str(direct_answers_path),
             ],
@@ -371,7 +451,9 @@ def main() -> int:
             json.dumps(
                 {
                     "schema_version": "0.1",
-                    "acceptance": "authoring-skill-a0",
+                    "answers_schema_version": answers["schema_version"],
+                    "acceptance": f"authoring-skill-{preset}",
+                    "preset": preset,
                     "state": "PASS",
                     "candidate": candidate["state"],
                     "draft": drafted["state"],

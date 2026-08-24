@@ -29,16 +29,16 @@ class _JsonArgumentParser(argparse.ArgumentParser):
 def build_parser() -> argparse.ArgumentParser:
     parser = _JsonArgumentParser(
         prog="veritrail-starter",
-        description="Create deterministic, unsealed VeriTrail single-webapp drafts.",
+        description="Create deterministic, unsealed VeriTrail preset drafts.",
     )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     doctor = subparsers.add_parser("doctor", help="perform bounded read-only authoring checks")
-    doctor.add_argument("--answers", type=Path, help="optional explicit Answers 0.1 JSON")
+    doctor.add_argument("--answers", type=Path, help="optional explicit Answers JSON")
 
     init = subparsers.add_parser("init", help="atomically create a DRAFT workspace")
-    init.add_argument("--preset", required=True, choices=("single-webapp",))
+    init.add_argument("--preset", required=True, choices=("single-webapp", "static-site"))
     init.add_argument("--answers", type=Path, required=True)
 
     for name in ("validate", "review", "handoff"):

@@ -66,6 +66,9 @@ jobs:
       - name: Run the real Authoring Skill DRAFT chain
         run: python scripts/authoring_skill_acceptance.py
 
+      - name: Run the static-site Authoring Skill DRAFT chain
+        run: python scripts/authoring_skill_acceptance.py --preset static-site
+
       - name: Build the wheel
         run: python -m pip wheel --no-deps --wheel-dir dist .
 
@@ -90,12 +93,36 @@ jobs:
           if ($observed -ne $expected) { throw "Core release wheel digest drifted: $observed" }
           "VERITRAIL_CORE_WHEEL=$coreWheel" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
+      - name: Download the frozen E1 entry-layer release assets
+        shell: pwsh
+        run: |
+          $assetRoot = Join-Path '${{ runner.temp }}' 'entry-layer-e1-assets'
+          New-Item -ItemType Directory -Path $assetRoot | Out-Null
+          $assets = @(
+            @('starter-v0.1.0', 'veritrail_starter-0.1.0-py3-none-any.whl'),
+            @('starter-v0.1.0', 'veritrail_starter-0.1.0.tar.gz'),
+            @('starter-v0.1.0', 'starter-e1-validation-summary.json'),
+            @('starter-v0.1.0', 'SHA256SUMS-starter.txt'),
+            @('authoring-skill-v0.1.0', 'veritrail-authoring-0.1.0.zip'),
+            @('authoring-skill-v0.1.0', 'authoring-skill-e1-validation-summary.json'),
+            @('authoring-skill-v0.1.0', 'SHA256SUMS-authoring-skill.txt')
+          )
+          foreach ($asset in $assets) {
+            $tag = $asset[0]
+            $name = $asset[1]
+            $url = "https://github.com/NoctilumeDev/VeriTrail/releases/download/$tag/$name"
+            curl.exe --fail --location --retry 3 --output (Join-Path $assetRoot $name) $url
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          "VERITRAIL_E1_ASSETS=$assetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
       - name: Run E1 release clean-install acceptance
         run: >-
           python scripts/entry_layer_e1_acceptance.py
           --output "${{ runner.temp }}\entry-layer-e1-${{ matrix.python-version }}"
           --python "${{ env.pythonLocation }}\python.exe"
           --core-wheel "${{ env.VERITRAIL_CORE_WHEEL }}"
+          --from-assets "${{ env.VERITRAIL_E1_ASSETS }}"
 
   workbench:
     name: Workbench tests, lint, build, and audit

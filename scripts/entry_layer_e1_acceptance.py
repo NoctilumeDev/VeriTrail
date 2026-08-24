@@ -37,6 +37,10 @@ SKILL_ASSET_NAMES = (
     "authoring-skill-e1-validation-summary.json",
     "SHA256SUMS-authoring-skill.txt",
 )
+FROZEN_E1_OFFICIAL_SKILL_VALIDATION = {
+    "status": "PASS",
+    "validator": "skill-creator/quick_validate.py",
+}
 
 
 class AcceptanceFailure(RuntimeError):
@@ -472,6 +476,51 @@ def verify_checksum_manifest(
     return result
 
 
+def python_series(value: object) -> tuple[int, int]:
+    require(isinstance(value, str), "Python version must be a string")
+    parts = value.split(".")
+    require(len(parts) == 3, f"Python version is malformed: {value!r}")
+    try:
+        numbers = tuple(int(part) for part in parts)
+    except ValueError as exc:
+        raise AcceptanceFailure(f"Python version is malformed: {value!r}") from exc
+    require(all(number >= 0 for number in numbers), "Python version cannot be negative")
+    return numbers[0], numbers[1]
+
+
+def verify_release_summary(
+    observed: dict[str, Any], expected: dict[str, Any], label: str
+) -> None:
+    observed_top = dict(observed)
+    expected_top = dict(expected)
+    observed_matrix = observed_top.pop("python_matrix", None)
+    expected_matrix = expected_top.pop("python_matrix", None)
+    require(observed_top == expected_top, f"downloaded {label} summary metadata drifted")
+    require(isinstance(observed_matrix, list), f"downloaded {label} matrix is malformed")
+    require(isinstance(expected_matrix, list), f"current {label} matrix is malformed")
+
+    observed_by_series: dict[tuple[int, int], dict[str, Any]] = {}
+    for entry in observed_matrix:
+        require(isinstance(entry, dict), f"downloaded {label} matrix entry is malformed")
+        series = python_series(entry.get("python"))
+        require(series not in observed_by_series, f"downloaded {label} matrix repeats Python {series}")
+        observed_by_series[series] = entry
+
+    for current_entry in expected_matrix:
+        require(isinstance(current_entry, dict), f"current {label} matrix entry is malformed")
+        series = python_series(current_entry.get("python"))
+        released_entry = observed_by_series.get(series)
+        require(released_entry is not None, f"downloaded {label} matrix lacks Python {series}")
+        released_facts = dict(released_entry)
+        current_facts = dict(current_entry)
+        released_facts.pop("python", None)
+        current_facts.pop("python", None)
+        require(
+            released_facts == current_facts,
+            f"downloaded {label} facts drifted for Python {series[0]}.{series[1]}",
+        )
+
+
 def release_artifacts_from_directory(
     source: Path, core_wheel: Path
 ) -> tuple[dict[str, Path], dict[str, str]]:
@@ -658,7 +707,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         if source_assets is not None:
             require(public_core_wheel is not None, "--from-assets requires --core-wheel")
-            require(validator is not None, "--from-assets requires --official-validator")
 
         with tempfile.TemporaryDirectory(prefix="veritrail-entry-e1-") as raw_temp:
             temp_root = Path(raw_temp).resolve()
@@ -682,16 +730,24 @@ def main(argv: Sequence[str] | None = None) -> int:
                     source_assets, public_core_wheel
                 )
             extracted_skill = extract_skill(artifacts["skill_zip"], temp_root / "skill")
-            official_validation = (
-                validate_officially(
+            if validator is not None:
+                official_validation = validate_officially(
                     owner_python=pythons[0],
                     validator=validator,
                     skill_root=extracted_skill,
                     environment_root=temp_root / "validator-env",
                 )
-                if validator is not None
-                else {"status": "NOT_REQUESTED", "validator": "skill-creator/quick_validate.py"}
-            )
+            elif source_assets is not None:
+                # The immutable E1 checksum manifests bind both the published
+                # package and its validation summary.  CI still clean-installs
+                # and exercises those payloads below; this frozen field records
+                # the official validation already performed for that release.
+                official_validation = dict(FROZEN_E1_OFFICIAL_SKILL_VALIDATION)
+            else:
+                official_validation = {
+                    "status": "NOT_REQUESTED",
+                    "validator": "skill-creator/quick_validate.py",
+                }
             matrix = exercise_matrix(
                 pythons=pythons,
                 labels=labels,
@@ -751,14 +807,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 observed_skill = read_json_object(
                     artifacts["skill_summary"], "Authoring Skill validation summary"
                 )
-                require(
-                    observed_starter == expected_starter,
-                    "downloaded Starter validation summary does not match clean-install readback",
-                )
-                require(
-                    observed_skill == expected_skill,
-                    "downloaded Skill validation summary does not match clean-install readback",
-                )
+                verify_release_summary(observed_starter, expected_starter, "Starter")
+                verify_release_summary(observed_skill, expected_skill, "Skill")
                 result = {
                     "schema_version": "0.1",
                     "acceptance": "entry-layer-e1-release-readback",

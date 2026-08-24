@@ -15,7 +15,7 @@ from typing import Any, Iterable
 
 
 PROTOCOL_VERSION = "0.1"
-SUPPORTED_STARTER_VERSIONS = frozenset({"0.1.0"})
+SUPPORTED_STARTER_VERSIONS = frozenset({"0.2.0"})
 ALLOWED_STARTER_COMMANDS = frozenset({"doctor", "init", "validate", "review"})
 MAX_INTAKE_BYTES = 256 * 1024
 MAX_SCAN_ENTRIES = 2048
@@ -36,7 +36,7 @@ TOPOLOGY_FIELDS = frozenset(
         "loopback_only",
     }
 )
-REQUIRED_POINTERS = (
+COMMON_REQUIRED_POINTERS = (
     "/schema_version",
     "/repository_root",
     "/topology/managed_nodes",
@@ -55,11 +55,6 @@ REQUIRED_POINTERS = (
     "/answers/subject/source_ref",
     "/answers/subject/working_directory",
     "/answers/subject/watch_roots",
-    "/answers/application/executable",
-    "/answers/application/arguments",
-    "/answers/application/port",
-    "/answers/application/health_path",
-    "/answers/application/expected_status",
     "/answers/browser/start_url",
     "/answers/browser/allowed_origin",
     "/answers/browser/headless",
@@ -84,6 +79,23 @@ REQUIRED_POINTERS = (
     "/answers/timeouts/shutdown_reader_ms",
     "/answers/random_seed",
 )
+PRESET_REQUIRED_POINTERS = {
+    "single-webapp": (
+        "/answers/application/executable",
+        "/answers/application/arguments",
+        "/answers/application/port",
+        "/answers/application/health_path",
+        "/answers/application/expected_status",
+    ),
+    "static-site": (
+        "/answers/static_site/python_executable",
+        "/answers/static_site/entry_file",
+        "/answers/static_site/port",
+        "/answers/static_site/expected_status",
+        "/answers/static_site/requires_build",
+        "/answers/static_site/requires_remote_assets",
+    ),
+}
 
 SECRET_KEY = re.compile(
     r"(?i)(?:^|[-_])(password|passwd|token|secret|api[-_]?key|authorization|cookie|credential|private[-_]?key)(?:$|[-_])"
@@ -99,6 +111,10 @@ SECRET_FILE = re.compile(
 )
 PUBLIC_FILE = re.compile(
     r"(?i)^(?:readme(?:\..+)?|pyproject\.toml|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|requirements(?:-[a-z0-9_.-]+)?\.txt|poetry\.lock|pdm\.lock|uv\.lock|cargo\.toml|cargo\.lock|go\.mod|go\.sum|pom\.xml|build\.gradle(?:\.kts)?|gradle\.properties|.*\.(?:sln|csproj|fsproj|vbproj))$"
+)
+STATIC_ENTRY = re.compile(r"(?i)^index\.html?$")
+BUILD_MARKER = re.compile(
+    r"(?i)^(?:pyproject\.toml|package\.json|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|requirements(?:-[a-z0-9_.-]+)?\.txt|poetry\.lock|pdm\.lock|uv\.lock|cargo\.toml|go\.mod|pom\.xml|build\.gradle(?:\.kts)?|gradle\.properties|.*\.(?:sln|csproj|fsproj|vbproj))$"
 )
 UNSUPPORTED_MARKER = re.compile(
     r"(?i)^(?:docker-compose(?:\..+)?\.ya?ml|compose(?:\..+)?\.ya?ml|dockerfile(?:\..+)?|devcontainer\.json)$"
@@ -124,7 +140,7 @@ SKIP_DIRECTORIES = frozenset(
 )
 
 NOT_PROVEN = (
-    "the application has not been started by this Skill",
+    "the selected runtime has not been started by this Skill",
     "no ProjectProfile or ExperimentPlan has been sealed",
     "no Preview digest has been approved",
     "no browser evidence, Bundle, ExecutionStatus, or Verdict exists",
@@ -293,11 +309,13 @@ def _contains_secret(value: Any) -> bool:
 
 def _safe_scan(root: Path) -> dict[str, Any]:
     public_files: list[str] = []
+    static_entry_files: list[str] = []
     unsupported_markers: list[str] = []
     secret_entries_ignored = 0
     reparse_entries_ignored = 0
     entries_examined = 0
     truncated = False
+    build_marker_detected = False
     stack: list[tuple[Path, int]] = [(root, 0)]
 
     while stack and entries_examined < MAX_SCAN_ENTRIES:
@@ -337,12 +355,19 @@ def _safe_scan(root: Path) -> dict[str, Any]:
             if PUBLIC_FILE.fullmatch(name) or UNSUPPORTED_MARKER.fullmatch(name):
                 if len(public_files) < MAX_PUBLIC_FILES:
                     public_files.append(relative)
+            if BUILD_MARKER.fullmatch(name):
+                build_marker_detected = True
+            if STATIC_ENTRY.fullmatch(name) and len(static_entry_files) < MAX_PUBLIC_FILES:
+                static_entry_files.append(relative)
             if UNSUPPORTED_MARKER.fullmatch(name) and len(unsupported_markers) < MAX_PUBLIC_FILES:
                 unsupported_markers.append(relative)
 
+    truncated = truncated or bool(stack)
     return {
         "entries_examined": entries_examined,
         "public_files": sorted(set(public_files), key=str.casefold),
+        "static_entry_files": sorted(set(static_entry_files), key=str.casefold),
+        "build_marker_detected": build_marker_detected,
         "secret_entries_ignored": secret_entries_ignored,
         "reparse_entries_ignored": reparse_entries_ignored,
         "scan_truncated": truncated,
@@ -355,11 +380,31 @@ def _safe_scan(root: Path) -> dict[str, Any]:
 def inspect_repository(root_raw: str) -> dict[str, Any]:
     root = _ordinary_directory(root_raw)
     scan = _safe_scan(root)
+    static_candidate = (
+        not scan["scan_truncated"]
+        and bool(scan["static_entry_files"])
+        and not scan["build_marker_detected"]
+        and not scan["unsupported_markers_requiring_confirmation"]
+    )
+    if scan["scan_truncated"]:
+        preset_candidate = None
+        runtime_question = (
+            "The bounded scan was incomplete. Narrow the repository root or explicitly confirm every supported topology fact before selecting a preset."
+        )
+        inference = "no preset candidate was inferred because the bounded scan was incomplete"
+    else:
+        preset_candidate = "static-site" if static_candidate else "single-webapp"
+        runtime_question = (
+            "Confirm the CPython executable, build-free entry file, fixed loopback port, and no required remote assets."
+            if static_candidate
+            else "Confirm the trusted executable, structured arguments, fixed loopback port, and health path."
+        )
+        inference = f"{preset_candidate} remains only a candidate until all facts are confirmed"
     return {
         "schema_version": PROTOCOL_VERSION,
         "operation": "inspect",
         "state": "NEEDS_USER_INPUT",
-        "preset_candidate": "single-webapp",
+        "preset_candidate": preset_candidate,
         "repository": {"root": str(root), **scan},
         "provenance": {
             "OBSERVED": [
@@ -367,13 +412,13 @@ def inspect_repository(root_raw: str) -> dict[str, Any]:
                 "only bounded public filenames and filesystem metadata were inspected",
             ],
             "USER_SUPPLIED": ["repository_root"],
-            "INFERRED": ["single-webapp remains only a candidate until topology is confirmed"],
+            "INFERRED": [inference],
             "NOT_PROVEN": list(NOT_PROVEN),
         },
         "questions": [
             "Confirm exactly one Starter-managed application node.",
             "Confirm no shell, container/VM, remote dependency, or secret is required.",
-            "Confirm the trusted executable, structured arguments, fixed loopback port, and health path.",
+            runtime_question,
             "Confirm every browser check, budget, timeout, and screenshot safety choice.",
         ],
         "boundary": BOUNDARY,
@@ -389,13 +434,13 @@ def _starter_contract() -> tuple[str, Any, type[Exception]]:
         raise AuthoringFailure(
             "STARTER_VERSION_UNSUPPORTED",
             "STARTER_NOT_AVAILABLE",
-            ("VeriTrail Starter 0.1 is not importable",),
+            ("VeriTrail Starter 0.2 is not importable",),
         ) from exc
     if starter_version not in SUPPORTED_STARTER_VERSIONS:
         raise AuthoringFailure(
             "STARTER_VERSION_UNSUPPORTED",
             "STARTER_VERSION_UNSUPPORTED",
-            ("the installed Starter version is outside the frozen Skill 0.1 range",),
+            ("the installed Starter version is outside the frozen Skill 0.2 range",),
         )
     return starter_version, normalize_answers, StarterError
 
@@ -417,13 +462,23 @@ def _validate_intake(document: dict[str, Any]) -> dict[str, Any]:
             "reasons": [{"code": "SECRET_REQUIRED_OR_PRESENT"}],
             "boundary": BOUNDARY,
         }
-    missing = [pointer for pointer in REQUIRED_POINTERS if not _has_pointer(document, pointer)]
+    answers_value = document.get("answers")
+    preset = answers_value.get("preset") if isinstance(answers_value, dict) else None
+    missing = [
+        pointer for pointer in COMMON_REQUIRED_POINTERS if not _has_pointer(document, pointer)
+    ]
+    if preset in PRESET_REQUIRED_POINTERS:
+        missing.extend(
+            pointer
+            for pointer in PRESET_REQUIRED_POINTERS[preset]
+            if not _has_pointer(document, pointer)
+        )
     if missing:
         return {
             "schema_version": PROTOCOL_VERSION,
             "operation": "candidate",
             "state": "NEEDS_USER_INPUT",
-            "preset_candidate": "single-webapp",
+            "preset_candidate": preset if preset in PRESET_REQUIRED_POINTERS else None,
             "missing_fields": missing,
             "boundary": BOUNDARY,
         }
@@ -433,6 +488,15 @@ def _validate_intake(document: dict[str, Any]) -> dict[str, Any]:
             "INTAKE_VERSION_UNSUPPORTED",
             ("intake schema_version must be 0.1",),
         )
+    if preset not in PRESET_REQUIRED_POINTERS:
+        return {
+            "schema_version": PROTOCOL_VERSION,
+            "operation": "candidate",
+            "state": "NO_MATCHING_PRESET",
+            "preset_candidate": None,
+            "reasons": [{"code": "PRESET_UNSUPPORTED"}],
+            "boundary": BOUNDARY,
+        }
     topology = document.get("topology")
     if not isinstance(topology, dict) or set(topology) != TOPOLOGY_FIELDS:
         raise AuthoringFailure(
@@ -511,7 +575,7 @@ def _validate_intake(document: dict[str, Any]) -> dict[str, Any]:
             "schema_version": PROTOCOL_VERSION,
             "operation": "candidate",
             "state": "STARTER_VALIDATION_FAILED",
-            "preset_candidate": "single-webapp",
+            "preset_candidate": preset,
             "starter_error": {"code": exc.code, "messages": list(exc.messages)},
             "boundary": BOUNDARY,
         }
@@ -520,7 +584,7 @@ def _validate_intake(document: dict[str, Any]) -> dict[str, Any]:
         "schema_version": PROTOCOL_VERSION,
         "operation": "candidate",
         "state": "CANDIDATE_READY",
-        "preset_candidate": "single-webapp",
+        "preset_candidate": preset,
         "starter_version": starter_version,
         "answers_sha256": hashlib.sha256(_canonical_bytes(normalized)).hexdigest(),
         "answers": normalized,
@@ -530,8 +594,11 @@ def _validate_intake(document: dict[str, Any]) -> dict[str, Any]:
                 "secret_entries_ignored": scan["secret_entries_ignored"],
                 "reparse_entries_ignored": scan["reparse_entries_ignored"],
             },
-            "USER_SUPPLIED": ["topology confirmations", "all Answers 0.1 fields"],
-            "INFERRED": ["single-webapp preset candidate"],
+            "USER_SUPPLIED": [
+                "topology confirmations",
+                f"all Answers {normalized['schema_version']} fields",
+            ],
+            "INFERRED": [f"{preset} preset candidate"],
             "NOT_PROVEN": list(NOT_PROVEN),
         },
         "boundary": BOUNDARY,
@@ -586,6 +653,12 @@ def _invoke_starter(command: str, arguments: list[str]) -> dict[str, Any]:
             "STARTER_VERSION_UNSUPPORTED",
             "STARTER_PROTOCOL_UNSUPPORTED",
             ("Starter returned an unknown protocol shape",),
+        )
+    if (result["outcome"] == "OK") != (completed.returncode == 0):
+        raise AuthoringFailure(
+            "STARTER_VERSION_UNSUPPORTED",
+            "STARTER_PROTOCOL_UNSUPPORTED",
+            ("Starter outcome and process exit code disagree",),
         )
     return result
 
@@ -664,7 +737,7 @@ def create_draft(document: dict[str, Any]) -> dict[str, Any]:
                 "boundary": BOUNDARY,
             }
         initialized = _invoke_starter(
-            "init", ["--preset", "single-webapp", "--answers", str(transient)]
+            "init", ["--preset", prepared["preset_candidate"], "--answers", str(transient)]
         )
         if initialized["outcome"] == "ERROR":
             return _failure_from_starter("draft", initialized)

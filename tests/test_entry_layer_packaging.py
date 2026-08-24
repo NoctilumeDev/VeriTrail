@@ -48,7 +48,7 @@ class EntryLayerPackagingTests(unittest.TestCase):
             second_result = self._build(second)
             self.assertEqual(first.read_bytes(), second.read_bytes())
             self.assertEqual(first_result["sha256"], second_result["sha256"])
-            self.assertEqual(first_result["version"], "0.1.0")
+            self.assertEqual(first_result["version"], "0.2.0")
 
             with zipfile.ZipFile(first, mode="r") as archive:
                 names = archive.namelist()
@@ -67,17 +67,18 @@ class EntryLayerPackagingTests(unittest.TestCase):
                 self.assertFalse(any("__pycache__" in name for name in names))
                 self.assertFalse(any(Path(name).is_absolute() or ".." in Path(name).parts for name in names))
 
-    def test_release_versions_are_aligned_without_widening_compatibility(self) -> None:
+    def test_source_versions_are_aligned_without_widening_compatibility(self) -> None:
         starter_pyproject = STARTER_PYPROJECT.read_text(encoding="utf-8")
         starter_init = STARTER_INIT.read_text(encoding="utf-8")
         skill_md = SKILL_MD.read_text(encoding="utf-8")
         authoring = AUTHORING_SCRIPT.read_text(encoding="utf-8")
-        self.assertRegex(starter_pyproject, r'(?m)^version = "0\.1\.0"$')
-        self.assertRegex(starter_init, r'(?m)^__version__ = "0\.1\.0"$')
-        self.assertRegex(skill_md, r'(?m)^  version: "0\.1\.0"$')
-        self.assertRegex(skill_md, r'(?m)^  compatible_starter: "0\.1\.0"$')
-        self.assertIn('SUPPORTED_STARTER_VERSIONS = frozenset({"0.1.0"})', authoring)
-        self.assertNotIn("0.1.0.dev0", starter_pyproject + starter_init + skill_md + authoring)
+        self.assertRegex(starter_pyproject, r'(?m)^version = "0\.2\.0"$')
+        self.assertRegex(starter_pyproject, r'(?m)^requires = \["setuptools>=77"\]$')
+        self.assertRegex(starter_init, r'(?m)^__version__ = "0\.2\.0"$')
+        self.assertRegex(skill_md, r'(?m)^  version: "0\.2\.0"$')
+        self.assertRegex(skill_md, r'(?m)^  compatible_starter: "0\.2\.0"$')
+        self.assertIn('SUPPORTED_STARTER_VERSIONS = frozenset({"0.2.0"})', authoring)
+        self.assertNotIn("0.2.0.dev0", starter_pyproject + starter_init + skill_md + authoring)
 
     def test_builder_refuses_to_overwrite_an_existing_archive(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-skill-conflict-") as raw_temp:

@@ -4,6 +4,7 @@ import copy
 import io
 import importlib.resources
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -101,6 +102,27 @@ class StarterContractTests(unittest.TestCase):
     def normalized(self) -> dict[str, object]:
         return normalize_answers(copy.deepcopy(self.answers))
 
+    def static_answers(self) -> dict[str, object]:
+        answers = copy.deepcopy(self.answers)
+        (self.root / "index.html").write_text(
+            "<!doctype html><html><body><main>static ready</main></body></html>",
+            encoding="utf-8",
+        )
+        application = answers.pop("application")
+        answers["schema_version"] = "0.2"
+        answers["preset"] = "static-site"
+        answers["question"] = "Does the static document satisfy the explicit browser checks?"
+        answers["static_site"] = {
+            "python_executable": application["executable"],
+            "entry_file": "index.html",
+            "port": application["port"],
+            "expected_status": 200,
+            "requires_build": False,
+            "requires_remote_assets": False,
+        }
+        answers["browser"]["start_url"] = f"http://127.0.0.1:{application['port']}/index.html"
+        return answers
+
     def test_packaged_answers_schema_is_strict_and_versioned(self) -> None:
         schema_path = importlib.resources.files("veritrail_starter").joinpath(
             "schemas/answers-0.1.schema.json"
@@ -110,6 +132,30 @@ class StarterContractTests(unittest.TestCase):
         self.assertFalse(schema["additionalProperties"])
         self.assertFalse(schema["$defs"]["budgets"]["additionalProperties"])
         self.assertFalse(schema["$defs"]["timeouts"]["additionalProperties"])
+
+        schema_02_path = importlib.resources.files("veritrail_starter").joinpath(
+            "schemas/answers-0.2.schema.json"
+        )
+        schema_02 = json.loads(schema_02_path.read_text(encoding="utf-8"))
+        self.assertEqual(schema_02["$schema"], "https://json-schema.org/draft/2020-12/schema")
+        self.assertEqual(len(schema_02["oneOf"]), 2)
+        self.assertFalse(schema_02["$defs"]["staticSite"]["additionalProperties"])
+        self.assertFalse(schema_02["$defs"]["staticSiteRuntime"]["additionalProperties"])
+        self.assertIsNotNone(
+            re.fullmatch(schema_02["$defs"]["entryFile"]["pattern"], "INDEX.HTML")
+        )
+        self.assertIsNotNone(
+            re.fullmatch(
+                schema_02["$defs"]["entryFile"]["pattern"],
+                f"pages/{'a' * 59}.html",
+            )
+        )
+        self.assertIsNone(
+            re.fullmatch(
+                schema_02["$defs"]["entryFile"]["pattern"],
+                f"pages/{'a' * 60}.html",
+            )
+        )
 
     def test_windows_11_detection_uses_kernel_build_not_release_label(self) -> None:
         windows_11 = mock.Mock(major=10, build=22621)
@@ -140,6 +186,88 @@ class StarterContractTests(unittest.TestCase):
         self.assertEqual(plan["bootstrap_profile"]["profile_sha256"], digest)
         self.assertEqual(bindings["schema_version"], "0.1")
 
+    def test_static_site_generates_fixed_owned_server_drafts(self) -> None:
+        answers = normalize_answers(self.static_answers())
+        profile, plan, bindings = build_documents(answers)
+        validate_project_profile(profile)
+        digest = project_profile_digest(profile)
+        ephemeral = copy.deepcopy(profile)
+        ephemeral["seal"] = {"algorithm": "sha256", "digest": digest}
+        validate_plan(plan, ephemeral)
+        node = profile["nodes"][0]
+        self.assertEqual(node["tool_binding"], "python-static-site")
+        self.assertEqual(
+            node["arguments"],
+            [
+                {"literal": "-m"},
+                {"literal": "http.server"},
+                {"node_port": "application"},
+                {"literal": "--bind"},
+                {"literal": "127.0.0.1"},
+            ],
+        )
+        self.assertEqual(node["readiness"]["path"], "/index.html")
+        self.assertEqual(plan["baseline"]["id"], "starter-static-site-0.2")
+        self.assertEqual(set(bindings["bindings"]), {"python-static-site"})
+        self.assertNotIn("seal", profile)
+        self.assertNotIn("seal", plan)
+
+    def test_static_site_fails_closed_for_build_remote_or_missing_entry(self) -> None:
+        build = self.static_answers()
+        build["static_site"]["requires_build"] = True
+        with self.assertRaises(StarterError) as caught:
+            normalize_answers(build)
+        self.assertEqual(caught.exception.code, "UNSUPPORTED")
+
+        remote = self.static_answers()
+        remote["static_site"]["requires_remote_assets"] = True
+        with self.assertRaises(StarterError) as caught:
+            normalize_answers(remote)
+        self.assertEqual(caught.exception.code, "UNSUPPORTED")
+
+        missing = self.static_answers()
+        missing["static_site"]["entry_file"] = "missing.html"
+        missing["browser"]["start_url"] = "http://127.0.0.1:18774/missing.html"
+        with self.assertRaises(StarterError) as caught:
+            normalize_answers(missing)
+        self.assertEqual(caught.exception.code, "INVALID_INPUT")
+
+    def test_static_site_accepts_nested_ordinary_uppercase_html_entry(self) -> None:
+        nested = self.root / "pages"
+        nested.mkdir()
+        (nested / "INDEX.HTML").write_text(
+            "<!doctype html><html><body>ready</body></html>", encoding="utf-8"
+        )
+        answers = self.static_answers()
+        answers["static_site"]["entry_file"] = "pages/INDEX.HTML"
+        answers["browser"]["start_url"] = "http://127.0.0.1:18774/pages/INDEX.HTML"
+        normalized = normalize_answers(answers)
+        self.assertEqual(normalized["static_site"]["entry_file"], "pages/INDEX.HTML")
+
+    def test_static_site_rejects_reparse_in_entry_path(self) -> None:
+        nested = self.root / "pages"
+        nested.mkdir()
+        (nested / "index.html").write_text(
+            "<!doctype html><html><body>ready</body></html>", encoding="utf-8"
+        )
+        answers = self.static_answers()
+        answers["static_site"]["entry_file"] = "pages/index.html"
+        answers["browser"]["start_url"] = "http://127.0.0.1:18774/pages/index.html"
+
+        from veritrail_starter import contract as contract_module
+
+        original = contract_module._is_reparse
+
+        def mark_nested_as_reparse(path: Path) -> bool:
+            return path == nested or original(path)
+
+        with mock.patch(
+            "veritrail_starter.contract._is_reparse", side_effect=mark_nested_as_reparse
+        ):
+            with self.assertRaises(StarterError) as caught:
+                normalize_answers(answers)
+        self.assertEqual(caught.exception.code, "INVALID_INPUT")
+
     def test_render_is_byte_deterministic(self) -> None:
         answers = self.normalized()
         first = render_workspace(answers)
@@ -168,11 +296,38 @@ class StarterContractTests(unittest.TestCase):
         after = {item.name: item.read_bytes() for item in workspace.iterdir()}
         self.assertEqual(before, after)
 
+    def test_static_site_workspace_manifest_is_preset_specific(self) -> None:
+        with mock.patch("veritrail_starter.workspace.require_supported_host"):
+            initialize_workspace(self.static_answers(), "static-site")
+        workspace = self.root / ".veritrail"
+        manifest = json.loads((workspace / "starter-manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["preset"], {"id": "static-site", "version": "0.2"})
+        review = (workspace / "REVIEW.md").read_text(encoding="utf-8")
+        self.assertIn("Build required: `false`", review)
+        self.assertIn("Required remote assets: `false`", review)
+        self.assertTrue(validate_workspace(workspace)["valid"])
+
     def test_workspace_mutation_is_detected(self) -> None:
         with mock.patch("veritrail_starter.workspace.require_supported_host"):
             initialize_workspace(copy.deepcopy(self.answers), "single-webapp")
         workspace = self.root / ".veritrail"
         (workspace / "REVIEW.md").write_text("changed\n", encoding="utf-8")
+        with self.assertRaises(StarterError) as caught:
+            validate_workspace(workspace)
+        self.assertEqual(caught.exception.code, "WORKSPACE_INVALID")
+
+    def test_workspace_requires_the_exact_creating_starter_version(self) -> None:
+        with mock.patch("veritrail_starter.workspace.require_supported_host"):
+            initialize_workspace(copy.deepcopy(self.answers), "single-webapp")
+        workspace = self.root / ".veritrail"
+        manifest_path = workspace / "starter-manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        manifest["starter_version"] = "0.1.0"
+        manifest_path.write_text(
+            json.dumps(manifest, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            + "\n",
+            encoding="utf-8",
+        )
         with self.assertRaises(StarterError) as caught:
             validate_workspace(workspace)
         self.assertEqual(caught.exception.code, "WORKSPACE_INVALID")
