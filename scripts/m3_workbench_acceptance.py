@@ -211,7 +211,7 @@ def main() -> int:
             page.keyboard.press("Escape")
             summary["checks"].append("desktop-negative-evidence")
 
-            page.get_by_test_id("catalog-return").press("Enter")
+            page.get_by_test_id("catalog-return").click()
             expect(page.get_by_test_id("fixture-invalid")).to_be_visible()
             page.get_by_test_id("fixture-invalid").click()
             expect(page.get_by_test_id("error-state")).to_contain_text("MISSING_ROOT_FILE")
