@@ -3,15 +3,37 @@
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
 [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml)
 [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
-[![Release v0.12.0](https://img.shields.io/badge/release-v0.12.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)
+[![Core v0.12.0](https://img.shields.io/badge/Core-v0.12.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)
+[![Starter v0.1.0](https://img.shields.io/badge/Starter-v0.1.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0)
+[![Authoring Skill v0.1.0](https://img.shields.io/badge/Authoring%20Skill-v0.1.0-A22D1F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0)
 [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
 
-> 单变量证明因果，组合批次验证交互，固定种子寻找偶发故障，真实链路形成系统结论。
+![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
+
+> **让每一项结论，都沿证据中轴归位。**
+>
+> 单变量建立可归因事实，组合批次验证交互，固定种子复现偶发故障，真实链路形成系统结论。
 
 VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优先验收证据工作台。它把计划、测试、
 浏览器 F12、进程、端口和资源事实组织成不可变、可比较、可审计的 Run，并由确定性规则给出结论。
 
-## 当前状态
+## 选择入口
+
+| 我现在要做什么 | 从这里进入 | 你会得到什么 |
+| --- | --- | --- |
+| 十分钟认识验迹 | [从这里开始](START_HERE.md) | 同一预注册标准下的一次真实 `PASS` 和一次故意 `FAIL` |
+| 接入一个本地 Web 项目 | [Starter 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.1.0) | 有界 `single-webapp` 草案；保持 `DRAFT / NOT SEALED` |
+| 用 AI 协助填写合同 | [Authoring Skill 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.1.0) | 仓库识别、缺失信息追问和候选草案；不封存、不裁决 |
+| 直接使用稳定内核 | [Core 0.12.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0) | Plan、Evidence、Verdict、Bundle 与本地只读 Workbench |
+
+## 发布状态
+
+Core `0.12.0` 已稳定发布；Starter 与 Authoring Skill 以独立 `0.1.0` 坐标发布。入口层只能降低合同
+填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与 Browser Smoke 当前共同守住可重复基线。
+
+<details>
+<summary>展开 M0–M14 冻结状态与最终发布事实</summary>
+
 
 | Milestone | Capability | Status |
 | --- | --- | --- |
@@ -52,6 +74,8 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 事实见[M11 Gate A 验证](docs/25-m11-gate-a-validation.md)，v1 失败分层见
 [M11 Gate B Plan v1 首次真实失败](docs/26-m11-gate-b-plan-v1-failure.md)，v2 与终审事实见
 [M11 Gate B 真实项目验证](docs/27-m11-gate-b-validation.md)。
+
+</details>
 
 ## 快速开始
 
@@ -288,6 +312,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail Authoring Skill A0 冻结事实](docs/62-authoring-skill-a0-facts.md)
 - [Post-Core 入口层 E1 独立发布合同 0.1](docs/63-entry-layer-e1-release-contract.md)
 - [VeriTrail 入口层 E1 0.1.0 发布说明](docs/64-entry-layer-e1-release-notes.md)
+- [GitHub 公共展示面收束事实](docs/65-github-public-presentation-facts.md)
 
 ## 项目来源
 

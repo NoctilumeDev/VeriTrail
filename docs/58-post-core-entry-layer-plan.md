@@ -1,6 +1,6 @@
 # Post-Core 独立入口层 Plan v1
 
-> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_READY`
+> 状态：`FROZEN / E0_COMPLETE / S0_COMPLETE / S1_COMPLETE / A0_COMPLETE / E1_COMPLETE / RELEASED`
 >
 > 基线：`VeriTrail Core 0.12.0` @ `v0.12.0`
 >
@@ -228,3 +228,21 @@ E0 完成要求：
   [A0 冻结事实](62-authoring-skill-a0-facts.md)；
 - A0 没有修改 Core Schema、Seal、Verdict、Workbench 或 `v0.12.0`；Skill 仍未独立发布。下一阶段
   为 E1，只处理独立包装、clean install、公共读回与发布边界。
+
+## 12. E1 发布事实
+
+- Starter 与 Authoring Skill 已分别以 `0.1.0` 独立版本化，并由带注释标签
+  `starter-v0.1.0`、`authoring-skill-v0.1.0` 固定到提交
+  `c7d3c8d2484899b150f47320acafa6553187de5a`；
+- 两个 GitHub Release 共包含 7 个固定资产；上传候选、GitHub digest、SHA-256 清单与重新下载副本
+  逐字节一致；
+- Python 3.10.6 与 3.13.13 均完成 Starter wheel、sdist、Core 0.12.0 公共 wheel 与 Skill ZIP 的
+  clean install、官方 Skill 校验和 DRAFT 等价读回；
+- 当前 `main` 上的 Public CI 与 Browser Smoke 已重新通过，入口层发布没有移动 Core `v0.12.0`，
+  也没有扩大 Seal、Run 或 Verdict 权限；
+- E1 的完整合同、资产坐标与公共读回事实见
+  [E1 发布合同](63-entry-layer-e1-release-contract.md)和
+  [E1 0.1.0 发布说明](64-entry-layer-e1-release-notes.md)。
+
+E1 至此闭环。后续有限 Preset 必须另立合同、独立验收；不得把 E1 的 `single-webapp` 事实外推为
+`static-site`、`two-process-app` 或通用项目探测已经受支持。

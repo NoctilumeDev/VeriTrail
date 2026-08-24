@@ -230,8 +230,12 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [VeriTrail Authoring Skill 0.1 合同](60-authoring-skill-contract.md)
 - [VeriTrail Starter 0.1 十分钟 PASS/FAIL 黄金路径](61-starter-single-webapp-golden-path.md)
 - [VeriTrail Authoring Skill A0 冻结事实](62-authoring-skill-a0-facts.md)
+- [Post-Core 入口层 E1 独立发布合同](63-entry-layer-e1-release-contract.md)
+- [VeriTrail 入口层 E1 0.1.0 发布说明](64-entry-layer-e1-release-notes.md)
+- [GitHub 公共展示面收束事实](65-github-public-presentation-facts.md)
 
-文档 58–62 是 `v0.12.0` 发布后的独立入口层规划与验收事实，不是 M15，也不改变 M0–M14 的冻结结论。
-Starter S0/S1 与 Authoring Skill A0 已完成源码冻结，但仍须独立版本化；只有完成 E1 的 clean install、
-安全、公共入口和发布读回后，才能把它们描述为已发布产品。
+文档 58–65 是 `v0.12.0` 发布后的独立入口层规划、验收、发布与公共展示事实，不是 M15，也不改变 M0–M14 的
+冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
+clean install、公共入口、GitHub Release 与下载读回，两个入口产品现在可以准确描述为已发布的
+`0.1.0`。后续 Preset 仍须另立合同，不能继承 E1 未证明的边界。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
