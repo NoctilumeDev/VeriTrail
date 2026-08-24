@@ -335,6 +335,12 @@ VeriTrail 的方法论来自受限单机上的真实工程实践：单变量验�
 复现偶发故障，并在资源停止线内守住一致性。PlainJournal 的 M0–M8 冻结基线是重要参考案例，但
 VeriTrail 不把任何电商服务、中间件或业务状态机硬编码为产品前提。
 
+## 参与协作
+
+- 提交可复现缺陷、边界明确的能力提案或 Pull Request 前，请阅读[贡献指南](CONTRIBUTING.md)；
+- 参与公开讨论与评审时，请遵守[社区行为准则](CODE_OF_CONDUCT.md)；
+- 安全问题不要公开披露，请按[安全策略](SECURITY.md)使用私下报告路径。
+
 ## License
 
 [Apache License 2.0](LICENSE)
