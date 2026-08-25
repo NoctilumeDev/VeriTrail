@@ -27,7 +27,8 @@ VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次�
 `PASS` 和一次故意制造的 `FAIL`，让你看到同一份预注册标准如何保留成功与反例。两次 Run 使用
 同一 Profile、同一 Plan，只改变一个受控业务事实；它们是独立验收对，不冒充因果 Comparison。
 
-如果只想先认识 Core 的 Plan、Evidence、Verdict 与 Bundle，可以运行最小证据示例：
+如果已经**克隆了本仓库**，并且只想先认识 Core 的 Plan、Evidence、Verdict 与 Bundle，可以运行
+最小证据示例：
 
 ```powershell
 python -m venv .venv
@@ -46,7 +47,21 @@ python -m venv .venv
   --output artifacts\my-first-run
 ```
 
-这个示例只解释 Plan、Evidence、Verdict 与 Bundle，不代表完整项目自举已经发生。
+上面命令里的 `examples\minimal` 属于 Git 仓库，并不包含在 `v0.12.0` wheel 中。只下载 wheel、
+没有 clone 仓库的用户，不能把这组命令当成自包含首跑。这个示例只解释 Plan、Evidence、Verdict
+与 Bundle，不代表完整项目自举已经发生。
+
+默认分支正在为 `v0.12.0` 之后的维护版验证一条无需 checkout 的 Core 首跑命令：
+
+```powershell
+.\.venv\Scripts\veritrail.exe demo --output artifacts\first-run-demo
+```
+
+它从同一份内置 sealed Plan 生成一个 `PASS` Bundle、一个故意制造的 `FAIL` Bundle，并建立只读
+Catalog。输出始终带有 `SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE` 边界标记：它演示确定性 Core
+链，不证明用户自己的项目。维护版正式发布并从 GitHub 公开下载读回之前，这仍只是默认分支候选能力，
+不得描述成稳定 `v0.12.0` 已包含的功能。精确边界与门禁见
+[Core 无 checkout 首跑维护合同](docs/71-core-first-run-maintenance-contract.md)。
 
 ### 已有一个本地 Web 项目
 

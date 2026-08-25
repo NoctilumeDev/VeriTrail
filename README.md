@@ -36,6 +36,12 @@ Browser Smoke 当前共同守住可重复基线。
 从默认分支构建的 wheel 不再冒充已发布的 `0.12.0`。稳定 Release 与不可移动标签仍是
 [`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)，本次源码坐标更新不创建新 Release。
 
+默认分支同时正在验证无需 Git checkout 的合成首跑命令 `veritrail demo`。它只从 Core wheel 自身
+生成同 Plan 的 `PASS`／故意 `FAIL` Bundle 与 Catalog，并始终标记
+`SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE`。它不探测项目、不修改断言、不批准 Starter 草案，
+也不扩大稳定 `v0.12.0` 的能力声明。维护版完成发布与公开读回以前，它仍是未发布候选；精确边界见
+[文档 71](docs/71-core-first-run-maintenance-contract.md)。
+
 Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：它面向无需构建、无需远程
 资源的现存静态 HTML，并始终保持 `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。两个带注释标签共同
 钉在提交 `c9592e1`；七个 GitHub 下载资产已通过 Python 3.10/3.13 clean install、双 Preset、普通/
@@ -143,8 +149,10 @@ npm run build
 `Public CI` 在每次 main push、PR 更新与 merge queue 上，以 Windows Runner 运行双 Python Core／
 Starter／Authoring Skill 回归、`single-webapp` 与 `static-site` 两条真实 DRAFT 链、wheel/sdist 构建，
 并从 GitHub Release 下载冻结的 E1 0.1.0 资产做 checksum 与 clean-install 回读；独立 Linux Runner
-运行 Workbench test、lint、type-check、生产构建和 moderate 级依赖审计。两个基础门禁通过后，独立
-Windows Runner 还会运行 Starter 的真实 PASS/FAIL 双 Bundle、Catalog 与生产 Workbench 黄金路径。
+运行 Workbench test、lint、type-check、生产构建和 moderate 级依赖审计。新的 Core 候选还由独立
+Windows 双 Python matrix 在**不 checkout 仓库**的空工作区里只安装刚构建的 wheel，复核同 Plan
+`PASS`／故意 `FAIL`、Catalog、边界标记和本机绝对路径泄漏。基础门禁通过后，另一独立 Windows
+Runner 还会运行 Starter 的真实 PASS/FAIL 双 Bundle、Catalog 与生产 Workbench 黄金路径。
 PR 改 base 也会重新触发，避免堆叠分支只保留旧合并事实。
 
 `Browser Smoke` 在 main 与每周定时任务上使用仓库内公开、合成、脱敏的 M2 证据包运行真实
