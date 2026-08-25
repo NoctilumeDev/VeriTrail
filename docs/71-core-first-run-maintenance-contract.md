@@ -1,10 +1,10 @@
 # Core 无 checkout 首跑维护合同
 
-> 状态：`RELEASE CANDIDATE / PENDING PUBLIC READBACK`
+> 状态：`RELEASED / MAINTENANCE FROZEN`
 >
 > 稳定基线：`VeriTrail Core 0.12.0` @ 不可移动标签 `v0.12.0`
 >
-> 候选发布坐标：`0.12.1`
+> 发布坐标：`0.12.1` @ 受保护注释标签 `v0.12.1`
 >
 > 影响层级：Core 公共 CLI／包合同 `L2_CONTRACT`，以及有界公开 CI `L3_SYSTEM`
 
@@ -20,7 +20,7 @@
 
 ## 2. 授权变更
 
-候选版可以增加一条命令：
+维护版授权增加一条命令：
 
 ```text
 veritrail demo --output <new-directory>
@@ -49,7 +49,7 @@ Core wheel 内的常量生成：
 - 批准 Starter 草案、生成 Bootstrap Preview 批准或运行用户项目；
 - 授予 Starter／Authoring Skill 任何 Seal、Run、Verdict、Comparison 或 Workbench 权限；
 - 把合成 `PASS` 描述成 VeriTrail 自身或任何外部项目的验收证据；
-- 移动或改写 `v0.12.0`，或把候选能力描述成已经发布。
+- 移动或改写 `v0.12.0`，或在发布停止线未完成前把候选能力描述成已经发布。
 
 ## 4. 无 checkout 门禁
 
@@ -87,7 +87,7 @@ Core wheel 内的常量生成：
 Pull Request 和当前 CI。由于这是单维护者仓库，规则不得要求无法完成的自我批准。分支保护属于仓库
 治理变化，不改变 VeriTrail 执行或 Verdict 语义。
 
-## 7. 候选实现与门禁事实
+## 7. 实现、门禁与发布事实
 
 - `veritrail demo`、原子发布、边界摘要与覆盖拒绝已经实现；
 - Core 在 Python 3.10／3.13 的普通与 `-O` 模式均通过 `341/341`；
@@ -103,6 +103,13 @@ Pull Request 和当前 CI。由于这是单维护者仓库，规则不得要求�
   如实暴露出 Starter S1 浏览器门禁使用 3 秒冷启动窗口的瞬态漂移。整改只把该真实链的单操作
   上限恢复到仓库其他浏览器样例使用的有界 10 秒，并在失败时输出实际裁决、失败断言和短期验收
   artifact；不得用 retry 把失败改写成绿色。
+- 整改 PR #10 合并为 `1d3e5a053dfca26837ec4293b11a17f016973413`；该精确提交的
+  [Public CI 32872266734](https://github.com/NoctilumeDev/VeriTrail/actions/runs/32872266734) 与
+  [Browser Smoke 32872266093](https://github.com/NoctilumeDev/VeriTrail/actions/runs/32872266093)
+  均成功。
+- GitHub Release `v0.12.1` 已发布；五个资产已公开下载，大小、GitHub digest、下载 SHA-256 与上传
+  副本逐项一致；公开 wheel 在 Python 3.10／3.13、公开 sdist 在 Python 3.10 的仓库外 clean venv
+  再次通过安装、`pip check` 与完整 demo。
 
-以上只允许切出 `0.12.1` 候选。只有 GitHub Release 资产公开下载、无 checkout 再验证、digest 与
-Release target 读回并写入事实文档后，本合同才可改为 `RELEASED`。
+上述发布停止线已经闭合。精确标签、提交、CI run、资产大小与摘要、公开下载复验及未扩张边界见
+[Core 0.12.1 发布与公开读回事实](73-core-v0.12.1-release-readback-facts.md)。

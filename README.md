@@ -37,7 +37,8 @@ Browser Smoke 当前共同守住可重复基线。
 生成同 Plan 的 `PASS`／故意 `FAIL` Bundle 与 Catalog，并始终标记
 `SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE`。它不探测项目、不修改断言、不批准 Starter 草案，
 也不把合成结果冒充项目验收。精确合同与发布说明见[文档 71](docs/71-core-first-run-maintenance-contract.md)
-和 [0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)。
+和 [0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)，标签、资产摘要与公开下载复验见
+[发布读回事实](docs/73-core-v0.12.1-release-readback-facts.md)。
 
 Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：它面向无需构建、无需远程
 资源的现存静态 HTML，并始终保持 `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。两个带注释标签共同
@@ -82,7 +83,8 @@ lint/type-check/生产构建、依赖审计、wheel/sdist 独立安装运行、R
 扫描覆盖 375 个文件、12 个攻击面，可报告发现为 0。准确环境、资源峰值、安全边界、资产摘要与
 读回规则见 [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)，安装和故障恢复见
 [0.12.0 Release Notes](docs/57-v0.12.0-release-notes.md)。0.12.1 的维护增量、独立 wheel 首跑和禁止扩张
-边界见 [0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)。
+边界见 [0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)和
+[发布读回事实](docs/73-core-v0.12.1-release-readback-facts.md)。
 
 M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标签；前者不是稳定 Release，
 后者仍使用 `0.12.0.dev1` 包版本。M13 的分层终审事实继续由
@@ -342,6 +344,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail 入口层 E3 0.2.0 发布说明](docs/70-entry-layer-e3-0.2-release-notes.md)
 - [Core 无 checkout 首跑维护合同](docs/71-core-first-run-maintenance-contract.md)
 - [VeriTrail 0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)
+- [Core 0.12.1 发布与公开读回事实](docs/73-core-v0.12.1-release-readback-facts.md)
 
 ## 项目来源
 
