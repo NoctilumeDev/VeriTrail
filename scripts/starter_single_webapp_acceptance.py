@@ -28,6 +28,7 @@ RUN_EXPECTATIONS = {
     PASS_RUN_ID: ("COMPLETED", "PASS"),
     FAIL_RUN_ID: ("COMPLETED", "FAIL"),
 }
+ACCEPTANCE_BROWSER_TIMEOUT_MS = 10_000
 
 
 def require(condition: object, message: str) -> None:
@@ -66,6 +67,39 @@ def read_json(path: Path) -> dict[str, Any]:
     document = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(document, dict), f"{path.name} must contain one JSON object")
     return document
+
+
+def run_verdict_drift_message(
+    *,
+    run_id: str,
+    expected_execution: str,
+    expected_verdict: str,
+    result: dict[str, Any],
+    run_output: Path,
+) -> str:
+    failed_assertions: list[str] = []
+    report_path = run_output / "report.json"
+    if report_path.is_file():
+        try:
+            report = read_json(report_path)
+            assertions = report.get("assertions")
+            if isinstance(assertions, list):
+                failed_assertions = sorted(
+                    item["id"]
+                    for item in assertions
+                    if isinstance(item, dict)
+                    and isinstance(item.get("id"), str)
+                    and item.get("status") == "FAIL"
+                )
+        except (OSError, ValueError, RuntimeError):
+            failed_assertions = ["REPORT_UNREADABLE"]
+    return (
+        f"{run_id} verdict drifted: expected "
+        f"{expected_execution}/{expected_verdict}, observed "
+        f"{result.get('execution_status')}/{result.get('verdict')}, "
+        f"browser_capture_complete={result.get('browser_capture_complete')!r}, "
+        f"failed_assertions={failed_assertions}"
+    )
 
 
 def port_is_free(port: int) -> bool:
@@ -143,7 +177,10 @@ def build_answers(subject_root: Path, port: int) -> dict[str, Any]:
             "start_url": origin + "/",
             "allowed_origin": origin,
             "headless": True,
-            "timeout_ms": 3000,
+            # A hosted Windows runner can need several seconds to cold-start the
+            # pinned Chromium process. Keep this at the same bounded 10-second
+            # ceiling used by the repository's other real browser examples.
+            "timeout_ms": ACCEPTANCE_BROWSER_TIMEOUT_MS,
             "viewports": [
                 {"name": "desktop", "width": 1440, "height": 960, "is_mobile": False},
                 {"name": "mobile", "width": 390, "height": 844, "is_mobile": True},
@@ -582,7 +619,16 @@ def main() -> int:
             )
             expected_execution, expected_verdict = RUN_EXPECTATIONS[run_id]
             require(result.get("execution_status") == expected_execution, f"{run_id} execution drifted")
-            require(result.get("verdict") == expected_verdict, f"{run_id} verdict drifted")
+            if result.get("verdict") != expected_verdict:
+                raise RuntimeError(
+                    run_verdict_drift_message(
+                        run_id=run_id,
+                        expected_execution=expected_execution,
+                        expected_verdict=expected_verdict,
+                        result=result,
+                        run_output=run_output,
+                    )
+                )
             require(result.get("services_ready") is True, f"{run_id} service was not ready")
             require(result.get("cleanup_complete") is True, f"{run_id} cleanup was incomplete")
             require(

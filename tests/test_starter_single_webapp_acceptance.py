@@ -6,9 +6,11 @@ import unittest
 from pathlib import Path
 
 from scripts.starter_single_webapp_acceptance import (
+    ACCEPTANCE_BROWSER_TIMEOUT_MS,
     FIXTURE_ROOT,
     build_answers,
     materialize_subjects,
+    run_verdict_drift_message,
 )
 from veritrail.plan import validate_plan
 from veritrail.project_profile import project_profile_digest, validate_project_profile
@@ -44,6 +46,8 @@ class StarterSingleWebappAcceptanceTests(unittest.TestCase):
         self.assertNotIn("seal", plan)
         self.assertEqual(plan["resource_budget"]["max_artifact_bytes"], 8 * 1024 * 1024)
         self.assertLessEqual(plan["resource_budget"]["max_artifact_bytes"], 10 * 1024 * 1024)
+        self.assertEqual(plan["browser"]["timeout_ms"], ACCEPTANCE_BROWSER_TIMEOUT_MS)
+        self.assertEqual(ACCEPTANCE_BROWSER_TIMEOUT_MS, 10_000)
         self.assertEqual(
             next(
                 item
@@ -64,6 +68,29 @@ class StarterSingleWebappAcceptanceTests(unittest.TestCase):
         }
         validate_plan(plan, sealed_profile)
         self.assertEqual(bindings["schema_version"], "0.1")
+
+    def test_verdict_drift_reports_observed_state_and_failed_assertions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            run_output = Path(temporary)
+            (run_output / "report.json").write_text(
+                '{"assertions":[{"id":"browser-ready","status":"FAIL"}]}\n',
+                encoding="utf-8",
+            )
+            message = run_verdict_drift_message(
+                run_id="starter-s1-pass",
+                expected_execution="COMPLETED",
+                expected_verdict="PASS",
+                result={
+                    "execution_status": "COMPLETED",
+                    "verdict": "FAIL",
+                    "browser_capture_complete": False,
+                },
+                run_output=run_output,
+            )
+        self.assertIn("expected COMPLETED/PASS", message)
+        self.assertIn("observed COMPLETED/FAIL", message)
+        self.assertIn("browser_capture_complete=False", message)
+        self.assertIn("browser-ready", message)
 
     def test_acceptance_gate_does_not_depend_on_optimized_away_asserts(self) -> None:
         import scripts.starter_single_webapp_acceptance as acceptance

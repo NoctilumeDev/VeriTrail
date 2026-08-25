@@ -90,7 +90,7 @@ Pull Request 和当前 CI。由于这是单维护者仓库，规则不得要求�
 ## 7. 候选实现与门禁事实
 
 - `veritrail demo`、原子发布、边界摘要与覆盖拒绝已经实现；
-- Core 在 Python 3.10／3.13 的普通与 `-O` 模式均通过 `340/340`；
+- Core 在 Python 3.10／3.13 的普通与 `-O` 模式均通过 `341/341`；
 - Starter 与 Authoring Skill 在双 Python、普通与 `-O` 模式均通过 `24/24`；
 - Workbench 通过 `172/172`、lint、type-check、生产构建与依赖审计；
 - 双 Python 公共 CI 已在无 checkout workspace 中只安装候选 wheel，并验证 PASS／故意 FAIL、
@@ -98,6 +98,11 @@ Pull Request 和当前 CI。由于这是单维护者仓库，规则不得要求�
 - 本机仓库外 clean venv 也已在 Python 3.10.6／3.13.13 复现同一事实；
 - PR #8 已在七项门禁全绿后合并；`main` 已禁止删除／强推并要求 PR 与七项严格检查；稳定 Core
   `v*` 标签已禁止删除和改写。
+- 候选合并后的精确 merge commit `81b9625d1246a352287256ff8cb1c3cc3b66de40` 在
+  [Public CI 32863463458](https://github.com/NoctilumeDev/VeriTrail/actions/runs/32863463458)
+  如实暴露出 Starter S1 浏览器门禁使用 3 秒冷启动窗口的瞬态漂移。整改只把该真实链的单操作
+  上限恢复到仓库其他浏览器样例使用的有界 10 秒，并在失败时输出实际裁决、失败断言和短期验收
+  artifact；不得用 retry 把失败改写成绿色。
 
 以上只允许切出 `0.12.1` 候选。只有 GitHub Release 资产公开下载、无 checkout 再验证、digest 与
 Release target 读回并写入事实文档后，本合同才可改为 `RELEASED`。
