@@ -32,6 +32,10 @@ Core `0.12.0` 已稳定发布；Starter 与 Authoring Skill 以独立 `0.2.0` �
 Release 继续保留。入口层只能降低合同填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与
 Browser Smoke 当前共同守住可重复基线。
 
+默认分支的 Core 源码使用未发布开发坐标 `0.12.1.dev0`，用于标识 `v0.12.0` 之后的 Core 修复；
+从默认分支构建的 wheel 不再冒充已发布的 `0.12.0`。稳定 Release 与不可移动标签仍是
+[`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)，本次源码坐标更新不创建新 Release。
+
 Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：它面向无需构建、无需远程
 资源的现存静态 HTML，并始终保持 `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。两个带注释标签共同
 钉在提交 `c9592e1`；七个 GitHub 下载资产已通过 Python 3.10/3.13 clean install、双 Preset、普通/

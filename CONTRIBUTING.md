@@ -5,6 +5,10 @@ entry layers are released at `0.2.0` and support two bounded DRAFT-only presets:
 `static-site`. They cannot execute Core seal/run, approve a Preview, or issue or modify a Verdict; the Skill
 also stops before Starter's human-reviewed handoff.
 
+The default branch carries the unreleased Core source coordinate `0.12.1.dev0` because its Core payload
+contains a post-`v0.12.0` fix. Builds from the default branch must not identify as the immutable `0.12.0`
+release, and this development coordinate does not create or move a release.
+
 Contributions are welcome when they fix a reproducible defect, strengthen a declared gate, improve public
 reproducibility, or propose a separately versioned bounded capability. Do not silently broaden a frozen
 contract or describe planned, mocked, or advisory behavior as implemented evidence.
