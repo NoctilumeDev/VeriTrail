@@ -1,10 +1,10 @@
 # Core 无 checkout 首跑维护合同
 
-> 状态：`IMPLEMENTING / NOT RELEASED`
+> 状态：`RELEASE CANDIDATE / PENDING PUBLIC READBACK`
 >
 > 稳定基线：`VeriTrail Core 0.12.0` @ 不可移动标签 `v0.12.0`
 >
-> 候选源码坐标：`0.12.1.dev0`
+> 候选发布坐标：`0.12.1`
 >
 > 影响层级：Core 公共 CLI／包合同 `L2_CONTRACT`，以及有界公开 CI `L3_SYSTEM`
 
@@ -77,11 +77,27 @@ Core wheel 内的常量生成：
 - GitHub 已发布 wheel 被再次公开下载，并在无 checkout 环境读回；
 - README、`START_HERE.md`、包版本、标签、Release target、资产 digest 与公开读回事实一致。
 
-停止线全部关闭前，稳定 Core 仍是 `0.12.0`，源码仍是 `0.12.1.dev0`，命令只能描述成未发布维护
-候选。
+进入发布候选以前，稳定 Core 必须保持 `0.12.0`，默认分支源码必须保持 `0.12.1.dev0`。实现门禁、
+受保护 PR 与治理规则全部成立后，发布分支才可以把源码固定为 `0.12.1`；在公开 Release 资产完成
+下载读回以前，它仍只能描述成维护候选，不能冒充已经公开发布的稳定事实。
 
 ## 6. 分支保护边界
 
 候选 PR 建立稳定 check 名称后，`main` 必须增加公开保护规则：禁止 force-push 与删除，并要求通过
 Pull Request 和当前 CI。由于这是单维护者仓库，规则不得要求无法完成的自我批准。分支保护属于仓库
 治理变化，不改变 VeriTrail 执行或 Verdict 语义。
+
+## 7. 候选实现与门禁事实
+
+- `veritrail demo`、原子发布、边界摘要与覆盖拒绝已经实现；
+- Core 在 Python 3.10／3.13 的普通与 `-O` 模式均通过 `340/340`；
+- Starter 与 Authoring Skill 在双 Python、普通与 `-O` 模式均通过 `24/24`；
+- Workbench 通过 `172/172`、lint、type-check、生产构建与依赖审计；
+- 双 Python 公共 CI 已在无 checkout workspace 中只安装候选 wheel，并验证 PASS／故意 FAIL、
+  同 Plan、两 Run／零 issue Catalog、边界标记与无本机路径泄漏；
+- 本机仓库外 clean venv 也已在 Python 3.10.6／3.13.13 复现同一事实；
+- PR #8 已在七项门禁全绿后合并；`main` 已禁止删除／强推并要求 PR 与七项严格检查；稳定 Core
+  `v*` 标签已禁止删除和改写。
+
+以上只允许切出 `0.12.1` 候选。只有 GitHub Release 资产公开下载、无 checkout 再验证、digest 与
+Release target 读回并写入事实文档后，本合同才可改为 `RELEASED`。
