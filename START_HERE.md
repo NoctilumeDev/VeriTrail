@@ -61,7 +61,8 @@ python -m venv .venv
 Catalog。输出始终带有 `SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE` 边界标记：它演示确定性 Core
 链，不证明用户自己的项目，也不会探测启动命令、端口或验收标准。精确边界与门禁见
 [Core 无 checkout 首跑维护合同](docs/71-core-first-run-maintenance-contract.md)和
-[0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)。
+[0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)；精确标签、资产摘要与公开下载复验见
+[Core 0.12.1 发布与公开读回事实](docs/73-core-v0.12.1-release-readback-facts.md)。
 
 ### 已有一个本地 Web 项目
 
