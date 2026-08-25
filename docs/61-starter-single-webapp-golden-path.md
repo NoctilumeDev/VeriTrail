@@ -98,12 +98,17 @@ AI、Starter 和验收脚本都不能在观察结果后修改 sealed Plan，也�
 本地 S1 冻结轮取得：
 
 - Profile SHA-256：`68a18c971a2066901e3421c2ba9b4bc6a97c5385473b3709844e0f5022cd6c59`；
-- Plan SHA-256：`b8e9e496607fac988e46c4ae64bbb74a3ea9e4aed2fb7eb97fc25322f1c6d1bc`；
+- Plan SHA-256：`31973b67edc7bee9438bf127fabe6c39d009c24951b9236c04d99cdf11883fc2`；
 - 2 个可验证 Bundle，Catalog `2 Runs / 0 issues`；
 - 1440×960 与 390×844 的目录、PASS 详情、FAIL 详情；
 - 0 Console error、0 page error、0 request failure、0 HTTP error、0 横向溢出；
 - 应用与 Catalog 固定端口释放，owned 临时 workspace 残留为 0；
 - Bundle 与公开 acceptance 摘要中无 Subject、输出目录或仓库绝对路径。
+
+真实浏览器步骤采用有界的 10 秒单操作上限，与仓库其他真实浏览器样例一致。这个上限给 hosted
+Windows runner 的 Chromium 冷启动留出确定性窗口；它不是失败重试，也不会在观察到业务结果后
+放宽断言。若裁决漂移，验收器会打印实际 ExecutionStatus、Verdict、浏览器完整性与失败断言，公共
+CI 只在失败时短期保留完整验收目录供复核。
 
 这些摘要是一次可复核冻结事实，不替代未来 clean install、Release 和下载资产读回。
 

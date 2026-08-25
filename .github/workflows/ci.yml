@@ -343,3 +343,13 @@ jobs:
         run: >-
           python scripts/starter_single_webapp_acceptance.py
           --output "${{ runner.temp }}\starter-single-webapp-s1"
+
+      - name: Upload failed Starter acceptance evidence
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: starter-single-webapp-s1-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}\starter-single-webapp-s1
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 7
