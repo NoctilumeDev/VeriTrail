@@ -25,6 +25,7 @@ from veritrail.catalog import CatalogError, build_catalog
 from veritrail.comparison import ComparisonError, create_comparison_bundle
 from veritrail.command_execution import collect_command_evidence
 from veritrail.command_preview import build_command_preview, resolve_command
+from veritrail.demo import create_first_run_demo
 from veritrail.errors import SafetyError, ValidationError, VeriTrailError
 from veritrail.evidence import import_evidence_document
 from veritrail.local_api import create_catalog_server
@@ -148,6 +149,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--execution-status",
         choices=("PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"),
         default="COMPLETED",
+    )
+
+    demo = subparsers.add_parser(
+        "demo",
+        help="create a self-contained synthetic PASS/FAIL first run and read-only Catalog",
+    )
+    demo.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="new output directory; no repository checkout or example files are required",
     )
 
     preflight = subparsers.add_parser(
@@ -379,6 +391,20 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 return 1
             _success(preview)
+            return 0
+        if args.command == "demo":
+            summary = create_first_run_demo(args.output)
+            _success(
+                {
+                    "command": "demo",
+                    "output": str(args.output),
+                    "pass_verdict": summary["runs"]["pass"]["verdict"],
+                    "fail_verdict": summary["runs"]["fail"]["verdict"],
+                    "catalog_id": summary["catalog"]["catalog_id"],
+                    "catalog_run_count": summary["catalog"]["run_count"],
+                    "boundary": summary["boundary"],
+                }
+            )
             return 0
         if args.command == "evaluate":
             plan = load_and_seal_plan(args.plan)

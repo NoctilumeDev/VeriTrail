@@ -51,6 +51,9 @@ jobs:
       - name: Run Core regression tests
         run: python -m unittest -v
 
+      - name: Run Core regression tests with assertions disabled
+        run: python -O -m unittest -v
+
       - name: Run Starter contract tests
         run: python -m unittest discover -s starter/tests -v
 
@@ -71,6 +74,14 @@ jobs:
 
       - name: Build the wheel
         run: python -m pip wheel --no-deps --wheel-dir dist .
+
+      - name: Upload the Core wheel for checkout-free acceptance
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: core-wheel-${{ matrix.python-version }}
+          path: dist/veritrail-*.whl
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Build the independent Starter wheel
         run: python -m pip wheel --no-deps --wheel-dir dist ./starter
@@ -123,6 +134,70 @@ jobs:
           --python "${{ env.pythonLocation }}\python.exe"
           --core-wheel "${{ env.VERITRAIL_CORE_WHEEL }}"
           --from-assets "${{ env.VERITRAIL_E1_ASSETS }}"
+
+  wheel-only-first-run:
+    name: Wheel-only first run on Python ${{ matrix.python-version }}
+    needs: [python]
+    runs-on: windows-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Download only the built Core wheel
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: core-wheel-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/core-wheel
+
+      - name: Prove the workspace has no repository checkout
+        shell: pwsh
+        run: |
+          if (Test-Path -LiteralPath (Join-Path $env:GITHUB_WORKSPACE '.git')) {
+            throw 'wheel-only acceptance unexpectedly contains a Git checkout'
+          }
+          $entries = @(Get-ChildItem -Force -LiteralPath $env:GITHUB_WORKSPACE)
+          if ($entries.Count -ne 0) {
+            throw "wheel-only workspace is not empty: $($entries.Name -join ', ')"
+          }
+
+      - name: Install only the wheel and run the self-contained demo
+        shell: pwsh
+        run: |
+          $wheel = @(Get-ChildItem -File -LiteralPath '${{ runner.temp }}/core-wheel' -Filter 'veritrail-*.whl')
+          if ($wheel.Count -ne 1) { throw "expected one Core wheel, found $($wheel.Count)" }
+          python -m pip install --no-deps $wheel[0].FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $output = Join-Path '${{ runner.temp }}' 'veritrail-wheel-only-demo'
+          veritrail demo --output $output
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+          $summary = Get-Content -Raw -LiteralPath (Join-Path $output 'demo-summary.json') | ConvertFrom-Json
+          if ($summary.runs.pass.verdict -ne 'PASS') { throw 'built-in positive demo did not PASS' }
+          if ($summary.runs.fail.verdict -ne 'FAIL') { throw 'built-in negative demo did not FAIL' }
+          if ($summary.catalog.run_count -ne 2 -or $summary.catalog.issue_count -ne 0) {
+            throw 'built-in demo Catalog is incomplete'
+          }
+          if ($summary.boundary -ne 'SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE') {
+            throw 'built-in demo boundary marker drifted'
+          }
+
+          $pass = Get-Content -Raw -LiteralPath (Join-Path $output 'artifacts/demo-pass/report.json') | ConvertFrom-Json
+          $fail = Get-Content -Raw -LiteralPath (Join-Path $output 'artifacts/demo-fail/report.json') | ConvertFrom-Json
+          if ($pass.plan.sha256 -ne $fail.plan.sha256) { throw 'demo Runs do not share one sealed Plan' }
+
+          $textFiles = @(Get-ChildItem -File -Recurse -LiteralPath $output | Where-Object {
+            $_.Extension -in @('.json', '.md')
+          })
+          $leaks = @($textFiles | Select-String -SimpleMatch -Pattern $env:RUNNER_TEMP, $env:GITHUB_WORKSPACE)
+          if ($leaks.Count -ne 0) { throw 'demo persisted a runner-local absolute path' }
 
   entry-layer-e3-release:
     name: E3 0.2 release download acceptance
