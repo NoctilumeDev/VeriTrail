@@ -12,9 +12,9 @@ import tempfile
 from pathlib import Path
 from typing import Any, Sequence
 
-try:
-    from scripts import entry_layer_e1_acceptance as common
-except ModuleNotFoundError:  # pragma: no cover - direct script execution
+if __package__:
+    from . import entry_layer_e1_acceptance as common
+else:  # pragma: no cover - exercised through the subprocess regression
     import entry_layer_e1_acceptance as common
 
 

@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import gzip
 import io
+import os
+import subprocess
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -18,6 +21,34 @@ from scripts.entry_layer_e3_acceptance import (
 
 
 class EntryLayerE3AcceptanceTests(unittest.TestCase):
+    def test_direct_script_ignores_conflicting_scripts_package(self) -> None:
+        script = (
+            Path(__file__).resolve().parents[1]
+            / "scripts"
+            / "entry_layer_e3_acceptance.py"
+        )
+        with tempfile.TemporaryDirectory() as raw_temp:
+            root = Path(raw_temp)
+            conflicting_package = root / "scripts"
+            conflicting_package.mkdir()
+            (conflicting_package / "__init__.py").write_text(
+                "# Deliberately shadows the repository namespace.\n",
+                encoding="utf-8",
+            )
+            environment = os.environ.copy()
+            environment["PYTHONPATH"] = str(root)
+            completed = subprocess.run(
+                [sys.executable, str(script), "--help"],
+                cwd=root,
+                env=environment,
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertIn("Build or read back the VeriTrail E3", completed.stdout)
+
     def test_candidate_requires_exact_dual_python_series(self) -> None:
         require_release_python_series(["3.10.6", "3.13.13"])
         with self.assertRaises(AcceptanceFailure):
