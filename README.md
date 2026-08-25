@@ -3,7 +3,7 @@
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
 [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml)
 [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
-[![Core v0.12.0](https://img.shields.io/badge/Core-v0.12.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)
+[![Core v0.12.1](https://img.shields.io/badge/Core-v0.12.1-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.1)
 [![Starter v0.2.0](https://img.shields.io/badge/Starter-v0.2.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
 [![Authoring Skill v0.2.0](https://img.shields.io/badge/Authoring%20Skill-v0.2.0-A22D1F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)
 [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
@@ -24,23 +24,20 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | 十分钟认识验迹 | [从这里开始](START_HERE.md) | 同一预注册标准下的一次真实 `PASS` 和一次故意 `FAIL` |
 | 接入一个本地 Web 项目 | [Starter 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0) | 有界 `single-webapp` / `static-site` 草案；保持 `DRAFT / NOT SEALED` |
 | 用 AI 协助填写合同 | [Authoring Skill 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0) | 有限 Preset 识别、缺失信息追问和候选草案；不封存、不裁决 |
-| 直接使用稳定内核 | [Core 0.12.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0) | Plan、Evidence、Verdict、Bundle 与本地只读 Workbench |
+| 直接使用稳定内核 | [Core 0.12.1](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.1) | Plan、Evidence、Verdict、Bundle、合成首跑与本地只读 Workbench |
 
 ## 发布状态
 
-Core `0.12.0` 已稳定发布；Starter 与 Authoring Skill 以独立 `0.2.0` 坐标发布，历史 `0.1.0`
+Core `0.12.1` 已作为有界维护版发布；Starter 与 Authoring Skill 以独立 `0.2.0` 坐标发布，历史 `0.1.0`
 Release 继续保留。入口层只能降低合同填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与
 Browser Smoke 当前共同守住可重复基线。
 
-默认分支的 Core 源码使用未发布开发坐标 `0.12.1.dev0`，用于标识 `v0.12.0` 之后的 Core 修复；
-从默认分支构建的 wheel 不再冒充已发布的 `0.12.0`。稳定 Release 与不可移动标签仍是
-[`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)，本次源码坐标更新不创建新 Release。
-
-默认分支同时正在验证无需 Git checkout 的合成首跑命令 `veritrail demo`。它只从 Core wheel 自身
+`v0.12.1` 只关闭 wheel 独立首跑缺口，不重开 M0–M14，也不改写不可移动的 `v0.12.0`。新增的
+`veritrail demo` 无需 Git checkout，只从 Core wheel 自身
 生成同 Plan 的 `PASS`／故意 `FAIL` Bundle 与 Catalog，并始终标记
 `SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE`。它不探测项目、不修改断言、不批准 Starter 草案，
-也不扩大稳定 `v0.12.0` 的能力声明。维护版完成发布与公开读回以前，它仍是未发布候选；精确边界见
-[文档 71](docs/71-core-first-run-maintenance-contract.md)。
+也不把合成结果冒充项目验收。精确合同与发布说明见[文档 71](docs/71-core-first-run-maintenance-contract.md)
+和 [0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)。
 
 Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：它面向无需构建、无需远程
 资源的现存静态 HTML，并始终保持 `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。两个带注释标签共同
@@ -71,7 +68,9 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 | M13 | 系统思维与分层代码质量终审 | `FROZEN` |
 | M14 | 整改后终局复验与发布收束 | `FROZEN / RELEASED` |
 
-当前稳定基线为 [`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)。M14 没有
+M14 冻结基线仍为不可移动的 [`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)；
+当前稳定 Core 是只修复首跑入口合同的
+[`v0.12.1`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.1)。M14 没有
 增加能力，而是在安全整改后对 VeriTrail 自证目标与 InkNarratives 精确提交完成常规/优化双轮真实
 复验，并形成首个稳定 Release。最终门禁包括：双 Python 各 `318/318`、Workbench `171/171`、
 lint/type-check/生产构建、依赖审计、wheel/sdist 独立安装运行、Release ZIP 逐文件复核、真实 Chromium、
@@ -82,7 +81,8 @@ lint/type-check/生产构建、依赖审计、wheel/sdist 独立安装运行、R
 按预注册顺序取得 `PASS / FAIL / PENDING / PASS`，恢复 Comparison 同样为 `MATCH`。最终标准安全
 扫描覆盖 375 个文件、12 个攻击面，可报告发现为 0。准确环境、资源峰值、安全边界、资产摘要与
 读回规则见 [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)，安装和故障恢复见
-[0.12.0 Release Notes](docs/57-v0.12.0-release-notes.md)。
+[0.12.0 Release Notes](docs/57-v0.12.0-release-notes.md)。0.12.1 的维护增量、独立 wheel 首跑和禁止扩张
+边界见 [0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)。
 
 M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标签；前者不是稳定 Release，
 后者仍使用 `0.12.0.dev1` 包版本。M13 的分层终审事实继续由
@@ -340,6 +340,8 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Post-Core 入口层 E2 static-site 实现事实](docs/68-entry-layer-e2-static-site-facts.md)
 - [Post-Core 入口层 E3 0.2.0 独立发布合同](docs/69-entry-layer-e3-0.2-release-contract.md)
 - [VeriTrail 入口层 E3 0.2.0 发布说明](docs/70-entry-layer-e3-0.2-release-notes.md)
+- [Core 无 checkout 首跑维护合同](docs/71-core-first-run-maintenance-contract.md)
+- [VeriTrail 0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)
 
 ## 项目来源
 
