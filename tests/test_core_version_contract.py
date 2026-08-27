@@ -10,16 +10,20 @@ from veritrail import __version__
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 PYPROJECT = REPOSITORY_ROOT / "pyproject.toml"
 FROZEN_CORE_BASELINE = "0.12.0"
-MAINTENANCE_CORE_VERSION = "0.12.1"
+STABLE_CORE_VERSION = "0.12.1"
+CURRENT_SOURCE_VERSION = "0.12.2.dev0"
 CURRENT_STATUS_FILES = (
     REPOSITORY_ROOT / "AGENTS.md",
     REPOSITORY_ROOT / "CONTRIBUTING.md",
     REPOSITORY_ROOT / "SECURITY.md",
 )
+CURRENT_MAINTENANCE_CONTRACT = (
+    REPOSITORY_ROOT / "docs" / "74-core-demo-catalog-binding-maintenance-contract.md"
+)
 
 
 class CoreVersionContractTests(unittest.TestCase):
-    def test_source_uses_the_current_maintenance_coordinate(self) -> None:
+    def test_source_uses_a_new_unreleased_maintenance_coordinate(self) -> None:
         pyproject = PYPROJECT.read_text(encoding="utf-8")
         match = re.search(
             r'(?ms)^\[project\]\s*.*?^version = "([^"]+)"$',
@@ -28,21 +32,33 @@ class CoreVersionContractTests(unittest.TestCase):
         self.assertIsNotNone(match, "[project].version is missing from pyproject.toml")
         project_version = match.group(1)
 
-        self.assertEqual(project_version, MAINTENANCE_CORE_VERSION)
-        self.assertEqual(__version__, MAINTENANCE_CORE_VERSION)
+        self.assertEqual(project_version, CURRENT_SOURCE_VERSION)
+        self.assertEqual(__version__, CURRENT_SOURCE_VERSION)
         self.assertNotEqual(project_version, FROZEN_CORE_BASELINE)
+        self.assertNotEqual(project_version, STABLE_CORE_VERSION)
 
         self.assertIn('"Development Status :: 4 - Beta"', pyproject)
         self.assertIn('"Programming Language :: Python :: 3.10"', pyproject)
         self.assertIn('"Programming Language :: Python :: 3.13"', pyproject)
         self.assertNotIn('"Development Status :: 2 - Pre-Alpha"', pyproject)
 
-    def test_current_status_documents_do_not_restore_the_pre_release_coordinate(self) -> None:
+    def test_stable_release_and_candidate_coordinates_are_not_conflated(self) -> None:
         for path in CURRENT_STATUS_FILES:
             with self.subTest(path=path.name):
                 content = path.read_text(encoding="utf-8")
-                self.assertIn(MAINTENANCE_CORE_VERSION, content)
+                self.assertIn(STABLE_CORE_VERSION, content)
                 self.assertNotIn("0.12.1.dev0", content)
+
+        contract = CURRENT_MAINTENANCE_CONTRACT.read_text(encoding="utf-8")
+        self.assertIn(STABLE_CORE_VERSION, contract)
+        self.assertIn(CURRENT_SOURCE_VERSION, contract)
+        self.assertIn("NOT RELEASED", contract)
+
+        contributing = (REPOSITORY_ROOT / "CONTRIBUTING.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(CURRENT_SOURCE_VERSION, contributing)
+        self.assertIn("unreleased", contributing.lower())
 
         bug_template = (
             REPOSITORY_ROOT / ".github" / "ISSUE_TEMPLATE" / "bug_report.yml"

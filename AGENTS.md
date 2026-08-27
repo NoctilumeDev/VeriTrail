@@ -49,9 +49,10 @@
   深度扫描、攻击路径验证和极端环境攻击继续封存，普通质量审查不得冒充这些安全工作流。Core
   `0.12.1` 已按 `docs/71-core-first-run-maintenance-contract.md` 至
   `docs/73-core-v0.12.1-release-readback-facts.md` 完成有界维护发布，是当前仓库 Latest；它不重开
-  M0–M14，也不改写 `v0.12.0` 冻结基线。Core 源码与构建坐标现固定为已发布的 `0.12.1`；
-  `v0.12.0`、`v0.12.1` 与 E1/E3 的所有已发布标签和资产均不得移动或静默改写。后续若改变
-  Core payload，必须先建立新的未发布版本坐标与有界合同，不能继续以 `0.12.1` 构建。
+  M0–M14，也不改写 `v0.12.0` 冻结基线。归档审查随后证明 `demo` 在 staging 内生成的 Catalog
+  会在整目录改名后失去 Artifact root 绑定；`docs/74-core-demo-catalog-binding-maintenance-contract.md`
+  已将最小 producer 修复限定为 `0.12.2.dev0 / IMPLEMENTING / NOT RELEASED`。当前公开稳定 Core
+  仍是 `0.12.1`；`v0.12.0`、`v0.12.1` 与 E1/E3 的所有已发布标签和资产均不得移动或静默改写。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

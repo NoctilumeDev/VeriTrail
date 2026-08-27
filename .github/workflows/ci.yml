@@ -199,6 +199,80 @@ jobs:
           $leaks = @($textFiles | Select-String -SimpleMatch -Pattern $env:RUNNER_TEMP, $env:GITHUB_WORKSPACE)
           if ($leaks.Count -ne 0) { throw 'demo persisted a runner-local absolute path' }
 
+          $webRoot = Join-Path '${{ runner.temp }}' 'veritrail-wheel-only-web-${{ matrix.python-version }}'
+          New-Item -ItemType Directory -Path $webRoot -Force | Out-Null
+          Set-Content -LiteralPath (Join-Path $webRoot 'index.html') `
+            -Value '<!doctype html><title>VeriTrail wheel-only acceptance</title>' `
+            -Encoding utf8
+
+          $listener = [System.Net.Sockets.TcpListener]::new(
+            [System.Net.IPAddress]::Loopback,
+            0
+          )
+          $listener.Start()
+          $port = ([System.Net.IPEndPoint]$listener.LocalEndpoint).Port
+          $listener.Stop()
+          $origin = "http://127.0.0.1:$port"
+          $stdout = Join-Path '${{ runner.temp }}' 'catalog-serve.stdout.log'
+          $stderr = Join-Path '${{ runner.temp }}' 'catalog-serve.stderr.log'
+          $command = (Get-Command veritrail -ErrorAction Stop).Source
+          $service = Start-Process -FilePath $command -ArgumentList @(
+            'catalog-serve',
+            '--catalog', (Join-Path $output 'catalog'),
+            '--artifacts', (Join-Path $output 'artifacts'),
+            '--web-root', $webRoot,
+            '--port', "$port"
+          ) -PassThru -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+
+          try {
+            $health = $null
+            for ($attempt = 0; $attempt -lt 100; $attempt++) {
+              $service.Refresh()
+              if ($service.HasExited) { break }
+              try {
+                $health = Invoke-RestMethod -Uri "$origin/api/v1/health" -TimeoutSec 2
+                if ($health.status -eq 'READY') { break }
+              } catch {
+                Start-Sleep -Milliseconds 100
+              }
+            }
+            if ($null -eq $health -or $health.status -ne 'READY' -or -not $health.read_only) {
+              if (Test-Path -LiteralPath $stdout) { Get-Content -Raw -LiteralPath $stdout | Write-Host }
+              if (Test-Path -LiteralPath $stderr) { Get-Content -Raw -LiteralPath $stderr | Write-Host }
+              throw 'wheel-only catalog-serve did not become READY'
+            }
+
+            $servedCatalog = Invoke-RestMethod -Uri "$origin/api/v1/catalog" -TimeoutSec 5
+            if ($servedCatalog.catalog.run_count -ne 2 -or $servedCatalog.catalog.issue_count -ne 0) {
+              throw 'wheel-only served Catalog is incomplete'
+            }
+            $passRun = @($servedCatalog.runs | Where-Object { $_.run_id -eq 'demo-pass' })
+            if ($passRun.Count -ne 1) { throw 'wheel-only served Catalog lost demo-pass' }
+            $servedReport = Invoke-RestMethod `
+              -Uri ($origin + $passRun[0].bundle.base_url + 'report.json') `
+              -TimeoutSec 5
+            if ($servedReport.verdict -ne 'PASS') {
+              throw 'wheel-only catalog-serve did not return the PASS Bundle report'
+            }
+          } finally {
+            if ($null -ne $service) {
+              $service.Refresh()
+              if (-not $service.HasExited) {
+                Stop-Process -Id $service.Id -Force
+                $service.WaitForExit(5000) | Out-Null
+              }
+            }
+          }
+
+          $listeners = @(Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)
+          if ($listeners.Count -ne 0) { throw 'wheel-only catalog-serve left its port listening' }
+          $sidecars = @(Get-ChildItem -File -LiteralPath (Join-Path $output 'catalog') -Filter 'catalog.sqlite3-*')
+          if ($sidecars.Count -ne 0) { throw 'wheel-only catalog-serve left SQLite sidecars' }
+          $staging = @(Get-ChildItem -Directory -Force -LiteralPath (Split-Path -Parent $output) | Where-Object {
+            $_.Name -like '.veritrail-demo-*' -or $_.Name -like '.veritrail-catalog-*'
+          })
+          if ($staging.Count -ne 0) { throw 'wheel-only acceptance left staging directories' }
+
   entry-layer-e3-release:
     name: E3 0.2 release download acceptance
     runs-on: windows-latest
