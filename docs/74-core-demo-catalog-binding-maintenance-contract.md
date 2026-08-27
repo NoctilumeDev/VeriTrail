@@ -1,10 +1,10 @@
 # Core demo Catalog 最终位置绑定维护合同
 
-> 状态：`IMPLEMENTING / NOT RELEASED`
+> 状态：`RELEASE CANDIDATE / PENDING PUBLIC READBACK`
 >
 > 当前稳定 Core：`0.12.1` @ 不可移动标签 `v0.12.1`
 >
-> 未发布源码坐标：`0.12.2.dev0`
+> 候选源码／发布坐标：`0.12.2`
 >
 > 影响层级：Core `demo -> catalog-serve` 公共组合合同 `L2_CONTRACT`
 
@@ -28,7 +28,8 @@ Core `0.12.1` 的 `veritrail demo` 先在输出目录的同级 staging 中生成
    从创建时就绑定最终位置；
 4. 只计算一次绑定摘要，并把同一值写入 SQLite 与 Manifest；
 5. 保持公共 `build_catalog(artifact_root, output)` 的签名与“绑定实际扫描根”语义不变；
-6. 使用新的未发布源码坐标 `0.12.2.dev0`，不得重制 `0.12.1`。
+6. 使用新的候选坐标 `0.12.2`；公开标签、资产和下载读回完成以前不得描述为已发布，也不得重制
+   `0.12.1`。
 
 受限入口必须拒绝不同父目录、错误的 `artifacts`／`catalog` 相对布局、已有最终目标，以及 symlink／
 reparse staging 或 Artifact root。调用者不能传入任意 binding digest，也不能声称扫描 A 却绑定无关 B。
@@ -75,6 +76,7 @@ reparse staging 或 Artifact root。调用者不能传入任意 binding digest�
 
 ## 5. 发布停止线
 
-本文件只建立维护候选，不宣布发布。只有候选经独立陌生读者复核、受保护 PR 的既有 required checks
-通过、仓库外 wheel 真实链闭合，并以新的不可移动标签和 Release 资产完成公开下载及摘要读回后，
-才能另行把源码从 `0.12.2.dev0` 固定到发布版本。`v0.12.0`、`v0.12.1` 及其资产始终保持不动。
+源码现在只固定为维护发布候选，不宣布公开发布。只有候选经独立陌生读者复核、受保护 PR 的既有
+required checks 通过、仓库外 wheel 真实链闭合，并以新的不可移动标签和 Release 资产完成公开下载
+及摘要读回后，才能把公开状态更新为 `RELEASED / MAINTENANCE FROZEN`，并把稳定安装入口推进到
+`0.12.2`。`v0.12.0`、`v0.12.1` 及其资产始终保持不动。

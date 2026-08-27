@@ -11,7 +11,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 PYPROJECT = REPOSITORY_ROOT / "pyproject.toml"
 FROZEN_CORE_BASELINE = "0.12.0"
 STABLE_CORE_VERSION = "0.12.1"
-CURRENT_SOURCE_VERSION = "0.12.2.dev0"
+CURRENT_SOURCE_VERSION = "0.12.2"
 CURRENT_STATUS_FILES = (
     REPOSITORY_ROOT / "AGENTS.md",
     REPOSITORY_ROOT / "CONTRIBUTING.md",
@@ -20,10 +20,11 @@ CURRENT_STATUS_FILES = (
 CURRENT_MAINTENANCE_CONTRACT = (
     REPOSITORY_ROOT / "docs" / "74-core-demo-catalog-binding-maintenance-contract.md"
 )
+CURRENT_RELEASE_NOTES = REPOSITORY_ROOT / "docs" / "75-v0.12.2-release-notes.md"
 
 
 class CoreVersionContractTests(unittest.TestCase):
-    def test_source_uses_a_new_unreleased_maintenance_coordinate(self) -> None:
+    def test_source_uses_the_new_maintenance_release_candidate_coordinate(self) -> None:
         pyproject = PYPROJECT.read_text(encoding="utf-8")
         match = re.search(
             r'(?ms)^\[project\]\s*.*?^version = "([^"]+)"$',
@@ -52,13 +53,19 @@ class CoreVersionContractTests(unittest.TestCase):
         contract = CURRENT_MAINTENANCE_CONTRACT.read_text(encoding="utf-8")
         self.assertIn(STABLE_CORE_VERSION, contract)
         self.assertIn(CURRENT_SOURCE_VERSION, contract)
-        self.assertIn("NOT RELEASED", contract)
+        self.assertIn("RELEASE CANDIDATE / PENDING PUBLIC READBACK", contract)
+
+        release_notes = CURRENT_RELEASE_NOTES.read_text(encoding="utf-8")
+        self.assertIn(STABLE_CORE_VERSION, release_notes)
+        self.assertIn(CURRENT_SOURCE_VERSION, release_notes)
+        self.assertIn("PENDING PUBLIC READBACK", release_notes)
+        self.assertIn("veritrail-0.12.2-py3-none-any.whl", release_notes)
 
         contributing = (REPOSITORY_ROOT / "CONTRIBUTING.md").read_text(
             encoding="utf-8"
         )
         self.assertIn(CURRENT_SOURCE_VERSION, contributing)
-        self.assertIn("unreleased", contributing.lower())
+        self.assertIn("pending public readback", contributing.lower())
 
         bug_template = (
             REPOSITORY_ROOT / ".github" / "ISSUE_TEMPLATE" / "bug_report.yml"

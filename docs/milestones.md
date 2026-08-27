@@ -242,6 +242,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [VeriTrail 0.12.1 Release Notes](72-v0.12.1-release-notes.md)
 - [Core 0.12.1 发布与公开读回事实](73-core-v0.12.1-release-readback-facts.md)
 - [Core demo Catalog 最终位置绑定维护合同](74-core-demo-catalog-binding-maintenance-contract.md)
+- [VeriTrail 0.12.2 Release Notes](75-v0.12.2-release-notes.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -254,6 +255,7 @@ clean install、公共入口、GitHub Release 与下载读回，两个入口产�
 不重开 M0–M14，也不授予 Starter 或 AI 封存、运行与裁决权限。
 文档 72 是对应的 `0.12.1` 维护 Release 说明；文档 73 记录受保护标签、精确提交、发布资产摘要与
 公开下载复验。文档 71 的停止线已经满足，Core `0.12.1` 状态为 `RELEASED / MAINTENANCE FROZEN`。
-文档 74 另行记录归档审查发现的 demo 最终位置绑定缺口与 `0.12.2.dev0` 未发布维护候选；它不改写
-文档 71–73 的历史发布事实，也不把实现候选冒充新 Release。
+文档 74 另行记录归档审查发现的 demo 最终位置绑定缺口与 `0.12.2` 维护发布候选；文档 75 记录
+候选说明、已取得的实现证据和仍待完成的公开读回停止线。两者不改写文档 71–73 的历史发布事实，
+也不把候选冒充已完成的新 Release。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
