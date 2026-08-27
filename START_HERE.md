@@ -1,11 +1,12 @@
 # 从这里开始使用 VeriTrail
 
-> 当前稳定内核：[`VeriTrail Core 0.12.1`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.1)
+> 当前稳定内核：[`VeriTrail Core 0.12.2`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.2)
 >
-> 默认分支当前携带 Core `0.12.2` 发布候选，只修复 demo Catalog 的最终位置绑定；在标签、资产和
-> 公开下载读回完成以前，安装入口仍保持 `0.12.1`。候选边界见
+> Core `0.12.2` 只修复 demo Catalog 的最终位置绑定；受保护标签、五项 Release 资产、公开下载摘要、
+> 双 Python wheel、sdist 和搬移负对照均已读回。边界与精确事实见
 > [文档 74](docs/74-core-demo-catalog-binding-maintenance-contract.md)与
-> [0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)。
+> [0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)，以及
+> [0.12.2 发布与公开读回事实](docs/76-core-v0.12.2-release-readback-facts.md)。
 >
 > 当前稳定入口层：[`VeriTrail Starter 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
 > 与 [`VeriTrail Authoring Skill 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)。
@@ -39,7 +40,7 @@ VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次�
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install `
-  "https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.1/veritrail-0.12.1-py3-none-any.whl"
+  "https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.2/veritrail-0.12.2-py3-none-any.whl"
 
 .\.venv\Scripts\veritrail.exe seal `
   --plan examples\minimal\plan.json `
@@ -52,11 +53,11 @@ python -m venv .venv
   --output artifacts\my-first-run
 ```
 
-上面命令里的 `examples\minimal` 属于 Git 仓库，并不包含在 `v0.12.1` wheel 中。只下载 wheel、
+上面命令里的 `examples\minimal` 属于 Git 仓库，并不包含在 `v0.12.2` wheel 中。只下载 wheel、
 没有 clone 仓库的用户，不能把这组命令当成自包含首跑。这个示例只解释 Plan、Evidence、Verdict
 与 Bundle，不代表完整项目自举已经发生。
 
-只安装 Core `0.12.1` wheel、没有 clone 仓库时，使用自包含首跑命令：
+只安装 Core `0.12.2` wheel、没有 clone 仓库时，使用自包含首跑命令：
 
 ```powershell
 .\.venv\Scripts\veritrail.exe demo --output artifacts\first-run-demo
@@ -65,9 +66,12 @@ python -m venv .venv
 它从同一份内置 sealed Plan 生成一个 `PASS` Bundle、一个故意制造的 `FAIL` Bundle，并建立只读
 Catalog。输出始终带有 `SYNTHETIC_CORE_DEMO_NOT_PROJECT_ACCEPTANCE` 边界标记：它演示确定性 Core
 链，不证明用户自己的项目，也不会探测启动命令、端口或验收标准。精确边界与门禁见
-[Core 无 checkout 首跑维护合同](docs/71-core-first-run-maintenance-contract.md)和
-[0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)；精确标签、资产摘要与公开下载复验见
-[Core 0.12.1 发布与公开读回事实](docs/73-core-v0.12.1-release-readback-facts.md)。
+[Core 无 checkout 首跑维护合同](docs/71-core-first-run-maintenance-contract.md)；0.12.1 建立该入口的
+历史事实见[0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)与
+[0.12.1 发布读回事实](docs/73-core-v0.12.1-release-readback-facts.md)。0.12.2 保持同一合成边界并修复
+最终位置绑定，见[维护合同](docs/74-core-demo-catalog-binding-maintenance-contract.md)、
+[0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)和
+[0.12.2 发布读回事实](docs/76-core-v0.12.2-release-readback-facts.md)。
 
 ### 已有一个本地 Web 项目
 
@@ -136,7 +140,7 @@ AI 可以帮助阅读仓库、推荐最接近的有限预设、解释字段和�
 
 ## 当前支持边界
 
-Core 0.12.1 继承 0.12.0 已冻结的 Windows 11、C1、本地受控进程、真实 Chromium、不可变 Bundle、Catalog、
+Core 0.12.2 继承 0.12.0 已冻结的 Windows 11、C1、本地受控进程、真实 Chromium、不可变 Bundle、Catalog、
 Comparison、Paired Analysis 和 Batch Analysis。它没有证明通用项目探测、自动安装、C2/C3、Docker、
 跨平台、多服务编排、恶意代码隔离或生产容量。
 
