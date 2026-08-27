@@ -70,5 +70,5 @@ body:
           required: true
         - label: The proposal does not let Starter, an AI Skill, or the Workbench seal, run, or modify a Verdict.
           required: true
-        - label: The proposal does not reinterpret Core v0.12.0/v0.12.1 or historical entry-layer releases.
+        - label: The proposal does not reinterpret Core v0.12.0/v0.12.1/v0.12.2 or historical entry-layer releases.
           required: true

@@ -19,13 +19,13 @@ wheel and the Starter wheel into a clean virtual environment:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install `
-  https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.1/veritrail-0.12.1-py3-none-any.whl `
+  https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.2/veritrail-0.12.2-py3-none-any.whl `
   https://github.com/NoctilumeDev/VeriTrail/releases/download/starter-v0.2.0/veritrail_starter-0.2.0-py3-none-any.whl
 ```
 
 The immutable Starter 0.2.0 release readback was originally performed against
 Core 0.12.0. Its declared compatibility remains `veritrail>=0.12,<0.13`; the
-command above uses the current 0.12.1 maintenance release without reinterpreting
+command above uses the current 0.12.2 maintenance release without reinterpreting
 the historical 0.2.0 release evidence.
 
 The source distribution is provided for independent build verification. It is

@@ -1,10 +1,10 @@
 # Core demo Catalog 最终位置绑定维护合同
 
-> 状态：`RELEASE CANDIDATE / PENDING PUBLIC READBACK`
+> 状态：`RELEASED / MAINTENANCE FROZEN`
 >
-> 当前稳定 Core：`0.12.1` @ 不可移动标签 `v0.12.1`
+> 当前稳定 Core：`0.12.2` @ 不可移动标签 `v0.12.2`
 >
-> 候选源码／发布坐标：`0.12.2`
+> 发布坐标：`0.12.2`
 >
 > 影响层级：Core `demo -> catalog-serve` 公共组合合同 `L2_CONTRACT`
 
@@ -28,8 +28,7 @@ Core `0.12.1` 的 `veritrail demo` 先在输出目录的同级 staging 中生成
    从创建时就绑定最终位置；
 4. 只计算一次绑定摘要，并把同一值写入 SQLite 与 Manifest；
 5. 保持公共 `build_catalog(artifact_root, output)` 的签名与“绑定实际扫描根”语义不变；
-6. 使用新的候选坐标 `0.12.2`；公开标签、资产和下载读回完成以前不得描述为已发布，也不得重制
-   `0.12.1`。
+6. 使用新的坐标 `0.12.2`；发布前不得提前描述为已发布，发布后不得重制 `0.12.1` 或 `0.12.2`。
 
 受限入口必须拒绝不同父目录、错误的 `artifacts`／`catalog` 相对布局、已有最终目标，以及 symlink／
 reparse staging 或 Artifact root。调用者不能传入任意 binding digest，也不能声称扫描 A 却绑定无关 B。
@@ -76,7 +75,13 @@ reparse staging 或 Artifact root。调用者不能传入任意 binding digest�
 
 ## 5. 发布停止线
 
-源码现在只固定为维护发布候选，不宣布公开发布。只有候选经独立陌生读者复核、受保护 PR 的既有
-required checks 通过、仓库外 wheel 真实链闭合，并以新的不可移动标签和 Release 资产完成公开下载
-及摘要读回后，才能把公开状态更新为 `RELEASED / MAINTENANCE FROZEN`，并把稳定安装入口推进到
-`0.12.2`。`v0.12.0`、`v0.12.1` 及其资产始终保持不动。
+停止线已经满足：候选经两个无上下文读者分别复核源码/发布合同与冻结资产，受保护
+[PR #14](https://github.com/NoctilumeDev/VeriTrail/pull/14) 七项 required checks 全部通过并合并为
+`f961930ae1e69d7d88849fa2b0d40befb3e94c89`；该精确提交的 Public CI 与 Browser Smoke 通过。
+注释标签 `v0.12.2` 解引用到同一提交，五项 Release 资产完成 GitHub digest、公开下载 SHA-256、
+双 Python wheel、sdist、真实 `demo -> catalog-serve`、整体搬移负对照与清理读回。
+
+因此状态更新为 `RELEASED / MAINTENANCE FROZEN`，稳定安装入口推进到 `0.12.2`。精确标签对象、
+门禁、资产摘要、公开复验和边界见
+[Core 0.12.2 发布与公开读回事实](76-core-v0.12.2-release-readback-facts.md)。`v0.12.0`、`v0.12.1`
+及其资产始终保持不动。
