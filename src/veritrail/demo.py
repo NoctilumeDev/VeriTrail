@@ -9,7 +9,7 @@ from typing import Any
 from veritrail import __version__
 from veritrail.atomic_publish import publish_staged_directory
 from veritrail.canonical import canonical_json_bytes
-from veritrail.catalog import build_catalog
+from veritrail.catalog import _build_catalog_for_staged_parent_publish
 from veritrail.errors import SafetyError
 from veritrail.evidence import import_evidence_document
 from veritrail.plan import seal_plan
@@ -134,7 +134,12 @@ def create_first_run_demo(output: Path) -> dict[str, Any]:
                 execution_status="COMPLETED",
             )
 
-        catalog = build_catalog(artifacts, stage / "catalog")
+        catalog = _build_catalog_for_staged_parent_publish(
+            artifacts,
+            stage / "catalog",
+            stage_root=stage,
+            published_root=output,
+        )
         summary = {
             "schema_version": "0.1",
             "command": "demo",

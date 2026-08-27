@@ -393,7 +393,25 @@ def main(argv: list[str] | None = None) -> int:
             _success(preview)
             return 0
         if args.command == "demo":
-            summary = create_first_run_demo(args.output)
+            try:
+                summary = create_first_run_demo(args.output)
+            except VeriTrailError:
+                raise
+            except Exception:
+                print(
+                    json.dumps(
+                        {
+                            "error": {
+                                "code": "DEMO_INTERNAL_ERROR",
+                                "message": "Demo generation encountered an unexpected internal error.",
+                            }
+                        },
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    ),
+                    file=sys.stderr,
+                )
+                return 1
             _success(
                 {
                     "command": "demo",

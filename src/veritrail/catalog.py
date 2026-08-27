@@ -292,8 +292,96 @@ def _candidate_id(source_relative: str) -> str:
 
 
 def _root_binding(root: Path) -> str:
-    normalized = os.path.normcase(str(root.resolve(strict=True)))
+    return _path_binding(root.resolve(strict=True))
+
+
+def _path_binding(path: Path) -> str:
+    """Bind one already-canonical path without persisting the path itself."""
+
+    normalized = os.path.normcase(str(path))
     return sha256_bytes(os.fsencode(normalized))
+
+
+def _planned_staged_artifact_root_binding(
+    artifact_root: Path,
+    catalog_output: Path,
+    *,
+    stage_root: Path,
+    published_root: Path,
+) -> str:
+    """Derive the final Artifact binding for one constrained parent rename."""
+
+    try:
+        stage_metadata = os.lstat(stage_root)
+        artifact_metadata = os.lstat(artifact_root)
+        canonical_stage = stage_root.resolve(strict=True)
+        canonical_artifact_root = artifact_root.resolve(strict=True)
+        canonical_artifact_parent = artifact_root.parent.resolve(strict=True)
+        canonical_parent = canonical_stage.parent.resolve(strict=True)
+        published_parent = published_root.parent.resolve(strict=True)
+        catalog_parent = catalog_output.parent.resolve(strict=True)
+    except OSError as exc:
+        raise CatalogError(
+            "CATALOG_STAGED_PUBLISH_INVALID",
+            "Catalog staging 发布关系无效。",
+        ) from exc
+
+    if (
+        stage_root.is_symlink()
+        or _is_reparse(stage_metadata)
+        or not stat.S_ISDIR(stage_metadata.st_mode)
+        or artifact_root.is_symlink()
+        or _is_reparse(artifact_metadata)
+        or not stat.S_ISDIR(artifact_metadata.st_mode)
+    ):
+        raise CatalogError(
+            "CATALOG_STAGED_PUBLISH_INVALID",
+            "Catalog staging 发布关系无效。",
+        )
+    if (
+        published_parent != canonical_parent
+        or catalog_parent != canonical_stage
+        or catalog_output.name != "catalog"
+        or canonical_artifact_parent != canonical_stage
+        or artifact_root.name != "artifacts"
+        or canonical_artifact_root != canonical_stage / "artifacts"
+        or (
+            os.name == "nt"
+            and published_root.name.rstrip(" .") != published_root.name
+        )
+    ):
+        raise CatalogError(
+            "CATALOG_STAGED_PUBLISH_INVALID",
+            "Catalog staging 发布关系无效。",
+        )
+    try:
+        os.lstat(published_root)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        raise CatalogError(
+            "CATALOG_STAGED_PUBLISH_INVALID",
+            "Catalog staging 发布关系无效。",
+        ) from exc
+    else:
+        raise CatalogError(
+            "CATALOG_STAGED_PUBLISH_TARGET_EXISTS",
+            "拒绝绑定已有 demo 发布目录。",
+        )
+    try:
+        os.lstat(catalog_output)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        raise CatalogError(
+            "CATALOG_STAGED_PUBLISH_INVALID",
+            "Catalog staging 发布关系无效。",
+        ) from exc
+    else:
+        raise CatalogError("CATALOG_OUTPUT_EXISTS", "拒绝覆盖已有 Catalog 输出目录。")
+
+    planned_artifact_root = canonical_parent / published_root.name / "artifacts"
+    return _path_binding(planned_artifact_root)
 
 
 def _collect_regular_files(candidate: Path, root: Path) -> dict[str, Path]:
@@ -1365,7 +1453,12 @@ def _copy_catalog_rows(
     destination.commit()
 
 
-def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
+def _build_catalog(
+    artifact_root: Path,
+    output: Path,
+    *,
+    artifact_root_binding: str | None = None,
+) -> CatalogBuildResult:
     artifact_root = artifact_root.absolute()
     output = output.absolute()
     if output.exists():
@@ -1377,6 +1470,13 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
     catalog_id = "cat_" + bundle_set_sha256[:24]
     status = "COMPLETED_WITH_ISSUES" if issues else "COMPLETED"
     duplicate_count = sum(run.duplicate_count for run in runs)
+    root_binding = (
+        _root_binding(artifact_root)
+        if artifact_root_binding is None
+        else artifact_root_binding
+    )
+    if not SHA256_PATTERN.fullmatch(root_binding):
+        raise RuntimeError("internal Catalog Artifact root binding is invalid")
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".veritrail-catalog-", dir=output.parent))
     try:
@@ -1385,7 +1485,7 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
             database,
             catalog_id=catalog_id,
             bundle_set_sha256=bundle_set_sha256,
-            root_binding=_root_binding(artifact_root),
+            root_binding=root_binding,
             runs=runs,
             issues=issues,
         )
@@ -1397,7 +1497,7 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
             "api_version": CATALOG_API_VERSION,
             "catalog_id": catalog_id,
             "bundle_set_sha256": bundle_set_sha256,
-            "artifact_root_binding": _root_binding(artifact_root),
+            "artifact_root_binding": root_binding,
             "build_status": status,
             "run_count": len(runs),
             "issue_count": len(issues),
@@ -1426,6 +1526,38 @@ def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
         issue_count=len(issues),
         duplicate_count=duplicate_count,
         bundle_set_sha256=bundle_set_sha256,
+    )
+
+
+def build_catalog(artifact_root: Path, output: Path) -> CatalogBuildResult:
+    """Build a Catalog bound to the Artifact root that is scanned."""
+
+    return _build_catalog(artifact_root, output)
+
+
+def _build_catalog_for_staged_parent_publish(
+    artifact_root: Path,
+    output: Path,
+    *,
+    stage_root: Path,
+    published_root: Path,
+) -> CatalogBuildResult:
+    """Build a staged Catalog bound to its constrained final parent publication."""
+
+    artifact_root = artifact_root.absolute()
+    output = output.absolute()
+    stage_root = stage_root.absolute()
+    published_root = published_root.absolute()
+    root_binding = _planned_staged_artifact_root_binding(
+        artifact_root,
+        output,
+        stage_root=stage_root,
+        published_root=published_root,
+    )
+    return _build_catalog(
+        artifact_root,
+        output,
+        artifact_root_binding=root_binding,
     )
 
 

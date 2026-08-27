@@ -6,9 +6,12 @@ at `0.2.0` and support two bounded DRAFT-only presets: `single-webapp` and `stat
 Core seal/run, approve a Preview, or issue or modify a Verdict; the Skill also stops before Starter's
 human-reviewed handoff.
 
-The default branch carries the released Core source coordinate `0.12.1`. Any later change to the Core
-payload must first introduce a new unreleased version coordinate and bounded contract; it must not keep
-building changed Core bytes as `0.12.1` or move or rewrite either immutable Core release tag.
+The latest released Core source coordinate remains `0.12.1`. The default branch currently carries the
+bounded, unreleased `0.12.2.dev0` maintenance candidate described by
+`docs/74-core-demo-catalog-binding-maintenance-contract.md`; it is not a release coordinate. Any later
+change to the Core payload must first introduce a new unreleased version coordinate and bounded contract;
+it must not keep building changed Core bytes as `0.12.1` or move or rewrite either immutable Core release
+tag.
 
 Contributions are welcome when they fix a reproducible defect, strengthen a declared gate, improve public
 reproducibility, or propose a separately versioned bounded capability. Do not silently broaden a frozen
