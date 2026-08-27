@@ -41,9 +41,11 @@ Browser Smoke 当前共同守住可重复基线。
 [发布读回事实](docs/73-core-v0.12.1-release-readback-facts.md)。
 
 归档审查已证明 `0.12.1` 的 demo Catalog 在 staging 整目录改名后保留了旧 Artifact root 绑定。
-当前源码以 `0.12.2.dev0` 建立最小 producer 修复候选；它尚未发布，不能替代上面的稳定下载坐标，
-也不放宽 `catalog-serve` 的 fail-closed 合同。范围与停止线见
-[demo Catalog 最终位置绑定维护合同](docs/74-core-demo-catalog-binding-maintenance-contract.md)。
+当前源码已固定为 `0.12.2` 发布候选，只修 producer 的最终位置绑定；在受保护标签、Release 资产和
+公开下载读回完成以前，公开稳定下载坐标仍是 `0.12.1`。本候选不放宽 `catalog-serve` 的
+fail-closed 合同。范围与停止线见
+[demo Catalog 最终位置绑定维护合同](docs/74-core-demo-catalog-binding-maintenance-contract.md)和
+[0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)。
 
 Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：它面向无需构建、无需远程
 资源的现存静态 HTML，并始终保持 `DRAFT / NOT_SEALED / NOT_RUN / NO_VERDICT`。两个带注释标签共同
@@ -351,6 +353,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail 0.12.1 Release Notes](docs/72-v0.12.1-release-notes.md)
 - [Core 0.12.1 发布与公开读回事实](docs/73-core-v0.12.1-release-readback-facts.md)
 - [Core demo Catalog 最终位置绑定维护合同](docs/74-core-demo-catalog-binding-maintenance-contract.md)
+- [VeriTrail 0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)
 
 ## 项目来源
 

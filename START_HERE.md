@@ -2,6 +2,11 @@
 
 > 当前稳定内核：[`VeriTrail Core 0.12.1`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.1)
 >
+> 默认分支当前携带 Core `0.12.2` 发布候选，只修复 demo Catalog 的最终位置绑定；在标签、资产和
+> 公开下载读回完成以前，安装入口仍保持 `0.12.1`。候选边界见
+> [文档 74](docs/74-core-demo-catalog-binding-maintenance-contract.md)与
+> [0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)。
+>
 > 当前稳定入口层：[`VeriTrail Starter 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
 > 与 [`VeriTrail Authoring Skill 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)。
 > 两个带注释标签共同钉在提交 `c9592e1`；七个 GitHub 下载资产已通过 Python 3.10.6/3.13.13、
