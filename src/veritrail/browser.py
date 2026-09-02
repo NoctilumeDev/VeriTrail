@@ -340,7 +340,15 @@ def _collect_browser_evidence(
                 )
 
                 def route_request(route: Any, request: Any) -> None:
-                    check_stop()
+                    try:
+                        check_stop()
+                    except StopRequested:
+                        # Playwright route handlers run through its event queue.
+                        # Let the owning browser step surface cancellation on the
+                        # main thread instead of leaking an unhandled listener
+                        # exception while the request is still routed.
+                        route.abort("blockedbyclient")
+                        return
                     if (
                         _origin(request.url) not in allowed_origins
                         or len(network) >= MAX_NETWORK_EVENTS
@@ -352,7 +360,13 @@ def _collect_browser_evidence(
                 context.route("**/*", route_request)
 
                 def route_web_socket(route: Any) -> None:
-                    check_stop()
+                    try:
+                        check_stop()
+                    except StopRequested:
+                        # Keep asynchronous Playwright callbacks exception-free;
+                        # the surrounding browser step still owns stop semantics.
+                        route.close()
+                        return
                     if _websocket_origin(route.url) not in allowed_websocket_origins:
                         route.close()
                     else:

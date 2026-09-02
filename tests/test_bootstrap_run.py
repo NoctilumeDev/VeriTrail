@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import http.client
+import io
 import os
 import shutil
 import socket
@@ -10,6 +11,7 @@ import tempfile
 import threading
 import time
 import unittest
+from contextlib import redirect_stderr
 from pathlib import Path
 
 from unittest.mock import patch
@@ -636,16 +638,21 @@ class BootstrapObservedRunTests(unittest.TestCase):
                 "veritrail.bootstrap_run.collect_observed_browser_evidence",
                 side_effect=observed_browser,
             ):
-                result = run_observed_bootstrap(
-                    plan,
-                    profile,
-                    resolved,
-                    output_parent=root / "artifacts",
-                    cancel_event=cancellation,
-                )
+                captured_stderr = io.StringIO()
+                with redirect_stderr(captured_stderr):
+                    result = run_observed_bootstrap(
+                        plan,
+                        profile,
+                        resolved,
+                        output_parent=root / "artifacts",
+                        cancel_event=cancellation,
+                    )
             trigger.join(2)
 
             self.assertFalse(trigger.is_alive())
+            self.assertNotIn(
+                "Error occurred in event listener", captured_stderr.getvalue()
+            )
             self.assertEqual("USER_CANCELLED", result.lifecycle.stop_reason)
             self.assertTrue(result.lifecycle.ready_callback_started)
             self.assertFalse(result.lifecycle.ready_callback_completed)
