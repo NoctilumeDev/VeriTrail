@@ -124,8 +124,11 @@ M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标�
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install --editable ".[browser,command-windows]"
+.\.venv\Scripts\python.exe -m pip install --editable ./starter
 .\.venv\Scripts\python.exe -m playwright install chromium
 ```
+
+这里分别安装 Core 与独立 Starter 入口层；Starter 只生成并校验草案，不接管 Core 的封存、运行或裁决。
 
 封存一个最小计划并计算 Run：
 
@@ -141,10 +144,16 @@ python -m venv .venv
   --output artifacts\my-first-run
 ```
 
-运行 Core 回归：
+运行与公开 CI 对齐的 Core、Starter 和 Authoring Skill 基础回归：
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest -v
+.\.venv\Scripts\python.exe -O -m unittest -v
+.\.venv\Scripts\python.exe -m unittest discover -s starter/tests -v
+.\.venv\Scripts\python.exe -O -m unittest discover -s starter/tests -v
+.\.venv\Scripts\python.exe -m unittest discover -s skills/veritrail-authoring/tests -v
+.\.venv\Scripts\python.exe -O -m unittest discover -s skills/veritrail-authoring/tests -v
+.\.venv\Scripts\python.exe scripts/authoring_skill_acceptance.py
 ```
 
 构建只读 Workbench：
@@ -155,6 +164,7 @@ npm ci
 npm test
 npm run lint
 npm run build
+npm audit --audit-level=moderate --registry=https://registry.npmjs.org
 ```
 
 ## 公开 CI 与真实验收边界
