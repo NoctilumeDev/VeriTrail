@@ -55,6 +55,13 @@
   资产、公开下载、双 Python wheel、sdist 与搬移负对照的闭环。Core `0.12.2` 现在是仓库 Latest，
   状态为 `RELEASED / MAINTENANCE FROZEN`；`v0.12.0`、`v0.12.1`、`v0.12.2` 与 E1/E3 的所有已发布
   标签和资产均不得移动或静默改写。
+- `docs/77-post-core-platform-plugin-plan.md` 至 `docs/79-p0-github-plugin-design-review.md` 新开独立
+  平台插件 `P` 轨。P0 当前为 `FROZEN / DESIGN_ONLY`：它只冻结 GitHub Evidence Plugin 的权威、
+  依赖、权限、数据、失败和后继验收边界，不是 M15 或 E4，也没有创建可运行插件、Schema、CLI、
+  CI、标签或 Release。P1 必须从最新受保护 `main` 另开工作树，严格只做 Structured API Collector；
+  在 P1 合同与真实证据完成前，不得提前进入公开浏览器采集、Core handoff、定时监控或独立发布。
+  插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
+  路径验证继续不在当前工作范围内。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

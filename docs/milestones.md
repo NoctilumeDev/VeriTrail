@@ -244,6 +244,9 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Core demo Catalog 最终位置绑定维护合同](74-core-demo-catalog-binding-maintenance-contract.md)
 - [VeriTrail 0.12.2 Release Notes](75-v0.12.2-release-notes.md)
 - [Core 0.12.2 发布与公开读回事实](76-core-v0.12.2-release-readback-facts.md)
+- [Post-Core 平台证据插件 Plan v1](77-post-core-platform-plugin-plan.md)
+- [VeriTrail GitHub Evidence Plugin 0.1 合同](78-github-evidence-plugin-contract.md)
+- [P0 GitHub Evidence Plugin 架构评审与冻结事实](79-p0-github-plugin-design-review.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -260,4 +263,9 @@ clean install、公共入口、GitHub Release 与下载读回，两个入口产�
 Release 说明与门禁；文档 76 记录受保护标签、精确提交、五项资产、公开下载、clean install、
 正负组合链和清理读回。文档 74 的停止线已经满足，Core `0.12.2` 状态为
 `RELEASED / MAINTENANCE FROZEN`。文档 74–76 不改写文档 71–73 的 `0.12.1` 历史发布事实。
+
+文档 77–79 新开独立平台插件 `P` 轨。P0 只冻结 GitHub 外部平台事实的架构、合同、权限、失败语义
+与后继验收入口；它不是 M15，也不是 E4，不修改 Core、Starter、Authoring Skill、Workbench、
+Schema、CI 或任何既有版本。P0 没有可运行插件与发布坐标，P1 必须从受保护主线上的 P0 公开读回后
+另行施工。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
