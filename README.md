@@ -55,6 +55,17 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
+### 平台证据插件轨（P0 设计冻结）
+
+GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
+这类外部平台事实建立独立 `P` 轨，但当前只有 **P0 设计合同**，没有可安装插件、CLI、监控服务或
+发布版本。它不是 M15，也不属于 Starter/Authoring Skill；未来插件只负责只读采集与规范化，
+最终 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
+
+设计边界见[平台证据插件 Plan](docs/77-post-core-platform-plugin-plan.md)、
+[GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)与
+[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P1 在 P0 受保护主线与公开读回完成前不得施工。
+
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
 
@@ -369,6 +380,9 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Core demo Catalog 最终位置绑定维护合同](docs/74-core-demo-catalog-binding-maintenance-contract.md)
 - [VeriTrail 0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)
 - [Core 0.12.2 发布与公开读回事实](docs/76-core-v0.12.2-release-readback-facts.md)
+- [Post-Core 平台证据插件 Plan v1](docs/77-post-core-platform-plugin-plan.md)
+- [VeriTrail GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)
+- [P0 GitHub Evidence Plugin 架构评审与冻结事实](docs/79-p0-github-plugin-design-review.md)
 
 ## 项目来源
 
