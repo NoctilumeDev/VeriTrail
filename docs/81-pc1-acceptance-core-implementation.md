@@ -1,6 +1,6 @@
 # PC1 通用 Acceptance Core 实现与候选事实 0.1
 
-> 状态：`PC1_IMPLEMENTED / PC2_FREEZE_CANDIDATE / P1_NOT_STARTED`
+> 状态：`PC1_IMPLEMENTED / PC2_FROZEN / P1_NOT_STARTED`
 >
 > 合同来源：[Post-P0 Core 兼容桥合同 0.1](80-p0-core-compatibility-contract.md)
 >
@@ -109,7 +109,7 @@ wheel 构建成功并确认包含三个 PC1 runtime module。Workbench 保持 `1
 与生产构建通过，依赖审计为零漏洞。
 
 本节保留的是 PC1 当时的实现候选证据，不能替代 PC2 对精确提交完成的全消费者、正负 Bundle 独立
-复算、干净安装和远端冻结证据；当前 PC2 候选另见文档 82。
+复算、干净安装和远端冻结证据；PC2 冻结事实另见文档 82。
 
 ## 6. 停止线
 
@@ -117,13 +117,14 @@ PC1 完成后停止扩张。下一项只能是 PC2：从一个精确可寻址的
 优化模式、全 Core 与既有消费者回归、新 Acceptance 正负 Bundle 复算、敏感信息和清理门禁，再决定
 是否冻结或发布。
 
-在 PC2 达到 `FROZEN` 前：
+PC2 冻结前的停止线为：
 
 - P1 必须保持 `P1_NOT_STARTED`；
 - 不得创建 GitHub Collector 或联网探针；
 - 不得让插件导入 Core 私有符号；
 - 不得把本实现候选描述成已发布、已兼容或生产可用能力。
 
-PC2 已在精确本地候选上完成双 Python、全消费者、正负 Bundle 独立复算与 clean install；候选事实见
-[文档 82](82-pc2-acceptance-core-freeze-candidate.md)。远端 checks、主线合入和公开读回仍是冻结停止
-线，因此本文件不把候选改写为已发布能力，P1 继续为 `P1_NOT_STARTED`。
+PC2 已在精确本地候选上完成双 Python、全消费者、正负 Bundle 独立复算与 clean install，并通过
+PR #26 九项远端检查、受保护主线合入及真实 GitHub 渲染读回；冻结事实见
+[文档 82](82-pc2-acceptance-core-freeze-candidate.md)。PC2 当前为 `FROZEN`，但这不把 Core 改写为
+已发布能力；P1 继续为 `P1_NOT_STARTED`。

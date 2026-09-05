@@ -1,6 +1,6 @@
-# PC2 Acceptance Core 兼容与冻结候选事实 0.1
+# PC2 Acceptance Core 兼容与冻结事实 0.1
 
-> 状态：`PC2_FREEZE_CANDIDATE / REMOTE_GATES_PENDING / P1_NOT_STARTED`
+> 状态：`PC2_FROZEN / P1_NOT_STARTED`
 >
 > 主线基线：`78dc2c3c5bfdc95bfc8ef1cd5fbf8529d430c211`
 >
@@ -8,16 +8,18 @@
 >
 > 完整本地候选提交：`91004e99aaf4d3fb5cbae29d00057eff00f0b68a`
 >
+> 受保护主线实现基线：`fa8a5acac753456d37325bb0d9fac1b85add912b`
+>
 > 影响层级：`L2_CONTRACT + L3_SYSTEM`；只冻结并列 Acceptance 路径与旧消费者边界
 
 ## 1. 本轮结论
 
-PC2 已在本地完成合同要求的完整兼容与运行候选验证。`AcceptancePlan -> AcceptanceReport ->
+PC2 已完成合同要求的完整兼容、运行与交付验证。`AcceptancePlan -> AcceptanceReport ->
 AcceptanceBundle` 仍与既有 `ExperimentPlan -> Report -> Bundle` 并列；没有 GitHub Collector、网络
 probe、凭据、动态插件注册中心或 P1 代码。
 
-当前还不能写成 `FROZEN`。候选必须先经远端 PR checks、受保护主线合入和公开文档读回；任一门失败
-都保持 `P1_NOT_STARTED`。
+本轮候选已通过远端 PR checks、受保护主线合入和公开文档读回，PC2 因而标记 `FROZEN`。这只解除
+P1 的 Core 兼容前置阻断，不表示 P1 已经开始，也不把 Acceptance Core 扩张成已发布能力。
 
 ## 2. 冻结前发现并修复的语义缺口
 
@@ -80,14 +82,21 @@ Workbench 在实际 Node 依赖安装后完成 `173/173`、零警告 lint、type
 Codex Security 深扫、攻击路径分析和极端环境攻击按既有范围继续不执行；本轮普通质量门不得冒充这些
 安全能力。
 
-## 6. 远端停止线
+## 6. 远端门禁、主线与公开读回事实
 
-冻结候选接下来只允许：
+- [PR #26](https://github.com/NoctilumeDev/VeriTrail/pull/26) 从精确基线
+  `78dc2c3c5bfdc95bfc8ef1cd5fbf8529d430c211` 审查候选
+  `c0a7aa1de7aa8fb492db6e4187c0a1f5cd5becd3`，合并前状态为 `CLEAN / MERGEABLE`。
+- [Public CI 运行 33962872171](https://github.com/NoctilumeDev/VeriTrail/actions/runs/33962872171)
+  的九项可见检查全部 `SUCCESS`：双 Python Core、E3 下载验收、Workbench、双 Python wheel-only、
+  双 Python Acceptance Core freeze 与 Starter PASS/FAIL golden path。
+- PR 于 `2026-09-05` 合入受保护 `main`，合并提交为
+  `fa8a5acac753456d37325bb0d9fac1b85add912b`；随后远端 `refs/heads/main` 读回同一 SHA。
+- 真实 GitHub 渲染页随后读回
+  [README](https://github.com/NoctilumeDev/VeriTrail/blob/main/README.md) 与
+  [本文](https://github.com/NoctilumeDev/VeriTrail/blob/main/docs/82-pc2-acceptance-core-freeze-candidate.md)：
+  本文标题、候选阶段状态与 `P1_NOT_STARTED` 停止线均可见，README 的两处文档 82 链接均指向
+  `main` 上的同一文件。公开渲染没有被 Git/API 结果代替。
 
-1. 推送候选分支并建立 PR；
-2. 等待全部远端 required/visible checks 完成；
-3. 合入受保护 `main` 后读回精确提交；
-4. 由真实公开 README 与本文渲染页确认最终内容；
-5. 再以独立事实补丁把状态从 `PC2_FREEZE_CANDIDATE` 改为 `PC2_FROZEN`。
-
-在此之前不得进入 P1，也不得决定 Core 新版本、标签或 Release。
+以上事实关闭 PC2 的候选停止线。P1 当前仍为 `P1_NOT_STARTED`；是否开启 P1 必须另作明确施工决定。
+本轮不创建 GitHub Collector，不决定 Core 新版本、标签或 Release。

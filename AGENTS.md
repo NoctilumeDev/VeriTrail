@@ -58,16 +58,18 @@
 - `docs/77-post-core-platform-plugin-plan.md` 至 `docs/79-p0-github-plugin-design-review.md` 新开独立
   平台插件 `P` 轨。P0 当前为 `FROZEN / DESIGN_ONLY`：它只冻结 GitHub Evidence Plugin 的权威、
   依赖、权限、数据、失败和后继验收边界，不是 M15 或 E4，也没有创建可运行插件、Schema、CLI、
-  CI、标签或 Release。Core 0.12.2 离线探针已经证明：单源字面断言可以执行，但未观察 PRIMARY 仍可
-  `PASS`，跨 Evidence session 也无法由现有 Assertion 比较；因此当前 P1 Collector 仍被阻断。
+  CI、标签或 Release。Core 0.12.2 离线探针曾证明：单源字面断言可以执行，但未观察 PRIMARY 仍可
+  `PASS`，跨 Evidence session 也无法由当时的 Assertion 比较；这些缺口触发了后续兼容桥，不能被
+  插件布尔值、虚构实验字段或私有比较器绕过。
   `docs/80-p0-core-compatibility-contract.md` 已定义临时、串行的 `PC0 -> PC1 -> PC2` Core 兼容桥：PC0
   冻结独立 AcceptancePlan、跨 Evidence 关系和旧消费者隔离语义；`docs/81-pc1-acceptance-core-implementation.md`
   已实现平台无关的 PC1 Core；`docs/82-pc2-acceptance-core-freeze-candidate.md` 已从精确候选
   `91004e99aaf4d3fb5cbae29d00057eff00f0b68a` 完成双 Python、普通/优化、旧消费者、Workbench、正负
-  Bundle 独立复算、wheel clean install、敏感与清理本地门禁。当前状态仍是
-  `PC2_FREEZE_CANDIDATE / REMOTE_GATES_PENDING / P1_NOT_STARTED`。下一项只能完成远端 PR checks、
-  受保护主线合入与公开读回，再以事实补丁决定 `PC2_FROZEN`；在此之前不得进入 Structured API
-  Collector、公开浏览器采集、Core handoff、定时监控或独立发布。
+  Bundle 独立复算、wheel clean install、敏感与清理本地门禁，并经 PR #26 九项远端检查、受保护
+  `main` 合入及真实 GitHub 渲染读回固定在实现基线
+  `fa8a5acac753456d37325bb0d9fac1b85add912b`。当前状态是 `PC2_FROZEN / P1_NOT_STARTED`。PC2 不再
+  阻断后继规划，但在另行明确开启 P1 前仍不得进入 Structured API Collector、公开浏览器采集、
+  Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
