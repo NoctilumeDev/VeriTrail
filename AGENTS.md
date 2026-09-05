@@ -58,8 +58,11 @@
 - `docs/77-post-core-platform-plugin-plan.md` 至 `docs/79-p0-github-plugin-design-review.md` 新开独立
   平台插件 `P` 轨。P0 当前为 `FROZEN / DESIGN_ONLY`：它只冻结 GitHub Evidence Plugin 的权威、
   依赖、权限、数据、失败和后继验收边界，不是 M15 或 E4，也没有创建可运行插件、Schema、CLI、
-  CI、标签或 Release。P1 必须从最新受保护 `main` 另开工作树，严格只做 Structured API Collector；
-  在 P1 合同与真实证据完成前，不得提前进入公开浏览器采集、Core handoff、定时监控或独立发布。
+  CI、标签或 Release。Core 0.12.2 离线探针已经证明：单源字面断言可以执行，但未观察 PRIMARY 仍可
+  `PASS`，跨 Evidence session 也无法由现有 Assertion 比较；因此当前 P1 Collector 仍被阻断。下一项
+  只能从最新受保护 `main` 另开工作树设计独立 Core 兼容合同，不能先写采集器。兼容合同冻结后，P1
+  才能严格只做 Structured API Collector；在 P1 合同与真实证据完成前，不得提前进入公开浏览器采集、
+  Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
@@ -79,6 +82,13 @@
   check 不得仅按显示名合并，必须保留可取得的 producer/app/workflow/source identity；多次 GitHub
   调用必须记录 probe 级
   `observed_at`、实际操作数与总采集窗口，并明确整份 Evidence 不是平台原子快照。
+  sealed request 不等于一次观察；每次实际执行必须建立新的 `collection_session_id`，跨 session 的
+  API/Render 产物不得冒充同一次观察，最大窗口只使用 monotonic `collection_elapsed_ms`。P1 写代码前
+  必须分别证明 ExperimentPlan 字段按原语义可承载 GitHub 坐标，以及 Core assertion algebra 能直接
+  裁决规范化事实；禁止为 Schema 通过虚构实验字段，也禁止插件输出 Verdict-like boolean 绕过表达
+  缺口。插件摘要固定 `veritrail-json-c14n/1` 与冻结测试向量，不重算历史 Core digest。P1 0.1 禁用
+  conditional GET；tag 必须解引用到 `peeled_commit_sha`；Evidence 只保存匿名/只读认证 access mode，
+  不保存凭据。任一门不满足时保持 `P1_NOT_STARTED` 并另立兼容合同。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

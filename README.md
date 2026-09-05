@@ -68,7 +68,8 @@ Seal 权。
 
 同一平台事实也不等于同一次观察：`facts_digest` 只标识规范化事实内容，现有 EvidenceArtifact
 SHA-256 标识带来源与采集上下文的具体证据文件，Core Run 再标识一次执行。两次独立采集看见相同事实
-时，事实摘要可以相同，证据文件与 Run 仍必须保持可区分。
+时，事实摘要可以相同，证据文件与 Run 仍必须保持可区分。sealed request 也可以重放；每次真实采集
+另有 Collection Session，同一 request 的不同 session 不能冒充同一次观察或静默混配 API/页面产物。
 
 这条链验证的是精确坐标封存后的证据一致性与漂移，不是“真理证明”：GitHub API 与公开页面是同一
 平台的两个观察面，不是两个独立权威；插件和 Core 也不能证明信任锚建立前的源码、数据或结果未被
@@ -83,8 +84,12 @@ SHA-256 标识带来源与采集上下文的具体证据文件，Core Run 再标
 
 设计边界见[平台证据插件 Plan](docs/77-post-core-platform-plugin-plan.md)、
 [GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)与
-[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P0 已完成受保护主线合入与公开渲染读回；
-P1 仍为 `P1_NOT_STARTED`，只能在重新满足进入门后另行施工。
+[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P0 前两轮已完成受保护主线合入与公开渲染
+读回；P1 仍为 `P1_NOT_STARTED`。Core 0.12.2 离线探针确认单源字面事实可以裁决，但也确认未观察的
+PRIMARY 仍可得到 `PASS`，且跨 Evidence 的动态 session 无法由现有 Assertion 比较。因此下一步不是
+Collector，而是独立 Core 兼容合同：先给非因果平台验收和跨 Evidence 关系建立公共语义，再锁定可复算
+的 Plan-to-request 映射；JSON canonicalization profile 已在 P0 固定。不能用插件预生成“已通过”布尔值、
+占位实验字段或私有比较器绕过。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
