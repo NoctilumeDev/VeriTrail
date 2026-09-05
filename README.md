@@ -84,12 +84,13 @@ SHA-256 标识带来源与采集上下文的具体证据文件，Core Run 再标
 
 设计边界见[平台证据插件 Plan](docs/77-post-core-platform-plugin-plan.md)、
 [GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)与
-[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P0 前两轮已完成受保护主线合入与公开渲染
+[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P0 三轮均已完成受保护主线合入与公开渲染
 读回；P1 仍为 `P1_NOT_STARTED`。Core 0.12.2 离线探针确认单源字面事实可以裁决，但也确认未观察的
-PRIMARY 仍可得到 `PASS`，且跨 Evidence 的动态 session 无法由现有 Assertion 比较。因此下一步不是
-Collector，而是独立 Core 兼容合同：先给非因果平台验收和跨 Evidence 关系建立公共语义，再锁定可复算
-的 Plan-to-request 映射；JSON canonicalization profile 已在 P0 固定。不能用插件预生成“已通过”布尔值、
-占位实验字段或私有比较器绕过。
+PRIMARY 仍可得到 `PASS`，且跨 Evidence 的动态 session 无法由现有 Assertion 比较。独立的
+[Post-P0 Core 兼容桥合同](docs/80-p0-core-compatibility-contract.md)因此定义了并列的
+`AcceptancePlan`、Evidence 精确绑定、sufficiency / integrity / assertion 三类规则与跨 Evidence
+operand；它仍是设计，不是已经实现的 Core 或 Collector。只有 PC1 通用实现和 PC2 全兼容冻结完成，
+P1 才能开始。不能用插件预生成“已通过”布尔值、占位实验字段或私有比较器绕过。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -408,6 +409,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Post-Core 平台证据插件 Plan v1](docs/77-post-core-platform-plugin-plan.md)
 - [VeriTrail GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)
 - [P0 GitHub Evidence Plugin 架构评审与冻结事实](docs/79-p0-github-plugin-design-review.md)
+- [Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系](docs/80-p0-core-compatibility-contract.md)
 
 ## 项目来源
 

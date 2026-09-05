@@ -59,10 +59,11 @@
   平台插件 `P` 轨。P0 当前为 `FROZEN / DESIGN_ONLY`：它只冻结 GitHub Evidence Plugin 的权威、
   依赖、权限、数据、失败和后继验收边界，不是 M15 或 E4，也没有创建可运行插件、Schema、CLI、
   CI、标签或 Release。Core 0.12.2 离线探针已经证明：单源字面断言可以执行，但未观察 PRIMARY 仍可
-  `PASS`，跨 Evidence session 也无法由现有 Assertion 比较；因此当前 P1 Collector 仍被阻断。下一项
-  只能从最新受保护 `main` 另开工作树设计独立 Core 兼容合同，不能先写采集器。兼容合同冻结后，P1
-  才能严格只做 Structured API Collector；在 P1 合同与真实证据完成前，不得提前进入公开浏览器采集、
-  Core handoff、定时监控或独立发布。
+  `PASS`，跨 Evidence session 也无法由现有 Assertion 比较；因此当前 P1 Collector 仍被阻断。
+  `docs/80-p0-core-compatibility-contract.md` 已定义临时、串行的 `PC0 -> PC1 -> PC2` Core 兼容桥：PC0
+  只冻结独立 AcceptancePlan、跨 Evidence 关系和旧消费者隔离语义；PC1 才实现通用 Core，PC2 才做
+  兼容与运行冻结。PC2 达到 `FROZEN` 后，P1 才能严格只做 Structured API Collector；在 P1 合同与
+  真实证据完成前，不得提前进入公开浏览器采集、Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外

@@ -181,6 +181,11 @@ P0 已对 Core 0.12.2 做离线兼容探针，得到两条必须保留的负事�
 Evidence 关系，再决定是否需要公共 Schema/规则演进。插件不得利用 `observed_variables` 的偶然冲突
 检测、占位 NUISANCE 值或预计算布尔值冒充正式关系合同。
 
+[Post-P0 Core 兼容桥合同 0.1](80-p0-core-compatibility-contract.md) 已把这项裁决具体化为独立
+`AcceptancePlan 0.1`、公共 Evidence requirement/binding 和跨 Evidence operand。它不修改本合同的
+GitHub 采集语义，也不让 Core 认识 GitHub；只有通用 Core 实现、旧行为兼容和运行证据在 PC1/PC2
+完成冻结后，本合同的 P1 Collector 才可施工。
+
 默认拒绝：
 
 - 任意 URL、任意 Host、IP 字面量和 URL 中的凭据；
@@ -245,6 +250,12 @@ Public Render Collector 使用独立 `platform.github.public-render`，并引用
 目标合同要求 Core 通过 Plan 关联两份 Evidence；插件不得把 API 与浏览器结果预先压成一个跨源布尔
 值。P0 不修改 Core Schema，而本轮探针已经确认 Core 0.12.2 不能表达该跨源动态关系。因此必须先另开
 Core 兼容合同；在合同及其后继实现通过前，P1 Collector 不启动，也不能把字段或关系校验塞进私有导入。
+
+后继通用 Core 不从 `facts` 中猜绑定。插件 Evidence 必须在现有开放 `metadata` 中写入
+`metadata.veritrail_observation`，并显式绑定 `plan_digest`、`observation_spec_digest`、
+`collection_session_id`、collector role 和 normalization/profile identity；Core 只验证这份公共
+metadata 子合同。下列更丰富的 GitHub request、session、policy 与平台 provenance 仍保留在本合同定义的
+事实/元数据中，但不得形成第二套与公共 binding 竞争的权威字段。
 
 API Evidence 的 `facts` 至少保留：
 
