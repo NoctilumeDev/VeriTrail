@@ -1,15 +1,19 @@
 # Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系
 
-> 状态：`PC0_CONTRACT_DEFINED / DESIGN_ONLY / PC1_IMPLEMENTATION_NOT_STARTED / P1_NOT_STARTED`
+> 状态：`PC0_FROZEN / PC1_IMPLEMENTED_NOT_FROZEN / P1_NOT_STARTED`
 >
 > 日期：`2026-09-05`
 >
 > 设计基线：`VeriTrail Core 0.12.2` 与 P0 collection semantics 合并提交
 > `352ea611f7f7d349d9b9b61c0f68cc07b34c0743`
 >
-> 当前 diff：只修改文档；不创建 Schema、运行代码、CLI、插件、CI、标签或 Release
+> PC0 原始变更：只修改文档；未创建 Schema、运行代码、CLI、插件、CI、标签或 Release
 >
 > 未来影响层级：`L2_CONTRACT + L3_SYSTEM`；全部既有消费者必须进入兼容矩阵
+>
+> 后续事实：PC1 平台无关实现候选见
+> [`81-pc1-acceptance-core-implementation.md`](81-pc1-acceptance-core-implementation.md)。本文其余
+> “PC1 必须实现”等措辞保留为 PC0 冻结合同原文，不表示 PC2 已完成或 P1 已启动。
 
 ## 1. 为什么需要兼容桥
 

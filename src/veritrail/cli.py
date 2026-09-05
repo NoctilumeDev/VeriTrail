@@ -12,6 +12,11 @@ from types import FrameType
 from typing import Iterator
 
 from veritrail import __version__
+from veritrail.acceptance_plan import (
+    load_and_seal_acceptance_plan,
+    write_sealed_acceptance_plan,
+)
+from veritrail.acceptance_reporting import create_acceptance_bundle
 from veritrail.batching import (
     BatchError,
     create_batch_analysis_bundle,
@@ -100,6 +105,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     seal.add_argument("--output", type=Path, required=True, help="new sealed plan path")
 
+    acceptance_seal = subparsers.add_parser(
+        "acceptance-seal",
+        help="validate and seal one non-causal AcceptancePlan 0.1",
+    )
+    acceptance_seal.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or already sealed AcceptancePlan"
+    )
+    acceptance_seal.add_argument(
+        "--output", type=Path, required=True, help="new sealed AcceptancePlan path"
+    )
+
     profile_seal = subparsers.add_parser(
         "bootstrap-profile-seal",
         help="validate and seal one ProjectProfile 0.1 or 0.2",
@@ -146,6 +162,34 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate.add_argument("--output", type=Path, required=True, help="new output directory")
     evaluate.add_argument("--run-id", required=True, help="stable caller-supplied run identifier")
     evaluate.add_argument(
+        "--execution-status",
+        choices=("PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"),
+        default="COMPLETED",
+    )
+
+    acceptance_evaluate = subparsers.add_parser(
+        "acceptance-evaluate",
+        help="bind imported Evidence and create an AcceptanceBundle 0.1",
+    )
+    acceptance_evaluate.add_argument(
+        "--plan", type=Path, required=True, help="unsealed or sealed AcceptancePlan 0.1"
+    )
+    acceptance_evaluate.add_argument(
+        "--evidence",
+        type=Path,
+        action="append",
+        default=[],
+        help="structured Evidence 0.1 JSON; may be repeated",
+    )
+    acceptance_evaluate.add_argument(
+        "--output", type=Path, required=True, help="new AcceptanceBundle directory"
+    )
+    acceptance_evaluate.add_argument(
+        "--acceptance-id",
+        required=True,
+        help="stable caller-supplied acceptance evaluation identifier",
+    )
+    acceptance_evaluate.add_argument(
         "--execution-status",
         choices=("PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"),
         default="COMPLETED",
@@ -349,6 +393,17 @@ def main(argv: list[str] | None = None) -> int:
                 }
             )
             return 0
+        if args.command == "acceptance-seal":
+            plan = load_and_seal_acceptance_plan(args.plan)
+            write_sealed_acceptance_plan(args.output, plan)
+            _success(
+                {
+                    "command": "acceptance-seal",
+                    "output": str(args.output),
+                    "plan_sha256": plan["seal"]["digest"],
+                }
+            )
+            return 0
         if args.command == "bootstrap-profile-seal":
             profile = load_and_seal_project_profile(args.profile)
             write_sealed_project_profile(args.output, profile)
@@ -438,6 +493,25 @@ def main(argv: list[str] | None = None) -> int:
                     "command": "evaluate",
                     "output": str(args.output),
                     "run_id": report["run_id"],
+                    "execution_status": report["execution_status"],
+                    "verdict": report["verdict"],
+                }
+            )
+            return 0
+        if args.command == "acceptance-evaluate":
+            plan = load_and_seal_acceptance_plan(args.plan)
+            report = create_acceptance_bundle(
+                plan=plan,
+                evidence_paths=args.evidence,
+                output=args.output,
+                acceptance_id=args.acceptance_id,
+                execution_status=args.execution_status,
+            )
+            _success(
+                {
+                    "command": "acceptance-evaluate",
+                    "output": str(args.output),
+                    "acceptance_id": report["acceptance_id"],
                     "execution_status": report["execution_status"],
                     "verdict": report["verdict"],
                 }

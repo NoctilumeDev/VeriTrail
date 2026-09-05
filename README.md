@@ -89,8 +89,10 @@ SHA-256 标识带来源与采集上下文的具体证据文件，Core Run 再标
 PRIMARY 仍可得到 `PASS`，且跨 Evidence 的动态 session 无法由现有 Assertion 比较。独立的
 [Post-P0 Core 兼容桥合同](docs/80-p0-core-compatibility-contract.md)因此定义了并列的
 `AcceptancePlan`、Evidence 精确绑定、sufficiency / integrity / assertion 三类规则与跨 Evidence
-operand；它仍是设计，不是已经实现的 Core 或 Collector。只有 PC1 通用实现和 PC2 全兼容冻结完成，
-P1 才能开始。不能用插件预生成“已通过”布尔值、占位实验字段或私有比较器绕过。
+operand。[PC1 通用 Acceptance Core](docs/81-pc1-acceptance-core-implementation.md)现已实现独立的
+Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI，但仍是 `NOT_FROZEN` 候选；它没有
+GitHub Collector、网络访问或旧消费者接线。只有 PC2 完成全兼容与运行冻结后，P1 才能开始。不能用
+插件预生成“已通过”布尔值、占位实验字段或私有比较器绕过。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -410,6 +412,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)
 - [P0 GitHub Evidence Plugin 架构评审与冻结事实](docs/79-p0-github-plugin-design-review.md)
 - [Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系](docs/80-p0-core-compatibility-contract.md)
+- [PC1 通用 Acceptance Core 实现与候选事实 0.1](docs/81-pc1-acceptance-core-implementation.md)
 
 ## 项目来源
 
