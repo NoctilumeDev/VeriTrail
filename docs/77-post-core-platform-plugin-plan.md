@@ -28,13 +28,15 @@ P0–Pn   平台证据插件产品线
 
 ```mermaid
 flowchart LR
-    Request["Sealed observation request"] --> Plugin["GitHub Evidence Plugin"]
+    Plan["Sealed ExperimentPlan"] -->|"semantic derivation + plan_digest"| Request["Bounded observation request"]
+    Policy["Versioned Collector Policy"] -->|"runtime bounds + policy digest"| Request
+    Request --> Plugin["GitHub Evidence Plugin"]
     GitHub["GitHub API / public web"] --> Plugin
     Plugin --> ApiEvidence["Evidence 0.1 · platform.github.api.snapshot"]
     Plugin --> RenderEvidence["Evidence 0.1 · platform.github.public-render"]
     ApiEvidence --> Core["VeriTrail Core 0.12.x"]
     RenderEvidence --> Core
-    Plan["Sealed ExperimentPlan"] --> Core
+    Plan --> Core
     Core --> Verdict["Deterministic Verdict"]
     Verdict --> Workbench["Read-only Workbench"]
 ```
@@ -46,7 +48,8 @@ flowchart LR
 
 | 层 | 唯一职责 | 明确不负责 |
 | --- | --- | --- |
-| Claim owner / Plan author | 提出问题、选择前提、定义目标并决定是否 Seal | 把个人判断宣布为现实真相、回写已封存标准 |
+| Claim owner / Seal authority | 提出问题、选择前提、定义目标，并最终决定是否 Seal | 把个人判断宣布为现实真相、把 Seal 权隐式转交给起草者、回写已封存标准 |
+| Human / AI Plan drafter | 把已声明目标起草成可评审 Plan，暴露歧义、反例与未决项 | 因为起草了 Plan 就自动 Seal、替提出者改题或取得最终决定权 |
 | 执行 Agent | 在授权边界内忠实质疑、规划和执行，并报告观察到的前提冲突 | 擅自改写目标、扩大权限或宣布观点终极正确 |
 | GitHub | 仓库、提交、PR、检查、Release、Pages 与公开页面在平台上对外暴露的远端状态 | VeriTrail 计划、断言、裁决或现实真相 |
 | GitHub Evidence Plugin | 有界只读采集、字段白名单、来源与错误记录、Evidence 生成 | 修改 GitHub、生成 `PASS/FAIL`、替用户选择期望坐标 |
@@ -58,7 +61,10 @@ flowchart LR
 是否足以支持项目结论。
 
 这里的 API 与公开页面是 GitHub 同一权威下的两个观察面，可以暴露交付漂移，却不是相互独立的第三方
-见证。sealed request 固定预期坐标，插件记录观察，Core 检查规则；三者都不能单独证明坐标封存前的
+见证。sealed Plan 固定验收期望并派生观察坐标；独立的 versioned Collector Policy 只提供 API 版本、
+超时和重试等运行边界。request 同时绑定二者的 digest，但 Policy 不能携带通过条件。插件记录观察，
+Core 检查规则。Plan digest 证明内容绑定，不认证批准人的现实身份；任何一层都
+不能单独证明坐标封存前的
 源码、数据或结果真实。P 轨只承诺其支持范围内的“承诺后完整性与一致性”，不承诺“承诺前真实性”；
 GitHub 之外的独立见证、可信时间锚或来源真实性网络也不进入 P0–P4 产品路线。
 
@@ -85,14 +91,45 @@ P0 不创建包、目录、CLI、Schema、工作流、测试夹具、标签或 R
 P1 才允许建立独立包，并只实现首个纵向切片：
 
 ```text
-exact owner/repository + exact expected commit
+exact owner/repository + exact target commit + sealed plan_digest
   -> repository/default branch
   -> pull request/merge coordinate
-  -> required checks and observed check runs
+  -> required check identities and observed check runs
   -> release/tag/assets
   -> Pages deployment metadata when applicable
   -> normalized API Evidence 0.1
 ```
+
+Observation Request 不拥有独立 `expected.*` 语义，只描述从 sealed Plan 按版本化规则机械派生的“去
+哪里看、看什么”，以及 Collector Policy 给出的非语义运行边界；P1 必须在联网前用实际 Plan 和 Policy
+分别重算比对，不能只相信 digest 字符串。现有 ExperimentPlan 能否无歧义承载 GitHub 坐标也必须先由
+Plan-to-request 映射夹具证明；若需要自由文本私约或 Core Schema 变更，停止 P1 并另立兼容合同。
+
+观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
+坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
+标识“在同一观察规格和规范化语义下得到的事实内容”；现有 EvidenceArtifact SHA-256 则标识包含
+来源、策略、请求实例和采集元数据的具体
+证据文件。两次采集可以拥有相同 `facts_digest`，却必须拥有不同的 Evidence artifact identity。任何一层
+都不得把 request ID、本地时间或非语义超时策略混入事实身份，避免把“换了一次请求”误报成“平台事实
+发生漂移”。
+
+`plan_digest` 与派生规则版本由 request envelope 独立绑定，用来证明观察规格的来源，不能进入
+`observation_spec_digest`。否则只改 Plan 中与观察无关的文字或断言，也会错误改变 observation/fact
+identity。两个 Plan revision 派生出相同观察规格时，spec/fact identity 可以稳定，request 与 Evidence
+artifact identity 仍保持不同。
+
+原始 API/客户端/解析器版本属于采集 provenance；只有会改变规范化含义的
+`normalization_semantics_version` 才进入 `facts_digest`。实现版本变了但规范化语义与事实未变时，事实
+身份可以保持不变，具体 Evidence 产物仍应因 provenance 不同而保持可区分。换言之：
+
+```text
+Same Fact != Same Observation != Same Request
+Fact Identity != Evidence Artifact Identity != Execution Identity
+```
+
+required check 的显示名不是唯一身份；P1 必须尽可能保留 producer/app、workflow/job 与来源类型。一次
+Evidence 由多次 GitHub 调用组成时，还必须保存每个 probe 的观察时间、实际操作数与总采集窗口，且不
+得把组合结果描述成 GitHub 的原子快照。
 
 首片默认匿名读取公开仓库；可选凭据必须只从运行时内存进入，且权限不超过所需只读范围。
 
@@ -140,7 +177,8 @@ local success
 - Core 继续按 `0.12.x` 维护；P 轨不能把插件能力写成 Core 已发布事实。
 - 插件未来独立使用 SemVer；P0 阶段没有可安装版本。
 - 插件首个兼容窗口只能声明经过真实验证的 Core 范围，不提前承诺未来 Core。
-- GitHub REST API 请求必须显式固定受支持 API 版本；升级 API 版本属于合同变更并重新跑插件矩阵。
+- GitHub REST API 请求必须显式固定受支持 API 版本；升级 API 版本属于采集合同变更并重新跑插件矩阵。
+  API/解析器实现版本默认进入 provenance；只有规范化含义改变时才同时升级事实语义版本。
 - GitHub Enterprise、GraphQL、webhook、定时监控和多平台抽象均不属于首个版本。
 
 ## 7. P0 停止线
@@ -157,5 +195,6 @@ P0 完成只证明“施工边界已定义”，不证明插件存在。进入 P
 8. Core 0.12.2、M0–M14、E0–E3 以及全部标签均未移动；
 9. 文档通过链接、空白、敏感信息与历史口径检查；
 10. P0 设计经受保护主线合入并完成公开读回。
+11. request、fact、Evidence artifact 与 Core execution 的身份定义互不替代，且没有自引用摘要。
 
 在这些条件满足前，只能继续修正文档，不能进入 P1。
