@@ -266,8 +266,13 @@ Release 说明与门禁；文档 76 记录受保护标签、精确提交、五�
 
 文档 77–79 新开独立平台插件 `P` 轨。P0 只冻结 GitHub 外部平台事实的架构、合同、权限、失败语义
 与后继验收入口；它不是 M15，也不是 E4，不修改 Core、Starter、Authoring Skill、Workbench、
-Schema、CI 或任何既有版本。P0 没有可运行插件与发布坐标，P1 必须从受保护主线上的 P0 公开读回后
-另行施工。P0 的信任上限只覆盖声明信任域内的证据一致性与承诺后完整性；GitHub API 和公开页面
+Schema、CI 或任何既有版本。首轮 P0 文档已由 PR #21 合入
+`8944549a080e331a7021337e40de5c8accc49649`，并从真实 GitHub README、合同与评审渲染页完成公开
+读回。P0 没有可运行插件与发布坐标，P1 仍须从最新受保护主线另行施工。P0 的信任上限只覆盖声明
+信任域内的证据一致性与承诺后完整性；GitHub API 和公开页面
 不是两个独立权威，也不能证明首次封存前的上游事实真实。P0 的认识论上限同样不裁定提出者观点，
-只检查 sealed 条件与 Evidence 的关系并保留不确定性。GitHub 之外的独立锚不进入当前产品路线。
+只检查 sealed 条件与 Evidence 的关系并保留不确定性。sealed Plan 是期望的唯一权威；派生 request、
+Plan drafter、check identity 与非原子采集窗口均有独立边界。GitHub 之外的独立锚不进入当前产品路线。
+P0 还把 `facts_digest`、现有 EvidenceArtifact SHA-256、request identity 与 Core Run identity 分开：采集
+实现版本进入 provenance，只有规范化含义变化才升级事实语义版本；同事实的独立证据不得被去重。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

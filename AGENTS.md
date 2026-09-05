@@ -66,6 +66,19 @@
   的独立见证或可信锚点。P 轨也不得裁定提出者的观点是否正确；它只检查 sealed 条件与 Evidence 的
   关系，未知、冲突、缺证据和不可归因必须继续可见。Agent 发现与前提冲突的事实时必须报告并把
   Seal 决定权交还给人，不得以“人负责前提”为由沉默，也不得自行改写目标。
+  P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
+  绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
+  不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
+  也不冒充身份认证。observation spec、Collector Policy 和 request envelope 摘要不得混用；
+  observation spec digest 只能绑定自身语义版本、规范化坐标与投影；`plan_digest` 和 derivation version
+  只进入 request binding/envelope，不得污染 observation/fact identity。`facts_digest` 只绑定 observation
+  spec、规范化事实及 `normalization_semantics_version`，不得绑定
+  request ID、本地时间、ETag、采集实现版本或非语义运行策略。具体 Evidence 身份沿用 Core 对完整
+  EvidenceArtifact 计算的 SHA-256，不得在文件内创建自引用摘要，也不得与 fact/request/Core Run identity
+  混用。API/客户端/解析器实现版本属于 provenance；只有规范化含义变化才升级语义版本。required
+  check 不得仅按显示名合并，必须保留可取得的 producer/app/workflow/source identity；多次 GitHub
+  调用必须记录 probe 级
+  `observed_at`、实际操作数与总采集窗口，并明确整份 Evidence 不是平台原子快照。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

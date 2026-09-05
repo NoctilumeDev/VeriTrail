@@ -30,7 +30,10 @@ P0 因此冻结为 `P` 轨起点。它与 M14、E3 并列存在，不是任何�
 
 - GitHub 拥有其平台对外暴露的远端状态；
 - 插件拥有采集过程、规范化事实和来源说明；
-- sealed Plan 拥有期望值与适用 probe；
+- Claim owner / Seal authority 拥有最终 Seal 决定；Human / AI Plan drafter 只拥有草稿忠实性；
+- sealed Plan 是期望值、required set 与适用 probe 的唯一权威；它派生 request 的观察坐标；
+- versioned Collector Policy 只拥有 API 版本、超时和重试等运行边界；request 分别绑定 Plan 与 Policy，
+  Policy 不得携带验收语义；
 - Core 拥有 ExecutionStatus、Assertion 与 Verdict；
 - Workbench 只读。
 
@@ -115,9 +118,20 @@ Plan 理解了提出者真正的问题或覆盖了现实的全部前提。
 | 风险 | P0 裁决 |
 | --- | --- |
 | 采集器顺手修 GitHub | 只读接口；没有写 token、写 endpoint 或 mutation |
-| “最新”发生 TOCTOU | 请求固定 expected SHA 与 probe 坐标；所有来源回传实际操作数 |
+| Plan 与 request 同时持有期望 | Plan 是唯一期望权威；request 绑定 `plan_digest` 和派生规则版本，联网前从实际 Plan 重算，只携带观察坐标 |
+| 整个 Plan digest 污染 observation/fact identity | observation spec 只摘要自身版本、规范化坐标与投影；Plan 与 derivation 只进入 request binding/envelope |
+| Collector Policy 偷带通过条件 | Policy 只拥有 API 版本、超时、重试等运行边界，并独立绑定 digest；不能改变 Core assertion |
+| 现有 Plan 无法无歧义表达 GitHub 坐标 | P1 先冻结 Plan-to-request 映射夹具；若需自由文本私约或 Core Schema 变更，停止并另立兼容合同 |
+| request ID 或超时策略制造“事实漂移” | observation spec、Collector Policy 与 request envelope 三种摘要分开；`facts_digest` 不绑定实例噪音 |
+| `facts_digest` 与 Evidence 文件摘要混用 | 事实语义投影使用独立 `facts_digest`；具体证据产物沿用 Core 的 EvidenceArtifact SHA-256，禁止文件内自引用摘要 |
+| 所有版本号都被塞进事实身份 | API/客户端/解析器实现版本属于 provenance；只有规范化含义变化才升级 `normalization_semantics_version` |
+| 两次采集看到同一事实就被错误去重 | 允许 facts digest 相同而 Evidence artifact SHA-256、request 与 Core Run 不同；报告必须保留每次观察 |
+| Plan drafter 自动获得 Seal 权 | claim owner / Seal authority 与 Human/AI drafter 分列；起草不能代替确认 |
+| “最新”发生 TOCTOU | 请求固定 target SHA 与 probe 坐标；所有来源回传实际操作数 |
+| 多次 API 调用拼成不存在的同刻状态 | 保留 probe 级 `observed_at`、来源标识和 collection window；明确不是平台原子快照 |
+| 本地观察时间或 Plan digest 被包装成更强证明 | `observed_at` 只描述采集器窗口；digest 只证明内容绑定，不证明可信时间或现实身份 |
 | `404` 被误判为不存在 | 保留可见性/授权歧义，默认缺证据而非反例 |
-| 绿色检查绑错提交或错 context | required set、observed set 与 head SHA 分开保存 |
+| 绿色检查绑错提交、错 context 或同名异源 | required set、observed set、head SHA 与 producer/app/workflow/source identity 分开保存；显示名不作为唯一身份 |
 | API 更新但页面缓存/部署仍旧 | P2 使用未登录真实浏览器形成独立 render evidence |
 | 插件状态污染 Verdict | 三套状态命名与所有权分开，无自动映射 |
 | token 或私人会话泄漏 | 匿名优先；内存 token；fresh browser context；字段白名单 |
@@ -140,11 +154,16 @@ P0 已在文档层完成：
 - 固定 P0–P4 的串行阶段和跨级施工停止线；
 - 给出 authority、dependency、data、permission、failure 和 cleanup 边界；
 - 固定 API Collector 与 Public Render Collector 的双源证据模型；
-- 固定请求身份、Evidence 外壳、采集覆盖状态、规范化与 digest 规则；
+- 固定 Plan 单一期望权威、Collector Policy 运行边界、三层请求摘要、Evidence 外壳、采集覆盖状态、
+  规范化与 digest 规则；
+- 固定 `facts_digest` 与现有 EvidenceArtifact SHA-256 的不同所有权，区分语义规范化版本与采集实现
+  provenance，并拒绝自引用摘要和跨身份去重；
+- 固定 drafter / Seal authority 分离、check identity 与非原子采集窗口；
 - 明确承诺后完整性与承诺前真实性的分界，以及 API/公开页面的共同信任域；
 - 将“防君子，不防小人”限定为工程信任模型，并把 GitHub 之外的外部锚列为产品非目标；
 - 明确观点真值不属于 VeriTrail 权威，并要求未知、冲突与不可判保持可见；
-- 覆盖十八类正负验收场景，其中五类专门约束信任上限、共同故障域、认识论边界与人机责任；
+- 覆盖二十六类正负验收场景：既约束信任与认识论上限，也专门防止双重期望权威、drafter 越权、
+  同名 check 误合并、多次调用伪装成原子快照和事实/证据身份混用；
 - 引用 GitHub 官方 REST API、认证、版本、限流和各资源接口文档；
 - 明确 Codex Security 深扫与攻击路径分析不在本阶段范围内。
 
@@ -159,10 +178,32 @@ P1 开始前必须重新确认：
 1. P0 文档已在受保护 `main` 可公开读回；
 2. 工作树从最新 `origin/main` 创建，且没有继承历史本地补丁；
 3. 只实现 API Collector，不提前进入浏览器、Core handoff 或发布；
-4. 先提交独立包的 request/facts schema、解析器与合成正负夹具，再接真实 GitHub；
+4. 先冻结 Plan-to-request derivation map，证明现有 Plan 可无歧义派生；再提交独立包的 request/facts
+   schema、Collector Policy、解析器与合成正负夹具，最后才接真实 GitHub；
 5. 真实请求严格串行、总量有界，默认匿名，凭据只用于明确需要的只读 probe；
 6. 输出与示例只使用带 GitHub 信任域的结论语言，不把双观察面包装成双权威；
 7. 插件与示例不得评价提出者观点，只能报告 sealed 条件与 Evidence 的关系，并保留不确定性；
-8. Core 0.12.2 全量回归和秘密/路径零泄漏作为 P1 硬门禁。
+8. request schema 不含独立 `expected.*`，必须绑定 `plan_digest`、派生规则与 Collector Policy digest；
+   坐标可从实际 sealed Plan 确定性派生，Policy 不含验收语义；
+9. Plan drafter 与 Seal authority 可区分，未获 Seal 的草稿不能启动采集；现有 seal 不冒充身份认证；
+10. check identity 不以显示名为唯一键；probe 级时间、操作数和 collection window 必须保留；
+11. observation spec、Collector Policy 与 request envelope 摘要职责分开；spec digest 不包含整个 Plan
+    或派生规则身份；`facts_digest`、现有 EvidenceArtifact SHA-256 与 Core Run identity 也分别拥有事实
+    语义、具体证据产物与执行身份；
+12. `normalization_semantics_version` 与 API/客户端/解析器实现 provenance 分开，且同事实的独立采集
+    不得被去重；
+13. Core 0.12.2 全量回归和秘密/路径零泄漏作为 P1 硬门禁。
 
 违反任一项时保持 `P1_NOT_STARTED`，回到合同评审，不以临时代码绕过。
+
+## 8. 受保护主线与公开读回闭环
+
+首轮 P0 文档经 [PR #21](https://github.com/NoctilumeDev/VeriTrail/pull/21) 受保护合入，merge commit 为
+`8944549a080e331a7021337e40de5c8accc49649`。随后在真实 GitHub 公开渲染页逐项读回：
+
+- README 的 P0 入口、Trust Ceiling、Epistemic Ceiling 与 `P1_NOT_STARTED` 停止线；
+- 文档 78 的第 8、9 节、三条风险路径、人机责任链和外部锚产品非目标；
+- 本评审页的认识论边界、P0 非运行声明和 P1 进入门。
+
+这次读回使用最终网页渲染而非 API 内容代替，因此关闭了 P0 的最后展示层门禁；它不改变“API 与公开
+页面同属 GitHub 共同信任域”的结论，也不等于 P1 已经开始。

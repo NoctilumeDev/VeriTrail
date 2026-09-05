@@ -62,6 +62,14 @@ GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公�
 发布版本。它不是 M15，也不属于 Starter/Authoring Skill；未来插件只负责只读采集与规范化，
 最终 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
 
+简单说，sealed Plan 决定“什么算通过”；observation request 只是带着 `plan_digest` 的有界取证清单，
+负责说明“去哪里看”，不再复制另一套通过规则。写 Plan 的人或 AI 也不会因为负责起草就自动获得
+Seal 权。
+
+同一平台事实也不等于同一次观察：`facts_digest` 只标识规范化事实内容，现有 EvidenceArtifact
+SHA-256 标识带来源与采集上下文的具体证据文件，Core Run 再标识一次执行。两次独立采集看见相同事实
+时，事实摘要可以相同，证据文件与 Run 仍必须保持可区分。
+
 这条链验证的是精确坐标封存后的证据一致性与漂移，不是“真理证明”：GitHub API 与公开页面是同一
 平台的两个观察面，不是两个独立权威；插件和 Core 也不能证明信任锚建立前的源码、数据或结果未被
 预先伪造。工程上可概括为“防君子，不防小人”：提高误操作、事后漂移与低成本篡改的发现成本，不把
@@ -75,7 +83,8 @@ GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公�
 
 设计边界见[平台证据插件 Plan](docs/77-post-core-platform-plugin-plan.md)、
 [GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)与
-[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P1 在 P0 受保护主线与公开读回完成前不得施工。
+[P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P0 已完成受保护主线合入与公开渲染读回；
+P1 仍为 `P1_NOT_STARTED`，只能在重新满足进入门后另行施工。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>

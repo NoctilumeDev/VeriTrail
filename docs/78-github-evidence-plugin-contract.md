@@ -18,8 +18,8 @@ VeriTrail 可验证的 Evidence。它用于发现“本地、分支、PR、主�
 ## 2. 不变量
 
 1. **Read only**：所有 GitHub 与浏览器操作均为只读；插件不存在远端写入口。
-2. **Exact coordinates**：owner、repository、ref、commit、PR、tag、release 或页面期望必须来自已封存
-   请求或 Plan，不能从执行结果倒推。
+2. **Exact coordinates**：owner、repository、ref、commit、PR、tag、release 或页面观察选择器必须从
+   sealed Plan 按版本化规则派生，不能由插件选择，也不能从执行结果倒推。
 3. **API is not rendering**：REST API 成功不能证明用户看到的页面已经更新。
 4. **Observation is not verdict**：插件只产生事实和采集状态，不产生 `PASS / FAIL / INCONCLUSIVE /
    PENDING`。
@@ -33,6 +33,17 @@ VeriTrail 可验证的 Evidence。它用于发现“本地、分支、PR、主�
    自洽证明信任锚建立前的事实真实。
 10. **Epistemic ceiling is explicit**：VeriTrail 不拥有被声明观点的终极真值，只负责保留声明、证据
     来源、验收过程、规则与 Verdict 的可追溯关系，并忠实保存未知、冲突和不可判。
+11. **Plan owns expectations**：sealed Plan 是验收期望的唯一权威；observation request 只能机械派生
+    并携带观察坐标，不能另造 `expected.*` 或独立通过语义。
+12. **Identity beats display name**：required check 的显示名不等于事实身份；可取得的 producer、app、
+    workflow、job 与来源类型必须保留，歧义不能静默折叠。
+13. **Collection is not an atomic snapshot**：精确 SHA 不能把多次平台调用变成同一时刻的世界；每个
+    probe 的观察时间、实际操作数和总采集窗口必须可见。
+14. **Request identity is not fact identity**：request ID、Plan revision、采集时间或非语义运行策略可以
+    标识一次请求或执行，不能让语义相同的观察规格与相同来源事实产生不同 `facts_digest`。
+15. **Fact identity is not Evidence identity**：`facts_digest` 只标识规范化事实内容；现有
+    EvidenceArtifact SHA-256 标识一份包含 provenance 的具体证据文件。二者不能互相替代，也不能与
+    Core Run/Execution identity 混用。
 
 ## 3. 请求合同
 
@@ -41,23 +52,67 @@ P1 实现前必须把输入冻结为版本化 `github-observation-request 0.1`�
 ```text
 schema_version
 request_id
+plan_digest
+derivation.version
+observation_spec.version
+observation_spec_digest
 repository.owner
 repository.name
-expected.commit_sha
-probes[]
+target.commit_sha
+probes[].type
+probes[].coordinates
+captured_policy.policy_id
+captured_policy.version
+captured_policy.digest
 captured_policy.api_version
 captured_policy.public_mode
-timeouts
+captured_policy.timeouts
+seal.algorithm
+seal.digest
 ```
 
-每个 probe 还必须声明自己的精确坐标和期望，例如 PR number、required check name、tag、Release ID、
-Pages URL 或公开页面的有限可见标记。请求封存后计算 canonical SHA-256；改变仓库、提交、检查集合、
-页面或期望值必须创建新请求，不能回写旧请求。
+请求由两个权威不同的输入确定性组装：验收范围与观察坐标从 sealed Plan 机械派生，并以 `plan_digest`
+绑定；API 版本、公开模式、超时和重试预算来自只含运行约束的 versioned Collector Policy，并以独立
+digest 绑定。Collector Policy 不能包含 required set、期望值或 assertion，也不能改变相同 Evidence
+在 Core 中的 Verdict。
+
+`plan_digest` 本身只说明引用对象，不能单独证明派生正确；插件必须按版本化的 `derivation.version`
+从实际 sealed Plan 重算 repository、target 与 probes，并在联网前逐字段比对。请求只回答“去哪里观察、
+采集哪些字段”，不回答“观察到什么算满足”。每个 probe 只声明精确资源坐标和有限投影，例如
+PR number、target commit、check source coordinate、tag、Release ID、Pages URL 或公开页面观察选择器；
+Plan 才拥有 required set、期望值和 assertion。请求的 `seal.digest` 对排除 `seal` 字段自身后的 canonical
+unsigned envelope 计算 SHA-256；不得手工编辑。坐标、投影或适用 probe 变化时必须从新版本 Plan 重新
+派生，不能让 request 成为第二份期望权威。
+
+`observation_spec_digest` 只标识“观察什么”，必须由 `observation_spec.version`、规范化资源坐标、probe
+类型与有限投影计算；它不包含整个 `plan_digest` 或 `derivation.version`。后两者仍由 request envelope
+绑定，用来证明“这份观察规格从哪份 Plan、按哪条规则产生”。否则 Plan 中与观察规格无关的说明或
+assertion 变化也会污染事实身份。两个 Plan revision 若机械派生出完全相同的观察规格，其
+`observation_spec_digest` 可以相同，但 request seal 与后续 Evidence artifact identity 必须继续可区分。
+
+三个摘要用途不能混用：
+
+```text
+observation_spec_digest  spec version + normalized coordinates/probes/projections (excluding its digest field)
+collector_policy.digest API version + public mode + timeout/retry/resource bounds (excluding its digest field)
+request seal digest      canonical unsigned envelope, including request/Plan/derivation/spec/policy (excluding seal)
+```
+
+前两者分别标识“观察什么”和“怎样有界采集”，最后一个只封存这次请求实例。`plan_digest`、
+`derivation.version`、`request_id`、本地时间和非语义运行策略不进入 `observation_spec_digest`；任何摘要
+都不等于批准者身份、可信时间或事实真实。
+这些都是请求侧身份，不是 `facts_digest` 或现有 EvidenceArtifact SHA-256 的别名。
+
+现有 ExperimentPlan Schema 允许通用 variables、required evidence 与 assertions，但没有命名的 GitHub
+坐标字段。P0 不预判这些通用字段一定足以形成无歧义映射。P1 的第一项设计证据必须冻结
+Plan-to-request derivation map，并用合成 Plan 证明可重复派生；如果只能依赖自由文本、未声明私有字段
+或修改 Core 公共 Schema，必须停止 Collector 施工并另开兼容合同。
 
 默认拒绝：
 
 - 任意 URL、任意 Host、IP 字面量和 URL 中的凭据；
-- 缺失 `expected.commit_sha` 的“检查最新状态”；
+- 缺失 `plan_digest`、派生规则版本、observation spec version/digest、Collector Policy digest、无法证明
+  机械派生关系，或缺失 `target.commit_sha` 的“检查最新状态”；
 - 通配符仓库、组织全量扫描和无限分页；
 - 页面脚本、自由文本 Shell、任意文件读取和响应体持久化。
 
@@ -73,7 +128,8 @@ P1 的固定网络目标仅为 `https://api.github.com`；P2 才允许由请求�
 - repository identity、visibility、default branch；
 - commit/ref；
 - pull request state、head/base SHA、merged 状态与 merge commit；
-- required rules/check names 与指定 commit 的 check runs/statuses；
+- required rules/check identities 与指定 commit 的 check runs/statuses；身份至少区分显示名、来源类型，
+  并保留 API 可提供的 producer/app、workflow/job、外部标识与来源 URL；
 - tag、release、asset name/size/digest when available；
 - Pages configuration/deployment metadata when applicable。
 
@@ -119,6 +175,10 @@ API Evidence 的 `facts` 至少保留：
 
 ```text
 request_identity
+observation_spec_identity
+collector_policy_identity
+normalization_semantics_version
+facts_digest
 repository
 commit
 pull_request
@@ -126,16 +186,23 @@ required_checks
 observed_checks
 release
 pages
-request_alignment
+request_binding
+collection_window
+probe_observations
+source_provenance
 coverage
 collection_errors
 ```
 
-Render Evidence 独立保留 request identity、requested/final URL、navigation、visible markers、links、
-content signature、viewport、coverage 与 collection errors。`request_alignment` 只能比较这份来源和
-sealed request，例如 `main_sha_matches_expected`；必须同时保留两个操作数和推导规则版本。跨 API /
-浏览器一致性只由 Core 的 sealed assertion 计算。所有 alignment 都只是事实，不是断言状态，更不是
-Verdict。
+Render Evidence 独立保留 request identity、observation spec identity、Collector Policy identity、
+`normalization_semantics_version`、`facts_digest`、requested/final URL、navigation、visible markers、links、
+content signature、viewport、provenance、coverage、collection window 与 collection errors。两个 Evidence
+类型各自对自己的语义投影计算 `facts_digest`；不得复用另一 Collector 的 fact identity，也不得因为引用
+同一 request 就合并成一份事实。`request_binding` 只
+证明响应资源与请求坐标相符，例如“响应 commit SHA 等于本次 target commit”；它必须保留两个操作数
+和推导规则版本，不能使用 `*_matches_expected` 一类暗示验收的名字。Evidence 是否满足 Plan 只能由
+Core 的 sealed assertion 计算；跨 API / 浏览器一致性也只能在 Core 内推导。所有 binding 都只是
+采集正确性事实，不是断言状态，更不是 Verdict。
 
 采集状态只允许：
 
@@ -150,12 +217,70 @@ Verdict。
 
 ## 6. 规范化与确定性
 
-- 响应只保留合同白名单字段；未知新增字段默认忽略并记录解析器版本。
-- 列表使用稳定业务键排序；重复项不得静默覆盖。
-- volatile headers、请求耗时、采集时间和速率窗口进入 metadata，不参与 canonical fact digest。
-- canonical fact digest 必须包含请求摘要、API 版本、插件版本、来源坐标和规范化 facts。
-- 同一封存请求与同一来源快照应生成相同 canonical facts；时间与 request ID 的差异不能制造事实漂移。
-- GitHub API 版本升级、字段语义变化或规范化规则变化必须产生新插件合同/解析器版本。
+- 响应只保留合同白名单字段；未知新增字段默认忽略。原始 API 版本、客户端版本、解析器实现版本和
+  采集器版本进入 provenance，不凭版本号变化自动制造新的事实身份。
+- 列表使用稳定事实身份排序；重复项不得静默覆盖。两个同名 check 若 producer、app、workflow、job
+  或来源类型不同，必须保留为两个观察；若平台没有暴露足够身份，必须显式记录歧义，不能只按名称合并。
+- volatile headers、ETag、请求耗时、采集时间、速率窗口、request identity 与 Collector Policy 进入
+  provenance 或 metadata，不参与 `facts_digest`。
+- `facts_digest` 必须只对如下语义投影计算 canonical SHA-256：
+
+  ```text
+  observation_spec_digest
+  normalization_semantics_version
+  normalized source coordinates
+  normalized fact values
+  ```
+
+  该投影排除 `facts_digest` 字段自身、request envelope seal、request ID、采集时间、ETag、原始采集机制
+  版本以及 timeout/retry 等运行策略，避免循环摘要和实例噪音。`facts_digest` 相等只说明这份语义投影
+  相同，不证明采集完整、来源真实、Evidence 相同或 Plan 已满足；coverage、errors 与冲突仍须独立保留。
+- `normalization_semantics_version` 属于事实身份。若字段含义、缺省规则、单位、排序身份、冲突折叠或
+  规范化投影改变，必须升级该版本；仅 API、客户端或解析器实现升级，而规范化含义与输出事实未变时，
+  不得仅凭实现版本改变 `facts_digest`。若上游 API 语义变化影响规范化含义，则必须同时升级
+  `normalization_semantics_version`。
+- 相同 observation spec 与同一来源快照应生成相同 canonical facts；不同请求实例、时间或非语义
+  Collector Policy 不能制造事实漂移。Policy 若导致覆盖不同，应由 coverage / errors 表达，而不是
+  改写已经取得的同一来源事实。
+- 现有 Core 已对脱敏后的完整 Evidence 0.1 文档计算 `ImportedEvidence.sha256`，并以 `sha256` 写入
+  Evidence manifest/report；P 轨沿用它作为 Evidence artifact identity，不在 Evidence 文件内部再造一个
+  自引用 `evidence_digest`。请求实例、Collector Policy、`captured_at`、source metadata 和 provenance
+  只要被完整保留在 Evidence 文档中，就会使两次独立采集产生不同 artifact SHA-256；Bundle manifest
+  另行封存 Evidence、附件和清单文件。
+
+因此允许且预期：
+
+```text
+same facts_digest + different Evidence artifact SHA-256
+same request instance + multiple Evidence artifacts
+same fact identity + different Core Run / execution identity
+```
+
+这三种关系不能被去重逻辑、缓存或报告层压成一条记录。简写为：
+
+```text
+Same Fact != Same Observation != Same Request
+Fact Identity != Evidence Artifact Identity != Execution Identity
+```
+
+身份对照如下；任一行的相等都不能替代下一行的证明：
+
+| 身份 | 规范输入或现有坐标 | 相等最多说明 | 不能推出 |
+| --- | --- | --- | --- |
+| Observation spec | spec version、规范化坐标、probe 与投影 | 观察的问题相同 | 来自同一 Plan 或 request |
+| Collector Policy | API/public mode、timeout、retry 与资源边界 | 有界采集策略相同 | 事实相同或验收通过 |
+| Request instance | 排除 seal 自身的完整 request envelope | 同一封存请求字节 | 同一次观察或执行 |
+| Fact | observation spec、规范化语义版本与规范化事实 | 语义事实投影相同 | Evidence 完整、来源真实或 Plan 满足 |
+| Evidence artifact | Core 现有的脱敏完整 Evidence 文档 SHA-256 | 保留的具体 Evidence 字节相同 | 采集前事实真实或外部时间可信 |
+| Execution | Core Run identity 与对应 Bundle 上下文 | 同一运行坐标 | request、fact 或 Evidence 可互换 |
+
+每个 probe attempt 还必须记录稳定递增的采集序号、自己的 `observed_at`、实际请求操作数、返回资源
+标识，以及 API 可用时的 ETag 或等价来源标识；Evidence 外壳记录 `collection_started_at` 与
+`collection_completed_at`。这些本地时间
+只说明采集器观察窗口，不是 GitHub 事件发生时间、可信时间戳或外部真实性锚，也不参与事实摘要。多次
+调用或有界重试之间若资源发生变化，必须保留每次观察及冲突；不得只保存“最后一次”，也不得拼成
+一个从未同时存在过的“GitHub 原子快照”。只有 Plan 明确声明最大采集窗口且 Evidence 满足时，Core
+才可裁决相应时间约束，仍不能宣称平台提供了原子读。
 
 ## 7. 权限、凭据与网络
 
@@ -211,7 +336,8 @@ Truth         最初的源码、数据、实验或现实事件是否真实
   没有平台级故障、受控管理员变更或共同失陷。
 - VeriTrail Core 是规则裁决者，不是事实创造者；确定性裁决只能说明现有 Evidence 是否满足 sealed
   Plan，不能补出 Evidence 没有携带的现实真实性。
-- sealed request / Plan 固定的是“准备相信和检查什么”，不是其内容诚实的证明。
+- sealed Plan 固定验收期望；由它派生的 request 固定观察坐标。两者都不是其内容诚实的证明，request
+  也不能成为第二份期望权威。
 - Bundle 哈希证明采集后字节和清单的对应关系，不证明采集前事实、采集者身份或声明时间真实。
 
 因此，GitHub、插件与 Core 不是三个相互独立的真相来源。它们组成一条职责分离的工程证据链，但仍有
@@ -255,7 +381,7 @@ VeriTrail 与本插件不建设、托管或裁决 GitHub 之外的第三方签�
 | 风险路径 | 主要来源 | VeriTrail 能做什么 | 不能承诺什么 |
 | --- | --- | --- | --- |
 | 封存前有意构造一套自洽材料 | 能共同控制源码、数据、结果与平台坐标的主体 | 声明信任域，保留采集后完整性并发现后续漂移 | 仅靠内部证据识别源头造假 |
-| 人的前提或目标存在歧义、遗漏或后续争议 | Claim owner / Plan author | 版本化保存声明、反例、未决项与确认过程 | 代替提出者裁定观点终极正确 |
+| 人的前提或目标存在歧义、遗漏或后续争议 | Claim owner / Seal authority | 版本化保存声明、反例、未决项与确认过程 | 代替提出者裁定观点终极正确 |
 | Agent 诚实地理解了另一个问题 | AI / 执行 Agent | 限制权限与爆炸半径，要求报告冲突并验证是否偏离 sealed Plan | 从内部自洽自动发现未声明的真实意图 |
 
 三条路径都可能留下“Plan、实现、测试、Evidence 与 Verdict 完全一致”的外观，但动机、权威和治理
@@ -284,11 +410,18 @@ VeriTrail 回答的是“这次执行是否满足 sealed Plan”，不回答“s
 
 - 提出者拥有自己的 claim、问题定义与封存选择，承担前提与验收目标的最终决定责任，但这不等于
   拥有现实真相；
+- Human / AI Plan drafter 只负责把目标起草成可评审合同并暴露未决项；起草身份不自动获得 Seal 权，
+  也不能把自己的推断写成已经被 claim owner 确认的前提；
 - 现实拥有最终真相，且现实可能模糊、不完整、随时间变化、相互冲突或当前不可判；
 - VeriTrail 拥有声明、证据来源、验收过程、规则版本和 Verdict 推导的完整性，不拥有世界真相；
 - 插件只观察声明范围内的平台事实，不能评价人的想法，也不能扩大或重写其验收目标；
 - AI 或执行 Agent 负责在授权边界内忠实质疑、规划和执行；发现与前提冲突的证据时必须报告，却
   不能擅自改写人的目标、扩大现实权限或把自己的世界模型冒充最终真值。
+
+0.1 不建立身份认证或电子签名系统。角色分离首先是权限与流程纪律：Plan 的 SHA-256 seal 证明内容
+未变，不证明某个现实身份亲自批准。P1 若不能在不修改 Core 公共 Schema 的前提下保存 drafter、确认
+过程与 Seal authority 的可区分审计引用，必须停止并另开兼容合同；不得把一个自由文本姓名或 request
+字段冒充已认证授权。
 
 这不是“输入错了不管”。更准确的纪律是：
 
@@ -304,6 +437,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 
 ```text
 Human       owns premise authority and the Seal decision
+Plan drafter owns draft fidelity, not Seal authority
 Agent       owns faithful challenge and authorized execution
 VeriTrail   owns judgment discipline
 Reality     owns truth
@@ -364,6 +498,9 @@ Authoring 或人工流程可以在 Seal 前增加 premise review、反例、独�
 | API 与公开页面坐标冲突 | 两份独立事实及冲突 | `INCONCLUSIVE` |
 | 页面有效显示旧内容 | public render 反例 | 若 Plan 要求当前渲染，可 `FAIL` |
 | API 与页面在共同信任域内返回一致但错误或预先构造的状态 | 按来源记录所见事实与已声明信任域 | 最多判断与 Plan 一致；不得升级为来源真实性或现实真实性 |
+| request 的 `plan_digest` 不匹配或无法证明机械派生 | 网络前预检错误，不启动 probe | `PENDING` 或 `INCONCLUSIVE`；不得选择任一份期望继续 |
+| 两个 check 显示名相同但 producer/workflow 不同 | 分别保留身份与来源；身份不足时记录歧义 | 不能仅按名称判定 required check 已满足 |
+| 采集窗口内平台状态发生变化 | probe 级时间、操作数、来源标识与冲突 | 不能把组合 Evidence 描述为原子快照 |
 | probe 未在请求中声明 | `NOT_APPLICABLE` 或不输出 | 不得补做、不得扩大验收范围 |
 
 GitHub 官方说明某些私有资源在授权不足时会返回 `404`；因此 `404` 只有在请求权威和可见性已经独立
@@ -396,6 +533,27 @@ P1–P3 至少逐项建立独立夹具或真实证据：
     `PENDING`，不得由插件、AI 或展示层补写成确定结论。
 18. Agent 观察到与人类前提冲突的仓库事实时必须保留并上报冲突；不得以“前提由人负责”为由忽略，
     也不得在未经重新确认或新版本 Seal 的情况下自行改写目标继续执行。
+19. observation request 含与 Plan 重复或冲突的 `expected.*` 时必须拒绝；正确请求必须分别绑定
+    `plan_digest`、派生规则版本与 Collector Policy digest，且由实际 sealed Plan 可确定性重新派生
+    相同观察坐标；只有 digest 字符串相同而重算结果不同也必须在联网前拒绝。Collector Policy 改变
+    运行边界时生成新 request envelope seal，但不得改变 observation spec digest 或相同 Evidence 的
+    验收语义。
+20. AI 或另一位 Human 起草 Plan 的案例中，drafter 未取得明确 Seal authority 时不能封存或启动采集；
+    起草者身份、确认者与最终 Seal 决定必须可区分。
+21. 两个 display name 相同但 producer/app/workflow/source identity 不同的 check 必须保持两个事实；
+    身份字段不足时得到显式歧义，而不是错误满足 required set。
+22. 一个采集窗口内 main、PR、Release 或 Pages 发生变化的夹具，必须保留 probe 级 `observed_at`、
+    实际操作数、来源标识与窗口；报告不得声称这些结果构成同一时刻的平台原子快照，也不得把本地
+    `observed_at` 表述为可信时间戳或平台事件时间。
+23. 对同一 observation spec 独立采集两次且规范化事实相同的夹具，必须得到相同 `facts_digest` 和不同
+    Evidence artifact SHA-256；两份 Evidence 与两个 Core Run 不得被去重。
+24. 只改变 API/客户端/解析器实现版本、保持语义版本与规范化事实不变时，`facts_digest` 必须不变，
+    provenance 与 Evidence artifact SHA-256 必须变化。
+25. 只改变 `normalization_semantics_version` 时，`facts_digest` 必须变化，即使输出字段的表面 JSON 值
+    恰好相同。
+26. 只改变 Plan 中与观察规格无关的 revision 内容、并机械派生出完全相同 observation spec 时，
+    `observation_spec_digest` 与同来源的 `facts_digest` 必须不变；request seal、Plan binding 与 Evidence
+    artifact SHA-256 必须变化。
 
 每个负例只改变一个预注册变量；不能用同一份混合失败同时证明多个边界。
 
