@@ -62,10 +62,12 @@
   `PASS`，跨 Evidence session 也无法由现有 Assertion 比较；因此当前 P1 Collector 仍被阻断。
   `docs/80-p0-core-compatibility-contract.md` 已定义临时、串行的 `PC0 -> PC1 -> PC2` Core 兼容桥：PC0
   冻结独立 AcceptancePlan、跨 Evidence 关系和旧消费者隔离语义；`docs/81-pc1-acceptance-core-implementation.md`
-  已实现平台无关的 PC1 Core 候选，但状态仍为 `NOT_FROZEN`，且没有 Collector、网络访问或旧消费者
-  接线。下一项只能是 PC2 全兼容与运行冻结。PC2 达到 `FROZEN` 后，P1 才能严格只做 Structured API
-  Collector；在 P1 合同与真实证据完成前，不得提前进入公开浏览器采集、Core handoff、定时监控或
-  独立发布。
+  已实现平台无关的 PC1 Core；`docs/82-pc2-acceptance-core-freeze-candidate.md` 已从精确候选
+  `91004e99aaf4d3fb5cbae29d00057eff00f0b68a` 完成双 Python、普通/优化、旧消费者、Workbench、正负
+  Bundle 独立复算、wheel clean install、敏感与清理本地门禁。当前状态仍是
+  `PC2_FREEZE_CANDIDATE / REMOTE_GATES_PENDING / P1_NOT_STARTED`。下一项只能完成远端 PR checks、
+  受保护主线合入与公开读回，再以事实补丁决定 `PC2_FROZEN`；在此之前不得进入 Structured API
+  Collector、公开浏览器采集、Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外

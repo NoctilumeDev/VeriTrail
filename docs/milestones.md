@@ -249,6 +249,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [P0 GitHub Evidence Plugin 架构评审与冻结事实](79-p0-github-plugin-design-review.md)
 - [Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系](80-p0-core-compatibility-contract.md)
 - [PC1 通用 Acceptance Core 实现与候选事实 0.1](81-pc1-acceptance-core-implementation.md)
+- [PC2 Acceptance Core 兼容与冻结候选事实 0.1](82-pc2-acceptance-core-freeze-candidate.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -285,7 +286,8 @@ P0 还把 `facts_digest`、现有 EvidenceArtifact SHA-256、request identity �
 session 无法直接比较；所以当前门禁实际为未满足，P1 Collector 保持 `P1_NOT_STARTED`。下一项只能先
 建立独立 Core 兼容桥，不能用插件布尔值、虚构实验字段、偶然的变量冲突检测或缓存事实绕过。文档
 80 已把该桥定义为一次性、串行的 `PC0 -> PC1 -> PC2`：PC0 只冻结独立 AcceptancePlan、公共
-Evidence binding、跨 Evidence 关系与旧消费者隔离；81 已完成平台无关的 PC1 Core 实现候选，但没有
-Collector、网络访问、旧消费者接线或发布声明，仍为 `NOT_FROZEN`。下一项只能是 PC2 兼容与运行冻结；
-PC2 未达到 `FROZEN` 前，P1 不得启动。
+Evidence binding、跨 Evidence 关系与旧消费者隔离；81 已完成平台无关的 PC1 Core 实现；82 已在
+精确本地候选上完成 PC2 双 Python、全消费者、Workbench、正负 Bundle 独立复算、wheel clean install、
+敏感与清理门禁，但远端 checks、受保护主线合入与公开渲染读回尚未完成。当前只能写作
+`PC2_FREEZE_CANDIDATE / P1_NOT_STARTED`，不得提前启动 P1 或决定新版本、标签与 Release。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

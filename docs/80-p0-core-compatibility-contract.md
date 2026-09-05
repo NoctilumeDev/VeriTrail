@@ -1,6 +1,6 @@
 # Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系
 
-> 状态：`PC0_FROZEN / PC1_IMPLEMENTED_NOT_FROZEN / P1_NOT_STARTED`
+> 状态：`PC0_FROZEN / PC2_FREEZE_CANDIDATE / P1_NOT_STARTED`
 >
 > 日期：`2026-09-05`
 >
@@ -12,8 +12,10 @@
 > 未来影响层级：`L2_CONTRACT + L3_SYSTEM`；全部既有消费者必须进入兼容矩阵
 >
 > 后续事实：PC1 平台无关实现候选见
-> [`81-pc1-acceptance-core-implementation.md`](81-pc1-acceptance-core-implementation.md)。本文其余
-> “PC1 必须实现”等措辞保留为 PC0 冻结合同原文，不表示 PC2 已完成或 P1 已启动。
+> [`81-pc1-acceptance-core-implementation.md`](81-pc1-acceptance-core-implementation.md)，PC2 本地兼容与
+> 运行候选见 [`82-pc2-acceptance-core-freeze-candidate.md`](82-pc2-acceptance-core-freeze-candidate.md)。
+> 本文其余“PC1/PC2 必须”等措辞保留为 PC0 冻结合同原文；远端门禁与公开读回完成前，PC2 仍未
+> `FROZEN`，P1 仍未启动。
 
 ## 1. 为什么需要兼容桥
 
