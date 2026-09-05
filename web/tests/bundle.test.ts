@@ -108,6 +108,26 @@ async function createImageAttachmentBundle(
 }
 
 describe('Bundle Loader', () => {
+  it('explicitly rejects an Acceptance Bundle without interpreting legacy files', async () => {
+    const entries = new Map<string, Blob>([
+      [
+        'acceptance-bundle-manifest.json',
+        new Blob([
+          JSON.stringify({
+            schema_version: '0.1',
+            bundle_kind: 'ACCEPTANCE',
+            acceptance_id: 'acceptance-workbench-boundary',
+            files: [],
+          }),
+        ]),
+      ],
+    ])
+
+    await expect(loadBundleFromBlobs(entries, 'unit')).rejects.toMatchObject({
+      code: 'UNSUPPORTED_BUNDLE_KIND',
+    })
+  })
+
   it('verifies a Report 0.1 bundle without browser evidence', async () => {
     const loaded = await loadBundleFromBlobs(await createMinimalBundle(), 'unit')
 

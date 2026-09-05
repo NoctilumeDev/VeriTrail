@@ -390,6 +390,9 @@ export async function loadBundleFromBlobs(
 ): Promise<LoadedBundle> {
   assertEntryLimits(entries)
   const manifestBlob = entries.get('bundle-manifest.json')
+  if (!manifestBlob && entries.has('acceptance-bundle-manifest.json')) {
+    fail('UNSUPPORTED_BUNDLE_KIND', '当前 Workbench 尚不支持 Acceptance Bundle。')
+  }
   if (!manifestBlob) fail('MISSING_ROOT_FILE', '证据包缺少 bundle-manifest.json。')
   const bundleManifest = validateBundleManifest(await parseJson(manifestBlob, 'bundle-manifest.json'))
   const declaredPaths = new Set(bundleManifest.files.map((entry) => entry.path))

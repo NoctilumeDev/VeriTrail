@@ -257,6 +257,29 @@ class AcceptanceEvaluationTests(unittest.TestCase):
         )
         self.assertEqual("INCONCLUSIVE", result["verdict"])
 
+    def test_malformed_same_type_evidence_blocks_an_otherwise_valid_binding(self) -> None:
+        evidence = self.artifacts()
+        malformed = copy.deepcopy(evidence[0].document)
+        malformed["metadata"]["veritrail_observation"]["surprise"] = True
+        evidence.append(import_evidence_document(malformed, "malformed-extra.json"))
+
+        result = evaluate_acceptance(self.plan, evidence, "COMPLETED")
+
+        self.assertEqual("INCONCLUSIVE", result["verdict"])
+        api_binding = next(
+            item
+            for item in result["evidence_bindings"]
+            if item["requirement_id"] == "api-evidence"
+        )
+        self.assertEqual("METADATA_INVALID", api_binding["status"])
+        self.assertEqual(1, api_binding["exact_match_count"])
+        self.assertEqual(1, api_binding["metadata_error_count"])
+        self.assertIsNone(api_binding["evidence_sha256"])
+        self.assertIn(
+            "OBSERVATION_METADATA_INVALID",
+            {item["code"] for item in result["reasons"]},
+        )
+
     def test_bounded_operator_set_has_deterministic_positive_cases(self) -> None:
         cases = (
             ("eq", {"id": 1}, {"id": 1}),

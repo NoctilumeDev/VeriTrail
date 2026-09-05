@@ -4,18 +4,32 @@ import contextlib
 import hashlib
 import io
 import json
+import sqlite3
 import tempfile
 import unittest
 from pathlib import Path
 
 from veritrail.acceptance_plan import seal_acceptance_plan
 from veritrail.acceptance_reporting import create_acceptance_bundle
+from veritrail.batching import (
+    BatchError,
+    create_batch_analysis_bundle,
+    seal_batch_plan,
+    write_sealed_batch_plan,
+)
 from veritrail.canonical import canonical_json_bytes
 from veritrail.catalog import build_catalog, load_catalog_snapshot
 from veritrail.cli import main
+from veritrail.comparison import ComparisonError, create_comparison_bundle
 from veritrail.errors import SafetyError
+from veritrail.pairing import (
+    PairingError,
+    create_paired_analysis_bundle,
+    seal_pairing_plan,
+    write_sealed_pairing_plan,
+)
 
-from tests.support import acceptance_artifact, acceptance_plan
+from tests.support import ROOT, acceptance_artifact, acceptance_plan
 
 
 class AcceptanceReportingTests(unittest.TestCase):
@@ -37,6 +51,18 @@ class AcceptanceReportingTests(unittest.TestCase):
             path.write_bytes(canonical_json_bytes(artifact.document) + b"\n")
             evidence_paths.append(path)
         return plan_path, evidence_paths
+
+    def _create_bundle(self, root: Path, name: str = "acceptance-only") -> Path:
+        plan_path, evidence_paths = self._write_inputs(root)
+        bundle = root / name
+        create_acceptance_bundle(
+            plan=json.loads(plan_path.read_text(encoding="utf-8")),
+            evidence_paths=evidence_paths,
+            output=bundle,
+            acceptance_id=f"{name}-id",
+            execution_status="COMPLETED",
+        )
+        return bundle
 
     def test_bundle_is_independent_hashed_and_refuses_overwrite(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -198,6 +224,142 @@ class AcceptanceReportingTests(unittest.TestCase):
             manifest, database = load_catalog_snapshot(catalog_root)
             self.assertEqual("COMPLETED_WITH_ISSUES", manifest["build_status"])
             self.assertGreater(len(database), 0)
+            connection = sqlite3.connect(catalog_root / "catalog.sqlite3")
+            try:
+                codes = connection.execute(
+                    "SELECT code FROM catalog_issues ORDER BY issue_id"
+                ).fetchall()
+            finally:
+                connection.close()
+            self.assertEqual([("UNSUPPORTED_BUNDLE_KIND",)], codes)
+
+    def test_legacy_comparison_pairing_and_batch_reject_acceptance_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bundle = self._create_bundle(root)
+
+            comparison_output = root / "comparison"
+            with self.assertRaises(ComparisonError) as comparison:
+                create_comparison_bundle(
+                    baseline=bundle,
+                    repeat=bundle,
+                    output=comparison_output,
+                )
+            self.assertEqual("UNSUPPORTED_BUNDLE_KIND", comparison.exception.code)
+            self.assertFalse(comparison_output.exists())
+
+            pairing_draft = json.loads(
+                (ROOT / "examples" / "pairing" / "pairing-plan.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            pairing_plan_path = root / "sealed-pairing-plan.json"
+            write_sealed_pairing_plan(
+                pairing_plan_path, seal_pairing_plan(pairing_draft)
+            )
+            pairing_output = root / "pairing"
+            with self.assertRaises(PairingError) as pairing:
+                create_paired_analysis_bundle(
+                    pairing_plan_path=pairing_plan_path,
+                    baseline=bundle,
+                    treatment=bundle,
+                    restored_baseline=bundle,
+                    negative_control=bundle,
+                    output=pairing_output,
+                )
+            self.assertEqual("UNSUPPORTED_BUNDLE_KIND", pairing.exception.code)
+            self.assertFalse(pairing_output.exists())
+
+            batch_draft = json.loads(
+                (ROOT / "examples" / "batch" / "batch-plan.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            sealed_batch = seal_batch_plan(batch_draft)
+            batch_plan_path = root / "sealed-batch-plan.json"
+            write_sealed_batch_plan(batch_plan_path, sealed_batch)
+            assignment_path = root / "assignment.json"
+            assignment_path.write_bytes(
+                canonical_json_bytes(
+                    {
+                        "schema_version": "0.1",
+                        "batch_plan_sha256": sealed_batch["seal"]["digest"],
+                        "assignments": [
+                            {"slot_id": "coverage-01", "bundle": bundle.name}
+                        ],
+                    }
+                )
+                + b"\n"
+            )
+            batch_output = root / "batch"
+            with self.assertRaises(BatchError) as batch:
+                create_batch_analysis_bundle(
+                    batch_plan_path=batch_plan_path,
+                    assignment_path=assignment_path,
+                    runs_root=root,
+                    output=batch_output,
+                )
+            self.assertEqual("UNSUPPORTED_BUNDLE_KIND", batch.exception.code)
+            self.assertFalse(batch_output.exists())
+
+    def test_legacy_execution_entries_reject_acceptance_plan_before_side_effects(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            draft = root / "acceptance-plan.json"
+            draft.write_bytes(canonical_json_bytes(acceptance_plan()) + b"\n")
+            subject = root / "subject"
+            subject.mkdir()
+            commands = {
+                "preflight": [
+                    "preflight",
+                    "--plan",
+                    str(draft),
+                    "--output",
+                    str(root / "legacy-preflight"),
+                    "--run-id",
+                    "legacy-acceptance-preflight",
+                ],
+                "browser-capture": [
+                    "browser-capture",
+                    "--plan",
+                    str(draft),
+                    "--output",
+                    str(root / "legacy-browser"),
+                    "--run-id",
+                    "legacy-acceptance-browser",
+                ],
+                "command-preview": [
+                    "command-preview",
+                    "--plan",
+                    str(draft),
+                    "--subject-root",
+                    str(subject),
+                    "--tool-bindings",
+                    str(root / "unused-tool-bindings.json"),
+                ],
+                "run": [
+                    "run",
+                    "--plan",
+                    str(draft),
+                    "--subject-root",
+                    str(subject),
+                    "--output",
+                    str(root / "legacy-run"),
+                    "--run-id",
+                    "legacy-acceptance-run",
+                ],
+            }
+            for command, argv in commands.items():
+                with self.subTest(command=command):
+                    stderr = io.StringIO()
+                    with contextlib.redirect_stderr(stderr):
+                        code = main(argv)
+                    self.assertEqual(2, code)
+                    self.assertIn("plan_kind", stderr.getvalue())
+            self.assertFalse((root / "legacy-preflight").exists())
+            self.assertFalse((root / "legacy-browser").exists())
+            self.assertFalse((root / "legacy-run").exists())
+            self.assertFalse((root / "unused-tool-bindings.json").exists())
 
 
 if __name__ == "__main__":

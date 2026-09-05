@@ -90,9 +90,11 @@ PRIMARY 仍可得到 `PASS`，且跨 Evidence 的动态 session 无法由现有 
 [Post-P0 Core 兼容桥合同](docs/80-p0-core-compatibility-contract.md)因此定义了并列的
 `AcceptancePlan`、Evidence 精确绑定、sufficiency / integrity / assertion 三类规则与跨 Evidence
 operand。[PC1 通用 Acceptance Core](docs/81-pc1-acceptance-core-implementation.md)现已实现独立的
-Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI，但仍是 `NOT_FROZEN` 候选；它没有
-GitHub Collector、网络访问或旧消费者接线。只有 PC2 完成全兼容与运行冻结后，P1 才能开始。不能用
-插件预生成“已通过”布尔值、占位实验字段或私有比较器绕过。
+Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI。[PC2 冻结候选事实](docs/82-pc2-acceptance-core-freeze-candidate.md)
+又在双 Python、普通/优化模式、旧消费者、Workbench 与 wheel clean install 中完成正负 Bundle 的
+独立复算；当前仍为 `REMOTE_GATES_PENDING`，没有 GitHub Collector 或网络访问。只有远端 checks、
+受保护主线合入与公开读回完成并把 PC2 标记 `FROZEN` 后，P1 才能开始。不能用插件预生成“已通过”
+布尔值、占位实验字段或私有比较器绕过。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -413,6 +415,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P0 GitHub Evidence Plugin 架构评审与冻结事实](docs/79-p0-github-plugin-design-review.md)
 - [Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系](docs/80-p0-core-compatibility-contract.md)
 - [PC1 通用 Acceptance Core 实现与候选事实 0.1](docs/81-pc1-acceptance-core-implementation.md)
+- [PC2 Acceptance Core 兼容与冻结候选事实 0.1](docs/82-pc2-acceptance-core-freeze-candidate.md)
 
 ## 项目来源
 

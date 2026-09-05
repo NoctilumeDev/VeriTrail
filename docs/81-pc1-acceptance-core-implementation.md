@@ -1,6 +1,6 @@
 # PC1 通用 Acceptance Core 实现与候选事实 0.1
 
-> 状态：`PC1_IMPLEMENTED / NOT_FROZEN / PC2_NOT_STARTED / P1_NOT_STARTED`
+> 状态：`PC1_IMPLEMENTED / PC2_FREEZE_CANDIDATE / P1_NOT_STARTED`
 >
 > 合同来源：[Post-P0 Core 兼容桥合同 0.1](80-p0-core-compatibility-contract.md)
 >
@@ -108,8 +108,8 @@ PC1 定向合同套件覆盖：
 wheel 构建成功并确认包含三个 PC1 runtime module。Workbench 保持 `172/172`、零警告 lint、类型检查
 与生产构建通过，依赖审计为零漏洞。
 
-这些仍是 PC1 工作树上的实现候选证据，不是 PC2 对精确提交完成的全消费者、正负 Bundle 独立复算、
-干净安装和远端冻结证据。
+本节保留的是 PC1 当时的实现候选证据，不能替代 PC2 对精确提交完成的全消费者、正负 Bundle 独立
+复算、干净安装和远端冻结证据；当前 PC2 候选另见文档 82。
 
 ## 6. 停止线
 
@@ -123,3 +123,7 @@ PC1 完成后停止扩张。下一项只能是 PC2：从一个精确可寻址的
 - 不得创建 GitHub Collector 或联网探针；
 - 不得让插件导入 Core 私有符号；
 - 不得把本实现候选描述成已发布、已兼容或生产可用能力。
+
+PC2 已在精确本地候选上完成双 Python、全消费者、正负 Bundle 独立复算与 clean install；候选事实见
+[文档 82](82-pc2-acceptance-core-freeze-candidate.md)。远端 checks、主线合入和公开读回仍是冻结停止
+线，因此本文件不把候选改写为已发布能力，P1 继续为 `P1_NOT_STARTED`。
