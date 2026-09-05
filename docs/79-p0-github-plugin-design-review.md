@@ -6,6 +6,10 @@
 >
 > 审查对象：文档 77–79；未创建插件实现、Schema、CLI、CI、标签或 Release
 
+> 后继状态：PC2 已在后续独立阶段冻结，关闭本页记录的两项 Core 兼容阻断。P1 当前仅进入
+> [结构化 GitHub API Collector 施工合同候选](83-p1-structured-github-api-collector-contract.md)，仍未创建
+> Collector、网络 probe、版本、标签或 Release。本页以下结论保留 P0 当时的历史语境。
+
 ## 1. 评审问题
 
 P0 只回答：GitHub 外部平台事实能否作为独立插件被采集，并在不重开 Core、不污染入口层、不让采集器
