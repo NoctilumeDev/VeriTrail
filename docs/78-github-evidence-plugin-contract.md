@@ -29,6 +29,10 @@ VeriTrail 可验证的 Evidence。它用于发现“本地、分支、PR、主�
 7. **No secret persistence**：令牌、Cookie、Authorization、响应体、私人路径和账号环境值不进入
    Evidence、日志、截图或测试夹具。
 8. **Core owns semantics**：插件升级、失败或卸载不能改变 Core 的裁决规则。
+9. **Trust ceiling is explicit**：本链只能检查支持范围内的证据一致性与承诺后完整性，不能仅凭内部
+   自洽证明信任锚建立前的事实真实。
+10. **Epistemic ceiling is explicit**：VeriTrail 不拥有被声明观点的终极真值，只负责保留声明、证据
+    来源、验收过程、规则与 Verdict 的可追溯关系，并忠实保存未知、冲突和不可判。
 
 ## 3. 请求合同
 
@@ -181,7 +185,175 @@ Verdict。
 - [Releases](https://docs.github.com/en/rest/releases/releases)
 - [GitHub Pages](https://docs.github.com/en/rest/pages/pages)
 
-## 8. 故障语义
+## 8. 信任上限与共同故障域
+
+### 8.1 三种不能混用的结论
+
+```text
+Consistency   证据、坐标与规则之间是否自洽
+Authenticity  来源身份与制品归属是否得到额外可信机制支持
+Truth         最初的源码、数据、实验或现实事件是否真实
+```
+
+本插件与 Core 首先检查 `Consistency`。在精确坐标和规则封存、Evidence 被采集并进入不可变 Bundle 后，
+它们可以发现支持范围内的错绑、漏证、漂移和内容变化，即“承诺后的完整性”。它们不从内部自洽自动
+推出 `Authenticity`，更不能推出 `Truth`。
+
+例如，一套在首次封存前已被人为构造、但源码、数据、运行结果、Commit、PR、Checks、Release、Pages
+和 sealed Plan 彼此一致的材料，可能满足全部预注册断言。此时 Core 最多能裁决“声明的 GitHub 平台
+证据满足 sealed Plan”，不能把该 `PASS` 解释为上游数据或现实命题真实。
+
+### 8.2 共同信任域
+
+- GitHub REST API 与 GitHub 公开页面是不同交付面，可以互相暴露缓存、部署或链接漂移；它们仍由
+  GitHub 同一平台权威提供，不是两个独立见证人。
+- GitHub Evidence Plugin 是观察者，不是被观察事实的独立来源；插件正确运行不能证明 GitHub 本身
+  没有平台级故障、受控管理员变更或共同失陷。
+- VeriTrail Core 是规则裁决者，不是事实创造者；确定性裁决只能说明现有 Evidence 是否满足 sealed
+  Plan，不能补出 Evidence 没有携带的现实真实性。
+- sealed request / Plan 固定的是“准备相信和检查什么”，不是其内容诚实的证明。
+- Bundle 哈希证明采集后字节和清单的对应关系，不证明采集前事实、采集者身份或声明时间真实。
+
+因此，GitHub、插件与 Core 不是三个相互独立的真相来源。它们组成一条职责分离的工程证据链，但仍有
+共同信任根；GitHub 全局不可用或同一权威提供一致但错误的状态时，本链不能凭自身完成外部反证。
+
+### 8.3 可支持与不可支持的表述
+
+| 可支持 | 不可仅凭本链支持 |
+| --- | --- |
+| 指定 Commit、PR、Check、Tag、Release、Pages 和公开标记在采集时是否对齐 | 原始源码、业务数据或实验输入在首次封存前没有被伪造 |
+| Check 是否绑定错误 SHA，PR 是否未合入，Tag/Release 是否漂移 | GitHub 平台、仓库管理员或凭据从未失陷 |
+| API 与公开渲染是否冲突，重复采集是否发生变化 | 平台账号等同于现实身份，或签名内容必然真实 |
+| Evidence 进入 Bundle 后是否被静默修改 | 一个内部完全自洽的历史必然对应真实世界 |
+
+允许的结论语言应带适用边界，例如：
+
+> 在声明的 GitHub 信任域、采集时间和 sealed Plan 下，指定平台坐标与所需证据一致。
+
+禁止把它缩写成“来源已被证明真实”“不存在事前造假”或“GitHub 不可能出错”。
+
+工程俗语可概括为：**防君子，不防小人**。这里不是对使用者作道德判断，而是说明产品只提高误操作、
+事后漂移、选择性遗漏与低成本篡改的发现成本；它不与能够在信任锚建立前共同控制源码、数据、结果、
+平台坐标和 sealed Plan 的蓄意造假者对抗。
+
+> **它防的是漂移，不是阴谋。**
+
+### 8.4 外部锚是产品非目标
+
+VeriTrail 与本插件不建设、托管或裁决 GitHub 之外的第三方签名见证、透明日志、可信时间戳、硬件
+证明、仪器来源证明或多方见证网络。这些机制会引入新的身份、密钥、可用性与权威问题，不属于 P0–P4，
+也不进入当前产品路线。
+
+高风险场景若需要更高保证，应由使用方在 VeriTrail 之外选择和治理独立来源，再把“存在何种外部
+保证”作为适用边界说明；Core 不得因看到一个签名或摘要就推断内容真实。任何未来的定位变化都必须
+另立产品提案，不能作为 GitHub 插件的顺手扩展，也不能倒写 0.1 已经具备外部见证。
+
+## 9. 认识论上限（Epistemic Ceiling）
+
+### 9.1 两个上限下的三条风险路径
+
+| 风险路径 | 主要来源 | VeriTrail 能做什么 | 不能承诺什么 |
+| --- | --- | --- | --- |
+| 封存前有意构造一套自洽材料 | 能共同控制源码、数据、结果与平台坐标的主体 | 声明信任域，保留采集后完整性并发现后续漂移 | 仅靠内部证据识别源头造假 |
+| 人的前提或目标存在歧义、遗漏或后续争议 | Claim owner / Plan author | 版本化保存声明、反例、未决项与确认过程 | 代替提出者裁定观点终极正确 |
+| Agent 诚实地理解了另一个问题 | AI / 执行 Agent | 限制权限与爆炸半径，要求报告冲突并验证是否偏离 sealed Plan | 从内部自洽自动发现未声明的真实意图 |
+
+三条路径都可能留下“Plan、实现、测试、Evidence 与 Verdict 完全一致”的外观，但动机、权威和治理
+动作不同，不能压成同一种风险。VeriTrail 只能辅助发现矛盾、保存边界并定位应回查的层级；当所有
+输入从起点就内部一致时，它不能根治问题，也不能凭空制造外部真相。
+
+### 9.2 验证正确不等于命题正确
+
+```text
+Verification Correctness != Specification Correctness
+Claim Ownership          != Truth Ownership
+```
+
+VeriTrail 回答的是“这次执行是否满足 sealed Plan”，不回答“sealed Plan 表达的观点在终极意义上是否
+正确”。一个 Plan、实现、测试、Evidence 与 Verdict 可以完全一致，却未必对应提出者真正想解决的
+问题，也未必覆盖现实中的全部前提；内部没有矛盾时，VeriTrail 不能凭空发现一个未被声明的目标。
+
+这类风险对 AI Agent 尤其重要：模型可能并无欺骗意图，只是理解了不同的问题，随后诚实地把与提出者
+意图不一致的方向做成完整闭环。此时 `PASS` 只表示封存条件被保留证据满足，不得扩张为“用户真实
+目标已被证明达成”。
+
+> VeriTrail 不裁定一个被声明的观点在终极意义上是否正确，只裁定其预先声明的验收条件是否被现有
+> 证据满足。
+
+### 9.3 权威与职责
+
+- 提出者拥有自己的 claim、问题定义与封存选择，承担前提与验收目标的最终决定责任，但这不等于
+  拥有现实真相；
+- 现实拥有最终真相，且现实可能模糊、不完整、随时间变化、相互冲突或当前不可判；
+- VeriTrail 拥有声明、证据来源、验收过程、规则版本和 Verdict 推导的完整性，不拥有世界真相；
+- 插件只观察声明范围内的平台事实，不能评价人的想法，也不能扩大或重写其验收目标；
+- AI 或执行 Agent 负责在授权边界内忠实质疑、规划和执行；发现与前提冲突的证据时必须报告，却
+  不能擅自改写人的目标、扩大现实权限或把自己的世界模型冒充最终真值。
+
+这不是“输入错了不管”。更准确的纪律是：
+
+```text
+Not responsible for Truth != Not responsible for Uncertainty
+```
+
+不拥有真理裁决权，反而意味着必须忠实保存不知道：`UNKNOWN` 仍是未知，来源冲突仍保留冲突，缺失
+必需证据仍按既有规则得到 `PENDING`，不可归因仍得到 `INCONCLUSIVE`；任何一层都不能为了形成漂亮
+闭环而补写、压平或升级成 `PASS / FAIL`。
+
+### 9.4 人机责任链与失败归因
+
+```text
+Human       owns premise authority and the Seal decision
+Agent       owns faithful challenge and authorized execution
+VeriTrail   owns judgment discipline
+Reality     owns truth
+```
+
+“人的前提由人决定”不能被 Agent 当成忽略明显反证的免责条款。Agent 若观察到“声明文件不存在，但
+仓库中实际存在”之类的冲突，应把证据和影响交还提出者确认；在决定前不得继续扩大动作，在决定后也
+只能执行被重新确认或新版本封存的目标。
+
+VeriTrail 通过 Plan、权限边界、提交/封存屏障（commit barrier）、Evidence 与独立裁决，把推理错误
+和现实副作用隔开：
+
+```text
+Reasoning Error   != Unbounded Real-World Effect
+Premise Error     != Plan Error
+Plan Error        != Execution Error
+Execution Error   != Observation Error
+Observation Error != Verdict Error
+```
+
+它不保证项目必然正确，而是让失败后能够判断应回查前提、规格、执行、证据还是裁决，避免模型同时
+解释目标、修改目标、执行并自证成功。
+
+反向排查顺序应遵循现有证据，而不是默认回到代码层强改：
+
+```text
+unexpected outcome
+  -> verdict derivation
+  -> evidence completeness and conflicts
+  -> platform observation / delivery
+  -> execution versus sealed Plan
+  -> Plan versus declared intent
+  -> premise review by its owner
+```
+
+若执行与 Evidence 已证明没有偏离，就回查 Plan 或前提；若 API 与公开页面冲突，就定位到平台渲染或
+交付层。系统不得在问题已被定位到上游层后继续用重构代码制造“完成感”。
+
+### 9.5 Seal 前只能降风险
+
+Authoring 或人工流程可以在 Seal 前增加 premise review、反例、独立 challenge，以及由提出者或领域
+责任人确认“系统理解的是不是准备验收的问题”。这些步骤降低误解概率，却不证明命题终极正确；两个
+模型也可能共享同一错误先验。
+
+此类审查不属于 GitHub Collector 的职责，不能让插件获得 Plan 修改权或 Verdict 权。若未来提供辅助
+入口，它只能把问题、分歧、未决前提与确认者记录为声明事实；未决项必须继续可见。
+
+> **现实拥有真相，VeriTrail 只拥有裁决纪律。**
+
+## 10. 故障语义
 
 | 观察 | 插件记录 | Core 可得出的最大结论 |
 | --- | --- | --- |
@@ -191,12 +363,13 @@ Verdict。
 | private resource 未授权时 `404` | `PARTIAL` + authority ambiguity | `INCONCLUSIVE` 或 `PENDING`，不得当作不存在 |
 | API 与公开页面坐标冲突 | 两份独立事实及冲突 | `INCONCLUSIVE` |
 | 页面有效显示旧内容 | public render 反例 | 若 Plan 要求当前渲染，可 `FAIL` |
+| API 与页面在共同信任域内返回一致但错误或预先构造的状态 | 按来源记录所见事实与已声明信任域 | 最多判断与 Plan 一致；不得升级为来源真实性或现实真实性 |
 | probe 未在请求中声明 | `NOT_APPLICABLE` 或不输出 | 不得补做、不得扩大验收范围 |
 
 GitHub 官方说明某些私有资源在授权不足时会返回 `404`；因此 `404` 只有在请求权威和可见性已经独立
 确认时，才能作为“资源不存在”的事实。
 
-## 9. 首个验收矩阵
+## 11. 首个验收矩阵
 
 P1–P3 至少逐项建立独立夹具或真实证据：
 
@@ -213,10 +386,20 @@ P1–P3 至少逐项建立独立夹具或真实证据：
 11. 相同来源快照重复规范化，canonical facts 与 digest 相同；
 12. token、Cookie、私有路径和原始响应体在日志、Evidence、Bundle、截图与 Git diff 中均不存在；
 13. Core 0.12.2 全量回归、Starter/Skill、Workbench 与 Browser Smoke 不受影响。
+14. 一套内部自洽的合成材料只能得到带 GitHub 信任域限定的结果，报告不得生成“上游事实真实”或
+    “不存在事前造假”的扩张性表述；
+15. GitHub API 与公开页面共同不可用或共同返回无法外部反证的状态时，Evidence 必须保留共同故障域，
+    不得把两个观察面计成两个独立权威。
+16. 一套 Plan、实现、测试与 Evidence 内部一致但未覆盖某个未声明真实目标的合成案例，只能证明 sealed
+    条件被满足，报告不得宣称观点终极正确或用户真实目标已经得到证明；
+17. 未知前提、来源冲突和缺失必需证据分别保持可见，并按既有 Core 规则进入 `INCONCLUSIVE` 或
+    `PENDING`，不得由插件、AI 或展示层补写成确定结论。
+18. Agent 观察到与人类前提冲突的仓库事实时必须保留并上报冲突；不得以“前提由人负责”为由忽略，
+    也不得在未经重新确认或新版本 Seal 的情况下自行改写目标继续执行。
 
 每个负例只改变一个预注册变量；不能用同一份混合失败同时证明多个边界。
 
-## 10. 未来包边界
+## 12. 未来包边界
 
 P1 经批准后可采用：
 
@@ -231,8 +414,9 @@ plugins/github-evidence/
 目录只是候选，不在 P0 创建。包不得放入 `src/veritrail`，不得 monkey-patch Core，不得依赖 Core 私有
 符号。Core 通过文件或公开 API 消费标准 Evidence；插件卸载后既有 Bundle 仍可验证和阅读。
 
-## 11. 明确延期
+## 13. 明确延期
 
-首个版本不包含 GitHub Enterprise、自定义 Host、GraphQL、webhook server、GitHub App 安装流程、
+本产品不包含 GitHub 之外的独立见证、可信时间锚或来源真实性网络。首个版本也不包含 GitHub
+Enterprise、自定义 Host、GraphQL、webhook server、GitHub App 安装流程、
 自动定时器、组织级仪表盘、仓库修复、PR 合并、规则集修改、Release 发布、Pages 部署、跨平台统一
-SPI 或通用网页爬虫。需要其中任何一项时必须先写新合同。
+SPI 或通用网页爬虫。后述 GitHub 平台能力需要新合同；外部见证不因新合同自动进入本产品路线。
