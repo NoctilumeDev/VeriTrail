@@ -290,6 +290,7 @@ def _evaluate_rule(
 def _binding_reason(code: str, requirement_id: str) -> dict[str, str]:
     messages = {
         "OBSERVATION_MISSING": "No Evidence artifact was supplied for the requirement.",
+        "OBSERVATION_METADATA_INVALID": "Same-type Evidence contains invalid Core-owned observation metadata.",
         "OBSERVATION_BINDING_MISMATCH": "Same-type Evidence was supplied but did not match the sealed Plan and observation spec.",
         "OBSERVATION_CARDINALITY_CONFLICT": "More than one Evidence artifact matched an EXACTLY_ONE requirement.",
         "OBSERVATION_REUSE_CONFLICT": "One Evidence artifact was consumed by more than one requirement.",
@@ -345,7 +346,13 @@ def evaluate_acceptance(
 
         status = "RESOLVED"
         evidence_sha256: str | None = None
-        if not exact:
+        if metadata_errors:
+            status = "METADATA_INVALID"
+            reasons.append(
+                _binding_reason("OBSERVATION_METADATA_INVALID", requirement_id)
+            )
+            blockers = True
+        elif not exact:
             if same_type:
                 status = "BINDING_MISMATCH"
                 reasons.append(
