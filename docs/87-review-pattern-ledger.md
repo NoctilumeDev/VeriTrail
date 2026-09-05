@@ -2,7 +2,7 @@
 
 ## 1. 状态与用途
 
-- 状态：`LEDGER_SCHEMA_CANDIDATE / SEED_SET_CANDIDATE`；
+- 状态：`LEDGER_SCHEMA_FROZEN / SEED_SET_FROZEN / LEDGER_OPEN`；
 - 冻结策略：R0 冻结记录格式与首批种子；P2–P4 期间 Ledger 保持 append-only/open；
 - 目的：把真实工程中发现的认知陷阱沉淀为可复核的审查模式，而不是把一次 bug 修复包装成通用真理；
 - 非目标：本账册不确认缺陷、不生成 Core Verdict、不授权自动修复，也不是机器学习训练集承诺。

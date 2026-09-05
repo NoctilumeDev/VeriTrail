@@ -3,11 +3,13 @@
 ## 1. 文档身份
 
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
-- 当前阶段：`R0_BLUEPRINT_CANDIDATE / DESIGN_ONLY`；
+- 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_NOT_STARTED`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
+
+冻结闭环与公开读回事实见[文档 88](88-r0-review-attention-design-review.md)。
 
 仓库历史中的 `M12-R1/R2/R3` 是 M12 内部的表现层重组阶段。本文的顶层 `R0–R6` 必须始终写出
 `Review Attention` 全名；未来包、标签和发布坐标不得只使用裸 `r*`，以免与历史阶段混淆。

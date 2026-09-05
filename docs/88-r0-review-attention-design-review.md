@@ -1,14 +1,16 @@
-# R0 Review Attention 架构评审与冻结候选事实
+# R0 Review Attention 架构评审与冻结事实
 
 ## 1. 评审身份
 
 - 评审对象：文档 85–87 与 README/AGENTS/milestones 入口；
 - 分支基线：`origin/main@e539ad1129d66aac41a03f09222ac3dc42d4d764`；
+- 设计候选合入：`main@411a43814632df8a5dc5ae4a9d4e66b11ab7aed1`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
-- 当前结论：`R0_FREEZE_CANDIDATE / REMOTE_CLOSURE_PENDING`；
+- 当前结论：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 保持状态：`P1_FROZEN / P2_NOT_STARTED`。
 
-本文记录本地设计复核和待完成的远端停止线。它不把尚未发生的 CI、主线合入或公开读回写成事实。
+本文记录本地设计复核、远端门禁、受保护主线合入和公开读回；没有发生的 R1/P2 实现仍明确保持
+未开始。
 
 ## 2. 草稿归纳结果
 
@@ -122,13 +124,33 @@ ReviewPolicy authority
 | 文档相对链接 | `PASS_LOCAL_CHECK` |
 | 非 Markdown R 轨实现文件 | `NONE` |
 | `P2_NOT_STARTED` | `CONFIRMED_IN_WORKTREE` |
-| 远端 PR 门禁 | `PENDING` |
-| 受保护主线合入 | `PENDING` |
-| 精确 main SHA 读回 | `PENDING` |
-| 匿名 README/Plan/Contract/Ledger/Review 读回 | `PENDING` |
+| 远端 PR 门禁 | `PR #34 / 11 OF 11 SUCCESS` |
+| 受保护主线合入 | `PR #34 MERGED` |
+| 精确 main SHA 读回 | `411a43814632df8a5dc5ae4a9d4e66b11ab7aed1` |
+| 未登录 README/Plan/Contract/Ledger/Review HTML 读回 | `PASS` |
 
-因此当前不得写 `R0_ARCHITECTURE_FROZEN`。远端停止线全部满足后，应以新的 docs-only closure 提交记录
-精确 PR、checks、merge commit 与公开页面事实，再把状态升级为：
+### 8.2 远端与公开读回事实
+
+1. 设计候选提交 `f221639cd14051f983fe46da5802b90d2c053b88` 从精确
+   `main@e539ad1129d66aac41a03f09222ac3dc42d4d764` 起步；
+2. [PR #34](https://github.com/NoctilumeDev/VeriTrail/pull/34) 的
+   [Public CI run 33979104271](https://github.com/NoctilumeDev/VeriTrail/actions/runs/33979104271)
+   最终 11 个 job 全部 `SUCCESS`，包括双 Python、普通/优化 Core、Acceptance Core freeze、两套
+   wheel-only、GitHub Evidence、Starter 黄金路径、Workbench 与 E3 下载复验；
+3. PR #34 以 merge commit `411a43814632df8a5dc5ae4a9d4e66b11ab7aed1` 合入受保护 `main`，
+   随后 `origin/main` 与匿名 `ls-remote refs/heads/main` 精确读回同一 SHA；
+4. 内置浏览器两次在 GitHub 导航阶段超时，均未产生页面事实；公开网页读取器又返回仍处于 P1 候选的
+   陈旧缓存副本。这三次失败没有被冒充为成功；
+5. 最终改用无 Authorization/Cookie 的直接 HTTPS，读取 GitHub `blob/main` 与精确 commit HTML，
+   [README](https://github.com/NoctilumeDev/VeriTrail/blob/main/README.md)、
+   [Plan](https://github.com/NoctilumeDev/VeriTrail/blob/main/docs/85-post-core-review-attention-plugin-plan.md)、
+   [Contract](https://github.com/NoctilumeDev/VeriTrail/blob/main/docs/86-review-attention-r0-contract.md)、
+   [Ledger](https://github.com/NoctilumeDev/VeriTrail/blob/main/docs/87-review-pattern-ledger.md)与
+   [本文](https://github.com/NoctilumeDev/VeriTrail/blob/main/docs/88-r0-review-attention-design-review.md)
+   均实际返回 GitHub `Sign in` 匿名界面及各自 R0 标记；README 的 `blob/main` 与精确 commit 页面同时
+   命中，证明这次不是 raw/API 替代，也不是只读到分支旧副本。
+
+R0 停止线至此满足，状态升级为：
 
 ```text
 R0_ARCHITECTURE_FROZEN

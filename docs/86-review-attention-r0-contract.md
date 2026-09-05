@@ -2,8 +2,8 @@
 
 ## 1. 合同状态
 
-本文是顶层 `R` 轨的设计合同候选。`R = Review`，机器输出的是审查注意力候选，不是风险真值。
-当前状态为 `R0_CONTRACT_CANDIDATE / DESIGN_ONLY`；所有 `MUST / MUST NOT / SHOULD` 仅约束未来实现，
+本文是顶层 `R` 轨已经冻结的设计合同。`R = Review`，机器输出的是审查注意力候选，不是风险真值。
+当前状态为 `R0_CONTRACT_FROZEN / DESIGN_ONLY`；所有 `MUST / MUST NOT / SHOULD` 仅约束未来实现，
 不证明仓库已经具备相应运行能力。
 
 ## 2. 不可移动原则
