@@ -1,21 +1,25 @@
-# P1 Structured GitHub API Collector 实现与冻结候选事实 0.1
+# P1 Structured GitHub API Collector 实现与冻结事实 0.1
 
-> 状态：`P1_IMPLEMENTED / FREEZE_CANDIDATE`
+> 状态：`P1_FROZEN / P2_NOT_STARTED`
 >
 > 精确施工基线：`8d3728cd2255c6a042c41183f9dc9e63e7ce547d`
+>
+> 完整实现候选：`244c54b60986673622704a361da76dbc86a90788`
+>
+> 受保护主线实现基线：`9b45bd635dedd132dc8333c105c04723991c2670`
 >
 > 影响层级：独立 `plugins/github-evidence` 包与公共 CI；不修改 Core、Schema、Starter、
 > Authoring Skill 或 Workbench 语义
 
-## 1. 候选结论
+## 1. 冻结结论
 
 P1 已形成一条可运行的只读纵向切片：插件从 sealed `AcceptancePlan 0.1` 机械派生有界 observation
 request，串行读取 GitHub REST API，规范化平台事实，并输出标准 VeriTrail `Evidence 0.1`。最终
 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 Core 按 sealed Plan 推导；插件不保存另一套期望值，
 也不生成 Verdict-like 布尔值。
 
-当前状态只是冻结候选。只有候选经独立 PR、required checks、受保护 `main` 合入，并从未登录
-GitHub 页面真实读回 README 与本文后，才能升级为 `P1_FROZEN`。
+候选已经过独立 PR、11 项远端 checks、受保护 `main` 合入、真实 GitHub Markdown 渲染与匿名公开
+HTML 读回，因此 P1 在本文合同范围内标记 `FROZEN`。这不是插件 Release，也不授权进入 P2。
 
 ## 2. 分层与依赖边界
 
@@ -128,12 +132,23 @@ Python 3.10 与 3.13 还分别在无 checkout 的隔离环境中，只安装 Cor
 P1 只证明合同内的只读采集、事实规范化、Evidence 生成与 Core 可消费性。它不能证明封存前的事实
 真实，也不判断提出者观点终极正确；未知与冲突必须继续可见。
 
-## 8. 候选后的唯一下一步
+## 8. 远端门禁、主线与公开读回事实
 
-1. 固定候选提交并推送独立分支；
-2. 等待全部 required checks，失败时只按证据修复；
-3. 经受保护 `main` 合入后读回精确主线 SHA；
-4. 从未登录 GitHub 页面真实读取 README 与本文；
-5. 另以事实补丁记录 PR、CI、merge commit 和公开渲染坐标，再裁决是否升级为 `P1_FROZEN`。
+- [PR #30](https://github.com/NoctilumeDev/VeriTrail/pull/30) 从精确基线
+  `8d3728cd2255c6a042c41183f9dc9e63e7ce547d` 审查候选
+  `244c54b60986673622704a361da76dbc86a90788`；合并前为 `CLEAN / MERGEABLE`。
+- [Public CI 运行 33972086544](https://github.com/NoctilumeDev/VeriTrail/actions/runs/33972086544)
+  的 11 项检查全部 `SUCCESS`：Python 3.10/3.13、E3 下载验收、Workbench、Starter golden path、
+  双 Core wheel-only、双 Acceptance Core freeze 与新增的双 GitHub Evidence wheel-only。
+- PR 于 `2026-09-05` 合入受保护 `main`，merge commit 与远端 `refs/heads/main` 均读回
+  `9b45bd635dedd132dc8333c105c04723991c2670`。
+- 真实 GitHub Markdown 页面随后读回 README 的“P1 实现冻结候选”入口与本文全部八节；标题、
+  候选状态、测试矩阵、facts digest、P2/P3/P4 停止线和 README 链接均为渲染后的可见内容。
+- 唯一内置浏览器实例当时已有 GitHub 登录会话，因此没有把它谎称为“未登录浏览器”。另以不发送
+  Cookie 或 Authorization 的匿名请求读取两个公开 GitHub HTML 页面，均返回 `200`，并逐项读回
+  README 标题/本文链接以及本文标题、状态和停止线。API 文本没有替代 GitHub 页面层。
 
-在以上步骤完成前，不进入 P2、P3 或 P4。
+## 9. 冻结后的边界
+
+P1 当前为 `P1_FROZEN / P2_NOT_STARTED`。后继若继续，只能另立 P2 浏览器采集合同；不得把本轮源码
+候选自动升级为插件 tag、Release 或稳定安装坐标，也不得在 P1 事实补丁中提前施工 P2、P3 或 P4。
