@@ -1,6 +1,6 @@
 # P1 Structured GitHub API Collector 施工合同 0.2
 
-> 状态：`P1_CONTRACT_CORRECTION_CANDIDATE / P1_FREEZE_BLOCKED`
+> 状态：`P1_CONTRACT_0.2_FROZEN / P1_FROZEN / P2_NOT_STARTED`
 >
 > 0.1 精确主线基线：`d693f9eb5bdc899d3cb3a5bdd99792e60d2c7617`
 >
@@ -9,6 +9,10 @@
 > 0.1 受保护主线合同基线：`786cb7f8a07e79da57a3eb0cfef19a6baf631db4`
 >
 > 0.2 纠正施工基线：`9b45bd635dedd132dc8333c105c04723991c2670`
+>
+> 0.2 纠正提交：`7bd800fd9962fa4b4baa7a849128f373d7fa294a`
+>
+> 0.2 受保护主线实现基线：`5b363637f59be9786d58eed61a14e3bd663dd6d8`
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM`
 >
@@ -495,3 +499,10 @@ P1 实现只有在以下条件全部满足后才能标记 `P1_FROZEN`：
 - 0.2 的唯一模型变化是 `Ruleset OR Branch Protection` 更正为
   `Ruleset + Branch Protection`。这属于 Observation Model 修正，不扩张 GitHub 写权限、Core
   Verdict 权、P2 Render、P3 handoff 或 P4 发布范围。
+- 0.2 修正提交 `7bd800fd9962fa4b4baa7a849128f373d7fa294a` 经
+  [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项公共 CI 全部成功后，以 merge commit
+  `5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入受保护 `main`。
+- 合入后已读回精确 `origin/main`，并从未登录 GitHub 页面真实渲染读取 README 与文档 84；公开页面
+  显示 0.2 双来源叠加、57 项插件测试、真实 `PARTIAL` 负链和 P2/P3/P4 停止线。
+- 因此本合同 0.2 与 P1 实现冻结为 `P1_FROZEN`；P2 仍为 `P2_NOT_STARTED`。新反例仍可显式重开
+  对应边界，但既有绿灯不得覆盖反例，修正也不得静默扩大阶段范围。
