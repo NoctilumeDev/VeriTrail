@@ -273,6 +273,66 @@ jobs:
           })
           if ($staging.Count -ne 0) { throw 'wheel-only acceptance left staging directories' }
 
+  acceptance-core-freeze:
+    name: Acceptance Core freeze on Python ${{ matrix.python-version }}
+    needs: [python]
+    runs-on: windows-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        python-version: ['3.10', '3.13']
+    steps:
+      - name: Check out only the PC2 verifier
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Download the built Core wheel
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: core-wheel-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/acceptance-core-wheel
+
+      - name: Install only the built wheel
+        shell: pwsh
+        run: |
+          $wheel = @(Get-ChildItem -File -LiteralPath '${{ runner.temp }}/acceptance-core-wheel' -Filter 'veritrail-*.whl')
+          if ($wheel.Count -ne 1) { throw "expected one Core wheel, found $($wheel.Count)" }
+          python -m pip install --no-deps --force-reinstall $wheel[0].FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Generate and independently recompute PASS and FAIL bundles
+        shell: pwsh
+        run: |
+          $output = Join-Path '${{ runner.temp }}' 'pc2-acceptance-core-${{ matrix.python-version }}'
+          python -I scripts/pc2_acceptance_core_freeze.py `
+            --output $output `
+            --expected-source-root '${{ github.workspace }}'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $summary = Get-Content -Raw -LiteralPath (Join-Path $output 'pc2-summary.json') | ConvertFrom-Json
+          if ($summary.status -ne 'PASS') { throw 'PC2 summary did not PASS' }
+          if ($summary.cases.pass.verdict -ne 'PASS' -or $summary.cases.fail.verdict -ne 'FAIL') {
+            throw 'PC2 positive/negative verdicts drifted'
+          }
+          if ($summary.boundary -ne 'PC2_ACCEPTANCE_CORE_FREEZE_NOT_P1') {
+            throw 'PC2/P1 boundary marker drifted'
+          }
+
+      - name: Upload failed PC2 evidence
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: pc2-acceptance-core-failure-${{ matrix.python-version }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/pc2-acceptance-core-${{ matrix.python-version }}
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 7
+
   entry-layer-e3-release:
     name: E3 0.2 release download acceptance
     runs-on: windows-latest

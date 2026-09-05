@@ -844,6 +844,8 @@ def validate_bundle(
     if not _is_relative_to(resolved_candidate, root):
         raise _CandidateRejected("BUNDLE_ROOT_ESCAPE")
     files = _collect_regular_files(candidate, root)
+    if "acceptance-bundle-manifest.json" in files:
+        raise _CandidateRejected("UNSUPPORTED_BUNDLE_KIND")
     if "bundle-manifest.json" not in files:
         raise _CandidateRejected("MISSING_BUNDLE_MANIFEST")
     file_bytes = {path: _read_stable_file(value) for path, value in files.items()}
