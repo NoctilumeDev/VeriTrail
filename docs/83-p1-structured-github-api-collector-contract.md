@@ -1,16 +1,18 @@
-# P1 Structured GitHub API Collector 施工合同 0.1
+# P1 Structured GitHub API Collector 施工合同 0.2
 
-> 状态：`P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`
+> 状态：`P1_CONTRACT_CORRECTION_CANDIDATE / P1_FREEZE_BLOCKED`
 >
-> 精确主线基线：`d693f9eb5bdc899d3cb3a5bdd99792e60d2c7617`
+> 0.1 精确主线基线：`d693f9eb5bdc899d3cb3a5bdd99792e60d2c7617`
 >
-> 合同候选提交：`a3ed9de6e087824e4771ff8a45570584126ec5c9`
+> 0.1 合同候选提交：`a3ed9de6e087824e4771ff8a45570584126ec5c9`
 >
-> 受保护主线合同基线：`786cb7f8a07e79da57a3eb0cfef19a6baf631db4`
+> 0.1 受保护主线合同基线：`786cb7f8a07e79da57a3eb0cfef19a6baf631db4`
+>
+> 0.2 纠正施工基线：`9b45bd635dedd132dc8333c105c04723991c2670`
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM`
 >
-> 本页只冻结 P1 的施工与验收边界；没有 Collector、网络 probe、插件版本、标签或 Release
+> 0.2 只纠正 required-check 来源叠加语义；不进入 P2，不创建标签或 Release
 
 ## 1. 本轮裁决
 
@@ -259,17 +261,25 @@ Collector 只执行投影所需 probe，并按下列固定依赖顺序串行运�
 2. exact commit：`GET /repos/{owner}/{repository}/commits/{target_commit_sha}`；
 3. PR（适用时）：`GET /repos/{owner}/{repository}/pulls/{pull_request_number}`；
 4. active branch rules（适用时）：`GET /repos/{owner}/{repository}/rules/branches/{branch}`；
-5. required status protection fallback（仅需解释旧式 protection 且权限允许时）；
+5. classic branch protection required status checks（适用时独立观察，不是第 4 项的 fallback）；
 6. check runs：`GET /repos/{owner}/{repository}/commits/{target_commit_sha}/check-runs?filter=all`；
 7. combined commit statuses：读取 exact SHA 的 status contexts；
 8. Release（适用时）：按 exact tag 获取 Release；
 9. tag ref 与 bounded peel（适用时）：读取 `refs/tags/{release_tag}`，最多解引用 `5` 层；
 10. Pages metadata（适用时）：`GET /repos/{owner}/{repository}/pages`。
 
-Rules API 返回对分支生效的 active rules，包括仓库或组织层规则；它与 observed check runs 是两类事实，
-不能互相替代。官方文档同时表明 required check 可以携带 integration/app identity，而 check runs 也带
-app identity；因此显示名只用于展示，不能作为唯一匹配键。参考：[repository rules](https://docs.github.com/en/rest/repos/rules)、
-[protected branch checks](https://docs.github.com/en/rest/branches/branch-protection) 与
+Rules API 返回对分支生效的 active rules，包括仓库或组织层 ruleset；classic branch protection 是另一个
+可以同时适用的规则源。两者必须分别采集并聚合，任一来源成功或返回空集合都不能取消另一来源的
+probe。任一适用来源不可观察时，已取得事实可以保留，但 coverage 必须保持 `PARTIAL/ERROR`，不得把
+未知来源解释为空集合。GitHub 官方说明 rulesets 与 branch protection rules 会共同保护同一分支，所有
+适用规则均执行；多个 ruleset 之间同样 layering。参考：[rule layering](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets)、
+[repository rules](https://docs.github.com/en/rest/repos/rules) 与
+[protected branch checks](https://docs.github.com/en/rest/branches/branch-protection)。
+
+required check 的有效身份由 `context + integration/app identity` 表达，来源不是该有效要求的替代身份。
+同一有效要求同时来自 RULESET 与 BRANCH_PROTECTION 时只保留一个 requirement item，并在该 item 的
+`sources[]` 中保留两个 provenance；不同有效要求做集合并集。ruleset 来源还应保留 API 可取得的
+`ruleset_id`、`ruleset_source_type` 与 `ruleset_source`。显示名不能作为唯一匹配键，参考
 [check runs](https://docs.github.com/en/rest/checks/runs)。
 
 每个 probe 必须保留：
@@ -316,7 +326,10 @@ conflicts
 - commit 事实必须回显 GitHub 返回的 exact SHA；请求路径中的 SHA 不能替代响应事实；
 - PR 分开保存 `head.sha`、`base.sha`、`merged`、`merge_commit_sha`；合并前的 test merge SHA 不得冒充
   最终主线提交；
-- required check identity 至少保存 `context`、source kind 和可得的 integration/app identity；
+- required check item 至少保存 `context`、可得的 integration/app identity 与 `sources[]`；每个 source
+  保存 `RULESET | BRANCH_PROTECTION`，并保留可得的 ruleset identity；
+- Ruleset=A、BranchProtection=B 时有效 items 为 A+B；Ruleset=[] 不得压掉 BranchProtection=B；
+  两个来源同时要求同一 A 时只形成一个有效 item，但必须保留两个 source provenance；
 - observed check identity 至少保存 name/context、app id/slug、suite/run id、status、conclusion 与 head SHA；
 - 同名异源保持多条；身份不足时写显式 ambiguity/conflict，不静默去重；
 - tag 分开保存 `ref_target_sha`、`object_type`、完整 bounded peel chain 与 `peeled_commit_sha`；
@@ -345,7 +358,7 @@ request_seal_digest
 collection_session_id
 collector_role = github-api
 coverage
-normalization_semantics_version = github-rest-facts/0.1
+normalization_semantics_version = github-rest-facts/0.2
 facts_digest
 ```
 
@@ -396,32 +409,36 @@ atomic publish，不覆盖既有产物。P1 不拥有远端资源，因此没有
 9. repository + exact commit 正链；请求 SHA 与响应 SHA 不同负链；
 10. PR 未合并、已合并 merge、squash、rebase 坐标分别保留；
 11. active rules required set 与 exact SHA observed set 分开输出；
-12. 同 display name、不同 app/source 不被去重；身份不足形成 ambiguity；
-13. commit status 与 check run 同名但来源不同不被错误合并；
-14. lightweight/annotated tag 指向同一 commit 得到同 peeled SHA 和不同 provenance；
-15. tag 错目标、非 commit、循环/超过 peel 上限分别可辨；
-16. Release tag 正确/错误、asset 缺失/重复、`target_commitish` 歧义分别保留；
-17. Pages present/not applicable/permission ambiguous 分开；
-18. `401/403/404/429/5xx/timeout/损坏 JSON/分页上限/意外 304` 分别 fail closed；
-19. 合成 wall-clock 跳变不影响 monotonic 最大窗口；
-20. token、Cookie、Authorization、个人路径和原始 body 对日志/Evidence/Git diff 为零。
+12. Ruleset=A 与 BranchProtection=B 聚合为 A+B；Ruleset=[] 仍保留 BranchProtection=B；
+13. 同一 A 来自两个规则源时只形成一个有效 item，同时保留两个 source provenance；
+14. 任一规则源不可观察时不得由另一来源的成功掩盖，coverage 保持非 COMPLETE；
+15. 同 display name、不同 app identity 不被去重；同一有效要求的不同规则来源只合并 item、不丢失
+    source provenance；身份不足形成 ambiguity；
+16. commit status 与 check run 同名但来源不同不被错误合并；
+17. lightweight/annotated tag 指向同一 commit 得到同 peeled SHA 和不同 provenance；
+18. tag 错目标、非 commit、循环/超过 peel 上限分别可辨；
+19. Release tag 正确/错误、asset 缺失/重复、`target_commitish` 歧义分别保留；
+20. Pages present/not applicable/permission ambiguous 分开；
+21. `401/403/404/429/5xx/timeout/损坏 JSON/分页上限/意外 304` 分别 fail closed；
+22. 合成 wall-clock 跳变不影响 monotonic 最大窗口；
+23. token、Cookie、Authorization、个人路径和原始 body 对日志/Evidence/Git diff 为零。
 
 ### 11.3 Core 与旧消费者
 
-21. 当前 Acceptance Core 可直接对 commit/ref、merge、required/observed checks、tag/release 的原始规范化
+24. 当前 Acceptance Core 可直接对 commit/ref、merge、required/observed checks、tag/release 的原始规范化
     字段断言，不需要插件 Verdict-like boolean；
-22. metadata 畸形、spec digest 不符、facts digest 不符与 session 绑定错误保持 `INCONCLUSIVE`；
-23. Core 全量普通/`-O`、Starter/Skill、Workbench、Browser Smoke 与历史 digest 回归不漂移；
-24. Comparison、Pairing、Batch、Workbench 等旧消费者继续保持 PC2 冻结的显式隔离。
+25. metadata 畸形、spec digest 不符、facts digest 不符与 session 绑定错误保持 `INCONCLUSIVE`；
+26. Core 全量普通/`-O`、Starter/Skill、Workbench、Browser Smoke 与历史 digest 回归不漂移；
+27. Comparison、Pairing、Batch、Workbench 等旧消费者继续保持 PC2 冻结的显式隔离。
 
 ### 11.4 真实 GitHub 只读纵向切片
 
-25. 对一个公开固定仓库、exact SHA 和 sealed Plan，匿名模式完成一次严格串行 API Evidence；
-26. 对同一坐标重复采集，事实未变时得到相同 facts digest、不同 session 与 Evidence SHA；
-27. 使用只读 token 重复可见事实，Evidence 只改变安全 provenance，不泄漏 token；
-28. 至少一个单变量远端负链由 Core 直接得到预期非 PASS 结果；
-29. wheel clean install 从 `site-packages` 运行，不从 checkout 偷导入；
-30. 真实响应只在内存解析，最终保留文件可按 manifest 逐项重算，staging 和临时凭据为零。
+28. 对一个公开固定仓库、exact SHA 和 sealed Plan，匿名模式完成一次严格串行 API Evidence；
+29. 对同一坐标重复采集，事实未变时得到相同 facts digest、不同 session 与 Evidence SHA；
+30. 使用只读 token 重复可见事实，Evidence 只改变安全 provenance，不泄漏 token；
+31. 至少一个单变量远端负链由 Core 直接得到预期非 PASS 结果；
+32. wheel clean install 从 `site-packages` 运行，不从 checkout 偷导入；
+33. 真实响应只在内存解析，最终保留文件可按 manifest 逐项重算，staging 和临时凭据为零。
 
 真实 GitHub 测试不得依赖“永远会变化”的外部公开仓库作为唯一 CI 成功条件。CI 主门禁使用冻结、脱敏
 fixture；真实 live probe 是人工触发、只读、有精确坐标和证据留存的候选冻结门。
@@ -434,13 +451,15 @@ P1 实现只有在以下条件全部满足后才能标记 `P1_FROZEN`：
 2. 插件代码从该精确主线基线另起工作树；
 3. 第 11 节全部适用矩阵有可复现证据；
 4. Python 3.10/3.13、普通/优化模式、wheel clean install 和 Core 全回归通过；
-5. 候选经独立 PR、required checks、受保护主线合入；
-6. 最终 README 与 P1 事实文档在未登录 GitHub 页面真实读回；
-7. 最终状态仍明确没有 P2 浏览器、P3 Core handoff、P4 发布。
+5. Freeze 前完成 Semantic Reality Review：主动寻找合同是否遗漏 GitHub 官方允许的有效组合；任何新验证
+   反例均可否决既有测试和 CI 绿灯，直至模型被纠正并重新验收；
+6. 候选经独立 PR、required checks、受保护主线合入；
+7. 最终 README 与 P1 事实文档在未登录 GitHub 页面真实读回；
+8. 最终状态仍明确没有 P2 浏览器、P3 Core handoff、P4 发布。
 
-本合同已经完成候选合入与公开页面读回，因此状态只升级为
-`P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`。这仍不授权在本次冻结补丁中创建
-`plugins/github-evidence`；在后继 P1 实现冻结前不得进入：
+0.1 合同已经完成候选合入与公开页面读回；P1 实现随后由 PR #30 合入主线，但 Freeze 前反例证明
+0.1 把两个可同时适用的 required-check 来源误写成 primary/fallback。本 0.2 候选只重开该模型点及其
+规范化语义版本；P1 在纠正合入、全矩阵和新冻结事实完成前继续保持未冻结，并且不得进入：
 
 - P2 公开渲染采集；
 - API/Render 双源关系；
@@ -464,3 +483,15 @@ P1 实现只有在以下条件全部满足后才能标记 `P1_FROZEN`：
   fact/Evidence/execution 身份分离和 P2/P3/P4 停止线；没有用 API 文本代替页面渲染。
 - 本冻结补丁只把已发生的远端事实和状态写回文档，不创建运行目录、不修改 Core/Schema/CLI/CI，
   也不把合同冻结冒充 P1 Collector 已经存在。
+
+## 14. 0.2 语义纠正来源
+
+- P1 初始实现由 [PR #30](https://github.com/NoctilumeDev/VeriTrail/pull/30) 合入
+  `main@9b45bd635dedd132dc8333c105c04723991c2670`，状态保持
+  `P1_IMPLEMENTED / FREEZE_CANDIDATE`。
+- 冻结事实 PR #31 尚未合入时发现反例：rulesets 与 classic branch protection 可同时约束同一分支，
+  但 0.1 Collector 只在 active rules 规范化失败时读取后者。#31 因此关闭且未合并；全绿门禁不替代
+  新反例。
+- 0.2 的唯一模型变化是 `Ruleset OR Branch Protection` 更正为
+  `Ruleset + Branch Protection`。这属于 Observation Model 修正，不扩张 GitHub 写权限、Core
+  Verdict 权、P2 Render、P3 handoff 或 P4 发布范围。

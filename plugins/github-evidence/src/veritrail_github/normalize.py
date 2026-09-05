@@ -147,9 +147,7 @@ def normalize_pull_request(payload: Any) -> dict[str, Any]:
     }
 
 
-def normalize_active_rules(
-    payload: Any, conflicts: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
+def normalize_active_rules(payload: Any) -> list[dict[str, Any]]:
     rules = _array(payload, "active rules response")
     normalized: list[dict[str, Any]] = []
     for index, item in enumerate(rules):
@@ -163,26 +161,48 @@ def normalize_active_rules(
             parameters.get("required_status_checks"),
             f"active_rules[{index}].parameters.required_status_checks",
         )
+        ruleset_id = rule.get("ruleset_id")
+        ruleset_source_type = rule.get("ruleset_source_type")
+        ruleset_source = rule.get("ruleset_source")
+        source = {
+            "source_kind": "RULESET",
+            "ruleset_id": (
+                _integer(ruleset_id, f"active_rules[{index}].ruleset_id")
+                if ruleset_id is not None
+                else None
+            ),
+            "ruleset_source_type": (
+                _string(
+                    ruleset_source_type,
+                    f"active_rules[{index}].ruleset_source_type",
+                )
+                if ruleset_source_type is not None
+                else None
+            ),
+            "ruleset_source": (
+                _string(ruleset_source, f"active_rules[{index}].ruleset_source")
+                if ruleset_source is not None
+                else None
+            ),
+        }
         for check_index, check_value in enumerate(checks):
             check = _object(check_value, f"active_rules[{index}].checks[{check_index}]")
             integration_id = check.get("integration_id")
             normalized.append(
                 {
                     "context": _string(check.get("context"), "required_check.context"),
-                    "source_kind": "RULESET",
                     "integration_id": (
                         _integer(integration_id, "required_check.integration_id")
                         if integration_id is not None
                         else None
                     ),
+                    "source": dict(source),
                 }
             )
-    return _sort_required_checks(normalized, conflicts)
+    return normalized
 
 
-def normalize_branch_protection(
-    payload: Any, conflicts: list[dict[str, Any]]
-) -> list[dict[str, Any]]:
+def normalize_branch_protection(payload: Any) -> list[dict[str, Any]]:
     value = _object(payload, "required status protection response")
     normalized: list[dict[str, Any]] = []
     checks = value.get("checks")
@@ -195,12 +215,12 @@ def normalize_branch_protection(
             normalized.append(
                 {
                     "context": _string(check.get("context"), "required_check.context"),
-                    "source_kind": "BRANCH_PROTECTION",
                     "integration_id": (
                         _integer(app_id, "required_check.app_id")
                         if app_id is not None
                         else None
                     ),
+                    "source": {"source_kind": "BRANCH_PROTECTION"},
                 }
             )
     else:
@@ -208,19 +228,60 @@ def normalize_branch_protection(
             normalized.append(
                 {
                     "context": _string(context, "required_check.context"),
-                    "source_kind": "BRANCH_PROTECTION",
                     "integration_id": None,
+                    "source": {"source_kind": "BRANCH_PROTECTION"},
                 }
             )
-    return _sort_required_checks(normalized, conflicts)
+    return normalized
 
 
-def _sort_required_checks(
+def merge_required_checks(
     checks: list[dict[str, Any]], conflicts: list[dict[str, Any]]
 ) -> list[dict[str, Any]]:
-    context_counts = Counter(item["context"] for item in checks)
+    grouped: dict[tuple[str, int | None], dict[str, Any]] = {}
+    source_counts: Counter[tuple[Any, ...]] = Counter()
+    for check in checks:
+        identity = (check["context"], check.get("integration_id"))
+        source = check["source"]
+        source_identity = (
+            source["source_kind"],
+            source.get("ruleset_id"),
+            source.get("ruleset_source_type"),
+            source.get("ruleset_source"),
+        )
+        source_counts[identity + source_identity] += 1
+        item = grouped.setdefault(
+            identity,
+            {
+                "context": check["context"],
+                "integration_id": check.get("integration_id"),
+                "sources": [],
+            },
+        )
+        if source not in item["sources"]:
+            item["sources"].append(dict(source))
+
+    for identity, count in sorted(source_counts.items(), key=lambda item: str(item[0])):
+        if count > 1:
+            context, integration_id, source_kind, ruleset_id, _, _ = identity
+            conflict = {
+                "code": "REQUIRED_CHECK_SOURCE_IDENTITY_DUPLICATED",
+                "context": context,
+                "source_kind": source_kind,
+                "integration_id": integration_id,
+                "candidate_count": count,
+            }
+            if ruleset_id is not None:
+                conflict["ruleset_id"] = ruleset_id
+            conflicts.append(conflict)
+
+    merged = list(grouped.values())
+    for item in merged:
+        item["sources"].sort(key=_required_check_source_sort_key)
+
+    context_counts = Counter(item["context"] for item in merged)
     incomplete = {
-        item["context"] for item in checks if item.get("integration_id") is None
+        item["context"] for item in merged if item.get("integration_id") is None
     }
     for context in sorted(incomplete):
         if context_counts[context] > 1:
@@ -231,30 +292,21 @@ def _sort_required_checks(
                     "candidate_count": context_counts[context],
                 }
             )
-    identities = Counter(
-        (item["context"], item["source_kind"], item.get("integration_id"))
-        for item in checks
-    )
-    for (context, source_kind, integration_id), count in sorted(
-        identities.items(), key=lambda item: str(item[0])
-    ):
-        if count > 1:
-            conflicts.append(
-                {
-                    "code": "REQUIRED_CHECK_SOURCE_IDENTITY_DUPLICATED",
-                    "context": context,
-                    "source_kind": source_kind,
-                    "integration_id": integration_id,
-                    "candidate_count": count,
-                }
-            )
     return sorted(
-        checks,
+        merged,
         key=lambda item: (
             item["context"],
-            item["source_kind"],
             -1 if item["integration_id"] is None else item["integration_id"],
         ),
+    )
+
+
+def _required_check_source_sort_key(source: dict[str, Any]) -> tuple[Any, ...]:
+    return (
+        source["source_kind"],
+        -1 if source.get("ruleset_id") is None else source["ruleset_id"],
+        source.get("ruleset_source_type") or "",
+        source.get("ruleset_source") or "",
     )
 
 
