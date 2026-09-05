@@ -302,32 +302,64 @@ class AcceptanceReportingTests(unittest.TestCase):
             self.assertEqual("UNSUPPORTED_BUNDLE_KIND", batch.exception.code)
             self.assertFalse(batch_output.exists())
 
-    def test_legacy_run_rejects_acceptance_plan_before_subject_execution(self) -> None:
+    def test_legacy_execution_entries_reject_acceptance_plan_before_side_effects(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             draft = root / "acceptance-plan.json"
             draft.write_bytes(canonical_json_bytes(acceptance_plan()) + b"\n")
             subject = root / "subject"
             subject.mkdir()
-            output = root / "legacy-run"
-            stderr = io.StringIO()
-            with contextlib.redirect_stderr(stderr):
-                code = main(
-                    [
-                        "run",
-                        "--plan",
-                        str(draft),
-                        "--subject-root",
-                        str(subject),
-                        "--output",
-                        str(output),
-                        "--run-id",
-                        "legacy-acceptance-run",
-                    ]
-                )
-            self.assertEqual(2, code)
-            self.assertIn("plan_kind", stderr.getvalue())
-            self.assertFalse(output.exists())
+            commands = {
+                "preflight": [
+                    "preflight",
+                    "--plan",
+                    str(draft),
+                    "--output",
+                    str(root / "legacy-preflight"),
+                    "--run-id",
+                    "legacy-acceptance-preflight",
+                ],
+                "browser-capture": [
+                    "browser-capture",
+                    "--plan",
+                    str(draft),
+                    "--output",
+                    str(root / "legacy-browser"),
+                    "--run-id",
+                    "legacy-acceptance-browser",
+                ],
+                "command-preview": [
+                    "command-preview",
+                    "--plan",
+                    str(draft),
+                    "--subject-root",
+                    str(subject),
+                    "--tool-bindings",
+                    str(root / "unused-tool-bindings.json"),
+                ],
+                "run": [
+                    "run",
+                    "--plan",
+                    str(draft),
+                    "--subject-root",
+                    str(subject),
+                    "--output",
+                    str(root / "legacy-run"),
+                    "--run-id",
+                    "legacy-acceptance-run",
+                ],
+            }
+            for command, argv in commands.items():
+                with self.subTest(command=command):
+                    stderr = io.StringIO()
+                    with contextlib.redirect_stderr(stderr):
+                        code = main(argv)
+                    self.assertEqual(2, code)
+                    self.assertIn("plan_kind", stderr.getvalue())
+            self.assertFalse((root / "legacy-preflight").exists())
+            self.assertFalse((root / "legacy-browser").exists())
+            self.assertFalse((root / "legacy-run").exists())
+            self.assertFalse((root / "unused-tool-bindings.json").exists())
 
 
 if __name__ == "__main__":
