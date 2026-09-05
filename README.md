@@ -55,12 +55,13 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P0 设计冻结）
+### 平台证据插件轨（P1 实现冻结候选）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
-这类外部平台事实建立独立 `P` 轨，但当前只有 **P0 设计合同**，没有可安装插件、CLI、监控服务或
-发布版本。它不是 M15，也不属于 Starter/Authoring Skill；未来插件只负责只读采集与规范化，
-最终 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
+这类外部平台事实建立独立 `P` 轨。P0 设计合同已经冻结；P1 现有独立源码包、只读 CLI、离线合同
+测试和真实 GitHub 纵向切片，但仍是 **实现冻结候选**，没有插件标签、Release 或稳定发布坐标。
+它不是 M15，也不属于 Starter/Authoring Skill；插件只负责只读采集与规范化，最终
+`PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
 
 简单说，sealed Plan 决定“什么算通过”；observation request 只是带着 `plan_digest` 的有界取证清单，
 负责说明“去哪里看”，不再复制另一套通过规则。写 Plan 的人或 AI 也不会因为负责起草就自动获得
@@ -95,9 +96,11 @@ Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI。[PC2 �
 独立复算，并经 PR #26 九项远端检查、受保护主线合入和真实 GitHub 渲染读回固定在实现基线
 `fa8a5acac753456d37325bb0d9fac1b85add912b`。PC2 当前为 `FROZEN`；
 [P1 Structured GitHub API Collector 施工合同](docs/83-p1-structured-github-api-collector-contract.md)已在
-PR #28 九项远端门禁、受保护主线合入和真实 GitHub 页面读回后冻结，但实现仍为
-`IMPLEMENTATION_NOT_STARTED`。没有 GitHub Collector 或网络 probe，也不能用
-插件预生成“已通过”布尔值、占位实验字段或私有比较器绕过。
+PR #28 九项远端门禁、受保护主线合入和真实 GitHub 页面读回后冻结。独立实现与本地/真实网络证据见
+[P1 实现与冻结候选事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)；当前状态为
+`P1_IMPLEMENTED / FREEZE_CANDIDATE`，必须等独立 PR、required checks、受保护主线合入及未登录
+GitHub 页面读回后才能标记 `P1_FROZEN`。插件不得预生成“已通过”布尔值、占位实验字段或私有
+比较器绕过 Core。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -420,6 +423,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [PC1 通用 Acceptance Core 实现与候选事实 0.1](docs/81-pc1-acceptance-core-implementation.md)
 - [PC2 Acceptance Core 兼容与冻结事实 0.1](docs/82-pc2-acceptance-core-freeze-candidate.md)
 - [P1 Structured GitHub API Collector 施工合同 0.1](docs/83-p1-structured-github-api-collector-contract.md)
+- [P1 Structured GitHub API Collector 实现与冻结候选事实 0.1](docs/84-p1-structured-github-api-collector-freeze-candidate.md)
 
 ## 项目来源
 

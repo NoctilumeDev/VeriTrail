@@ -250,6 +250,8 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Post-P0 Core 兼容桥合同 0.1：AcceptancePlan 与跨 Evidence 关系](80-p0-core-compatibility-contract.md)
 - [PC1 通用 Acceptance Core 实现与候选事实 0.1](81-pc1-acceptance-core-implementation.md)
 - [PC2 Acceptance Core 兼容与冻结事实 0.1](82-pc2-acceptance-core-freeze-candidate.md)
+- [P1 Structured GitHub API Collector 施工合同 0.1](83-p1-structured-github-api-collector-contract.md)
+- [P1 Structured GitHub API Collector 实现与冻结候选事实 0.1](84-p1-structured-github-api-collector-freeze-candidate.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -289,6 +291,8 @@ session 无法直接比较；这些缺口不能用插件布尔值、虚构实验
 Evidence binding、跨 Evidence 关系与旧消费者隔离；81 已完成平台无关的 PC1 Core 实现；82 已在
 精确候选上完成 PC2 双 Python、全消费者、Workbench、正负 Bundle 独立复算、wheel clean install、
 敏感与清理门禁，并通过 PR #26 九项远端检查、受保护主线合入及真实 GitHub 渲染读回。PC2 当前为
-`PC2_FROZEN`，上述兼容前置门已经关闭；P1 仍为 `P1_NOT_STARTED`，本轮没有决定新版本、标签或
-Release。
+`PC2_FROZEN`，上述兼容前置门已经关闭。文档 83 随后冻结 P1 施工合同；文档 84 已按该合同实现
+独立只读 GitHub REST Collector、Evidence 规范化、双 Python 离线/兼容矩阵、wheel clean install 与
+真实 GitHub 纵向切片。当前状态为 `P1_IMPLEMENTED / FREEZE_CANDIDATE`；在独立 PR、required checks、
+受保护主线合入和未登录页面读回完成前，不得升级为 `P1_FROZEN`，也没有决定插件标签或 Release。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

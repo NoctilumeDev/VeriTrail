@@ -1,0 +1,91 @@
+{
+  "plan_kind": "ACCEPTANCE",
+  "schema_version": "0.1",
+  "plan_id": "github-p1-reference",
+  "version": 1,
+  "subject": {
+    "id": "veritrail",
+    "version": "8d3728cd2255c6a042c41183f9dc9e63e7ce547d",
+    "source_ref": "github:noctilumedev/veritrail"
+  },
+  "question": "Does GitHub expose the declared repository and exact immutable commit?",
+  "governance": {
+    "claim_owner_ref": "human:repository-owner",
+    "drafter_ref": "reference:plugin-example",
+    "seal_authority_ref": "human:repository-owner",
+    "seal_decision": "CONFIRMED"
+  },
+  "observation_specs": [
+    {
+      "id": "github-api",
+      "contract": {
+        "id": "github-observation-request",
+        "version": "0.1"
+      },
+      "evidence_type": "platform.github.api.snapshot",
+      "coordinates": {
+        "owner": "NoctilumeDev",
+        "repository": "VeriTrail",
+        "target_commit_sha": "8d3728cd2255c6a042c41183f9dc9e63e7ce547d",
+        "branch": "main"
+      },
+      "projections": [
+        "commit.identity",
+        "repository.default_branch",
+        "repository.identity"
+      ],
+      "canonicalization_profile": "veritrail-json-c14n/1"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "github-evidence",
+      "observation_spec_id": "github-api",
+      "cardinality": "EXACTLY_ONE"
+    }
+  ],
+  "sufficiency_rules": [
+    {
+      "id": "coverage-complete",
+      "left": {
+        "requirement_id": "github-evidence",
+        "path": "/metadata/veritrail_observation/coverage"
+      },
+      "operator": "eq",
+      "right": "COMPLETE"
+    }
+  ],
+  "integrity_rules": [],
+  "assertions": [
+    {
+      "id": "exact-commit",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "github-evidence",
+        "path": "/facts/commit/sha"
+      },
+      "operator": "eq",
+      "right": "8d3728cd2255c6a042c41183f9dc9e63e7ce547d"
+    }
+  ],
+  "resource_budget": {
+    "network_requests": 24
+  },
+  "change_scope": {
+    "level": "L3_SYSTEM",
+    "owner": "github-evidence-plugin",
+    "consumers": [
+      "acceptance-core"
+    ]
+  },
+  "reproduction_steps": [
+    "Run the bounded anonymous GitHub Evidence collector."
+  ],
+  "cleanup_steps": [
+    "Remove the generated local Evidence file."
+  ],
+  "seal": {
+    "algorithm": "sha256",
+    "digest": "76d5dc743734ca9ac12d689c0a2c5cf5c9adcea69a1f3fc51f4debc564796273"
+  }
+}
