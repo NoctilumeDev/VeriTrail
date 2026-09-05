@@ -118,6 +118,19 @@ P1 Collector 继续保持停止；下一项获准工作仅是另立 Core 兼容�
 语义，并为跨 Evidence 关系定义由 Core 拥有的比较能力。合同冻结前不创建 Collector、网络调用或
 GitHub 专用 Verdict 逻辑。
 
+该兼容桥现由 [Post-P0 Core 兼容桥合同 0.1](80-p0-core-compatibility-contract.md) 单独定义，并严格串行为：
+
+```text
+PC0  compatibility contract
+  -> PC1  generic Acceptance Core
+  -> PC2  backward-compatibility and runtime freeze
+  -> P1   Structured GitHub API Collector
+```
+
+PC 只是 P0 与 P1 之间的一次性公共语义桥，不是新的长期产品线，也不把插件重新塞进 Core。PC1 只实现
+平台无关的 AcceptancePlan、Evidence binding 与跨 Evidence rule evaluator；PC2 冻结兼容事实。PC2
+未达到 `FROZEN` 前，P1 不得启动。
+
 观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
 坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
 标识“在同一观察规格和规范化语义下得到的事实内容”；现有 EvidenceArtifact SHA-256 则标识包含

@@ -144,6 +144,10 @@ Plan 理解了提出者真正的问题或覆盖了现实的全部前提。
 该裁决不要求 P0 修改运行代码或公共 Schema，也不把插件重新并入 M15。后续兼容合同必须保持通用，
 只定义平台验收计划与跨 Evidence 关系的公共语义；GitHub 坐标、API 与页面采集仍留在独立 P 轨。
 
+该后续边界现由 [Post-P0 Core 兼容桥合同 0.1](80-p0-core-compatibility-contract.md) 定义为一次性
+`PC0 -> PC1 -> PC2` 桥。PC0 只冻结合同，PC1 只实现平台无关的 Acceptance Core，PC2 才冻结旧行为
+兼容与运行证据；三者都不是 P1 Collector。PC2 未达到 `FROZEN` 前，本评审的 P1 停止线继续有效。
+
 ## 5. 风险与预先裁决
 
 | 风险 | P0 裁决 |
@@ -257,7 +261,9 @@ P1 开始前必须重新确认；其中第 4、5 项已被本轮探针判定为�
 首轮 P0 文档经 [PR #21](https://github.com/NoctilumeDev/VeriTrail/pull/21) 受保护合入，merge commit 为
 `8944549a080e331a7021337e40de5c8accc49649`。请求/事实/Evidence 身份收口又经
 [PR #22](https://github.com/NoctilumeDev/VeriTrail/pull/22) 合入，merge commit 为
-`6635280c7aaa5b54da8f1a371b337658c0cb7317`。两轮随后都在真实 GitHub 公开渲染页逐项读回；第二轮
+`6635280c7aaa5b54da8f1a371b337658c0cb7317`。认识论边界和实现前语义找茬又经
+[PR #23](https://github.com/NoctilumeDev/VeriTrail/pull/23) 合入，merge commit 为
+`352ea611f7f7d349d9b9b61c0f68cc07b34c0743`。三轮随后都在真实 GitHub 公开渲染页逐项读回；后两轮
 明确核对了仓库首页最新 merge commit，以及：
 
 - README 的 P0 入口、Trust Ceiling、Epistemic Ceiling、`facts_digest` / EvidenceArtifact 分层与
@@ -267,5 +273,5 @@ P1 开始前必须重新确认；其中第 4、5 项已被本轮探针判定为�
   `normalization_semantics_version` 与 Plan 无关 revision 负例；
 - 本评审页的二十六类矩阵、事实/Evidence 身份、认识论边界、P0 非运行声明和 P1 进入门。
 
-这次读回使用最终网页渲染而非 API 内容代替，因此关闭了 P0 的最后展示层门禁；它不改变“API 与公开
+这些读回使用最终网页渲染而非 API 内容代替，因此关闭了 P0 的最后展示层门禁；它不改变“API 与公开
 页面同属 GitHub 共同信任域”的结论，也不等于 P1 已经开始。
