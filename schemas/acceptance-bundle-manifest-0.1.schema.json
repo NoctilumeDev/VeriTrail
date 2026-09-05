@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/acceptance-bundle-manifest-0.1.schema.json",
+  "title": "VeriTrail AcceptanceBundle Manifest 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_kind", "schema_version", "acceptance_id", "files"],
+  "properties": {
+    "bundle_kind": { "const": "ACCEPTANCE" },
+    "schema_version": { "const": "0.1" },
+    "acceptance_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "files": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 255,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "size"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "size": { "type": "integer", "minimum": 0, "maximum": 67108864 }
+        }
+      }
+    }
+  }
+}

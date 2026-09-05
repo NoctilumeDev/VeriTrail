@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/acceptance-report-0.1.schema.json",
+  "title": "VeriTrail AcceptanceReport 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_kind",
+    "schema_version",
+    "acceptance_id",
+    "created_at",
+    "plan",
+    "subject",
+    "question",
+    "governance",
+    "resource_budget",
+    "change_scope",
+    "reproduction_steps",
+    "cleanup_steps",
+    "evidence",
+    "execution_status",
+    "verdict",
+    "reasons",
+    "evidence_bindings",
+    "rule_results",
+    "missing_evidence"
+  ],
+  "properties": {
+    "report_kind": { "const": "ACCEPTANCE" },
+    "schema_version": { "const": "0.1" },
+    "acceptance_id": { "$ref": "#/$defs/identifier" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version", "sha256"],
+      "properties": {
+        "kind": { "const": "ACCEPTANCE" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "subject": { "type": "object" },
+    "question": { "type": "string", "minLength": 1 },
+    "governance": { "type": "object" },
+    "resource_budget": { "type": "object" },
+    "change_scope": { "type": "object" },
+    "reproduction_steps": { "type": "array", "items": { "type": "string" } },
+    "cleanup_steps": { "type": "array", "items": { "type": "string" } },
+    "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidenceEntry" } },
+    "execution_status": { "enum": ["PLANNED", "RUNNING", "COMPLETED", "ABORTED", "ERROR"] },
+    "verdict": { "enum": ["PASS", "FAIL", "INCONCLUSIVE", "PENDING"] },
+    "reasons": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/reason" } },
+    "evidence_bindings": { "type": "array", "items": { "$ref": "#/$defs/binding" } },
+    "rule_results": { "type": "array", "items": { "$ref": "#/$defs/ruleResult" } },
+    "missing_evidence": { "type": "array", "items": { "$ref": "#/$defs/identifier" } }
+  },
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nullableSha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "reason": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "requirement_id", "message"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "requirement_id": { "type": "string" },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "evidenceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_type", "path", "sha256", "size", "redacted_fields", "redacted", "redaction_rule_version", "parser_version", "captured_at", "source", "source_name", "retention", "observation_spec_digest", "facts_digest"],
+      "properties": {
+        "evidence_type": { "type": "string" },
+        "path": { "type": "string", "pattern": "^evidence/[^/]+\\.json$" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size": { "type": "integer", "minimum": 0 },
+        "redacted_fields": { "type": "integer", "minimum": 0 },
+        "redacted": { "type": "boolean" },
+        "redaction_rule_version": { "const": "privacy/0.1" },
+        "parser_version": { "const": "evidence-json/0.1" },
+        "captured_at": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "minLength": 1 },
+        "source_name": { "type": "string", "minLength": 1 },
+        "retention": { "const": "local-default" },
+        "observation_spec_digest": { "$ref": "#/$defs/nullableSha256" },
+        "facts_digest": { "$ref": "#/$defs/nullableSha256" }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirement_id", "observation_spec_id", "observation_spec_digest", "evidence_type", "cardinality", "status", "evidence_sha256", "candidate_count", "exact_match_count", "metadata_error_count"],
+      "properties": {
+        "requirement_id": { "$ref": "#/$defs/identifier" },
+        "observation_spec_id": { "$ref": "#/$defs/identifier" },
+        "observation_spec_digest": { "$ref": "#/$defs/sha256" },
+        "evidence_type": { "type": "string" },
+        "cardinality": { "const": "EXACTLY_ONE" },
+        "status": { "enum": ["RESOLVED", "MISSING", "BINDING_MISMATCH", "CARDINALITY_CONFLICT", "REUSE_CONFLICT"] },
+        "evidence_sha256": { "$ref": "#/$defs/nullableSha256" },
+        "candidate_count": { "type": "integer", "minimum": 0 },
+        "exact_match_count": { "type": "integer", "minimum": 0 },
+        "metadata_error_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "operandResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "requirement_id", "path", "resolution", "resolved", "value", "evidence_sha256"],
+      "properties": {
+        "kind": { "enum": ["EVIDENCE", "LITERAL", "NONE"] },
+        "requirement_id": { "type": ["string", "null"] },
+        "path": { "type": ["string", "null"] },
+        "resolution": { "enum": ["RESOLVED", "MISSING_REQUIREMENT", "MISSING_PATH", "NOT_APPLICABLE"] },
+        "resolved": { "type": "boolean" },
+        "value": {},
+        "evidence_sha256": { "$ref": "#/$defs/nullableSha256" }
+      }
+    },
+    "ruleResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "operator", "left", "right", "status", "explanation"],
+      "allOf": [
+        {
+          "if": {
+            "required": ["category"],
+            "properties": { "category": { "const": "ASSERTION" } }
+          },
+          "then": { "required": ["severity"] },
+          "else": { "not": { "required": ["severity"] } }
+        }
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "category": { "enum": ["SUFFICIENCY", "INTEGRITY", "ASSERTION"] },
+        "operator": { "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "contains", "exists", "set_equals", "contains_all"] },
+        "severity": { "enum": ["HARD", "DEGRADATION_BOUNDARY", "OBJECTIVE", "OBSERVATION"] },
+        "left": { "$ref": "#/$defs/operandResult" },
+        "right": { "$ref": "#/$defs/operandResult" },
+        "status": { "enum": ["PASS", "FAIL", "NOT_EVALUATED", "ERROR"] },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

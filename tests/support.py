@@ -6,7 +6,9 @@ from pathlib import Path
 from typing import Any
 
 from veritrail.canonical import canonical_json_bytes, sha256_bytes
+from veritrail.acceptance_plan import observation_spec_digest
 from veritrail.evidence import ImportedEvidence
+from veritrail.evidence import import_evidence_document
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 
@@ -330,3 +332,158 @@ def artifact(
         redacted_fields=0,
         input_name="unit-test.json",
     )
+
+
+def acceptance_plan() -> dict[str, Any]:
+    return {
+        "plan_kind": "ACCEPTANCE",
+        "schema_version": "0.1",
+        "plan_id": "platform-readback",
+        "version": 1,
+        "subject": {
+            "id": "public-delivery",
+            "version": "candidate-001",
+            "source_ref": "public-contract-fixture",
+        },
+        "question": "Do retained observations satisfy the declared delivery coordinates?",
+        "governance": {
+            "claim_owner_ref": "fixture-claim-owner",
+            "drafter_ref": "fixture-plan-drafter",
+            "seal_authority_ref": "fixture-seal-authority",
+            "seal_decision": "CONFIRMED",
+        },
+        "observation_specs": [
+            {
+                "id": "api-spec",
+                "contract": {"id": "fixture.platform-api", "version": "0.1"},
+                "evidence_type": "platform.api",
+                "coordinates": {"resource": "release", "ref": "candidate-001"},
+                "projections": ["commit_sha", "collection_session_id", "coverage"],
+                "canonicalization_profile": "veritrail-json-c14n/1",
+            },
+            {
+                "id": "render-spec",
+                "contract": {"id": "fixture.public-render", "version": "0.1"},
+                "evidence_type": "platform.render",
+                "coordinates": {"resource": "readme", "ref": "candidate-001"},
+                "projections": ["commit_sha", "collection_session_id", "coverage"],
+                "canonicalization_profile": "veritrail-json-c14n/1",
+            },
+        ],
+        "evidence_requirements": [
+            {
+                "id": "api-evidence",
+                "observation_spec_id": "api-spec",
+                "cardinality": "EXACTLY_ONE",
+            },
+            {
+                "id": "render-evidence",
+                "observation_spec_id": "render-spec",
+                "cardinality": "EXACTLY_ONE",
+            },
+        ],
+        "sufficiency_rules": [
+            {
+                "id": "api-coverage",
+                "left": {
+                    "requirement_id": "api-evidence",
+                    "path": "/metadata/veritrail_observation/coverage",
+                },
+                "operator": "eq",
+                "right": "COMPLETE",
+            },
+            {
+                "id": "render-coverage",
+                "left": {
+                    "requirement_id": "render-evidence",
+                    "path": "/metadata/veritrail_observation/coverage",
+                },
+                "operator": "eq",
+                "right": "COMPLETE",
+            },
+        ],
+        "integrity_rules": [
+            {
+                "id": "same-session",
+                "left": {
+                    "requirement_id": "api-evidence",
+                    "path": "/metadata/veritrail_observation/collection_session_id",
+                },
+                "operator": "eq",
+                "right": {
+                    "requirement_id": "render-evidence",
+                    "path": "/metadata/veritrail_observation/collection_session_id",
+                },
+            }
+        ],
+        "assertions": [
+            {
+                "id": "api-commit",
+                "severity": "HARD",
+                "left": {
+                    "requirement_id": "api-evidence",
+                    "path": "/facts/commit_sha",
+                },
+                "operator": "eq",
+                "right": "candidate-001",
+            },
+            {
+                "id": "same-visible-commit",
+                "severity": "HARD",
+                "left": {
+                    "requirement_id": "api-evidence",
+                    "path": "/facts/commit_sha",
+                },
+                "operator": "eq",
+                "right": {
+                    "requirement_id": "render-evidence",
+                    "path": "/facts/commit_sha",
+                },
+            },
+        ],
+        "resource_budget": {},
+        "change_scope": {
+            "level": "L2_CONTRACT",
+            "owner": "acceptance-core",
+            "expected_blast_radius": "new acceptance-only path",
+            "consumers": ["acceptance-cli"],
+        },
+        "reproduction_steps": ["Import the retained fixture evidence."],
+        "cleanup_steps": ["Remove the generated temporary bundle."],
+    }
+
+
+def acceptance_artifact(
+    sealed_plan: dict[str, Any],
+    spec_id: str,
+    *,
+    facts: dict[str, Any],
+    session_id: str = "collection-001",
+    coverage: str = "COMPLETE",
+    plan_digest: str | None = None,
+    spec_digest: str | None = None,
+    input_name: str | None = None,
+) -> ImportedEvidence:
+    spec = next(item for item in sealed_plan["observation_specs"] if item["id"] == spec_id)
+    document = {
+        "schema_version": "0.1",
+        "evidence_type": spec["evidence_type"],
+        "source": "fixture-collector/0.1",
+        "captured_at": "2026-09-05T00:00:00Z",
+        "facts": copy.deepcopy(facts),
+        "metadata": {
+            "veritrail_observation": {
+                "schema_version": "0.1",
+                "canonicalization_profile": "veritrail-json-c14n/1",
+                "plan_digest": plan_digest or sealed_plan["seal"]["digest"],
+                "observation_spec_digest": spec_digest or observation_spec_digest(spec),
+                "request_seal_digest": sha256_bytes(b"fixture-request"),
+                "collection_session_id": session_id,
+                "collector_role": "fixture-collector",
+                "coverage": coverage,
+                "normalization_semantics_version": "fixture-normalization/0.1",
+                "facts_digest": sha256_bytes(canonical_json_bytes(facts)),
+            }
+        },
+    }
+    return import_evidence_document(document, input_name or f"{spec_id}.json")

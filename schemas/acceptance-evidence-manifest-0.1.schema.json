@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/acceptance-evidence-manifest-0.1.schema.json",
+  "title": "VeriTrail Acceptance Evidence Manifest 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest_kind", "schema_version", "acceptance_id", "artifacts", "duplicate_inputs_ignored"],
+  "properties": {
+    "manifest_kind": { "const": "ACCEPTANCE_EVIDENCE" },
+    "schema_version": { "const": "0.1" },
+    "acceptance_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
+    "artifacts": { "type": "array", "items": { "$ref": "#/$defs/evidenceEntry" } },
+    "duplicate_inputs_ignored": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "nullableSha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "evidenceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_type",
+        "path",
+        "sha256",
+        "size",
+        "redacted_fields",
+        "redacted",
+        "redaction_rule_version",
+        "parser_version",
+        "captured_at",
+        "source",
+        "source_name",
+        "retention",
+        "observation_spec_digest",
+        "facts_digest"
+      ],
+      "properties": {
+        "evidence_type": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "pattern": "^evidence/[^/]+\\.json$" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "size": { "type": "integer", "minimum": 0 },
+        "redacted_fields": { "type": "integer", "minimum": 0 },
+        "redacted": { "type": "boolean" },
+        "redaction_rule_version": { "const": "privacy/0.1" },
+        "parser_version": { "const": "evidence-json/0.1" },
+        "captured_at": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "minLength": 1 },
+        "source_name": { "type": "string", "minLength": 1 },
+        "retention": { "const": "local-default" },
+        "observation_spec_digest": { "$ref": "#/$defs/nullableSha256" },
+        "facts_digest": { "$ref": "#/$defs/nullableSha256" }
+      }
+    }
+  }
+}
