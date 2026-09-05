@@ -294,7 +294,7 @@ Evidence binding、跨 Evidence 关系与旧消费者隔离；81 已完成平台
 `PC2_FROZEN`，上述兼容前置门已经关闭。文档 83 的 P1 合同 0.1 随后冻结，文档 84 已据此实现独立
 只读 GitHub REST Collector、Evidence 规范化、双 Python 离线/兼容矩阵、wheel clean install 与真实
 GitHub 纵向切片；Freeze 前发现 rulesets 与 classic branch protection 的来源叠加反例，0.2 因而只重开
-这一模型点。当前状态仍为 `P1_IMPLEMENTED / FREEZE_CANDIDATE`；在修正候选的独立 PR、required
-checks、受保护主线合入和未登录页面读回完成前，不得升级为 `P1_FROZEN`，也没有决定插件标签或
-Release。
+这一模型点。修正已通过 PR #32 的 11 项门禁，以
+`main@5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入，并完成精确主线与匿名 README/事实文档
+读回。当前状态为 `P1_FROZEN / P2_NOT_STARTED`；插件标签与 Release 仍未决定。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

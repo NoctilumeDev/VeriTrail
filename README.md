@@ -55,11 +55,11 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P1 实现冻结候选）
+### 平台证据插件轨（P1 已冻结）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
-这类外部平台事实建立独立 `P` 轨。P0 设计合同已经冻结；P1 现有独立源码包、只读 CLI、离线合同
-测试和真实 GitHub 纵向切片，但仍是 **实现冻结候选**，没有插件标签、Release 或稳定发布坐标。
+这类外部平台事实建立独立 `P` 轨。P0 设计合同和 P1 实现均已冻结；P1 现有独立源码包、只读 CLI、
+离线合同测试、真实 GitHub 纵向切片与公开读回，但仍没有插件标签、Release 或稳定发布坐标。
 它不是 M15，也不属于 Starter/Authoring Skill；插件只负责只读采集与规范化，最终
 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
 
@@ -99,10 +99,11 @@ Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI。[PC2 �
 0.1 版已在 PR #28 九项远端门禁、受保护主线合入和真实 GitHub 页面读回后冻结；Freeze 前发现
 rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只重开这一处来源叠加语义。
 独立实现与本地/真实网络证据见
-[P1 实现与冻结候选事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)；当前状态仍为
-`P1_IMPLEMENTED / FREEZE_CANDIDATE`，必须等修正候选的独立 PR、required checks、受保护主线合入及
-未登录 GitHub 页面读回后才能标记 `P1_FROZEN`。插件不得预生成“已通过”布尔值、占位实验字段或
-私有比较器绕过 Core。
+[P1 实现与冻结事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)。0.2 修正已通过
+[PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
+`main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
+当前状态为 `P1_FROZEN / P2_NOT_STARTED`。插件不得预生成“已通过”布尔值、占位实验字段或私有
+比较器绕过 Core。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>

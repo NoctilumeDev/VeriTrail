@@ -68,11 +68,11 @@
   Bundle 独立复算、wheel clean install、敏感与清理本地门禁，并经 PR #26 九项远端检查、受保护
   `main` 合入及真实 GitHub 渲染读回固定在实现基线
   `fa8a5acac753456d37325bb0d9fac1b85add912b`。PC2 当前为 `FROZEN`。P1 合同随后经 PR #28 冻结，
-  独立 Structured API Collector 经 PR #30 合入 `main@9b45bd635dedd132dc8333c105c04723991c2670`，
-  当前仍是 `P1_IMPLEMENTED / FREEZE_CANDIDATE`。冻结事实 PR #31 在合入前因 required-check 来源
-  layering 反例关闭且未合并；P1 必须先把 rulesets 与 classic branch protection 改为独立叠加来源，
-  重新完成全矩阵、主线合入和公开读回。P1 冻结前仍不得进入公开浏览器采集、Core handoff、定时监控
-  或独立发布。
+  独立 Structured API Collector 经 PR #30 合入 `main@9b45bd635dedd132dc8333c105c04723991c2670`。
+  冻结事实 PR #31 在合入前因 required-check 来源 layering 反例关闭且未合并；0.2 修正经 PR #32 的
+  11 项门禁后，以 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入，并完成精确主线与匿名
+  README/事实文档读回。P1 当前为 `P1_FROZEN / P2_NOT_STARTED`；仍不得顺手进入公开浏览器采集、
+  Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
@@ -101,7 +101,7 @@
   不保存凭据。required checks 的 ruleset 与 classic branch protection 是独立适用来源：必须分别采集
   并聚合；同一有效要求只保留一个 item，同时保留全部来源 provenance；任一来源不可观察时不得以
   另一来源的成功冒充完整。该变化升级 `normalization_semantics_version`，不重算历史 Core digest。
-  任一冻结门不满足时保持 `P1_IMPLEMENTED / FREEZE_CANDIDATE`。
+  P1 已冻结；后续新反例只能显式重开受影响的语义边界，不得借修补之名静默扩张 P2/P3/P4。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
