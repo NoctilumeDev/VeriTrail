@@ -1,8 +1,12 @@
 # P1 Structured GitHub API Collector 施工合同 0.1
 
-> 状态：`P1_CONTRACT_CANDIDATE / IMPLEMENTATION_NOT_STARTED`
+> 状态：`P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`
 >
 > 精确主线基线：`d693f9eb5bdc899d3cb3a5bdd99792e60d2c7617`
+>
+> 合同候选提交：`a3ed9de6e087824e4771ff8a45570584126ec5c9`
+>
+> 受保护主线合同基线：`786cb7f8a07e79da57a3eb0cfef19a6baf631db4`
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM`
 >
@@ -434,8 +438,9 @@ P1 实现只有在以下条件全部满足后才能标记 `P1_FROZEN`：
 6. 最终 README 与 P1 事实文档在未登录 GitHub 页面真实读回；
 7. 最终状态仍明确没有 P2 浏览器、P3 Core handoff、P4 发布。
 
-本合同合入只允许把状态升级为 `P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`。在那之前不得创建
-`plugins/github-evidence`；在 P1 冻结前不得进入：
+本合同已经完成候选合入与公开页面读回，因此状态只升级为
+`P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`。这仍不授权在本次冻结补丁中创建
+`plugins/github-evidence`；在后继 P1 实现冻结前不得进入：
 
 - P2 公开渲染采集；
 - API/Render 双源关系；
@@ -446,3 +451,16 @@ P1 实现只有在以下条件全部满足后才能标记 `P1_FROZEN`：
 它验证的是已声明坐标之后的平台事实一致性与交付漂移，不证明封存之前的事实真实，也不裁定提出者的
 观点终极正确。未知仍是未知，冲突仍保留冲突：**它防的是漂移，不是阴谋；它负责裁决纪律，不替现实
 补答案。**
+
+## 13. 合同冻结事实
+
+- [PR #28](https://github.com/NoctilumeDev/VeriTrail/pull/28) 从精确基线
+  `d693f9eb5bdc899d3cb3a5bdd99792e60d2c7617` 审查候选
+  `a3ed9de6e087824e4771ff8a45570584126ec5c9`；合并前为 `CLEAN / MERGEABLE`。
+- 九项远端门禁全部为 `SUCCESS`：Python 3.10/3.13、双 wheel-only first run、双 Acceptance Core
+  freeze、E3 release download、Workbench 和 Starter PASS/FAIL golden path。
+- PR #28 以 merge commit `786cb7f8a07e79da57a3eb0cfef19a6baf631db4` 合入受保护 `main`。
+- 合入后在真实 GitHub Markdown 页面逐项读回标题、候选状态、精确基线、API version、独立包边界、
+  fact/Evidence/execution 身份分离和 P2/P3/P4 停止线；没有用 API 文本代替页面渲染。
+- 本冻结补丁只把已发生的远端事实和状态写回文档，不创建运行目录、不修改 Core/Schema/CLI/CI，
+  也不把合同冻结冒充 P1 Collector 已经存在。

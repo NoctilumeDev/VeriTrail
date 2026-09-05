@@ -94,8 +94,9 @@ Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI。[PC2 �
 又在双 Python、普通/优化模式、旧消费者、Workbench 与 wheel clean install 中完成正负 Bundle 的
 独立复算，并经 PR #26 九项远端检查、受保护主线合入和真实 GitHub 渲染读回固定在实现基线
 `fa8a5acac753456d37325bb0d9fac1b85add912b`。PC2 当前为 `FROZEN`；
-[P1 Structured GitHub API Collector 施工合同](docs/83-p1-structured-github-api-collector-contract.md)已进入
-候选评审，但实现仍为 `IMPLEMENTATION_NOT_STARTED`。没有 GitHub Collector 或网络 probe，也不能用
+[P1 Structured GitHub API Collector 施工合同](docs/83-p1-structured-github-api-collector-contract.md)已在
+PR #28 九项远端门禁、受保护主线合入和真实 GitHub 页面读回后冻结，但实现仍为
+`IMPLEMENTATION_NOT_STARTED`。没有 GitHub Collector 或网络 probe，也不能用
 插件预生成“已通过”布尔值、占位实验字段或私有比较器绕过。
 
 <details>

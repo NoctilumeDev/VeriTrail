@@ -1,9 +1,9 @@
 # VeriTrail GitHub Evidence Plugin 0.1 合同
 
-> 后继状态：`P1_CONTRACT_CANDIDATE / IMPLEMENTATION_NOT_STARTED`。PC2 已关闭本合同记录的 Core
+> 后继状态：`P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`。PC2 已关闭本合同记录的 Core
 > 兼容阻断；P1 的精确施工与验收边界见
 > [文档 83](83-p1-structured-github-api-collector-contract.md)。下文保留 P0 冻结时的探针与停止事实，
-> 不把历史未通过状态改写成已经存在 Collector。
+> 不把历史未通过状态改写成已经存在 Collector；文档 83 的实现前合同现已冻结。
 
 > 状态：`P0_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`
 >

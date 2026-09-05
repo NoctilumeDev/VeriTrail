@@ -1,14 +1,14 @@
 # Post-Core 平台证据插件 Plan v1
 
-> 状态：`P0_FROZEN / P1_CONTRACT_CANDIDATE / IMPLEMENTATION_NOT_STARTED`
+> 状态：`P0_FROZEN / P1_CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED`
 >
 > 基线：`VeriTrail Core 0.12.2`；M0–M14、E0–E3 与全部既有发布坐标保持只读
 >
 > 影响层级：独立平台插件产品线；Core、Starter、Authoring Skill 与 Workbench 均不修改
 
-> 后继状态：PC2 已冻结并关闭本页记录的 Core 兼容阻断；P1 的实现前边界现由
+> 后继状态：PC2 已冻结并关闭本页记录的 Core 兼容阻断；P1 的实现前边界已由
 > [P1 Structured GitHub API Collector 施工合同 0.1](83-p1-structured-github-api-collector-contract.md)
-> 收口。本页保留 P0 当时的探针结论，不把历史判断改写成已经实现 Collector。
+> 冻结合同收口。本页保留 P0 当时的探针结论，不把历史判断改写成已经实现 Collector。
 
 ## 1. 为什么另开 P 轨
 
@@ -133,7 +133,7 @@ PC0  compatibility contract
 
 PC 只是 P0 与 P1 之间的一次性公共语义桥，不是新的长期产品线，也不把插件重新塞进 Core。PC1 只实现
 平台无关的 AcceptancePlan、Evidence binding 与跨 Evidence rule evaluator；PC2 已冻结兼容事实。
-P1 当前只进入施工合同候选，Collector 仍未实现。
+P1 施工合同已冻结，Collector 仍未实现。
 
 观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
 坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
