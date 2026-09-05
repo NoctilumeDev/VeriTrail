@@ -1,10 +1,12 @@
-# P1 Structured GitHub API Collector 实现与冻结候选事实 0.1
+# P1 Structured GitHub API Collector 实现与冻结候选事实 0.2
 
 > 状态：`P1_IMPLEMENTED / FREEZE_CANDIDATE`
 >
-> 精确施工基线：`8d3728cd2255c6a042c41183f9dc9e63e7ce547d`
+> 0.1 精确施工基线：`8d3728cd2255c6a042c41183f9dc9e63e7ce547d`
 >
-> 影响层级：独立 `plugins/github-evidence` 包与公共 CI；不修改 Core、Schema、Starter、
+> 0.2 语义纠正施工基线：`9b45bd635dedd132dc8333c105c04723991c2670`
+>
+> 影响层级：P1 合同、独立 `plugins/github-evidence` 事实结构与规范化语义；不修改 Core、Schema、Starter、
 > Authoring Skill 或 Workbench 语义
 
 ## 1. 候选结论
@@ -16,6 +18,11 @@ request，串行读取 GitHub REST API，规范化平台事实，并输出标准
 
 当前状态只是冻结候选。只有候选经独立 PR、required checks、受保护 `main` 合入，并从未登录
 GitHub 页面真实读回 README 与本文后，才能升级为 `P1_FROZEN`。
+
+初始实现虽已完成本合同原 0.1 矩阵并由 PR #30 合入主线，但 Freeze 前反例证明 active rulesets 与
+classic branch protection 被错误建模成 primary/fallback。0.2 只纠正这一处 Observation Model：两个
+可同时适用的来源必须独立观察、聚合并保留 provenance。冻结事实 PR #31 因此关闭且未合并；既有绿灯
+不覆盖新反例。
 
 ## 2. 分层与依赖边界
 
@@ -60,32 +67,35 @@ digest 复算；Core 只拥有通用 Evidence 合同与最终裁决。
 总窗口使用 monotonic elapsed，不把墙钟当作预算权威。
 
 已实现的规范化投影覆盖 repository、exact commit、pull request、active rules/branch protection、
-required checks、check runs/statuses、release、bounded tag peel 和 Pages API metadata。同名异源检查
-保持独立；身份不足、重复资产、坐标不符、窗口内变化和可见性歧义进入显式 conflict/error，不能
-静默合并为成功事实。`401/403/404/429/304/5xx`、timeout、网络错误、损坏 JSON 和上限触发均
-fail closed。
+required checks、check runs/statuses、release、bounded tag peel 和 Pages API metadata。required-check
+采集无条件分别访问 active rulesets 与 classic branch protection；Ruleset=A、BranchProtection=B 得到
+A+B，Ruleset=[] 仍保留 B。同一 `context + integration/app identity` 来自两个来源时只形成一个有效
+item，但 `sources[]` 保留全部 provenance。任一来源不可观察时，另一来源的成功不能把 coverage 冒充
+为 `COMPLETE`。身份不足、重复资产、坐标不符、窗口内变化和可见性歧义进入显式 conflict/error；
+`401/403/404/429/304/5xx`、timeout、网络错误、损坏 JSON 和上限触发均 fail closed。
 
 最终 Evidence 不保留 Authorization、Cookie、原始 response body 或完整 request headers。发布采用
 create-new 与 atomic publish，不覆盖已有产物；异常或取消后的 staging 必须清理。
 
 ## 5. 离线与兼容回归
 
-插件现有 53 项测试，覆盖四个规范 JSON 向量、Plan-to-request 派生、四类身份分离、分页与预算、
+插件现有 57 项测试，覆盖四个规范 JSON 向量、Plan-to-request 派生、四类身份分离、分页与预算、
 PR/check/tag/release/Pages 正负链、HTTP/网络失败、凭据边界、Core 原字段断言、Evidence conformance
-与原子发布。串行本地结果为：
+与原子发布，并新增 ruleset+branch protection、空 ruleset、跨来源同项及来源不可观察四组单变量
+反例。串行本地结果为：
 
 | 门禁 | CPython 3.10 | CPython 3.13 |
 | --- | --- | --- |
-| 插件普通 / `-O` | `53/53` / `53/53` | `53/53` / `53/53` |
+| 插件普通 / `-O` | `57/57` / `57/57` | `57/57` / `57/57` |
 | Core 普通 / `-O` | `383/383` / `383/383` | `383/383` / `383/383` |
 | Starter 普通 / `-O` | `24/24` / `24/24` | `24/24` / `24/24` |
 | Authoring Skill 普通 / `-O` | `24/24` / `24/24` | `24/24` / `24/24` |
 
 两个真实 Authoring DRAFT preset 均为 `PASS`，并继续保持
 `NOT_RUN / NOT_SEALED / NO_VERDICT`。Workbench 完成 14 个文件、`173/173` 测试、零警告 lint、
-type-check、生产 build 和 moderate 依赖审计零漏洞。插件源码与测试通过 Ruff format/check；CI YAML
-由独立解析器读回 7 个作业。既有 M3 真实 Chromium smoke 完成 5 项检查与 102 个网络请求，HTTP
-错误为零，最终 `PASS` 且端口释放。
+type-check、生产 build 和 npm 官方审计端点 moderate 依赖审计零漏洞。插件源码与测试通过 Ruff
+format/check。M3 真实 Chromium smoke 完成 5 项检查与 102 个网络请求，console/page/request/HTTP
+错误均为零，最终 `PASS` 且端口释放。
 
 公共 CI 新增双 Python 插件测试与 wheel 构建，并新增无 checkout 的 wheel-only 作业：它只下载并
 安装同一矩阵产生的 Core wheel 与插件 wheel，再从 `site-packages` 验证公开版本、规范摘要向量和
@@ -99,20 +109,25 @@ CLI 入口。作业设置 `max-parallel: 1`，没有把真实 GitHub 的可变�
 8d3728cd2255c6a042c41183f9dc9e63e7ce547d
 ```
 
-最终候选复验分别使用匿名与认证会话，各串行执行 2 个 `GET`，均得到 `COMPLETE`。两次规范化结果的
+0.2 候选使用两个匿名 request instance 各串行执行 2 个 `GET`，均得到 `COMPLETE`。两次规范化结果的
 facts digest 相同：
 
 ```text
-1f99eda3c22e553e303c6f523c624b5c8c95a90fc44e5bfadc65fe33516cf136
+fffbdf2f5b76b898f386d379d3207c8463bc733544d26dde911780b6a33654bb
 ```
 
 两次 request seal、collection session 与 Evidence SHA 均不同，符合“同一事实不等于同一次观察”。
-认证会话只改变安全 provenance；最终 JSON 对 `Authorization`、`Bearer`、`Cookie` 与 token 形态扫描
-为零。另一次同坐标正链由 Core 得到 `PASS`；只改变 sealed assertion 期望的单变量负链由 Core 得到
-`FAIL`，证明 Collector coverage 与最终 Verdict 没有混成一层。
+`normalization_semantics_version` 已升级为 `github-rest-facts/0.2`，因此它不冒充 0.1 的事实身份。
+
+另以只读认证会话请求 `rules.required_checks`：真实调用顺序为 repository、exact commit、active rules、
+classic branch protection；active rules 返回 7 个 ruleset 要求，而 branch protection required-status
+endpoint 返回语义不确定的 404。Collector 保留已观察的 7 项，同时输出 `PARTIAL` 与
+`NOT_VISIBLE_OR_NOT_FOUND`，没有用 ruleset 成功遮蔽另一来源不可判；Evidence 的 token/Authorization/
+Bearer/Cookie 形态扫描为零。这是本次语义纠正的真实负链，不是 `COMPLETE` 正链。
 
 Python 3.10 与 3.13 还分别在无 checkout 的隔离环境中，只安装 Core `0.12.2` wheel 与插件 wheel，
-从 `site-packages` 完成真实匿名 `COMPLETE` 采集；没有从工作树偷导入源码。
+从 `site-packages` 完成真实匿名 `COMPLETE` 采集，均得到上述 0.2 facts digest；没有从工作树偷导入
+源码。
 
 ## 7. 范围外与停止线
 

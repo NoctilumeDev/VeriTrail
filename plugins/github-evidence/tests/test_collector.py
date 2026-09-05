@@ -120,6 +120,9 @@ class CollectorPositiveTests(unittest.TestCase):
                 [
                     {
                         "type": "required_status_checks",
+                        "ruleset_source_type": "Repository",
+                        "ruleset_source": "NoctilumeDev/VeriTrail",
+                        "ruleset_id": 42,
                         "parameters": {
                             "required_status_checks": [
                                 {"context": "build", "integration_id": 10},
@@ -128,6 +131,10 @@ class CollectorPositiveTests(unittest.TestCase):
                         },
                     }
                 ],
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/branches/main/protection/required_status_checks",
+                {"strict": True, "checks": []},
             )
             .add(
                 f"/repos/NoctilumeDev/VeriTrail/commits/{TARGET_SHA}/check-runs?filter=all&per_page=100",
@@ -173,10 +180,185 @@ class CollectorPositiveTests(unittest.TestCase):
         )
         facts = collect(plan, transport).artifact.document["facts"]
         self.assertEqual(len(facts["required_checks"]["items"]), 2)
+        self.assertEqual(
+            {
+                source["source_kind"]
+                for item in facts["required_checks"]["items"]
+                for source in item["sources"]
+            },
+            {"RULESET"},
+        )
         self.assertEqual(len(facts["observed_checks"]), 3)
         self.assertEqual(
             {item["source_kind"] for item in facts["observed_checks"]},
             {"CHECK_RUN", "COMMIT_STATUS"},
+        )
+
+    def test_ruleset_and_branch_protection_requirements_are_aggregated(self) -> None:
+        plan = acceptance_plan(["rules.required_checks"])
+        transport = (
+            base_transport()
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/rules/branches/main?per_page=100",
+                [
+                    {
+                        "type": "required_status_checks",
+                        "ruleset_source_type": "Repository",
+                        "ruleset_source": "NoctilumeDev/VeriTrail",
+                        "ruleset_id": 42,
+                        "parameters": {
+                            "required_status_checks": [
+                                {"context": "ruleset-build", "integration_id": 10}
+                            ]
+                        },
+                    }
+                ],
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/branches/main/protection/required_status_checks",
+                {
+                    "strict": True,
+                    "checks": [{"context": "protection-build", "app_id": 11}],
+                },
+            )
+        )
+
+        result = collect(plan, transport)
+        required = result.artifact.document["facts"]["required_checks"]
+
+        self.assertEqual(
+            [(item["context"], item["integration_id"]) for item in required["items"]],
+            [("protection-build", 11), ("ruleset-build", 10)],
+        )
+        self.assertEqual(
+            [source["source_kind"] for source in required["items"][0]["sources"]],
+            ["BRANCH_PROTECTION"],
+        )
+        self.assertEqual(
+            [source["source_kind"] for source in required["items"][1]["sources"]],
+            ["RULESET"],
+        )
+        self.assertEqual(
+            [
+                probe["probe_id"]
+                for probe in result.artifact.document["metadata"]["github_collection"][
+                    "probes"
+                ][-2:]
+            ],
+            ["active_rules", "required_status_protection"],
+        )
+
+    def test_empty_ruleset_result_does_not_suppress_branch_protection(self) -> None:
+        plan = acceptance_plan(["rules.required_checks"])
+        transport = (
+            base_transport()
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/rules/branches/main?per_page=100",
+                [],
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/branches/main/protection/required_status_checks",
+                {
+                    "strict": True,
+                    "checks": [{"context": "legacy-build", "app_id": 12}],
+                },
+            )
+        )
+
+        required = collect(plan, transport).artifact.document["facts"][
+            "required_checks"
+        ]
+
+        self.assertEqual(len(required["items"]), 1)
+        self.assertEqual(required["items"][0]["context"], "legacy-build")
+        self.assertEqual(
+            required["items"][0]["sources"],
+            [{"source_kind": "BRANCH_PROTECTION"}],
+        )
+
+    def test_same_requirement_from_both_sources_is_one_item_with_two_provenances(
+        self,
+    ) -> None:
+        plan = acceptance_plan(["rules.required_checks"])
+        transport = (
+            base_transport()
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/rules/branches/main?per_page=100",
+                [
+                    {
+                        "type": "required_status_checks",
+                        "ruleset_source_type": "Organization",
+                        "ruleset_source": "NoctilumeDev",
+                        "ruleset_id": 73,
+                        "parameters": {
+                            "required_status_checks": [
+                                {"context": "build", "integration_id": 10}
+                            ]
+                        },
+                    }
+                ],
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/branches/main/protection/required_status_checks",
+                {
+                    "strict": True,
+                    "checks": [{"context": "build", "app_id": 10}],
+                },
+            )
+        )
+
+        facts = collect(plan, transport).artifact.document["facts"]
+        required = facts["required_checks"]
+
+        self.assertEqual(len(required["items"]), 1)
+        self.assertEqual(
+            {source["source_kind"] for source in required["items"][0]["sources"]},
+            {"RULESET", "BRANCH_PROTECTION"},
+        )
+        self.assertEqual(required["items"][0]["sources"][1]["ruleset_id"], 73)
+        self.assertEqual(facts["conflicts"], [])
+
+    def test_unobservable_branch_protection_cannot_be_hidden_by_ruleset_success(
+        self,
+    ) -> None:
+        plan = acceptance_plan(["rules.required_checks"])
+        transport = (
+            base_transport()
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/rules/branches/main?per_page=100",
+                [
+                    {
+                        "type": "required_status_checks",
+                        "ruleset_source_type": "Repository",
+                        "ruleset_source": "NoctilumeDev/VeriTrail",
+                        "ruleset_id": 42,
+                        "parameters": {
+                            "required_status_checks": [
+                                {"context": "build", "integration_id": 10}
+                            ]
+                        },
+                    }
+                ],
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/branches/main/protection/required_status_checks",
+                status=404,
+            )
+        )
+
+        result = collect(plan, transport)
+        document = result.artifact.document
+
+        self.assertEqual(
+            document["metadata"]["veritrail_observation"]["coverage"], "PARTIAL"
+        )
+        self.assertEqual(len(document["facts"]["required_checks"]["items"]), 1)
+        self.assertIn(
+            "NOT_VISIBLE_OR_NOT_FOUND",
+            {
+                error["code"]
+                for error in document["metadata"]["github_collection"]["errors"]
+            },
         )
 
     def test_annotated_tag_is_peeled_to_commit_without_using_release_commitish(

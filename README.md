@@ -95,12 +95,14 @@ Schema、validator/seal、规则求值、AcceptanceBundle 与显式 CLI。[PC2 �
 又在双 Python、普通/优化模式、旧消费者、Workbench 与 wheel clean install 中完成正负 Bundle 的
 独立复算，并经 PR #26 九项远端检查、受保护主线合入和真实 GitHub 渲染读回固定在实现基线
 `fa8a5acac753456d37325bb0d9fac1b85add912b`。PC2 当前为 `FROZEN`；
-[P1 Structured GitHub API Collector 施工合同](docs/83-p1-structured-github-api-collector-contract.md)已在
-PR #28 九项远端门禁、受保护主线合入和真实 GitHub 页面读回后冻结。独立实现与本地/真实网络证据见
-[P1 实现与冻结候选事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)；当前状态为
-`P1_IMPLEMENTED / FREEZE_CANDIDATE`，必须等独立 PR、required checks、受保护主线合入及未登录
-GitHub 页面读回后才能标记 `P1_FROZEN`。插件不得预生成“已通过”布尔值、占位实验字段或私有
-比较器绕过 Core。
+[P1 Structured GitHub API Collector 施工合同](docs/83-p1-structured-github-api-collector-contract.md)的
+0.1 版已在 PR #28 九项远端门禁、受保护主线合入和真实 GitHub 页面读回后冻结；Freeze 前发现
+rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只重开这一处来源叠加语义。
+独立实现与本地/真实网络证据见
+[P1 实现与冻结候选事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)；当前状态仍为
+`P1_IMPLEMENTED / FREEZE_CANDIDATE`，必须等修正候选的独立 PR、required checks、受保护主线合入及
+未登录 GitHub 页面读回后才能标记 `P1_FROZEN`。插件不得预生成“已通过”布尔值、占位实验字段或
+私有比较器绕过 Core。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>

@@ -67,9 +67,12 @@
   `91004e99aaf4d3fb5cbae29d00057eff00f0b68a` 完成双 Python、普通/优化、旧消费者、Workbench、正负
   Bundle 独立复算、wheel clean install、敏感与清理本地门禁，并经 PR #26 九项远端检查、受保护
   `main` 合入及真实 GitHub 渲染读回固定在实现基线
-  `fa8a5acac753456d37325bb0d9fac1b85add912b`。当前状态是 `PC2_FROZEN / P1_NOT_STARTED`。PC2 不再
-  阻断后继规划，但在另行明确开启 P1 前仍不得进入 Structured API Collector、公开浏览器采集、
-  Core handoff、定时监控或独立发布。
+  `fa8a5acac753456d37325bb0d9fac1b85add912b`。PC2 当前为 `FROZEN`。P1 合同随后经 PR #28 冻结，
+  独立 Structured API Collector 经 PR #30 合入 `main@9b45bd635dedd132dc8333c105c04723991c2670`，
+  当前仍是 `P1_IMPLEMENTED / FREEZE_CANDIDATE`。冻结事实 PR #31 在合入前因 required-check 来源
+  layering 反例关闭且未合并；P1 必须先把 rulesets 与 classic branch protection 改为独立叠加来源，
+  重新完成全矩阵、主线合入和公开读回。P1 冻结前仍不得进入公开浏览器采集、Core handoff、定时监控
+  或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
@@ -95,7 +98,10 @@
   裁决规范化事实；禁止为 Schema 通过虚构实验字段，也禁止插件输出 Verdict-like boolean 绕过表达
   缺口。插件摘要固定 `veritrail-json-c14n/1` 与冻结测试向量，不重算历史 Core digest。P1 0.1 禁用
   conditional GET；tag 必须解引用到 `peeled_commit_sha`；Evidence 只保存匿名/只读认证 access mode，
-  不保存凭据。任一门不满足时保持 `P1_NOT_STARTED` 并另立兼容合同。
+  不保存凭据。required checks 的 ruleset 与 classic branch protection 是独立适用来源：必须分别采集
+  并聚合；同一有效要求只保留一个 item，同时保留全部来源 provenance；任一来源不可观察时不得以
+  另一来源的成功冒充完整。该变化升级 `normalization_semantics_version`，不重算历史 Core digest。
+  任一冻结门不满足时保持 `P1_IMPLEMENTED / FREEZE_CANDIDATE`。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

@@ -23,6 +23,7 @@ from veritrail_github.conformance import verify_github_evidence
 from veritrail_github.errors import CollectionError, ContractError, TransportError
 from veritrail_github.normalize import (
     annotated_tag_target,
+    merge_required_checks,
     normalize_active_rules,
     normalize_branch_protection,
     normalize_commit,
@@ -49,7 +50,7 @@ _SAFE_HEADER_FIELDS = {
 }
 
 COLLECTOR_IMPLEMENTATION_VERSION = "0.1.0"
-PARSER_IMPLEMENTATION_VERSION = "github-rest-parser/0.1"
+PARSER_IMPLEMENTATION_VERSION = "github-rest-parser/0.2"
 
 
 @dataclass(frozen=True)
@@ -351,39 +352,44 @@ class GitHubCollector:
                     fatal=False,
                     mode="list",
                 )
-                normalized_rules: list[dict[str, Any]] | None = None
+                required_check_occurrences: list[dict[str, Any]] = []
+                rules_observed = rules_payload is not None
                 if rules_payload is not None:
                     try:
-                        normalized_rules = normalize_active_rules(
-                            rules_payload, conflicts
+                        required_check_occurrences.extend(
+                            normalize_active_rules(rules_payload)
                         )
                     except ContractError:
+                        rules_observed = False
                         self._record_normalization_failure(
                             state, "active_rules", fatal=False
                         )
-                if normalized_rules is None:
-                    fallback = self._fetch(
-                        state,
-                        policy,
-                        "required_status_protection",
-                        f"{repository_path}/branches/{encoded_branch}/protection/required_status_checks",
-                        {},
-                        {"branch": default_branch},
-                        fatal=False,
-                    )
-                    if fallback is not None:
-                        try:
-                            normalized_rules = normalize_branch_protection(
-                                fallback, conflicts
-                            )
-                        except ContractError:
-                            self._record_normalization_failure(
-                                state, "required_status_protection", fatal=False
-                            )
-                if normalized_rules is not None:
+                protection_payload = self._fetch(
+                    state,
+                    policy,
+                    "required_status_protection",
+                    f"{repository_path}/branches/{encoded_branch}/protection/required_status_checks",
+                    {},
+                    {"branch": default_branch},
+                    fatal=False,
+                )
+                protection_observed = protection_payload is not None
+                if protection_payload is not None:
+                    try:
+                        required_check_occurrences.extend(
+                            normalize_branch_protection(protection_payload)
+                        )
+                    except ContractError:
+                        protection_observed = False
+                        self._record_normalization_failure(
+                            state, "required_status_protection", fatal=False
+                        )
+                if rules_observed or protection_observed:
                     facts["required_checks"] = {
                         "branch": default_branch,
-                        "items": normalized_rules,
+                        "items": merge_required_checks(
+                            required_check_occurrences, conflicts
+                        ),
                     }
 
         if not state.fatal and "checks.observed_runs" in projections:

@@ -40,18 +40,25 @@ class CoreProjectionAssertionTests(unittest.TestCase):
             assertion_path="/facts/required_checks/items/0/context",
             assertion_value="build",
         )
-        transport = base_transport().add(
-            "/repos/NoctilumeDev/VeriTrail/rules/branches/main?per_page=100",
-            [
-                {
-                    "type": "required_status_checks",
-                    "parameters": {
-                        "required_status_checks": [
-                            {"context": "build", "integration_id": 10}
-                        ]
-                    },
-                }
-            ],
+        transport = (
+            base_transport()
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/rules/branches/main?per_page=100",
+                [
+                    {
+                        "type": "required_status_checks",
+                        "parameters": {
+                            "required_status_checks": [
+                                {"context": "build", "integration_id": 10}
+                            ]
+                        },
+                    }
+                ],
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/branches/main/protection/required_status_checks",
+                {"strict": True, "checks": []},
+            )
         )
         self._assert_pass(plan, transport)
 
