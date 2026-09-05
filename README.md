@@ -105,6 +105,36 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 当前状态为 `P1_FROZEN / P2_NOT_STARTED`。插件不得预生成“已通过”布尔值、占位实验字段或私有
 比较器绕过 Core。
 
+### 审查注意力插件轨（R0 蓝图候选）
+
+AI 可以把一个不完整的现实模型实现得整齐、自洽并通过全部测试。VeriTrail 因此另开独立顶层 `R` 轨：
+`R = Review`，不表示 Risk。它不替人宣布“这里有 bug”，而是把精确源码、确定性分析证据和可解释
+候选组织成注意力地图，再由人确认、驳回、争议或请求补证。
+
+```text
+Exact Source + Sealed Review Policy
+    -> Code Facts / Analyzer Evidence
+    -> Machine Proposal
+    -> Attention Map
+    -> Human Disposition
+    -> optional Core handoff
+```
+
+事实、Attention Proposal、人工处置和 Core Verdict 是四类不同 Artifact；AI confidence 也不等于项目审查
+优先级。机器提案使用“紫色 + 标签/图标/文字”表达来源，不使用红黄绿伪装结论。简单说：
+**它帮你少看，不帮你不看；减的是阅读负担，不减判断责任。**
+
+R 轨以插件能力接入，但不拆成失去闭环的微服务碎片：可替换 Provider 依赖稳定合同，同进程也不得
+共享权威或可变控制状态。R0 只冻结权威、Artifact、依赖、失败和视觉语义；真实反例进入独立、追加式
+Pattern Ledger。P2–P4 会继续为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
+
+当前仍是 `R0_BLUEPRINT_CANDIDATE / DESIGN_ONLY`，没有审查源码包、Schema、CLI、CI、标签或 Release；
+R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动，P2 此刻仍为 `P2_NOT_STARTED`。设计入口见
+[Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
+[R0 Contract](docs/86-review-attention-r0-contract.md)与
+[Review Pattern Ledger](docs/87-review-pattern-ledger.md)；本地找茬、修正和未完成的远端停止线见
+[R0 架构评审](docs/88-r0-review-attention-design-review.md)。
+
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
 
@@ -427,6 +457,10 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [PC2 Acceptance Core 兼容与冻结事实 0.1](docs/82-pc2-acceptance-core-freeze-candidate.md)
 - [P1 Structured GitHub API Collector 施工合同 0.1](docs/83-p1-structured-github-api-collector-contract.md)
 - [P1 Structured GitHub API Collector 实现与冻结候选事实 0.1](docs/84-p1-structured-github-api-collector-freeze-candidate.md)
+- [Post-Core Review Attention Plugin Plan v1](docs/85-post-core-review-attention-plugin-plan.md)
+- [Review Attention R0 Contract 0.1](docs/86-review-attention-r0-contract.md)
+- [Review Attention Pattern Ledger 0.1](docs/87-review-pattern-ledger.md)
+- [R0 Review Attention 架构评审与冻结候选事实](docs/88-r0-review-attention-design-review.md)
 
 ## 项目来源
 

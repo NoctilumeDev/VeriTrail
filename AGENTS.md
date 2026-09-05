@@ -102,6 +102,20 @@
   并聚合；同一有效要求只保留一个 item，同时保留全部来源 provenance；任一来源不可观察时不得以
   另一来源的成功冒充完整。该变化升级 `normalization_semantics_version`，不重算历史 Core digest。
   P1 已冻结；后续新反例只能显式重开受影响的语义边界，不得借修补之名静默扩张 P2/P3/P4。
+- `docs/85-post-core-review-attention-plugin-plan.md` 至 `docs/88-r0-review-attention-design-review.md` 新开独立顶层
+  Review Attention `R` 轨。`R = Review`，不表示 Risk；它与历史 `M12-R1/R2/R3` 无关，文档、未来
+  包与发布坐标必须使用完整名称，禁止裸 `r*` 标签。当前仅为
+  `R0_BLUEPRINT_CANDIDATE / DESIGN_ONLY`：只允许冻结权威、Artifact、依赖、失败、视觉语义、阶段门和
+  Pattern Ledger Schema；不得创建源码包、Schema、CLI、CI、标签、Release 或空实现骨架。
+  R 轨必须保持事实、Analyzer Evidence、机器 Proposal、Attention Map、Human Disposition 与 Core
+  Verdict 分离。机器只能提出需要关注的位置，不能确认缺陷；Provider 成功不等于覆盖完整，空提案
+  不得写成“无问题”。AI confidence 与 ReviewPolicy priority 必须分离；紫色仅表示机器提案来源，
+  界面还必须使用标签、图标/边框和文字，不得只靠颜色或把红黄绿结论语义借给提案。
+  可替换能力通过窄 Provider SPI 接入；同进程部署不等于共享权威，Core、P 插件和 Provider 实现不得
+  相互导入或共享可变控制状态。`docs/87-review-pattern-ledger.md` 在 R0 后继续 append-only/open，P2–P4
+  的新反例只能按 Schema 追加，不得反向改写 R0 或改变 P 轨范围。R1 必须等 P4 冻结并选定 exact
+  commit + manifest digest 的 Pattern Corpus 后才能启动。当前仍为
+  `P1_FROZEN / P2_NOT_STARTED`；先完成 R0 文档的受保护主线与匿名公开读回，再返回 P2。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
