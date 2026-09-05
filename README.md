@@ -62,6 +62,17 @@ GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公�
 发布版本。它不是 M15，也不属于 Starter/Authoring Skill；未来插件只负责只读采集与规范化，
 最终 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
 
+这条链验证的是精确坐标封存后的证据一致性与漂移，不是“真理证明”：GitHub API 与公开页面是同一
+平台的两个观察面，不是两个独立权威；插件和 Core 也不能证明信任锚建立前的源码、数据或结果未被
+预先伪造。工程上可概括为“防君子，不防小人”：提高误操作、事后漂移与低成本篡改的发现成本，不把
+内部自洽当作现实真实。**它防的是漂移，不是阴谋。** GitHub 之外的外部锚不纳入本产品；准确边界
+见插件合同。
+
+它还有独立的认识论上限：VeriTrail 不裁定一个被声明的观点在终极意义上是否正确，只裁定其预先
+声明的验收条件是否被保留证据满足。现实若模糊、不完整、冲突或不可判，这种不确定性必须继续可见。
+**现实拥有真相，VeriTrail 只拥有裁决纪律。** 它提供的是分层故障定位与责任归因，不是消灭误判、
+误解或蓄意造假的根治机制。
+
 设计边界见[平台证据插件 Plan](docs/77-post-core-platform-plugin-plan.md)、
 [GitHub Evidence Plugin 0.1 合同](docs/78-github-evidence-plugin-contract.md)与
 [P0 架构评审](docs/79-p0-github-plugin-design-review.md)。P1 在 P0 受保护主线与公开读回完成前不得施工。
