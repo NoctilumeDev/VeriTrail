@@ -30,7 +30,8 @@ P0–Pn   平台证据插件产品线
 flowchart LR
     Plan["Sealed ExperimentPlan"] -->|"semantic derivation + plan_digest"| Request["Bounded observation request"]
     Policy["Versioned Collector Policy"] -->|"runtime bounds + policy digest"| Request
-    Request --> Plugin["GitHub Evidence Plugin"]
+    Request --> Session["Collection Session"]
+    Session --> Plugin["GitHub Evidence Plugin"]
     GitHub["GitHub API / public web"] --> Plugin
     Plugin --> ApiEvidence["Evidence 0.1 · platform.github.api.snapshot"]
     Plugin --> RenderEvidence["Evidence 0.1 · platform.github.public-render"]
@@ -102,8 +103,20 @@ exact owner/repository + exact target commit + sealed plan_digest
 
 Observation Request 不拥有独立 `expected.*` 语义，只描述从 sealed Plan 按版本化规则机械派生的“去
 哪里看、看什么”，以及 Collector Policy 给出的非语义运行边界；P1 必须在联网前用实际 Plan 和 Policy
-分别重算比对，不能只相信 digest 字符串。现有 ExperimentPlan 能否无歧义承载 GitHub 坐标也必须先由
-Plan-to-request 映射夹具证明；若需要自由文本私约或 Core Schema 变更，停止 P1 并另立兼容合同。
+分别重算比对，不能只相信 digest 字符串。
+
+P1 写 Collector 代码前有两道独立兼容门。第一道用真实 Schema 和合成 Plan 证明 GitHub 坐标能够按
+字段原意无歧义派生，不能为“通过校验”虚构 PRIMARY variable、baseline、load model 或其他实验事实。
+第二道用现有 Core assertion algebra 证明 required checks、commit/ref、merge、tag/release 等首片规则
+能够只依据原始规范化事实裁决。插件不得预先生成 `all_required_checks_passed`、`api_render_match`、
+`release_is_correct` 等 Verdict-like boolean 再让 Core 判断 `true == true`。
+
+在 Core 0.12.2 上完成的 P0 离线兼容探针已经证明：单一 API Evidence 中的字段可以与 Plan 字面期望
+比较；但当前 `SINGLE_VARIABLE` Plan 会接受没有任何 `observed_variables` 的占位 PRIMARY，且不同
+Evidence 中的动态 session 值无法由现有 Assertion 直接比较。因此“结构可装入”尚未升级为“语义兼容”。
+P1 Collector 继续保持停止；下一项获准工作仅是另立 Core 兼容合同，选择不伪装成因果实验的验收计划
+语义，并为跨 Evidence 关系定义由 Core 拥有的比较能力。合同冻结前不创建 Collector、网络调用或
+GitHub 专用 Verdict 逻辑。
 
 观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
 坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
@@ -127,17 +140,35 @@ Same Fact != Same Observation != Same Request
 Fact Identity != Evidence Artifact Identity != Execution Identity
 ```
 
+Request 仍只是可验证、可重放的观察声明，不等于一次已经发生的观察。每次实际执行先建立新的
+`collection_session_id`；同一 request 重放必须产生新 session。只有由同一协调执行产生、明确携带同一
+session identity 的 API/Render Evidence，才可描述为同一次观察的多个产物；不同 session 的产物不能
+静默拼成一个观察。session ID 只用于 provenance/correlation，不进入 observation spec 或
+`facts_digest`，也不证明真实性或可信时间。墙钟记录“何时观察”，单调时钟产生
+`collection_elapsed_ms` 记录“采集耗时”；最大窗口约束只能使用后者判断。
+
+P1 所有插件侧摘要固定使用版本化 `veritrail-json-c14n/1`。它与 Core 0.12.2 现有
+`canonical_json_bytes` 行为及 `plan_digest` 关系必须由公开测试向量锁定；profile identity 与摘要值一起
+保留。该约束不回写历史 Plan，也不重算既有 Bundle。未知 profile、非有限 JSON 或首片未定义的浮点
+规范化必须在联网前拒绝。
+
 required check 的显示名不是唯一身份；P1 必须尽可能保留 producer/app、workflow/job 与来源类型。一次
 Evidence 由多次 GitHub 调用组成时，还必须保存每个 probe 的观察时间、实际操作数与总采集窗口，且不
 得把组合结果描述成 GitHub 的原子快照。
 
-首片默认匿名读取公开仓库；可选凭据必须只从运行时内存进入，且权限不超过所需只读范围。
+首片默认匿名读取公开仓库；可选凭据必须只从运行时内存进入，且权限不超过所需只读范围。Evidence
+只保留 `ANONYMOUS` 或 `AUTHENTICATED_READ_ONLY` access mode 及安全的可见性/权限类别，不保留 token、
+账号秘密或 Authorization。tag 事实必须区分 lightweight ref 与 annotated tag object，并保留
+`ref_target_sha`、`object_type` 与最终 `peeled_commit_sha`；Release `target_commitish` 不能代替真实 tag
+解引用。P1 0.1 首片不使用 conditional GET；在精确旧 Evidence SHA、旧 `facts_digest`、同一资源坐标与
+validator 的复用合同建立前，`304 Not Modified` 不能被当作当前事实。
 
 ### P2：公开渲染证据
 
 P2 在全新、未登录的浏览器 Context 中读取公开 README、Release 或 Pages 页面，记录最终 URL、HTTP
 状态、可见标记、链接目标和内容签名。API 事实与浏览器事实是同一平台下独立记录的两个观察面，
-不能互相冒充，也不能被计成两个独立权威。
+不能互相冒充，也不能被计成两个独立权威。若 Plan 要求它们属于同一次观察，P2 必须先证明现有 Core
+或另立的兼容合同能够校验共同 `collection_session_id`；不能只由插件选取两份产物后宣称已经配对。
 
 ### P3：Core handoff 与真实正负链
 
@@ -196,5 +227,11 @@ P0 完成只证明“施工边界已定义”，不证明插件存在。进入 P
 9. 文档通过链接、空白、敏感信息与历史口径检查；
 10. P0 设计经受保护主线合入并完成公开读回。
 11. request、fact、Evidence artifact 与 Core execution 的身份定义互不替代，且没有自引用摘要。
+12. observation spec、request 与实际 collection session 分离；跨 Collector 产物不能跨 session 静默配对。
+13. Plan/Schema 与 Core assertion algebra 的兼容探针已有可复现结论；若探针发现字段原义或关系表达
+    缺口，P1 Collector 保持停止，下一项工作只能是独立 Core 兼容合同，不能用插件布尔值或占位字段绕过。
+14. 插件摘要使用具名 canonicalization profile 与冻结测试向量；它不追溯改写 Core 历史摘要。
+15. `304`、tag peeling 与认证 access mode 已有 fail-closed 合同，不从无正文响应、tag object SHA 或
+    权限歧义推断当前事实。
 
 在这些条件满足前，只能继续修正文档，不能进入 P1。

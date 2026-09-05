@@ -11,7 +11,8 @@
 P0 只回答：GitHub 外部平台事实能否作为独立插件被采集，并在不重开 Core、不污染入口层、不让采集器
 获得裁决权的前提下，进入 VeriTrail 的现有证据链。
 
-结论为 **可以进入 P1 施工准备，但不能把 P0 描述为插件已经可用**。
+结论为 **P0 设计可以冻结，但当前 Plan/Schema 语义与跨 Evidence assertion 兼容门未通过；P1
+Collector 不得开工。下一项只允许设计独立 Core 兼容合同；P0 不能被描述为插件已经可用**。
 
 ## 2. 分轨裁决
 
@@ -34,6 +35,8 @@ P0 因此冻结为 `P` 轨起点。它与 M14、E3 并列存在，不是任何�
 - sealed Plan 是期望值、required set 与适用 probe 的唯一权威；它派生 request 的观察坐标；
 - versioned Collector Policy 只拥有 API 版本、超时和重试等运行边界；request 分别绑定 Plan 与 Policy，
   Policy 不得携带验收语义；
+- Collection Session 只拥有一次实际采集的 correlation identity 与 monotonic elapsed time；它不拥有
+  request、fact、可信时间或 Verdict；
 - Core 拥有 ExecutionStatus、Assertion 与 Verdict；
 - Workbench 只读。
 
@@ -57,7 +60,9 @@ GitHub API / public browser
 ```
 
 Core 不反向依赖插件；插件不导入 Core 私有实现；API Collector 与 Browser Collector 也不共享登录态
-或隐式全局缓存。组内允许围绕单一职责高内聚，组间只通过版本化请求和 Evidence 连接。
+或隐式全局缓存。request 可以重放，每次执行建立新 Collection Session；API/Render 只有在同一协调
+执行、同一 session identity 且关系可由 Core/兼容合同验证时，才可称为同一次观察的多个产物。组内
+允许围绕单一职责高内聚，组间只通过版本化请求和 Evidence 连接。
 
 ### 3.3 状态边界
 
@@ -103,6 +108,9 @@ Plan 理解了提出者真正的问题或覆盖了现实的全部前提。
 
 - 现有 `evidence.schema.json` 允许版本化通用 `evidence_type` 与 facts；P0 只设计相互独立的
   `platform.github.api.snapshot` 与 `platform.github.public-render`，没有修改 Schema。
+- 当前 ExperimentPlan 固定 `SINGLE_VARIABLE`，Assertion 只支持一个 `evidence_type`、一个 JSON
+  Pointer、一个 literal expected 与有限运算符；因此“Schema 可装入”和“Core 可无泄漏地裁决”必须
+  分别以真实 validator/evaluator 夹具证明，不能由文档假定。
 - `docs/01-evidence-model.md` 已要求证据、执行状态和裁决分离；插件合同没有另造裁决体系。
 - `docs/02-architecture.md` 已把技术栈差异交给适配器，并规定适配器失败不能修改 Core 裁决语义；P 轨
   把该原则落实为独立产品边界。
@@ -110,8 +118,31 @@ Plan 理解了提出者真正的问题或覆盖了现实的全部前提。
   倒写该历史。
 - M0–M14、E0–E3、Core `v0.12.0`/`v0.12.1`/`v0.12.2` 与入口层全部标签保持不可移动。
 
-若 P1 证明通用 Evidence 不能严格承载插件事实，必须停止并另开 Core 兼容合同；不能在插件里静默
-放宽 Schema 或复制 Core 验证器。
+### 4.1 Core 0.12.2 离线兼容探针
+
+本轮没有等到 P1 写代码才验证。基于合并提交
+`6635280c7aaa5b54da8f1a371b337658c0cb7317` 的现有 validator、Evidence importer 与 Verdict evaluator，
+在 Python 3.10.6 和 3.13.13 上执行了不落盘的合成探针：
+
+| 探针 | 实际结果 | 能证明什么 | 不能证明什么 |
+| --- | --- | --- | --- |
+| GitHub subject + 占位 baseline + `target_commit_sha` PRIMARY + 有界 load model；三个 API 原始字段与 Plan 字面值比较 | 两个 Python 均 `validator=ACCEPTED`、三条 Assertion `PASS`、Verdict `PASS` | 单一 Evidence 的 commit、merge 与具名 check 字段可由现有字面断言比较 | ExperimentPlan 字段已按因果实验原义使用 |
+| 上述 Evidence 完全不提供 `observed_variables` | 仍为 `PASS` | validator/evaluator 不要求 PRIMARY 必须被观察 | 声明 PRIMARY 已由证据覆盖 |
+| API session 为 `session-A`，Render session 为 `session-B`；两边只断言 session 字段存在 | 两条 Assertion `PASS`、Verdict `PASS` | 两份证据字段都存在 | 两份证据属于同一 Collection Session |
+
+代码读回同时确认，现有 Assertion 结构只有一个 `evidence_type`、一个 JSON Pointer、一个 literal
+`expected` 与有限运算符；跨 Evidence 动态值比较没有公共语义。`observed_variables` 的冲突检测不能作为
+替代合同：session 不是因果变量，NUISANCE 仍要求声明 value，而且任一产物漏报时也不能证明成对完整。
+
+因此当前事实不是“兼容门等待以后验证”，而是：
+
+- 单源 API 原始事实的字面比较能力已存在；
+- 非因果平台验收被迫装入 `SINGLE_VARIABLE` 的语义仍未成立；
+- API/Render 的共同 session 关系当前不能由 Assertion algebra 表达；
+- P1 Collector 保持 `P1_NOT_STARTED`；下一项工作只能是独立 Core 兼容合同，不能先写采集器再补语义。
+
+该裁决不要求 P0 修改运行代码或公共 Schema，也不把插件重新并入 M15。后续兼容合同必须保持通用，
+只定义平台验收计划与跨 Evidence 关系的公共语义；GitHub 坐标、API 与页面采集仍留在独立 P 轨。
 
 ## 5. 风险与预先裁决
 
@@ -121,16 +152,24 @@ Plan 理解了提出者真正的问题或覆盖了现实的全部前提。
 | Plan 与 request 同时持有期望 | Plan 是唯一期望权威；request 绑定 `plan_digest` 和派生规则版本，联网前从实际 Plan 重算，只携带观察坐标 |
 | 整个 Plan digest 污染 observation/fact identity | observation spec 只摘要自身版本、规范化坐标与投影；Plan 与 derivation 只进入 request binding/envelope |
 | Collector Policy 偷带通过条件 | Policy 只拥有 API 版本、超时、重试等运行边界，并独立绑定 digest；不能改变 Core assertion |
-| 现有 Plan 无法无歧义表达 GitHub 坐标 | P1 先冻结 Plan-to-request 映射夹具；若需自由文本私约或 Core Schema 变更，停止并另立兼容合同 |
+| 现有 Plan 无法无歧义表达 GitHub 坐标 | 本轮探针已阻断 P1；先另立 Core 兼容合同并冻结真实 Plan-to-request 映射，不允许自由文本私约或占位实验字段 |
+| 为适配 `SINGLE_VARIABLE` Schema 编造 PRIMARY variable、baseline 或 load model | Schema 验证不等于语义兼容；字段必须按原义成立，否则停止并另立兼容合同 |
+| Core 无法表达集合/跨证据关系 | 用真实 assertion 夹具证明首片规则可直接读取规范化事实；禁止插件生成 `*_passed` / `*_match` / `*_is_correct` 后让 Core 判断布尔值 |
 | request ID 或超时策略制造“事实漂移” | observation spec、Collector Policy 与 request envelope 三种摘要分开；`facts_digest` 不绑定实例噪音 |
+| 同一 request 多次执行或 API/Render 跨轮错配 | 每次执行建立新 `collection_session_id`；不同 session 不能冒充同一次观察，关系必须由 Core/兼容合同验证 |
 | `facts_digest` 与 Evidence 文件摘要混用 | 事实语义投影使用独立 `facts_digest`；具体证据产物沿用 Core 的 EvidenceArtifact SHA-256，禁止文件内自引用摘要 |
 | 所有版本号都被塞进事实身份 | API/客户端/解析器实现版本属于 provenance；只有规范化含义变化才升级 `normalization_semantics_version` |
 | 两次采集看到同一事实就被错误去重 | 允许 facts digest 相同而 Evidence artifact SHA-256、request 与 Core Run 不同；报告必须保留每次观察 |
 | Plan drafter 自动获得 Seal 权 | claim owner / Seal authority 与 Human/AI drafter 分列；起草不能代替确认 |
 | “最新”发生 TOCTOU | 请求固定 target SHA 与 probe 坐标；所有来源回传实际操作数 |
 | 多次 API 调用拼成不存在的同刻状态 | 保留 probe 级 `observed_at`、来源标识和 collection window；明确不是平台原子快照 |
+| wall clock 跳变污染最大窗口 | 墙钟只记“何时观察”；monotonic `collection_elapsed_ms` 才能判断耗时约束 |
+| SHA-256 稳定但 canonical bytes 未版本化 | 插件固定 `veritrail-json-c14n/1` 与跨 Python 测试向量；未知 profile/未定义浮点联网前拒绝，不重算 Core 历史摘要 |
 | 本地观察时间或 Plan digest 被包装成更强证明 | `observed_at` 只描述采集器窗口；digest 只证明内容绑定，不证明可信时间或现实身份 |
 | `404` 被误判为不存在 | 保留可见性/授权歧义，默认缺证据而非反例 |
+| 匿名与认证观察无法复盘 | Evidence 保存 `ANONYMOUS` / `AUTHENTICATED_READ_ONLY` 与安全权限类别，凭据本身零持久化 |
+| `304` 被当作带正文的当前事实 | P1 首片禁用 conditional GET；未来只有精确绑定旧 Evidence/facts/坐标/validator 才可复用 |
+| annotated tag object SHA 被误当成 commit SHA | 分开保存 ref target、object type、peel chain 与 `peeled_commit_sha`；Release target_commitish 不能替代实际解引用 |
 | 绿色检查绑错提交、错 context 或同名异源 | required set、observed set、head SHA 与 producer/app/workflow/source identity 分开保存；显示名不作为唯一身份 |
 | API 更新但页面缓存/部署仍旧 | P2 使用未登录真实浏览器形成独立 render evidence |
 | 插件状态污染 Verdict | 三套状态命名与所有权分开，无自动映射 |
@@ -158,12 +197,20 @@ P0 已在文档层完成：
   规范化与 digest 规则；
 - 固定 `facts_digest` 与现有 EvidenceArtifact SHA-256 的不同所有权，区分语义规范化版本与采集实现
   provenance，并拒绝自引用摘要和跨身份去重；
-- 固定 drafter / Seal authority 分离、check identity 与非原子采集窗口；
+- 固定 drafter / Seal authority 分离、check identity、Collection Session、monotonic elapsed 与非原子采集
+  窗口；
+- 固定 Plan/Schema 语义兼容与 Core assertion expressibility 两道独立门，禁止把 Verdict-like boolean
+  藏进插件；
+- 完成 Core 0.12.2 双 Python 离线兼容探针，记录单源字面断言可用、未观察 PRIMARY 仍可 `PASS` 与
+  跨 Evidence session 不可比较三项实际结果，并据此阻止 P1 Collector 提前开工；
+- 固定 `veritrail-json-c14n/1`、四组跨 Python 冻结向量和 plan digest 的无 `seal` 精确输入；
+- 固定 P1 首片禁用 conditional GET、tag peeling 与认证 access mode provenance；
 - 明确承诺后完整性与承诺前真实性的分界，以及 API/公开页面的共同信任域；
 - 将“防君子，不防小人”限定为工程信任模型，并把 GitHub 之外的外部锚列为产品非目标；
 - 明确观点真值不属于 VeriTrail 权威，并要求未知、冲突与不可判保持可见；
-- 覆盖二十六类正负验收场景：既约束信任与认识论上限，也专门防止双重期望权威、drafter 越权、
-  同名 check 误合并、多次调用伪装成原子快照和事实/证据身份混用；
+- 覆盖三十五类正负验收场景：既约束信任与认识论上限，也专门防止双重期望权威、drafter 越权、
+  同名 check 误合并、跨 session 错配、多次调用伪装成原子快照、未版本化 canonical bytes、缓存复用
+  越权和事实/证据身份混用；
 - 引用 GitHub 官方 REST API、认证、版本、限流和各资源接口文档；
 - 明确 Codex Security 深扫与攻击路径分析不在本阶段范围内。
 
@@ -173,37 +220,52 @@ README 读回是最后的冻结证据。
 
 ## 7. P1 进入门
 
-P1 开始前必须重新确认：
+P1 开始前必须重新确认；其中第 4、5 项已被本轮探针判定为未满足，必须先由独立 Core 兼容合同关闭：
 
 1. P0 文档已在受保护 `main` 可公开读回；
 2. 工作树从最新 `origin/main` 创建，且没有继承历史本地补丁；
 3. 只实现 API Collector，不提前进入浏览器、Core handoff 或发布；
-4. 先冻结 Plan-to-request derivation map，证明现有 Plan 可无歧义派生；再提交独立包的 request/facts
-   schema、Collector Policy、解析器与合成正负夹具，最后才接真实 GitHub；
-5. 真实请求严格串行、总量有界，默认匿名，凭据只用于明确需要的只读 probe；
-6. 输出与示例只使用带 GitHub 信任域的结论语言，不把双观察面包装成双权威；
-7. 插件与示例不得评价提出者观点，只能报告 sealed 条件与 Evidence 的关系，并保留不确定性；
-8. request schema 不含独立 `expected.*`，必须绑定 `plan_digest`、派生规则与 Collector Policy digest；
+4. 先冻结 Plan-to-request derivation map，证明现有 Plan 不仅可无歧义派生，而且 variables、baseline、
+   load model 等字段按原语义成立，没有为了 Schema 验证编造实验事实；
+5. 用当前 Core validator/evaluator 证明首片 assertion 可以直接读取规范化 GitHub 事实；若需要插件预先
+   输出 Verdict-like boolean、动态跨 Evidence 值比较或 Core Schema/规则变化，停止并另立兼容合同；
+6. 再提交独立包的 request/facts schema、Collector Policy、解析器与合成正负夹具，最后才接真实 GitHub；
+7. 真实请求严格串行、总量有界，默认匿名，凭据只用于明确需要的只读 probe；
+8. 输出与示例只使用带 GitHub 信任域的结论语言，不把双观察面包装成双权威；
+9. 插件与示例不得评价提出者观点，只能报告 sealed 条件与 Evidence 的关系，并保留不确定性；
+10. request schema 不含独立 `expected.*`，必须绑定 `plan_digest`、派生规则与 Collector Policy digest；
    坐标可从实际 sealed Plan 确定性派生，Policy 不含验收语义；
-9. Plan drafter 与 Seal authority 可区分，未获 Seal 的草稿不能启动采集；现有 seal 不冒充身份认证；
-10. check identity 不以显示名为唯一键；probe 级时间、操作数和 collection window 必须保留；
-11. observation spec、Collector Policy 与 request envelope 摘要职责分开；spec digest 不包含整个 Plan
+11. Plan drafter 与 Seal authority 可区分，未获 Seal 的草稿不能启动采集；现有 seal 不冒充身份认证；
+12. check identity 不以显示名为唯一键；probe 级时间、操作数和 collection window 必须保留；
+13. observation spec、Collector Policy 与 request envelope 摘要职责分开；spec digest 不包含整个 Plan
     或派生规则身份；`facts_digest`、现有 EvidenceArtifact SHA-256 与 Core Run identity 也分别拥有事实
     语义、具体证据产物与执行身份；
-12. `normalization_semantics_version` 与 API/客户端/解析器实现 provenance 分开，且同事实的独立采集
+14. 每次 request 执行建立新的 Collection Session；session ID 不进入 fact identity，跨 session API/Render
+    产物不能冒充同一次观察；窗口判断只使用 monotonic `collection_elapsed_ms`；
+15. `normalization_semantics_version` 与 API/客户端/解析器实现 provenance 分开，且同事实的独立采集
     不得被去重；
-13. Core 0.12.2 全量回归和秘密/路径零泄漏作为 P1 硬门禁。
+16. 所有插件摘要固定 `veritrail-json-c14n/1` 并通过四组冻结向量；unknown profile、非有限值与未定义
+    浮点规范化在联网前拒绝，历史 Core digest 不重算；
+17. P1 首片不使用 conditional GET；tag 比较使用 `peeled_commit_sha`；Evidence 保存 access mode 但不
+    保存凭据；
+18. Core 0.12.2 全量回归和秘密/路径零泄漏作为 P1 硬门禁。
 
 违反任一项时保持 `P1_NOT_STARTED`，回到合同评审，不以临时代码绕过。
 
 ## 8. 受保护主线与公开读回闭环
 
 首轮 P0 文档经 [PR #21](https://github.com/NoctilumeDev/VeriTrail/pull/21) 受保护合入，merge commit 为
-`8944549a080e331a7021337e40de5c8accc49649`。随后在真实 GitHub 公开渲染页逐项读回：
+`8944549a080e331a7021337e40de5c8accc49649`。请求/事实/Evidence 身份收口又经
+[PR #22](https://github.com/NoctilumeDev/VeriTrail/pull/22) 合入，merge commit 为
+`6635280c7aaa5b54da8f1a371b337658c0cb7317`。两轮随后都在真实 GitHub 公开渲染页逐项读回；第二轮
+明确核对了仓库首页最新 merge commit，以及：
 
-- README 的 P0 入口、Trust Ceiling、Epistemic Ceiling 与 `P1_NOT_STARTED` 停止线；
-- 文档 78 的第 8、9 节、三条风险路径、人机责任链和外部锚产品非目标；
-- 本评审页的认识论边界、P0 非运行声明和 P1 进入门。
+- README 的 P0 入口、Trust Ceiling、Epistemic Ceiling、`facts_digest` / EvidenceArtifact 分层与
+  `P1_NOT_STARTED` 停止线；
+- 文档 78 的 `Same Fact != Same Observation != Same Request`、
+  `Fact Identity != Evidence Artifact Identity != Execution Identity`、
+  `normalization_semantics_version` 与 Plan 无关 revision 负例；
+- 本评审页的二十六类矩阵、事实/Evidence 身份、认识论边界、P0 非运行声明和 P1 进入门。
 
 这次读回使用最终网页渲染而非 API 内容代替，因此关闭了 P0 的最后展示层门禁；它不改变“API 与公开
 页面同属 GitHub 共同信任域”的结论，也不等于 P1 已经开始。

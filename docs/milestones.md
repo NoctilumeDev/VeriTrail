@@ -267,7 +267,8 @@ Release 说明与门禁；文档 76 记录受保护标签、精确提交、五�
 文档 77–79 新开独立平台插件 `P` 轨。P0 只冻结 GitHub 外部平台事实的架构、合同、权限、失败语义
 与后继验收入口；它不是 M15，也不是 E4，不修改 Core、Starter、Authoring Skill、Workbench、
 Schema、CI 或任何既有版本。首轮 P0 文档已由 PR #21 合入
-`8944549a080e331a7021337e40de5c8accc49649`，并从真实 GitHub README、合同与评审渲染页完成公开
+`8944549a080e331a7021337e40de5c8accc49649`；身份语义补丁又由 PR #22 合入
+`6635280c7aaa5b54da8f1a371b337658c0cb7317`，两轮均从真实 GitHub README、合同与评审渲染页完成公开
 读回。P0 没有可运行插件与发布坐标，P1 仍须从最新受保护主线另行施工。P0 的信任上限只覆盖声明
 信任域内的证据一致性与承诺后完整性；GitHub API 和公开页面
 不是两个独立权威，也不能证明首次封存前的上游事实真实。P0 的认识论上限同样不裁定提出者观点，
@@ -275,4 +276,10 @@ Schema、CI 或任何既有版本。首轮 P0 文档已由 PR #21 合入
 Plan drafter、check identity 与非原子采集窗口均有独立边界。GitHub 之外的独立锚不进入当前产品路线。
 P0 还把 `facts_digest`、现有 EvidenceArtifact SHA-256、request identity 与 Core Run identity 分开：采集
 实现版本进入 provenance，只有规范化含义变化才升级事实语义版本；同事实的独立证据不得被去重。
+最终收口再把可重放 request 与实际 Collection Session 分开，窗口只使用 monotonic elapsed 判断，并
+为 Plan/Schema 语义、Core assertion expressibility 与 `veritrail-json-c14n/1` 建立 P1 前置门；P1 0.1
+禁用 conditional GET，tag 使用 peeled commit，认证只保留无秘密 access mode provenance。Core 0.12.2
+双 Python 离线探针已确认单源字面断言可执行，同时确认未观察 PRIMARY 仍可 `PASS`、不同 Evidence 的
+session 无法直接比较；所以当前门禁实际为未满足，P1 Collector 保持 `P1_NOT_STARTED`。下一项只能先
+设计独立 Core 兼容合同，不能用插件布尔值、虚构实验字段、偶然的变量冲突检测或缓存事实绕过。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

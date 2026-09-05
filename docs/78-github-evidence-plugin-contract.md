@@ -44,6 +44,18 @@ VeriTrail 可验证的 Evidence。它用于发现“本地、分支、PR、主�
 15. **Fact identity is not Evidence identity**：`facts_digest` 只标识规范化事实内容；现有
     EvidenceArtifact SHA-256 标识一份包含 provenance 的具体证据文件。二者不能互相替代，也不能与
     Core Run/Execution identity 混用。
+16. **Request is not observation**：sealed request 可以重放；每次实际采集必须建立新的 Collection
+    Session。同一 request、同一 facts 不等于同一次观察，跨 session 产物不得静默配对。
+17. **Core retains verdict authority**：Plan 与 Core assertion algebra 必须能直接基于原始规范化事实表达
+    所需规则；插件不得输出 `*_passed`、`*_match`、`*_is_correct` 等 Verdict-like boolean 规避表达缺口。
+18. **Schema validity is not semantic compatibility**：能通过 ExperimentPlan Schema 不等于按字段原意
+    建模；不得虚构 PRIMARY variable、baseline、load model 或其他实验事实来适配插件。
+19. **Canonical bytes are versioned**：SHA-256 只在 canonicalization profile 与输入投影同时明确时有
+    可复核语义；未知 profile、非有限 JSON 或未冻结数字规则必须 fail closed。
+20. **Cache response is not current fact**：`304 Not Modified` 没有当前表示正文；除非与精确旧 Evidence、
+    facts、资源坐标和 validator 绑定，否则不能重建当前事实。
+21. **Reference identity is not commit identity**：lightweight tag ref、annotated tag object、Release
+    metadata 与最终 commit 是不同坐标；比较提交时必须使用有来源的 `peeled_commit_sha`。
 
 ## 3. 请求合同
 
@@ -52,6 +64,7 @@ P1 实现前必须把输入冻结为版本化 `github-observation-request 0.1`�
 ```text
 schema_version
 request_id
+canonicalization_profile
 plan_digest
 derivation.version
 observation_spec.version
@@ -84,6 +97,17 @@ Plan 才拥有 required set、期望值和 assertion。请求的 `seal.digest` �
 unsigned envelope 计算 SHA-256；不得手工编辑。坐标、投影或适用 probe 变化时必须从新版本 Plan 重新
 派生，不能让 request 成为第二份期望权威。
 
+P1 兼容 Core 0.12.2 时，`request.plan_digest` 必须满足：
+
+```text
+request.plan_digest
+== verified sealed Plan.seal.digest
+== SHA256(veritrail-json-c14n/1(unsigned Plan excluding seal))
+```
+
+这里的最后一项是对 Core 0.12.2 现有实现行为的具名冻结，不给历史 Plan 新增字段，也不重算既有
+Bundle。整个 sealed Plan 文件（含 `seal`）的文件 SHA-256 不是 `plan_digest`。
+
 `observation_spec_digest` 只标识“观察什么”，必须由 `observation_spec.version`、规范化资源坐标、probe
 类型与有限投影计算；它不包含整个 `plan_digest` 或 `derivation.version`。后两者仍由 request envelope
 绑定，用来证明“这份观察规格从哪份 Plan、按哪条规则产生”。否则 Plan 中与观察规格无关的说明或
@@ -93,8 +117,8 @@ assertion 变化也会污染事实身份。两个 Plan revision 若机械派生�
 三个摘要用途不能混用：
 
 ```text
-observation_spec_digest  spec version + normalized coordinates/probes/projections (excluding its digest field)
-collector_policy.digest API version + public mode + timeout/retry/resource bounds (excluding its digest field)
+observation_spec_digest  c14n profile + spec version + normalized coordinates/probes/projections (excluding digest)
+collector_policy.digest c14n profile + API version + public mode + timeout/retry/resource bounds (excluding digest)
 request seal digest      canonical unsigned envelope, including request/Plan/derivation/spec/policy (excluding seal)
 ```
 
@@ -103,16 +127,66 @@ request seal digest      canonical unsigned envelope, including request/Plan/der
 都不等于批准者身份、可信时间或事实真实。
 这些都是请求侧身份，不是 `facts_digest` 或现有 EvidenceArtifact SHA-256 的别名。
 
+### 3.1 Canonicalization Profile
+
+P1 所有插件侧 JSON 摘要固定声明 `canonicalization_profile=veritrail-json-c14n/1`。Profile 1 精确复用
+Core 0.12.2 的 `canonical_json_bytes`：UTF-8、无 BOM、对象键按 Unicode code point 升序、分隔符固定为
+`,` 与 `:` 且不插入空白、非 ASCII 字符保持 UTF-8，仅按 JSON 要求转义控制字符/引号/反斜线，并拒绝
+`NaN` 与正负无穷。字段 absent 与显式 `null` 是不同输入。
+
+为避免不同运行时的浮点打印规则进入首片身份，P1 digest 投影只允许 string、boolean、null、整数、
+array 和 object；时间使用 RFC3339 string，耗时/大小/计数使用具名整数单位。需要浮点事实时必须先为
+其十进制/单位规范化另立 profile 版本，不能直接依赖语言默认序列化。
+
+冻结测试向量如下；哈希均对表中 canonical UTF-8 字节计算 SHA-256：
+
+| 输入语义 | Canonical JSON | SHA-256 |
+| --- | --- | --- |
+| empty object | `{}` | `44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a` |
+| key ordering | `{"a":1,"b":2}` | `43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777` |
+| Unicode / bool / null | `{"enabled":true,"label":"验迹","value":null}` | `8e7d13a7fc5609925598e1f5a9b8db749a4c54a49c4bea2acda36adf1418c270` |
+| nested array/object | `{"items":[3,2,1],"nested":{"a":"A","z":0}}` | `3ec5a09f647d26013353111c8569e41444237e1c517fd481658b3587f03b0f30` |
+
+未知 profile、非有限值、未声明浮点规范化、测试向量不匹配或请求/Policy/profile 身份不一致时，必须
+在联网前拒绝。Profile 变更不会追溯改变 Core 历史 Plan、Evidence 或 Bundle；需要兼容新 Core 时另立
+映射合同。
+
 现有 ExperimentPlan Schema 允许通用 variables、required evidence 与 assertions，但没有命名的 GitHub
 坐标字段。P0 不预判这些通用字段一定足以形成无歧义映射。P1 的第一项设计证据必须冻结
 Plan-to-request derivation map，并用合成 Plan 证明可重复派生；如果只能依赖自由文本、未声明私有字段
 或修改 Core 公共 Schema，必须停止 Collector 施工并另开兼容合同。
 
+通过 derivation map 只是第一道门。P1 还必须用当前 Core 的真实 Plan 校验器与 Verdict evaluator 证明：
+
+- GitHub 坐标使用 variables、baseline、load model 等字段时符合这些字段本来的实验语义，不是为了
+  Schema 通过而编造占位事实；
+- commit/ref、merge、required check identity/set、tag/release 等首片断言可以直接读取规范化事实；
+- 插件不需要先计算 `all_required_checks_passed=true`、`release_is_correct=true` 或同类结论；
+- 需要的集合包含、跨 Evidence 关系或动态值比较若超出现有 assertion algebra，必须停止并另开 Core
+  兼容合同，而不是把关系判断藏进 Collector。
+
+因此：**能被 Schema 塞进去，不等于语义兼容；能被 Core 比较，不等于裁决权没有泄漏。**
+
+P0 已对 Core 0.12.2 做离线兼容探针，得到两条必须保留的负事实：
+
+1. 合成 GitHub Plan 可以通过 validator，并在三个 API 字段字面断言通过时得到 `PASS`；即使 Evidence
+   完全没有 `observed_variables`，声明的 PRIMARY 也不会因此缺证据。这只证明结构接受，不证明
+   `SINGLE_VARIABLE`、baseline 与 load model 被按原义使用。
+2. API Evidence 的 `collection_session_id=session-A`、Render Evidence 的
+   `collection_session_id=session-B` 时，分别对两个字段做 `exists` 断言仍会得到 `PASS`。当前 Assertion
+   只比较“一个 evidence type 的一个 JSON Pointer”与 literal expected，不能表达跨 Evidence 动态相等。
+
+所以当前兼容门的裁决是 **未通过**，而不是“以后再测”。`P1_NOT_STARTED` 保持有效；下一项允许工作
+仅为独立 Core 兼容合同。该合同必须先解决非因果平台验收计划的真实字段语义，以及由 Core 判断的跨
+Evidence 关系，再决定是否需要公共 Schema/规则演进。插件不得利用 `observed_variables` 的偶然冲突
+检测、占位 NUISANCE 值或预计算布尔值冒充正式关系合同。
+
 默认拒绝：
 
 - 任意 URL、任意 Host、IP 字面量和 URL 中的凭据；
-- 缺失 `plan_digest`、派生规则版本、observation spec version/digest、Collector Policy digest、无法证明
-  机械派生关系，或缺失 `target.commit_sha` 的“检查最新状态”；
+- 缺失或未知 canonicalization profile，缺失 `plan_digest`、派生规则版本、observation spec
+  version/digest、Collector Policy digest、无法证明机械派生关系，或缺失 `target.commit_sha` 的“检查
+  最新状态”；
 - 通配符仓库、组织全量扫描和无限分页；
 - 页面脚本、自由文本 Shell、任意文件读取和响应体持久化。
 
@@ -130,7 +204,8 @@ P1 的固定网络目标仅为 `https://api.github.com`；P2 才允许由请求�
 - pull request state、head/base SHA、merged 状态与 merge commit；
 - required rules/check identities 与指定 commit 的 check runs/statuses；身份至少区分显示名、来源类型，
   并保留 API 可提供的 producer/app、workflow/job、外部标识与来源 URL；
-- tag、release、asset name/size/digest when available；
+- tag ref target、object type、bounded peel chain、最终 `peeled_commit_sha`、release metadata、asset
+  name/size/digest when available；lightweight ref 与 annotated tag object 分开记录；
 - Pages configuration/deployment metadata when applicable。
 
 它不下载任意 Release 资产，不解析 README 视觉结果，也不推断浏览器是否已经获得最新内容。
@@ -167,16 +242,18 @@ P2 使用全新、未登录、无持久 Profile 的浏览器 Context，只负责
 ```
 
 Public Render Collector 使用独立 `platform.github.public-render`，并引用同一 sealed request digest。
-Core 通过 Plan 关联两份 Evidence；插件不得把 API 与浏览器结果预先压成一个跨源布尔值。P0 不修改
-Core Schema。P1 必须先证明通用 Evidence 外壳足以严格校验插件事实；如果需要改变 Core 公共
-Schema，必须停止 P1，另开 Core 兼容合同，不能把字段校验塞进私有导入。
+目标合同要求 Core 通过 Plan 关联两份 Evidence；插件不得把 API 与浏览器结果预先压成一个跨源布尔
+值。P0 不修改 Core Schema，而本轮探针已经确认 Core 0.12.2 不能表达该跨源动态关系。因此必须先另开
+Core 兼容合同；在合同及其后继实现通过前，P1 Collector 不启动，也不能把字段或关系校验塞进私有导入。
 
 API Evidence 的 `facts` 至少保留：
 
 ```text
 request_identity
+collection_session_identity
 observation_spec_identity
 collector_policy_identity
+canonicalization_profile
 normalization_semantics_version
 facts_digest
 repository
@@ -190,19 +267,40 @@ request_binding
 collection_window
 probe_observations
 source_provenance
+access_mode
 coverage
 collection_errors
 ```
 
-Render Evidence 独立保留 request identity、observation spec identity、Collector Policy identity、
-`normalization_semantics_version`、`facts_digest`、requested/final URL、navigation、visible markers、links、
-content signature、viewport、provenance、coverage、collection window 与 collection errors。两个 Evidence
+Render Evidence 独立保留 request identity、collection session identity、observation spec identity、
+Collector Policy identity、canonicalization profile、`normalization_semantics_version`、`facts_digest`、
+requested/final URL、navigation、visible markers、links、content signature、viewport、provenance、access
+mode、coverage、collection window 与 collection errors。两个 Evidence
 类型各自对自己的语义投影计算 `facts_digest`；不得复用另一 Collector 的 fact identity，也不得因为引用
 同一 request 就合并成一份事实。`request_binding` 只
 证明响应资源与请求坐标相符，例如“响应 commit SHA 等于本次 target commit”；它必须保留两个操作数
 和推导规则版本，不能使用 `*_matches_expected` 一类暗示验收的名字。Evidence 是否满足 Plan 只能由
 Core 的 sealed assertion 计算；跨 API / 浏览器一致性也只能在 Core 内推导。所有 binding 都只是
 采集正确性事实，不是断言状态，更不是 Verdict。
+
+`collection_session_id` 在每次实际采集执行开始、任何 probe 之前创建；同一 sealed request 重放必须
+获得新 ID。它与 request seal、collector 类型和 session 内产物引用共同形成 provenance/correlation，
+不进入 observation spec 或 `facts_digest`，也不证明来源、时间或执行真实性。只有同一协调执行明确
+生成且携带同一 session identity 的 API/Render Evidence，才可称为同一次观察的多个产物；不同 session
+不得因 request 相同而混合。P2/P3 若无法由 Core 或单独兼容合同验证该关系，必须停止 handoff，不能
+由插件自行挑选后生成 `api_render_match=true`。
+
+每份产物至少保存以下 session 投影；session manifest 或 handoff 若引用多个产物，还必须绑定其精确
+EvidenceArtifact SHA-256，不接受“同目录”“最近一次”或仅 request 相同的隐式配对：
+
+```text
+collection_session_identity.session_id
+collection_session_identity.request_seal_digest
+collection_session_identity.collector_role
+collection_session_identity.collection_started_at
+collection_session_identity.collection_completed_at
+collection_session_identity.collection_elapsed_ms
+```
 
 采集状态只允许：
 
@@ -221,19 +319,21 @@ Core 的 sealed assertion 计算；跨 API / 浏览器一致性也只能在 Core
   采集器版本进入 provenance，不凭版本号变化自动制造新的事实身份。
 - 列表使用稳定事实身份排序；重复项不得静默覆盖。两个同名 check 若 producer、app、workflow、job
   或来源类型不同，必须保留为两个观察；若平台没有暴露足够身份，必须显式记录歧义，不能只按名称合并。
-- volatile headers、ETag、请求耗时、采集时间、速率窗口、request identity 与 Collector Policy 进入
-  provenance 或 metadata，不参与 `facts_digest`。
+- volatile headers、ETag、请求耗时、采集时间、速率窗口、request identity、collection session identity、
+  access mode 与 Collector Policy 进入 provenance 或 metadata，不参与 `facts_digest`。
 - `facts_digest` 必须只对如下语义投影计算 canonical SHA-256：
 
   ```text
+  canonicalization_profile
   observation_spec_digest
   normalization_semantics_version
   normalized source coordinates
   normalized fact values
   ```
 
-  该投影排除 `facts_digest` 字段自身、request envelope seal、request ID、采集时间、ETag、原始采集机制
-  版本以及 timeout/retry 等运行策略，避免循环摘要和实例噪音。`facts_digest` 相等只说明这份语义投影
+  该投影排除 `facts_digest` 字段自身、request envelope seal、request ID、collection session ID、采集
+  时间、ETag、原始采集机制版本以及 timeout/retry 等运行策略，避免循环摘要和实例噪音。
+  `facts_digest` 相等只说明这份语义投影
   相同，不证明采集完整、来源真实、Evidence 相同或 Plan 已满足；coverage、errors 与冲突仍须独立保留。
 - `normalization_semantics_version` 属于事实身份。若字段含义、缺省规则、单位、排序身份、冲突折叠或
   规范化投影改变，必须升级该版本；仅 API、客户端或解析器实现升级，而规范化含义与输出事实未变时，
@@ -252,7 +352,8 @@ Core 的 sealed assertion 计算；跨 API / 浏览器一致性也只能在 Core
 
 ```text
 same facts_digest + different Evidence artifact SHA-256
-same request instance + multiple Evidence artifacts
+same request instance + multiple Collection Sessions
+same Collection Session + one or more explicitly bound Evidence artifacts
 same fact identity + different Core Run / execution identity
 ```
 
@@ -270,32 +371,54 @@ Fact Identity != Evidence Artifact Identity != Execution Identity
 | Observation spec | spec version、规范化坐标、probe 与投影 | 观察的问题相同 | 来自同一 Plan 或 request |
 | Collector Policy | API/public mode、timeout、retry 与资源边界 | 有界采集策略相同 | 事实相同或验收通过 |
 | Request instance | 排除 seal 自身的完整 request envelope | 同一封存请求字节 | 同一次观察或执行 |
+| Collection session | 新 session ID、request seal 与本次协调执行上下文 | 同一次实际采集会话 | 事实相同、可信时间或 Plan 满足 |
 | Fact | observation spec、规范化语义版本与规范化事实 | 语义事实投影相同 | Evidence 完整、来源真实或 Plan 满足 |
 | Evidence artifact | Core 现有的脱敏完整 Evidence 文档 SHA-256 | 保留的具体 Evidence 字节相同 | 采集前事实真实或外部时间可信 |
 | Execution | Core Run identity 与对应 Bundle 上下文 | 同一运行坐标 | request、fact 或 Evidence 可互换 |
 
 每个 probe attempt 还必须记录稳定递增的采集序号、自己的 `observed_at`、实际请求操作数、返回资源
 标识，以及 API 可用时的 ETag 或等价来源标识；Evidence 外壳记录 `collection_started_at` 与
-`collection_completed_at`。这些本地时间
-只说明采集器观察窗口，不是 GitHub 事件发生时间、可信时间戳或外部真实性锚，也不参与事实摘要。多次
-调用或有界重试之间若资源发生变化，必须保留每次观察及冲突；不得只保存“最后一次”，也不得拼成
-一个从未同时存在过的“GitHub 原子快照”。只有 Plan 明确声明最大采集窗口且 Evidence 满足时，Core
-才可裁决相应时间约束，仍不能宣称平台提供了原子读。
+`collection_completed_at`，并使用同一进程内的 monotonic clock 记录非负整数
+`collection_elapsed_ms`。墙钟字段只说明采集器何时观察，不是 GitHub 事件发生时间、可信时间戳或
+外部真实性锚，也不参与事实摘要；最大采集窗口只能比较 `collection_elapsed_ms`，不能用两个 wall
+clock timestamp 相减。多次调用或有界重试之间若资源发生变化，必须保留每次观察及冲突；不得只保存
+“最后一次”，也不得拼成一个从未同时存在过的“GitHub 原子快照”。即使 Plan 的窗口约束满足，Core
+仍不能宣称平台提供了原子读。
 
 ## 7. 权限、凭据与网络
 
 默认模式匿名读取公开资源。GitHub 文档说明公开资源的部分检查接口可不认证读取；需要认证时，只接受
 运行时进程环境或调用方内存传入的可选 token，优先 fine-grained token，并限制到实际 probe 所需的
-只读权限。token 不得出现在 CLI 参数、URL、配置文件、Bundle、异常文本或测试快照中。
+只读权限。token 不得出现在 CLI 参数、URL、配置文件、Bundle、异常文本或测试快照中。Evidence 必须
+记录 `access_mode=ANONYMOUS|AUTHENTICATED_READ_ONLY`，并在端点能安全判断时记录可见性/权限类别；
+不得记录 token、Authorization 值、账号秘密或可用于重放认证的信息。`404` 的解释必须关联本次 access
+mode，不能脱离认证上下文宣称资源不存在。
 
 实现必须：
 
 - 设置 `Accept`、稳定 `User-Agent` 与显式 `X-GitHub-Api-Version`；
 - 串行、有界请求，不做组织级并发扫库；
-- 使用条件请求与缓存标识降低重复读取；
+- P1 0.1 首片禁用 conditional GET，不发送 `If-None-Match` / `If-Modified-Since`，也不把本地缓存当事实；
 - 遵守 `retry-after`、`x-ratelimit-remaining` 和 `x-ratelimit-reset`，有界退避后停止；
 - 区分 `401`、权限不足、主/次限流、网络超时、服务器错误和数据校验错误；
 - 不把 GitHub request headers、token 或原始响应 body 写入持久产物。
+
+### 7.1 `304 Not Modified` 与旧证据
+
+`304` 只表示请求表示相对于所带 validator 未变化，本身没有可重新规范化的当前 response body。
+因此 P1 0.1 选择禁用条件请求，以最小请求量换取来源清楚的 `200` 事实。若后继版本启用缓存，必须先
+另立合同并同时绑定：完全相同的资源坐标与请求参数、matching ETag/Last-Modified、精确旧
+EvidenceArtifact SHA-256、旧 `facts_digest`、旧 normalization/profile identity，以及本次 `304` 的
+probe provenance；任一项缺失只能形成缺证据/采集错误，不能重建当前事实。意外收到 `304` 时 fail
+closed，不沿用“最近一次”缓存。
+
+### 7.2 Tag 与 Release 解引用
+
+`refs/tags/<name>` 可能直接指向 commit（lightweight tag），也可能指向 annotated tag object。Collector
+必须保存 `ref_target_sha`、每一步 `object_type/object_sha`、有界 peel chain 和最终
+`peeled_commit_sha`。首片只接受最终解引用为 commit 的目标；循环、超过上限、tree/blob 或无法读取的
+对象记录为歧义/错误，不把 tag object SHA 与预期 commit 直接比较。Release 的 `target_commitish` 是
+平台 metadata，不替代 tag ref 与最终 commit 的实际解引用结果。
 
 官方依据：
 
@@ -501,6 +624,12 @@ Authoring 或人工流程可以在 Seal 前增加 premise review、反例、独�
 | request 的 `plan_digest` 不匹配或无法证明机械派生 | 网络前预检错误，不启动 probe | `PENDING` 或 `INCONCLUSIVE`；不得选择任一份期望继续 |
 | 两个 check 显示名相同但 producer/workflow 不同 | 分别保留身份与来源；身份不足时记录歧义 | 不能仅按名称判定 required check 已满足 |
 | 采集窗口内平台状态发生变化 | probe 级时间、操作数、来源标识与冲突 | 不能把组合 Evidence 描述为原子快照 |
+| API 与 Render 来自不同 collection session | 分别保留 session identity，拒绝冒充同一次观察 | 不得生成跨源一致性结论 |
+| wall clock 在采集中跳变 | 保留墙钟事实；窗口只使用 monotonic `collection_elapsed_ms` | 不得用墙钟差值制造超时或通过 |
+| Plan/Assertion 只能靠插件预计算布尔值才能表达 | 兼容门失败，不启动 Collector | 保持 `P1_NOT_STARTED`，另立 Core 兼容合同 |
+| canonicalization profile 未知或测试向量不匹配 | 联网前预检错误 | 不得计算或比较摘要 |
+| 首片意外收到 `304` | `ERROR`/缺事实，并保留无秘密 provenance | 不得从未绑定缓存重建当前事实 |
+| annotated tag object SHA 与 commit SHA 不同 | 保存 ref/object/peel chain，比较 `peeled_commit_sha` | 不得把 object SHA 差异直接判为 wrong tag |
 | probe 未在请求中声明 | `NOT_APPLICABLE` 或不输出 | 不得补做、不得扩大验收范围 |
 
 GitHub 官方说明某些私有资源在授权不足时会返回 `404`；因此 `404` 只有在请求权威和可见性已经独立
@@ -554,6 +683,26 @@ P1–P3 至少逐项建立独立夹具或真实证据：
 26. 只改变 Plan 中与观察规格无关的 revision 内容、并机械派生出完全相同 observation spec 时，
     `observation_spec_digest` 与同来源的 `facts_digest` 必须不变；request seal、Plan binding 与 Evidence
     artifact SHA-256 必须变化。
+27. 同一 sealed request 重放两次时必须产生两个 `collection_session_id`；若规范化事实相同，
+    `facts_digest` 可相同，但 session identity 与 Evidence artifact SHA-256 必须不同。
+28. API Evidence A 与 Render Evidence B 的 request 相同但 collection session 不同时，不得被称为同一次
+    观察或生成跨源匹配结果；同一协调执行的多个产物则必须携带相同 session identity。
+29. 合成 wall clock 前跳/后跳时，`observed_at` 保留实际观察值，最大窗口只依据 monotonic
+    `collection_elapsed_ms`；时钟跳变不得制造窗口 `PASS/FAIL`。
+30. 使用当前 Plan validator 与 Verdict evaluator 的首片夹具必须直接对规范化 commit/ref、merge、
+    required check、tag/release 事实形成断言；若必须由插件输出 Verdict-like boolean，兼容门失败。
+31. GitHub Plan 夹具必须按 PRIMARY variable、baseline、load model 等字段原义成立；仅为 Schema 通过而
+    编造占位实验事实时，兼容门失败并保持 `P1_NOT_STARTED`。
+32. `veritrail-json-c14n/1` 的四个冻结向量必须在受支持 Python 上逐字节与 SHA-256 一致；未知 profile、
+    `NaN`/无穷或首片浮点投影必须在联网前拒绝。sealed Plan 的 `plan_digest` 必须等于排除 `seal` 的
+    canonical 内容摘要，而不是整个 Plan 文件摘要。
+33. P1 首片不得发送 conditional GET；意外 `304` 或只有 validator 而没有精确旧 Evidence SHA、旧
+    `facts_digest` 和同坐标绑定时，必须缺证据/fail closed，不能复用最近缓存。
+34. lightweight tag 与 annotated tag 指向同一 commit 的夹具必须得到相同 `peeled_commit_sha`，同时保留
+    不同 ref/object provenance；错误目标、非 commit 目标和超过 peel 上限必须保持可区分。
+35. 匿名与只读认证采集必须分别保留 `access_mode`，同一可见事实可规范化为相同 `facts_digest`，具体
+    Evidence provenance/SHA 不同；token、Authorization 和可重放账号秘密必须为零，歧义 `404` 不得当作
+    不存在。
 
 每个负例只改变一个预注册变量；不能用同一份混合失败同时证明多个边界。
 
@@ -576,5 +725,6 @@ plugins/github-evidence/
 
 本产品不包含 GitHub 之外的独立见证、可信时间锚或来源真实性网络。首个版本也不包含 GitHub
 Enterprise、自定义 Host、GraphQL、webhook server、GitHub App 安装流程、
-自动定时器、组织级仪表盘、仓库修复、PR 合并、规则集修改、Release 发布、Pages 部署、跨平台统一
-SPI 或通用网页爬虫。后述 GitHub 平台能力需要新合同；外部见证不因新合同自动进入本产品路线。
+conditional GET/旧 Evidence 缓存复用、自动定时器、组织级仪表盘、仓库修复、PR 合并、规则集修改、
+Release 发布、Pages 部署、跨平台统一 SPI 或通用网页爬虫。后述 GitHub 平台能力需要新合同；外部见证
+不因新合同自动进入本产品路线。
