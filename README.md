@@ -110,7 +110,8 @@ Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话�
 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。Pages 根坐标修正冻结后，
 实现前可行性探针又证明 `Network.dataReceived` 的最终计数不能替代实时硬截断；合同现只重开
 response-body 预算的精确计量与 Chromium Fetch 流控制语义。Collector、P3 handoff、标签和 Release
-仍未创建。插件不得预生成“已通过”布尔值、占位实验字段或私有比较器绕过 Core。
+仍未创建。该反例已按 append-only 账本记录为 `RA-017`，没有反向改写 R0。插件不得预生成“已通过”
+布尔值、占位实验字段或私有比较器绕过 Core。
 
 ### 审查注意力插件轨（R0 架构已冻结）
 

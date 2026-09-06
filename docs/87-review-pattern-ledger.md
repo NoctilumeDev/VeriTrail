@@ -144,3 +144,60 @@ provenance: >
 
 这些方向是观察清单，不是预判 P2–P4 一定存在缺陷。新 Evidence 可以更新模式状态，但不能为了丰富
 Ledger 而制造问题或扩大 P 轨范围。
+
+## 8. P2 追加记录
+
+### RA-017 rev1：完成时计量冒充实时硬上限
+
+以下记录在 P2 Collector 编写前由真实 Chromium、慢速本地生产端与服务端完成/断开 oracle 共同触发。
+它不把某个 CDP API 宣布为“不可靠”，只要求硬限制必须证明自己真的在被测响应完成前取得控制权。
+`record_digest` 对删除该字段后的完整 JSON 按 `veritrail-json-c14n/1` 计算：
+
+```json
+{
+  "pattern_id": "RA-017",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:6ff5bd94dd858d9d0a3d6e25ea8e40cb19efb7e3d3fd72c28bd048e95ae10a2e",
+  "status": "GENERALIZED",
+  "source_coordinate": [
+    "VeriTrail contract correction candidate@91bdce6 docs/89-p2-public-render-collector-contract.md",
+    "https://chromedevtools.github.io/devtools-protocol/tot/Network/",
+    "https://chromedevtools.github.io/devtools-protocol/tot/Fetch/",
+    "https://chromedevtools.github.io/devtools-protocol/tot/IO/"
+  ],
+  "problem_layer": "Observation",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "CapabilitySemantics",
+  "suspicious_structure": "A hard limit is specified, but implementation measures a completion-time or delayed observation event without proving upstream interruption.",
+  "possible_interpretations": [
+    "The event is a real-time enforcement primitive.",
+    "The event is delayed or completion-time observation only.",
+    "The measured unit is response body payload rather than encoded wire transfer.",
+    "A passive observer must be replaced by an active bounded interception primitive."
+  ],
+  "required_evidence": [
+    "A slow streaming producer with sent, completed and disconnected state.",
+    "Separate oversized main-document and subresource fixtures.",
+    "The exact runtime/protocol primitive and measurement unit.",
+    "Proof that threshold crossing occurs before the producer completes."
+  ],
+  "minimal_counterexample": "A 40 MiB script under a 32 MiB total cap completes at the server before Network.dataReceived exposes enough bytes to trip the cap.",
+  "false_positive_conditions": [
+    "The runtime primitive guarantees sufficiently incremental delivery and that guarantee is verified against a producer-side completion oracle.",
+    "An independently enforced lower-layer transport quota bounds the same byte domain before the observer."
+  ],
+  "detectable_cues": [
+    "Network.loadingFinished or response.body used as the only size gate",
+    "Threshold checked only after complete body materialization",
+    "Tests assert a local counter but not producer sent/completed/disconnected state",
+    "Metric name says encoded transfer while code counts decoded body characters or payload bytes"
+  ],
+  "non_claim": "This pattern does not prove Chromium cannot enforce a hard response-body budget; P2 feasibility demonstrated Fetch.takeResponseBodyAsStream plus IO.read can interrupt the producer before completion.",
+  "provenance": "Observed 2026-09-06 during P2 8 MiB/32 MiB feasibility before Collector implementation; retained as a contract-model correction, not a defect verdict."
+}
+```
+
+该记录的解决方向不是“把超时或阈值调大”，而是先拆清计量对象，再选能在响应完成前主动中断的原语。
+P2 当前采用 identity response-body stream 作为有界对象，同时明确不声称测得 HTTP/TLS 线速字节。
