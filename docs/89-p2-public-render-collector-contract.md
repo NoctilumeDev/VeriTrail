@@ -1,6 +1,6 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_RESPONSE_BUDGET_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_PAUSED_AT_FEASIBILITY`
+> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -17,6 +17,12 @@
 > 修正后受保护主线基线：`4d0edfc8b94e7b8c8a07d47b61a25c8758725c2a`
 >
 > 修正后基线 Tree：`0bf3bd4fc43062b070c567d96be84f30e3c266ca`
+>
+> Response-budget 修正候选：`a769b338bc4928c489ce5bdcddcaef22e5ec56f5`
+>
+> Response-budget 受保护主线基线：`55babcf2171baa29db3718d53f6abc46885c23e4`
+>
+> Response-budget 基线 Tree：`5a8db1a68d7592f507948476aefc929e58a194ef`
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`
 >
@@ -907,3 +913,34 @@ Playwright optional extra 隔离与 matching bundled Chromium preflight，没有
 字段；P2 仍保持一页、`8/32 MiB`、45 秒、512 请求、零重试、匿名只读与零越界交付边界。只有本修正
 经 docs-only PR、完整门禁、受保护主线、exact-SHA 匿名公开读回和 docs-only closure 后，状态才可恢复为
 `P2_CONTRACT_0.1_FROZEN`，实现分支才能重建于新主线并继续。
+
+修正候选的合同提交 `91bdce640ab44efa7be8267b12ae394e9b6995cc` 与 append-only Ledger 提交
+`a769b338bc4928c489ce5bdcddcaef22e5ec56f5` 经
+[PR #42](https://github.com/NoctilumeDev/VeriTrail/pull/42) 的 Public CI
+[run 34015482222](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34015482222) 11 项门禁全部
+`SUCCESS`，以 merge commit `55babcf2171baa29db3718d53f6abc46885c23e4` 合入受保护 `main`；随后
+`origin/main` 与 tree 精确读回为该 SHA 与 `5a8db1a68d7592f507948476aefc929e58a194ef`，merge parents 也精确包含
+此前主线 `0ab22fbee7bb5e7a7d821c479cc7f3f4a744e332` 与候选 head。
+
+内置 browser skill 声明的本地文件仍不存在，不能作为完成证据。独立读回使用锁定 Playwright 1.62.0、
+matching bundled Chromium、全新匿名 non-persistent desktop context 与 `GET/HEAD`-only 路由，对 exact
+merge SHA 逐页观察：
+
+- README 返回 200、URL 不变、唯一 `article.markdown-body`，三次正文摘要稳定为
+  `31500768081b384892367ce599c93fbaec69175ad9017b801709530119a30c68`；候选状态命中 2 次，
+  `RA-017` 与 `Network.dataReceived` 各命中 1 次；
+- 本文返回 200、URL 不变、唯一作用域，三次摘要稳定为
+  `082d401db942181cd7ae316129153ab2207c78aa6b2bffc10d38a883d77fa0db`；“Response-budget 可行性
+  反例与合同重开”命中 1 次、`Fetch.takeResponseBodyAsStream` 命中 2 次，新总预算字段命中 1 次；
+- Pattern Ledger 返回 200、URL 不变、唯一作用域，三次摘要稳定为
+  `0b9eb8f70472a27015cefd07a4560c92cdf057b81d0cb6b6ed7352a9df12b79a`；`RA-017 rev1`、其
+  `record_digest` 与 `CapabilitySemantics` 各命中 1 次。
+
+三页初始 cookies/origins 均为 0/0，导航后 Cookie 均为 6；被阻断 telemetry write 分别为 2/3/2，
+console error 分别为 2/3/2，unexpected read host 均为 0，关闭后 matching Chromium 和 staging 残留均为
+0。noise 没有被隐藏，也没有被解释成正文失败。
+
+这次 closure 只重新冻结 response-body 预算合同和 `RA-017` 账本事实，不证明 P2 Collector 已实现。
+当前状态为 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；下一步必须从本 closure
+合入后的新 exact main 重建实现分支，恢复 optional dependency/preflight 候选，再开始受合同约束的
+response-body budget 与 Collector 施工。P3、P4 与 R1 仍未开始。
