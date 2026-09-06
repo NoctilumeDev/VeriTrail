@@ -306,7 +306,9 @@ GitHub 纵向切片；Freeze 前发现 rulesets 与 classic branch protection �
 合入与 exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。默认 Pages
 根坐标反例随后经 PR #40 的 11 项门禁、受保护主线合入和 exact-SHA 匿名 Render 读回，将空
 `pages_path` 冻结为站点根 `/` 的唯一表示。当前为
-`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`；尚无浏览器实现、P3 handoff、插件标签或 Release。
+`P2_CONTRACT_0.1_RESPONSE_BUDGET_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_PAUSED_AT_FEASIBILITY`；
+completion-time Network 计数不能冒充 response-body 硬截断，当前只重开精确计量与 Chromium Fetch
+流控制语义；尚无 Collector、P3 handoff、插件标签或 Release。
 
 文档 85–88 新开独立顶层 Review Attention `R` 轨；它不是 M15、P5 或 M13 的重跑。R0 只设计
 精确 Source Snapshot、ReviewPolicy、CodeFact/AnalyzerEvidence、机器 Proposal、Attention Map、
