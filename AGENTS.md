@@ -82,9 +82,10 @@
   `docs/89-p2-public-render-collector-contract.md`。P2 实现已从冻结后的 exact main 独立施工，经 PR #49
   的 11 项门禁合入 `main@ca6b8aaa33bc06795c96610b9e9085506efef9a0`，并从该 exact main 完成产品
   Collector 的 desktop/narrow 匿名 README 读回；实现与本地/远端证据见
-  `docs/90-p2-public-render-collector-freeze-candidate.md`。当前准确状态为
-  `P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`；只允许继续完成 docs-only closure 自身的
-  门禁、受保护主线合入和匿名公开读回，不得提前创建 P3 handoff、定时监控或独立发布。
+  `docs/90-p2-public-render-collector-freeze-candidate.md`。docs-only closure 又经 PR #50 的 11 项门禁合入
+  `main@2d3877df41d7ec5a3b7b932404f6b622f06862a8`，并从该 exact main 对 README/事实文档完成
+  desktop/narrow 匿名读回。当前准确状态为 `P2_FROZEN / P3_NOT_STARTED`；若继续，只能从新的 exact
+  main 单独定义并评审 P3，不得顺手创建 P4 发布、定时监控或 Review Attention R1。
   第一次 docs-only closure PR #43 因重复的 M10 Chromium cleanup timing failure 被否决并关闭，未合入；
   独立 PR #44 以单一绝对清理 deadline 修复并经 11 项门禁合入
   `main@25ff62f50a01fddc086c41740af802d9c2df0495`。当前 closure 必须从该 exact main 重建，不能 rerun 洗白

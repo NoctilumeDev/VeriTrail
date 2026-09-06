@@ -1,6 +1,6 @@
-# P2 Public Render Collector 实现与冻结闭环候选事实 0.1
+# P2 Public Render Collector 实现与冻结事实 0.1
 
-> 状态：`P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`
+> 状态：`P2_FROZEN / P3_NOT_STARTED`
 >
 > 精确实现基线：`cacb08539a9c2835320410ade03e68502ca5de6c`
 >
@@ -9,6 +9,8 @@
 > 受保护主线实现基线：`ca6b8aaa33bc06795c96610b9e9085506efef9a0`
 >
 > 主线 Tree：`4c45191a6fac4f4848883be94d0c646076716e56`
+>
+> 冻结闭环主线：`2d3877df41d7ec5a3b7b932404f6b622f06862a8`
 >
 > 本文影响层级：`L0_DOCUMENTATION_ONLY`；只记录已发生的 P2 实现与验收事实，不修改运行代码
 
@@ -19,9 +21,9 @@ Chromium、固定公开作用域、三样本内容观察、标准 `Evidence 0.1`
 协调的可运行纵向切片。Collector 只保存它实际观察到的事实；Evidence 的充分性、跨 Evidence 关系、
 assertion 与最终 Verdict 仍由 Core 拥有。
 
-当前还不是 `P2_FROZEN`。实现 PR、公共门禁、受保护主线合入和 exact-main 真实读回已经完成；本
-docs-only 闭环候选仍须通过自己的完整门禁、受保护主线合入和合入后匿名公开读回。任何新反例都可以
-否决冻结，既有 11/11、测试数量或真实浏览器成功不能覆盖新证据。
+实现 PR、公共门禁、受保护主线合入、exact-main 真实读回，以及独立 docs-only closure 自身的 11 项
+门禁、主线合入和合入后匿名公开读回均已完成，因此 P2 在本文边界内冻结为 `P2_FROZEN`。任何后继
+反例仍可显式重开受影响边界；冻结不会把既有绿灯升级为对未知现实的永久保证。
 
 ## 2. 实现边界
 
@@ -129,7 +131,7 @@ desktop 观察到 150 个请求和 `7,624,936` response-body bytes；narrow 观�
 `7,623,809` bytes。差异保留为两个实际观察，不被抹平成“相同网络世界”。两次 context 均在关闭后
 没有遗留项目拥有的 Playwright/Chromium 进程。
 
-## 7. 范围外与冻结停止线
+## 7. 范围外与后继停止线
 
 本候选没有进入：
 
@@ -139,18 +141,44 @@ desktop 观察到 150 个请求和 `7,624,936` response-body bytes；narrow 观�
 - Review Attention R1、Pattern Corpus 冻结或自动 HumanDisposition；
 - GitHub 之外的真实性锚点、Codex Security 深扫或“已经证明安全/真实”的声明。
 
-冻结剩余步骤严格串行：
+P2 冻结只解除 P3 的阶段阻断，不自动启动 P3。后继仍须严格串行：
 
 ```text
-本文与状态索引形成 docs-only 候选
-    -> 候选自己的 11 项 required checks
-    -> 合入受保护 main
-    -> 读回新的 exact origin/main SHA
-    -> fresh anonymous Chromium 读回 README 与本文
-    -> 最小状态事实补丁记录上述闭环
-    -> P2_FROZEN / P3_NOT_STARTED
+P2_FROZEN
+    -> 从新的 exact main 单独定义 P3 合同与验收矩阵
+    -> 合同冻结后才可实现正式 Core handoff
+    -> P3 完整正负 Verdict 链冻结后才可进入 P4
 ```
 
-在最后一步成立前，准确状态始终是
-`P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`。全绿不是冻结资格；任何新反例拥有
-否决权。
+P3、P4 与 Review Attention R1 当前仍未开始。不得把 P2 的配对 coordinator、标准 Evidence 或
+synthetic 纵向门冒充 P3 的正式 AcceptanceBundle/Verdict 闭环。
+
+## 8. Docs-only 冻结闭环事实
+
+1. docs-only 候选 `55977b79f9c681cf81508c1c2ab61b8fc860f963` 从精确实现主线
+   `ca6b8aaa33bc06795c96610b9e9085506efef9a0` 起步，只改 README、AGENTS、P 轨状态/索引与本文；
+2. [PR #50](https://github.com/NoctilumeDev/VeriTrail/pull/50) 的
+   [Public CI run 34034165712](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34034165712)
+   原始 attempt 共 11 个 job，全部 `COMPLETED / SUCCESS`，没有 rerun；
+3. PR #50 以 merge commit `2d3877df41d7ec5a3b7b932404f6b622f06862a8` 合入受保护 `main`；
+   合入后 `origin/main` 精确读回同一 SHA，tree 为
+   `6c5e7ddf5d9dd0fea8a8eb36aeda220c796a710c`，merge parents 为此前实现主线
+   `ca6b8aaa33bc06795c96610b9e9085506efef9a0` 与候选
+   `55977b79f9c681cf81508c1c2ab61b8fc860f963`；
+4. 从该 exact main 使用产品 `PublicRenderCollector`、锁定 Playwright 1.62.0 与 matching Chromium，
+   分别为 README 和本文建立 fresh anonymous desktop/narrow context；四次观察均返回 HTTP 200、
+   requested/final path 相同、唯一 usable scope、三样本全等、coverage `COMPLETE`；
+5. README 两个视口均观察到 19 个 heading 与 154 个 link；三样本摘要均为
+   `7dbd0eee60018535ebf95e6b618498e607a0afc2bf9be6fd1e1260a9f2e0980b`，并实际命中
+   `P2_IMPLEMENTED`、`FREEZE_CLOSURE_CANDIDATE` 与 `P3_NOT_STARTED`；desktop/narrow 分别记录
+   150/149 个请求与 `7,628,534 / 7,627,358` response-body bytes；
+6. 本文两个视口均观察到 8 个 heading 与 10 个 link，候选状态标记分别命中 2/2/3 次；desktop/narrow
+   的三样本摘要分别为 `7be2398a17b21396ea45579fa97fa9c77121167aa8ca9a2f1835e13d3e40e881` 与
+   `7b6f80cc42ab8854277a69880419347e25bc18eddf9043345a99d4a3dadaeced`，记录 141/140 个请求与
+   `7,316,980 / 7,315,812` response-body bytes；
+7. 四次观察的 policy-blocked writes 分别为 3/3/2/2，但影响 coverage 的网络冲突均为 0；body failure
+   均为 `null`，结束时 active streams 为 0，cleanup errors 为空。视口间差异作为真实观察保留，没有
+   被抹平成原子快照或相同网络世界。
+
+P2 至此冻结。下一阶段若启动，只能从新的 exact main 另行定义并评审 P3；当前准确状态为
+`P2_FROZEN / P3_NOT_STARTED`。
