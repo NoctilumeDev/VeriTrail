@@ -1,9 +1,11 @@
 # P3 Core Handoff 合同冻结事实
 
-> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。
+> 历史状态：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。
 > P3-A 本地候选实现暴露的快照连续性反例已按
 > [第 13.1 节](92-p3-core-handoff-contract.md#131-连续安全读取不等于同一快照)完成最小合同修正、独立地基修复、
 > 受保护主线合入与 exact-main 产品读回；本文继续保留第一次冻结、后继反例与第一次修正失败，不改写历史。
+> 后继当前事实为 `P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`，见
+> [文档 94](94-p3-core-handoff-implementation-freeze-candidate.md)。
 
 > 状态发布目标：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`
 >

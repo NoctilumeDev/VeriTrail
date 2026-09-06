@@ -121,6 +121,15 @@
   恢复为 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。只能从新的 exact
   main 重建 P3-A，再串行继续 P3-B；不得复用旧候选、rerun 洗白旧失败，或把 Browser 地基修复算作 P3
   证据。P4 与 Review Attention R1 仍不得启动。
+  P3 后继实现已从冻结后的 `main@589bbad7261cceda1aa3a6412278a48473a9b1b7` 严格串行完成 A–E；
+  [PR #64](https://github.com/NoctilumeDev/VeriTrail/pull/64) 的原始 11 项门禁把完整候选
+  `fa26dda516c354a5ddd08335202d3fd1cf5dbabb` 合入
+  `main@c0bce6cb7a3c9f3684d1845beda355084f232d0a`，随后 README 与 P3 合同完成 exact-main 匿名产品读回。
+  当前状态为 `P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`，事实见
+  `docs/94-p3-core-handoff-implementation-freeze-candidate.md`。第一次真实 E 暴露的 synthetic P2 fact path
+  漂移已由 `7e10e7a` 最小修正，并以 append-only `RA-021 rev1` 保留；不得把旧失败输出删除后冒充从未
+  发生，也不得把合成夹具的全绿替代真实标准 Evidence。P3 只有在 docs-only closure、主线合入与合入后
+  匿名读回全部成立后才可标记 `P3_FROZEN`；在此之前 P4 与 Review Attention R1 仍不得启动。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
