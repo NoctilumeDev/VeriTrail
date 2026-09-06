@@ -1,6 +1,6 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_ROOT_PATH_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`
+> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -11,6 +11,12 @@
 > 受保护主线合同基线：`8c624ec3aa83fe462e3578d8aa215e8ef9908332`
 >
 > 合同基线 Tree：`ddc84f65408831b6cd62640b572594e51fc1cc63`
+>
+> Pages 根坐标修正候选：`220765010b51a12cc2393e0c95439022fe893907`
+>
+> 修正后受保护主线基线：`4d0edfc8b94e7b8c8a07d47b61a25c8758725c2a`
+>
+> 修正后基线 Tree：`0bf3bd4fc43062b070c567d96be84f30e3c266ca`
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`
 >
@@ -806,6 +812,23 @@ exact-main worktree 进入 `P2_IMPLEMENTING`，不得提前进入 P3、P4 或 Re
 
 本修正只把 `pages_path = ""` 冻结为 Pages 专用的站点根坐标，并继续拒绝 repository Markdown 的空路径、
 尾随斜杠、`.` 和 redirect-based alias；它不开放任意 URL、自定义 Pages 域名、query、fragment 或新
-target kind。此前未提交的离线实现草案已经撤回，候选保持 docs-only。只有本修正经受保护主线合入、
-exact SHA 与匿名公开 Render 读回、再由 docs-only closure 记录后，状态才可恢复为
-`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`。
+target kind。此前未提交的离线实现草案已经撤回，候选保持 docs-only。
+
+修正候选 `220765010b51a12cc2393e0c95439022fe893907` 经
+[PR #40](https://github.com/NoctilumeDev/VeriTrail/pull/40) 的 Public CI
+[run 34012098362](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34012098362) 11 项门禁全部
+`SUCCESS`，以 merge commit `4d0edfc8b94e7b8c8a07d47b61a25c8758725c2a` 合入受保护 `main`；随后
+`origin/main` 与 tree 分别精确读回为该 SHA 和 `0bf3bd4fc43062b070c567d96be84f30e3c266ca`。
+
+锁定 Playwright 1.62.0 与 matching bundled Chromium 在 fresh、匿名、non-persistent desktop context 中
+读回 exact merge SHA：README 和本文均返回 200、requested/final URL 相同、恰好一个
+`article.markdown-body`，三次规范化正文摘要分别稳定为
+`8525538c2279480783c241b05a453679d91585bedc25c8237f4b8ec58b8fbd6e` 与
+`781220253e77cf29f27f20406d457d68b4fdf95d20b2298c7af8ba74665ef37b`。README 实际命中修正候选状态；
+本文实际命中 `pages_path = ""` 与“Pages 根坐标反例与合同重开”。两页初态 cookies/origins 均为 0/0，
+导航后 Cookie 为 6，各阻断 telemetry write 2 次、观察 console error 2 次、unexpected read host 为 0；
+关闭后 matching Chromium 进程为 0。noise 没有被抹掉，也没有被解释成正文失败。
+
+该读回只证明 docs-only 修正已进入公开渲染面，不证明 P2 Collector 已实现。状态现恢复为
+`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`；下一步必须从本 closure 合入后的新 exact
+main 开始 optional-capability 与 network-budget feasibility 施工，仍不得提前进入 P3、P4 或 R1。

@@ -74,7 +74,9 @@
   README/事实文档读回。P1 当前为 `P1_FROZEN`；P2 合同从精确主线
   `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 起步，经 PR #38 的最终 11 项门禁、受保护主线合入与
   exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。当前为
-  `P2_CONTRACT_0.1_ROOT_PATH_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`，合同位于
+  `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`。默认 Pages 根坐标反例随后经 PR #40
+  docs-only 修正为 `pages_path = ""` 的唯一表示，并在 11 项门禁、受保护主线与 exact-SHA 匿名 Render
+  读回后重新冻结；合同位于
   `docs/89-p2-public-render-collector-contract.md`。P2 实现只能从冻结后的新 exact-main worktree 独立
   开始；仍不得提前创建 Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
