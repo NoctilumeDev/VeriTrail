@@ -1,6 +1,6 @@
 # Post-Core 平台证据插件 Plan v1
 
-> 状态：`P0_FROZEN / P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_CANDIDATE`
+> 状态发布：`P0_FROZEN / P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_FROZEN`
 >
 > 基线：`VeriTrail Core 0.12.2`；M0–M14、E0–E3 与全部既有发布坐标保持只读
 >
@@ -8,7 +8,8 @@
 
 > 后继状态：PC2、P1、P2 合同与 P2 实现均已冻结；P2 事实见
 > [P2 实现与冻结事实](90-p2-public-render-collector-freeze-candidate.md)。本页保留 P0 当时的探针结论，
-> 不把历史判断改写成当时已经实现 Collector。P3 当前只进入合同候选，尚未开始实现。
+> 不把历史判断改写成当时已经实现 Collector。P3 合同冻结事实见[文档 93](93-p3-core-handoff-contract-freeze.md)，
+> 实现尚未开始。
 
 ## 1. 为什么另开 P 轨
 
@@ -133,7 +134,7 @@ PC0  compatibility contract
 
 PC 只是 P0 与 P1 之间的一次性公共语义桥，不是新的长期产品线，也不把插件重新塞进 Core。PC1 只实现
 平台无关的 AcceptancePlan、Evidence binding 与跨 Evidence rule evaluator；PC2 已冻结兼容事实。
-P1 与 P2 Collector 均已冻结；P3 只进入合同候选，实现仍未开始。
+P1 与 P2 Collector、P3 0.1 合同均已冻结；P3 实现仍未开始。
 
 观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
 坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
@@ -207,11 +208,12 @@ local success
 插件仍不输出 Verdict；Core 必须能把缺证据、证据冲突和真实不变量失败分开。
 
 P3 的精确施工边界见
-[P3 Core Handoff 与真实正负链合同 0.1](92-p3-core-handoff-contract.md)。合同候选明确以两份标准
+[P3 Core Handoff 与真实正负链合同 0.1](92-p3-core-handoff-contract.md)及其
+[冻结事实](93-p3-core-handoff-contract-freeze.md)。冻结合同明确以两份标准
 Evidence 和一个只绑定 role/path/digest 的极薄 handoff manifest 连接现有 Core；manifest 不复制
-Plan/session、facts、coverage 或 Verdict，Plan binding 与 session integrity 仍由 Core 裁决。合同完成
-docs-only 冻结闭环前，不得创建 manifest Schema、publisher、reference lab、示例 Plan 或
-AcceptanceBundle 产物。
+Plan/session、facts、coverage 或 Verdict，Plan binding 与 session integrity 仍由 Core 裁决。合同冻结
+只允许从新的 exact main 串行开始 P3-A；当前尚未创建 manifest Schema、publisher、reference lab、
+示例 Plan 或 AcceptanceBundle 产物。
 
 ### P4：独立发布与公共读回
 
