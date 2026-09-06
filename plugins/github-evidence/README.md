@@ -1,15 +1,25 @@
 # VeriTrail GitHub Evidence Plugin
 
-This package is the independent P1 Structured GitHub API Collector. It derives a
-sealed, read-only observation request from a VeriTrail `AcceptancePlan 0.1`,
-collects only the selected GitHub REST projections, normalizes source facts, and
-emits standard VeriTrail `Evidence 0.1`.
+This package contains two independently bounded, read-only capabilities:
 
-The package does not modify GitHub, evaluate acceptance assertions, collect
-browser-rendered content, or import VeriTrail private implementation symbols.
+- the base P1 Structured GitHub API Collector; and
+- the optional P2 GitHub Public Render Collector.
 
-See the repository-level P1 contract before using or changing this package:
-[`docs/83-p1-structured-github-api-collector-contract.md`](../../docs/83-p1-structured-github-api-collector-contract.md).
+Both derive sealed observation requests from a VeriTrail `AcceptancePlan 0.1`,
+retain source-specific facts, and emit separate standard VeriTrail
+`Evidence 0.1` artifacts. P1 reads selected GitHub REST projections. P2 observes
+fixed public GitHub render surfaces through an explicitly installed, matching
+Chromium runtime.
+
+The package does not modify GitHub, evaluate acceptance assertions, join P1 and
+P2 facts, or import VeriTrail private implementation symbols. VeriTrail Core,
+not either Collector, owns sufficiency, cross-Evidence integrity, assertions,
+and the final Verdict.
+
+See the repository-level contracts before using or changing these capabilities:
+
+- [`docs/83-p1-structured-github-api-collector-contract.md`](../../docs/83-p1-structured-github-api-collector-contract.md)
+- [`docs/89-p2-public-render-collector-contract.md`](../../docs/89-p2-public-render-collector-contract.md)
 
 ## Reference vertical slice
 
@@ -27,6 +37,44 @@ veritrail-github-collect `
 ```
 
 The optional credential is read only from `VERITRAIL_GITHUB_TOKEN` at runtime;
-there is intentionally no token command-line option. Anonymous collection is
-the default. The resulting file is standard `Evidence 0.1`; VeriTrail Core,
-not this plugin, owns assertion evaluation and the final Verdict.
+there is intentionally no token command-line option. Anonymous P1 collection is
+the default.
+
+P1 remains the base installation and does not require a browser dependency.
+The P2 public-render capability is installed explicitly with the `render`
+extra:
+
+```powershell
+python -m pip install ".[render]"
+python -m playwright install chromium
+```
+
+Importing the package and running the P1 collector or CLI must continue to work
+when Playwright is absent. Installing the extra does not install Chromium as a
+Collector side effect: the operator or build pipeline must preinstall the exact
+bundled browser before collection. P2 loads Playwright only inside its own
+capability boundary, never downloads a browser at runtime, and never falls back
+to a system browser.
+
+P2 is intentionally imported from its explicit capability modules rather than
+the P1-only top-level package surface:
+
+```python
+from pathlib import Path
+
+from veritrail_github.public_render_collector import PublicRenderCollector
+from veritrail_github.public_render_contracts import derive_public_render_request
+from veritrail_github.publisher import publish_evidence
+
+request = derive_public_render_request(
+    plan,
+    "github-public-readme",
+    "render-request-001",
+)
+result = PublicRenderCollector().collect(plan, request)
+publish_evidence(Path("github-render-evidence.json"), result.artifact)
+```
+
+The thin paired coordinator can give one P1 and one P2 collection a shared,
+plugin-created session identity and fixed P1-then-P2 order. It still publishes
+two Evidence files and never turns correlation into an atomic-snapshot claim.
