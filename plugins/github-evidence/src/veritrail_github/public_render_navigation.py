@@ -7,9 +7,6 @@ from urllib.parse import urlsplit
 
 from veritrail_github.errors import CollectionError
 
-
-NORMALIZATION_SEMANTICS_VERSION = "github-public-render-facts/0.1"
-
 _READ_METHODS = frozenset({"GET", "HEAD"})
 _GITHUB_TARGETS = frozenset(
     {

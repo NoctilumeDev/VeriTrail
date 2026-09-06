@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 from dataclasses import dataclass
+from types import SimpleNamespace
 
 from veritrail_github.public_render_browser import (
     FreshContextRejected,
@@ -295,6 +296,14 @@ class RenderBrowserSessionTests(unittest.TestCase):
             self.assertEqual(snapshot.conflicts, ())
             self.assertEqual(snapshot.main_frame_responses, ())
             self.assertEqual(
+                snapshot.runtime_events,
+                {
+                    "console_categories": {},
+                    "page_error_count": 0,
+                    "request_failure_categories": {},
+                },
+            )
+            self.assertEqual(
                 snapshot.response_bodies,
                 {
                     "total_response_body_bytes": 0,
@@ -318,13 +327,40 @@ class RenderBrowserSessionTests(unittest.TestCase):
             )
             self.assertFalse(browser.context_options["is_mobile"])
             self.assertFalse(browser.context_options["has_touch"])
-            self.assertTrue(
-                playwright.chromium.launch_options["headless"]
-            )
+            self.assertTrue(playwright.chromium.launch_options["headless"])
         self.assertTrue(context.cdp.detached)
         self.assertTrue(context.closed)
         self.assertTrue(browser.closed)
         self.assertTrue(playwright.stopped)
+
+    def test_runtime_noise_is_retained_only_as_safe_categories(self) -> None:
+        manager, _browser, context, _playwright = _fakes()
+        with RenderBrowserSession(
+            _request(),
+            playwright_factory=lambda: manager,
+            runtime_preflight=_FakePreflight,
+        ) as session:
+            context.page.events["console"](SimpleNamespace(type="error"))
+            context.page.events["console"](SimpleNamespace(type="warning"))
+            context.page.events["pageerror"](RuntimeError("secret payload"))
+            context.page.events["requestfailed"](
+                SimpleNamespace(failure="net::ERR_BLOCKED_BY_CLIENT")
+            )
+            context.page.events["requestfailed"](
+                SimpleNamespace(failure="could not load https://secret.example")
+            )
+
+            runtime_events = session.snapshot().runtime_events
+
+        self.assertEqual(
+            runtime_events["console_categories"], {"error": 1, "warning": 1}
+        )
+        self.assertEqual(runtime_events["page_error_count"], 1)
+        self.assertEqual(
+            runtime_events["request_failure_categories"],
+            {"ERR_BLOCKED_BY_CLIENT": 1, "OTHER": 1},
+        )
+        self.assertNotIn("secret", repr(runtime_events))
 
     def test_dirty_initial_state_stops_before_page_creation_and_navigation(
         self,

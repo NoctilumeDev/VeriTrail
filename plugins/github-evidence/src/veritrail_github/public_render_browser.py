@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import math
+import re
 import time
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping
@@ -68,6 +69,7 @@ class BrowserSessionSnapshot:
     response_bodies: dict[str, Any] | None
     main_frame_responses: tuple[dict[str, Any], ...]
     network: tuple[dict[str, Any], ...]
+    runtime_events: dict[str, Any]
     conflicts: tuple[dict[str, Any], ...]
     cleanup_errors: tuple[str, ...]
 
@@ -207,6 +209,11 @@ class RenderBrowserSession:
         self._scope_locator = None
         self._network_policy: PublicRenderNetworkPolicy | None = None
         self._network_records: list[dict[str, Any]] = []
+        self._runtime_events: dict[str, Any] = {
+            "console_categories": {},
+            "page_error_count": 0,
+            "request_failure_categories": {},
+        }
         self._main_frame_responses: list[dict[str, Any]] = []
         self._stability_response_baseline = 0
         self._conflicts: list[dict[str, Any]] = []
@@ -261,6 +268,9 @@ class RenderBrowserSession:
             self._context.on("page", self._reject_unexpected_page)
             self._page.on("download", self._reject_download)
             self._page.on("response", self._record_main_frame_response)
+            self._page.on("console", self._record_console_message)
+            self._page.on("pageerror", self._record_page_error)
+            self._page.on("requestfailed", self._record_request_failure)
             self._cdp_session = self._context.new_cdp_session(self._page)
             main_frame_id = _main_frame_id(self._cdp_session)
             response_policy = ResponseBodyPolicy(
@@ -494,6 +504,7 @@ class RenderBrowserSession:
                 copy.deepcopy(self._main_frame_responses)
             ),
             network=tuple(copy.deepcopy(self._network_records)),
+            runtime_events=copy.deepcopy(self._runtime_events),
             conflicts=tuple(copy.deepcopy(self._conflicts)),
             cleanup_errors=tuple(self._cleanup_errors),
         )
@@ -637,6 +648,23 @@ class RenderBrowserSession:
                 {"code": "MAIN_FRAME_RESPONSE_HANDLER_FAILED"}
             )
 
+    def _record_console_message(self, message: Any) -> None:
+        category = getattr(message, "type", None)
+        if not isinstance(category, str) or not category:
+            category = "unknown"
+        normalized = category.casefold()
+        counts = self._runtime_events["console_categories"]
+        counts[normalized] = counts.get(normalized, 0) + 1
+
+    def _record_page_error(self, _error: Any) -> None:
+        self._runtime_events["page_error_count"] += 1
+
+    def _record_request_failure(self, request: Any) -> None:
+        failure = getattr(request, "failure", None)
+        category = _request_failure_category(failure)
+        counts = self._runtime_events["request_failure_categories"]
+        counts[category] = counts.get(category, 0) + 1
+
     def _raise_body_failure(self) -> None:
         if self._body_controller is not None:
             self._body_controller.raise_if_failed()
@@ -650,6 +678,13 @@ def _default_playwright_factory() -> Any:
             "P2 render capability requires the explicit 'render' extra"
         ) from error
     return sync_playwright()
+
+
+def _request_failure_category(value: Any) -> str:
+    if not isinstance(value, str):
+        return "UNKNOWN"
+    match = re.search(r"\b(?:net::)?ERR_[A-Z0-9_]+\b", value.upper())
+    return match.group(0).removeprefix("NET::") if match else "OTHER"
 
 
 def _main_frame_id(cdp_session: Any) -> str:

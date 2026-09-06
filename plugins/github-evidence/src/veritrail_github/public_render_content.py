@@ -10,13 +10,13 @@ from urllib.parse import urljoin, urlsplit
 from veritrail.canonical import sha256_json
 from veritrail_github.errors import CollectionError
 from veritrail_github.public_render_contracts import (
+    PUBLIC_RENDER_NORMALIZATION_SEMANTICS_VERSION,
     PUBLIC_RENDER_VIEWPORTS,
     normalize_rendered_text,
 )
 from veritrail_github.public_render_navigation import safe_public_url_facts
 
 
-NORMALIZATION_SEMANTICS_VERSION = "github-public-render-facts/0.1"
 MAX_RENDERED_TEXT_BYTES = 524_288
 MAX_HEADINGS = 256
 MAX_LINKS = 512
@@ -184,7 +184,9 @@ def collect_content_sample(
         conflicts.extend(link_conflicts)
 
     digest_input = {
-        "normalization_semantics_version": NORMALIZATION_SEMANTICS_VERSION,
+        "normalization_semantics_version": (
+            PUBLIC_RENDER_NORMALIZATION_SEMANTICS_VERSION
+        ),
         "facts": facts,
         "truncations": truncations,
         "conflicts": conflicts,

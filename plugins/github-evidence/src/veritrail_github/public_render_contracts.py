@@ -28,6 +28,9 @@ PUBLIC_RENDER_OBSERVATION_CONTRACT = MappingProxyType(
     {"id": "github-public-render-request", "version": "0.1"}
 )
 PUBLIC_RENDER_EVIDENCE_TYPE = "platform.github.public-render"
+PUBLIC_RENDER_NORMALIZATION_SEMANTICS_VERSION = (
+    "github-public-render-facts/0.1"
+)
 
 PUBLIC_RENDER_PROJECTIONS = frozenset(
     {
@@ -599,3 +602,43 @@ def validate_public_render_request(
             ["public render request does not match deterministic sealed Plan derivation"]
         )
     return _copy_json(expected)
+
+
+def public_render_facts_digest(
+    *,
+    observation_spec_digest_value: str,
+    source_coordinates: Mapping[str, Any],
+    facts: Mapping[str, Any],
+    normalization_semantics_version: str = (
+        PUBLIC_RENDER_NORMALIZATION_SEMANTICS_VERSION
+    ),
+) -> str:
+    """Identify normalized Render facts without execution-instance noise."""
+
+    if not isinstance(observation_spec_digest_value, str) or not re.fullmatch(
+        r"[0-9a-f]{64}", observation_spec_digest_value
+    ):
+        raise ContractError(
+            ["observation_spec_digest must be a lowercase SHA-256 digest"]
+        )
+    if not isinstance(source_coordinates, Mapping):
+        raise ContractError(["source_coordinates must be an object"])
+    if not isinstance(facts, Mapping):
+        raise ContractError(["facts must be an object"])
+    projection = {
+        "canonicalization_profile": CANONICALIZATION_PROFILE,
+        "observation_spec_digest": observation_spec_digest_value,
+        "normalization_semantics_version": normalization_semantics_version,
+        "source_coordinates": _copy_json(dict(source_coordinates)),
+        "facts": _copy_json(dict(facts)),
+    }
+    errors: list[str] = []
+    _reject_floats(projection, "facts identity", errors)
+    try:
+        digest = sha256_json(projection)
+    except (TypeError, ValueError) as exc:
+        errors.append(f"facts identity must be finite JSON: {exc}")
+        digest = ""
+    if errors:
+        raise ContractError(errors)
+    return digest
