@@ -222,6 +222,7 @@ def _normalized_spec(spec: dict[str, Any]) -> dict[str, Any]:
     if (
         not isinstance(repository, str)
         or not _REPOSITORY_PATTERN.fullmatch(repository)
+        or repository in {".", ".."}
         or repository.lower().endswith(".git")
     ):
         errors.append("coordinates.repository must be an exact GitHub repository name")
