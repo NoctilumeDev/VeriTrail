@@ -256,6 +256,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention R0 Contract 0.1](86-review-attention-r0-contract.md)
 - [Review Attention Pattern Ledger 0.1](87-review-pattern-ledger.md)
 - [R0 Review Attention 架构评审与冻结事实](88-r0-review-attention-design-review.md)
+- [P2 Public Render Collector 施工合同 0.1](89-p2-public-render-collector-contract.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -300,7 +301,10 @@ Evidence binding、跨 Evidence 关系与旧消费者隔离；81 已完成平台
 GitHub 纵向切片；Freeze 前发现 rulesets 与 classic branch protection 的来源叠加反例，0.2 因而只重开
 这一模型点。修正已通过 PR #32 的 11 项门禁，以
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入，并完成精确主线与匿名 README/事实文档
-读回。当前状态为 `P1_FROZEN / P2_NOT_STARTED`；插件标签与 Release 仍未决定。
+读回。P1 状态为 `P1_FROZEN`；文档 89 现从精确主线
+`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 定义
+`P2_CONTRACT_0.1_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`，只冻结匿名公开渲染观察边界，尚无
+浏览器实现、P3 handoff、插件标签或 Release。
 
 文档 85–88 新开独立顶层 Review Attention `R` 轨；它不是 M15、P5 或 M13 的重跑。R0 只设计
 精确 Source Snapshot、ReviewPolicy、CodeFact/AnalyzerEvidence、机器 Proposal、Attention Map、
@@ -312,5 +316,6 @@ authority 能创建 HumanDisposition，Policy 不能自动处置。P4 以后才�
 且逐项绑定 `pattern_id + selected_record_digest` 的 Pattern Corpus 供 R1 使用。R0 设计候选已通过 PR #34 的 11 项门禁，以
 `main@411a43814632df8a5dc5ae4a9d4e66b11ab7aed1` 合入，并完成精确主线和未登录 GitHub HTML 读回。
 当前为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有源码包、Schema、CLI、CI、
-标签或 Release；R1 被明确阻塞到 P4 与 corpus freeze 之后，P2 仍未启动。
+标签或 Release；R1 被明确阻塞到 P4 与 corpus freeze 之后。R0 冻结发生时 P2 仍未启动；后续 P2
+合同候选不会反向改写该历史事实或改变 R0 范围。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

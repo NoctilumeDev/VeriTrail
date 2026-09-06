@@ -102,8 +102,11 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 [P1 实现与冻结事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)。0.2 修正已通过
 [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
-当前状态为 `P1_FROZEN / P2_NOT_STARTED`。插件不得预生成“已通过”布尔值、占位实验字段或私有
-比较器绕过 Core。
+当前状态为 `P1_FROZEN / P2_CONTRACT_0.1_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`。
+[P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
+Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同候选没有
+浏览器实现、P3 handoff、标签或 Release。插件不得预生成“已通过”布尔值、占位实验字段或私有比较器
+绕过 Core。
 
 ### 审查注意力插件轨（R0 架构已冻结）
 
@@ -132,8 +135,9 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
-CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动，P2 此刻仍为
-`P2_NOT_STARTED`。设计入口见
+CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 当前只进入
+`P2_CONTRACT_0.1_CANDIDATE`，没有实现；其新反例只可按 Ledger Schema 追加，不得改变 R0 或 P2 范围。
+设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
 [Review Pattern Ledger](docs/87-review-pattern-ledger.md)；本地找茬、修正和未完成的远端停止线见
@@ -465,6 +469,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention R0 Contract 0.1](docs/86-review-attention-r0-contract.md)
 - [Review Attention Pattern Ledger 0.1](docs/87-review-pattern-ledger.md)
 - [R0 Review Attention 架构评审与冻结事实](docs/88-r0-review-attention-design-review.md)
+- [P2 Public Render Collector 施工合同 0.1](docs/89-p2-public-render-collector-contract.md)
 
 ## 项目来源
 

@@ -71,8 +71,11 @@
   独立 Structured API Collector 经 PR #30 合入 `main@9b45bd635dedd132dc8333c105c04723991c2670`。
   冻结事实 PR #31 在合入前因 required-check 来源 layering 反例关闭且未合并；0.2 修正经 PR #32 的
   11 项门禁后，以 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入，并完成精确主线与匿名
-  README/事实文档读回。P1 当前为 `P1_FROZEN / P2_NOT_STARTED`；仍不得顺手进入公开浏览器采集、
-  Core handoff、定时监控或独立发布。
+  README/事实文档读回。P1 当前为 `P1_FROZEN`；P2 已从精确主线
+  `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 进入独立
+  `P2_CONTRACT_0.1_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`，合同位于
+  `docs/89-p2-public-render-collector-contract.md`。合同冻结前仍不得创建公开浏览器采集代码、Core
+  handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
@@ -118,7 +121,7 @@
   record_digest` 的不可变 revision。P2–P4 的新反例只能按 Schema 追加，不得反向改写 R0 或改变 P 轨
   范围。R1 必须等 P4 冻结并选定 exact commit + manifest digest，且逐项绑定
   `pattern_id + selected_record_digest` 的 Pattern Corpus 后才能启动。当前仍为
-  `P1_FROZEN / P2_NOT_STARTED`；下一步回到 P 轨时仍须从独立 P2 合同开始，不能顺手进入 R1。
+  `R0_ARCHITECTURE_FROZEN / DESIGN_ONLY`；P2 的新反例可以按 Ledger Schema 追加，但不得借此启动 R1。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
