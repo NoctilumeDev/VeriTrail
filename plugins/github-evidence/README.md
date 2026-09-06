@@ -88,3 +88,15 @@ publish_evidence(Path("github-render-evidence.json"), result.artifact)
 The thin paired coordinator can give one P1 and one P2 collection a shared,
 plugin-created session identity and fixed P1-then-P2 order. It still publishes
 two Evidence files and never turns correlation into an atomic-snapshot claim.
+
+The P3 reference lab then publishes one thin handoff manifest, imports each
+selected Evidence file exactly once, and gives those same snapshots to the Core
+Bundle API. The plugin never computes a Verdict. The committed positive and
+single-wrong-expectation Plans are executable compatibility vectors:
+
+- [`tests/fixtures/p3-acceptance-plan-pass.json`](tests/fixtures/p3-acceptance-plan-pass.json)
+- [`tests/fixtures/p3-acceptance-plan-wrong-expectation.json`](tests/fixtures/p3-acceptance-plan-wrong-expectation.json)
+
+The synthetic lab proves `PASS`, `FAIL`, `INCONCLUSIVE`, and `PENDING` by
+changing one declared variable at a time while retaining immutable Plan,
+Evidence, handoff, and Bundle artifacts for each case.

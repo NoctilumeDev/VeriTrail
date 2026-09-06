@@ -1,0 +1,149 @@
+{
+  "plan_kind": "ACCEPTANCE",
+  "schema_version": "0.1",
+  "plan_id": "github-p3-synthetic-handoff",
+  "version": 1,
+  "subject": {
+    "id": "veritrail",
+    "version": "589bbad7261cceda1aa3a6412278a48473a9b1b7",
+    "source_ref": "github:noctilumedev/veritrail"
+  },
+  "question": "Do the retained API and Render observations satisfy the sealed claim?",
+  "governance": {
+    "claim_owner_ref": "human:owner",
+    "drafter_ref": "fixture:p3-reference-lab",
+    "seal_authority_ref": "human:owner",
+    "seal_decision": "CONFIRMED"
+  },
+  "observation_specs": [
+    {
+      "id": "github-api",
+      "contract": {
+        "id": "github-observation-request",
+        "version": "0.1"
+      },
+      "evidence_type": "platform.github.api.snapshot",
+      "coordinates": {
+        "owner": "NoctilumeDev",
+        "repository": "VeriTrail",
+        "target_commit_sha": "589bbad7261cceda1aa3a6412278a48473a9b1b7",
+        "branch": "main"
+      },
+      "projections": [
+        "commit.identity"
+      ],
+      "canonicalization_profile": "veritrail-json-c14n/1"
+    },
+    {
+      "id": "github-public-render",
+      "contract": {
+        "id": "github-public-render-request",
+        "version": "0.1"
+      },
+      "evidence_type": "platform.github.public-render",
+      "coordinates": {
+        "owner": "NoctilumeDev",
+        "repository": "VeriTrail",
+        "target_kind": "GITHUB_MARKDOWN_FILE",
+        "target_commit_sha": "589bbad7261cceda1aa3a6412278a48473a9b1b7",
+        "repository_path": "README.md",
+        "viewport_profile": "DESKTOP_1365X768"
+      },
+      "projections": [
+        "navigation.identity"
+      ],
+      "canonicalization_profile": "veritrail-json-c14n/1"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "github-api-evidence",
+      "observation_spec_id": "github-api",
+      "cardinality": "EXACTLY_ONE"
+    },
+    {
+      "id": "github-render-evidence",
+      "observation_spec_id": "github-public-render",
+      "cardinality": "EXACTLY_ONE"
+    }
+  ],
+  "sufficiency_rules": [
+    {
+      "id": "api-coverage-complete",
+      "left": {
+        "requirement_id": "github-api-evidence",
+        "path": "/metadata/veritrail_observation/coverage"
+      },
+      "operator": "eq",
+      "right": "COMPLETE"
+    },
+    {
+      "id": "render-coverage-complete",
+      "left": {
+        "requirement_id": "github-render-evidence",
+        "path": "/metadata/veritrail_observation/coverage"
+      },
+      "operator": "eq",
+      "right": "COMPLETE"
+    }
+  ],
+  "integrity_rules": [
+    {
+      "id": "same-collection-session",
+      "left": {
+        "requirement_id": "github-api-evidence",
+        "path": "/metadata/veritrail_observation/collection_session_id"
+      },
+      "operator": "eq",
+      "right": {
+        "requirement_id": "github-render-evidence",
+        "path": "/metadata/veritrail_observation/collection_session_id"
+      }
+    },
+    {
+      "id": "same-target-commit",
+      "left": {
+        "requirement_id": "github-api-evidence",
+        "path": "/facts/commit/sha"
+      },
+      "operator": "eq",
+      "right": {
+        "requirement_id": "github-render-evidence",
+        "path": "/facts/navigation/target_commit_sha"
+      }
+    }
+  ],
+  "assertions": [
+    {
+      "id": "sealed-exact-commit",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "github-api-evidence",
+        "path": "/facts/commit/sha"
+      },
+      "operator": "eq",
+      "right": "589bbad7261cceda1aa3a6412278a48473a9b1b7"
+    }
+  ],
+  "resource_budget": {
+    "network_requests": 512,
+    "max_elapsed_ms": 45000
+  },
+  "change_scope": {
+    "level": "L3_SYSTEM",
+    "owner": "github-evidence-plugin",
+    "consumers": [
+      "acceptance-core"
+    ]
+  },
+  "reproduction_steps": [
+    "Run the bounded P3 synthetic reference lab."
+  ],
+  "cleanup_steps": [
+    "Remove generated Evidence, handoff, and Bundle files."
+  ],
+  "seal": {
+    "algorithm": "sha256",
+    "digest": "f2abe6445b59085440b101b23b6f42c515d4cee5f1b2612456b2fea0a4763e28"
+  }
+}
