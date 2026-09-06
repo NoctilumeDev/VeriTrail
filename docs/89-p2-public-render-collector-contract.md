@@ -1,6 +1,6 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_REOPENED / P2_IMPLEMENTATION_PAUSED`
+> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -1006,3 +1006,36 @@ P2 request validator 施工前复算公共向量时发现：第 4 节示例在�
 该修正不改变 P1、网络预算、浏览器 preflight 或任何运行代码。P2 实现保持暂停；只有修正候选通过完整
 门禁、合入受保护主线，并从该 exact main 完成匿名公共读回后，才能另立 closure 恢复
 `P2_CONTRACT_0.1_FROZEN`。
+
+### 18.8 Literal marker 公共向量再冻结
+
+修正候选 `9a3ad95485b47f2eca6269eeb7335fbe7e8f249c` 经
+[PR #47](https://github.com/NoctilumeDev/VeriTrail/pull/47) 的 Public CI
+[run 34022023354](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34022023354) 11 项门禁全部
+`SUCCESS`，没有通过 rerun 覆盖首次结果；随后以 merge commit
+`c06123446fabac0b75d3bbd20195ad6cd40d596e` 合入受保护 `main`。`origin/main`、tree 与 merge parents
+分别精确读回为该 SHA、`edcb661f5b52df87f5f4a57e787d361053734088`、此前主线
+`6e0db839a812fcd33da55a25e21bcc33818d49b1` 与候选 head。
+
+内置 browser skill 声明的本地文件仍不存在，不能作为完成证据。独立读回使用锁定 Playwright 1.62.0、
+matching bundled Chromium 151.0.7922.34，并为两个目标分别建立 fresh、匿名、non-persistent desktop
+context；只允许 `GET/HEAD`，从 exact merge SHA 串行观察：
+
+- 本文返回 200、requested/final URL 相同且恰好存在一个 `article.markdown-body`；三次 NFC 与换行规范化
+  正文摘要稳定为 `2186e7d095c10f96a1201596d9fac2ea00e33e52262f8dfe05f1f9f5b0f25ab1`。页面实际显示
+  `P2_CONTRACT_0.1_REOPENED / P2_IMPLEMENTATION_PAUSED`，命中新 spec digest、完整 Plan seal 与第 18.7
+  节，并确认旧 spec digest 不再出现；
+- 完整 AcceptancePlan fixture 页面返回 200、URL 不变，共观察到 94 个 GitHub code cell；三次同规则
+  规范化摘要稳定为 `25d7384c577005ef06f5965df3f665ba518f085cec25de66dd5d2f794a5b0f6f`。页面命中
+  `github-p2-public-render-fixture`、Plan seal 与 `content.rendered_text_signature`，并确认未出现
+  `literal_markers` 字段。
+
+两个 context 的初态 cookies/origins 均为 0/0，页面显示 `Sign in`，导航后 Cookie 均为 6；分别阻断
+3/2 个 telemetry `POST`，保留 3/2 个 console error，读请求只到 `github.com`、
+`github.githubassets.com` 与 `avatars.githubusercontent.com`。关闭后 matching Playwright Chromium/driver
+进程为 0。上述 noise 没有被抹掉，也没有被解释成正文失败。
+
+这次 closure 只重新冻结 literal-marker 投影边界、spec digest 与完整 Plan fixture，不证明 P2 Collector
+已实现。当前状态恢复为 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；下一步必须
+从本 closure 合入后的新 exact main 重新绑定既有 P2 feasibility commits，再继续 request
+derivation/URL safety。P3、P4 与 Review Attention R1 仍未开始。
