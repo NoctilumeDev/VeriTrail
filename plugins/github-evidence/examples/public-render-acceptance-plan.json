@@ -1,0 +1,94 @@
+{
+  "plan_kind": "ACCEPTANCE",
+  "schema_version": "0.1",
+  "plan_id": "github-p2-public-render-fixture",
+  "version": 1,
+  "subject": {
+    "id": "veritrail",
+    "version": "cdc2c250f21b37a0be9f815295f7b7c3c5081d0d",
+    "source_ref": "github:noctilumedev/veritrail"
+  },
+  "question": "Does retained public Render evidence satisfy this declared coordinate?",
+  "governance": {
+    "claim_owner_ref": "human:owner",
+    "drafter_ref": "fixture:p2-contract",
+    "seal_authority_ref": "human:owner",
+    "seal_decision": "CONFIRMED"
+  },
+  "observation_specs": [
+    {
+      "id": "github-public-readme",
+      "contract": {
+        "id": "github-public-render-request",
+        "version": "0.1"
+      },
+      "evidence_type": "platform.github.public-render",
+      "coordinates": {
+        "owner": "NoctilumeDev",
+        "repository": "VeriTrail",
+        "target_kind": "GITHUB_MARKDOWN_FILE",
+        "target_commit_sha": "cdc2c250f21b37a0be9f815295f7b7c3c5081d0d",
+        "repository_path": "README.md",
+        "viewport_profile": "DESKTOP_1365X768"
+      },
+      "projections": [
+        "content.rendered_text_signature",
+        "content.scope",
+        "navigation.identity"
+      ],
+      "canonicalization_profile": "veritrail-json-c14n/1"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "github-public-render-evidence",
+      "observation_spec_id": "github-public-readme",
+      "cardinality": "EXACTLY_ONE"
+    }
+  ],
+  "sufficiency_rules": [
+    {
+      "id": "coverage-complete",
+      "left": {
+        "requirement_id": "github-public-render-evidence",
+        "path": "/metadata/veritrail_observation/coverage"
+      },
+      "operator": "eq",
+      "right": "COMPLETE"
+    }
+  ],
+  "integrity_rules": [],
+  "assertions": [
+    {
+      "id": "declared-request-coordinate",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "github-public-render-evidence",
+        "path": "/facts/navigation/requested_url"
+      },
+      "operator": "eq",
+      "right": "https://github.com/NoctilumeDev/VeriTrail/blob/cdc2c250f21b37a0be9f815295f7b7c3c5081d0d/README.md"
+    }
+  ],
+  "resource_budget": {
+    "network_requests": 512,
+    "max_elapsed_ms": 45000
+  },
+  "change_scope": {
+    "level": "L3_SYSTEM",
+    "owner": "github-evidence-plugin",
+    "consumers": [
+      "acceptance-core"
+    ]
+  },
+  "reproduction_steps": [
+    "Run the bounded public Render collector."
+  ],
+  "cleanup_steps": [
+    "Remove the generated Evidence file."
+  ],
+  "seal": {
+    "algorithm": "sha256",
+    "digest": "d08e2da6b665ebedaa1032eaf9834950a3d1e984b5b7c9e31f3d63d5ec4097ae"
+  }
+}
