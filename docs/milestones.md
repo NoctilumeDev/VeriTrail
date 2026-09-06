@@ -306,8 +306,10 @@ GitHub 纵向切片；Freeze 前发现 rulesets 与 classic branch protection �
 精确 Source Snapshot、ReviewPolicy、CodeFact/AnalyzerEvidence、机器 Proposal、Attention Map、
 HumanDisposition 和可选 Core handoff 的权威与 Artifact 边界。`R = Review`，不表示 Risk；机器提案
 不能冒充缺陷事实或 Core Verdict。R0 宪法与 Ledger Schema 可以先冻结，真实模式账册则在 P2–P4
-期间保持 append-only/open；P4 以后才选择 exact commit + manifest digest 的 Pattern Corpus 供 R1
-使用。R0 设计候选已通过 PR #34 的 11 项门禁，以
+期间保持 append-only/open。冻结后合同一致性修正又将问题层与机制类拆为 `problem_layer /
+pattern_class`，并要求每次状态提升追加 `record_revision / supersedes_digest / record_digest`；只有人类
+authority 能创建 HumanDisposition，Policy 不能自动处置。P4 以后才选择 exact commit + manifest digest
+且逐项绑定 `pattern_id + selected_record_digest` 的 Pattern Corpus 供 R1 使用。R0 设计候选已通过 PR #34 的 11 项门禁，以
 `main@411a43814632df8a5dc5ae4a9d4e66b11ab7aed1` 合入，并完成精确主线和未登录 GitHub HTML 读回。
 当前为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有源码包、Schema、CLI、CI、
 标签或 Release；R1 被明确阻塞到 P4 与 corpus freeze 之后，P2 仍未启动。

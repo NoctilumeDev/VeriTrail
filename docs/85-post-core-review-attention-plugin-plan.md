@@ -1,4 +1,4 @@
-# Post-Core Review Attention Plugin Plan v1
+# Post-Core Review Attention Plugin Plan v1.1
 
 ## 1. 文档身份
 
@@ -48,8 +48,8 @@ R 轨可以消费 P 轨留下的反例与平台 Evidence，但不得导入 P 插
 ## 4. 系统闭环
 
 ```text
-Human / Project Policy Authority
-    seals review scope, priority and allowed providers
+Human Seal Authority
+    seals ReviewPolicy and retains final disposition authority
                          |
                          v
 Exact Source Snapshot -> Source/Semantic Providers -> Code Facts
@@ -76,13 +76,15 @@ Exact Source Snapshot -> Source/Semantic Providers -> Code Facts
                                  optional exact handoff to Core
 ```
 
-闭环成立依赖四个不同责任层：
+闭环成立依赖五个不同责任层：
 
-1. 人或项目策略拥有审查范围、优先级、允许的数据外发方式和最终处置；
-2. 可替换 Provider 产生带来源的事实、证据或提案；
-3. Review Attention application 只执行合同校验、Artifact 关联和流程状态，不生成 Core Verdict；
+1. 人拥有 ReviewPolicy 的 Seal 决定与最终 HumanDisposition；
+2. 已封存 ReviewPolicy 机械约束审查范围、优先级、必审项、允许的数据外发方式和 Provider；它不能
+   生成、驳回或替代 HumanDisposition；
+3. 可替换 Provider 产生带来源的事实、证据或提案；
+4. Review Attention application 只执行合同校验、Artifact 关联和流程状态，不生成 Core Verdict；
    规范化、分析、提案、排序与展示均来自可替换 Provider；
-4. Core 仅在未来显式 handoff 且存在 sealed AcceptancePlan 时独立裁决。
+5. Core 仅在未来显式 handoff 且存在 sealed AcceptancePlan 时独立裁决。
 
 `need evidence` 会回到证据 Provider，而不是让 AI 自行把猜测升级为事实。一次驳回也不删除原提案；
 处置以新 Artifact 保留。因此来源、推导、决定和最终验收可以分别追溯。
@@ -109,6 +111,9 @@ PolicyProvider
 PresentationAdapter
 ```
 
+`PolicyProvider` 只能加载、校验和应用已封存 ReviewPolicy；它不能因自动规则命中而代替人产生
+`HumanDisposition`。若未来确需自动处置，必须另建身份不同的 `PolicyDisposition`，不得复用人工签字语义。
+
 Provider 之间只交换版本化 Artifact，不共享可变控制状态，不直接调用彼此的实现类型。排序、聚合、去重
 和展示策略同样属于可替换能力；Review Attention application 只执行合同允许的流程与状态转换，不内置
 某家模型或某套启发式。部署时可以同进程，
@@ -130,7 +135,7 @@ Provider implementation -> R contracts <- Review Attention application
 | R0 | 权威、Artifact、依赖、失败、视觉语义和 Pattern Ledger 如何冻结 | 任何实现 |
 | R1 | 如何对精确 Source Snapshot 建立确定性语义清单与覆盖账册 | AI、自动排序、人类结论 |
 | R2 | 如何接入静态分析、编译器、测试、Profiler/Sanitizer 等可复算证据 | AI 判错、Core Verdict |
-| R3 | AI/规则如何提出带依据的风险候选并形成注意力地图 | 自动确认缺陷、自动合并 |
+| R3 | AI/规则如何提出带依据的关注候选并形成注意力地图 | 自动确认缺陷、自动合并 |
 | R4 | 人如何确认、驳回、争议、请求补证并保留责任链 | 用处置覆盖原始证据 |
 | R5 | 如何将选定事实与处置按精确坐标交给 Core 独立验收 | 私有比较器、Verdict 泄漏 |
 | R6 | 如何独立打包、卸载、发布并完成公开读回 | 回填 Core、改写旧 Release |
@@ -148,11 +153,12 @@ R0 冻结：
 - AI、人、Core 的职责；
 - 紫色机器提案语义和非颜色提示要求；
 - R1–R6 路线与 R1 前置门；
-- Pattern Ledger 的记录格式与状态机。
+- Pattern Ledger 的正交分类、不可变修订身份与状态提升规则。
 
 R0 不冻结全部未来审查规则。`docs/87-review-pattern-ledger.md` 在 P4 前保持 append-only/open：新反例
-可以追加、驳回或提升为合同候选，但不能反向改写 R0 权威。P4 后只冻结一个供 R1 使用的 corpus
-snapshot，历史条目继续保留。
+和状态提升都必须追加新的不可变 revision，不得原地改写旧记录，也不能反向改写 R0 权威。P4 后只冻结
+一个供 R1 使用的 corpus snapshot；manifest 必须为每个模式绑定 `pattern_id + selected_record_digest`，
+历史 revision 继续保留。
 
 ## 8. 资源与权限边界
 
