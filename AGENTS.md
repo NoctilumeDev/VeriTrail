@@ -71,11 +71,12 @@
   独立 Structured API Collector 经 PR #30 合入 `main@9b45bd635dedd132dc8333c105c04723991c2670`。
   冻结事实 PR #31 在合入前因 required-check 来源 layering 反例关闭且未合并；0.2 修正经 PR #32 的
   11 项门禁后，以 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入，并完成精确主线与匿名
-  README/事实文档读回。P1 当前为 `P1_FROZEN`；P2 已从精确主线
-  `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 进入独立
-  `P2_CONTRACT_0.1_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`，合同位于
-  `docs/89-p2-public-render-collector-contract.md`。合同冻结前仍不得创建公开浏览器采集代码、Core
-  handoff、定时监控或独立发布。
+  README/事实文档读回。P1 当前为 `P1_FROZEN`；P2 合同从精确主线
+  `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 起步，经 PR #38 的最终 11 项门禁、受保护主线合入与
+  exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。当前为
+  `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`，合同位于
+  `docs/89-p2-public-render-collector-contract.md`。P2 实现只能从冻结后的新 exact-main worktree 独立
+  开始；仍不得提前创建 Core handoff、定时监控或独立发布。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外

@@ -1,10 +1,16 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`
+> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
 > 基线 Tree：`6643e311a61f7ef6a4c8854a61c004f5d67c2742`
+>
+> 最终合同候选：`cdb589125ddbb8554f9a7bb77fc35482536bd5d1`
+>
+> 受保护主线合同基线：`8c624ec3aa83fe462e3578d8aa215e8ef9908332`
+>
+> 合同基线 Tree：`ddc84f65408831b6cd62640b572594e51fc1cc63`
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`
 >
@@ -22,8 +28,8 @@ P2 不证明页面内容在终极意义上真实，不把 GitHub API 与公开�
 `goto` 成功代替页面内容正确。它更不负责把 API/Render 事实配对后直接宣布通过；P3 才负责正式
 handoff 与完整正负 Verdict 链。
 
-本合同先于实现冻结。合同候选未完成受保护主线合入与匿名公开读回前，不创建 P2 源码、Schema、CLI、
-CI job 或安装依赖。
+本合同已先于实现完成受保护主线合入与匿名公开读回。冻结没有创建 P2 源码、Schema、CLI、CI job 或
+安装依赖；实现仍须从新的 exact-main worktree 独立开始。
 
 ## 2. 分层、权威与唯一所有权
 
@@ -703,7 +709,7 @@ Evidence，也不作为实现完成证明。观察到：
 - 工具侧内置浏览器控制通道曾不可用，随后成功的独立 Playwright 探针不能覆盖该失败事实；
 - 本机 Git 未继承 Windows system proxy，直连远端超时；显式单次代理成功不证明全局网络正常。
 
-这些发现只决定 P2 合同需要表达哪些变量，不得被包装为 P2 Collector 已实现或已冻结。
+这些发现只决定 P2 合同需要表达哪些变量，不能单独证明合同冻结，更不得被包装为 P2 Collector 已实现。
 
 ## 17. 出口与停止线
 
@@ -730,3 +736,61 @@ Evidence，也不作为实现完成证明。观察到：
 
 P2 只能把公开渲染变成一份有界、可追溯的观察。现实拥有真相，Plan 拥有验收声明，Core 拥有裁决；
 Collector 只拥有它实际看见并能按合同保留下来的事实。
+
+## 18. 合同冻结闭环事实
+
+### 18.1 候选、反例与语义修正
+
+1. 第一份合同候选 `8805377e78b005eb58d912c057edbc61dca7b476` 从精确
+   `main@cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 起步，只改 README、AGENTS、milestones 与本文；
+2. Freeze 前外部语义复核否决了“两份相同样本即可稳定”和“exact commit 是不可变渲染面”两处表述，并
+   要求冻结 literal occurrence、initial viewport、redirect coordinate drift、`NOT_APPLICABLE` 与配对
+   顺序；最终候选 `cdb589125ddbb8554f9a7bb77fc35482536bd5d1` 将七处语义全部收回合同，没有在
+   实现里增加兼容 fallback；
+3. 修正后固定为三样本全等、source coordinate 与 render observation 分离、大小写敏感的 Unicode
+   非重叠字面计数、viewport 正面积相交、requested/final coordinate 并存、0.1 不主动产生
+   `NOT_APPLICABLE`，以及 `P1 API -> P2 Render` 串行顺序；
+4. 本地第一次 P1 回归命令使用了不存在的下划线目录，第二次又缺少测试 `support` 导入路径，两轮都在
+   collection/import 阶段停止，均不计代码失败或通过；绑定当前 checkout 的 Core、插件源码与测试目录后，
+   P1 `57/57` 和 Acceptance Core `35/35` 在 Python 3.10/3.13、普通/`-O` 四组全部通过。
+
+### 18.2 远端门禁与受保护主线
+
+1. [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 第一候选的
+   [Public CI run 34009054178](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34009054178)
+   attempt 1 在 Python 3.10 `-O` 的既有 M10 生命周期测试中观察到 `12.938s`，超过合同内 `<9s`；普通
+   3.10 与整条 3.13 已通过。精确单测随后在本机串行三次以 `5.278s / 5.239s / 5.301s` 通过，紧邻主线
+   的同一冻结 Core 也曾通过；未改 `<9s` 阈值或 Core 源码，失败 attempt 保留在 PR 历史；
+2. 只重跑失败作业后，run 34009054178 attempt 2 的 11 个 job 全部 `SUCCESS`。该证据支持一次 hosted
+   runner/browser 时序偏移，但不把第一次失败改写成未发生；
+3. 最终合同 head 上较早的 run
+   [34009994100](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34009994100) 因同 SHA 的更新
+   run 在 concurrency policy 下被取消，不计成功或失败；最终
+   [run 34010024076](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34010024076) 的 11 个 job
+   全部 `SUCCESS`；
+4. PR #38 以 merge commit `8c624ec3aa83fe462e3578d8aa215e8ef9908332` 合入受保护 `main`，随后
+   `origin/main` 精确读回同一 SHA 与 tree `ddc84f65408831b6cd62640b572594e51fc1cc63`。
+
+### 18.3 匿名公开 Render 读回
+
+内置浏览器技能声明路径与本机插件缓存版本不一致，不能作为完成证据。独立读回使用锁定的
+`playwright==1.62.0`、matching bundled Chromium、显式出口代理、全新非持久 desktop context 和
+`GET/HEAD`-only 路由，目标均绑定 exact merge SHA，而不是 `blob/main`：
+
+1. 第一次读回在导航前访问 `about:blank localStorage` 时触发 origin `SecurityError`，没有产生页面事实；
+   context/browser 随后关闭且无 Playwright 残留。第二次改用 `BrowserContext.storage_state()` 检查初态，
+   不放宽网络、匿名或作用域边界；
+2. [exact README](https://github.com/NoctilumeDev/VeriTrail/blob/8c624ec3aa83fe462e3578d8aa215e8ef9908332/README.md)
+   返回 `200`、requested/final URL 相同、唯一 `article.markdown-body`，三次正文摘要均为
+   `62a5249944170da4e4f40ea49ff6742f0c9ca5636f97ec80001ed82738785323`；页面实际命中
+   `P2_CONTRACT_0.1_CANDIDATE` 与 `P2_IMPLEMENTATION_NOT_STARTED`；
+3. [exact 本文](https://github.com/NoctilumeDev/VeriTrail/blob/8c624ec3aa83fe462e3578d8aa215e8ef9908332/docs/89-p2-public-render-collector-contract.md)
+   同样返回 `200`、坐标未漂移、唯一正文作用域，三次正文摘要均为
+   `82495e1f0e6624004b96ea3895ea44dffaab8d7a83fcce27570a54e0350101d2`；标题、候选状态、实现停止线
+   均在真实渲染正文中出现；
+4. 两页初始 cookies/origins 均为 `0/0`，导航后匿名 Cookie 数均为 `6`；每页阻断 telemetry write `2`
+   次并观察 console error `2` 次，unexpected read host 为 `0`，三样本正文仍稳定完整。关闭后无
+   bundled Chromium 残留。这些 noise 没有被抹掉，也没有被误判为正文失败。
+
+上述闭环只冻结 P2 0.1 合同。当前仍为 `P2_IMPLEMENTATION_NOT_STARTED`；下一步只能从冻结后的新
+exact-main worktree 进入 `P2_IMPLEMENTING`，不得提前进入 P3、P4 或 Review Attention R1。
