@@ -33,6 +33,7 @@
 | 什么时候写代码？ | P4 与 Pattern Corpus 冻结之后才进 R1 | Plan 6、9 节；Contract 12 节 |
 | 现在已有运行能力吗？ | 没有，状态始终标记 DESIGN_ONLY | 三份文档与 README |
 | 新反例会不会反复打碎 R0？ | 不会；Ledger 开放，R0 宪法不随条目漂移 | Plan 7 节、Ledger 2 节 |
+| Ledger 状态提升会不会改写历史？ | 不会；每次提升追加不可变 revision，Corpus 只选择精确 record digest | Ledger 3、6 节 |
 
 外部读者可以在 README 第一层得到正确心智模型，再按 Plan → Contract → Ledger 逐层进入；不需要先读
 P1 实现历史才能理解 R 轨。
@@ -53,10 +54,12 @@ P1 实现历史才能理解 R 轨。
 | 插件目录分开但实际共享状态怎么办？ | 共享权威/可变状态/实现类型即判定为假分层 | 边界闭合 |
 | 受审代码能否通过注释改写工具指令？ | 源码与相关文本是数据，不能改变 Policy、权限和命令 | 边界闭合 |
 | R 轨会不会拖动 P2–P4 施工？ | 只追加 Ledger；R1 明确阻塞到 P4 与 corpus freeze | 边界闭合 |
+| Policy 会不会以低优先级自动驳回提案？ | Policy 只机械约束范围、优先级与必审项；HumanDisposition 只能由人产生 | 边界闭合 |
+| Seed 分类是否满足冻结 Schema？ | `problem_layer` 与开放的 `pattern_class` 正交，seed 的层值只使用冻结枚举 | 边界闭合 |
 
 ## 5. 本轮反向修正
 
-评审没有把第一稿默认当成完成，已在候选内修正四处：
+首轮评审没有把第一稿默认当成完成，已在候选内修正四处：
 
 1. `RiskProposal` 改为 `AttentionProposal`，避免命名先行宣布风险成立；
 2. 增加 `AttentionStrategyProvider`，不把排序、聚合和去重启发式藏进 application；
@@ -64,6 +67,26 @@ P1 实现历史才能理解 R 轨。
 4. 增加 Provider 误报/漏报/不支持范围的 corpus 责任，避免用“人最终负责”替插件免责。
 
 这些修正没有扩大 R0 为实现阶段。
+
+### 5.1 冻结后合同一致性反例与 0.2 修正
+
+R0 首次冻结后，外部复核又发现五个不改变架构方向、但会在 Ledger 机器化或持续追加时产生身份债务的
+语义口子。本轮从精确 `main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3` 重开 docs-only 修正：
+
+1. Ledger 的 `problem_layer` 曾与 seed 中 Pairing/Dependency/Retry 等机制类别混用；0.2 增加正交
+   `pattern_class`，并把全部 seed layer 映射回冻结枚举；
+2. `append-only` 与状态提升曾缺少记录身份；0.2 增加 `record_revision / supersedes_digest /
+   record_digest`，禁止原地改写，并令 Corpus Manifest 选择精确 record digest；
+3. ReviewBundle handoff 曾借用 ExperimentPlan 的 `PRIMARY` 术语；0.2 改为 AcceptancePlan 原生的
+   required Evidence bindings、sufficiency/integrity conditions 与 assertions；
+4. Policy 与人的处置 authority 曾在自然语言中混写；0.2 明确 Policy 只能机械约束范围、优先级与必审项，
+   HumanDisposition 只能由经过身份确认的人类 authority 创建；机器 Proposal 生命周期中的
+   `NEEDS_EVIDENCE / DISPUTED` 也被拆回 HumanDisposition，机器侧只保留 `EVIDENCE_GAP`；
+5. R3 路线中的“风险候选”残词改为“关注候选”，与 AttentionProposal 的非结论语义一致。
+
+这次修正不创建 R1 实现，也不改变 P 轨。它说明 Freeze 可以被新反例显式重开，但修正必须版本化、
+有界并重新经过原停止线，不能静默覆盖第一次冻结事实。0.1 仍由精确 `fd944621...` 保留；由于 P2
+尚未开始、Ledger 尚无后继物化记录，本次 0.2 修正不需要迁移既有 revision。
 
 ## 6. 分层闭环裁决
 
@@ -112,6 +135,10 @@ ReviewPolicy authority
 4. GitHub Evidence 插件首次因本地包未安装在 import 阶段停止；绑定当前 worktree 插件后，常规
    57/57、`python -O` 57/57；
 5. Markdown 相对链接、`git diff --check`、变更路径和非 Markdown R 轨实现文件检查均通过。
+6. 0.2 修正的首次聚合终检在 PowerShell 解析 `$file:` 时停止，所有子检查均未执行；该轮不计通过；
+7. 改用 `${file}` 消除插值歧义后原样重跑：16/16 seed ID 唯一、`problem_layer` 合法且
+   `pattern_class` 非空，Markdown fence、相对链接、敏感差异、语义标记、docs-only 路径和
+   `git diff --check` 全部通过。
 
 完整 Core、Starter、Authoring Skill、双 Python、wheel-only 和公开门禁仍必须由既有远端 CI 从干净
 环境执行；本地定向通过不能替代远端完整矩阵。

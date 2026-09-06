@@ -1,4 +1,4 @@
-# Review Attention R0 Contract 0.1
+# Review Attention R0 Contract 0.2
 
 ## 1. 合同状态
 
@@ -9,7 +9,8 @@
 ## 2. 不可移动原则
 
 1. **Reality owns truth.** R 轨不拥有世界真相或源码缺陷的终极真值；
-2. **Human owns review policy and disposition.** 人或明确授权的项目策略拥有审查优先级与最终处置；
+2. **Human owns the Seal decision and HumanDisposition.** 已封存 ReviewPolicy 可以机械约束范围、优先级和
+   必审项，但只有人类 authority 能产生 HumanDisposition；
 3. **Providers produce bounded artifacts.** Provider 只产生合同允许的事实、证据或提案；
 4. **AI proposes; it does not decide.** AI 可以挑战、解释和建议，但不能 Seal、确认缺陷或生成 Verdict；
 5. **Core alone derives Core Verdict.** R 轨不得预生成 `PASS/FAIL` 布尔值绕过 Core；
@@ -22,15 +23,16 @@
 | 对象 | 最终 authority | Provider 可以做什么 | Provider 不得做什么 |
 | --- | --- | --- | --- |
 | Source Snapshot | Git/制品坐标与逐字节内容 | 读取、解码、报告哈希 | 把 `latest` 当 exact、静默改源码 |
-| Review Policy | 人或项目授权策略 | 校验、解释、应用 | 自行扩大范围、改变优先级 |
+| Review Policy | 人类 Seal authority + 已封存 Policy | 校验、解释、机械应用 | 自行扩大范围、改变优先级或产生处置 |
 | Code Facts | 对应事实 Provider + 规范化合同 | 报告符号、依赖、调用、状态结构 | 宣布其语义必然正确或完整 |
 | Analyzer Evidence | 具体 Analyzer 执行与原始产物 | 记录命令、版本、范围、结果 | 把 exit 0 解释为全局无风险 |
 | Attention Proposal | Proposal Provider | 提出候选、依据与反例问题 | 宣布 confirmed defect |
 | Attention Map | Review Attention 派生器 | 排序、聚合、解释关注原因 | 覆盖原始提案、伪造事实 |
-| Human Disposition | 做出决定的人/授权主体 | 确认、驳回、争议、补证、升级 | 改写历史 Evidence |
+| Human Disposition | 经过身份确认的人类 authority | 确认、驳回、争议、补证、升级 | 由 AI、Policy 或 Provider 代签；改写历史 Evidence |
 | Core Verdict | sealed AcceptancePlan + Core | 独立复算 | 由 R 插件代写或覆盖 |
 
-`Plan drafter != policy/seal authority`。AI 或人可以起草 Review Policy，但起草行为不会自动授予 Seal 权。
+`Plan drafter != policy/seal authority`。AI 或人可以起草 Review Policy，但起草行为不会自动授予 Seal 权；
+Policy 被封存也不等于获得 HumanDisposition 权。
 
 ## 4. Artifact 分类与身份
 
@@ -92,13 +94,16 @@ HUMAN_CONFIRMED
 ESCALATED
 ```
 
-这是审查处置，不是 Core Verdict。处置必须追加记录 actor/authority、时间、理由、输入摘要与替代关系；
-`DISMISSED` 不删除 AttentionProposal，后续新证据也不能静默重写旧决定。
+这是审查处置，不是 Core Verdict。只有经过身份确认的人类 authority 可以创建 HumanDisposition；Policy、
+AI 和 Provider 最多提出优先级、升级或补证建议。处置必须追加记录 actor/authority、时间、理由、输入摘要
+与替代关系；`DISMISSED` 不删除 AttentionProposal，后续新证据也不能静默重写旧决定。若未来允许自动
+处置，必须另建 `PolicyDisposition` Artifact、权限和视觉语义，不能冒充 HumanDisposition。
 
 ### 4.7 ReviewBundle
 
-ReviewBundle 只封装上述精确身份、引用和清单。若未来交给 Core，必须由独立 AcceptancePlan 指定哪些
-Artifact 是 PRIMARY、充分性条件是什么以及如何裁决。Bundle 自身不得携带私有 `review_passed`。
+ReviewBundle 只封装上述精确身份、引用和清单。若未来交给 Core，必须由独立 sealed AcceptancePlan
+显式声明 required Evidence bindings、sufficiency/integrity conditions 与 assertions。Bundle 自身不得
+携带私有 `review_passed`，也不得借用 ExperimentPlan 的 `PRIMARY` 变量语义。
 
 因此：
 
@@ -114,13 +119,13 @@ Fact Identity != Evidence Identity != Attention Proposal Identity
 ```text
 PROPOSED
   -> SUPPORTED
-  -> NEEDS_EVIDENCE
-  -> DISPUTED
+  -> EVIDENCE_GAP
   -> STALE
 ```
 
-这些状态描述提案证据位置，不描述缺陷真值。只有 HumanDisposition 可以出现 `HUMAN_CONFIRMED`，且它
-仍然表示“某个授权主体作出了确认”，不是 Reality 或 Core 的终极真值。
+这些状态描述机器提案的证据位置，不描述缺陷真值。`NEEDS_EVIDENCE / DISPUTED / DISMISSED /
+HUMAN_CONFIRMED / ESCALATED` 只属于独立 HumanDisposition；其中 `HUMAN_CONFIRMED` 仍然只表示
+“某个人类 authority 作出了确认”，不是 Reality 或 Core 的终极真值。
 
 ## 6. Provider SPI 与可替换性
 
@@ -185,11 +190,12 @@ MACHINE PROPOSAL · NEEDS HUMAN REVIEW
 ## 11. 责任边界
 
 ```text
-Human/project authority  owns review premise, policy and disposition
-Provider                 owns faithful bounded observation/proposal behavior
-Review Attention         owns traceable correlation and attention allocation
-Core                     owns deterministic verdict derivation when invoked
-Reality                  owns truth
+Human seal authority    owns review premise, Policy Seal and HumanDisposition
+Sealed ReviewPolicy     owns mechanical scope, priority and mandatory-review constraints
+Provider                owns faithful bounded observation/proposal behavior
+Review Attention        owns traceable correlation and attention allocation
+Core                    owns deterministic verdict derivation when invoked
+Reality                 owns truth
 ```
 
 人承担最终判断责任，不等于插件可以不对误报、漏报、覆盖谎言、来源错绑或越权负责。R 轨不能根治

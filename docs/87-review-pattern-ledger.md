@@ -1,4 +1,4 @@
-# Review Attention Pattern Ledger 0.1
+# Review Attention Pattern Ledger 0.2
 
 ## 1. 状态与用途
 
@@ -6,6 +6,10 @@
 - 冻结策略：R0 冻结记录格式与首批种子；P2–P4 期间 Ledger 保持 append-only/open；
 - 目的：把真实工程中发现的认知陷阱沉淀为可复核的审查模式，而不是把一次 bug 修复包装成通用真理；
 - 非目标：本账册不确认缺陷、不生成 Core Verdict、不授权自动修复，也不是机器学习训练集承诺。
+
+0.1 的矛盾版本仍可由 Git 历史在 `main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3` 精确读回；0.2 是在
+P2 尚未开始、尚无后继 PatternRecord 的零迁移窗口中完成的显式 Schema 修正，不声称 0.1 从未存在。
+0.2 重新冻结后，append-only 规则适用于所有物化 revision。
 
 ## 2. 为什么 Ledger 必须与 R0 宪法分离
 
@@ -27,9 +31,15 @@ Corpus Snapshot   selected and frozen before R1
 | 字段 | 含义 |
 | --- | --- |
 | `pattern_id` | 稳定标识，不因标题润色变化 |
+| `record_revision` | 同一 `pattern_id` 下从 1 开始、严格递增的不可变记录版本 |
+| `supersedes_digest` | 上一 revision 的 `record_digest`；首个 revision 为 `null` |
+| `record_canonicalization` | 摘要规范化语义；0.2 固定为 `veritrail-json-c14n/1`，实现须通过其冻结向量但不得导入 Core 实现 |
+| `record_digest` | 当前不可变记录的 SHA-256；规范化输入包含其余完整记录并排除 `record_digest` 自身，避免自引用 |
 | `status` | `OBSERVED / GENERALIZED / CONTRACT_CANDIDATE / FROZEN_PATTERN / REJECTED` |
 | `source_coordinate` | 仓库、精确提交/PR/文档/外部资料坐标 |
 | `problem_layer` | Premise / Plan / Authority / Identity / Execution / Observation / Verdict / Delivery / Presentation |
+| `taxonomy_version` | `problem_layer` 与 `pattern_class` 的分类语义版本 |
+| `pattern_class` | 正交的机制/陷阱类别，例如 Pairing / Dependency / Retry / Coverage / Policy / Instruction；开放但受 `taxonomy_version` 约束 |
 | `suspicious_structure` | 代码或设计中值得人确认的结构 |
 | `possible_interpretations` | 至少列出替代、优先、覆盖、叠加等可能语义 |
 | `required_evidence` | 需要哪些代码、合同、运行或外部平台语义才能裁决 |
@@ -39,36 +49,55 @@ Corpus Snapshot   selected and frozen before R1
 | `non_claim` | 本记录明确没有证明什么 |
 | `provenance` | 谁在何时基于何证据记录/修订 |
 
-状态只描述模式成熟度，不描述代码缺陷真值。`FROZEN_PATTERN` 表示该模式进入某个精确 Corpus 快照，
-不是“所有命中都是 bug”。
+`problem_layer` 回答“问题发生在哪一层”，`pattern_class` 回答“它是哪类机制或陷阱”，两者不得混用。
+状态只描述该 revision 的模式成熟度，不描述代码缺陷真值。`FROZEN_PATTERN` 表示该 revision 被选入某个
+精确 Corpus 快照，不是“所有命中都是 bug”。
+
+任何状态提升、证伪或内容修订都必须追加新 revision，并令 `supersedes_digest` 指向当时唯一链头；不得
+原地修改旧 revision。第二个并发 successor 不得被静默选为“当前状态”：若 Git 合并形成分叉，Ledger
+必须显式报告冲突，相关模式在修复前不得进入 Corpus。Corpus Manifest 必须绑定精确仓库提交、manifest
+digest，以及每个条目的 `pattern_id + selected_record_digest`：
+
+```text
+Ledger History != Corpus Selection
+```
 
 ## 4. 首批种子模式
 
-| ID | 层 | 可疑结构 | 最小反例 / 人工问题 |
-| --- | --- | --- | --- |
-| RA-001 | Authority | 两个角色最终写入同一事实 | 谁拥有最终状态？Reporter 是否被误当 authority？ |
-| RA-002 | Identity | request/fact/evidence/run 共用摘要或 ID | 同一事实两次独立采集是否被误当同一 Evidence？ |
-| RA-003 | Observation | 一个来源成功后跳过其他适用来源 | 现实究竟是 `OR`、优先级，还是 `A + B`？ |
-| RA-004 | Observation | 首个成功、exit 0 或 HTTP 200 被推导为完整 | 未支持/未观察范围在哪里？ |
-| RA-005 | Observation | 多次 API 读取被描述成原子快照 | 组合事实是否曾在同一时刻成立？ |
-| RA-006 | Verdict | Provider 输出 `*_ok` / `passed` 并被直接消费 | sealed 条件与 Core 是否被绕过？ |
-| RA-007 | Evidence | 本地时间或不可信时间戳决定事实顺序 | 是否有可信顺序来源或只能保留未知？ |
-| RA-008 | Evidence | cache/latest/HEAD 替代精确坐标 | 源已漂移时旧结论为何仍成立？ |
-| RA-009 | Pairing | 不同 session/source 的产物被隐式配对 | 它们是否来自同一次有界观察？ |
-| RA-010 | Premise | 内部自洽被当作源头前提正确 | 有没有与 sealed premise 冲突的外部事实？ |
-| RA-011 | Dependency | “有接口”被当作插件解耦证明 | Core 是否仍认识实现类型或共享其状态？ |
-| RA-012 | Presentation | 红黄绿或高分让提案看起来像结论 | 用户能否一眼分清机器提案、严重度与人工决定？ |
-| RA-013 | Retry | retry 穿过副作用边界 | 重试是否产生重复写、重复通知或双重结算？ |
-| RA-014 | Coverage | 空结果被解释为没有风险 | Provider 是完整执行、部分执行、失败还是不支持？ |
-| RA-015 | Policy | AI confidence 被直接映射为审查优先级 | 项目风险政策和模型自信是否被混为一谈？ |
-| RA-016 | Instruction | 被审查源码/注释改变了工具行为或权限 | 数据是否被错误提升为控制指令？ |
+下表是 Seed Set 的人类可读投影，不冒充未来序列化的 PatternRecord；机器化时每个 seed 必须物化为包含
+全部 Schema 字段的 revision。表内“层”严格使用 `problem_layer` 枚举，“模式类”单独表达机制：
+
+| ID | 层 | 模式类 | 可疑结构 | 最小反例 / 人工问题 |
+| --- | --- | --- | --- | --- |
+| RA-001 | Authority | Ownership | 两个角色最终写入同一事实 | 谁拥有最终状态？Reporter 是否被误当 authority？ |
+| RA-002 | Identity | IdentityCollapse | request/fact/evidence/run 共用摘要或 ID | 同一事实两次独立采集是否被误当同一 Evidence？ |
+| RA-003 | Observation | SourceComposition | 一个来源成功后跳过其他适用来源 | 现实究竟是 `OR`、优先级，还是 `A + B`？ |
+| RA-004 | Observation | Coverage | 首个成功、exit 0 或 HTTP 200 被推导为完整 | 未支持/未观察范围在哪里？ |
+| RA-005 | Observation | Atomicity | 多次 API 读取被描述成原子快照 | 组合事实是否曾在同一时刻成立？ |
+| RA-006 | Verdict | VerdictLeakage | Provider 输出 `*_ok` / `passed` 并被直接消费 | sealed 条件与 Core 是否被绕过？ |
+| RA-007 | Observation | TemporalOrdering | 本地时间或不可信时间戳决定事实顺序 | 是否有可信顺序来源或只能保留未知？ |
+| RA-008 | Identity | CoordinateStaleness | cache/latest/HEAD 替代精确坐标 | 源已漂移时旧结论为何仍成立？ |
+| RA-009 | Identity | Pairing | 不同 session/source 的产物被隐式配对 | 它们是否来自同一次有界观察？ |
+| RA-010 | Premise | PremiseValidity | 内部自洽被当作源头前提正确 | 有没有与 sealed premise 冲突的外部事实？ |
+| RA-011 | Authority | Dependency | “有接口”被当作插件解耦证明 | Core 是否仍认识实现类型或共享其状态？ |
+| RA-012 | Presentation | ConclusionSignaling | 红黄绿或高分让提案看起来像结论 | 用户能否一眼分清机器提案、严重度与人工决定？ |
+| RA-013 | Execution | Retry | retry 穿过副作用边界 | 重试是否产生重复写、重复通知或双重结算？ |
+| RA-014 | Observation | Coverage | 空结果被解释为没有风险 | Provider 是完整执行、部分执行、失败还是不支持？ |
+| RA-015 | Authority | Policy | AI confidence 被直接映射为审查优先级 | 项目风险政策和模型自信是否被混为一谈？ |
+| RA-016 | Execution | Instruction | 被审查源码/注释改变了工具行为或权限 | 数据是否被错误提升为控制指令？ |
 
 ## 5. 完整样例：Fallback 与 Layering
 
 ```yaml
 pattern_id: RA-003
+record_revision: 1
+supersedes_digest: null
+record_canonicalization: veritrail-json-c14n/1
+record_digest: <sha256 of the canonical record excluding record_digest>
 status: GENERALIZED
 problem_layer: Observation
+taxonomy_version: review-attention-taxonomy/1
+pattern_class: SourceComposition
 suspicious_structure: >
   当来源 A 成功或返回空集合时，不再读取来源 B；代码把 B 命名为 fallback。
 possible_interpretations:
@@ -97,12 +126,13 @@ provenance: >
 
 ## 6. Intake 与提升规则
 
-1. 新发现先以 `OBSERVED` 追加，必须绑定精确来源，不能只写口头印象；
-2. 能跨越单个实现、写出最小反例与误报条件后才可升为 `GENERALIZED`；
-3. 拟进入未来合同或自动检测前必须升为 `CONTRACT_CANDIDATE` 并完成反向找茬；
-4. P4 后选择进入 R1 的条目，以 manifest + digest 形成 `FROZEN_PATTERN` corpus；
-5. 被证伪或范围不成立的模式标记 `REJECTED`，保留原因，不删除历史；
-6. 任何自动化只输出命中 Evidence/Proposal，不能因为模式已冻结就自动确认缺陷。
+1. 新发现先以 `OBSERVED` rev1 追加，必须绑定精确来源，不能只写口头印象；
+2. 能跨越单个实现、写出最小反例与误报条件后，追加 `GENERALIZED` revision；
+3. 拟进入未来合同或自动检测前，追加 `CONTRACT_CANDIDATE` revision 并完成反向找茬；
+4. P4 后以 manifest 选择 `pattern_id + selected_record_digest`，形成 `FROZEN_PATTERN` corpus；
+5. 被证伪或范围不成立时追加 `REJECTED` revision，保留完整前序链；
+6. revision 必须严格引用唯一前序 digest；缺链、分叉、摘要不符或 revision 倒退均不得静默选入 Corpus；
+7. 任何自动化只输出命中 Evidence/Proposal，不能因为模式已冻结就自动确认缺陷。
 
 ## 7. P2–P4 重点收集面
 

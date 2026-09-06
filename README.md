@@ -121,12 +121,15 @@ Exact Source + Sealed Review Policy
 ```
 
 事实、Attention Proposal、人工处置和 Core Verdict 是四类不同 Artifact；AI confidence 也不等于项目审查
-优先级。机器提案使用“紫色 + 标签/图标/文字”表达来源，不使用红黄绿伪装结论。简单说：
+优先级。已封存 Policy 可以约束范围、优先级和必审项，但只有人类 authority 能产生 HumanDisposition。
+机器提案使用“紫色 + 标签/图标/文字”表达来源，不使用红黄绿伪装结论。简单说：
 **它帮你少看，不帮你不看；减的是阅读负担，不减判断责任。**
 
 R 轨以插件能力接入，但不拆成失去闭环的微服务碎片：可替换 Provider 依赖稳定合同，同进程也不得
 共享权威或可变控制状态。R0 只冻结权威、Artifact、依赖、失败和视觉语义；真实反例进入独立、追加式
-Pattern Ledger。P2–P4 会继续为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
+Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern_class` 表达机制类别；状态提升通过
+`record_revision -> supersedes_digest` 追加不可变记录，Corpus 只选择精确 `record_digest`。P2–P4 会继续
+为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动，P2 此刻仍为

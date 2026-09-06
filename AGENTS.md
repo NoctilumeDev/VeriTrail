@@ -108,13 +108,16 @@
   `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`：权威、Artifact、依赖、失败、视觉语义、
   阶段门和 Pattern Ledger Schema 已固定；不得创建源码包、Schema、CLI、CI、标签、Release 或空实现骨架。
   R 轨必须保持事实、Analyzer Evidence、机器 Proposal、Attention Map、Human Disposition 与 Core
-  Verdict 分离。机器只能提出需要关注的位置，不能确认缺陷；Provider 成功不等于覆盖完整，空提案
+  Verdict 分离。机器只能提出需要关注的位置，不能确认缺陷；只有经过身份确认的人类 authority 可以
+  创建 HumanDisposition，已封存 ReviewPolicy 只能机械约束范围、优先级与必审项。Provider 成功不等于覆盖完整，空提案
   不得写成“无问题”。AI confidence 与 ReviewPolicy priority 必须分离；紫色仅表示机器提案来源，
   界面还必须使用标签、图标/边框和文字，不得只靠颜色或把红黄绿结论语义借给提案。
   可替换能力通过窄 Provider SPI 接入；同进程部署不等于共享权威，Core、P 插件和 Provider 实现不得
-  相互导入或共享可变控制状态。`docs/87-review-pattern-ledger.md` 在 R0 后继续 append-only/open，P2–P4
-  的新反例只能按 Schema 追加，不得反向改写 R0 或改变 P 轨范围。R1 必须等 P4 冻结并选定 exact
-  commit + manifest digest 的 Pattern Corpus 后才能启动。当前仍为
+  相互导入或共享可变控制状态。`docs/87-review-pattern-ledger.md` 在 R0 后继续 append-only/open；
+  `problem_layer` 与 `pattern_class` 必须正交，状态提升必须追加带 `record_revision / supersedes_digest /
+  record_digest` 的不可变 revision。P2–P4 的新反例只能按 Schema 追加，不得反向改写 R0 或改变 P 轨
+  范围。R1 必须等 P4 冻结并选定 exact commit + manifest digest，且逐项绑定
+  `pattern_id + selected_record_digest` 的 Pattern Corpus 后才能启动。当前仍为
   `P1_FROZEN / P2_NOT_STARTED`；下一步回到 P 轨时仍须从独立 P2 合同开始，不能顺手进入 R1。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
