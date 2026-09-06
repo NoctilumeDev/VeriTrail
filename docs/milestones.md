@@ -303,9 +303,9 @@ GitHub 纵向切片；Freeze 前发现 rulesets 与 classic branch protection �
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8` 合入，并完成精确主线与匿名 README/事实文档
 读回。P1 状态为 `P1_FROZEN`；文档 89 从精确主线
 `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 定义 P2 0.1，随后经 PR #38 最终 11 项门禁、受保护主线
-合入与 exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。当前为
-`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`，只冻结匿名公开渲染观察边界，尚无浏览器
-实现、P3 handoff、插件标签或 Release。
+合入与 exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。当前因默认
+Pages 根坐标反例重开为 `P2_CONTRACT_0.1_ROOT_PATH_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`，
+只修正空 `pages_path` 对站点根 `/` 的唯一表示；尚无浏览器实现、P3 handoff、插件标签或 Release。
 
 文档 85–88 新开独立顶层 Review Attention `R` 轨；它不是 M15、P5 或 M13 的重跑。R0 只设计
 精确 Source Snapshot、ReviewPolicy、CodeFact/AnalyzerEvidence、机器 Proposal、Attention Map、

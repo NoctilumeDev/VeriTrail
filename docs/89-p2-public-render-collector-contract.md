@@ -1,6 +1,6 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`
+> 状态：`P2_CONTRACT_0.1_ROOT_PATH_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -229,7 +229,7 @@ P2 0.1 只允许由结构化坐标生成以下四类 HTTPS 目标：
 | `GITHUB_REPOSITORY_README` | `owner`, `repository` | `https://github.com/{owner}/{repository}` |
 | `GITHUB_MARKDOWN_FILE` | `owner`, `repository`, `target_commit_sha`, `repository_path` | exact commit blob 页面 |
 | `GITHUB_RELEASE` | `owner`, `repository`, `release_tag` | `https://github.com/{owner}/{repository}/releases/tag/{tag}` |
-| `GITHUB_PAGES_DEFAULT` | `owner`, `repository`, `site_kind`, `pages_path` | GitHub 默认 `github.io` 域名 |
+| `GITHUB_PAGES_DEFAULT` | `owner`, `repository`, `site_kind`, `pages_path` | GitHub 默认 `github.io` 域名；空字符串精确表示站点根路径 |
 
 所有目标还必须在 `coordinates` 中携带一个允许的 `viewport_profile`；只有请求
 `content.literal_markers` 时才允许并要求 `literal_markers`。其余 target-specific 字段出现即拒绝，不能
@@ -241,14 +241,16 @@ P2 0.1 只允许由结构化坐标生成以下四类 HTTPS 目标：
   `^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$`，repository 为 `^[A-Za-z0-9_.-]{1,100}$` 且不以 `.git`
   结尾，并额外拒绝 `.` / `..`；不接受通配符、URL、userinfo、端口或 host；
 - `target_commit_sha` 必须是 40 位小写十六进制；Markdown 永久链接不得用 branch/tag 替代 exact SHA；
-- `repository_path` / `pages_path` 必须是相对 POSIX 路径，拒绝 `..`、控制字符、反斜杠、预编码分隔符和
-  空路径段；
+- `repository_path` 必须是非空相对 POSIX 路径，拒绝 `..`、控制字符、反斜杠、预编码分隔符和空路径段；
+- `pages_path` 只有两种合法形态：空字符串精确表示站点根路径，或满足上述约束的非空相对 POSIX 路径；
+  `/`、`.`、`./`、尾随 `/` 和其他“依赖 redirect 才回到根”的写法均拒绝，不能用 `index.html` 冒充 `/`；
 - `release_tag` 复用 P1 的 `^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$` 子集，拒绝空/`.`/`..` 路径段与
   连续 `/`；固定 encoder 逐段编码并保留合法 slash 层级，不接受预编码 URL 或查询参数；
 - `GITHUB_PAGES_DEFAULT` 的 `site_kind=OWNER` 时要求 repository 大小写不敏感地等于
-  `{owner}.github.io`，生成 `https://{lowercase-owner}.github.io/{pages_path}`；`site_kind=PROJECT` 时生成
-  `https://{lowercase-owner}.github.io/{repository}/{pages_path}`。它只允许这两种默认 `github.io`
-  坐标；自定义域名、CNAME 重定向和任意站点均推迟到后继合同；
+  `{owner}.github.io`；空 `pages_path` 生成 `https://{lowercase-owner}.github.io/`，非空时生成
+  `https://{lowercase-owner}.github.io/{pages_path}`。`site_kind=PROJECT` 的空路径生成
+  `https://{lowercase-owner}.github.io/{repository}/`，非空时才在其后追加编码后的 `pages_path`。
+  它只允许这两种默认 `github.io` 坐标；自定义域名、CNAME 重定向和任意站点均推迟到后继合同；
 - 所有查询值和 fragment 都禁止出现在请求坐标中。
 
 exact commit Markdown 提供不可变的源坐标；它在 GitHub 上的公共 HTML 仍是带采集时间、renderer 与
@@ -625,7 +627,7 @@ expected content signature 改错，由 Core 在独立测试中得到非 PASS。
 
 ### 14.1 纯离线合同
 
-1. target kind、坐标、路径/tag 编码、投影、viewport 与 marker 上限全部在浏览器启动前验证；
+1. target kind、坐标、Pages 根路径/非根路径、路径/tag 编码、投影、viewport 与 marker 上限全部在浏览器启动前验证；
 2. arbitrary URL/host、query、userinfo、`..`、预编码分隔符、selector、regex、script 和凭据均拒绝；
 3. 同一 spec 确定性派生同一 spec digest；Policy/request/session 变化不污染 fact identity；
 4. viewport 或 normalization semantics 变化必须改变 fact identity；浏览器实现版本变化不得改变 facts digest；
@@ -794,3 +796,16 @@ Collector 只拥有它实际看见并能按合同保留下来的事实。
 
 上述闭环只冻结 P2 0.1 合同。当前仍为 `P2_IMPLEMENTATION_NOT_STARTED`；下一步只能从冻结后的新
 exact-main worktree 进入 `P2_IMPLEMENTING`，不得提前进入 P3、P4 或 Review Attention R1。
+
+### 18.4 Pages 根坐标反例与合同重开
+
+实现 worktree 从 `main@c0ec6e29ee9f43e69846535af8b2e79be52a4fc1` 建立后、首个源码提交产生前，
+外部语义复核发现冻结合同没有为默认 GitHub Pages 的站点根路径 `/` 定义规范坐标：空字符串会与
+“拒绝空路径段”冲突，`/` 不是相对路径，`.` 依赖 redirect，`index.html` 又不是根坐标。该反例会直接
+影响 request identity、spec digest、URL derivation 和 fixture，因而否决立即进入实现。
+
+本修正只把 `pages_path = ""` 冻结为 Pages 专用的站点根坐标，并继续拒绝 repository Markdown 的空路径、
+尾随斜杠、`.` 和 redirect-based alias；它不开放任意 URL、自定义 Pages 域名、query、fragment 或新
+target kind。此前未提交的离线实现草案已经撤回，候选保持 docs-only。只有本修正经受保护主线合入、
+exact SHA 与匿名公开 Render 读回、再由 docs-only closure 记录后，状态才可恢复为
+`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`。
