@@ -185,3 +185,37 @@ PATTERN_LEDGER_OPEN
 R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE
 P2_NOT_STARTED
 ```
+
+### 8.3 0.2 语义修正与重新冻结事实
+
+第一次冻结没有被静默改写。外部复核提出 5.1 节的合同一致性反例后，R0 只重开受影响的 Markdown
+语义，并从精确 `main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3` 形成独立修正候选：
+
+1. 本地候选提交为 `b7e5234072a0fa4a805be02a276fc283d014830a`；由于本机到
+   `github.com:443` 的 Git HTTPS 推送通道不可达，首次 `git push` 与随后的 PR 创建均失败，未产生
+   远端事实；
+2. `api.github.com` 仍可达，因此改用 GitHub Git Database API，在同一父提交上上传完全相同的
+   7 文件 Markdown tree，形成远端候选 `18e80dda8ff7851b667bea8cf08f1eee6bab7a91`。该候选与本地候选
+   tree 等价；API 只替代传输通道，没有绕过分支保护、PR 或门禁；
+3. [PR #36](https://github.com/NoctilumeDev/VeriTrail/pull/36) 的
+   [Public CI run 34005259949](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34005259949)
+   最终 11 个 job 全部 `SUCCESS`；
+4. PR #36 合入受保护 `main` 后，GitHub API 将 `refs/heads/main` 精确读回为
+   `feb3c451cab67e31212c0edcdc63100e05094511`；其 tree
+   `a186094b993024207399c4ce3a70980e28b2cdc9` 与修正候选 tree 完全一致；
+5. 无 Authorization/Cookie 的公开 GitHub HTML 随后同时读回精确提交页与浮动 `blob/main`：README
+   命中“只有人类 authority 能产生 HumanDisposition”和 `P2_NOT_STARTED`；Plan 命中“关注候选”；
+   Contract 命中 AcceptancePlan 的 required Evidence bindings；Ledger 命中
+   `record_revision / supersedes_digest / problem_layer / pattern_class` 及
+   `Ledger History != Corpus Selection`；本文命中 5.1 节修正记录。页面均显示 GitHub `Sign in`，
+   因而不是 raw/API 替代，也不是登录会话中的私有视图。
+
+本次重新冻结只确认 R0 0.2 文档语义与追加式 Ledger 身份边界；没有创建 R1 源码、Schema、CLI、CI、
+标签或 Release，也没有启动 P2。当前状态保持：
+
+```text
+R0_ARCHITECTURE_FROZEN_0_2
+PATTERN_LEDGER_OPEN
+R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE
+P2_NOT_STARTED
+```
