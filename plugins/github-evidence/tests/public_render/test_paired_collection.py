@@ -6,7 +6,9 @@ import unittest
 from dataclasses import fields
 from pathlib import Path
 
+from veritrail.acceptance_evaluation import evaluate_acceptance
 from veritrail.acceptance_plan import seal_acceptance_plan
+from veritrail.evidence import import_evidence_document
 
 from veritrail_github.collector import GitHubCollector
 from veritrail_github.contracts import derive_observation_request
@@ -114,7 +116,26 @@ def _paired_plan() -> dict[str, object]:
                     "right": "COMPLETE",
                 },
             ],
-            "integrity_rules": [],
+            "integrity_rules": [
+                {
+                    "id": "same-collection-session",
+                    "left": {
+                        "requirement_id": "github-api-evidence",
+                        "path": (
+                            "/metadata/veritrail_observation/"
+                            "collection_session_id"
+                        ),
+                    },
+                    "operator": "eq",
+                    "right": {
+                        "requirement_id": "github-render-evidence",
+                        "path": (
+                            "/metadata/veritrail_observation/"
+                            "collection_session_id"
+                        ),
+                    },
+                }
+            ],
             "assertions": [
                 {
                     "id": "api-coordinate-retained",
@@ -148,6 +169,12 @@ def _requests(plan):
         derive_public_render_request(
             plan, "github-public-render", "paired-render-001"
         ),
+    )
+
+
+def _import_published(path: Path):
+    return import_evidence_document(
+        json.loads(path.read_text(encoding="utf-8")), path.name
     )
 
 
@@ -482,6 +509,48 @@ class PairedCollectionTests(unittest.TestCase):
             )
             self.assertEqual(result.api.artifact_path, api_path)
             self.assertEqual(result.render.artifact_path, render_path)
+
+            report = evaluate_acceptance(
+                plan,
+                [_import_published(api_path), _import_published(render_path)],
+                "COMPLETED",
+            )
+            self.assertEqual(report["verdict"], "PASS")
+
+    def test_core_keeps_cross_session_artifacts_inconclusive(self) -> None:
+        plan = _paired_plan()
+        api_request, render_request = _requests(plan)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            first_api = root / "first-api.json"
+            first_render = root / "first-render.json"
+            second_api = root / "second-api.json"
+            second_render = root / "second-render.json"
+            self._coordinator(session_id="paired-session-first").collect_and_publish(
+                plan,
+                api_request,
+                render_request,
+                api_output_path=first_api,
+                render_output_path=first_render,
+            )
+            self._coordinator(session_id="paired-session-second").collect_and_publish(
+                plan,
+                api_request,
+                render_request,
+                api_output_path=second_api,
+                render_output_path=second_render,
+            )
+
+            report = evaluate_acceptance(
+                plan,
+                [_import_published(first_api), _import_published(second_render)],
+                "COMPLETED",
+            )
+            self.assertEqual(report["verdict"], "INCONCLUSIVE")
+            self.assertIn(
+                "same-collection-session",
+                {item["id"] for item in report["rule_results"]},
+            )
 
     def test_api_collection_exception_does_not_prevent_render_publish(self) -> None:
         plan = _paired_plan()
