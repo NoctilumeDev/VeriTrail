@@ -67,6 +67,21 @@ def _settle_playwright_start(playwright: Any) -> None:
     sync_wait(asyncio.wait_for(asyncio.shield(init_task), timeout=1.0))
 
 
+def _resolve_route_after_stop(action: Callable[[], None]) -> None:
+    """Resolve a queued route best-effort after stop ownership is established.
+
+    Playwright may deliver a route callback while the owning thread is already
+    closing the browser driver.  At that point ``abort``/``close`` can fail only
+    because the transport disappeared first.  The established stop reason remains
+    authoritative; normal routing operations intentionally do not use this helper.
+    """
+
+    try:
+        action()
+    except Exception:
+        pass
+
+
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -378,7 +393,9 @@ def _collect_browser_evidence(
                         # Let the owning browser step surface cancellation on the
                         # main thread instead of leaking an unhandled listener
                         # exception while the request is still routed.
-                        route.abort("blockedbyclient")
+                        _resolve_route_after_stop(
+                            lambda: route.abort("blockedbyclient")
+                        )
                         return
                     if (
                         _origin(request.url) not in allowed_origins
@@ -396,7 +413,7 @@ def _collect_browser_evidence(
                     except StopRequested:
                         # Keep asynchronous Playwright callbacks exception-free;
                         # the surrounding browser step still owns stop semantics.
-                        route.close()
+                        _resolve_route_after_stop(route.close)
                         return
                     if _websocket_origin(route.url) not in allowed_websocket_origins:
                         route.close()
