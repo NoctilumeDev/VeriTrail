@@ -74,13 +74,17 @@
   README/事实文档读回。P1 当前为 `P1_FROZEN`；P2 合同从精确主线
   `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 起步，经 PR #38 的最终 11 项门禁、受保护主线合入与
   exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。当前为
-  `P2_CONTRACT_0.1_RESPONSE_BUDGET_CORRECTION_CANDIDATE /
-  P2_IMPLEMENTATION_PAUSED_AT_FEASIBILITY`。默认 Pages 根坐标反例随后经 PR #40 docs-only 修正为
+  `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`。默认 Pages 根坐标反例随后经 PR #40 docs-only 修正为
   `pages_path = ""` 的唯一表示，并在 11 项门禁、受保护主线与 exact-SHA 匿名 Render 读回后重新冻结；
   其后的 implementation feasibility 又证明 completion-time Network 计数不能冒充 response-body 硬截断，
-  当前只重开计量字段、Chromium Fetch 流控制和 producer-side 中断证据；合同位于
+  并曾只重开计量字段、Chromium Fetch 流控制和 producer-side 中断证据；该修正与 append-only
+  `RA-017` 已经 PR #42 的 11 项门禁、受保护主线与 exact-SHA 匿名 README/合同/Ledger 读回重新冻结；合同位于
   `docs/89-p2-public-render-collector-contract.md`。P2 实现只能从冻结后的新 exact-main worktree 独立
   开始；仍不得提前创建 Core handoff、定时监控或独立发布。
+  第一次 docs-only closure PR #43 因重复的 M10 Chromium cleanup timing failure 被否决并关闭，未合入；
+  独立 PR #44 以单一绝对清理 deadline 修复并经 11 项门禁合入
+  `main@25ff62f50a01fddc086c41740af802d9c2df0495`。当前 closure 必须从该 exact main 重建，不能 rerun 洗白
+  #43，也不能把 M10 修复解释成 P2 Collector 已实现。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
