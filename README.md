@@ -131,6 +131,11 @@ desktop/narrow 两次真实读回。docs-only closure 又经 PR #50 的 11 项�
 `RA-018 rev2` Ledger 读回。本状态发布以自身 11 项门禁、受保护主线合入和合入后匿名读回为生效
 条件；该链成立后 P2 至此冻结。P3、P4 与 Review Attention R1 均未开始。
 
+P1/P2 在开放世界施工中形成的可复用边界另见
+[受约束的开放世界观察方法](docs/91-bounded-open-world-observation-method.md)。它把平台适配、运行时
+控制、观察语义与证据工程分开，并明确合成机制证据、真实兼容证据、观察者效应和不确定性如何进入
+冻结门；它是一份方法归纳，不扩张 P1/P2 合同，也不表示 P3 已开始。
+
 ### 审查注意力插件轨（R0 架构已冻结）
 
 AI 可以把一个不完整的现实模型实现得整齐、自洽并通过全部测试。VeriTrail 因此另开独立顶层 `R` 轨：
@@ -156,6 +161,10 @@ R 轨以插件能力接入，但不拆成失去闭环的微服务碎片：可替
 Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern_class` 表达机制类别；状态提升通过
 `record_revision -> supersedes_digest` 追加不可变记录，Corpus 只选择精确 `record_digest`。P2–P4 会继续
 为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
+
+未来 R1 不会把源码唯一切成等长“代码段”。它将从精确 Source Snapshot 的确定性关系图派生可重叠、
+可追溯且有界的 Semantic Review Slice，并把 slice derivation、analysis 与 attention ranking 保持分权；
+具体 Schema 仍须等 P4 与 Pattern Corpus 冻结后单独定稿。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
@@ -496,6 +505,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [R0 Review Attention 架构评审与冻结事实](docs/88-r0-review-attention-design-review.md)
 - [P2 Public Render Collector 施工合同 0.1](docs/89-p2-public-render-collector-contract.md)
 - [P2 Public Render Collector 实现与冻结事实 0.1](docs/90-p2-public-render-collector-freeze-candidate.md)
+- [受约束的开放世界观察方法 0.1](docs/91-bounded-open-world-observation-method.md)
 
 ## 项目来源
 
