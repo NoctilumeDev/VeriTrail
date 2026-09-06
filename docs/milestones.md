@@ -259,6 +259,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [P2 Public Render Collector 施工合同 0.1](89-p2-public-render-collector-contract.md)
 - [P2 Public Render Collector 实现与冻结事实 0.1](90-p2-public-render-collector-freeze-candidate.md)
 - [受约束的开放世界观察方法 0.1](91-bounded-open-world-observation-method.md)
+- [P3 Core Handoff 与真实正负链合同 0.1](92-p3-core-handoff-contract.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -343,4 +344,11 @@ authority 能创建 HumanDisposition，Policy 不能自动处置。P4 以后才�
 `METHOD_NOTE / NON_CONTRACTUAL`。同一补丁把 R1 的未来问题补充为：从精确 Source Snapshot 的确定性
 关系图派生允许重叠、有界且带 coverage/truncation 的 Semantic Review Slice，并保持 slice derivation、
 analysis 与 attention ranking 分权。该说明不修改已冻结 R0 Artifact，不启动 R1，也不表示 P3 已开始。
+
+文档 92 从 `main@3e785d197c8040c8baa4120fc63301eb347e5bc8` 新开 P3 合同候选。它不新增 Collector，
+只定义 P1/P2 标准 Evidence、仅绑定 role/path/digest 的极薄 handoff manifest 与现有 Acceptance Core 的
+串行交接，并把 Plan binding、session integrity 与 Verdict 权留在 Core；同时冻结四态正负链、身份、
+失败、安装和真实 GitHub 验收边界。候选合入、exact-main 与匿名公开读回、
+docs-only closure 全部成立前，P3 实现保持未开始。
+
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
