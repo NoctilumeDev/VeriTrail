@@ -82,14 +82,20 @@
   `docs/89-p2-public-render-collector-contract.md`。P2 实现已从冻结后的 exact main 独立施工，经 PR #49
   的 11 项门禁合入 `main@ca6b8aaa33bc06795c96610b9e9085506efef9a0`，并从该 exact main 完成产品
   Collector 的 desktop/narrow 匿名 README 读回；实现与本地/远端证据见
-  `docs/90-p2-public-render-collector-freeze-candidate.md`。当前准确状态为
-  `P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`；只允许继续完成 docs-only closure 自身的
-  门禁、受保护主线合入和匿名公开读回，不得提前创建 P3 handoff、定时监控或独立发布。
+  `docs/90-p2-public-render-collector-freeze-candidate.md`。docs-only closure 又经 PR #50 的 11 项门禁合入
+  `main@2d3877df41d7ec5a3b7b932404f6b622f06862a8`，并从该 exact main 对 README/事实文档完成
+  desktop/narrow 匿名读回。最终冻结发布 PR #51 的原始门禁随后重新打出 Python 3.10 `-O` 的
+  M10 生命周期反例（`13.688s > 9s`），因此被关闭且未合并；P2 实现证据保持成立，冻结资格没有成立。
+  独立 PR #52 沿完整中断链统一生命周期与 Chromium 释放预算，并阻止 owned termination 后的失效观察，
+  其原始 11 项门禁全绿后合入 `main@bb8f2d44c0c681862a5e63506ae57d4b4a8d7947`。修正后的 exact main
+  已由产品 Collector 完成匿名 README desktop 与 `RA-018 rev2` Ledger narrow 读回。本状态发布以自身
+  11 项门禁、受保护主线合入和合入后匿名读回为生效条件；该链成立后状态为
+  `P2_FROZEN / P3_NOT_STARTED`。不得把 P2 冻结自动解释为已创建 P3 handoff、P4 发布、定时监控或
+  Review Attention R1。
   第一次 docs-only closure PR #43 因重复的 M10 Chromium cleanup timing failure 被否决并关闭，未合入；
   独立 PR #44 以单一绝对清理 deadline 修复并经 11 项门禁合入
-  `main@25ff62f50a01fddc086c41740af802d9c2df0495`。当前 closure 必须从该 exact main 重建，不能 rerun 洗白
-  #43，也不能把 M10 修复解释成 P2 Collector 实现证据。后继 P2 实现必须继续引用 PR #49 与文档 90
-  的独立事实链。
+  `main@25ff62f50a01fddc086c41740af802d9c2df0495`。后继 closure 没有 rerun 洗白 #43，也没有把 M10 修复
+  解释成 P2 Collector 实现证据；PR #51/#52 同样保留“发布失败、地基修复、重新发布”三条独立事实链。
   插件只能产生只读事实，不能写 GitHub，不能生成或覆盖 Core Verdict。Codex Security 深度扫描与攻击
   路径验证继续不在当前工作范围内。GitHub API 与公开页面是同一信任域的两个观察面，不是两个独立
   权威；P 轨不得把承诺后完整性扩张为首次封存前的来源真实性或现实真实性，也不建设 GitHub 之外
