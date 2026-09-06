@@ -260,6 +260,8 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [P2 Public Render Collector 实现与冻结事实 0.1](90-p2-public-render-collector-freeze-candidate.md)
 - [受约束的开放世界观察方法 0.1](91-bounded-open-world-observation-method.md)
 - [P3 Core Handoff 与真实正负链合同 0.1](92-p3-core-handoff-contract.md)
+- [P3 Core Handoff 合同冻结事实](93-p3-core-handoff-contract-freeze.md)
+- [P3 Core Handoff 实现与冻结候选事实 0.1](94-p3-core-handoff-implementation-freeze-candidate.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -355,5 +357,13 @@ PR #56 没有删除 Mermaid 或放宽 P2，只把这一现实边界写回合同�
 exact-main 匿名读回，作为独立 docs-only 状态发布；其自身门禁、合入和读回全部成立后，状态为
 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`，下一步只能从新的 exact main
 串行开始 P3-A。
+
+P3 后继实现从 `main@589bbad7261cceda1aa3a6412278a48473a9b1b7` 严格串行完成 A–E。实现候选
+`fa26dda516c354a5ddd08335202d3fd1cf5dbabb` 经 PR #64 原始 11 项门禁合入
+`main@c0bce6cb7a3c9f3684d1845beda355084f232d0a`；合入后产品 P1/P2 Collector 又对 exact README 与 P3
+合同完成匿名 `COMPLETE` 读回并由 Core 得到 `PASS`。第一次真实 E 暴露 synthetic fixture 与生产 P2
+fact path 漂移，提交 `7e10e7a` 只修正 C 并将经验追加为 `RA-021 rev1`，没有改 P2 或 Verdict 语义。
+当前为 `P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`；文档 94 的 docs-only closure 完成门禁、
+主线合入和合入后读回以前，不得标记 `P3_FROZEN` 或启动 P4。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
