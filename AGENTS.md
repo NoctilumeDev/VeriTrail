@@ -90,8 +90,9 @@
   其原始 11 项门禁全绿后合入 `main@bb8f2d44c0c681862a5e63506ae57d4b4a8d7947`。修正后的 exact main
   已由产品 Collector 完成匿名 README desktop 与 `RA-018 rev2` Ledger narrow 读回。本状态发布以自身
   11 项门禁、受保护主线合入和合入后匿名读回为生效条件；该链成立后状态为
-  `P2_FROZEN / P3_CONTRACT_0.1_CANDIDATE / P3_IMPLEMENTATION_NOT_STARTED`。不得把 P2 冻结或 P3
-  合同候选自动解释为已创建 handoff、P4 发布、定时监控或
+  `P2_FROZEN / P3_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。P3 合同冻结只在
+  `docs/93-p3-core-handoff-contract-freeze.md` 自身的门禁、合入和合入后读回全部成立后生效；不得把 P2
+  冻结或 P3 合同冻结自动解释为已创建 handoff、P4 发布、定时监控或
   Review Attention R1。
   第一次 docs-only closure PR #43 因重复的 M10 Chromium cleanup timing failure 被否决并关闭，未合入；
   独立 PR #44 以单一绝对清理 deadline 修复并经 11 项门禁合入
@@ -103,12 +104,14 @@
   的独立见证或可信锚点。P 轨也不得裁定提出者的观点是否正确；它只检查 sealed 条件与 Evidence 的
   关系，未知、冲突、缺证据和不可归因必须继续可见。Agent 发现与前提冲突的事实时必须报告并把
   Seal 决定权交还给人，不得以“人负责前提”为由沉默，也不得自行改写目标。
-  `docs/92-p3-core-handoff-contract.md` 已新开 P3 0.1 文档候选：P3 不新增观察面，只把 P1/P2 标准
+  `docs/92-p3-core-handoff-contract.md` 与 `docs/93-p3-core-handoff-contract-freeze.md` 已冻结 P3 0.1
+  施工边界：P3 不新增观察面，只把 P1/P2 标准
   Evidence 通过显式 role/path/digest handoff 交给现有 Acceptance Core。handoff manifest 是插件侧极薄
   交接清单，不是 Evidence，不复制 plan/session/facts/coverage，不进入 rule evaluator，也不产生 Verdict；
   Plan binding 与 session integrity 仍只由 Core 裁决。
-  合同经候选合入、exact-main 匿名读回和独立 docs-only closure 冻结前，禁止创建 P3 Schema、publisher、
-  reference lab、示例 Plan 或 AcceptanceBundle 产物；P4 与 Review Attention R1 仍不得启动。
+  只有从状态发布后的新 exact main 才能串行开始 P3-A manifest contract + canonical identity；在 P3-A
+  之前禁止创建 publisher、reference lab、示例 Plan 或 AcceptanceBundle，P4 与 Review Attention R1
+  仍不得启动。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

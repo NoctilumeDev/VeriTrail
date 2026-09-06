@@ -1,6 +1,9 @@
 # P3 Core Handoff 与真实正负链合同 0.1
 
-> 状态：`P3_CORE_HANDOFF_CONTRACT_0.1_CANDIDATE / P3_IMPLEMENTATION_NOT_STARTED`
+> 状态发布：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`
+>
+> 冻结事实：[文档 93](93-p3-core-handoff-contract-freeze.md)。该状态只在文档 93 自身的远端门禁、
+> 受保护主线合入和合入后精确匿名读回全部成立后生效。
 >
 > 精确设计基线：`3e785d197c8040c8baa4120fc63301eb347e5bc8`
 >
@@ -378,7 +381,8 @@ P3 不重开 P2，也不删除 Mermaid 来迫使现实迎合观察器。这里�
    门禁、合入和匿名读回；
 7. 仓库中仍不存在 P3 manifest Schema、publisher、reference lab、示例 Plan 或 AcceptanceBundle 产物。
 
-在 closure 完成前，状态保持：
+候选、语义修正与修正后 exact-main 读回已经完成；精确坐标、失败观察和产品 Artifact 摘要由
+[文档 93](93-p3-core-handoff-contract-freeze.md)保留。在文档 93 的状态发布闭环完成前，状态仍保持：
 
 ```text
 P2_FROZEN
@@ -388,4 +392,6 @@ P4_NOT_STARTED
 R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE
 ```
 
-任何新反例都可以否决冻结资格。合同冻结只允许后续从新的 exact main 开始 P3-A，不自动授权 P4 或 R1。
+任何新反例都可以否决冻结资格。文档 93 的最后门全部成立后，合同状态变为
+`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`；冻结只允许后续从新的 exact main
+开始 P3-A，不自动授权 P4 或 R1。
