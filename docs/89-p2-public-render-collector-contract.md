@@ -1,6 +1,6 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`
+> 状态：`P2_CONTRACT_0.1_REOPENED / P2_IMPLEMENTATION_PAUSED`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -142,8 +142,7 @@ P2 只接受 Core 公共 validator 已验证且 seal 可重算一致的 `Accepta
     "target_kind": "GITHUB_MARKDOWN_FILE",
     "target_commit_sha": "cdc2c250f21b37a0be9f815295f7b7c3c5081d0d",
     "repository_path": "README.md",
-    "viewport_profile": "DESKTOP_1365X768",
-    "literal_markers": []
+    "viewport_profile": "DESKTOP_1365X768"
   },
   "projections": [
     "content.rendered_text_signature",
@@ -157,12 +156,14 @@ P2 只接受 Core 公共 validator 已验证且 seal 可重算一致的 `Accepta
 该示例 spec 已由当前 Core 0.12.2 公共 `observation_spec_digest()` 在 Python 3.10/3.13 独立复算为：
 
 ```text
-1202751c155285c992d75dd1784731a4d56c3b8a7a13466e543bf50b497485ce
+fcdaaf5428814d2556426fdf0626199e0400f386172de764203ead7f0e6c28d8
 ```
 
-把它放入一份最小有效 AcceptancePlan 后，两套 Python 得到同一 Plan seal
-`2facc067ba82276de83a167f188eb706f1a96fe2115d03bd0ffb09dca9888087`。这是 P2 实现必须保留的公开
-兼容向量；它不代表页面已经采集。
+完整向量保存在
+[`plugins/github-evidence/examples/public-render-acceptance-plan.json`](../plugins/github-evidence/examples/public-render-acceptance-plan.json)。
+两套 Python 对它得到同一 Plan seal
+`d08e2da6b665ebedaa1032eaf9834950a3d1e984b5b7c9e31f3d63d5ec4097ae`。这两项是 P2 实现必须保留的
+公开兼容向量；它们不代表页面已经采集。
 
 derivation 必须在启动浏览器前：
 
@@ -989,3 +990,19 @@ exact main 串行读回：
 各保留 2 个 console error，关闭后 matching Chromium 为 0。上述 noise 没有被抹掉，也没有被用来替代
 正文事实。新的 closure 必须从 `main@25ff62f...` 独立产生；只有本 docs-only 候选重新通过完整门禁、受保护
 主线合入与合入后匿名读回，P2 0.1 才恢复冻结。该闭环仍不证明 P2 Collector 已实现。
+
+### 18.7 Literal marker 公共向量重开
+
+P2 request validator 施工前复算公共向量时发现：第 4 节示例在未请求
+`content.literal_markers` 投影时仍携带 `literal_markers: []`，而第 5 节要求该字段只有在请求该投影时才
+允许并要求。两条规则不能同时成立，旧 spec digest 因而不能继续作为冻结向量。
+
+本轮只删除未适用字段，并保留既有能力边界：未请求 literal-marker 投影时字段必须不存在；请求时字段
+必须存在且可包含 0 至 32 个受限字面量。修正后的 spec digest 为
+`fcdaaf5428814d2556426fdf0626199e0400f386172de764203ead7f0e6c28d8`。为避免再次出现“只给 seal、不给
+被 seal 对象”的不可复算证据，本轮同时加入完整 AcceptancePlan fixture，其 seal 为
+`d08e2da6b665ebedaa1032eaf9834950a3d1e984b5b7c9e31f3d63d5ec4097ae`。
+
+该修正不改变 P1、网络预算、浏览器 preflight 或任何运行代码。P2 实现保持暂停；只有修正候选通过完整
+门禁、合入受保护主线，并从该 exact main 完成匿名公共读回后，才能另立 closure 恢复
+`P2_CONTRACT_0.1_FROZEN`。
