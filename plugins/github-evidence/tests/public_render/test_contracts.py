@@ -461,21 +461,25 @@ class PublicRenderProjectionTests(unittest.TestCase):
 
 
 class P1P2CoordinateConformanceTests(unittest.TestCase):
+    @staticmethod
+    def _vectors() -> list[dict[str, object]]:
+        corpus_path = (
+            PLUGIN_ROOT / "tests" / "fixtures" / "github-coordinate-conformance.json"
+        )
+        corpus = json.loads(corpus_path.read_text(encoding="utf-8"))
+        if corpus.get("schema_version") != "github-coordinate-conformance/0.1":
+            raise AssertionError("unexpected coordinate conformance schema")
+        vectors = corpus.get("vectors")
+        if not isinstance(vectors, list) or not vectors:
+            raise AssertionError("coordinate conformance corpus is empty")
+        return vectors
+
     def test_owner_and_repository_boundaries_conform_without_shared_validator(self) -> None:
-        cases = [
-            ("NoctilumeDev", "VeriTrail", True),
-            ("A", "repo_1.2", True),
-            ("a-", "repo", True),
-            ("-bad", "repo", False),
-            ("bad/name", "repo", False),
-            ("NoctilumeDev", ".", False),
-            ("NoctilumeDev", "..", False),
-            ("NoctilumeDev", "repo.git", False),
-            ("NoctilumeDev", "bad/name", False),
-            ("NoctilumeDev", "r" * 101, False),
-        ]
-        for owner, repository, expected in cases:
-            with self.subTest(owner=owner, repository=repository):
+        for vector in self._vectors():
+            owner = vector["owner"]
+            repository = vector["repository"]
+            expected = vector["accepted"]
+            with self.subTest(vector=vector["id"]):
                 p1 = acceptance_plan(["repository.identity"])
                 p1.pop("seal")
                 p1["observation_specs"][0]["coordinates"]["owner"] = owner

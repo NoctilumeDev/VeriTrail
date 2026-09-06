@@ -1,0 +1,15 @@
+{
+  "schema_version": "github-coordinate-conformance/0.1",
+  "vectors": [
+    {"id": "ordinary-owner-and-repository", "owner": "NoctilumeDev", "repository": "VeriTrail", "accepted": true},
+    {"id": "short-owner-and-punctuated-repository", "owner": "A", "repository": "repo_1.2", "accepted": true},
+    {"id": "owner-ending-in-hyphen", "owner": "a-", "repository": "repo", "accepted": true},
+    {"id": "owner-leading-hyphen", "owner": "-bad", "repository": "repo", "accepted": false},
+    {"id": "owner-containing-path-separator", "owner": "bad/name", "repository": "repo", "accepted": false},
+    {"id": "repository-current-directory-alias", "owner": "NoctilumeDev", "repository": ".", "accepted": false},
+    {"id": "repository-parent-directory-alias", "owner": "NoctilumeDev", "repository": "..", "accepted": false},
+    {"id": "repository-dot-git-alias", "owner": "NoctilumeDev", "repository": "repo.git", "accepted": false},
+    {"id": "repository-containing-path-separator", "owner": "NoctilumeDev", "repository": "bad/name", "accepted": false},
+    {"id": "repository-over-platform-length-limit", "owner": "NoctilumeDev", "repository": "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", "accepted": false}
+  ]
+}
