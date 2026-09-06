@@ -1,6 +1,8 @@
 # P3 Core Handoff 实现与冻结候选事实 0.1
 
-> 当前状态：`P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`
+> 候选记录状态：`P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`
+>
+> 后继冻结状态发布：[文档 95](95-p3-core-handoff-freeze-publication.md)
 >
 > 精确施工基线：`589bbad7261cceda1aa3a6412278a48473a9b1b7`
 >

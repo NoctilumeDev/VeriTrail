@@ -125,11 +125,17 @@
   [PR #64](https://github.com/NoctilumeDev/VeriTrail/pull/64) 的原始 11 项门禁把完整候选
   `fa26dda516c354a5ddd08335202d3fd1cf5dbabb` 合入
   `main@c0bce6cb7a3c9f3684d1845beda355084f232d0a`，随后 README 与 P3 合同完成 exact-main 匿名产品读回。
-  当前状态为 `P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`，事实见
+  候选阶段状态为 `P3_IMPLEMENTED / FREEZE_CANDIDATE / P4_NOT_STARTED`，事实见
   `docs/94-p3-core-handoff-implementation-freeze-candidate.md`。第一次真实 E 暴露的 synthetic P2 fact path
   漂移已由 `7e10e7a` 最小修正，并以 append-only `RA-021 rev1` 保留；不得把旧失败输出删除后冒充从未
   发生，也不得把合成夹具的全绿替代真实标准 Evidence。P3 只有在 docs-only closure、主线合入与合入后
   匿名读回全部成立后才可标记 `P3_FROZEN`；在此之前 P4 与 Review Attention R1 仍不得启动。
+  后继 docs-only 候选由 PR #65 的原始 11 项门禁合入
+  `main@ec5ac70dcfa72b1b9859602af62cc3c9344389de`，并从该 exact main 对 README 与文档 94 完成 fresh
+  anonymous P1/P2 产品读回，Core 均为 `PASS`。最终状态发布见
+  `docs/95-p3-core-handoff-freeze-publication.md`；其自身门禁、合入与合入后读回全部成立后，当前状态为
+  `P3_FROZEN / P4_NOT_STARTED`。这只解除 P4 的阶段阻断，不代表 P4 已开始；Review Attention R1 仍须
+  等待 P4 与精确 Pattern Corpus 一并冻结。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
