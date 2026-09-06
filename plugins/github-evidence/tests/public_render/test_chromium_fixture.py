@@ -20,14 +20,26 @@ class _FixtureRuntime:
 
 
 class _SyntheticGitHubSession(RenderBrowserSession):
-    def __init__(self, request: dict[str, object], html: str) -> None:
+    def __init__(
+        self,
+        request: dict[str, object],
+        html: str,
+        *,
+        status: int = 200,
+        abort_navigation: bool = False,
+    ) -> None:
         super().__init__(request, runtime_preflight=lambda: _FixtureRuntime())
         self._fixture_html = html
+        self._status = status
+        self._abort_navigation = abort_navigation
 
     def _continue_allowed_request(self, route: object, request: object) -> None:
         if request.is_navigation_request():
+            if self._abort_navigation:
+                route.abort("failed")
+                return
             route.fulfill(
-                status=200,
+                status=self._status,
                 headers={
                     "content-type": "text/html; charset=utf-8",
                     "set-cookie": (
@@ -45,6 +57,78 @@ class _SyntheticGitHubSession(RenderBrowserSession):
     "render extra is not installed",
 )
 class RealChromiumFixtureTests(unittest.TestCase):
+    @staticmethod
+    def _navigation_plan() -> dict[str, object]:
+        coordinates = {
+            "owner": "NoctilumeDev",
+            "repository": "VeriTrail",
+            "target_kind": "GITHUB_REPOSITORY_README",
+            "viewport_profile": "DESKTOP_1365X768",
+        }
+        return public_render_plan(
+            coordinates, projections=["navigation.identity"]
+        )
+
+    def test_http_error_statuses_remain_complete_navigation_facts(self) -> None:
+        plan = self._navigation_plan()
+        for status in (404, 500):
+            with self.subTest(status=status):
+                request = derive_public_render_request(
+                    plan,
+                    "github-public-render",
+                    f"chromium-status-{status}",
+                )
+                result = PublicRenderCollector(
+                    session_id_factory=lambda status=status: (
+                        f"github-render-status-{status}"
+                    ),
+                    browser_session_factory=lambda verified, status=status: (
+                        _SyntheticGitHubSession(
+                            verified, "<html></html>", status=status
+                        )
+                    ),
+                ).collect(plan, request)
+                document = result.artifact.document
+
+                self.assertEqual(
+                    "COMPLETE",
+                    document["metadata"]["veritrail_observation"]["coverage"],
+                )
+                self.assertEqual(
+                    status,
+                    document["facts"]["navigation"]["top_level_http_status"],
+                )
+
+    def test_navigation_without_response_fails_closed_as_error_evidence(self) -> None:
+        plan = self._navigation_plan()
+        request = derive_public_render_request(
+            plan, "github-public-render", "chromium-no-response"
+        )
+        result = PublicRenderCollector(
+            session_id_factory=lambda: "github-render-no-response",
+            browser_session_factory=lambda verified: _SyntheticGitHubSession(
+                verified, "<html></html>", abort_navigation=True
+            ),
+        ).collect(plan, request)
+        document = result.artifact.document
+
+        self.assertEqual(
+            "ERROR", document["metadata"]["veritrail_observation"]["coverage"]
+        )
+        self.assertIsNone(document["facts"]["navigation"])
+        self.assertTrue(
+            any(
+                item["code"]
+                in {
+                    "RENDER_NAVIGATION_FAILED",
+                    "RESPONSE_BODY_OBSERVATION_FAILED",
+                }
+                for item in document["metadata"][
+                    "github_public_render_collection"
+                ]["errors"]
+            )
+        )
+
     def test_full_collector_observes_bounded_synthetic_surface(self) -> None:
         projections = sorted(
             [

@@ -24,6 +24,7 @@ from veritrail_github.public_render_content import ContentSample, ContentWindow
 from veritrail_github.public_render_contracts import (
     DEFAULT_RENDER_POLICY,
     derive_public_render_request,
+    public_render_facts_digest,
 )
 from veritrail_github.publisher import publish_evidence
 
@@ -209,6 +210,35 @@ def _assemble(
 
 
 class PublicRenderEvidenceTests(unittest.TestCase):
+    def test_viewport_and_normalization_semantics_change_fact_identity(self) -> None:
+        coordinates = {
+            "owner": "NoctilumeDev",
+            "repository": "VeriTrail",
+            "target_kind": "GITHUB_REPOSITORY_README",
+            "viewport_profile": "DESKTOP_1365X768",
+        }
+        arguments = {
+            "observation_spec_digest_value": "a" * 64,
+            "source_coordinates": coordinates,
+            "facts": {"navigation": {"top_level_http_status": 200}},
+        }
+        baseline = public_render_facts_digest(**arguments)
+        narrow = public_render_facts_digest(
+            **dict(
+                arguments,
+                source_coordinates=dict(
+                    coordinates, viewport_profile="NARROW_390X844"
+                ),
+            )
+        )
+        revised_normalization = public_render_facts_digest(
+            **arguments,
+            normalization_semantics_version="github-public-render-facts/0.2",
+        )
+
+        self.assertNotEqual(baseline, narrow)
+        self.assertNotEqual(baseline, revised_normalization)
+
     def test_complete_evidence_separates_fact_and_artifact_identity(self) -> None:
         plan, request, first = _assemble()
         _plan, _request, second = _assemble(

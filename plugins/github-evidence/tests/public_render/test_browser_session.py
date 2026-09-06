@@ -573,6 +573,29 @@ class RenderBrowserSessionTests(unittest.TestCase):
             self.assertTrue(network[2]["allowed"])
             self.assertEqual(network[3]["reasons"], ["WEBSOCKET_NOT_ALLOWED"])
 
+    def test_unexpected_page_and_download_are_closed_without_payload(self) -> None:
+        manager, _browser, context, _playwright = _fakes()
+        popup_closed: list[bool] = []
+        download_cancelled: list[bool] = []
+        popup = SimpleNamespace(close=lambda: popup_closed.append(True))
+        download = SimpleNamespace(cancel=lambda: download_cancelled.append(True))
+
+        session = RenderBrowserSession(
+            _request(),
+            playwright_factory=lambda: manager,
+            runtime_preflight=_FakePreflight,
+        ).open()
+        context.events["page"](popup)
+        context.page.events["download"](download)
+        session.close()
+        snapshot = session.snapshot()
+
+        self.assertEqual([True], popup_closed)
+        self.assertEqual([True], download_cancelled)
+        self.assertIn({"code": "UNEXPECTED_PAGE_BLOCKED"}, snapshot.conflicts)
+        self.assertIn({"code": "DOWNLOAD_BLOCKED"}, snapshot.conflicts)
+        self.assertEqual((), snapshot.cleanup_errors)
+
 
 if __name__ == "__main__":
     unittest.main()
