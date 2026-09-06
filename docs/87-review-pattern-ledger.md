@@ -311,3 +311,70 @@ editable 安装导入了其他 checkout 的生产模块。它要求先证明“�
 
 这两条模式均未进入 Pattern Corpus，也没有启动 R1。前者要求确认预算的单一 authority，后者要求先
 对齐执行证据的源码身份；二者都只缩小误归因空间，不承诺自动判断现实语义。
+
+### RA-018 rev2：跨抽象边界刷新预算与中断后继续观察
+
+PR #51 在发布 `P2_FROZEN` 前再次击穿同一公共生命周期上限，证明 rev1 只修正 cleanup 内部两个等待
+还不够：外层同步关闭与资源 observer 的释放等待仍可能各自取得时间。该 revision 扩大的是已观察模式的
+适用边界，不把 P2 Collector 实现误判为失败，也不覆盖 rev1。`record_digest` 对删除该字段后的完整 JSON
+按 `veritrail-json-c14n/1` 计算：
+
+```json
+{
+  "pattern_id": "RA-018",
+  "record_revision": 2,
+  "supersedes_digest": "sha256:ab4863cb5fad5d25e970d530f63df2b3332058dafa41bba24b3260c4d8994e11",
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:2caba65e9842c38378bcf0f9bac2a49ac01cd228016e7aa9d28215d6fd3b70fe",
+  "status": "GENERALIZED",
+  "source_coordinate": [
+    "VeriTrail PR #51 head@1829738683b4ce1fb1c59bb2a8928a1ddac2c453 / Public CI run 34035125337 / Python 3.10 -O",
+    "VeriTrail main@2d3877df41d7ec5a3b7b932404f6b622f06862a8",
+    "VeriTrail correction candidate@4316897 src/veritrail/browser.py",
+    "VeriTrail correction candidate@4316897 src/veritrail/bootstrap_browser.py"
+  ],
+  "problem_layer": "Execution",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "BudgetSemantics",
+  "suspicious_structure": "An outer lifecycle deadline is checked before teardown, but synchronous close operations run outside the resource owner's absolute release deadline; after owned termination, finally blocks may also continue observing resources that no longer exist.",
+  "possible_interpretations": [
+    "Synchronous close is guaranteed to be bounded by the already-expired outer lifecycle deadline.",
+    "Context, browser, driver and owned-process release intentionally have separate budgets and the public bound includes their sum.",
+    "The resource owner must interrupt first and all later cleanup must consume one inherited absolute deadline.",
+    "Post-interruption observer calls are safe because the observed transport remains valid after process termination."
+  ],
+  "required_evidence": [
+    "A monotonic end-to-end timeline from lifecycle creation through final observable completion.",
+    "The owner, start, end and inherited deadline of context close, browser close, driver stop and process release.",
+    "A loaded real-browser run at the exact public failure coordinate without weakening the elapsed-time assertion.",
+    "A deterministic fixture proving escalation cannot create a fresh release budget.",
+    "A fixture proving owned interruption precedes potentially blocking close calls and prevents later checkpoint observation."
+  ],
+  "minimal_counterexample": "A 5 s lifecycle expires, context/browser/driver synchronous shutdown consumes about 5 s outside the observer budget, then process release receives another 3 s; the public less-than-9 s invariant completes in 13.688 s.",
+  "false_positive_conditions": [
+    "Every teardown primitive is proven to inherit one immutable outer deadline and cannot block beyond it.",
+    "The contract explicitly defines separate teardown budgets and the public end-to-end limit includes all of them.",
+    "The later observer reads an independently valid immutable snapshot rather than a transport destroyed by interruption."
+  ],
+  "detectable_cues": [
+    "check_deadline(); context.close(); browser.close(); new_release_deadline()",
+    "A resource observer creates its absolute deadline only after an unbounded owner-level close returns",
+    "Job or process termination is followed by CDP checkpoint or live-resource sampling in finally",
+    "Nested modules each satisfy local timeout tests while the public operation exceeds their declared total"
+  ],
+  "non_claim": "This pattern does not invalidate the merged P2 implementation evidence and does not prove every synchronous close must be skipped; it requires one explicit owner for the public end-to-end interruption budget and forbids post-termination observation from being reported as an external collection failure.",
+  "provenance": "Observed on 2026-09-06 when docs-only PR #51 independently reproduced 13.688 s on Python 3.10 -O. The PR was closed unmerged; correction candidate 4316897 terminates and confirms the owned Playwright/Chromium Job on the inherited lifecycle coordinate, skips potentially blocking context/browser closes after accepted interruption, and suppresses checkpoints against the destroyed CDP session."
+}
+```
+
+rev2 的关键不是“再缩短一个 timeout”，而是把控制变量重新放回总操作：
+
+```text
+lifecycle expiry
+→ owner accepts interruption
+→ owned Job termination and release confirmation share the inherited deadline
+→ no live-resource observation after termination
+→ local Playwright control object may then stop without refreshing browser cleanup authority
+```
+
+该 revision 仍未进入 Pattern Corpus，也没有启动 R1。
