@@ -1,16 +1,11 @@
 from __future__ import annotations
 
-import builtins
 import re
+import subprocess
 import sys
+import textwrap
 import unittest
 from pathlib import Path
-from unittest.mock import patch
-
-from support import acceptance_plan, base_transport
-
-from veritrail_github.collector import GitHubCollector
-from veritrail_github.contracts import derive_observation_request
 
 
 class OptionalRenderBoundaryTests(unittest.TestCase):
@@ -32,43 +27,67 @@ class OptionalRenderBoundaryTests(unittest.TestCase):
         )
 
     def test_p1_collection_does_not_import_playwright(self) -> None:
-        loaded_playwright = {
-            name: module
-            for name, module in tuple(sys.modules.items())
-            if name == "playwright" or name.startswith("playwright.")
-        }
-        for name in loaded_playwright:
-            del sys.modules[name]
-        original_import = builtins.__import__
+        repository_root = Path(__file__).resolve().parents[3]
+        script = textwrap.dedent(
+            """
+            import builtins
+            import sys
 
-        def reject_playwright(name, globals=None, locals=None, fromlist=(), level=0):
-            if name == "playwright" or name.startswith("playwright."):
-                raise AssertionError("P1 attempted to import optional Playwright")
-            return original_import(name, globals, locals, fromlist, level)
+            sys.path[:0] = sys.argv[1:]
+            original_import = builtins.__import__
 
-        try:
+            def reject_playwright(
+                name, globals=None, locals=None, fromlist=(), level=0
+            ):
+                if name == "playwright" or name.startswith("playwright."):
+                    raise AssertionError(
+                        "P1 attempted to import optional Playwright"
+                    )
+                return original_import(name, globals, locals, fromlist, level)
+
+            builtins.__import__ = reject_playwright
+
+            from support import acceptance_plan, base_transport
+            from veritrail_github.collector import GitHubCollector
+            from veritrail_github.contracts import derive_observation_request
+
             plan = acceptance_plan(["commit.identity"])
             request = derive_observation_request(
                 plan, "github-api", "request-no-browser"
             )
-            with patch("builtins.__import__", side_effect=reject_playwright):
-                result = GitHubCollector(
-                    base_transport(),
-                    session_id_factory=lambda: "github-session-no-browser",
-                ).collect(plan, request)
-            self.assertFalse(
-                any(
-                    name == "playwright" or name.startswith("playwright.")
-                    for name in sys.modules
-                )
+            result = GitHubCollector(
+                base_transport(),
+                session_id_factory=lambda: "github-session-no-browser",
+            ).collect(plan, request)
+            if any(
+                name == "playwright" or name.startswith("playwright.")
+                for name in sys.modules
+            ):
+                raise AssertionError("P1 left Playwright imported")
+            print(
+                result.artifact.document["metadata"]
+                ["veritrail_observation"]["coverage"]
             )
-        finally:
-            sys.modules.update(loaded_playwright)
-
-        self.assertEqual(
-            result.artifact.document["metadata"]["veritrail_observation"]["coverage"],
-            "COMPLETE",
+            """
         )
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-c",
+                script,
+                str(repository_root / "src"),
+                str(repository_root / "plugins" / "github-evidence" / "src"),
+                str(repository_root / "plugins" / "github-evidence" / "tests"),
+            ],
+            cwd=repository_root,
+            capture_output=True,
+            check=False,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        self.assertEqual("COMPLETE", completed.stdout.strip())
 
 
 if __name__ == "__main__":
