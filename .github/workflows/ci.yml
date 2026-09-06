@@ -342,7 +342,7 @@ jobs:
           if ($plugin.Count -ne 1) { throw "expected one plugin wheel, found $($plugin.Count)" }
           python -m pip install --no-deps $core[0].FullName $plugin[0].FullName
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -I -c "from veritrail.canonical import sha256_json; from veritrail_github import __version__; raise SystemExit(0 if __version__ == '0.1.0' and sha256_json({}) == '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a' else 1)"
+          python -I -c "from importlib.util import find_spec; from veritrail.canonical import sha256_json; from veritrail_github import GitHubCollector, UrllibTransport, __version__; collector = GitHubCollector(UrllibTransport()); raise SystemExit(0 if find_spec('playwright') is None and collector is not None and __version__ == '0.1.0' and sha256_json({}) == '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a' else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           veritrail-github-collect --help | Out-Null
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

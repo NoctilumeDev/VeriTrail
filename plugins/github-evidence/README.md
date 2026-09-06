@@ -30,3 +30,15 @@ The optional credential is read only from `VERITRAIL_GITHUB_TOKEN` at runtime;
 there is intentionally no token command-line option. Anonymous collection is
 the default. The resulting file is standard `Evidence 0.1`; VeriTrail Core,
 not this plugin, owns assertion evaluation and the final Verdict.
+
+P1 remains the base installation and does not require a browser dependency.
+The P2 public-render capability is installed explicitly with the `render`
+extra:
+
+```powershell
+python -m pip install ".[render]"
+```
+
+Importing the package and running the P1 collector or CLI must continue to work
+when Playwright is absent. P2 loads Playwright only inside its own capability
+boundary and never downloads a browser at runtime.
