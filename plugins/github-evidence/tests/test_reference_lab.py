@@ -78,8 +78,12 @@ def _plan(*, expected_sha: str = TARGET_SHA, version: int = 1) -> dict[str, Any]
                         "target_commit_sha": TARGET_SHA,
                         "repository_path": "README.md",
                         "viewport_profile": "DESKTOP_1365X768",
+                        "literal_markers": ["VeriTrail"],
                     },
-                    "projections": ["navigation.identity"],
+                    "projections": [
+                        "content.literal_markers",
+                        "navigation.identity",
+                    ],
                     "canonicalization_profile": "veritrail-json-c14n/1",
                 },
             ],
@@ -137,7 +141,7 @@ def _plan(*, expected_sha: str = TARGET_SHA, version: int = 1) -> dict[str, Any]
                     "operator": "eq",
                     "right": {
                         "requirement_id": "github-render-evidence",
-                        "path": "/facts/navigation/target_commit_sha",
+                        "path": "/facts/target/source_coordinates/target_commit_sha",
                     },
                 },
             ],
@@ -151,7 +155,33 @@ def _plan(*, expected_sha: str = TARGET_SHA, version: int = 1) -> dict[str, Any]
                     },
                     "operator": "eq",
                     "right": expected_sha,
-                }
+                },
+                {
+                    "id": "render-requested-url-retained",
+                    "severity": "HARD",
+                    "left": {
+                        "requirement_id": "github-render-evidence",
+                        "path": "/facts/navigation/requested_url/path",
+                    },
+                    "operator": "eq",
+                    "right": (
+                        "/NoctilumeDev/VeriTrail/blob/"
+                        f"{TARGET_SHA}/README.md"
+                    ),
+                },
+                {
+                    "id": "readme-marker-retained",
+                    "severity": "HARD",
+                    "left": {
+                        "requirement_id": "github-render-evidence",
+                        "path": (
+                            "/facts/content/window/stable_facts/"
+                            "literal_markers/0/rendered_text_occurrences"
+                        ),
+                    },
+                    "operator": "gte",
+                    "right": 1,
+                },
             ],
             "resource_budget": {
                 "network_requests": 512,
@@ -180,7 +210,31 @@ def _artifact(
     if role == "github-api":
         facts = {"commit": {"sha": TARGET_SHA}}
     else:
-        facts = {"navigation": {"target_commit_sha": TARGET_SHA}}
+        facts = {
+            "target": {
+                "source_coordinates": {"target_commit_sha": TARGET_SHA},
+            },
+            "navigation": {
+                "requested_url": {
+                    "path": (
+                        "/NoctilumeDev/VeriTrail/blob/"
+                        f"{TARGET_SHA}/README.md"
+                    )
+                }
+            },
+            "content": {
+                "window": {
+                    "stable_facts": {
+                        "literal_markers": [
+                            {
+                                "literal": "VeriTrail",
+                                "rendered_text_occurrences": 1,
+                            }
+                        ]
+                    }
+                }
+            },
+        }
     document = {
         "schema_version": "0.1",
         "evidence_type": spec["evidence_type"],

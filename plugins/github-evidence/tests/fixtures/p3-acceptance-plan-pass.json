@@ -47,9 +47,13 @@
         "target_kind": "GITHUB_MARKDOWN_FILE",
         "target_commit_sha": "589bbad7261cceda1aa3a6412278a48473a9b1b7",
         "repository_path": "README.md",
-        "viewport_profile": "DESKTOP_1365X768"
+        "viewport_profile": "DESKTOP_1365X768",
+        "literal_markers": [
+          "VeriTrail"
+        ]
       },
       "projections": [
+        "content.literal_markers",
         "navigation.identity"
       ],
       "canonicalization_profile": "veritrail-json-c14n/1"
@@ -109,7 +113,7 @@
       "operator": "eq",
       "right": {
         "requirement_id": "github-render-evidence",
-        "path": "/facts/navigation/target_commit_sha"
+        "path": "/facts/target/source_coordinates/target_commit_sha"
       }
     }
   ],
@@ -123,6 +127,26 @@
       },
       "operator": "eq",
       "right": "589bbad7261cceda1aa3a6412278a48473a9b1b7"
+    },
+    {
+      "id": "render-requested-url-retained",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "github-render-evidence",
+        "path": "/facts/navigation/requested_url/path"
+      },
+      "operator": "eq",
+      "right": "/NoctilumeDev/VeriTrail/blob/589bbad7261cceda1aa3a6412278a48473a9b1b7/README.md"
+    },
+    {
+      "id": "readme-marker-retained",
+      "severity": "HARD",
+      "left": {
+        "requirement_id": "github-render-evidence",
+        "path": "/facts/content/window/stable_facts/literal_markers/0/rendered_text_occurrences"
+      },
+      "operator": "gte",
+      "right": 1
     }
   ],
   "resource_budget": {
@@ -144,6 +168,6 @@
   ],
   "seal": {
     "algorithm": "sha256",
-    "digest": "f2abe6445b59085440b101b23b6f42c515d4cee5f1b2612456b2fea0a4763e28"
+    "digest": "837bfd793abc6c60ca7ab0737874965010b0d331df502a83bd6f4467abe1584b"
   }
 }
