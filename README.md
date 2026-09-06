@@ -102,7 +102,7 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 [P1 实现与冻结事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)。0.2 修正已通过
 [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
-当前状态为 `P1_FROZEN / P2_CONTRACT_0.1_ROOT_PATH_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_NOT_STARTED`。
+当前状态为 `P1_FROZEN / P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -136,9 +136,9 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
-CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同当前因默认
-Pages 根坐标反例短暂重开为 `P2_CONTRACT_0.1_ROOT_PATH_CORRECTION_CANDIDATE`，实现仍未开始；该窄修正
-不改变 R0 或 P2 范围。
+CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
+Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；当前仍为
+`P2_CONTRACT_0.1_FROZEN`，实现尚未开始，该窄修正没有改变 R0 或 P2 范围。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
