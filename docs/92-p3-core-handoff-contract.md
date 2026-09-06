@@ -350,15 +350,33 @@ P3 不包含：
 
 ## 13. 合同冻结门
 
+候选经 PR #55 合入 `main@ea6723a224b5430095c25398d872caf025210c99` 后，真实匿名读回暴露了
+冻结门自身的一条错误假设：本文与 README 不含嵌入式 Mermaid，均可得到 `COMPLETE`；P 轨 Plan
+`docs/77-post-core-platform-plugin-plan.md` 含 Mermaid，GitHub 会导航到
+`viewscreen.githubusercontent.com/markdown/mermaid` 子框架，而 P2 冻结策略会把任何非主文档导航保留为
+`UNEXPECTED_PAGE_NAVIGATION`。desktop 与 narrow 两次独立观察都因此正确得到 `PARTIAL`，不是主页面、
+作用域、样本或标记失败。
+
+P3 不重开 P2，也不删除 Mermaid 来迫使现实迎合观察器。这里把“公共读回存在”与“整页观察
+`COMPLETE`”拆开：Plan 页的有界 `PARTIAL` 只证明指定标记在一个明确受限的公开观察中存在，绝不升级为
+`COMPLETE`，也不进入 P3 reference slice 的正式 Acceptance Evidence。
+
 本候选只有在以下事实全部成立后才能进入 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN`：
 
 1. 本文与 P0/P1/P2、PC2 合同逐项复核，不改写既有冻结语义；
 2. 文档候选通过原始远端门禁并由受保护主线合入；
 3. 合入后读取新的 exact `origin/main`；
-4. 使用 fresh anonymous P2 Collector 读取 README、本文与更新后的 P 轨 Plan，确认唯一作用域、三样本
-   稳定、指定标记存在且 coverage 为 `COMPLETE`；
-5. 另一个 docs-only closure 只记录已经发生的事实，再次通过门禁、合入和匿名读回；
-6. 仓库中仍不存在 P3 manifest Schema、publisher、reference lab、示例 Plan 或 AcceptanceBundle 产物。
+4. 使用 fresh anonymous P2 Collector 读取 README 与本文，确认 HTTP 200、requested/final URL 相同、
+   唯一作用域、三样本稳定、指定标记存在且 coverage 为 `COMPLETE`；
+5. 使用同一产品 Collector 读取更新后的 P 轨 Plan。`COMPLETE` 可直接满足；若因嵌入式 Mermaid 得到
+   `PARTIAL`，只允许以下精确闭集同时成立：HTTP 200、requested/final URL 相同、作用域唯一可用、三样本
+   稳定、无 truncation、指定标记至少出现一次、collector errors 为空，coverage reasons 恰为
+   `FACT_CONFLICTS_RETAINED + NETWORK_POLICY_AFFECTED_COVERAGE`，唯一影响 coverage 的 conflict 恰为
+   `NETWORK_POLICY_BOUNDARY / UNEXPECTED_PAGE_NAVIGATION / viewscreen.githubusercontent.com/markdown/mermaid`；
+   任何额外 reason、error、conflict 或不稳定都否决冻结；
+6. 另一个 docs-only closure 只记录候选、修正、首次失败观察与最终有界读回已经发生的事实，再次通过
+   门禁、合入和匿名读回；
+7. 仓库中仍不存在 P3 manifest Schema、publisher、reference lab、示例 Plan 或 AcceptanceBundle 产物。
 
 在 closure 完成前，状态保持：
 
