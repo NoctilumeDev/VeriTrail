@@ -103,10 +103,12 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
 P3 合同曾在状态发布补丁自身的门禁、合入和合入后精确匿名读回全部成立后冻结；后继 P3-A 本地候选实现审查
-暴露了 handoff 核验与 Core 路径重读之间的快照连续性缺口。当前状态因此回到
-`P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`。
-第一份修正 PR #60 又由原始 Python 3.13 `-O` 门禁复现既有 Browser 停止后 route 回调竞态，已关闭且
-未合并；独立 PR #61 修复该地基并以 11/11 合入 `main@6e48b5d...`，本合同候选从该新坐标重建。
+暴露了 handoff 核验与 Core 路径重读之间的快照连续性缺口。第一份修正 PR #60 又由原始 Python 3.13
+`-O` 门禁复现既有 Browser 停止后 route 回调竞态，已关闭且未合并；独立 PR #61 只修复该地基并以
+11/11 合入 `main@6e48b5d...`。快照合同修正随后由 PR #62 的原始 11 项门禁通过，以
+`main@5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8` 合入，并由产品 Collector 完成 exact-SHA README/合同
+匿名读回。独立 closure 的门禁、合入和合入后读回全部成立后，当前状态恢复为
+`P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -141,9 +143,11 @@ desktop/narrow 两次真实读回。docs-only closure 又经 PR #50 的 11 项�
 P1/P2 标准 Evidence 如何通过精确 role/path/digest 清单交给现有 Acceptance Core，以及
 `PASS / FAIL / INCONCLUSIVE / PENDING` 四条真实正负链如何留证。插件仍不拼接 facts、不判断 coverage、
 不复制 Plan/session 权威、不输出 Verdict。P3-A 本地候选实现已通过纯合同定向回归，但 P3-B 前的
-组合审查发现：handoff 与 Core 若先后重读同一路径，两次各自稳定的读取不能证明消费同一快照。合同现
+组合审查发现：handoff 与 Core 若先后重读同一路径，两次各自稳定的读取不能证明消费同一快照。合同当时
 只重开这一处，要求一次 Core 公共导入形成 `ImportedEvidence`，同一对象再进入通用 Core Bundle 入口；
-Schema、evaluator、P1/P2 facts 与 Verdict 优先级均不改变，P3-B 保持暂停。
+Schema、evaluator、P1/P2 facts 与 Verdict 优先级均不改变。该修正已经 PR #62、受保护主线与 exact-main
+产品读回证明，独立 closure 生效后可从新的 exact main 重建 P3-A，再串行进入 P3-B；路径只负责定位，
+被验证并由 Core 消费的必须是同一 Evidence 快照。
 
 P1/P2 在开放世界施工中形成的可复用边界另见
 [受约束的开放世界观察方法](docs/91-bounded-open-world-observation-method.md)。它把平台适配、运行时
@@ -183,9 +187,10 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
-可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 因
-快照连续性反例处于 `P3_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`。这些后继事实没有改变
-R0 范围，也没有启动 R1。
+可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 的
+快照连续性边界已完成最小修正与再次冻结，当前为
+`P3_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。这些后继事实没有改变 R0 范围，也没有
+启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与

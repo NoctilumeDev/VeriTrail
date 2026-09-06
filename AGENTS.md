@@ -110,15 +110,17 @@
   plan/session/facts/coverage，不进入 rule evaluator，也不产生 Verdict；Plan binding 与 session integrity
   仍只由 Core 裁决。P3-A 本地候选实现审查随后证明：handoff 先核验一次路径、Core 再读同一路径会让
   manifest 绑定的 Evidence A 与 Core 实际裁决的 Evidence B 发生快照漂移；两次各自安全的读取不能证明
-  同一快照。P3 合同当前只重开这一处，状态为
-  `P3_CORE_HANDOFF_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`。修正边界只允许 Core 增加通用
-  imported-snapshot Bundle 入口，并让既有 path 入口先导入后委托它；不得修改 Schema、evaluator、
-  P1/P2 fact semantics、coverage 或 Verdict 优先级。只有本 docs-only 修正通过完整门禁、受保护主线合入、
-  exact-main 匿名读回并由独立 closure 重新冻结后，才能从新的 exact main 重建 P3-A、继续 P3-B；P4 与
-  Review Attention R1 仍不得启动。第一次修正 PR #60 的原始 Python 3.13 `-O` 门禁复现既有 Browser
-  route 回调与 driver 关闭竞态，因此关闭且未合并；独立 PR #61 只修复该停止边界，经 11 项门禁合入
-  `main@6e48b5d109d0dd0e6c7b1b0fbe723cf1b792f852` 并完成匿名 exact-SHA 源码/Ledger 读回。本合同修正
-  必须从该新主线重建，不得 rerun 旧失败或把地基修复算作 P3 证据。
+  同一快照。修正边界只允许 Core 增加通用 imported-snapshot Bundle 入口，并让既有 path 入口先导入后
+  委托它；不得修改 Schema、evaluator、P1/P2 fact semantics、coverage 或 Verdict 优先级。第一次修正
+  PR #60 的原始 Python 3.13 `-O` 门禁复现既有 Browser route 回调与 driver 关闭竞态，因此关闭且未合并；
+  独立 PR #61 只修复该停止边界，经 11 项门禁合入
+  `main@6e48b5d109d0dd0e6c7b1b0fbe723cf1b792f852` 并完成匿名 exact-SHA 源码/Ledger 读回。合同修正随后
+  从该新主线重建，由 PR #62 的原始 11 项门禁通过后合入
+  `main@5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8`；从该 exact main 运行产品 Collector 对 README 与
+  P3 合同完成 `COMPLETE` 匿名读回。独立 docs-only closure 的门禁、合入和合入后读回全部成立后，状态
+  恢复为 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。只能从新的 exact
+  main 重建 P3-A，再串行继续 P3-B；不得复用旧候选、rerun 洗白旧失败，或把 Browser 地基修复算作 P3
+  证据。P4 与 Review Attention R1 仍不得启动。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
