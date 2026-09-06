@@ -574,7 +574,7 @@ class RenderBrowserSession:
                 )
             self._record_network_decision(method, main_document, decision)
             if decision.allowed:
-                route.continue_()
+                self._continue_allowed_request(route, request)
             else:
                 route.abort("blockedbyclient")
         except Exception:
@@ -583,6 +583,12 @@ class RenderBrowserSession:
                 route.abort("blockedbyclient")
             except Exception:
                 pass
+
+    def _continue_allowed_request(self, route: Any, request: Any) -> None:
+        """Continue one policy-approved request without changing its semantics."""
+
+        del request
+        route.continue_()
 
     def _route_websocket(self, route: Any) -> None:
         decision = self._network_policy.reject_websocket(route.url)
