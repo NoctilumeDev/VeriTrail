@@ -102,12 +102,16 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 [P1 实现与冻结事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)。0.2 修正已通过
 [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
-当前状态为 `P1_FROZEN / P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`。
+当前状态为
+`P1_FROZEN / P2_CONTRACT_0.1_RESPONSE_BUDGET_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_PAUSED_AT_FEASIBILITY`。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
-匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。当前没有浏览器实现、
-P3 handoff、标签或 Release。插件不得预生成“已通过”布尔值、占位实验字段或私有比较器绕过 Core。
+匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。Pages 根坐标修正冻结后，
+实现前可行性探针又证明 `Network.dataReceived` 的最终计数不能替代实时硬截断；合同现只重开
+response-body 预算的精确计量与 Chromium Fetch 流控制语义。Collector、P3 handoff、标签和 Release
+仍未创建。该反例已按 append-only 账本记录为 `RA-017`，没有反向改写 R0。插件不得预生成“已通过”
+布尔值、占位实验字段或私有比较器绕过 Core。
 
 ### 审查注意力插件轨（R0 架构已冻结）
 
@@ -137,8 +141,9 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
-Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；当前仍为
-`P2_CONTRACT_0.1_FROZEN`，实现尚未开始，该窄修正没有改变 R0 或 P2 范围。
+Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
+可行性反例只重开 P2 的精确计量语义，当前为
+`P2_CONTRACT_0.1_RESPONSE_BUDGET_CORRECTION_CANDIDATE`。该窄修正没有改变 R0 或 P2 范围，也没有启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与

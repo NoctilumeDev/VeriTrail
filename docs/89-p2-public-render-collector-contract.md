@@ -1,6 +1,6 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`
+> 状态：`P2_CONTRACT_0.1_RESPONSE_BUDGET_CORRECTION_CANDIDATE / P2_IMPLEMENTATION_PAUSED_AT_FEASIBILITY`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -209,8 +209,10 @@ sample_count = 3
 sample_interval_ms = 500
 max_redirects = 10
 max_requests = 512
-max_main_document_bytes = 8388608
-max_total_encoded_bytes = 33554432
+max_main_document_response_body_bytes = 8388608
+max_total_response_body_bytes = 33554432
+response_body_read_chunk_bytes = 65536
+content_encoding = IDENTITY_ONLY
 max_elapsed_ms = 45000
 retries = 0
 service_workers = BLOCK
@@ -362,14 +364,52 @@ Collector 在 context 级路由所有请求；路由会关闭 HTTP cache，servi
   final coordinate 必须分别保留。即使最终仍在允许域内，owner、repository、path、tag 或 Pages site
   coordinate 经目标类型规范化后发生语义变化，也必须形成显式 conflict，不能把 repository rename、
   transfer 或其他 canonical redirect 透明洗成原请求坐标；
-- 主文档与总 encoded transfer 必须由 Chromium 网络事件执行 `8 MiB / 32 MiB` 硬上限；超限立即停止加载、
-  关闭 context 并形成 `ERROR`，不能只在整页进入内存后才检查；
+- 最终主文档 response body 与本页全部可渲染 response body 必须由 Chromium CDP 响应阶段拦截执行
+  `8 MiB / 32 MiB` 硬上限；超限立即停止加载、关闭 context、关闭未完成 stream 并形成 `ERROR`，不能
+  只在完整响应或整页进入内存后才检查；
 - 意外 read host 必须阻断并使 coverage 非 `COMPLETE`；预期被阻断的 telemetry write 不自动降低 coverage；
 - 不保存原始 headers、body、Cookie、query values、HAR、trace 或完整 DOM。
 
-Policy 默认上限：一页、零重试、最多 `10` 次 redirect、`512` 个网络请求、`8 MiB` 主文档、`32 MiB`
-总传输与 `45_000ms` monotonic 总窗口。超过上限不扩大权限或偷偷重跑；需要重试时必须建立新的
-collection session。
+Policy 默认上限：一页、零重试、最多 `10` 次 redirect、`512` 个网络请求、`8 MiB` 最终主文档
+response body、`32 MiB` 全页 response body 与 `45_000ms` monotonic 总窗口。超过上限不扩大权限或
+偷偷重跑；需要重试时必须建立新的 collection session。
+
+#### 7.2.1 Response-body 预算的精确语义
+
+冻结合同原先使用 `max_total_encoded_bytes` 与“encoded transfer”，但这会把至少三种不同对象混在一起：
+
+```text
+response body octets
+HTTP headers / transfer framing / TLS bytes
+Chromium completion-time encodedDataLength
+```
+
+P2 0.1 只对第一种建立可执行硬上限。Collector 必须在 `Network.enable` 后以
+`Network.setExtraHTTPHeaders` 为全部请求显式设置 `Accept-Encoding: identity`；响应头仍出现非
+`identity` 的 `Content-Encoding` 时，必须在读取或交付 body 前 fail closed。计量值固定为 CDP
+`Fetch.takeResponseBodyAsStream` 返回的顺序流经 `IO.read` 取得的 body octets：base64 数据先解码，
+非 base64 数据按 UTF-8 还原字节。它不包含 request bytes、response headers、HTTP/2/3 framing、TLS 或
+服务端在连接关闭前已经进入传输缓冲区但尚未被 Collector 读取的字节，因此不得再命名或展示为
+“总线速传输量”。参考 [CDP Fetch](https://chromedevtools.github.io/devtools-protocol/tot/Fetch/)、
+[CDP IO](https://chromedevtools.github.io/devtools-protocol/tot/IO/) 与
+[CDP Network](https://chromedevtools.github.io/devtools-protocol/tot/Network/)。
+
+每个有 body 的响应必须在 `HeadersReceived` 阶段暂停，逐块读取并先计入一个 session 共享的 monotonic
+预算协调器；单次 `IO.read` 请求不得超过 `65_536` bytes。只有响应完整、未越界且通过响应头检查后，
+才能以原 status、允许的响应头和逐字节相同 body 交回 Chromium。`HEAD`、`1xx`、`204`、`304` 与
+redirect 是无渲染 body 的控制响应，必须以空 body 交回并保留 status/redirect headers，不能走一个
+不受预算约束的透明 continue 路径。该响应替换属于已声明的 observer effect，必须进入 Policy
+provenance；它不冒充未经拦截的原生网络时序。
+
+预算首次越界允许 Collector 为判定多读取至多一个受限 read chunk；浏览器/内核已在途缓冲也可能使
+服务端发送量略高于阈值。P2 的“硬上限”准确承诺是：越界 body 不会被完整物化或交付给 renderer，
+Collector 会停止页面并关闭 context/stream，且慢速生产端夹具必须证明完整响应没有发送完成、连接已
+被中断。它不承诺在 TCP/TLS 线上恰好第 `8_388_608` 或 `33_554_432` 个字节处断线。
+
+`Network.dataReceived`、`Network.streamResourceContent` 与 `Network.loadingFinished.encodedDataLength`
+可以作为诊断 provenance，但不能承担硬截断权威。设计期反例已证明大脚本的 `dataReceived` 可能在
+服务端完成全部响应后才把足够事件交给客户端；`loadingFinished` 按定义更是完成事件。实现不得因为
+这些事件最终给出正确总数，就把事后观察改写成实时控制。
 
 代理只属于运行时 provenance：允许由明确 CLI/runtime 参数给 Chromium 提供 `http(s)` 出口代理，但它
 不得进入 observation/fact identity，也不得从系统全局配置隐式推断认证信息。Evidence 只记录
@@ -646,39 +686,45 @@ expected content signature 改错，由 Core 在独立测试中得到非 PASS。
 8. fresh context 初态为空；预置 Cookie 或 storage 单变量负例在导航前拒绝；
 9. 页面导航后设置匿名 Cookie：保留安全计数，但仍可证明 fresh initial state；
 10. 正常 200、404 与 500 均生成 top-level status 事实；DNS/TLS/timeout/no Response 为 ERROR；
-11. 保持同一规范化坐标的 redirect、语义坐标漂移、unexpected host、auth redirect、redirect loop 与超过
+11. `12 MiB` 慢速主文档触发 `8 MiB` response-body 上限：服务端未发送完成、连接被中断、body 未交付；
+12. 小主文档引用 `40 MiB` 慢速子资源并触发 `32 MiB` 总上限：同样证明生产端未完成与零越界交付；
+13. 同一超限夹具只使用 `Network.dataReceived` 时保留“服务端已完成后才触发”的负证据，不能算硬截断；
+14. 服务端忽略 `Accept-Encoding: identity` 并返回 gzip/br/zstd 时在 body 读取/交付前 fail closed；
+15. 允许范围内的多资源页面经流式计量与逐字节回放后仍产生正确 status、唯一作用域和正文；无 body
+    控制响应使用空 body 回放，不存在透明未计量旁路；
+16. 保持同一规范化坐标的 redirect、语义坐标漂移、unexpected host、auth redirect、redirect loop 与超过
     10 跳分别可辨；
-12. GitHub-like 页面发起 telemetry POST 和 console error、正文仍完整：阻断 write 且 coverage 不自动降级；
-13. unexpected GET host 被阻断并使 coverage 非 COMPLETE；service worker/WebSocket/popup/download 全阻断；
-14. 四种 target kind 各自只使用固定作用域；scope 0/multiple 不回退 full body；
-15. heading 位于首屏、首屏以下、仅接触 viewport 边界、`visibility:hidden` 与 `opacity:0` 的语义分别按
+17. GitHub-like 页面发起 telemetry POST 和 console error、正文仍完整：阻断 write 且 coverage 不自动降级；
+18. unexpected GET host 被阻断并使 coverage 非 COMPLETE；service worker/WebSocket/popup/download 全阻断；
+19. 四种 target kind 各自只使用固定作用域；scope 0/multiple 不回退 full body；
+20. heading 位于首屏、首屏以下、仅接触 viewport 边界、`visibility:hidden` 与 `opacity:0` 的语义分别按
     `playwright_visible` / 正面积相交规则保留；
-16. 固定采集三个样本；仅 `S1 == S2 == S3` 为稳定，任何不一致均为 PARTIAL，不能选择 first/last；
-17. 文本超 512 KiB、heading/link/request 上限分别触发显式 truncation；
-18. 重复链接保留，relative URL 正确解析，secret-like query value 不落盘；
-19. literal marker 与正文使用同一规范化，并按大小写敏感、Unicode code point、非重叠规则只输出
+21. 固定采集三个样本；仅 `S1 == S2 == S3` 为稳定，任何不一致均为 PARTIAL，不能选择 first/last；
+22. 文本超 512 KiB、heading/link/request 上限分别触发显式 truncation；
+23. 重复链接保留，relative URL 正确解析，secret-like query value 不落盘；
+24. literal marker 与正文使用同一规范化，并按大小写敏感、Unicode code point、非重叠规则只输出
     occurrence，不输出 present/ok/pass；
-20. desktop/narrow 两个 profile 分开产生事实，不能将一端结果代替另一端或把 narrow 冒充真实手机。
+25. desktop/narrow 两个 profile 分开产生事实，不能将一端结果代替另一端或把 narrow 冒充真实手机。
 
 ### 14.3 P1、Core 与旧消费者
 
-21. P1 API request seal 与 P2 Render request seal 不同，plan digest 与内部 session 相同；
-22. caller 不能注入 session；同 coordinator 两份 Evidence 可由 Core integrity operand 验证相等；
-23. 跨 session 组合由 Core 得到 `INCONCLUSIVE`，插件不得先筛选或改写；
-24. P1 既有测试与 facts digest 逐项不漂移；P2 不导入/改写 P1 私有实现；
-25. Core 普通/`-O`、双 Python、Starter/Skill、Workbench、M2/M3 Browser 与历史 digest 全回归；
-26. 插件卸载后 Core 与 P1 Evidence 继续可读，P2 Evidence 仍是标准 Evidence 0.1。
+26. P1 API request seal 与 P2 Render request seal 不同，plan digest 与内部 session 相同；
+27. caller 不能注入 session；同 coordinator 两份 Evidence 可由 Core integrity operand 验证相等；
+28. 跨 session 组合由 Core 得到 `INCONCLUSIVE`，插件不得先筛选或改写；
+29. P1 既有测试与 facts digest 逐项不漂移；P2 不导入/改写 P1 私有实现；
+30. Core 普通/`-O`、双 Python、Starter/Skill、Workbench、M2/M3 Browser 与历史 digest 全回归；
+31. 插件卸载后 Core 与 P1 Evidence 继续可读，P2 Evidence 仍是标准 Evidence 0.1。
 
 ### 14.4 真实匿名 GitHub
 
-27. exact commit README 在 fresh desktop context 读取 final URL、200、唯一 Markdown scope、heading 与 signature；
-28. repository 首页 README 作为 current surface 单独采集，不冒充 exact permalink；
-29. Release 页面使用独立 scope；不存在 tag 的 404 仍形成完整 navigation fact；
-30. 默认 GitHub Pages 只允许默认域与同源子资源；custom-domain redirect 按合同阻断；
-31. 真实 GitHub telemetry write 即使被阻断，也不能因 console noise 抹掉完整正文；
-32. 同一 Plan 固定按 P1/API 再 P2/Render 严格串行、同 session、两份 Evidence，Core 可校验相关性；
-33. wheel clean install 从 `site-packages` 启动匹配 Chromium，不从 checkout 偷导入；
-34. 两个视口、代理/直连可用路径、敏感扫描、browser/staging/download/trace/HAR 残留全部检查。
+32. exact commit README 在 fresh desktop context 读取 final URL、200、唯一 Markdown scope、heading 与 signature；
+33. repository 首页 README 作为 current surface 单独采集，不冒充 exact permalink；
+34. Release 页面使用独立 scope；不存在 tag 的 404 仍形成完整 navigation fact；
+35. 默认 GitHub Pages 只允许默认域与同源子资源；custom-domain redirect 按合同阻断；
+36. 真实 GitHub telemetry write 即使被阻断，也不能因 console noise 抹掉完整正文；
+37. 同一 Plan 固定按 P1/API 再 P2/Render 严格串行、同 session、两份 Evidence，Core 可校验相关性；
+38. wheel clean install 从 `site-packages` 启动匹配 Chromium，不从 checkout 偷导入；
+39. 两个视口、代理/直连可用路径、敏感扫描、browser/staging/download/trace/HAR 残留全部检查。
 
 wheel-only 环境必须使用预先安装且与 `playwright==1.62.0` 匹配的 bundled Chromium；Collector 自动下载
 浏览器或回退到系统 Chrome 属于失败，而不是便利功能。
@@ -700,6 +746,9 @@ Freeze 前必须再问一次“合同是否忠实描述真实浏览器”，而�
 - exact permalink 与 current repository surface 是否被互相替代；
 - browser version、采集时间和代理是否污染了事实身份；
 - custom domain、任意 URL 或登录态是否从“方便”路径偷偷越界。
+- response-body payload、encoded wire transfer 与完成事件是否被误写成同一种计量；
+- 本地计数器越界是否同时有生产端“未完成 + 被断开”的外部证据；
+- response-stage body replay 的 observer effect 是否被保留，而不是冒充原生网络时序。
 
 任何真实反例均可否决既有测试和 CI 绿灯。修正必须显式升级受影响合同/规范化语义，不得在实现里加
 隐藏 fallback。
@@ -832,3 +881,29 @@ target kind。此前未提交的离线实现草案已经撤回，候选保持 do
 该读回只证明 docs-only 修正已进入公开渲染面，不证明 P2 Collector 已实现。状态现恢复为
 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`；下一步必须从本 closure 合入后的新 exact
 main 开始 optional-capability 与 network-budget feasibility 施工，仍不得提前进入 P3、P4 或 R1。
+
+### 18.5 Response-budget 可行性反例与合同重开
+
+实现分支从 Pages 根坐标 closure 后的 `main@0ab22fbee7bb5e7a7d821c479cc7f3f4a744e332` 建立，先完成
+Playwright optional extra 隔离与 matching bundled Chromium preflight，没有创建 Collector。随后按停止线
+只做本地慢速生产端可行性探针，发现原文字面不能直接作为实现合同：
+
+1. `Network.dataReceived.encodedDataLength` 对 `12 MiB` 主文档为 0，只有完成事件能给出最终值；对
+   `40 MiB` parser-blocking script，即使同步/异步客户端持续泵事件，阈值也在服务端完整发送后才可见；
+2. 因此“最终字节数正确”不等于“能在上游完成前硬截断”，`Network.dataReceived`、
+   `streamResourceContent` 或 `loadingFinished` 均不得单独承担控制权；
+3. 改用 response-stage `Fetch.takeResponseBodyAsStream + IO.read` 后，`8 MiB` 主文档实验在 Collector
+   读取 `8_454_144` bytes 时停止；服务端只发送 `8_519_680 / 12_582_912` bytes，`completed=false`、
+   `disconnected=true`；
+4. `32 MiB` 全页实验在 Collector 读取 `33_554_480` bytes 时停止；服务端只发送
+   `33_619_968 / 41_943_040` bytes，同样 `completed=false / disconnected=true`；
+5. 使用 `Accept-Encoding: identity`、非 identity 响应 fail closed、response-stage body stream 与受控回放
+   后，真实 exact-SHA GitHub README 返回 200、唯一 `article.markdown-body`；149 个响应中 1 个 302 以
+   空 body 控制响应回放，其余成功计量/回放，合计 body `7_620_445` bytes、错误为 0。
+
+这组探针只证明候选原语可行，不是 P2 Evidence，也不证明 Collector 已实现。它同时证明原合同的
+`encoded transfer` 命名把 response body 与协议/传输层字节混为一谈。本候选因此只重开预算计量语义：
+旧的 `max_main_document_bytes / max_total_encoded_bytes` 名称不再合法，改为精确的 response-body
+字段；P2 仍保持一页、`8/32 MiB`、45 秒、512 请求、零重试、匿名只读与零越界交付边界。只有本修正
+经 docs-only PR、完整门禁、受保护主线、exact-SHA 匿名公开读回和 docs-only closure 后，状态才可恢复为
+`P2_CONTRACT_0.1_FROZEN`，实现分支才能重建于新主线并继续。
