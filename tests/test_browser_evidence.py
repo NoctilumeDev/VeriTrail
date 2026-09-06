@@ -18,6 +18,7 @@ from unittest.mock import Mock, patch
 from veritrail.browser import (
     _collect_browser_evidence,
     _origin,
+    _resolve_route_after_stop,
     _websocket_origin,
     sanitize_url,
 )
@@ -214,6 +215,19 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
 
 
 class BrowserEvidenceTests(unittest.TestCase):
+    def test_route_resolution_failure_after_stop_does_not_replace_stop_reason(
+        self,
+    ) -> None:
+        calls: list[str] = []
+
+        def driver_already_closed() -> None:
+            calls.append("abort")
+            raise RuntimeError("connection closed while reading from the driver")
+
+        _resolve_route_after_stop(driver_already_closed)
+
+        self.assertEqual(["abort"], calls)
+
     def test_real_playwright_ownership_failure_leaves_no_pending_start_task(
         self,
     ) -> None:

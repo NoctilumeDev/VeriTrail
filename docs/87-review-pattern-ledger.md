@@ -378,3 +378,60 @@ lifecycle expiry
 ```
 
 该 revision 仍未进入 Pattern Corpus，也没有启动 R1。
+
+### RA-020 rev1：停止权威成立后，延迟回调仍竞争已关闭的控制通道
+
+这条记录来自 P3 合同修正 PR 的既有 Core 门禁。Run 已正确保留 `USER_CANCELLED`，但 Playwright
+事件队列中的 HTTP route 回调同时撞上 driver 关闭，并从 listener 泄漏第二个异常。它要求区分
+“正常路径错误仍须可见”和“停止权威成立后的路由解析只能尽力完成”。`record_digest` 对删除该字段后的
+完整 JSON 按 `veritrail-json-c14n/1` 计算：
+
+```json
+{
+  "pattern_id": "RA-020",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:56e6cc68a3d3834caa89efda92d1504351cbe5594a9095e0fe0a7c1441c2ccff",
+  "status": "GENERALIZED",
+  "source_coordinate": [
+    "VeriTrail PR #60 head@dcb46b6 / Public CI run 34050007876 / Python 3.13 -O",
+    "VeriTrail main@294ebf7dd11db34d5f9ff99a8b879e81cb9b1c8d",
+    "VeriTrail correction candidate@e4e341a src/veritrail/browser.py",
+    "VeriTrail correction candidate@e4e341a tests/test_browser_evidence.py"
+  ],
+  "problem_layer": "Execution",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "LifecycleAuthority",
+  "suspicious_structure": "An asynchronous callback recognizes an authoritative stop and then performs a route-resolution command through a driver transport that owner-level teardown may already be closing.",
+  "possible_interpretations": [
+    "The driver remains valid until every queued callback has resolved its route.",
+    "Route resolution is best-effort after the owning thread has accepted the stop reason.",
+    "The failure happened before stop ownership was established and must remain observable.",
+    "The event system forwards callback failures to the lifecycle owner without leaking an independent listener error."
+  ],
+  "required_evidence": [
+    "The exact point at which stop reason ownership becomes authoritative.",
+    "A deterministic callback action that raises after the driver transport closes.",
+    "Repeated real-Chromium cancellation runs that capture listener stderr and verify cleanup.",
+    "A change-surface audit proving normal allow, block and connect operations do not use the best-effort stop path."
+  ],
+  "minimal_counterexample": "User cancellation starts Playwright teardown while a queued HTTP route callback catches the same stop; route.abort then raises Connection closed while reading from the driver and Playwright leaks Error occurred in event listener even though the owning Run preserves USER_CANCELLED.",
+  "false_positive_conditions": [
+    "The runtime serializes callback drainage before driver teardown and proves the route transport remains valid.",
+    "The callback failure is delivered to the lifecycle owner and cannot create a second competing failure fact.",
+    "The failing route operation runs before stop acceptance, where normal error visibility still applies."
+  ],
+  "detectable_cues": [
+    "except StopRequested followed by route.abort, route.close or another driver command",
+    "queued event callbacks use a transport destroyed concurrently by owner cleanup",
+    "the test verdict is correct but stderr contains Error occurred in event listener",
+    "an accepted stop reason is followed by a second callback-level transport failure"
+  ],
+  "non_claim": "This pattern does not authorize suppressing ordinary route or browser errors. Only route resolution after authoritative stop acceptance is best-effort; failures on normal routing paths must remain visible.",
+  "provenance": "Observed on 2026-09-06 when docs-only PR #60 reproduced the Playwright listener race on Python 3.13 -O. The exact local test reproduced it on attempt 3 of 5; correction candidate e4e341a then passed 20 consecutive Python 3.13 -O real-Chromium repetitions and the 388-test Core suite across both Python versions in normal and optimized modes without listener stderr."
+}
+```
+
+该记录不重开 R0，也不进入 Pattern Corpus。它只保留一个可复用的审查问题：异步回调已经观察到
+权威停止后，后续动作是在完成必要语义，还是在竞争一个已被 owner 撤销的控制通道？
