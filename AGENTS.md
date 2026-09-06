@@ -104,14 +104,21 @@
   的独立见证或可信锚点。P 轨也不得裁定提出者的观点是否正确；它只检查 sealed 条件与 Evidence 的
   关系，未知、冲突、缺证据和不可归因必须继续可见。Agent 发现与前提冲突的事实时必须报告并把
   Seal 决定权交还给人，不得以“人负责前提”为由沉默，也不得自行改写目标。
-  `docs/92-p3-core-handoff-contract.md` 与 `docs/93-p3-core-handoff-contract-freeze.md` 已冻结 P3 0.1
-  施工边界：P3 不新增观察面，只把 P1/P2 标准
-  Evidence 通过显式 role/path/digest handoff 交给现有 Acceptance Core。handoff manifest 是插件侧极薄
-  交接清单，不是 Evidence，不复制 plan/session/facts/coverage，不进入 rule evaluator，也不产生 Verdict；
-  Plan binding 与 session integrity 仍只由 Core 裁决。
-  只有从状态发布后的新 exact main 才能串行开始 P3-A manifest contract + canonical identity；在 P3-A
-  之前禁止创建 publisher、reference lab、示例 Plan 或 AcceptanceBundle，P4 与 Review Attention R1
-  仍不得启动。
+  `docs/92-p3-core-handoff-contract.md` 与 `docs/93-p3-core-handoff-contract-freeze.md` 曾冻结 P3 0.1
+  施工边界：P3 不新增观察面，只把 P1/P2 标准 Evidence 通过显式 role/path/digest handoff 交给现有
+  Acceptance Core。handoff manifest 是插件侧极薄交接清单，不是 Evidence，不复制
+  plan/session/facts/coverage，不进入 rule evaluator，也不产生 Verdict；Plan binding 与 session integrity
+  仍只由 Core 裁决。P3-A 本地候选实现审查随后证明：handoff 先核验一次路径、Core 再读同一路径会让
+  manifest 绑定的 Evidence A 与 Core 实际裁决的 Evidence B 发生快照漂移；两次各自安全的读取不能证明
+  同一快照。P3 合同当前只重开这一处，状态为
+  `P3_CORE_HANDOFF_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`。修正边界只允许 Core 增加通用
+  imported-snapshot Bundle 入口，并让既有 path 入口先导入后委托它；不得修改 Schema、evaluator、
+  P1/P2 fact semantics、coverage 或 Verdict 优先级。只有本 docs-only 修正通过完整门禁、受保护主线合入、
+  exact-main 匿名读回并由独立 closure 重新冻结后，才能从新的 exact main 重建 P3-A、继续 P3-B；P4 与
+  Review Attention R1 仍不得启动。第一次修正 PR #60 的原始 Python 3.13 `-O` 门禁复现既有 Browser
+  route 回调与 driver 关闭竞态，因此关闭且未合并；独立 PR #61 只修复该停止边界，经 11 项门禁合入
+  `main@6e48b5d109d0dd0e6c7b1b0fbe723cf1b792f852` 并完成匿名 exact-SHA 源码/Ledger 读回。本合同修正
+  必须从该新主线重建，不得 rerun 旧失败或把地基修复算作 P3 证据。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

@@ -1,15 +1,23 @@
 # P3 Core Handoff 与真实正负链合同 0.1
 
-> 状态发布：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`
+> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`
 >
-> 冻结事实：[文档 93](93-p3-core-handoff-contract-freeze.md)。该状态只在文档 93 自身的远端门禁、
-> 受保护主线合入和合入后精确匿名读回全部成立后生效。
+> 历史冻结事实：[文档 93](93-p3-core-handoff-contract-freeze.md)。P3-A 本地候选实现审查发现“连续两次安全读取
+> 不等于同一快照”的组合反例；第 13.1 节只重开 handoff 到 Core 的快照连续性。
 >
 > 精确设计基线：`3e785d197c8040c8baa4120fc63301eb347e5bc8`
+>
+> 本次重开重建基线：`main@6e48b5d109d0dd0e6c7b1b0fbe723cf1b792f852`
 >
 > 依赖状态：`P1_FROZEN / P2_FROZEN / Acceptance Core PC2_FROZEN`
 >
 > 影响等级：`L2_CONTRACT + L3_SYSTEM`；候选阶段只修改文档、索引与仓库协作说明
+
+第一次 docs-only 修正 PR #60 从 `main@294ebf7...` 建立，但其原始 Python 3.13 `-O` 门禁复现了既有
+Browser 停止竞态：Run 已保留 `USER_CANCELLED`，事件队列中的 route 回调仍与关闭中的 Playwright
+driver 竞争并泄漏第二个 listener 异常。#60 因而关闭且未合并；独立 PR #61 只收窄停止后的路由解析
+边界，原始 11 项门禁全绿后合入上述新主线，并完成匿名 exact-SHA 源码与 `RA-020` Ledger 读回。
+本候选从该 exact main 重建，不以重跑洗白 #60，也不把 Browser 地基修复冒充 P3 合同或实现证据。
 
 ## 1. 本轮裁决
 
@@ -59,12 +67,14 @@ Core 的语义输入仍然只有：
 
 ```text
 sealed AcceptancePlan 0.1
-zero or more standard Evidence 0.1 files
+zero or more imported standard Evidence 0.1 snapshots
 execution_status
 ```
 
 P3 不修改 `AcceptancePlan`、`Evidence`、`AcceptanceReport` 或 `AcceptanceBundle` Schema，不增加 GitHub
-专用 operator，也不要求 Core 导入 `veritrail_github`。
+专用 operator，也不要求 Core 导入 `veritrail_github`。Core 现有路径入口继续存在；为避免 handoff 核验与
+Core 导入之间再次打开可变路径，P3 只允许增加一个通用的、接受已由 Core 公共 importer 形成之
+`ImportedEvidence` 快照的 Bundle 入口，路径入口必须先导入再委托给同一实现。
 
 ### 3.2 GitHubEvidenceHandoff 0.1
 
@@ -112,11 +122,20 @@ sides[]
 reference lab 在调用 Core 前必须：
 
 1. 验证 manifest 的闭合集合、字段、路径和摘要格式；
-2. 对每个 `PUBLISHED` 文件重新读取并计算 SHA-256，与 manifest 精确比较；
-3. 使用 Core 公共 Evidence importer 验证标准 Evidence；
-4. 验证 Evidence 的 `collector_role` 对应 manifest side；
-5. 只把验证成功的明确路径原样传给 Core；Evidence 的 Plan/spec binding、跨源 session integrity、coverage
-   sufficiency 与缺失 side 继续由 sealed Plan 和 Core 保持可见。
+2. 对每个 `PUBLISHED` 路径只做一次有界、身份稳定的普通文件读取，并由 Core 公共 Evidence importer
+   在该次读取拥有的字节快照上形成标准 `ImportedEvidence`；
+3. 以 importer 计算的规范 Evidence SHA-256 与 manifest 精确比较；不得用包含文件尾换行的原始文件
+   字节摘要替代 Evidence 产物身份；
+4. 验证已导入 Evidence 的 `collector_role` 对应 manifest side；
+5. 将同一批已验证的 `ImportedEvidence` 对象直接交给 Core 通用公共入口。Core 必须在求值前再次执行
+   `verify_imported_evidence`，但不得为本次 handoff 再次打开原路径；
+6. Evidence 的 Plan/spec binding、跨源 session integrity、coverage sufficiency 与缺失 side 继续由
+   sealed Plan 和 Core 保持可见。
+
+这里的 snapshot ownership 不等于“相信同一个 Python 对象永远不会变化”。Core importer 必须拥有递归
+复制后的 document/attachment 内容，不得继续引用调用者提供的可变映射；交接后任何对象内 mutation 都
+必须因消费前规范摘要复算而失败。0.1 不引入新的 persistent immutable container，也不允许插件修改
+`ImportedEvidence` 后重签摘要。
 
 handoff 验证不得读取业务 facts、Plan/spec binding、session 或 coverage 来决定是否传递，也不得因 coverage
 为 `PARTIAL/ERROR` 就丢弃 Evidence。结构/摘要/路径不可信时必须在 Core 调用前失败并保留 typed handoff
@@ -190,7 +209,7 @@ derive and validate both requests offline
 run PairedCollectionCoordinator
 publish handoff manifest
 verify exact handoff files
-call Core create_acceptance_bundle / acceptance-evaluate
+call Core with the same imported Evidence snapshots
 independently recompute and read report
 ```
 
@@ -319,8 +338,13 @@ P3 合同冻结后，实现至少建立以下证据格：
     `FAIL`，不得在观察后改 Plan；
 16. 真实链报告明确同一 GitHub trust domain、同一相关 session、非原子快照，不扩张为来源真实性或
     世界真相；
-17. Core、Starter/Skill、Workbench、P1、P2 与双 Python `normal/-O` 回归不受影响；
-18. 远端门禁、受保护主线、exact-main、匿名 README/合同/事实文档读回分别成立。
+17. handoff 核验后替换原路径的确定性负例证明 Core 仍消费核验时的同一 `ImportedEvidence` 快照，不会
+    把 manifest 绑定的 A 与随后路径中的 B 混成一次合法 Run；
+18. 旧的 path-based Core 公共入口与新的 imported-snapshot 入口对同一输入产生同一 Bundle/Verdict；
+19. importer 不共享调用者的输入映射；导入后修改原映射不改变快照，直接修改快照则在 Core 消费前因
+    摘要复算被拒绝；
+20. Core、Starter/Skill、Workbench、P1、P2 与双 Python `normal/-O` 回归不受影响；
+21. 远端门禁、受保护主线、exact-main、匿名 README/合同/事实文档读回分别成立。
 
 测试数量不是出口；每个合同命题必须指向独立自动化证据或明确的真实外部读回。
 
@@ -337,8 +361,9 @@ P3-E  real GitHub PASS/FAIL slice
 P3-F  remote gates + freeze closure
 ```
 
-每批独立验证后再进入下一批。若实现需要修改 Acceptance Core Schema/evaluator、P1/P2 fact semantics、
-Collector coverage 或 Verdict 优先级，立即停止并重开相应合同，不能在 P3 内兼容掉矛盾。
+每批独立验证后再进入下一批。第 13.1 节只允许增加通用 imported-snapshot Bundle 入口并让旧路径入口
+委托它；若实现需要修改 Acceptance Core Schema/evaluator、P1/P2 fact semantics、Collector coverage
+或 Verdict 优先级，立即停止并重开相应合同，不能在 P3 内兼容掉矛盾。
 
 ## 12. 明确延期
 
@@ -381,8 +406,8 @@ P3 不重开 P2，也不删除 Mermaid 来迫使现实迎合观察器。这里�
    门禁、合入和匿名读回；
 7. 仓库中仍不存在 P3 manifest Schema、publisher、reference lab、示例 Plan 或 AcceptanceBundle 产物。
 
-候选、语义修正与修正后 exact-main 读回已经完成；精确坐标、失败观察和产品 Artifact 摘要由
-[文档 93](93-p3-core-handoff-contract-freeze.md)保留。在文档 93 的状态发布闭环完成前，状态仍保持：
+候选、语义修正与修正后 exact-main 读回当时已经完成；精确坐标、失败观察和产品 Artifact 摘要由
+[文档 93](93-p3-core-handoff-contract-freeze.md)保留。在文档 93 的状态发布闭环完成前，当时状态保持：
 
 ```text
 P2_FROZEN
@@ -392,6 +417,47 @@ P4_NOT_STARTED
 R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE
 ```
 
-任何新反例都可以否决冻结资格。文档 93 的最后门全部成立后，合同状态变为
-`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`；冻结只允许后续从新的 exact main
-开始 P3-A，不自动授权 P4 或 R1。
+任何新反例都可以否决冻结资格。文档 93 的最后门随后全部成立，合同曾进入
+`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`；该冻结只允许后续从新的 exact
+main 开始 P3-A，没有自动授权 P4 或 R1。第 13.1 节记录的后继反例现已再次否决该冻结资格。
+
+### 13.1 连续安全读取不等于同一快照
+
+P3-A 已在独立本地候选实现中完成 manifest 纯合同和规范身份的定向验证，但进入 P3-B 前审计 Core 公共
+入口时发现：
+
+```text
+handoff verifier reads path -> Evidence A -> digest matches manifest
+path changes from A to B
+Core path entry reads path   -> Evidence B -> each individual read is safe
+```
+
+`read_stable_bytes` 能证明一次打开期间普通文件身份和内容没有变化，却不能把两个先后发生的打开变成同一
+快照。原合同要求 handoff 先导入核验、随后把路径交给 Core 重读，因此可能让 manifest 绑定 A、Core
+裁决 B。两次局部安全不能推出组合身份连续：
+
+```text
+StableRead(A) + StableRead(B) != SameSnapshot(A, B)
+```
+
+这不改变 manifest、Evidence 或 Verdict 语义，只纠正交接载体。修正后的唯一合法链为：
+
+```text
+one stable bounded file read
+    -> Core public Evidence import
+    -> manifest digest and collector_role verification
+    -> same ImportedEvidence objects
+    -> Core generic imported-snapshot bundle entry
+    -> Core verify_imported_evidence
+    -> deterministic evaluation and Bundle publication
+```
+
+Core 旧路径入口继续兼容既有调用者，但必须先导入路径并委托同一个通用实现。P3 插件不得复制 importer、
+不得把 GitHub 类型引入 Core、不得用文件锁或“调用足够快”冒充身份连续，也不得在 handoff 后再次打开
+Evidence 路径。该修正只补通用 API 组合边界，不修改 Schema、operator、binding、coverage 或 Verdict
+优先级。现有 importer 已经为 dict/list 建立递归 owned copy，现有 Core verifier 也会在消费前复算摘要；
+实现只需保持并验证这两条性质，不为“绝对不可变”另造一套容器系统。
+
+因此 P3-B 及后续施工暂停。只有本 docs-only 修正经完整门禁、受保护主线合入、exact-main 匿名公开读回，
+再由独立 closure 恢复 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN` 后，才能从新的 exact main 重建 P3-A 并
+继续 P3-B。
