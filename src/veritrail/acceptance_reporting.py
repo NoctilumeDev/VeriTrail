@@ -17,12 +17,14 @@ from veritrail.evidence import (
     ImportedEvidence,
     import_evidence_files,
     validate_evidence_collection_budget,
+    verify_imported_evidence,
 )
 from veritrail.markdown import markdown_code, markdown_json, markdown_text
 from veritrail.resource_limits import (
     MAX_ARTIFACT_BYTES,
     MAX_BUNDLE_BYTES,
     MAX_BUNDLE_FILES,
+    MAX_EVIDENCE_COMPONENT_FILES,
 )
 
 
@@ -203,14 +205,12 @@ def render_acceptance_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def create_acceptance_bundle(
+def _validate_bundle_request(
     *,
     plan: dict[str, Any],
-    evidence_paths: list[Path],
     output: Path,
     acceptance_id: str,
-    execution_status: str,
-) -> dict[str, Any]:
+) -> None:
     verify_sealed_acceptance_plan(plan)
     if not ACCEPTANCE_ID_PATTERN.fullmatch(acceptance_id):
         raise ValidationError(
@@ -221,7 +221,45 @@ def create_acceptance_bundle(
             f"refusing to overwrite existing output directory: {output.name}"
         )
     output.parent.mkdir(parents=True, exist_ok=True)
-    imported, duplicates = import_evidence_files(evidence_paths, MAX_ARTIFACT_BYTES)
+
+
+def _prepare_imported_evidence(
+    evidence: list[ImportedEvidence],
+) -> tuple[list[ImportedEvidence], list[str]]:
+    if len(evidence) > MAX_EVIDENCE_COMPONENT_FILES:
+        raise ValidationError(
+            [
+                "evidence input count exceeds the fixed bundle component limit of "
+                f"{MAX_EVIDENCE_COMPONENT_FILES} files"
+            ]
+        )
+    imported: list[ImportedEvidence] = []
+    duplicates: list[str] = []
+    seen_hashes: set[str] = set()
+    for artifact in evidence:
+        if not isinstance(artifact, ImportedEvidence):
+            raise ValidationError(
+                ["imported_evidence must contain only ImportedEvidence snapshots"]
+            )
+        verify_imported_evidence(artifact)
+        if artifact.sha256 in seen_hashes:
+            duplicates.append(artifact.input_name)
+            continue
+        seen_hashes.add(artifact.sha256)
+        imported.append(artifact)
+        validate_evidence_collection_budget(imported)
+    return imported, duplicates
+
+
+def _create_acceptance_bundle_from_verified_imports(
+    *,
+    plan: dict[str, Any],
+    imported: list[ImportedEvidence],
+    duplicates: list[str],
+    output: Path,
+    acceptance_id: str,
+    execution_status: str,
+) -> dict[str, Any]:
     validate_evidence_collection_budget(imported)
 
     stage = Path(tempfile.mkdtemp(prefix=".veritrail-acceptance-", dir=output.parent))
@@ -292,3 +330,55 @@ def create_acceptance_bundle(
     except Exception:
         shutil.rmtree(stage, ignore_errors=True)
         raise
+
+
+def create_acceptance_bundle_from_imported(
+    *,
+    plan: dict[str, Any],
+    imported_evidence: list[ImportedEvidence],
+    output: Path,
+    acceptance_id: str,
+    execution_status: str,
+) -> dict[str, Any]:
+    """Create a Bundle from already-owned Evidence snapshots without reopening paths."""
+
+    _validate_bundle_request(
+        plan=plan,
+        output=output,
+        acceptance_id=acceptance_id,
+    )
+    imported, duplicates = _prepare_imported_evidence(imported_evidence)
+    return _create_acceptance_bundle_from_verified_imports(
+        plan=plan,
+        imported=imported,
+        duplicates=duplicates,
+        output=output,
+        acceptance_id=acceptance_id,
+        execution_status=execution_status,
+    )
+
+
+def create_acceptance_bundle(
+    *,
+    plan: dict[str, Any],
+    evidence_paths: list[Path],
+    output: Path,
+    acceptance_id: str,
+    execution_status: str,
+) -> dict[str, Any]:
+    """Compatibility path API: import each path once, then use the snapshot entry."""
+
+    _validate_bundle_request(
+        plan=plan,
+        output=output,
+        acceptance_id=acceptance_id,
+    )
+    imported, duplicates = import_evidence_files(evidence_paths, MAX_ARTIFACT_BYTES)
+    return _create_acceptance_bundle_from_verified_imports(
+        plan=plan,
+        imported=imported,
+        duplicates=duplicates,
+        output=output,
+        acceptance_id=acceptance_id,
+        execution_status=execution_status,
+    )

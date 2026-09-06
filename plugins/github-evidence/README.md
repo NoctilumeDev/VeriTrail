@@ -4,7 +4,8 @@ This package contains independently bounded, read-only capabilities:
 
 - the base P1 Structured GitHub API Collector; and
 - the optional P2 GitHub Public Render Collector; and
-- the offline P3 handoff manifest contract and canonical identity validator.
+- the offline P3 handoff manifest contract, create-new publisher, and exact
+  snapshot verifier.
 
 Both derive sealed observation requests from a VeriTrail `AcceptancePlan 0.1`,
 retain source-specific facts, and emit separate standard VeriTrail
@@ -12,10 +13,12 @@ retain source-specific facts, and emit separate standard VeriTrail
 fixed public GitHub render surfaces through an explicitly installed, matching
 Chromium runtime.
 
-The P3 contract validates only the closed manifest shape and its canonical
-digest. It does not inspect Evidence files, publish a manifest, or prevalidate
-Plan, session, coverage, assertions, or Verdict; those later responsibilities
-remain outside P3-A.
+The P3 manifest remains a thin artifact-selection boundary. Its publisher
+retains paired side outcomes without copying Plan, session, coverage, facts, or
+Verdict-like fields. Its verifier safely imports each selected Evidence file
+once, checks the canonical Evidence digest and collector role, and returns those
+same Core-owned `ImportedEvidence` snapshots. It does not interpret Plan/spec
+binding, session integrity, coverage, assertions, or Verdict.
 
 The package does not modify GitHub, evaluate acceptance assertions, join P1 and
 P2 facts, or import VeriTrail private implementation symbols. VeriTrail Core,
