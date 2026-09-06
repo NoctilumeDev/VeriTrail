@@ -1,13 +1,13 @@
 # P3 Core Handoff 合同冻结事实
 
-> 后继状态：本文记录的冻结曾真实成立；P3-A 本地候选实现的组合审查又发现 handoff 核验与 Core 路径
-> 重读之间无法证明同一快照。当前合同已按
-> [第 13.1 节](92-p3-core-handoff-contract.md#131-连续安全读取不等于同一快照)只重开该边界，状态为
-> `P3_CORE_HANDOFF_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`。本文不因后继反例而改写历史证据。
+> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。
+> P3-A 本地候选实现暴露的快照连续性反例已按
+> [第 13.1 节](92-p3-core-handoff-contract.md#131-连续安全读取不等于同一快照)完成最小合同修正、独立地基修复、
+> 受保护主线合入与 exact-main 产品读回；本文继续保留第一次冻结、后继反例与第一次修正失败，不改写历史。
 
 > 状态发布目标：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`
 >
-> 状态发布重建基线：`main@befee158da6153ad2774aae7b8772ee3677133d0`
+> 状态发布重建基线：`main@5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8`
 >
 > 本文只记录已经发生的合同、门禁与公开读回事实；本补丁自己的远端门禁、受保护主线合入和合入后
 > 精确匿名读回全部成立后，状态发布才生效。
@@ -47,6 +47,17 @@ Review Attention R1、Codex Security 深扫或任何 GitHub 写能力。
    `--retry-all-errors --retry-delay 2 --retry-max-time 60`，保留全部 SHA-256 与 clean-install 验收；其原始
    11 项门禁全部通过，并以 merge commit `befee158da6153ad2774aae7b8772ee3677133d0` 合入主线；
 8. 本状态发布从新的 exact main 重建，不复活 #57，也不把 CI 传输修复冒充 P3 合同或实现证据。
+9. 第一次冻结后的 P3-A 本地候选证明 manifest 纯合同可实现，同时暴露“handoff 验证 Evidence A、Core
+   路径入口重新读取 Evidence B”的快照连续性反例；因此只重开 handoff 到 Core 的组合边界，P3-B 暂停；
+10. 第一次快照修正 PR #60 的原始 Python 3.13 `-O` 门禁复现既有 Browser 停止后 route 回调与 driver
+    关闭竞态。#60 关闭且未合并，没有 rerun 洗白；
+11. 独立 PR #61 只修复停止后的 route callback resolution，补入确定性反例与 `RA-020 rev1`，经原始
+    11 项门禁合入 `main@6e48b5d109d0dd0e6c7b1b0fbe723cf1b792f852`，并完成匿名 exact-SHA 源码与
+    Ledger 读回；该地基修复不属于 P3 合同或实现证据；
+12. 快照修正从该 exact main 重建。PR #62 只修改 `AGENTS.md`、README 与文档 92/93，其原始
+    [Public CI run 34052537701](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34052537701)
+    11 项门禁全部通过，并以 merge commit
+    `5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8` 合入受保护主线。
 
 候选 merge `ea6723a...` 上保留的产品观察摘要为：
 
@@ -81,6 +92,20 @@ Acceptance Evidence，也不证明页面 `COMPLETE`。
 唯一 conflict 仍为上述 Mermaid 子框架导航。此前一份缺少必需 HARD assertion 的临时 Plan 被公共
 validator 在浏览器创建前拒绝，没有产生网络观察，也没有被算作页面失败。
 
+### 3.1 快照修正后的 exact-main 产品读回
+
+从 `main@5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8` 建立 detached worktree，显式把 Core、插件源码与
+Python import provenance 绑定到该 worktree，再用 fresh anonymous Chromium 串行读取两个精确 Markdown
+坐标：
+
+| 页面 | Coverage | Artifact SHA-256 | 读回摘要 |
+| --- | --- | --- | --- |
+| `README.md` | `COMPLETE` | `7f320bfcb7de2ef0dba82ece51f61328c6cbef613f811639685de7aa573c0f72` | HTTP 200；URL 不漂移；唯一作用域；三样本稳定；无 error/conflict/cleanup error；marker 2 次 |
+| `docs/92-p3-core-handoff-contract.md` | `COMPLETE` | `fab0f08b8d4e660820c1bb0764047893bf15ec4e11b45a86a7e024c00253c4b8` | HTTP 200；URL 不漂移；唯一作用域；三样本稳定；无 error/conflict/cleanup error；marker 1 次 |
+
+这两份 Artifact 证明 PR #62 合入后的公开渲染与修正合同坐标一致；它们不是 P3 manifest、reference lab、
+AcceptanceBundle 或实现通过证据，也不替代本状态发布补丁自己的远端门禁、合入和合入后读回。
+
 ## 4. 边界裁决
 
 本轮冻结确认：
@@ -94,6 +119,14 @@ handoff 层只能验证闭合 Schema、role、显式 path、文件 SHA-256 和�
 binding、session integrity、coverage sufficiency、assertion 与四态 Verdict 全部留给 Core。路径逃逸、
 摘要漂移或不可导入文件是 pre-Core handoff failure；语义不一致只有在可信 Evidence 已精确交接后才由
 Core 裁决。
+
+路径只负责定位，快照才负责身份。handoff 只能把一次有界稳定读取形成的同一批 `ImportedEvidence`
+对象交给 Core；Core 通用入口必须在消费前再次复算每个快照摘要，但不得重新打开已由 handoff 验证的
+路径。既有路径入口继续作为兼容 wrapper，先导入一次，再委托同一通用实现：
+
+```text
+Verified Snapshot = Consumed Snapshot
+```
 
 因此本合同冻结不会把：
 
@@ -112,8 +145,8 @@ deterministic judgment
 1. 原始远端门禁全部通过，不以 rerun 覆盖红灯；
 2. 受保护主线 merge；
 3. fetch 新的 exact `origin/main`；
-4. 从该 exact main 再次运行产品 Collector：README 与 P3 合同必须 `COMPLETE`；P 轨路线图必须
-   `COMPLETE`，或只保留合同第 13 节规定的精确 Mermaid `PARTIAL` 闭集；
+4. 从该 exact main 再次运行产品 Collector：README 与 P3 合同必须 `COMPLETE`，并确认 HTTP 200、
+   URL 不漂移、唯一可用作用域、三样本稳定、指定标记存在且没有额外 error/conflict/cleanup error；
 5. 确认仓库仍不存在 P3 manifest Schema、publisher、reference lab、示例 Plan 或 AcceptanceBundle 实现。
 
 任一新反例都否决冻结资格。只有上述事实全部成立，以下状态才成为当前主线事实：

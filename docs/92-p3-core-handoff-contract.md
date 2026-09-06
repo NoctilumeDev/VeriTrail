@@ -1,6 +1,6 @@
 # P3 Core Handoff 与真实正负链合同 0.1
 
-> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`
+> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`
 >
 > 历史冻结事实：[文档 93](93-p3-core-handoff-contract-freeze.md)。P3-A 本地候选实现审查发现“连续两次安全读取
 > 不等于同一快照”的组合反例；第 13.1 节只重开 handoff 到 Core 的快照连续性。
@@ -458,6 +458,21 @@ Evidence 路径。该修正只补通用 API 组合边界，不修改 Schema、op
 优先级。现有 importer 已经为 dict/list 建立递归 owned copy，现有 Core verifier 也会在消费前复算摘要；
 实现只需保持并验证这两条性质，不为“绝对不可变”另造一套容器系统。
 
-因此 P3-B 及后续施工暂停。只有本 docs-only 修正经完整门禁、受保护主线合入、exact-main 匿名公开读回，
-再由独立 closure 恢复 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN` 后，才能从新的 exact main 重建 P3-A 并
-继续 P3-B。
+因此 P3-B 及后续施工当时暂停；旧 P3-A 候选不具备继续施工资格，也不得被当作新合同实现证据。
+
+### 13.2 快照交接修正重新冻结
+
+第一次修正 PR #60 的原始 Python 3.13 `-O` 门禁复现了既有 Browser 停止后 route 回调与 driver 关闭竞态，
+因此关闭且未合并，没有以 rerun 或旧绿灯覆盖失败。独立 PR #61 只修复该地基，并经原始 11 项门禁合入
+`main@6e48b5d109d0dd0e6c7b1b0fbe723cf1b792f852`；该修复没有被解释成 P3 合同或实现证据。
+
+快照修正随后从该 exact main 重建，由 PR #62 的原始 11 项门禁通过后，以 merge commit
+`5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8` 合入受保护主线。从该 exact main 运行产品
+`PublicRenderCollector`，README 与本文均确认 HTTP 200、requested/final URL 相同、唯一可用作用域、
+三样本稳定、指定标记存在、coverage 为 `COMPLETE`，且没有 conflict、collector error 或 cleanup error。
+精确 Artifact 摘要由[文档 93](93-p3-core-handoff-contract-freeze.md)保留。
+
+独立 docs-only closure 的原始门禁、受保护主线合入和合入后 exact-main 产品读回全部成立后，本合同重新
+进入 `P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。冻结只允许从新的
+exact main 重建 P3-A，再串行进入 P3-B；P4 与 Review Attention R1 仍未获得启动资格。任何后继反例仍可
+再次否决受影响边界的冻结资格。
