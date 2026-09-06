@@ -245,8 +245,10 @@ P2 0.1 只允许由结构化坐标生成以下四类 HTTPS 目标：
   坐标；自定义域名、CNAME 重定向和任意站点均推迟到后继合同；
 - 所有查询值和 fragment 都禁止出现在请求坐标中。
 
-exact commit Markdown 是不可变参考面；repository 首页 README 是默认分支的当前公开展示面。二者
-不能互相替代。GitHub 关于永久文件链接和 README 展示的公开规则见：
+exact commit Markdown 提供不可变的源坐标；它在 GitHub 上的公共 HTML 仍是带采集时间、renderer 与
+平台实现语境的一次 Render observation，不得宣称为不可变渲染。repository 首页 README 是默认分支的
+当前公开展示面。两者不能互相替代：`source coordinate stability != render stability`。GitHub 关于永久文件
+链接和 README 展示的公开规则见：
 [permanent links](https://docs.github.com/en/repositories/working-with-files/using-files/getting-permanent-links-to-files)
 与 [about READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes)。
 
@@ -287,8 +289,10 @@ literal
 rendered_text_occurrences
 ```
 
-`rendered_text_occurrences` 来自固定作用域的 `innerText` 规范化结果。它不叫 `marker_ok`，也不承诺该
-文本在首屏、没有被遮挡或一定被人看见。
+`literal` 本身与固定作用域的 `innerText` 使用 8.3 节同一 normalization profile。随后在规范化正文中按
+Unicode code point 执行大小写敏感、从左到右、不重叠的精确子串计数；命中后下一次搜索从本次命中末尾
+继续。`rendered_text_occurrences` 只保存该确定性计数。它不叫 `marker_ok`，也不承诺该文本在首屏、没有
+被遮挡或一定被人看见。
 
 ### 6.3 视口
 
@@ -308,6 +312,11 @@ P2 对元素只使用明确命名的 `playwright_visible` 与 `in_initial_viewpo
 “human visible”。Playwright 的 visible 语义要求非空 bounding box 且不为 `visibility:hidden`，但
 `opacity:0` 仍可被视为 visible；该限制必须保留，不能包装成更强的人眼可见性声明。参考：
 [Playwright actionability](https://playwright.dev/python/docs/actionability#visible)。
+
+`in_initial_viewport` 固定定义为：在最终主文档导航完成后、Collector 未执行任何滚动或交互时，元素的
+CSS-pixel bounding box 与初始 viewport 矩形 `[0,width) x [0,height)` 存在正面积交集。仅接触边界、空
+bounding box 或无法取得 bounding box 均为 `false`；它不要求元素完整落入 viewport，也不替代
+`playwright_visible`。该字段属于三次规范化样本，位置事实不一致同样使稳定窗口为 `PARTIAL`。
 
 ## 7. 匿名浏览器与网络边界
 
@@ -335,7 +344,10 @@ Collector 在 context 级路由所有请求；路由会关闭 HTTP cache，servi
   DNS label 边界匹配的 `*.github.com`、`*.githubassets.com` 与 `*.githubusercontent.com`；字符串后缀相似
   但不处于 label 边界的 host 必须拒绝；
 - default Pages 只允许目标同源 `GET` / `HEAD` 子资源；
-- redirect 每一跳都重新校验 scheme、host、port、userinfo、目标类型与最大跳数；
+- redirect 每一跳都重新校验 scheme、host、port、userinfo、目标类型与最大跳数；requested coordinate 与
+  final coordinate 必须分别保留。即使最终仍在允许域内，owner、repository、path、tag 或 Pages site
+  coordinate 经目标类型规范化后发生语义变化，也必须形成显式 conflict，不能把 repository rename、
+  transfer 或其他 canonical redirect 透明洗成原请求坐标；
 - 主文档与总 encoded transfer 必须由 Chromium 网络事件执行 `8 MiB / 32 MiB` 硬上限；超限立即停止加载、
   关闭 context 并形成 `ERROR`，不能只在整页进入内存后才检查；
 - 意外 read host 必须阻断并使 coverage 非 `COMPLETE`；预期被阻断的 telemetry write 不自动降低 coverage；
@@ -505,7 +517,11 @@ facts_digest
 | `COMPLETE` | 初态、导航、redirect，以及请求适用时的作用域/稳定窗口和全部投影均在合同上限内完整观察 |
 | `PARTIAL` | 已有可用事实，但作用域歧义、未稳定、截断、意外 read host 或部分投影失败 |
 | `ERROR` | 浏览器启动、DNS/TLS、timeout、crash、无主文档 Response 或产物校验失败 |
-| `NOT_APPLICABLE` | sealed spec 明确不适用于该目标；不得由 Collector 自由猜测 |
+| `NOT_APPLICABLE` | 为兼容 Core Evidence 公共枚举而保留；P2 0.1 Collector 不主动产生 |
+
+P2 0.1 的合法 sealed spec 对其合法 target 必然适用。未知 target、缺字段、不受支持投影或不合法坐标必须在
+联网和创建 session 前拒绝，不能被改写成 `NOT_APPLICABLE`。未来只有新合同显式冻结 applicability 条件后，
+Collector 才能产生该状态。
 
 以下情况单独不改变 `COMPLETE`：
 
@@ -545,7 +561,7 @@ P2 可以在插件内新增薄的 `PairedCollectionCoordinator`，但它只能�
 1. 接受同一 sealed AcceptancePlan 机械派生的一个 P1 request 与一个 P2 request；
 2. 内部生成不可由 caller 提供的全新 `collection_session_id`；
 3. 把同一 session factory 注入已公开支持该边界的 P1 Collector 与 P2 Collector；
-4. 严格串行采集并分别原子发布两份标准 Evidence；
+4. 固定按 `P1 API -> P2 Render` 严格串行采集，并分别原子发布两份标准 Evidence；
 5. 返回两份 Artifact 路径与安全的执行 provenance。
 
 它不得拼接 facts、挑选“最好看”的产物、生成匹配布尔值、调用 Core 或输出 AcceptanceBundle。同一 session
@@ -564,6 +580,7 @@ P2 可以在插件内新增薄的 `PairedCollectionCoordinator`，但它只能�
 | 非空初始 Cookie/storage | 启动导航前拒绝 | 不得称为匿名 |
 | 任意 URL/selector/script/unknown projection | 联网前拒绝 | 不得降级猜测 |
 | redirect 越界或进入登录/任意域 | `PARTIAL/ERROR` + chain | 不得跟随到成功页洗白 |
+| 允许域内但 final coordinate 与 requested coordinate 语义不同 | `PARTIAL` + 两份坐标 + conflict | 不得把 rename/transfer 当成原坐标成功 |
 | HTTP 404/500 + Response | 保留 status 和内容观察 | 不等于 navigation error，也不等于通过 |
 | DNS/TLS/timeout/crash/no Response | `ERROR` | 不得复用缓存或旧 Evidence |
 | scope 为 0 或多个 | navigation 可保留，content 非 COMPLETE | 不得退回 full body |
@@ -615,15 +632,18 @@ expected content signature 改错，由 Core 在独立测试中得到非 PASS。
 8. fresh context 初态为空；预置 Cookie 或 storage 单变量负例在导航前拒绝；
 9. 页面导航后设置匿名 Cookie：保留安全计数，但仍可证明 fresh initial state；
 10. 正常 200、404 与 500 均生成 top-level status 事实；DNS/TLS/timeout/no Response 为 ERROR；
-11. expected redirect、unexpected host、auth redirect、redirect loop 与超过 10 跳分别可辨；
+11. 保持同一规范化坐标的 redirect、语义坐标漂移、unexpected host、auth redirect、redirect loop 与超过
+    10 跳分别可辨；
 12. GitHub-like 页面发起 telemetry POST 和 console error、正文仍完整：阻断 write 且 coverage 不自动降级；
 13. unexpected GET host 被阻断并使 coverage 非 COMPLETE；service worker/WebSocket/popup/download 全阻断；
 14. 四种 target kind 各自只使用固定作用域；scope 0/multiple 不回退 full body；
-15. heading 位于首屏、首屏以下、`visibility:hidden` 与 `opacity:0` 的语义分别按命名保留；
-16. 两个相同样本稳定；三个不一致样本为 PARTIAL，不能选择 first/last；
+15. heading 位于首屏、首屏以下、仅接触 viewport 边界、`visibility:hidden` 与 `opacity:0` 的语义分别按
+    `playwright_visible` / 正面积相交规则保留；
+16. 固定采集三个样本；仅 `S1 == S2 == S3` 为稳定，任何不一致均为 PARTIAL，不能选择 first/last；
 17. 文本超 512 KiB、heading/link/request 上限分别触发显式 truncation；
 18. 重复链接保留，relative URL 正确解析，secret-like query value 不落盘；
-19. literal marker 只输出 occurrence，不输出 present/ok/pass；
+19. literal marker 与正文使用同一规范化，并按大小写敏感、Unicode code point、非重叠规则只输出
+    occurrence，不输出 present/ok/pass；
 20. desktop/narrow 两个 profile 分开产生事实，不能将一端结果代替另一端或把 narrow 冒充真实手机。
 
 ### 14.3 P1、Core 与旧消费者
@@ -642,7 +662,7 @@ expected content signature 改错，由 Core 在独立测试中得到非 PASS。
 29. Release 页面使用独立 scope；不存在 tag 的 404 仍形成完整 navigation fact；
 30. 默认 GitHub Pages 只允许默认域与同源子资源；custom-domain redirect 按合同阻断；
 31. 真实 GitHub telemetry write 即使被阻断，也不能因 console noise 抹掉完整正文；
-32. 同一 Plan 的 P1/API 与 P2/Render 严格串行、同 session、两份 Evidence，Core 可校验相关性；
+32. 同一 Plan 固定按 P1/API 再 P2/Render 严格串行、同 session、两份 Evidence，Core 可校验相关性；
 33. wheel clean install 从 `site-packages` 启动匹配 Chromium，不从 checkout 偷导入；
 34. 两个视口、代理/直连可用路径、敏感扫描、browser/staging/download/trace/HAR 残留全部检查。
 
