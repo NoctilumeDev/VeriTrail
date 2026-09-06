@@ -38,6 +38,8 @@ class _BrowserLifecycleObserver(Protocol):
 
     def after_browser_close(self) -> None: ...
 
+    def interrupt(self, reason: str, lifecycle_deadline: float | None) -> None: ...
+
     def failed(self, stage: str, error_type: str) -> None: ...
 
 
@@ -221,12 +223,27 @@ def _collect_browser_evidence(
         ) from exc
 
     policy = plan["browser"]
+    owned_interruption_complete = False
+
+    def request_owned_interruption(reason: str) -> None:
+        nonlocal owned_interruption_complete
+        if lifecycle_observer is None or owned_interruption_complete:
+            return
+        observe(
+            "interrupt",
+            reason,
+            lifecycle_deadline,
+            required=True,
+        )
+        owned_interruption_complete = True
 
     def check_stop() -> None:
         reason = requested_stop_reason(cancel_event)
         if reason is not None:
+            request_owned_interruption(reason)
             raise StopRequested(reason)
         if lifecycle_deadline is not None and monotonic() >= lifecycle_deadline:
+            request_owned_interruption("LIFECYCLE_TIMEOUT")
             raise StopRequested("LIFECYCLE_TIMEOUT")
         if integrity_check is not None:
             integrity_check()
@@ -302,7 +319,21 @@ def _collect_browser_evidence(
                 headless=policy["headless"],
                 timeout=operation_timeout_ms(),
             )
+        except StopRequested:
+            try:
+                playwright.stop()
+            except Exception:
+                pass
+            raise
         except Exception as exc:
+            try:
+                check_stop()
+            except StopRequested:
+                try:
+                    playwright.stop()
+                except Exception:
+                    pass
+                raise
             try:
                 playwright.stop()
             except Exception:
@@ -506,7 +537,8 @@ def _collect_browser_evidence(
                     _finish_step(initial, initial_started, error=exc)
                     viewport_failed = True
                 finally:
-                    observe("checkpoint", browser)
+                    if not owned_interruption_complete:
+                        observe("checkpoint", browser)
 
                 if not viewport_failed:
                     screenshot_index = 0
@@ -541,7 +573,8 @@ def _collect_browser_evidence(
                             viewport_failed = True
                             break
                         finally:
-                            observe("checkpoint", browser)
+                            if not owned_interruption_complete:
+                                observe("checkpoint", browser)
                 if page is not None:
                     check_stop()
                     settle_and_enforce_page_set()
@@ -559,7 +592,7 @@ def _collect_browser_evidence(
                 viewport_failed = True
                 record_collection_error(f"viewport:{viewport_name}", type(exc).__name__)
             finally:
-                if context is not None:
+                if context is not None and not owned_interruption_complete:
                     try:
                         context.close()
                     except Exception as exc:
@@ -582,18 +615,20 @@ def _collect_browser_evidence(
                 }
             )
     finally:
-        observe("before_browser_close", browser)
-        try:
-            browser.close()
-        except Exception as exc:
-            cleanup_complete = False
-            record_collection_error("browser-close", type(exc).__name__)
+        if not owned_interruption_complete:
+            observe("before_browser_close", browser)
+            try:
+                browser.close()
+            except Exception as exc:
+                cleanup_complete = False
+                record_collection_error("browser-close", type(exc).__name__)
         try:
             playwright.stop()
         except Exception as exc:
             cleanup_complete = False
             record_collection_error("playwright-stop", type(exc).__name__)
-        observe("after_browser_close")
+        if not owned_interruption_complete:
+            observe("after_browser_close")
 
     failed_requests = [item for item in network if item["failure"] is not None]
     http_errors = [

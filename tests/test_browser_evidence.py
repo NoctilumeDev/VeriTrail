@@ -274,6 +274,13 @@ class BrowserEvidenceTests(unittest.TestCase):
                 self.assert_is_playwright(value)
                 observer_calls.append("playwright_started")
 
+            def interrupt(
+                self, reason: str, lifecycle_deadline: float | None
+            ) -> None:
+                if reason != "USER_CANCELLED" or lifecycle_deadline is not None:
+                    raise AssertionError("unexpected interruption coordinates")
+                observer_calls.append("interrupt")
+
             @staticmethod
             def assert_is_playwright(value: object) -> None:
                 if value is not playwright:
@@ -290,7 +297,122 @@ class BrowserEvidenceTests(unittest.TestCase):
                     cancel_event=cancellation,
                 )
 
-        self.assertEqual(["playwright_started"], observer_calls)
+        self.assertEqual(["playwright_started", "interrupt"], observer_calls)
+
+    def test_owned_interruption_precedes_context_and_browser_close(self) -> None:
+        plan = _safe_runtime_plan()
+        cancellation = threading.Event()
+        calls: list[str] = []
+
+        class Page:
+            def set_default_timeout(self, timeout_ms: int) -> None:
+                del timeout_ms
+
+            def set_default_navigation_timeout(self, timeout_ms: int) -> None:
+                del timeout_ms
+
+        page = Page()
+
+        class Context:
+            pages = [page]
+
+            def route(self, pattern: str, callback: object) -> None:
+                del pattern, callback
+
+            def route_web_socket(self, pattern: str, callback: object) -> None:
+                del pattern, callback
+
+            def new_page(self) -> Page:
+                return page
+
+            def on(self, event: str, callback: object) -> None:
+                del event, callback
+
+            def close(self) -> None:
+                raise AssertionError("context.close must not precede owned interruption")
+
+        context = Context()
+
+        class Browser:
+            version = "unit-test"
+
+            def new_context(self, **options: object) -> Context:
+                del options
+                return context
+
+            def close(self) -> None:
+                raise AssertionError("browser.close must not precede owned interruption")
+
+        browser = Browser()
+
+        class Chromium:
+            def launch(self, **options: object) -> Browser:
+                del options
+                return browser
+
+        playwright = SimpleNamespace(
+            chromium=Chromium(),
+            stop=lambda: calls.append("playwright.stop"),
+        )
+
+        class PlaywrightContext:
+            def start(self) -> object:
+                return playwright
+
+        class Observer:
+            def playwright_started(self, value: object) -> None:
+                if value is not playwright:
+                    raise AssertionError("unexpected Playwright object")
+                calls.append("playwright_started")
+
+            def browser_started(self, value: object) -> None:
+                if value is not browser:
+                    raise AssertionError("unexpected Browser object")
+                calls.append("browser_started")
+
+            def checkpoint(self, value: object) -> None:
+                if value is not browser:
+                    raise AssertionError("unexpected Browser object")
+                calls.append("checkpoint")
+                cancellation.set()
+
+            def interrupt(
+                self, reason: str, lifecycle_deadline: float | None
+            ) -> None:
+                self.assert_interruption(reason, lifecycle_deadline)
+                calls.append("interrupt")
+
+            @staticmethod
+            def assert_interruption(
+                reason: str, lifecycle_deadline: float | None
+            ) -> None:
+                if reason != "USER_CANCELLED" or lifecycle_deadline is not None:
+                    raise AssertionError("unexpected interruption coordinates")
+
+            def failed(self, method: str, error_type: str) -> None:
+                raise AssertionError(f"unexpected observer failure: {method}/{error_type}")
+
+        with patch(
+            "playwright.sync_api.sync_playwright",
+            return_value=PlaywrightContext(),
+        ):
+            with self.assertRaisesRegex(StopRequested, "USER_CANCELLED"):
+                _collect_browser_evidence(
+                    plan,
+                    lifecycle_observer=Observer(),
+                    cancel_event=cancellation,
+                )
+
+        self.assertEqual(
+            [
+                "playwright_started",
+                "browser_started",
+                "checkpoint",
+                "interrupt",
+                "playwright.stop",
+            ],
+            calls,
+        )
 
     def test_ownership_hook_failure_is_not_hidden_by_simultaneous_cancel(self) -> None:
         plan = _safe_runtime_plan()

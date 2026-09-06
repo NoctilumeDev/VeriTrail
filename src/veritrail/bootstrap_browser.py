@@ -309,7 +309,7 @@ class _ChromiumResourceObserver:
                 time.sleep(WAIT_SLICE_MS / 1000)
         return pending
 
-    def abort(self) -> None:
+    def abort(self, *, deadline: float | None = None) -> None:
         if self._handles:
             try:
                 total = sum(
@@ -333,7 +333,10 @@ class _ChromiumResourceObserver:
                 except Exception:
                     self.failed("browser-abort-job", "JobTerminationFailed")
                 else:
-                    pending = self._wait_for_process_release(pending)
+                    pending = self._wait_for_process_release(
+                        pending,
+                        deadline=deadline,
+                    )
             try:
                 self._backend.close_handle(self._job)
             except Exception:
@@ -348,6 +351,23 @@ class _ChromiumResourceObserver:
         self._handles.clear()
         self._after_close_observed = True
         self._detached = self._session is None
+
+    def interrupt(self, reason: str, lifecycle_deadline: float | None) -> None:
+        del reason
+        if self._after_close_observed:
+            return
+        # Once the owner has accepted an interruption, synchronous Playwright
+        # close calls no longer own a fresh graceful-shutdown budget.  Invalidating
+        # the CDP session and terminating the owned Job first prevents a blocked
+        # context/browser close from extending the public lifecycle bound.
+        self._session = None
+        self._detached = True
+        deadline = (
+            lifecycle_deadline + BROWSER_RELEASE_TIMEOUT_MS / 1000
+            if lifecycle_deadline is not None
+            else None
+        )
+        self.abort(deadline=deadline)
 
     def result(self, browser: ImportedEvidence) -> ObservedBrowserEvidence:
         values = self._result_values()

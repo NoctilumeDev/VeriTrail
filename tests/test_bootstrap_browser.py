@@ -66,8 +66,8 @@ class _DriverBackend:
 
 
 class _FakeClock:
-    def __init__(self) -> None:
-        self.now = 0.0
+    def __init__(self, now: float = 0.0) -> None:
+        self.now = now
 
     def monotonic(self) -> float:
         return self.now
@@ -234,6 +234,34 @@ class ChromiumResourceObserverTests(unittest.TestCase):
         self.assertLessEqual(clock.now, 0.1)
         self.assertEqual([("owned-job", 1)], backend.terminated)
         self.assertTrue(observer._processes_released)
+
+    def test_interruption_reuses_the_outer_lifecycle_cleanup_deadline(self) -> None:
+        backend = _DriverBackend(signal_after_terminate=False)
+        with patch(
+            "veritrail.bootstrap_browser._create_job",
+            return_value=("owned-job", False, True, True),
+        ):
+            observer = _ChromiumResourceObserver(backend, 512)  # type: ignore[arg-type]
+        observer._handles = {1: object()}
+        observer._session = SimpleNamespace(detach=lambda: None)
+        clock = _FakeClock(now=5.0)
+
+        with (
+            patch(
+                "veritrail.bootstrap_browser.time.monotonic",
+                side_effect=clock.monotonic,
+            ),
+            patch(
+                "veritrail.bootstrap_browser.time.sleep",
+                side_effect=clock.sleep,
+            ),
+        ):
+            observer.interrupt("LIFECYCLE_TIMEOUT", lifecycle_deadline=5.0)
+
+        self.assertLessEqual(clock.now, 8.05)
+        self.assertEqual([("owned-job", 1)], backend.terminated)
+        self.assertTrue(observer._detached)
+        self.assertFalse(observer._processes_released)
 
 
 if __name__ == "__main__":
