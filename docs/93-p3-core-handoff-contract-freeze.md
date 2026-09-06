@@ -1,5 +1,10 @@
 # P3 Core Handoff 合同冻结事实
 
+> 后继状态：本文记录的冻结曾真实成立；P3-A 本地候选实现的组合审查又发现 handoff 核验与 Core 路径
+> 重读之间无法证明同一快照。当前合同已按
+> [第 13.1 节](92-p3-core-handoff-contract.md#131-连续安全读取不等于同一快照)只重开该边界，状态为
+> `P3_CORE_HANDOFF_CONTRACT_0.1_REOPENED / P3_IMPLEMENTATION_PAUSED`。本文不因后继反例而改写历史证据。
+
 > 状态发布目标：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`
 >
 > 状态发布重建基线：`main@befee158da6153ad2774aae7b8772ee3677133d0`
