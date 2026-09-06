@@ -1,6 +1,8 @@
 # P2 Public Render Collector 施工合同 0.1
 
-> 状态：`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`
+> 状态：`P2_CONTRACT_0.1_FROZEN`
+>
+> 后继实现状态：`P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`
 >
 > 精确施工基线：`cdc2c250f21b37a0be9f815295f7b7c3c5081d0d`
 >
@@ -26,7 +28,8 @@
 >
 > 影响层级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`
 >
-> 本轮只冻结公开渲染观察合同；不创建浏览器采集代码，不进入 P3 handoff，不创建标签或 Release
+> 本合同只冻结公开渲染观察语义；后继实现事实见
+> [文档 90](90-p2-public-render-collector-freeze-candidate.md)，P3 handoff、标签与 Release 仍未创建
 
 ## 1. 本轮裁决
 
@@ -856,7 +859,7 @@ Collector 只拥有它实际看见并能按合同保留下来的事实。
    次并观察 console error `2` 次，unexpected read host 为 `0`，三样本正文仍稳定完整。关闭后无
    bundled Chromium 残留。这些 noise 没有被抹掉，也没有被误判为正文失败。
 
-上述闭环只冻结 P2 0.1 合同。当前仍为 `P2_IMPLEMENTATION_NOT_STARTED`；下一步只能从冻结后的新
+上述闭环只冻结 P2 0.1 合同。该阶段仍为 `P2_IMPLEMENTATION_NOT_STARTED`；下一步只能从冻结后的新
 exact-main worktree 进入 `P2_IMPLEMENTING`，不得提前进入 P3、P4 或 Review Attention R1。
 
 ### 18.4 Pages 根坐标反例与合同重开
@@ -885,7 +888,7 @@ target kind。此前未提交的离线实现草案已经撤回，候选保持 do
 导航后 Cookie 为 6，各阻断 telemetry write 2 次、观察 console error 2 次、unexpected read host 为 0；
 关闭后 matching Chromium 进程为 0。noise 没有被抹掉，也没有被解释成正文失败。
 
-该读回只证明 docs-only 修正已进入公开渲染面，不证明 P2 Collector 已实现。状态现恢复为
+该读回只证明 docs-only 修正已进入公开渲染面，不证明 P2 Collector 已实现。该阶段状态恢复为
 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_NOT_STARTED`；下一步必须从本 closure 合入后的新 exact
 main 开始 optional-capability 与 network-budget feasibility 施工，仍不得提前进入 P3、P4 或 R1。
 
@@ -942,7 +945,7 @@ console error 分别为 2/3/2，unexpected read host 均为 0，关闭后 matchi
 0。noise 没有被隐藏，也没有被解释成正文失败。
 
 这次 closure 只重新冻结 response-body 预算合同和 `RA-017` 账本事实，不证明 P2 Collector 已实现。
-当前状态为 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；下一步必须从本 closure
+该阶段状态为 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；下一步必须从本 closure
 合入后的新 exact main 重建实现分支，恢复 optional dependency/preflight 候选，再开始受合同约束的
 response-body budget 与 Collector 施工。P3、P4 与 R1 仍未开始。
 
@@ -1036,6 +1039,6 @@ context；只允许 `GET/HEAD`，从 exact merge SHA 串行观察：
 进程为 0。上述 noise 没有被抹掉，也没有被解释成正文失败。
 
 这次 closure 只重新冻结 literal-marker 投影边界、spec digest 与完整 Plan fixture，不证明 P2 Collector
-已实现。当前状态恢复为 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；下一步必须
+已实现。该阶段状态恢复为 `P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；下一步必须
 从本 closure 合入后的新 exact main 重新绑定既有 P2 feasibility commits，再继续 request
 derivation/URL safety。P3、P4 与 Review Attention R1 仍未开始。

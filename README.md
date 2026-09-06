@@ -55,7 +55,7 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P1 已冻结）
+### 平台证据插件轨（P2 冻结闭环候选）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
 这类外部平台事实建立独立 `P` 轨。P0 设计合同和 P1 实现均已冻结；P1 现有独立源码包、只读 CLI、
@@ -102,14 +102,14 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 [P1 实现与冻结事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)。0.2 修正已通过
 [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
-当前状态为 `P1_FROZEN / P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`。
+当前状态为 `P1_FROZEN / P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE`。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。Pages 根坐标修正冻结后，
-实现前可行性探针又证明 `Network.dataReceived` 的最终计数不能替代实时硬截断；合同现只重开
-response-body 预算的精确计量与 Chromium Fetch 流控制语义。Collector、P3 handoff、标签和 Release
-仍未创建。该修正与 append-only `RA-017` 已经 PR #42 的 11 项门禁、受保护主线和 exact-SHA 匿名
+实现前可行性探针又证明 `Network.dataReceived` 的最终计数不能替代实时硬截断；合同因而只重开
+response-body 预算的精确计量与 Chromium Fetch 流控制语义。该修正与 append-only `RA-017` 已经
+PR #42 的 11 项门禁、受保护主线和 exact-SHA 匿名
 README/合同/Ledger 读回重新冻结，没有反向改写 R0。插件不得预生成“已通过”布尔值、占位实验字段或
 私有比较器绕过 Core。
 
@@ -117,6 +117,13 @@ README/合同/Ledger 读回重新冻结，没有反向改写 R0。插件不得�
 覆盖失败。独立 PR #44 把正常释放与强制终止确认约束在同一个绝对清理 deadline 内，经 11 项门禁后合入
 `main@25ff62f50a01fddc086c41740af802d9c2df0495`；新 exact main 与匿名 README/合同/Ledger 已完成读回，
 本 closure 从该坐标重新生成。该修复不改变 P2 合同范围或冻结含义。
+
+[P2 实现与冻结闭环候选事实](docs/90-p2-public-render-collector-freeze-candidate.md)记录了 fresh anonymous
+Chromium、response-body 硬预算、固定作用域、三样本、Evidence assembly 与 P1 → P2 串行协调的实现。
+候选经 [PR #49](https://github.com/NoctilumeDev/VeriTrail/pull/49) 的 11 项公共门禁合入
+`main@ca6b8aaa33bc06795c96610b9e9085506efef9a0`，随后由产品 Collector 从 exact main 对 README 完成
+desktop/narrow 两次真实读回。P2 仍须等待本 docs-only closure 自身的门禁、合入与匿名读回，才可升级
+为 `P2_FROZEN`；P3、P4 与 Review Attention R1 均未开始。
 
 ### 审查注意力插件轨（R0 架构已冻结）
 
@@ -147,8 +154,8 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
-可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。当前仍为
-`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；该窄修正没有改变 R0 或 P2 范围，也没有启动 R1。
+可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前为
+`P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`；这些后继事实没有改变 R0 范围，也没有启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
@@ -482,6 +489,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention Pattern Ledger 0.1](docs/87-review-pattern-ledger.md)
 - [R0 Review Attention 架构评审与冻结事实](docs/88-r0-review-attention-design-review.md)
 - [P2 Public Render Collector 施工合同 0.1](docs/89-p2-public-render-collector-contract.md)
+- [P2 Public Render Collector 实现与冻结闭环候选事实 0.1](docs/90-p2-public-render-collector-freeze-candidate.md)
 
 ## 项目来源
 
