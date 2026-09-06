@@ -72,6 +72,8 @@ class ResponseBodySnapshot:
     completed_responses: int
     closed_streams: int
     active_streams: int
+    request_stage_pauses: int
+    response_error_reason_counts: dict[str, int]
     failure: str | None
 
 
@@ -132,6 +134,8 @@ class ResponseStageBodyController:
         self._delivered_bytes = 0
         self._completed_responses = 0
         self._closed_streams = 0
+        self._request_stage_pauses = 0
+        self._response_error_reason_counts: dict[str, int] = {}
 
     def install(self) -> None:
         if self._installed:
@@ -181,6 +185,10 @@ class ResponseStageBodyController:
             completed_responses=self._completed_responses,
             closed_streams=self._closed_streams,
             active_streams=len(self._active_streams),
+            request_stage_pauses=self._request_stage_pauses,
+            response_error_reason_counts=dict(
+                self._response_error_reason_counts
+            ),
             failure=type(self._failure).__name__ if self._failure else None,
         )
 
@@ -192,6 +200,34 @@ class ResponseStageBodyController:
                     "P2 response-stage pause omitted its request id"
                 )
             )
+            self._stop_loading()
+            return
+        if "responseStatusCode" not in params:
+            response_error = params.get("responseErrorReason")
+            if response_error is None:
+                self._request_stage_pauses += 1
+                return
+            if not isinstance(response_error, str) or not response_error:
+                self._record_failure(
+                    PublicRenderNetworkError(
+                        "P2 response-stage pause exposed an invalid failure reason"
+                    )
+                )
+                self._fail_request(request_id)
+                self._stop_loading()
+                return
+            self._response_error_reason_counts[response_error] = (
+                self._response_error_reason_counts.get(response_error, 0) + 1
+            )
+            if response_error == "BlockedByClient":
+                return
+            self._record_failure(
+                PublicRenderNetworkError(
+                    "P2 response failed before HTTP headers: "
+                    f"{response_error}"
+                )
+            )
+            self._fail_request(request_id)
             self._stop_loading()
             return
         if self._failure is not None:

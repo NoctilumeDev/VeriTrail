@@ -154,6 +154,86 @@ class ResponseBodyBudgetTests(unittest.TestCase):
 
 
 class ResponseStageBodyControllerTests(unittest.TestCase):
+    def test_request_stage_pause_is_not_mislabeled_as_response_failure(
+        self,
+    ) -> None:
+        session = _MemoryCdpSession()
+        controller = ResponseStageBodyController(session, main_frame_id="main")
+        controller.install()
+
+        session.emit(
+            "Fetch.requestPaused",
+            {
+                "requestId": "request-stage-1",
+                "request": {"method": "GET"},
+            },
+        )
+
+        controller.raise_if_failed()
+        snapshot = controller.snapshot()
+        self.assertEqual(1, snapshot.request_stage_pauses)
+        self.assertEqual(0, snapshot.completed_responses)
+        self.assertNotIn(
+            "Fetch.failRequest",
+            [method for method, _params in session.commands],
+        )
+        controller.close()
+
+    def test_policy_block_before_headers_is_retained_without_page_verdict(
+        self,
+    ) -> None:
+        session = _MemoryCdpSession()
+        controller = ResponseStageBodyController(session, main_frame_id="main")
+        controller.install()
+
+        session.emit(
+            "Fetch.requestPaused",
+            {
+                "requestId": "failed-response-1",
+                "responseErrorReason": "BlockedByClient",
+                "request": {"method": "GET"},
+            },
+        )
+
+        controller.raise_if_failed()
+        snapshot = controller.snapshot()
+        self.assertEqual(
+            {"BlockedByClient": 1},
+            snapshot.response_error_reason_counts,
+        )
+        methods = [method for method, _params in session.commands]
+        self.assertNotIn("Fetch.failRequest", methods)
+        self.assertNotIn("Page.stopLoading", methods)
+        controller.close()
+
+    def test_external_response_error_before_headers_fails_closed(self) -> None:
+        session = _MemoryCdpSession()
+        controller = ResponseStageBodyController(session, main_frame_id="main")
+        controller.install()
+
+        session.emit(
+            "Fetch.requestPaused",
+            {
+                "requestId": "failed-response-2",
+                "responseErrorReason": "ConnectionReset",
+                "request": {"method": "GET"},
+            },
+        )
+
+        with self.assertRaisesRegex(
+            PublicRenderNetworkError, "failed before HTTP headers"
+        ):
+            controller.raise_if_failed()
+        snapshot = controller.snapshot()
+        self.assertEqual(
+            {"ConnectionReset": 1},
+            snapshot.response_error_reason_counts,
+        )
+        methods = [method for method, _params in session.commands]
+        self.assertIn("Fetch.failRequest", methods)
+        self.assertIn("Page.stopLoading", methods)
+        controller.close()
+
     def test_base64_cdp_chunk_is_counted_as_decoded_body_bytes(self) -> None:
         session = _MemoryCdpSession()
         raw_body = b"\x00\xffbinary"
