@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "veritrail-github-evidence"
 version = "0.1.0"
-description = "Read-only GitHub REST evidence collector for VeriTrail AcceptancePlan 0.1"
+description = "Read-only GitHub API and optional public-render evidence collector for VeriTrail"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"

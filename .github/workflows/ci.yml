@@ -347,6 +347,50 @@ jobs:
           veritrail-github-collect --help | Out-Null
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: Add only the explicit render capability
+        shell: pwsh
+        run: |
+          python -m pip install "playwright==1.62.0"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m playwright install chromium
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Start the matching bundled Chromium from site-packages
+        shell: pwsh
+        run: |
+          python -I -c "import os; from pathlib import Path; import veritrail_github.public_render_collector as collector_module; import veritrail_github.public_render_runtime as runtime_module; from veritrail_github.paired_collection import PairedCollectionCoordinator; result = runtime_module.preflight_render_runtime(); workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module_paths = (Path(collector_module.__file__).resolve(), Path(runtime_module.__file__).resolve()); raise SystemExit(0 if all(not path.is_relative_to(workspace) for path in module_paths) and result.playwright_version == '1.62.0' and result.browser_engine == 'CHROMIUM' and result.browser_distribution == 'BUNDLED_MATCHING' and result.browser_version and PairedCollectionCoordinator is not None else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Prove plugin uninstall leaves Core-readable Evidence
+        shell: pwsh
+        run: |
+          $evidencePath = Join-Path '${{ runner.temp }}' 'retained-github-evidence.json'
+          $documents = @(
+            @{
+              schema_version = '0.1'
+              evidence_type = 'platform.github.api.snapshot'
+              source = 'wheel-only:p1'
+              captured_at = '2026-09-06T00:00:00Z'
+              facts = @{}
+              observed_variables = @{}
+              metadata = @{}
+            },
+            @{
+              schema_version = '0.1'
+              evidence_type = 'platform.github.public-render'
+              source = 'wheel-only:p2'
+              captured_at = '2026-09-06T00:00:01Z'
+              facts = @{}
+              observed_variables = @{}
+              metadata = @{}
+            }
+          )
+          $documents | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $evidencePath -Encoding utf8
+          python -m pip uninstall --yes veritrail-github-evidence
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I -c "import json, sys; from importlib.util import find_spec; from pathlib import Path; from veritrail.evidence import import_evidence_document, verify_imported_evidence; documents = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8-sig')); artifacts = [import_evidence_document(document, f'retained-{index}.json') for index, document in enumerate(documents, 1)]; [verify_imported_evidence(artifact) for artifact in artifacts]; raise SystemExit(0 if find_spec('veritrail_github') is None and len(artifacts) == 2 else 1)" $evidencePath
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
   acceptance-core-freeze:
     name: Acceptance Core freeze on Python ${{ matrix.python-version }}
     needs: [python]
