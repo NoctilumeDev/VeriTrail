@@ -201,3 +201,113 @@ Ledger 而制造问题或扩大 P 轨范围。
 
 该记录的解决方向不是“把超时或阈值调大”，而是先拆清计量对象，再选能在响应完成前主动中断的原语。
 P2 当前采用 identity response-body stream 作为有界对象，同时明确不声称测得 HTTP/TLS 线速字节。
+
+## 9. P2 闭环期间追加记录
+
+### RA-018 rev1：升级阶段重复刷新总预算
+
+这条记录来自 P2 文档闭环门禁连续两次暴露的 M10 时序债务。它关注的是预算所有权，不把“每阶段都
+有 timeout”直接判成错误。`record_digest` 对删除该字段后的完整 JSON 按
+`veritrail-json-c14n/1` 计算：
+
+```json
+{
+  "pattern_id": "RA-018",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:ab4863cb5fad5d25e970d530f63df2b3332058dafa41bba24b3260c4d8994e11",
+  "status": "GENERALIZED",
+  "source_coordinate": [
+    "VeriTrail PR #43 head@0950cf8 / Public CI run 34016126981 / Python 3.10 -O",
+    "VeriTrail correction candidate@b043ef8 src/veritrail/bootstrap_browser.py",
+    "VeriTrail correction candidate@b043ef8 tests/test_bootstrap_browser.py"
+  ],
+  "problem_layer": "Execution",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "BudgetSemantics",
+  "suspicious_structure": "One bounded operation gives each graceful, escalation and post-escalation phase a fresh relative timeout even though policy names one overall cleanup budget.",
+  "possible_interpretations": [
+    "Each phase intentionally owns an independent budget and the declared upper bound is their sum.",
+    "The operation owns one end-to-end budget that every phase must share.",
+    "Escalation needs a reserved part of the total budget to confirm cleanup.",
+    "The repeated relative timeout is harmless because every phase is independently bounded by another outer deadline."
+  ],
+  "required_evidence": [
+    "The policy owner and exact scope of the timeout.",
+    "Monotonic timestamps at graceful wait, escalation and cleanup confirmation boundaries.",
+    "A deterministic fake-clock fixture in which owned processes remain live.",
+    "A real loaded-runtime run that verifies stop reason, elapsed time and owned-resource release."
+  ],
+  "minimal_counterexample": "A 5 s lifecycle deadline enters browser cleanup; graceful release waits 3 s, forced Job termination then receives a fresh 3 s wait, so the same operation can exceed a less-than-9 s public bound.",
+  "false_positive_conditions": [
+    "The contract explicitly defines independent per-phase budgets and the public end-to-end bound includes their sum.",
+    "A separate immutable outer deadline prevents every inner reset from extending the operation.",
+    "The second timeout protects a different operation with a distinct authority and observable result."
+  ],
+  "detectable_cues": [
+    "deadline = monotonic() + timeout repeated after escalation",
+    "wait(T); force_terminate(); wait(T)",
+    "retry or cleanup phases accept relative timeouts but no shared absolute deadline",
+    "A public end-to-end timeout is smaller than the sum of nested phase budgets"
+  ],
+  "non_claim": "This pattern does not prove per-phase timeouts are inherently wrong; it asks whether timeout ownership and the externally claimed upper bound are the same operation.",
+  "provenance": "Observed twice on 2026-09-06 in Python 3.10 -O Public CI while closing the P2 contract; a fake clock reproduced 6.02 s of cleanup budget before the shared-deadline correction."
+}
+```
+
+### RA-019 rev1：测试与实现来源坐标错配
+
+这条记录保留一次被主动作废的本地测试结果：测试文件来自当前 worktree，但两个解释器通过各自的
+editable 安装导入了其他 checkout 的生产模块。它要求先证明“测的是谁”，不把所有跨目录导入都
+视为污染：
+
+```json
+{
+  "pattern_id": "RA-019",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:89682dc8f8548c0b9b0ede38598aebaf143b803061ca946d9d20a87dba8b2fc2",
+  "status": "GENERALIZED",
+  "source_coordinate": [
+    "VeriTrail local P2 worktree based on main@55babcf",
+    "Python 3.10 import probe resolved a sibling R0 review worktree",
+    "Python 3.13 import probe resolved the primary VeriTrail checkout",
+    "VeriTrail correction candidate@b043ef8"
+  ],
+  "problem_layer": "Observation",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "EnvironmentProvenance",
+  "suspicious_structure": "Tests are selected from the current checkout while the implementation package is imported through stale editable metadata or path precedence from another checkout.",
+  "possible_interpretations": [
+    "The test deliberately compares two declared immutable coordinates.",
+    "An editable installation still points to an older worktree.",
+    "PYTHONPATH, current directory and package metadata resolve different source roots.",
+    "The imported artifact is intentionally external but its coordinate was omitted from the evidence."
+  ],
+  "required_evidence": [
+    "The resolved test-file path and imported module __file__.",
+    "Interpreter identity, sys.path order and editable-install metadata.",
+    "Exact repository/worktree SHA for both test and implementation sources.",
+    "A rerun with import resolution explicitly bound to the intended source root or immutable wheel."
+  ],
+  "minimal_counterexample": "Production code is modified in checkout A and tests are read from A, but Python imports the production module from editable checkout B; the result is then attributed to A.",
+  "false_positive_conditions": [
+    "Cross-coordinate testing is predeclared and both immutable coordinates are retained.",
+    "The imported wheel or source tree digest is exact and is the intended subject.",
+    "The resolved module path is outside the test checkout by design and the acceptance rule evaluates that explicit pairing."
+  ],
+  "detectable_cues": [
+    "module.__file__ is outside the current checkout",
+    "Multiple worktrees or editable installs of the same distribution are present",
+    "Test changes affect discovery but production changes do not affect behavior",
+    "Different interpreters resolve the same package to different source roots"
+  ],
+  "non_claim": "A path mismatch does not by itself prove the tested implementation is wrong; it makes the evidence attribution invalid until both coordinates are declared and intentionally paired.",
+  "provenance": "Observed 2026-09-06 while validating the M10 cleanup correction: the first local result mixed the current test file with production modules from two other checkouts and was discarded before rerunning with the current worktree src explicitly bound."
+}
+```
+
+这两条模式均未进入 Pattern Corpus，也没有启动 R1。前者要求确认预算的单一 authority，后者要求先
+对齐执行证据的源码身份；二者都只缩小误归因空间，不承诺自动判断现实语义。

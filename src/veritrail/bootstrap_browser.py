@@ -243,7 +243,22 @@ class _ChromiumResourceObserver:
 
     def after_browser_close(self) -> None:
         self._after_close_observed = True
-        pending = self._wait_for_process_release(set(self._handles))
+        release_deadline = (
+            time.monotonic() + BROWSER_RELEASE_TIMEOUT_MS / 1000
+        )
+        # browser.close() is already the graceful shutdown request. Give its
+        # descendants one scheduler slice to publish their exit, then spend
+        # the remainder of the single release budget verifying Job
+        # termination. Waiting the full budget before escalation and then
+        # starting a second full budget made a five-second lifecycle deadline
+        # take more than ten seconds on a loaded Windows runner.
+        graceful_deadline = min(
+            release_deadline,
+            time.monotonic() + WAIT_SLICE_MS / 1000,
+        )
+        pending = self._wait_for_process_release(
+            set(self._handles), deadline=graceful_deadline
+        )
         if pending:
             try:
                 self._backend.win32job.TerminateJobObject(self._job, 1)
@@ -254,7 +269,9 @@ class _ChromiumResourceObserver:
                 # Forced Job termination is an allowed cleanup escalation, but it
                 # only counts as complete after every captured process handle is
                 # observed signalled.
-                pending = self._wait_for_process_release(pending)
+                pending = self._wait_for_process_release(
+                    pending, deadline=release_deadline
+                )
         self._processes_released = not pending
         for handle in self._handles.values():
             try:
@@ -268,8 +285,14 @@ class _ChromiumResourceObserver:
         except Exception:
             self._handles_released = False
 
-    def _wait_for_process_release(self, pending: set[int]) -> set[int]:
-        deadline = time.monotonic() + BROWSER_RELEASE_TIMEOUT_MS / 1000
+    def _wait_for_process_release(
+        self,
+        pending: set[int],
+        *,
+        deadline: float | None = None,
+    ) -> set[int]:
+        if deadline is None:
+            deadline = time.monotonic() + BROWSER_RELEASE_TIMEOUT_MS / 1000
         while pending and time.monotonic() < deadline:
             released: set[int] = set()
             for process_id in pending:

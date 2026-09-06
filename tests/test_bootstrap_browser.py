@@ -13,17 +13,30 @@ from veritrail.errors import SafetyError
 
 
 class _DriverBackend:
-    def __init__(self, *, assignment_fails: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        assignment_fails: bool = False,
+        signal_after_terminate: bool = True,
+    ) -> None:
         self.win32con = SimpleNamespace(
             PROCESS_QUERY_INFORMATION=0x0400,
             PROCESS_VM_READ=0x0010,
         )
         self.win32api = SimpleNamespace(OpenProcess=self.open_process)
-        self.win32job = SimpleNamespace(IsProcessInJob=self.is_process_in_job)
-        self.win32event = SimpleNamespace(WAIT_OBJECT_0=0)
+        self.win32job = SimpleNamespace(
+            IsProcessInJob=self.is_process_in_job,
+            TerminateJobObject=self.terminate_job,
+        )
+        self.win32event = SimpleNamespace(
+            WAIT_OBJECT_0=0,
+            WaitForSingleObject=self.wait_for_single_object,
+        )
         self.assignment_fails = assignment_fails
+        self.signal_after_terminate = signal_after_terminate
         self.assigned = False
         self.closed: list[object] = []
+        self.terminated: list[tuple[object, int]] = []
 
     def open_process(self, access: int, inherit: bool, process_id: int) -> object:
         self.opened = (access, inherit, process_id)
@@ -41,6 +54,26 @@ class _DriverBackend:
 
     def close_handle(self, handle: object) -> None:
         self.closed.append(handle)
+
+    def terminate_job(self, job: object, exit_code: int) -> None:
+        self.terminated.append((job, exit_code))
+
+    def wait_for_single_object(self, handle: object, timeout_ms: int) -> int:
+        del handle, timeout_ms
+        if self.signal_after_terminate and self.terminated:
+            return self.win32event.WAIT_OBJECT_0
+        return 258
+
+
+class _FakeClock:
+    def __init__(self) -> None:
+        self.now = 0.0
+
+    def monotonic(self) -> float:
+        return self.now
+
+    def sleep(self, seconds: float) -> None:
+        self.now += seconds
 
 
 def _playwright_with_driver(process_id: int) -> SimpleNamespace:
@@ -147,6 +180,60 @@ class ChromiumResourceObserverTests(unittest.TestCase):
         self.assertTrue(failure.process_cleanup_complete)
         self.assertIsNone(observer._job)
         self.assertEqual(["owned-job"], backend.closed)
+
+    def test_browser_release_escalation_shares_one_cleanup_deadline(self) -> None:
+        backend = _DriverBackend(signal_after_terminate=False)
+        with patch(
+            "veritrail.bootstrap_browser._create_job",
+            return_value=("owned-job", False, True, True),
+        ):
+            observer = _ChromiumResourceObserver(backend, 512)  # type: ignore[arg-type]
+        observer._handles = {1: object()}
+        observer._session = SimpleNamespace(detach=lambda: None)
+        clock = _FakeClock()
+
+        with (
+            patch(
+                "veritrail.bootstrap_browser.time.monotonic",
+                side_effect=clock.monotonic,
+            ),
+            patch(
+                "veritrail.bootstrap_browser.time.sleep",
+                side_effect=clock.sleep,
+            ),
+        ):
+            observer.after_browser_close()
+
+        self.assertLessEqual(clock.now, 3.05)
+        self.assertEqual([("owned-job", 1)], backend.terminated)
+        self.assertFalse(observer._processes_released)
+
+    def test_browser_release_escalation_observes_terminated_processes(self) -> None:
+        backend = _DriverBackend(signal_after_terminate=True)
+        with patch(
+            "veritrail.bootstrap_browser._create_job",
+            return_value=("owned-job", False, True, True),
+        ):
+            observer = _ChromiumResourceObserver(backend, 512)  # type: ignore[arg-type]
+        observer._handles = {1: object()}
+        observer._session = SimpleNamespace(detach=lambda: None)
+        clock = _FakeClock()
+
+        with (
+            patch(
+                "veritrail.bootstrap_browser.time.monotonic",
+                side_effect=clock.monotonic,
+            ),
+            patch(
+                "veritrail.bootstrap_browser.time.sleep",
+                side_effect=clock.sleep,
+            ),
+        ):
+            observer.after_browser_close()
+
+        self.assertLessEqual(clock.now, 0.1)
+        self.assertEqual([("owned-job", 1)], backend.terminated)
+        self.assertTrue(observer._processes_released)
 
 
 if __name__ == "__main__":
