@@ -77,6 +77,7 @@ class _FakePage:
         self._scope_wait_error = scope_wait_error
         self.events: dict[str, object] = {}
         self.goto_calls = 0
+        self.waited_ms: list[int] = []
 
     def on(self, event: str, handler: object) -> None:
         self.events[event] = handler
@@ -94,6 +95,9 @@ class _FakePage:
             raise self._scope_wait_error
         if self._scope_count == 0:
             raise TimeoutError("scope absent")
+
+    def wait_for_timeout(self, delay_ms: int) -> None:
+        self.waited_ms.append(delay_ms)
 
     def locator(self, _selector: str) -> _FakeLocator:
         return _FakeLocator(self._scope_count)
@@ -289,6 +293,7 @@ class RenderBrowserSessionTests(unittest.TestCase):
                 snapshot.post_navigation_state["cookie_count"], 1
             )
             self.assertEqual(snapshot.conflicts, ())
+            self.assertEqual(snapshot.main_frame_responses, ())
             self.assertEqual(
                 snapshot.response_bodies,
                 {
@@ -413,6 +418,48 @@ class RenderBrowserSessionTests(unittest.TestCase):
             self.assertEqual(context.page.goto_calls, 0)
         finally:
             session.close()
+
+    def test_policy_delay_is_exact_and_cannot_cross_absolute_window(self) -> None:
+        manager, _browser, context, _playwright = _fakes()
+        clock = _Clock()
+        session = RenderBrowserSession(
+            _request(),
+            playwright_factory=lambda: manager,
+            runtime_preflight=_FakePreflight,
+            monotonic=clock,
+        ).open()
+        try:
+            session.wait_for_policy_delay(0)
+            session.wait_for_policy_delay(500)
+            self.assertEqual(context.page.waited_ms, [500])
+            clock.now = 44.999
+            with self.assertRaises(RenderDeadlineExceeded):
+                session.wait_for_policy_delay(500)
+            self.assertEqual(context.page.waited_ms, [500])
+        finally:
+            session.close()
+
+    def test_main_frame_response_after_goto_is_a_stability_conflict(self) -> None:
+        manager, _browser, context, _playwright = _fakes()
+        with RenderBrowserSession(
+            _request(),
+            playwright_factory=lambda: manager,
+            runtime_preflight=_FakePreflight,
+        ) as session:
+            session.navigate()
+            request = _FakeRequest(
+                "https://github.com/NoctilumeDev/VeriTrail",
+                context.page.main_frame,
+            )
+            response = _FakeResponse(request, status=200)
+            request._response = response
+            context.page.events["response"](response)
+            conflicts = session.stability_navigation_conflicts()
+            self.assertEqual(
+                conflicts[0]["code"],
+                "MAIN_FRAME_NAVIGATED_DURING_STABILITY",
+            )
+            self.assertEqual(conflicts[0]["responses"][0]["http_status"], 200)
 
     def test_cleanup_failure_is_recorded_without_stopping_reverse_cleanup(self) -> None:
         manager, browser, context, playwright = _fakes()

@@ -66,6 +66,7 @@ class BrowserSessionSnapshot:
     navigation: BrowserNavigationSnapshot | None
     scope: FixedScopeSnapshot | None
     response_bodies: dict[str, Any] | None
+    main_frame_responses: tuple[dict[str, Any], ...]
     network: tuple[dict[str, Any], ...]
     conflicts: tuple[dict[str, Any], ...]
     cleanup_errors: tuple[str, ...]
@@ -206,6 +207,8 @@ class RenderBrowserSession:
         self._scope_locator = None
         self._network_policy: PublicRenderNetworkPolicy | None = None
         self._network_records: list[dict[str, Any]] = []
+        self._main_frame_responses: list[dict[str, Any]] = []
+        self._stability_response_baseline = 0
         self._conflicts: list[dict[str, Any]] = []
         self._cleanup_errors: list[str] = []
         self._opened = False
@@ -243,7 +246,7 @@ class RenderBrowserSession:
             self._playwright = self._playwright_manager.start()
             self._browser = self._playwright.chromium.launch(
                 headless=self._policy["headless"],
-                timeout=self._operation_timeout_ms(
+                timeout=self.bounded_timeout_ms(
                     self._policy["navigation_timeout_ms"]
                 ),
             )
@@ -257,6 +260,7 @@ class RenderBrowserSession:
             self._page = self._context.new_page()
             self._context.on("page", self._reject_unexpected_page)
             self._page.on("download", self._reject_download)
+            self._page.on("response", self._record_main_frame_response)
             self._cdp_session = self._context.new_cdp_session(self._page)
             main_frame_id = _main_frame_id(self._cdp_session)
             response_policy = ResponseBodyPolicy(
@@ -291,7 +295,7 @@ class RenderBrowserSession:
             response = self._page.goto(
                 self._target_url,
                 wait_until="domcontentloaded",
-                timeout=self._operation_timeout_ms(
+                timeout=self.bounded_timeout_ms(
                     self._policy["navigation_timeout_ms"]
                 ),
             )
@@ -335,6 +339,7 @@ class RenderBrowserSession:
         self._post_state = post_navigation_storage_summary(
             self._context.storage_state(indexed_db=True)
         )
+        self._stability_response_baseline = len(self._main_frame_responses)
         return self._navigation
 
     def locate_fixed_scope(self) -> FixedScopeSnapshot | None:
@@ -362,7 +367,7 @@ class RenderBrowserSession:
             self._page.wait_for_selector(
                 selector,
                 state="attached",
-                timeout=self._operation_timeout_ms(self._policy["scope_timeout_ms"]),
+                timeout=self.bounded_timeout_ms(self._policy["scope_timeout_ms"]),
             )
         except Exception as error:
             self._check_deadline()
@@ -400,6 +405,78 @@ class RenderBrowserSession:
         self._check_deadline()
         self._raise_body_failure()
 
+    def stability_navigation_conflicts(self) -> tuple[dict[str, Any], ...]:
+        """Retain main-frame changes observed after the initial goto completed."""
+
+        if self._navigation is None or self._page is None:
+            raise PublicRenderBrowserError(
+                "P2 navigation must precede stability checks"
+            )
+        conflicts: list[dict[str, Any]] = []
+        later_responses = self._main_frame_responses[
+            self._stability_response_baseline :
+        ]
+        if later_responses:
+            conflicts.append(
+                {
+                    "code": "MAIN_FRAME_NAVIGATED_DURING_STABILITY",
+                    "responses": copy.deepcopy(later_responses),
+                }
+            )
+        current_url = safe_public_url_facts(self._page.url)
+        if current_url != self._navigation.final_url:
+            conflicts.append(
+                {
+                    "code": "FINAL_URL_CHANGED_DURING_STABILITY",
+                    "initial": copy.deepcopy(self._navigation.final_url),
+                    "observed": current_url,
+                }
+            )
+        return tuple(conflicts)
+
+    def bounded_timeout_ms(self, requested_ms: int) -> int:
+        """Bind one browser operation to the existing absolute session window."""
+
+        if (
+            isinstance(requested_ms, bool)
+            or not isinstance(requested_ms, int)
+            or requested_ms < 1
+        ):
+            raise PublicRenderBrowserError(
+                "P2 browser operation timeout must be a positive integer"
+            )
+        self._check_deadline()
+        if self._deadline is None:
+            raise PublicRenderBrowserError(
+                "P2 browser session deadline has not been initialized"
+            )
+        remaining_ms = max(
+            1, math.ceil((self._deadline - self._monotonic()) * 1000)
+        )
+        return min(requested_ms, remaining_ms)
+
+    def wait_for_policy_delay(self, delay_ms: int) -> None:
+        """Wait an exact frozen delay without refreshing or shortening the window."""
+
+        if (
+            isinstance(delay_ms, bool)
+            or not isinstance(delay_ms, int)
+            or delay_ms < 0
+        ):
+            raise PublicRenderBrowserError(
+                "P2 browser policy delay must be a non-negative integer"
+            )
+        if delay_ms == 0:
+            self.assert_healthy()
+            return
+        available_ms = self.bounded_timeout_ms(delay_ms)
+        if available_ms < delay_ms:
+            raise RenderDeadlineExceeded(
+                "P2 collection window cannot contain the required policy delay"
+            )
+        self.page.wait_for_timeout(delay_ms)
+        self.assert_healthy()
+
     def snapshot(self) -> BrowserSessionSnapshot:
         response_bodies = (
             asdict(self._body_controller.snapshot())
@@ -413,6 +490,9 @@ class RenderBrowserSession:
             navigation=self._navigation,
             scope=self._scope,
             response_bodies=response_bodies,
+            main_frame_responses=tuple(
+                copy.deepcopy(self._main_frame_responses)
+            ),
             network=tuple(copy.deepcopy(self._network_records)),
             conflicts=tuple(copy.deepcopy(self._conflicts)),
             cleanup_errors=tuple(self._cleanup_errors),
@@ -436,15 +516,6 @@ class RenderBrowserSession:
                 getattr(resource, method)()
             except Exception:
                 self._cleanup_errors.append(f"{label}:close-failed")
-
-    def _operation_timeout_ms(self, requested_ms: int) -> int:
-        self._check_deadline()
-        if self._deadline is None:
-            raise PublicRenderBrowserError(
-                "P2 browser session deadline has not been initialized"
-            )
-        remaining_ms = max(1, math.ceil((self._deadline - self._monotonic()) * 1000))
-        return min(requested_ms, remaining_ms)
 
     def _check_deadline(self) -> None:
         if self._deadline is not None and self._monotonic() >= self._deadline:
@@ -540,6 +611,31 @@ class RenderBrowserSession:
             download.cancel()
         except Exception:
             self._cleanup_errors.append("download:cancel-failed")
+
+    def _record_main_frame_response(self, response: Any) -> None:
+        try:
+            request = response.request
+            if (
+                self._page is None
+                or not request.is_navigation_request()
+                or request.frame != self._page.main_frame
+            ):
+                return
+            status = response.status
+            if isinstance(status, bool) or not isinstance(status, int):
+                raise PublicRenderBrowserError(
+                    "P2 main-frame response status is invalid"
+                )
+            self._main_frame_responses.append(
+                {
+                    "url": safe_public_url_facts(request.url),
+                    "http_status": status,
+                }
+            )
+        except Exception:
+            self._conflicts.append(
+                {"code": "MAIN_FRAME_RESPONSE_HANDLER_FAILED"}
+            )
 
     def _raise_body_failure(self) -> None:
         if self._body_controller is not None:
