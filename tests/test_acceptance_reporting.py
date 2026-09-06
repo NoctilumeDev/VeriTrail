@@ -7,10 +7,16 @@ import json
 import sqlite3
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
+from unittest import mock
 
 from veritrail.acceptance_plan import seal_acceptance_plan
-from veritrail.acceptance_reporting import create_acceptance_bundle
+from veritrail.acceptance_evaluation import evaluate_acceptance
+from veritrail.acceptance_reporting import (
+    create_acceptance_bundle,
+    create_acceptance_bundle_from_imported,
+)
 from veritrail.batching import (
     BatchError,
     create_batch_analysis_bundle,
@@ -21,7 +27,9 @@ from veritrail.canonical import canonical_json_bytes
 from veritrail.catalog import build_catalog, load_catalog_snapshot
 from veritrail.cli import main
 from veritrail.comparison import ComparisonError, create_comparison_bundle
-from veritrail.errors import SafetyError
+from veritrail.errors import SafetyError, ValidationError
+from veritrail.evidence import import_evidence_document, import_evidence_files
+from veritrail.resource_limits import MAX_ARTIFACT_BYTES
 from veritrail.pairing import (
     PairingError,
     create_paired_analysis_bundle,
@@ -109,6 +117,104 @@ class AcceptanceReportingTests(unittest.TestCase):
                     acceptance_id="acceptance-002",
                     execution_status="COMPLETED",
                 )
+
+    def test_path_and_imported_snapshot_entries_create_the_same_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan_path, evidence_paths = self._write_inputs(root)
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            imported, duplicates = import_evidence_files(
+                evidence_paths, MAX_ARTIFACT_BYTES
+            )
+            self.assertEqual([], duplicates)
+            fixed_now = datetime(2026, 9, 6, 0, 0, 0, tzinfo=timezone.utc)
+
+            with mock.patch("veritrail.acceptance_reporting.datetime") as clock:
+                clock.now.return_value = fixed_now
+                path_report = create_acceptance_bundle(
+                    plan=plan,
+                    evidence_paths=evidence_paths,
+                    output=root / "path-bundle",
+                    acceptance_id="acceptance-equivalence",
+                    execution_status="COMPLETED",
+                )
+                imported_report = create_acceptance_bundle_from_imported(
+                    plan=plan,
+                    imported_evidence=imported,
+                    output=root / "imported-bundle",
+                    acceptance_id="acceptance-equivalence",
+                    execution_status="COMPLETED",
+                )
+
+            self.assertEqual(path_report, imported_report)
+            path_files = {
+                path.relative_to(root / "path-bundle"): path.read_bytes()
+                for path in (root / "path-bundle").rglob("*")
+                if path.is_file()
+            }
+            imported_files = {
+                path.relative_to(root / "imported-bundle"): path.read_bytes()
+                for path in (root / "imported-bundle").rglob("*")
+                if path.is_file()
+            }
+            self.assertEqual(path_files, imported_files)
+
+    def test_imported_snapshot_mutation_fails_before_bundle_publication(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan = seal_acceptance_plan(acceptance_plan())
+            artifact = acceptance_artifact(
+                plan, "api-spec", facts={"commit_sha": "candidate-001"}
+            )
+            artifact.document["facts"]["commit_sha"] = "mutated"
+            output = root / "must-not-exist"
+
+            with self.assertRaisesRegex(ValidationError, "changed after hashing"):
+                create_acceptance_bundle_from_imported(
+                    plan=plan,
+                    imported_evidence=[artifact],
+                    output=output,
+                    acceptance_id="acceptance-mutated-import",
+                    execution_status="COMPLETED",
+                )
+
+            self.assertFalse(output.exists())
+            self.assertEqual([], list(root.glob(".veritrail-acceptance-*")))
+
+    def test_imported_snapshot_entry_passes_the_same_object_to_evaluation(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan = seal_acceptance_plan(acceptance_plan())
+            artifact = acceptance_artifact(
+                plan, "api-spec", facts={"commit_sha": "candidate-001"}
+            )
+
+            with mock.patch(
+                "veritrail.acceptance_reporting.evaluate_acceptance",
+                wraps=evaluate_acceptance,
+            ) as evaluator:
+                create_acceptance_bundle_from_imported(
+                    plan=plan,
+                    imported_evidence=[artifact],
+                    output=root / "bundle",
+                    acceptance_id="acceptance-object-identity",
+                    execution_status="COMPLETED",
+                )
+
+            evaluated = evaluator.call_args.args[1]
+            self.assertIs(artifact, evaluated[0])
+
+    def test_importer_owns_nested_input_before_snapshot_handoff(self) -> None:
+        document = {
+            "schema_version": "0.1",
+            "evidence_type": "automated.test-summary",
+            "source": "owned-copy-test",
+            "captured_at": "2026-09-06T00:00:00Z",
+            "facts": {"nested": {"value": "original"}},
+        }
+        artifact = import_evidence_document(document, "owned-copy.json")
+        document["facts"]["nested"]["value"] = "caller-mutated"
+        self.assertEqual("original", artifact.document["facts"]["nested"]["value"])
 
     def test_explicit_cli_round_trip_and_legacy_cli_rejection(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

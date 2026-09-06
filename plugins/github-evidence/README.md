@@ -1,15 +1,24 @@
 # VeriTrail GitHub Evidence Plugin
 
-This package contains two independently bounded, read-only capabilities:
+This package contains independently bounded, read-only capabilities:
 
 - the base P1 Structured GitHub API Collector; and
-- the optional P2 GitHub Public Render Collector.
+- the optional P2 GitHub Public Render Collector; and
+- the offline P3 handoff manifest contract, create-new publisher, and exact
+  snapshot verifier.
 
 Both derive sealed observation requests from a VeriTrail `AcceptancePlan 0.1`,
 retain source-specific facts, and emit separate standard VeriTrail
 `Evidence 0.1` artifacts. P1 reads selected GitHub REST projections. P2 observes
 fixed public GitHub render surfaces through an explicitly installed, matching
 Chromium runtime.
+
+The P3 manifest remains a thin artifact-selection boundary. Its publisher
+retains paired side outcomes without copying Plan, session, coverage, facts, or
+Verdict-like fields. Its verifier safely imports each selected Evidence file
+once, checks the canonical Evidence digest and collector role, and returns those
+same Core-owned `ImportedEvidence` snapshots. It does not interpret Plan/spec
+binding, session integrity, coverage, assertions, or Verdict.
 
 The package does not modify GitHub, evaluate acceptance assertions, join P1 and
 P2 facts, or import VeriTrail private implementation symbols. VeriTrail Core,
@@ -20,6 +29,7 @@ See the repository-level contracts before using or changing these capabilities:
 
 - [`docs/83-p1-structured-github-api-collector-contract.md`](../../docs/83-p1-structured-github-api-collector-contract.md)
 - [`docs/89-p2-public-render-collector-contract.md`](../../docs/89-p2-public-render-collector-contract.md)
+- [`docs/92-p3-core-handoff-contract.md`](../../docs/92-p3-core-handoff-contract.md)
 
 ## Reference vertical slice
 
@@ -57,7 +67,7 @@ capability boundary, never downloads a browser at runtime, and never falls back
 to a system browser.
 
 P2 is intentionally imported from its explicit capability modules rather than
-the P1-only top-level package surface:
+the browser-free P1/P3-contract top-level package surface:
 
 ```python
 from pathlib import Path
@@ -78,3 +88,15 @@ publish_evidence(Path("github-render-evidence.json"), result.artifact)
 The thin paired coordinator can give one P1 and one P2 collection a shared,
 plugin-created session identity and fixed P1-then-P2 order. It still publishes
 two Evidence files and never turns correlation into an atomic-snapshot claim.
+
+The P3 reference lab then publishes one thin handoff manifest, imports each
+selected Evidence file exactly once, and gives those same snapshots to the Core
+Bundle API. The plugin never computes a Verdict. The committed positive and
+single-wrong-expectation Plans are executable compatibility vectors:
+
+- [`tests/fixtures/p3-acceptance-plan-pass.json`](tests/fixtures/p3-acceptance-plan-pass.json)
+- [`tests/fixtures/p3-acceptance-plan-wrong-expectation.json`](tests/fixtures/p3-acceptance-plan-wrong-expectation.json)
+
+The synthetic lab proves `PASS`, `FAIL`, `INCONCLUSIVE`, and `PENDING` by
+changing one declared variable at a time while retaining immutable Plan,
+Evidence, handoff, and Bundle artifacts for each case.

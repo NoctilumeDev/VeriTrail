@@ -8,6 +8,15 @@ from veritrail_github.contracts import (
     facts_digest,
     validate_observation_request,
 )
+from veritrail_github.handoff_contracts import (
+    handoff_manifest_digest,
+    validate_handoff_manifest,
+)
+from veritrail_github.handoff import (
+    build_handoff_manifest,
+    import_verified_handoff_evidence,
+    publish_handoff_manifest,
+)
 from veritrail_github.publisher import publish_evidence
 from veritrail_github.transport import UrllibTransport
 
@@ -16,10 +25,15 @@ __all__ = [
     "DEFAULT_COLLECTOR_POLICY",
     "GitHubCollector",
     "UrllibTransport",
+    "build_handoff_manifest",
     "derive_observation_request",
     "facts_digest",
+    "handoff_manifest_digest",
+    "import_verified_handoff_evidence",
     "publish_evidence",
+    "publish_handoff_manifest",
     "validate_observation_request",
+    "validate_handoff_manifest",
     "verify_github_evidence",
 ]
 

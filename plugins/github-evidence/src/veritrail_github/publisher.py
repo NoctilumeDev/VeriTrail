@@ -7,18 +7,20 @@ from pathlib import Path
 from veritrail.canonical import canonical_json_bytes
 from veritrail.evidence import ImportedEvidence, verify_imported_evidence
 
-from veritrail_github.errors import CollectionError
+from veritrail_github.errors import CollectionError, GitHubEvidenceError
 
 
-def publish_evidence(path: Path, artifact: ImportedEvidence) -> None:
-    """Create a complete Evidence file atomically without overwriting a target."""
-
-    verify_imported_evidence(artifact)
+def _publish_bytes_create_new(
+    path: Path,
+    payload: bytes,
+    *,
+    label: str,
+    error_type: type[GitHubEvidenceError] = CollectionError,
+) -> None:
     if path.exists():
-        raise CollectionError(f"refusing to overwrite existing Evidence: {path.name}")
+        raise error_type(f"refusing to overwrite existing {label}: {path.name}")
     path.parent.mkdir(parents=True, exist_ok=True)
     staging = path.parent / f".{path.name}.{secrets.token_hex(8)}.staging"
-    payload = canonical_json_bytes(artifact.document) + b"\n"
     try:
         with staging.open("xb") as handle:
             handle.write(payload)
@@ -27,15 +29,23 @@ def publish_evidence(path: Path, artifact: ImportedEvidence) -> None:
         try:
             os.link(staging, path)
         except FileExistsError as exc:
-            raise CollectionError(
-                f"refusing to overwrite existing Evidence: {path.name}"
+            raise error_type(
+                f"refusing to overwrite existing {label}: {path.name}"
             ) from exc
         except OSError as exc:
-            raise CollectionError(
-                "atomic create-new Evidence publish is unavailable"
+            raise error_type(
+                f"atomic create-new {label} publish is unavailable"
             ) from exc
     finally:
         try:
             staging.unlink()
         except FileNotFoundError:
             pass
+
+
+def publish_evidence(path: Path, artifact: ImportedEvidence) -> None:
+    """Create a complete Evidence file atomically without overwriting a target."""
+
+    verify_imported_evidence(artifact)
+    payload = canonical_json_bytes(artifact.document) + b"\n"
+    _publish_bytes_create_new(path, payload, label="Evidence")

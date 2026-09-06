@@ -1,0 +1,24 @@
+{
+  "schema_version": "0.1",
+  "manifest_kind": "GITHUB_EVIDENCE_HANDOFF",
+  "collection_order": [
+    "github-api",
+    "github-public-render"
+  ],
+  "sides": [
+    {
+      "collector_role": "github-api",
+      "state": "PUBLISHED",
+      "evidence_path": "github-api-evidence.json",
+      "evidence_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "error_code": null
+    },
+    {
+      "collector_role": "github-public-render",
+      "state": "PUBLISHED",
+      "evidence_path": "github-public-render-evidence.json",
+      "evidence_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "error_code": null
+    }
+  ]
+}

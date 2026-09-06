@@ -104,6 +104,14 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+      - name: Upload the checkout-free P3 wheel probe
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: p3-wheel-probe-${{ matrix.python-version }}
+          path: scripts/p3_wheel_probe.py
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Build the independent Starter wheel
         run: python -m pip wheel --no-deps --wheel-dir dist ./starter
 
@@ -322,6 +330,12 @@ jobs:
           name: github-evidence-wheel-${{ matrix.python-version }}
           path: ${{ runner.temp }}/github-evidence-plugin-wheel
 
+      - name: Download the checkout-free P3 wheel probe
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: p3-wheel-probe-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/p3-wheel-probe
+
       - name: Prove the workspace has no repository checkout
         shell: pwsh
         run: |
@@ -342,10 +356,23 @@ jobs:
           if ($plugin.Count -ne 1) { throw "expected one plugin wheel, found $($plugin.Count)" }
           python -m pip install --no-deps $core[0].FullName $plugin[0].FullName
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -I -c "from importlib.util import find_spec; from veritrail.canonical import sha256_json; from veritrail_github import GitHubCollector, UrllibTransport, __version__; collector = GitHubCollector(UrllibTransport()); raise SystemExit(0 if find_spec('playwright') is None and collector is not None and __version__ == '0.1.0' and sha256_json({}) == '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a' else 1)"
+          python -I -c "from importlib.util import find_spec; from veritrail.canonical import sha256_json; from veritrail_github import GitHubCollector, UrllibTransport, __version__, import_verified_handoff_evidence, publish_handoff_manifest; collector = GitHubCollector(UrllibTransport()); raise SystemExit(0 if find_spec('playwright') is None and collector is not None and callable(import_verified_handoff_evidence) and callable(publish_handoff_manifest) and __version__ == '0.1.0' and sha256_json({}) == '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a' else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           veritrail-github-collect --help | Out-Null
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Create a P3 AcceptanceBundle from installed base wheels
+        shell: pwsh
+        run: |
+          $probe = Join-Path '${{ runner.temp }}/p3-wheel-probe' 'p3_wheel_probe.py'
+          $output = Join-Path '${{ runner.temp }}' 'p3-wheel-probe-output'
+          python -I $probe prepare --output $output
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if (-not (Test-Path -LiteralPath (Join-Path $output 'p3-bundle/acceptance-report.json'))) {
+            throw 'P3 wheel probe did not publish an AcceptanceBundle'
+          }
+          "P3_WHEEL_PROBE=$probe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "P3_WHEEL_PROBE_OUTPUT=$output" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Add only the explicit render capability
         shell: pwsh
@@ -389,6 +416,8 @@ jobs:
           python -m pip uninstall --yes veritrail-github-evidence
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -I -c "import json, sys; from importlib.util import find_spec; from pathlib import Path; from veritrail.evidence import import_evidence_document, verify_imported_evidence; documents = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8-sig')); artifacts = [import_evidence_document(document, f'retained-{index}.json') for index, document in enumerate(documents, 1)]; [verify_imported_evidence(artifact) for artifact in artifacts]; raise SystemExit(0 if find_spec('veritrail_github') is None and len(artifacts) == 2 else 1)" $evidencePath
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I $env:P3_WHEEL_PROBE verify --output $env:P3_WHEEL_PROBE_OUTPUT
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
   acceptance-core-freeze:

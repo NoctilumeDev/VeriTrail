@@ -19,3 +19,7 @@ class TransportError(GitHubEvidenceError):
 
 class CollectionError(GitHubEvidenceError):
     """The bounded collection could not produce a trustworthy artifact."""
+
+
+class HandoffError(GitHubEvidenceError):
+    """An exact P3 handoff artifact could not be published or trusted."""
