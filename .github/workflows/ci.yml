@@ -117,7 +117,7 @@ jobs:
         shell: pwsh
         run: |
           $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.0-py3-none-any.whl'
-          curl.exe --fail --location --retry 3 --output $coreWheel `
+          curl.exe --fail --location --retry 3 --retry-all-errors --retry-delay 2 --retry-max-time 60 --output $coreWheel `
             'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.0/veritrail-0.12.0-py3-none-any.whl'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $expected = 'd0293f06e6a2b0271870ce032b2197c6ef7956db0ff3889230ca48234ff2fa45'
@@ -143,7 +143,7 @@ jobs:
             $tag = $asset[0]
             $name = $asset[1]
             $url = "https://github.com/NoctilumeDev/VeriTrail/releases/download/$tag/$name"
-            curl.exe --fail --location --retry 3 --output (Join-Path $assetRoot $name) $url
+            curl.exe --fail --location --retry 3 --retry-all-errors --retry-delay 2 --retry-max-time 60 --output (Join-Path $assetRoot $name) $url
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
           "VERITRAIL_E1_ASSETS=$assetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
@@ -480,7 +480,7 @@ jobs:
         shell: pwsh
         run: |
           $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.0-py3-none-any.whl'
-          curl.exe --fail --location --retry 3 --output $coreWheel `
+          curl.exe --fail --location --retry 3 --retry-all-errors --retry-delay 2 --retry-max-time 60 --output $coreWheel `
             'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.0/veritrail-0.12.0-py3-none-any.whl'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $coreExpected = 'd0293f06e6a2b0271870ce032b2197c6ef7956db0ff3889230ca48234ff2fa45'
@@ -504,7 +504,7 @@ jobs:
             $expected = $asset[2]
             $target = Join-Path $assetRoot $name
             $url = "https://github.com/NoctilumeDev/VeriTrail/releases/download/$tag/$name"
-            curl.exe --fail --location --retry 3 --output $target $url
+            curl.exe --fail --location --retry 3 --retry-all-errors --retry-delay 2 --retry-max-time 60 --output $target $url
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             $observed = (Get-FileHash -Algorithm SHA256 -LiteralPath $target).Hash.ToLowerInvariant()
             if ($observed -ne $expected) { throw "$name digest drifted: $observed" }
