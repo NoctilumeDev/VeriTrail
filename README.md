@@ -102,7 +102,8 @@ rulesets 与 classic branch protection 被误建模为 fallback，因此 0.2 只
 [P1 实现与冻结事实](docs/84-p1-structured-github-api-collector-freeze-candidate.md)。0.2 修正已通过
 [PR #32](https://github.com/NoctilumeDev/VeriTrail/pull/32) 的 11 项门禁，合入
 `main@5b363637f59be9786d58eed61a14e3bd663dd6d8`，并完成精确主线与匿名 README/事实文档读回。
-当前状态为 `P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_CANDIDATE / P3_IMPLEMENTATION_NOT_STARTED`。
+本状态发布声明为 `P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`；
+P3 合同冻结只在其状态发布补丁自身的门禁、合入和合入后精确匿名读回全部成立后生效。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -131,10 +132,12 @@ desktop/narrow 两次真实读回。docs-only closure 又经 PR #50 的 11 项�
 `RA-018 rev2` Ledger 读回。本状态发布以自身 11 项门禁、受保护主线合入和合入后匿名读回为生效
 条件；该链成立后 P2 至此冻结。P3 实现、P4 与 Review Attention R1 均未开始。
 
-[P3 Core Handoff 与真实正负链合同](docs/92-p3-core-handoff-contract.md)现已进入 0.1 文档候选：它只定义
+[P3 Core Handoff 与真实正负链合同](docs/92-p3-core-handoff-contract.md)及其
+[冻结事实](docs/93-p3-core-handoff-contract-freeze.md)只定义
 P1/P2 标准 Evidence 如何通过精确 role/path/digest 清单交给现有 Acceptance Core，以及
 `PASS / FAIL / INCONCLUSIVE / PENDING` 四条真实正负链如何留证。插件仍不拼接 facts、不判断 coverage、
-不复制 Plan/session 权威、不输出 Verdict；合同完成独立冻结闭环前，P3 实现仍未开始。
+不复制 Plan/session 权威、不输出 Verdict。合同冻结只授权从新的 exact main 串行开始 P3-A；当前仍没有
+P3 manifest Schema、publisher、reference lab、示例 Plan 或 AcceptanceBundle 实现。
 
 P1/P2 在开放世界施工中形成的可复用边界另见
 [受约束的开放世界观察方法](docs/91-bounded-open-world-observation-method.md)。它把平台适配、运行时
@@ -175,7 +178,7 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
 可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前为
-`P2_FROZEN / P3_CONTRACT_0.1_CANDIDATE / P3_IMPLEMENTATION_NOT_STARTED`；这些后继事实没有改变 R0
+`P2_FROZEN / P3_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`；这些后继事实没有改变 R0
 范围，也没有启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
@@ -513,6 +516,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P2 Public Render Collector 实现与冻结事实 0.1](docs/90-p2-public-render-collector-freeze-candidate.md)
 - [受约束的开放世界观察方法 0.1](docs/91-bounded-open-world-observation-method.md)
 - [P3 Core Handoff 与真实正负链合同 0.1](docs/92-p3-core-handoff-contract.md)
+- [P3 Core Handoff 合同冻结事实](docs/93-p3-core-handoff-contract-freeze.md)
 
 ## 项目来源
 

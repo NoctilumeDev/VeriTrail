@@ -348,7 +348,12 @@ analysis 与 attention ranking 分权。该说明不修改已冻结 R0 Artifact�
 文档 92 从 `main@3e785d197c8040c8baa4120fc63301eb347e5bc8` 新开 P3 合同候选。它不新增 Collector，
 只定义 P1/P2 标准 Evidence、仅绑定 role/path/digest 的极薄 handoff manifest 与现有 Acceptance Core 的
 串行交接，并把 Plan binding、session integrity 与 Verdict 权留在 Core；同时冻结四态正负链、身份、
-失败、安装和真实 GitHub 验收边界。候选合入、exact-main 与匿名公开读回、
-docs-only closure 全部成立前，P3 实现保持未开始。
+失败、安装和真实 GitHub 验收边界。PR #55 的原始 11 项门禁与候选合入后，匿名产品读回发现 P 轨
+路线图因 GitHub Mermaid 子框架导航稳定得到有界 `PARTIAL`，而不是旧冻结门假定的 `COMPLETE`。
+PR #56 没有删除 Mermaid 或放宽 P2，只把这一现实边界写回合同；其原始 11 项门禁全部通过并以
+`main@9eb630c1c502cbae0f76c3e783084c412792bba1` 合入。文档 93 保留候选、修正、失败观察与修正后
+exact-main 匿名读回，作为独立 docs-only 状态发布；其自身门禁、合入和读回全部成立后，状态为
+`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`，下一步只能从新的 exact main
+串行开始 P3-A。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
