@@ -257,6 +257,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention Pattern Ledger 0.1](87-review-pattern-ledger.md)
 - [R0 Review Attention 架构评审与冻结事实](88-r0-review-attention-design-review.md)
 - [P2 Public Render Collector 施工合同 0.1](89-p2-public-render-collector-contract.md)
+- [P2 Public Render Collector 实现与冻结闭环候选事实 0.1](90-p2-public-render-collector-freeze-candidate.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -305,10 +306,13 @@ GitHub 纵向切片；Freeze 前发现 rulesets 与 classic branch protection �
 `cdc2c250f21b37a0be9f815295f7b7c3c5081d0d` 定义 P2 0.1，随后经 PR #38 最终 11 项门禁、受保护主线
 合入与 exact-SHA 匿名 Render 读回固定在 `main@8c624ec3aa83fe462e3578d8aa215e8ef9908332`。默认 Pages
 根坐标反例随后经 PR #40 的 11 项门禁、受保护主线合入和 exact-SHA 匿名 Render 读回，将空
-`pages_path` 冻结为站点根 `/` 的唯一表示。当前为
-completion-time Network 计数不能冒充 response-body 硬截断；该精确计量与 Chromium Fetch 流控制修正
-已由 PR #42 的 11 项门禁、受保护主线与 exact-SHA 匿名 README/合同/Ledger 读回重新冻结。当前为
-`P2_CONTRACT_0.1_FROZEN / P2_IMPLEMENTATION_FEASIBILITY_ONLY`；尚无 Collector、P3 handoff、插件标签或 Release。
+`pages_path` 冻结为站点根 `/` 的唯一表示。completion-time Network 计数不能冒充 response-body 硬截断；
+该精确计量与 Chromium Fetch 流控制修正已由 PR #42 的 11 项门禁、受保护主线与 exact-SHA 匿名
+README/合同/Ledger 读回重新冻结。P2 Collector 随后完成 request/URL、浏览器生命周期、response-body
+预算、固定作用域、三样本、Evidence assembly 与 P1 → P2 串行协调；候选经 PR #49 的 11 项门禁合入
+`main@ca6b8aaa33bc06795c96610b9e9085506efef9a0`，并由产品 Collector 从 exact main 完成 desktop/narrow
+README 真实读回。当前为 `P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE / P3_NOT_STARTED`；尚无 P3
+正式 handoff、插件标签或 Release。
 第一次 docs-only closure PR #43 又因重复出现的 M10 Chromium cleanup timing failure 被否决并关闭，未合入；
 独立 PR #44 以共享绝对 deadline 修复预算刷新，经 11 项门禁合入
 `main@25ff62f50a01fddc086c41740af802d9c2df0495`。新的 closure 只从该 exact main 重建，不把失败尝试洗成
