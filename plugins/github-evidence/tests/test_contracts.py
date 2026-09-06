@@ -135,6 +135,22 @@ class RequestContractTests(unittest.TestCase):
         with self.assertRaises(Exception):
             seal_acceptance_plan(broken)
 
+    def test_repository_dot_segments_fail_before_collection(self) -> None:
+        for repository in (".", ".."):
+            with self.subTest(repository=repository):
+                broken = copy.deepcopy(self.plan)
+                broken.pop("seal")
+                broken["observation_specs"][0]["coordinates"][
+                    "repository"
+                ] = repository
+                broken = seal_acceptance_plan(broken)
+                with self.assertRaisesRegex(
+                    ContractError, "exact GitHub repository name"
+                ):
+                    derive_observation_request(
+                        broken, "github-api", "request-dot-segment"
+                    )
+
     def test_unsorted_sealed_projection_fails_instead_of_producing_unbindable_evidence(
         self,
     ) -> None:
