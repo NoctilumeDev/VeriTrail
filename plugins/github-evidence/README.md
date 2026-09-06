@@ -1,15 +1,21 @@
 # VeriTrail GitHub Evidence Plugin
 
-This package contains two independently bounded, read-only capabilities:
+This package contains independently bounded, read-only capabilities:
 
 - the base P1 Structured GitHub API Collector; and
-- the optional P2 GitHub Public Render Collector.
+- the optional P2 GitHub Public Render Collector; and
+- the offline P3 handoff manifest contract and canonical identity validator.
 
 Both derive sealed observation requests from a VeriTrail `AcceptancePlan 0.1`,
 retain source-specific facts, and emit separate standard VeriTrail
 `Evidence 0.1` artifacts. P1 reads selected GitHub REST projections. P2 observes
 fixed public GitHub render surfaces through an explicitly installed, matching
 Chromium runtime.
+
+The P3 contract validates only the closed manifest shape and its canonical
+digest. It does not inspect Evidence files, publish a manifest, or prevalidate
+Plan, session, coverage, assertions, or Verdict; those later responsibilities
+remain outside P3-A.
 
 The package does not modify GitHub, evaluate acceptance assertions, join P1 and
 P2 facts, or import VeriTrail private implementation symbols. VeriTrail Core,
@@ -20,6 +26,7 @@ See the repository-level contracts before using or changing these capabilities:
 
 - [`docs/83-p1-structured-github-api-collector-contract.md`](../../docs/83-p1-structured-github-api-collector-contract.md)
 - [`docs/89-p2-public-render-collector-contract.md`](../../docs/89-p2-public-render-collector-contract.md)
+- [`docs/92-p3-core-handoff-contract.md`](../../docs/92-p3-core-handoff-contract.md)
 
 ## Reference vertical slice
 
@@ -57,7 +64,7 @@ capability boundary, never downloads a browser at runtime, and never falls back
 to a system browser.
 
 P2 is intentionally imported from its explicit capability modules rather than
-the P1-only top-level package surface:
+the browser-free P1/P3-contract top-level package surface:
 
 ```python
 from pathlib import Path

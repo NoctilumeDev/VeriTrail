@@ -8,6 +8,10 @@ from veritrail_github.contracts import (
     facts_digest,
     validate_observation_request,
 )
+from veritrail_github.handoff_contracts import (
+    handoff_manifest_digest,
+    validate_handoff_manifest,
+)
 from veritrail_github.publisher import publish_evidence
 from veritrail_github.transport import UrllibTransport
 
@@ -18,8 +22,10 @@ __all__ = [
     "UrllibTransport",
     "derive_observation_request",
     "facts_digest",
+    "handoff_manifest_digest",
     "publish_evidence",
     "validate_observation_request",
+    "validate_handoff_manifest",
     "verify_github_evidence",
 ]
 
