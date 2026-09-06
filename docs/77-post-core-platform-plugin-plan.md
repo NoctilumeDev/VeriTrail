@@ -1,14 +1,14 @@
 # Post-Core 平台证据插件 Plan v1
 
-> 状态：`P0_FROZEN / P1_FROZEN / P2_IMPLEMENTED / FREEZE_CLOSURE_CANDIDATE`
+> 状态：`P0_FROZEN / P1_FROZEN / P2_FROZEN / P3_NOT_STARTED`
 >
 > 基线：`VeriTrail Core 0.12.2`；M0–M14、E0–E3 与全部既有发布坐标保持只读
 >
 > 影响层级：独立平台插件产品线；Core、Starter、Authoring Skill 与 Workbench 均不修改
 
-> 后继状态：PC2、P1 与 P2 合同已经冻结；P2 Collector 已由 PR #49 合入受保护主线，当前只允许
-> [P2 实现冻结闭环候选](90-p2-public-render-collector-freeze-candidate.md)继续完成 docs-only 门禁与公开
-> 读回。本页保留 P0 当时的探针结论，不把历史判断改写成当时已经实现 Collector。
+> 后继状态：PC2、P1、P2 合同与 P2 实现均已冻结；P2 事实见
+> [P2 实现与冻结事实](90-p2-public-render-collector-freeze-candidate.md)。本页保留 P0 当时的探针结论，
+> 不把历史判断改写成当时已经实现 Collector。P3 尚未开始。
 
 ## 1. 为什么另开 P 轨
 
@@ -133,7 +133,7 @@ PC0  compatibility contract
 
 PC 只是 P0 与 P1 之间的一次性公共语义桥，不是新的长期产品线，也不把插件重新塞进 Core。PC1 只实现
 平台无关的 AcceptancePlan、Evidence binding 与跨 Evidence rule evaluator；PC2 已冻结兼容事实。
-P1 Collector 已冻结；P2 Collector 已实现并处于冻结闭环候选，P3 仍未开始。
+P1 与 P2 Collector 均已冻结；P3 仍未开始。
 
 观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
 坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
@@ -188,8 +188,9 @@ P2 在全新、未登录的浏览器 Context 中读取公开 README、Release �
 或另立的兼容合同能够校验共同 `collection_session_id`；不能只由插件选取两份产物后宣称已经配对。
 
 P2 已在独立插件内实现上述 Collector、三样本观察、Evidence assembly 与 P1 → P2 串行协调；实现和
-证据见[文档 90](90-p2-public-render-collector-freeze-candidate.md)。当前仍是
-`FREEZE_CLOSURE_CANDIDATE`，在其自身 docs-only 门禁、主线合入与匿名读回完成前不得进入 P3。
+证据见[文档 90](90-p2-public-render-collector-freeze-candidate.md)。docs-only closure、被新反例否决的
+最终发布、独立 M10 修正与修正后匿名读回均保留为不同证据链；P2 当前为 `FROZEN`，P3 仍须从新的
+exact main 单独施工。文档中的最终状态只在本状态发布自身的门禁、主线合入和匿名读回完整成立后生效。
 
 ### P3：Core handoff 与真实正负链
 
