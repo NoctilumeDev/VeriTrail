@@ -1,10 +1,10 @@
-# Post-Core Review Attention Plugin Plan v1.1
+# Post-Core Review Attention Plugin Plan v1.2
 
 ## 1. 文档身份
 
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
-- 并行状态：`P1_FROZEN / P2_NOT_STARTED`；
+- 并行状态：`P1_FROZEN / P2_FROZEN / P3_NOT_STARTED`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
@@ -128,12 +128,57 @@ Provider implementation -> R contracts <- Review Attention application
 
 如果一个单体进程同时拥有源码事实、AI 提案、人类决定和 Verdict，哪怕目录拆得很漂亮，也不算分层。
 
+## 5.1 R1 的 Semantic Review Slice 设计边界
+
+源码不是线性文章，而是由 symbol、调用、状态、资源、authority 与变更关系组成的图。R1 不应把每行
+代码唯一切进某个固定“段落”，也不应以等长 token/file chunk 冒充语义边界。未来的确定性语义清单
+应先建立可追溯关系，再派生多个允许重叠的 `Semantic Review Slice` 视图：
+
+```text
+Exact Source Snapshot
+    -> deterministic Code Facts
+    -> typed semantic relations
+    -> bounded overlapping Review Slices
+    -> coverage ledger
+```
+
+候选 slice 至少包括 symbol、call path、state transition、ownership/authority、resource lifecycle 与
+change blast radius。一个源码锚可以同时出现在多个 slice 中，因为 slice 是认知视图，不是源码存储或
+唯一真值分区。
+
+每个派生 slice 必须能解释并复算其：
+
+```text
+anchor
+relation kind and direction
+expansion depth
+max symbols / files
+stop conditions
+coverage
+truncation reason
+SourceSnapshot binding
+```
+
+达到边界时必须保留 `PARTIAL` 与截断原因，不得把有界子图描述为完整调用链或完整状态所有权。R1
+优先使用解析器、编译器或确定性规则建立这套骨架；AI 只能在 R3 提议多个 slice 可能属于同一审查主题，
+不能反向改写 CodeFact 或把自己选择的上下文用来证明自己的提案。
+
+三种权责继续分离：
+
+```text
+segmentation / slice derivation != analysis != attention ranking
+```
+
+本节只补充 R1 的未来施工问题，不冻结 `ReviewSlice` Schema，不把它加入已冻结 R0 Artifact 清单，也
+不解除 `R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE`。具体 Schema、语言支持、关系类型和 coverage 算法
+仍须在 R1 开工前从精确 Pattern Corpus 单独定稿。
+
 ## 6. 阶段路线
 
 | 阶段 | 只回答的问题 | 明确不进入 |
 | --- | --- | --- |
 | R0 | 权威、Artifact、依赖、失败、视觉语义和 Pattern Ledger 如何冻结 | 任何实现 |
-| R1 | 如何对精确 Source Snapshot 建立确定性语义清单与覆盖账册 | AI、自动排序、人类结论 |
+| R1 | 如何对精确 Source Snapshot 建立确定性语义清单、关系图、可重叠有界 Slice 与覆盖账册 | AI、自动排序、人类结论 |
 | R2 | 如何接入静态分析、编译器、测试、Profiler/Sanitizer 等可复算证据 | AI 判错、Core Verdict |
 | R3 | AI/规则如何提出带依据的关注候选并形成注意力地图 | 自动确认缺陷、自动合并 |
 | R4 | 人如何确认、驳回、争议、请求补证并保留责任链 | 用处置覆盖原始证据 |
@@ -176,9 +221,10 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 1. 本 Plan、R0 合同和 Ledger Schema 经外部读者与语义反例复核；
 2. 文档只通过受保护主线合入，不绕过远端门禁；
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
-4. 主线仍声明 `P1_FROZEN / P2_NOT_STARTED`；
+4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
+   `P2_FROZEN / P3_NOT_STARTED`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
-6. 最终状态写为：
+6. R0 首次冻结记录中的状态继续保留为：
 
 ```text
 R0_ARCHITECTURE_FROZEN
@@ -186,3 +232,5 @@ PATTERN_LEDGER_OPEN
 R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE
 P2_NOT_STARTED
 ```
+
+本文当前状态只更新并行事实为 `P2_FROZEN / P3_NOT_STARTED`；它不把 R0 当时尚未发生的 P2 写回历史。

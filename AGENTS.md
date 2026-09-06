@@ -142,6 +142,10 @@
   范围。R1 必须等 P4 冻结并选定 exact commit + manifest digest，且逐项绑定
   `pattern_id + selected_record_digest` 的 Pattern Corpus 后才能启动。当前仍为
   `R0_ARCHITECTURE_FROZEN / DESIGN_ONLY`；P2 的新反例可以按 Ledger Schema 追加，但不得借此启动 R1。
+  文档 91 已把 P1/P2 的开放世界观察经验归纳为非合同方法，并在 R 轨 Plan 中补充 R1 的未来
+  Semantic Review Slice 边界：slice 由精确 SourceSnapshot 的确定性关系图派生，可以重叠但必须
+  有界、可追溯并保留 coverage/truncation；slice derivation、analysis 与 attention ranking 不得合并。
+  该补充不新增 R0 Artifact、不冻结 Slice Schema，也不解除 R1 前置阻断。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

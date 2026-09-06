@@ -258,6 +258,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [R0 Review Attention 架构评审与冻结事实](88-r0-review-attention-design-review.md)
 - [P2 Public Render Collector 施工合同 0.1](89-p2-public-render-collector-contract.md)
 - [P2 Public Render Collector 实现与冻结事实 0.1](90-p2-public-render-collector-freeze-candidate.md)
+- [受约束的开放世界观察方法 0.1](91-bounded-open-world-observation-method.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -337,4 +338,9 @@ authority 能创建 HumanDisposition，Policy 不能自动处置。P4 以后才�
 当前为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有源码包、Schema、CLI、CI、
 标签或 Release；R1 被明确阻塞到 P4 与 corpus freeze 之后。R0 冻结发生时 P2 仍未启动；后续 P2
 合同候选不会反向改写该历史事实或改变 R0 范围。
+
+文档 91 将 P1/P2 施工中形成的平台适配、运行时控制、观察语义与证据工程四层方法归纳为
+`METHOD_NOTE / NON_CONTRACTUAL`。同一补丁把 R1 的未来问题补充为：从精确 Source Snapshot 的确定性
+关系图派生允许重叠、有界且带 coverage/truncation 的 Semantic Review Slice，并保持 slice derivation、
+analysis 与 attention ranking 分权。该说明不修改已冻结 R0 Artifact，不启动 R1，也不表示 P3 已开始。
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
