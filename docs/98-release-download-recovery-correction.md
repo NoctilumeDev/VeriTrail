@@ -1,6 +1,6 @@
 # Release 资产下载恢复策略修正
 
-状态：`IMPLEMENTATION_CANDIDATE`
+状态发布目标：`RELEASE_DOWNLOAD_RECOVERY_FROZEN / P4_RELEASE_NOT_STARTED`
 
 变更级别：`L1_COMPONENT_INTERNAL`
 
@@ -43,7 +43,8 @@ current recovery window
 2. 单次请求最多消费 15 秒，但不得刷新总预算；
 3. 暂时性 HTTP `408 / 429 / 500 / 502 / 503 / 504` 与明确的 timeout、connection reset 等传输失败
    可按 `2 / 4 / 8 / 16` 秒有界退避；
-4. `404`、证书验证失败、非法 URL、错误摘要、错误资产或已存在目标不因重试而被接受；
+4. `404 / 403` 等声明为永久响应的 HTTP 结果、证书验证失败、非法 URL、摘要不一致或已存在目标不因
+   重试而被接受；下载工具不判断标签或资产为何不存在，坐标含义仍由上层解释；
 5. 每次尝试只写同目录内的独立 owned partial，失败即清理；
 6. 只有完整流式读取后的 SHA-256 与冻结值相等，才以不覆盖语义发布目标文件；
 7. 诊断只报告 attempt、失败类别、HTTP 状态、剩余预算和退避，不记录凭据。
@@ -98,3 +99,69 @@ integrity relaxation
 
 以上仍是本地候选事实。只有独立 PR 的原始远端门禁、受保护主线合入和新 exact main 的后继读回成立后，
 本恢复策略才可成为后续 P4 发布实施的地基。
+
+## 5. 远端合入与主线门禁
+
+实现提交 `24b2126907d9e0c60faa7d8ce10b13decb11b52f` 经
+[PR #74](https://github.com/NoctilumeDev/VeriTrail/pull/74) 的原始
+[Public CI run 34256599627](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34256599627)
+在 attempt 1 上取得 11/11 `SUCCESS`，没有 rerun。PR 随后以 merge commit
+`d23916735c7ac4d7e4a706d8edc5b106046b93c8` 合入受保护 `main`；精确读回得到：
+
+```text
+tree:
+f1cb8c67ace4d3a69eeb0006ad9f37a675144e93
+
+parents:
+12130378febde2075d4cb9924628a07f9f26cb1e
+24b2126907d9e0c60faa7d8ce10b13decb11b52f
+```
+
+该 exact main 的
+[Public CI run 34257876815](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34257876815)
+在原始 attempt 1 上取得 11/11 `SUCCESS`；同一 SHA 的
+[Browser Smoke run 34257876863](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34257876863)
+在原始 attempt 1 上取得 1/1 `SUCCESS`。PR 事实和主线事实分别成立，没有互相替代。
+
+## 6. exact-main 匿名产品读回
+
+从 clean detached `main@d23916735c7ac4d7e4a706d8edc5b106046b93c8`，在未提供
+`GITHUB_TOKEN`、`GH_TOKEN` 或 `VERITRAIL_GITHUB_TOKEN` 的环境中，固定执行
+`github-api -> github-public-render -> handoff -> Acceptance Core`。README 使用
+`DESKTOP_1365X768`，本文使用 `NARROW_390X844`；两页使用独立 sealed Plan 与独立 paired session。
+
+| 页面 | Plan digest | Session | Handoff digest | Evidence SHA-256（API / Render） | Core report canonical digest | Verdict |
+| --- | --- | --- | --- | --- | --- | --- |
+| exact README | `2c1b0c61692e741eea27965fff210e8a2747a4c4f1877a57a621a73b8ea144f8` | `github-paired-5683636f032b4db79091cbd300b002c0` | `80b45b72c0d995592bc2ce7eb02b52272826b3d6391065be3c3e0caa44096759` | `10c8b859219f2d006414162c938f3c3fd6c8ee6a7b0128b9d32c0eebd9c6a2ad` / `c8afb46ee71dc442d8634f44a0d3898fd4be569ce08ab9046e43304109259671` | `c010d93d8421129b5a0fa944053c59e5f3b0d3d7f986b2a9e0bb990133525827` | `PASS` |
+| exact 文档 98 | `930b9d98aef0b783187f5e965bf49aec895ff871e461d0ac70cb52e841b452ce` | `github-paired-4ac2e1eb86ff477bae122c48a72dd8c4` | `98c3c34bd6f2f3d62c16cc850f3c6c643e869bdc27a4344192382a43003d2975` | `cda35518a5b44533c91014ea21d2e1de8b24eb5e798550f5f501f2f56d664335` / `0ec470000a3260b9fe8445e8c9c5f26261a8b10142b274750967b9fe82cd5031` | `ee9b64b95337b4ef1d444a19c941aa93b853f0870f4f6660c2c137437d7b7d10` | `PASS` |
+
+两条链均满足：
+
+- P1/P2 为 `PUBLISHED / COMPLETE`，P1 精确 commit 与候选主线一致；
+- requested/final URL 均保持相同 GitHub exact-SHA Markdown 坐标；
+- 同一 pair 内 session 一致，P1/P2 Evidence 与 request seal 仍保持独立；
+- README marker `P4_RELEASE_NOT_STARTED` 出现 2 次，本文 marker `availability recovery` 出现 1 次；
+- 两页各自三个 sample digest 完全相同，`samples_stable=true`；
+- `errors / conflicts / cleanup_errors / coverage_reasons` 均为空；
+- Core 只消费 handoff 指定的 imported Evidence snapshot，并分别得到 `PASS`。
+
+README 链完成标准 Evidence、handoff 与 Acceptance Bundle 后，第一版仓库外摘要包装器错误假定报告顶层
+存在 `canonical_digest` 字段并退出。该错误发生在摘要整理层，不改变已经落盘的标准产物和 Core `PASS`；
+后继步骤直接读取公共报告并以 `sha256_json(report)` 计算规范摘要，没有重跑 README 网络观察，也没有把
+包装层错误改写成 Collector 成功或失败。全部运行产物继续留在仓库外。
+
+## 7. 状态发布的最后门
+
+本次收口只允许文档与索引变化。它自身仍须完成原始远端 Public CI 11 项、受保护主线合入，以及从新
+exact main 对 README/本文的匿名产品读回。只有该链全部成立，以下状态才成为后续 P4 施工可消费的主线
+事实：
+
+```text
+RELEASE_DOWNLOAD_RECOVERY_FROZEN
+P4_CONTRACT_0.1_FROZEN
+P4_RELEASE_NOT_STARTED
+R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE
+```
+
+该状态不创建 `github-evidence-v*` ruleset、tag、Release 或资产，不改变 Core `v0.12.2` 的 Latest 身份，
+也不把外部传输恢复能力扩张成资产完整性或 GitHub 内部根因证明。

@@ -152,6 +152,18 @@
   `main@eb4dcb60230a516503bf80ce26e13b25cd9b9d97`。该 exact main 的 Public CI、Browser Smoke 以及
   README desktop / 文档 96 narrow 的 fresh anonymous P1/P2 产品读回均成立，Core 两次为 `PASS`。
   这些事实只冻结发布合同，仍不授权提前创建 tag ruleset、tag、Release 或公开资产。
+  后继 PR #72 与 `main@12130378febde2075d4cb9924628a07f9f26cb1e` 的原始 Public CI 分别在不同
+  既有 Release 资产上连续收到 HTTP 500；后续匿名下载的字节与冻结 SHA-256 均成立，因此现有证据只支持
+  瞬时外部失败超出旧短恢复窗口，不证明 GitHub、代理、仓库或资产的单一根因。独立 PR #74 只把四处
+  固定短重试收敛为共享绝对截止时间、窄重试集合、owned partial、摘要校验后不覆盖发布的 CI 工具；其
+  原始 11/11 门禁合入 `main@d23916735c7ac4d7e4a706d8edc5b106046b93c8`，该 exact main 的 Public CI
+  11/11、Browser Smoke 1/1 以及 README desktop / 文档 98 narrow 的 fresh anonymous P1/P2 产品
+  读回均成立，Core 两次为 `PASS`。精确事实见
+  `docs/98-release-download-recovery-correction.md`；其 docs-only 状态发布自身的门禁、受保护主线合入与
+  合入后读回全部成立后，状态为
+  `RELEASE_DOWNLOAD_RECOVERY_FROZEN / P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`。
+  该修正不得被解释为 P4 已创建 tag ruleset、tag、Release 或资产；P4 只能从状态发布后的新 exact main
+  继续，R1 仍等待 P4 与 Pattern Corpus 双冻结。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
