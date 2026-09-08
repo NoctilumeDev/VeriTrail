@@ -28,6 +28,8 @@ from scripts.github_evidence_release_assets import (
     validate_validation_facts,
     verify_assets,
 )
+from scripts.p4_real_github_acceptance import release_acceptance_plan
+from veritrail.acceptance_plan import verify_sealed_acceptance_plan
 
 
 SOURCE_COMMIT = "a" * 40
@@ -164,6 +166,26 @@ def prepare_candidate(root: Path) -> tuple[Path, Path, Path]:
 
 
 class GitHubEvidenceReleaseAssetTests(unittest.TestCase):
+    def test_real_release_plan_is_presealed_to_the_exact_target(self) -> None:
+        plan = release_acceptance_plan(
+            owner="NoctilumeDev",
+            repository="VeriTrail",
+            target_commit_sha=SOURCE_COMMIT,
+            repository_path="README.md",
+            literal_marker="VeriTrail",
+        )
+        verify_sealed_acceptance_plan(plan)
+        self.assertEqual(plan["subject"]["version"], SOURCE_COMMIT)
+        self.assertEqual(
+            {
+                item["coordinates"]["target_commit_sha"]
+                for item in plan["observation_specs"]
+            },
+            {SOURCE_COMMIT},
+        )
+        self.assertEqual(plan["assertions"][0]["right"], SOURCE_COMMIT)
+        self.assertIn(SOURCE_COMMIT, plan["assertions"][1]["right"])
+
     def test_sdist_normalization_removes_gzip_and_member_time_variance(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-p4-normalize-") as raw_temp:
             root = Path(raw_temp)
