@@ -62,6 +62,54 @@ def _port_is_free(port: int) -> bool:
         return client.connect_ex(("127.0.0.1", port)) != 0
 
 
+def _cli_layer_diagnostic(payload: dict, staged: list[dict]) -> dict:
+    public_fields = (
+        "resource_decision",
+        "bootstrap_started",
+        "services_ready",
+        "browser_started",
+        "browser_completed",
+        "browser_capture_complete",
+        "stop_reason",
+        "cleanup_complete",
+        "execution_status",
+        "verdict",
+    )
+    public_state = {field: payload.get(field) for field in public_fields}
+    pre_teardown = None
+    if len(staged) == 1:
+        document = staged[0]
+        pre_teardown = {
+            "services_ready": document.get("services_ready"),
+            "ready_callback_started": document.get("ready_callback_started"),
+            "ready_callback_completed": document.get("ready_callback_completed"),
+            "trigger_reason": document.get("trigger_reason"),
+            "browser_exercise": document.get("browser_exercise"),
+            "events": document.get("events"),
+            "nodes": [
+                {
+                    "node_id": node.get("node_id"),
+                    "role": node.get("role"),
+                    "start_error_type": (node.get("start") or {}).get("error_type"),
+                    "process_created": (node.get("start") or {}).get("process_created"),
+                    "target_assigned": (node.get("start") or {}).get("target_assigned"),
+                    "target_resumed": (node.get("start") or {}).get("target_resumed"),
+                    "readiness_ready": (node.get("readiness") or {}).get("ready"),
+                    "readiness_error_type": (node.get("readiness") or {}).get(
+                        "error_type"
+                    ),
+                }
+                for node in document.get("nodes", [])
+                if isinstance(node, dict)
+            ],
+        }
+    return {
+        "public_state": public_state,
+        "staged_count": len(staged),
+        "pre_teardown": pre_teardown,
+    }
+
+
 def _start() -> OwnedServiceStartObservation:
     return OwnedServiceStartObservation(
         parent_in_job=False,
@@ -417,9 +465,23 @@ class M11SingleApplicationTests(unittest.TestCase):
             self.assertEqual("", stderr.getvalue())
             self.assertEqual(0, code)
             payload = json.loads(stdout.getvalue())
-            self.assertEqual("COMPLETED", payload["execution_status"])
-            self.assertEqual("PASS", payload["verdict"])
-            self.assertEqual("NONE", payload["stop_reason"])
+            diagnostic = _cli_layer_diagnostic(payload, staged)
+            self.assertEqual(
+                {
+                    "resource_decision": "PROCEED",
+                    "bootstrap_started": True,
+                    "services_ready": True,
+                    "browser_started": True,
+                    "browser_completed": True,
+                    "browser_capture_complete": True,
+                    "stop_reason": "NONE",
+                    "cleanup_complete": True,
+                    "execution_status": "COMPLETED",
+                    "verdict": "PASS",
+                },
+                diagnostic["public_state"],
+                json.dumps(diagnostic, ensure_ascii=True, sort_keys=True),
+            )
             self.assertEqual(1, len(staged))
             self.assertEqual("0.2", staged[0]["schema_version"])
             self.assertEqual(["application"], staged[0]["start_order"]["sealed"])
