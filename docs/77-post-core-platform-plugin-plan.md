@@ -1,6 +1,6 @@
 # Post-Core 平台证据插件 Plan v1
 
-> 状态发布：`P0_FROZEN / P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_NOT_STARTED`
+> 状态发布：`P0_FROZEN / P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`
 >
 > 基线：`VeriTrail Core 0.12.2`；M0–M14、E0–E3 与全部既有发布坐标保持只读
 >
@@ -10,7 +10,8 @@
 > [P2 实现与冻结事实](90-p2-public-render-collector-freeze-candidate.md)。本页保留 P0 当时的探针结论，
 > 不把历史判断改写成当时已经实现 Collector。P3 合同冻结事实见[文档 93](93-p3-core-handoff-contract-freeze.md)，
 > 后继实现与冻结候选事实见[文档 94](94-p3-core-handoff-implementation-freeze-candidate.md)，最终冻结状态
-> 发布见[文档 95](95-p3-core-handoff-freeze-publication.md)；P4 尚未开始。
+> 发布见[文档 95](95-p3-core-handoff-freeze-publication.md)。P4 已从该 exact main 开始且当前仅有
+> [独立发布合同候选](96-p4-github-evidence-release-contract.md)；ruleset、tag、Release 与公开资产均尚未创建。
 
 ## 1. 为什么另开 P 轨
 
@@ -135,7 +136,8 @@ PC0  compatibility contract
 
 PC 只是 P0 与 P1 之间的一次性公共语义桥，不是新的长期产品线，也不把插件重新塞进 Core。PC1 只实现
 平台无关的 AcceptancePlan、Evidence binding 与跨 Evidence rule evaluator；PC2 已冻结兼容事实。
-P1 与 P2 Collector、P3 0.1 合同和 P3 实现均已冻结；P4 尚未开始。
+P1 与 P2 Collector、P3 0.1 合同和 P3 实现均已冻结；P4 当前只进入 docs-only 合同候选，尚未进入
+发布实现。
 
 观察规格摘要、Collector Policy 摘要与 request envelope seal 必须分开：前者只由观察规格版本、规范化
 坐标和投影标识“观察什么”，第二个标识有界运行策略，最后一个标识单次请求。`facts_digest` 再独立
@@ -223,6 +225,13 @@ P3 冻结自动解释为插件已经发布。
 只有 P0–P3 的合同与真实证据全部满足后，才能决定是否发布。若发布，版本、标签和资产必须独立，
 候选命名为 `github-evidence-v0.1.0`；它不得移动 `v0.12.x`、Starter 或 Authoring Skill 标签，也不得
 成为仓库 Latest Core Release。
+
+P4 的精确候选边界见
+[GitHub Evidence Plugin 独立发布合同 0.1](96-p4-github-evidence-release-contract.md)。P4 必须把 exact
+source、Python distribution、候选资产 bytes、annotated tag、GitHub Release 与匿名下载观察分开；
+当前仓库的 tag ruleset 尚未覆盖 `refs/tags/github-evidence-v*`，因此保护规则生效是创建首个插件 tag
+之前的硬门。合同候选自己的门禁、合入、exact-main 产品读回与独立冻结发布未完成前，不得进入发布
+实现。
 
 ## 5. 阶段隔离
 

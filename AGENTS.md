@@ -136,6 +136,13 @@
   `docs/95-p3-core-handoff-freeze-publication.md`；其自身门禁、合入与合入后读回全部成立后，当前状态为
   `P3_FROZEN / P4_NOT_STARTED`。这只解除 P4 的阶段阻断，不代表 P4 已开始；Review Attention R1 仍须
   等待 P4 与精确 Pattern Corpus 一并冻结。
+  P4 现已从 `main@9c58b7367712ae726b826b54115766b81444cdf1` 开始 docs-only 合同候选，精确边界位于
+  `docs/96-p4-github-evidence-release-contract.md`。当前状态为
+  `P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`：不得在合同自己的原始门禁、受保护主线合入、
+  exact-main 匿名产品读回与独立冻结发布成立前创建 `github-evidence-v0.1.0`、Release、公开资产或
+  `github-evidence-v*` ruleset。P4 必须区分 source、distribution、asset、tag/Release 与 public-download
+  observation identity；当前 tag ruleset 不覆盖插件标签，这是 tag 创建前的硬门。插件 Release 必须
+  显式 non-Latest，Core `v0.12.2` 的 Latest 身份不得漂移。R1 继续等待 P4 与 Pattern Corpus 双冻结。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
