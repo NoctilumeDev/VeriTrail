@@ -1,12 +1,13 @@
 # P3 Core Handoff 与真实正负链合同 0.1
 
-> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_FROZEN / P4_NOT_STARTED`
+> 当前状态：`P3_CORE_HANDOFF_CONTRACT_0.1_FROZEN / P3_FROZEN / P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`
 >
 > 历史冻结事实：[文档 93](93-p3-core-handoff-contract-freeze.md)。P3-A 本地候选实现审查发现“连续两次安全读取
 > 不等于同一快照”的组合反例；第 13.1 节只重开 handoff 到 Core 的快照连续性。
 > 后继实现与冻结候选事实：[文档 94](94-p3-core-handoff-implementation-freeze-candidate.md)。本文后文保留
 > 合同冻结时的 `P3_IMPLEMENTATION_NOT_STARTED` 历史，不批量改写成当时已经实现。
-> 最终冻结状态发布：[文档 95](95-p3-core-handoff-freeze-publication.md)。
+> 最终冻结状态发布：[文档 95](95-p3-core-handoff-freeze-publication.md)。P4 当前边界见
+> [合同冻结事实](97-p4-github-evidence-release-contract-freeze.md)。
 >
 > 精确设计基线：`3e785d197c8040c8baa4120fc63301eb347e5bc8`
 >
