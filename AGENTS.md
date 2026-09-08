@@ -164,6 +164,13 @@
   `RELEASE_DOWNLOAD_RECOVERY_FROZEN / P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`。
   该修正不得被解释为 P4 已创建 tag ruleset、tag、Release 或资产；P4 只能从状态发布后的新 exact main
   继续，R1 仍等待 P4 与 Pattern Corpus 双冻结。
+  后继发布准备已经从 `main@b6ddb5c8a704b464dc9b4d07a0f43b7b93a64a71` 建立候选：内部工具固定
+  wheel/sdist、非自指 summary/checksum 顺序与 independent verify；双 Python 的 base、sdist、render、
+  plugin uninstall/Core-only 复算及预封存真实 GitHub P1 -> P2 -> P3 正向链均已形成本地证据，精确事实见
+  `docs/99-p4-github-evidence-release-preparation-candidate.md`。当前状态只能记为
+  `P4_RELEASE_PREPARATION_CANDIDATE / NO_TAG / NO_RELEASE`；只有该候选自己的原始远端门禁、受保护主线
+  合入与新 exact main 门成立后，才允许重建最终字节并创建 tag protection。当前候选字节不得复用为最终
+  Release 资产，R1 仍等待 P4 与 Pattern Corpus 双冻结。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
