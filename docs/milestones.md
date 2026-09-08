@@ -401,5 +401,10 @@ validation summary 若记录“每个 payload”的摘要会要求它声明自�
 Acceptance API，而先前准备矩阵使用了同版本号的当前源码本地 wheel。P4 因而保持 `BLOCKED`；
 [文档 100](100-core-v0.13.0-acceptance-api-release-contract.md)将既有冻结 Acceptance 能力的公开发行
 补全为独立 Core 0.13.0 前置闭环。该修正不移动或重制历史 `v0.12.2`，也不提前创建插件发布坐标。
+合同候选经 PR #77 原始 11/11 门禁合入
+`main@5b28ac3076ff4a08added47cbfc66c960c3dbdea`；该 exact main 的 Public CI 11/11、Browser Smoke
+1/1，以及 README/合同正文的两个独立匿名产品读回均已成立。[文档 101](101-core-v0.13.0-acceptance-api-contract-freeze.md)
+的最后门全部成立后，状态为 `CORE_0.13.0_CONTRACT_FROZEN / C1_NOT_STARTED / P4_BLOCKED`；后继只能
+进入 Core 0.13.0 的 C1 候选施工，P4 与 R1 仍保持阻断。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

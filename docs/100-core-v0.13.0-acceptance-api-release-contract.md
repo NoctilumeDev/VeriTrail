@@ -1,6 +1,10 @@
 # Core 0.13.0 Acceptance API 发布补全合同
 
-> 当前状态：`CONTRACT_CANDIDATE / P4_BLOCKED / NO_TAG / NO_RELEASE`
+> 状态发布目标：`CORE_0.13.0_CONTRACT_FROZEN / C1_NOT_STARTED / P4_BLOCKED / NO_TAG / NO_RELEASE`
+>
+> 候选门禁、受保护主线合入与合入后匿名产品读回见
+> [合同冻结事实](101-core-v0.13.0-acceptance-api-contract-freeze.md)。该状态发布自身的最后门未全部成立前，
+> 本文仍按 `CONTRACT_CANDIDATE` 解释。
 >
 > 发现基线：`main@8e51a03113a54230c5120d7bf5084035c78fe63e`
 >

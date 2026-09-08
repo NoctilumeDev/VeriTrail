@@ -177,6 +177,12 @@
   checksum 均不得创建。后继只能先按
   `docs/100-core-v0.13.0-acceptance-api-release-contract.md` 为既有冻结 Acceptance 能力建立独立 Core
   `0.13.0` 公开坐标；`v0.12.2` 标签与资产继续只读，R1 仍等待 P4 与 Pattern Corpus 双冻结。
+  该合同候选经 PR #77 原始 11/11 门禁合入 `main@5b28ac3076ff4a08added47cbfc66c960c3dbdea`；
+  exact-main 11/11、Browser Smoke 1/1 及 README/合同正文的两个独立匿名产品读回均已成立，冻结事实见
+  `docs/101-core-v0.13.0-acceptance-api-contract-freeze.md`。该状态发布自身的门禁、受保护主线合入与
+  合入后 exact-main 读回全部成立后，状态为
+  `CORE_0.13.0_CONTRACT_FROZEN / C1_NOT_STARTED / P4_BLOCKED`；下一步只能从新的 exact main 进入 C1，
+  不能创建插件 tag ruleset、tag、Release、validation summary 或 checksum。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

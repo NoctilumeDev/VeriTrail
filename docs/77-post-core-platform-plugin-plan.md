@@ -247,6 +247,11 @@ tag protection、tag、Release、公开资产或 P4 最终冻结已经完成。
 在新的 Core 公开坐标、匿名下载和仓库外复验成立前，P4 不得创建插件 tag ruleset、tag、Release、
 validation summary 或 checksum；历史 `v0.12.2` 不得移动或重制。
 
+该补全合同候选经原始门禁、受保护主线合入和 exact-main 匿名产品读回后，由
+[文档 101](101-core-v0.13.0-acceptance-api-contract-freeze.md)发布冻结事实。其最后门全部成立后，状态为
+`CORE_0.13.0_CONTRACT_FROZEN / C1_NOT_STARTED / P4_BLOCKED`；这只允许 Core 0.13.0 的 C1
+release-candidate 施工，不解除 P4，也不启动 R1。
+
 ## 5. 阶段隔离
 
 | 阶段 | 可修改 | 不可修改 | 出口 |
