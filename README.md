@@ -547,6 +547,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P3 Core Handoff 最终冻结状态发布](docs/95-p3-core-handoff-freeze-publication.md)
 - [P4 GitHub Evidence Plugin 独立发布合同 0.1](docs/96-p4-github-evidence-release-contract.md)
 - [P4 GitHub Evidence Plugin 独立发布合同冻结事实](docs/97-p4-github-evidence-release-contract-freeze.md)
+- [Release 资产下载恢复策略修正](docs/98-release-download-recovery-correction.md)
 
 ## 项目来源
 
