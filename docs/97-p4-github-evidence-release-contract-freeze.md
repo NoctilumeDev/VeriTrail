@@ -51,10 +51,21 @@ wheel + sdist
    [Public CI run 34230665610](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34230665610)
    在 attempt 1 上取得 11/11 `SUCCESS`，同一 SHA 的
    [Browser Smoke run 34230665518](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34230665518)
-   取得 1/1 `SUCCESS`。
+   取得 1/1 `SUCCESS`；
+8. 首次状态发布候选提交 `5120841fc824496e3c2af51f6626388cf195285e` 在
+   [PR #72](https://github.com/NoctilumeDev/VeriTrail/pull/72) 的原始
+   [Public CI run 34241218820](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34241218820)
+   attempt 1 上停止：Python 3.10 job 下载既有
+   `authoring-skill-v0.1.0/SHA256SUMS-authoring-skill.txt` 时，GitHub Release 连续四次返回
+   HTTP 500；同一工作流的 Python 3.13 job 完成了同一下载步骤。后续匿名本机读取
+   得到 `302 -> 200`、205 字节，SHA-256 为
+   `20684909030aa104cb3faadcb1707edcefa16be2b2832808ccd887996a8debfb`，与冻结值一致。
+   该事实只把异常分类为原始门禁中的外部下载失败，不证明仓库缺陷或单一网络根因；
+   PR #72 因此未合入、未 rerun，并已关闭。
 
 这条历史把“候选门禁通过”和“合同语义完整”保持为两类事实。PR #70 的绿灯没有阻止后继反例否决
-冻结；PR #71 也只修正摘要生成顺序，没有扩张 P1–P3 或 Core 语义。
+冻结；PR #71 也只修正摘要生成顺序，没有扩张 P1–P3 或 Core 语义。PR #72 的外部下载失败同样
+不被后继读回洗掉，但也不被外推成未经证明的产品或代理故障。
 
 ## 3. exact-main 匿名产品读回
 
