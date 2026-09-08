@@ -136,18 +136,22 @@
   `docs/95-p3-core-handoff-freeze-publication.md`；其自身门禁、合入与合入后读回全部成立后，当前状态为
   `P3_FROZEN / P4_NOT_STARTED`。这只解除 P4 的阶段阻断，不代表 P4 已开始；Review Attention R1 仍须
   等待 P4 与精确 Pattern Corpus 一并冻结。
-  P4 现已从 `main@f30647577e6de68c4d40a96f4f9b223fb24140bb` 重建 docs-only 合同候选，精确边界位于
-  `docs/96-p4-github-evidence-release-contract.md`。当前状态为
-  `P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`：不得在合同自己的原始门禁、受保护主线合入、
-  exact-main 匿名产品读回与独立冻结发布成立前创建 `github-evidence-v0.1.0`、Release、公开资产或
-  `github-evidence-v*` ruleset。P4 必须区分 source、distribution、asset、tag/Release 与 public-download
+  P4 docs-only 合同从 `main@f30647577e6de68c4d40a96f4f9b223fb24140bb` 重建，精确边界位于
+  `docs/96-p4-github-evidence-release-contract.md`，冻结事实位于
+  `docs/97-p4-github-evidence-release-contract-freeze.md`。该状态发布自身的门禁、受保护主线合入与合入后
+  exact-main 匿名产品读回成立后，当前状态为
+  `P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`。不得把合同冻结解释为已经创建
+  `github-evidence-v0.1.0`、Release、公开资产或 `github-evidence-v*` ruleset。P4 必须区分
+  source、distribution、asset、tag/Release 与 public-download
   observation identity；当前 tag ruleset 不覆盖插件标签，这是 tag 创建前的硬门。插件 Release 必须
   显式 non-Latest，Core `v0.12.2` 的 Latest 身份不得漂移。R1 继续等待 P4 与 Pattern Corpus 双冻结。
   先前 PR #68 的原始门禁暴露既有 M11 CLI 聚合 `ERROR` 后已停止且未合入；PR #69 只增加分层诊断并以
   原始 11/11 门禁合入当前基线。后继绿灯不覆盖 #68，也不把其未复现解释为已知根因。
-  PR #70 合入后的冻结前身份核账又发现 validation summary 不能把自身摘要写入自身；候选合同必须先
-  明确 `wheel/sdist -> summary -> checksum -> external release facts` 的非自指顺序，再重新完成自己的
-  门禁与 exact-main 匿名读回。该修正仍不授权创建 tag ruleset、tag、Release 或公开资产。
+  PR #70 合入后的冻结前身份核账又发现 validation summary 不能把自身摘要写入自身；PR #71 只把顺序
+  修正为 `wheel/sdist -> summary -> checksum -> external release facts`，经原始 11/11 门禁合入
+  `main@eb4dcb60230a516503bf80ce26e13b25cd9b9d97`。该 exact main 的 Public CI、Browser Smoke 以及
+  README desktop / 文档 96 narrow 的 fresh anonymous P1/P2 产品读回均成立，Core 两次为 `PASS`。
+  这些事实只冻结发布合同，仍不授权提前创建 tag ruleset、tag、Release 或公开资产。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

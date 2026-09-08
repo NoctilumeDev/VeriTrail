@@ -1,10 +1,13 @@
 # P4 GitHub Evidence Plugin 独立发布合同 0.1
 
-> 候选状态：`P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`
+> 当前状态：`P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`
 >
 > 精确设计基线：`main@f30647577e6de68c4d40a96f4f9b223fb24140bb`
 >
 > 前置事实：[P3 最终冻结状态发布](95-p3-core-handoff-freeze-publication.md)
+>
+> 合同冻结事实：[文档 97](97-p4-github-evidence-release-contract-freeze.md)。本文保留最初设计基线与
+> 候选形成历史，不把后继冻结读回改写成设计时已经发生。
 >
 > 影响层级：`L2_PUBLIC_DISTRIBUTION_CONTRACT + BOUNDED_L3_RELEASE_GOVERNANCE`
 >
@@ -338,9 +341,9 @@ PUBLIC_DOWNLOAD_READBACK_PASS
 `exact commit + corpus manifest digest + pattern_id/selected_record_digest` 的精确 Corpus 并独立冻结；
 P4 不得顺手完成该工作。
 
-## 13. 本合同候选自身的冻结门
+## 13. 本合同的冻结链
 
-本文当前只是一份 docs-only 候选，不授权立即创建 ruleset、tag、draft Release 或上传资产。它必须先：
+本文不因写入仓库就授权创建 ruleset、tag、draft Release 或上传资产。候选必须先：
 
 1. 原始 Public CI 11 个 job 全部成功，且 branch ruleset 声明的 7 项 required checks 全部满足；
 2. 合入受保护 `main`；
@@ -350,4 +353,9 @@ P4 不得顺手完成该工作。
 6. 通过独立 docs-only freeze publication 把状态推进为
    `P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`。
 
-在这条链完整成立前，P4 的下一项工作只能修订合同，不能进入发布实现。
+PR #70 合入后发现的 validation summary 摘要自指反例已由 PR #71 以最小非自指顺序修正；新的 exact
+main 又完成原始门禁、主线工作流和 README/本文匿名产品读回。独立
+[合同冻结事实](97-p4-github-evidence-release-contract-freeze.md)记录该链，并以自身门禁、合入和合入后
+读回作为最后状态门。该状态发布闭合后，本合同冻结为
+`P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`，只允许从新的 exact main 进入发布准备；不得
+把合同冻结解释为 tag protection、tag、Release、公开资产或 P4 最终冻结已经完成。

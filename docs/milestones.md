@@ -264,6 +264,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [P3 Core Handoff 实现与冻结候选事实 0.1](94-p3-core-handoff-implementation-freeze-candidate.md)
 - [P3 Core Handoff 最终冻结状态发布](95-p3-core-handoff-freeze-publication.md)
 - [P4 GitHub Evidence Plugin 独立发布合同 0.1](96-p4-github-evidence-release-contract.md)
+- [P4 GitHub Evidence Plugin 独立发布合同冻结事实](97-p4-github-evidence-release-contract-freeze.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -380,12 +381,20 @@ PR #68 的原始门禁暴露既有 M11 CLI 聚合 `ERROR` 后停止且未合入�
 GitHub Evidence Plugin `0.1.0` 的 source/distribution/asset/tag/Release/public-download 身份、固定四项
 资产、base/render 安装矩阵、non-Latest 约束、失败恢复与匿名读回门禁；不修改 P1–P3 或 Core 语义。
 盘点确认现有 tag ruleset 尚未覆盖 `refs/tags/github-evidence-v*`，因此独立标签保护必须先于 tag 创建。
-当前仍为 `P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`；合同自己的门禁、受保护主线合入、
+该候选阶段保持为 `P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`；合同自己的门禁、受保护主线合入、
 exact-main 匿名产品读回与独立冻结发布完成前，不得创建插件 ruleset、tag、Release 或公开资产。
 
 PR #70 将重建候选合入 `main@f27507c3735a68134fa428344f63265601c93715` 后，冻结前身份核账发现
 validation summary 若记录“每个 payload”的摘要会要求它声明自身摘要。候选因此保持未冻结，并以
 最小修正明确 `wheel/sdist -> summary -> checksum -> external release facts` 的非自指生成与绑定顺序；
 该反例没有触发 tag ruleset、tag、Release、资产上传或 P1–P3 语义修改。
+
+非自指修正经 PR #71 原始 11/11 门禁合入
+`main@eb4dcb60230a516503bf80ce26e13b25cd9b9d97`；该 exact main 的 Public CI 11/11 与 Browser Smoke
+1/1 成功，随后产品 P1/P2 Collector 对 README desktop 与文档 96 narrow 完成 fresh anonymous
+`PUBLISHED / COMPLETE` 读回，两条 Core 链均为 `PASS`。独立
+[文档 97](97-p4-github-evidence-release-contract-freeze.md)的自身门禁、主线合入和合入后读回全部成立后，
+当前状态为 `P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`；插件 tag ruleset、tag、Release 与公开
+资产仍不存在，R1 继续等待 P4 最终冻结与 Pattern Corpus 冻结。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
