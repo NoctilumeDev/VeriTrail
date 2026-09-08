@@ -55,7 +55,7 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P4 合同已冻结，发布未开始）
+### 平台证据插件轨（P4 发布准备候选，尚无 tag/Release）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
 这类外部平台事实建立独立 `P` 轨。P0 设计合同和 P1 实现均已冻结；P1 现有独立源码包、只读 CLI、
@@ -123,6 +123,11 @@ P3 合同曾在状态发布补丁自身的门禁、合入和合入后精确匿�
 [恢复策略修正](docs/98-release-download-recovery-correction.md)；其原始 11/11 门禁、主线 11/11、Browser
 Smoke 与 exact-main 匿名产品读回均已成立。本状态发布自身的门禁、合入和合入后读回全部成立后，状态为
 `RELEASE_DOWNLOAD_RECOVERY_FROZEN / P4_RELEASE_NOT_STARTED`，P4 才能从新的 exact main 继续施工。
+当前发布准备已在该后继主线上形成候选：固定 wheel/sdist 构建核验、双 Python base/sdist/render
+clean install、插件卸载后的 Core-only 复算，以及预封存真实 GitHub P1 -> P2 -> P3 正向链均已取得
+本地事实，见[文档 99](docs/99-p4-github-evidence-release-preparation-candidate.md)。这些事实仍不表示
+tag ruleset、tag、Release、公开资产或匿名下载已经发生；最终字节只能在候选经原始远端门禁并合入
+受保护主线后，从新的 exact main 重建。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -552,6 +557,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P4 GitHub Evidence Plugin 独立发布合同 0.1](docs/96-p4-github-evidence-release-contract.md)
 - [P4 GitHub Evidence Plugin 独立发布合同冻结事实](docs/97-p4-github-evidence-release-contract-freeze.md)
 - [Release 资产下载恢复策略修正](docs/98-release-download-recovery-correction.md)
+- [P4 GitHub Evidence Plugin 发布准备候选事实 0.1](docs/99-p4-github-evidence-release-preparation-candidate.md)
 
 ## 项目来源
 
