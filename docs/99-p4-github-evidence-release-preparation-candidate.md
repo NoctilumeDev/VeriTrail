@@ -1,5 +1,10 @@
 # P4 GitHub Evidence Plugin 发布准备候选事实 0.1
 
+> 后继事实：本页的 clean-install 使用当前源码本地构建、版本仍为 `0.12.2` 的 Core wheel；最终
+> exact-main 门改用公开 `v0.12.2` wheel 后确认其不含 P3 所需 Acceptance API。因此本页仍是历史候选
+> 证据，不再支持进入 tag/Release；修正合同见
+> [文档 100](100-core-v0.13.0-acceptance-api-release-contract.md)。
+
 > 当前状态：`P4_RELEASE_PREPARATION_CANDIDATE / NO_TAG / NO_RELEASE`
 >
 > 精确施工基线：`b6ddb5c8a704b464dc9b4d07a0f43b7b93a64a71`

@@ -127,7 +127,11 @@ Smoke 与 exact-main 匿名产品读回均已成立。本状态发布自身的�
 clean install、插件卸载后的 Core-only 复算，以及预封存真实 GitHub P1 -> P2 -> P3 正向链均已取得
 本地事实，见[文档 99](docs/99-p4-github-evidence-release-preparation-candidate.md)。这些事实仍不表示
 tag ruleset、tag、Release、公开资产或匿名下载已经发生；最终字节只能在候选经原始远端门禁并合入
-受保护主线后，从新的 exact main 重建。
+受保护主线后，从新的 exact main 重建。该重建门随后发现公开 `v0.12.2` wheel 不含 P3 所需的
+Acceptance API，而准备矩阵使用的是同版本号的当前源码本地构建；因此 P4 已停止，准确状态改为
+`CORE_0.13.0_CONTRACT_CANDIDATE / P4_BLOCKED / NO_TAG / NO_RELEASE`。后继只能先按
+[Core 0.13.0 Acceptance API 发布补全合同](docs/100-core-v0.13.0-acceptance-api-release-contract.md)
+为既有冻结能力建立新的公开 Core 坐标，不能重制 `v0.12.2` 或继续生成插件发布资产。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -558,6 +562,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P4 GitHub Evidence Plugin 独立发布合同冻结事实](docs/97-p4-github-evidence-release-contract-freeze.md)
 - [Release 资产下载恢复策略修正](docs/98-release-download-recovery-correction.md)
 - [P4 GitHub Evidence Plugin 发布准备候选事实 0.1](docs/99-p4-github-evidence-release-preparation-candidate.md)
+- [Core 0.13.0 Acceptance API 发布补全合同](docs/100-core-v0.13.0-acceptance-api-release-contract.md)
 
 ## 项目来源
 
