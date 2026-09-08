@@ -241,6 +241,12 @@ tag protection、tag、Release、公开资产或 P4 最终冻结已经完成。
 正向链，精确本地事实见[文档 99](99-p4-github-evidence-release-preparation-candidate.md)。该候选仍须完成
 自己的原始远端门禁并合入受保护主线；最终资产必须从新的 exact main 重建，不复用本地候选字节。
 
+候选合入后的最终重建门发现：公开 `v0.12.2` wheel 不包含 P3 依赖的 Acceptance API，而准备阶段
+通过的是同版本号的当前源码本地 wheel。该事实使 P4 保持 `BLOCKED`，并由
+[文档 100](100-core-v0.13.0-acceptance-api-release-contract.md)单独建立 Core 0.13.0 发布补全合同。
+在新的 Core 公开坐标、匿名下载和仓库外复验成立前，P4 不得创建插件 tag ruleset、tag、Release、
+validation summary 或 checksum；历史 `v0.12.2` 不得移动或重制。
+
 ## 5. 阶段隔离
 
 | 阶段 | 可修改 | 不可修改 | 出口 |

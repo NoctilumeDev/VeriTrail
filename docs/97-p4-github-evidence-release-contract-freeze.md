@@ -1,5 +1,9 @@
 # P4 GitHub Evidence Plugin 独立发布合同冻结事实
 
+> 后继事实：本页只证明当时的合同冻结过程，不证明其 `veritrail==0.12.2` 依赖可由公开资产满足。
+> final exact-main clean install 的反例与停止线见
+> [文档 100](100-core-v0.13.0-acceptance-api-release-contract.md)；P4 当前为 `BLOCKED`。
+
 > 状态发布目标：`P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`
 >
 > 合同冻结候选基线：`main@eb4dcb60230a516503bf80ce26e13b25cd9b9d97`

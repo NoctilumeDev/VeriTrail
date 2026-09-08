@@ -171,6 +171,12 @@
   `P4_RELEASE_PREPARATION_CANDIDATE / NO_TAG / NO_RELEASE`；只有该候选自己的原始远端门禁、受保护主线
   合入与新 exact main 门成立后，才允许重建最终字节并创建 tag protection。当前候选字节不得复用为最终
   Release 资产，R1 仍等待 P4 与 Pattern Corpus 双冻结。
+  该候选合入后的 final exact-main clean-install 门随后证明：公开 `v0.12.2` wheel 不含 P3 所需的
+  Acceptance API，而准备矩阵使用了同版本号的当前源码本地 wheel。该事实属于公开发行身份错配，不是
+  下载失败或插件回归；P4 已停止为 `BLOCKED`，插件 tag ruleset、tag、Release、validation summary 与
+  checksum 均不得创建。后继只能先按
+  `docs/100-core-v0.13.0-acceptance-api-release-contract.md` 为既有冻结 Acceptance 能力建立独立 Core
+  `0.13.0` 公开坐标；`v0.12.2` 标签与资产继续只读，R1 仍等待 P4 与 Pattern Corpus 双冻结。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

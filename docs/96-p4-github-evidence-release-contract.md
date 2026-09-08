@@ -1,5 +1,10 @@
 # P4 GitHub Evidence Plugin 独立发布合同 0.1
 
+> 后继阻断：最终 exact-main clean install 证明公开 `v0.12.2` wheel 不含本合同插件所需的 Acceptance
+> API。本合同的历史 0.1 内容继续保留，但 Core dependency 与 Latest 相关出口已由
+> [文档 100](100-core-v0.13.0-acceptance-api-release-contract.md)阻断；在 Core 0.13.0 公开发布并完成
+> 读回前，不得继续插件发布。
+
 > 当前状态：`P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`
 >
 > 精确设计基线：`main@f30647577e6de68c4d40a96f4f9b223fb24140bb`
