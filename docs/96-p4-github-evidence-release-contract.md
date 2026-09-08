@@ -151,6 +151,18 @@ SHA256SUMS-github-evidence.txt
 `SHA256SUMS-github-evidence.txt` 使用非自指约定，只覆盖前三个 payload。GitHub 自动生成的 source
 archive 链接不是上传资产，不进入固定资产集合，也不获得 byte-for-byte reproducibility 声明。
 
+validation summary 本身不能声明自己的 size 或 SHA-256。它只内嵌 wheel、sdist 的候选身份、验证结果
+与生成时已成立的平台事实；summary 完成并关闭后，其 filename、size 与 SHA-256 再由最后生成的
+`SHA256SUMS-github-evidence.txt` 和发布事实绑定。checksum manifest 也不列出自身摘要。由此保持固定
+顺序且不产生摘要自指：
+
+```text
+wheel + sdist
+    -> validation summary
+    -> SHA256SUMS (wheel + sdist + summary)
+    -> external release facts bind all four asset digests
+```
+
 同一 filename 在以下位置必须逐字节一致：
 
 ```text
@@ -173,7 +185,8 @@ trace、Cookie、token、绝对路径、临时目录或未经脱敏的真实 Evi
 - exact commit、tree、提交时间与工作树 clean 状态；
 - CPython、pip、setuptools、wheel/build backend 的精确版本；
 - distribution/import/version/Core dependency/render extra；
-- 每个 payload 的 filename、size 与 SHA-256；
+- wheel 与 sdist 的 filename、size 与 SHA-256；summary/checksum 的摘要按第 5 节在它们关闭后由外层
+  checksum/release facts 记录；
 - 两个独立构建目录的包内容/metadata 比较结果；
 - 若观察到逐字节可复现，可以记录该事实；未证明时不得把内容等价扩张为字节可复现；
 - 全部候选门禁、失败保留与范围外声明。

@@ -145,6 +145,9 @@
   显式 non-Latest，Core `v0.12.2` 的 Latest 身份不得漂移。R1 继续等待 P4 与 Pattern Corpus 双冻结。
   先前 PR #68 的原始门禁暴露既有 M11 CLI 聚合 `ERROR` 后已停止且未合入；PR #69 只增加分层诊断并以
   原始 11/11 门禁合入当前基线。后继绿灯不覆盖 #68，也不把其未复现解释为已知根因。
+  PR #70 合入后的冻结前身份核账又发现 validation summary 不能把自身摘要写入自身；候选合同必须先
+  明确 `wheel/sdist -> summary -> checksum -> external release facts` 的非自指顺序，再重新完成自己的
+  门禁与 exact-main 匿名读回。该修正仍不授权创建 tag ruleset、tag、Release 或公开资产。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

@@ -383,4 +383,9 @@ GitHub Evidence Plugin `0.1.0` 的 source/distribution/asset/tag/Release/public-
 当前仍为 `P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`；合同自己的门禁、受保护主线合入、
 exact-main 匿名产品读回与独立冻结发布完成前，不得创建插件 ruleset、tag、Release 或公开资产。
 
+PR #70 将重建候选合入 `main@f27507c3735a68134fa428344f63265601c93715` 后，冻结前身份核账发现
+validation summary 若记录“每个 payload”的摘要会要求它声明自身摘要。候选因此保持未冻结，并以
+最小修正明确 `wheel/sdist -> summary -> checksum -> external release facts` 的非自指生成与绑定顺序；
+该反例没有触发 tag ruleset、tag、Release、资产上传或 P1–P3 语义修改。
+
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
