@@ -118,7 +118,11 @@ P3 合同曾在状态发布补丁自身的门禁、合入和合入后精确匿�
 原始 11/11 门禁、受保护主线合入、非自指摘要顺序修正和 exact-main 匿名产品读回；独立
 [合同冻结事实](docs/97-p4-github-evidence-release-contract-freeze.md)闭合后，当前状态为
 `P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`。它尚未创建插件 tag ruleset、tag、Release 或公开
-资产，也没有改变 Core `v0.12.2` 的 Latest 身份。
+资产，也没有改变 Core `v0.12.2` 的 Latest 身份。合同冻结后的两次既有 Release 下载 HTTP 500 反例已由
+[PR #74](https://github.com/NoctilumeDev/VeriTrail/pull/74) 收敛为独立、有界且不放松摘要校验的
+[恢复策略修正](docs/98-release-download-recovery-correction.md)；其原始 11/11 门禁、主线 11/11、Browser
+Smoke 与 exact-main 匿名产品读回均已成立。本状态发布自身的门禁、合入和合入后读回全部成立后，状态为
+`RELEASE_DOWNLOAD_RECOVERY_FROZEN / P4_RELEASE_NOT_STARTED`，P4 才能从新的 exact main 继续施工。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
