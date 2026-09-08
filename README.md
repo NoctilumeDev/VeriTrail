@@ -55,7 +55,7 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P2 已冻结）
+### 平台证据插件轨（P3 已冻结，P4 合同候选）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
 这类外部平台事实建立独立 `P` 轨。P0 设计合同和 P1 实现均已冻结；P1 现有独立源码包、只读 CLI、
@@ -111,9 +111,12 @@ P3 合同曾在状态发布补丁自身的门禁、合入和合入后精确匿�
 `P1_FROZEN / P2_FROZEN / P3_CONTRACT_0.1_FROZEN / P3_IMPLEMENTATION_NOT_STARTED`。后继 P3 实现已由
 [PR #64](https://github.com/NoctilumeDev/VeriTrail/pull/64) 的原始 11 项门禁合入
 `main@c0bce6cb7a3c9f3684d1845beda355084f232d0a`，并完成 README/P3 合同的 exact-main 匿名产品读回；
-候选 closure 与独立最终状态发布全部成立后，当前为 `P3_FROZEN / P4_NOT_STARTED`；实现候选与最终
-冻结事实分别见[文档 94](docs/94-p3-core-handoff-implementation-freeze-candidate.md)和
-[文档 95](docs/95-p3-core-handoff-freeze-publication.md)。
+候选 closure 与独立最终状态发布全部成立后，P3 当前为 `FROZEN`；实现候选与最终冻结事实分别见
+[文档 94](docs/94-p3-core-handoff-implementation-freeze-candidate.md)和
+[文档 95](docs/95-p3-core-handoff-freeze-publication.md)。P4 现已从
+`main@f30647577e6de68c4d40a96f4f9b223fb24140bb` 重新进入
+[GitHub Evidence Plugin 独立发布合同 0.1](docs/96-p4-github-evidence-release-contract.md)的 docs-only
+候选阶段；它尚未创建插件 tag、Release 或公开资产，也没有改变 Core `v0.12.2` 的 Latest 身份。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -155,7 +158,8 @@ Schema、evaluator、P1/P2 facts 与 Verdict 优先级均不改变。该修正�
 被验证并由 Core 消费的必须是同一 Evidence 快照。后继实现已经贯通 manifest、同一 imported snapshot、
 四态 synthetic lab、wheel/uninstall 与真实 GitHub PASS/FAIL；第一次真实 E 暴露的 synthetic/production
 fact path 漂移以最小 C 修正和 `RA-021` 保留，没有回写 P2。独立 docs-only closure 与最终状态发布成立后，
-P3 已冻结；P4 仍未开始。
+P3 已冻结。P4 当前只开始了独立发布合同候选；合同自己的门禁、合入、exact-main 匿名读回与独立冻结
+发布成立前，不得创建 ruleset、tag、Release 或上传资产。
 
 P1/P2 在开放世界施工中形成的可复用边界另见
 [受约束的开放世界观察方法](docs/91-bounded-open-world-observation-method.md)。它把平台适配、运行时
@@ -193,11 +197,12 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 具体 Schema 仍须等 P4 与 Pattern Corpus 冻结后单独定稿。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
-CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P2 合同的默认
+CLI、CI、标签或 Release；R1 必须等 P4 冻结并选定精确 Pattern Corpus 后才能启动。P4 的 docs-only
+发布合同候选不会解除这一阻断。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
 可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 的
 快照连续性边界已完成最小修正与再次冻结，后继实现与状态发布完成后当前为
-`P3_FROZEN / P4_NOT_STARTED`。`RA-021` 只追加真实 E 暴露的合成夹具结构漂移，
+`P3_FROZEN / P4_CONTRACT_0.1_CANDIDATE / RELEASE_NOT_STARTED`。`RA-021` 只追加真实 E 暴露的合成夹具结构漂移，
 没有进入 Pattern Corpus。这些后继事实没有改变 R0 范围，也没有启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
@@ -538,6 +543,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P3 Core Handoff 合同冻结事实](docs/93-p3-core-handoff-contract-freeze.md)
 - [P3 Core Handoff 实现与冻结候选事实 0.1](docs/94-p3-core-handoff-implementation-freeze-candidate.md)
 - [P3 Core Handoff 最终冻结状态发布](docs/95-p3-core-handoff-freeze-publication.md)
+- [P4 GitHub Evidence Plugin 独立发布合同 0.1](docs/96-p4-github-evidence-release-contract.md)
 
 ## 项目来源
 
