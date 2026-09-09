@@ -536,6 +536,18 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 只完成整改后复验、归档和稳定发布。Post-M8 主线现已全部冻结。
 完整路线见 [Post-M8 收束路线](docs/13-post-m8-roadmap.md)。
 
+### 冻结边界之外的认知地图
+
+里程碑中记录的“未证明/未实现”不自动等于缺陷、欠债或后继承诺。计划编辑、结构化工具链、服务与
+容器生命周期、C2/C3、跨平台、不可信隔离、真实并行、统计与容量属于不同能力域；AI Verdict authority
+则是当前架构主动不拥有的权力，不是一个待补 TODO。
+
+这些边界、触发条件以及 VeriTrail、GitHub Evidence Plugin、Review Attention、JPyxis、FlowKernel 与
+Human authority 的候选职责关系，集中记录在
+[能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。该文档状态为
+`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY / NO_NEW_MILESTONE_COMMITTED`；它帮助未来不遗忘方向，
+但不声称“完全体”已经存在，也不改变当前 R1 优先级。
+
 ## 文档
 
 建议从以下入口阅读：
@@ -639,6 +651,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention Pattern Corpus manifest 0.1](docs/review-attention-pattern-corpus-0.1.json)
 - [Review Attention Pattern Corpus 冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
 - [Review Attention R1 确定性语义切片合同 0.1](docs/113-r1-deterministic-semantic-slice-contract.md)
+- [VeriTrail 能力边界与系统认知地图 0.1](docs/114-capability-boundary-and-system-map.md)
 - [Review Attention R1 合同冻结状态发布](docs/115-r1-contract-freeze-publication.md)
 
 ## 项目来源
