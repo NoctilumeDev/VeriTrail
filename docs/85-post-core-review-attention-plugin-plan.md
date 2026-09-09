@@ -5,7 +5,7 @@
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；
+  R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
@@ -230,7 +230,7 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
    `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-   R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
+   R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
 
@@ -243,7 +243,7 @@ P2_NOT_STARTED
 
 本文当前状态只更新并行事实为
 `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
+R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
 成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于
@@ -252,5 +252,8 @@ Ledger，并只选择 `RA-003 / RA-004 / RA-008 / RA-023` 的 frozen successor �
 [manifest 0.1](review-attention-pattern-corpus-0.1.json)。Payload 经 PR #87 合入精确 source commit
 `9bdcef30517309bbc87ed7fdb0fec395197ef58a`；[文档 112](112-review-attention-pattern-corpus-freeze-closure.md)
 外部绑定 manifest digest、四条精确 revision 及匿名公开读回。该状态发布自身闭环成立后，R1 的双前置门
-已满足。后继[文档 113](113-r1-deterministic-semantic-slice-contract.md)只建立 R1 0.1 合同候选；它不创建
-R1 Schema、源码或运行能力，也不能在自身冻结闭环前被写成 `R1_CONTRACT_FROZEN`。
+已满足。后继[文档 113](113-r1-deterministic-semantic-slice-contract.md)只建立 R1 0.1 合同候选；PR #89
+将其合入 `main@617e99ddd8217fbcaf26037c0f9ac15014795f15` 后，主线门禁和三次匿名产品读回均成立。
+[文档 115](115-r1-contract-freeze-publication.md)只发布该候选闭环；它自身的最后门成立后才允许写
+`R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。Schema 起草资格不能
+被解释为 Schema 已存在、已冻结或运行实现已经开始。

@@ -267,9 +267,13 @@ Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正�
 `sha256:ef7f65f7384f39d6afe3f1e44ac0463d8d5a0b85888dfe31ef069f0fbf6eea5d`。该状态发布自身的门禁、
 受保护主线合入与合入后读回全部成立后，状态为
 `PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED`。后继已从 exact
-`main@9ab64121350b69ce81e6be79961ad426026bbc39` 建立 docs-only R1 合同候选；当前严格状态为
-`R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`，不得把候选合同、Schema
-或实现互相替代。
+`main@9ab64121350b69ce81e6be79961ad426026bbc39` 建立 docs-only R1 合同候选。候选经 PR #89 原始
+11/11 门禁合入 `main@617e99ddd8217fbcaf26037c0f9ac15014795f15`，该 exact main 的 Public CI、
+Browser Smoke 与 README、合同、里程碑三次匿名产品读回均已成立。后继
+[合同冻结状态发布](docs/115-r1-contract-freeze-publication.md)自身的门禁、受保护主线合入与合入后
+exact-main 匿名读回全部成立后，状态才推进为
+`R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。Schema 获准起草不等于
+Schema 已存在、已冻结或实现已启动；在状态发布闭环前仍保持候选状态。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
@@ -278,7 +282,8 @@ Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正�
 [Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)，当前 payload 选择见
 [文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)，最终身份与公开读回见
 [文档 112](docs/112-review-attention-pattern-corpus-freeze-closure.md)，R1 的首个候选合同见
-[文档 113](docs/113-r1-deterministic-semantic-slice-contract.md)。
+[文档 113](docs/113-r1-deterministic-semantic-slice-contract.md)，合同冻结状态发布见
+[文档 115](docs/115-r1-contract-freeze-publication.md)。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -634,6 +639,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention Pattern Corpus manifest 0.1](docs/review-attention-pattern-corpus-0.1.json)
 - [Review Attention Pattern Corpus 冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
 - [Review Attention R1 确定性语义切片合同 0.1](docs/113-r1-deterministic-semantic-slice-contract.md)
+- [Review Attention R1 合同冻结状态发布](docs/115-r1-contract-freeze-publication.md)
 
 ## 项目来源
 
