@@ -215,7 +215,7 @@ P1/P2 在开放世界施工中形成的可复用边界另见
 控制、观察语义与证据工程分开，并明确合成机制证据、真实兼容证据、观察者效应和不确定性如何进入
 冻结门；它是一份方法归纳，不扩张 P1/P2 合同，也不表示 P3 已开始。
 
-### 审查注意力插件轨（R0 架构已冻结）
+### 审查注意力插件轨（R0 与首个 Pattern Corpus 已冻结）
 
 AI 可以把一个不完整的现实模型实现得整齐、自洽并通过全部测试。VeriTrail 因此另开独立顶层 `R` 轨：
 `R = Review`，不表示 Risk。它不替人宣布“这里有 bug”，而是把精确源码、确定性分析证据和可解释
@@ -241,13 +241,13 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 `record_revision -> supersedes_digest` 追加不可变记录，Corpus 只选择精确 `record_digest`。P2–P4 会继续
 为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
 
-未来 R1 不会把源码唯一切成等长“代码段”。它将从精确 Source Snapshot 的确定性关系图派生可重叠、
+R1 不会把源码唯一切成等长“代码段”。它将从精确 Source Snapshot 的确定性关系图派生可重叠、
 可追溯且有界的 Semantic Review Slice，并把 slice derivation、analysis 与 attention ranking 保持分权；
-具体 Schema 仍须等 P4 与 Pattern Corpus 冻结后单独定稿。
+具体 Schema 仍须在后继独立 R1 合同中定稿。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
-CLI、CI、标签或 Release；P4 已完成独立插件 Release 并冻结，只解除了 R1 的发布前置门。R1 仍须等
-精确 Pattern Corpus 完成选择、manifest、受保护主线和匿名公开读回后才能启动。P2 合同的默认
+CLI、CI、标签或 Release；P4 已完成独立插件 Release 并冻结，首个精确 Pattern Corpus 也已完成选择、
+manifest、受保护主线和匿名公开读回。双前置门只解除 R1 合同入口，R1 实现仍未启动。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
 可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 的
 快照连续性边界已完成最小修正与再次冻结，后继实现与状态发布完成后当前为
@@ -258,16 +258,22 @@ Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正�
 `CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN`。后继候选已逐条审议 `RA-001` 至 `RA-027`，只将
 `RA-003 / RA-004 / RA-008 / RA-023` 的线性 successor 选入非自引用
 [Corpus manifest](docs/review-attention-pattern-corpus-0.1.json)，选择依据与最小性证明见
-[文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)。当前仍只是
-`CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`：没有 payload 合入后的 exact
-source commit、外部绑定的 manifest digest 与匿名公开读回，不得启动 R1。
+[文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)。Payload 经 PR #87 原始 11/11
+门禁合入 `main@9bdcef30517309bbc87ed7fdb0fec395197ef58a`，其 exact-main Public CI、Browser Smoke、四组独立
+复算、README/文档 111 匿名产品读回及 manifest 匿名原始字节读回均成立；[冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
+外部绑定该 source commit 与
+`sha256:ef7f65f7384f39d6afe3f1e44ac0463d8d5a0b85888dfe31ef069f0fbf6eea5d`。该状态发布自身的门禁、
+受保护主线合入与合入后读回全部成立后，状态为
+`PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。这只解除
+R1 入口停止线，不在本轮创建 R1 合同或实现。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
 [Review Pattern Ledger](docs/87-review-pattern-ledger.md)；本地找茬、修正和未完成的远端停止线见
 [R0 架构评审](docs/88-r0-review-attention-design-review.md)，P4 后的选择与冻结边界见
 [Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)，当前 payload 选择见
-[文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)。
+[文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)，最终身份与公开读回见
+[文档 112](docs/112-review-attention-pattern-corpus-freeze-closure.md)。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -621,6 +627,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention Pattern Corpus 合同冻结状态发布](docs/110-review-attention-pattern-corpus-contract-freeze.md)
 - [Review Attention Pattern Corpus 选择与 payload 候选](docs/111-review-attention-pattern-corpus-selection-candidate.md)
 - [Review Attention Pattern Corpus manifest 0.1](docs/review-attention-pattern-corpus-0.1.json)
+- [Review Attention Pattern Corpus 冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
 
 ## 项目来源
 

@@ -1,10 +1,11 @@
-# Post-Core Review Attention Plugin Plan v1.2
+# Post-Core Review Attention Plugin Plan v1.3
 
 ## 1. 文档身份
 
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
-- 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_CANDIDATE`；
+- 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
+  R1_IMPLEMENTATION_NOT_STARTED`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
@@ -169,9 +170,9 @@ SourceSnapshot binding
 segmentation / slice derivation != analysis != attention ranking
 ```
 
-本节只补充 R1 的未来施工问题，不冻结 `ReviewSlice` Schema，不把它加入已冻结 R0 Artifact 清单，也
-不解除 `R1_BLOCKED_UNTIL_P4_AND_CORPUS_FREEZE`。具体 Schema、语言支持、关系类型和 coverage 算法
-仍须在 R1 开工前从精确 Pattern Corpus 单独定稿。
+本节只补充 R1 的未来施工问题，不冻结 `ReviewSlice` Schema，也不把它加入已冻结 R0 Artifact 清单。
+P4 与首个 Pattern Corpus 双前置门闭合后，本停止线只解除 R1 合同入口；具体 Schema、语言支持、关系
+类型和 coverage 算法仍须从冻结 Corpus 单独定稿，当前没有 R1 实现。
 
 ## 6. 阶段路线
 
@@ -185,8 +186,9 @@ segmentation / slice derivation != analysis != attention ranking
 | R5 | 如何将选定事实与处置按精确坐标交给 Core 独立验收 | 私有比较器、Verdict 泄漏 |
 | R6 | 如何独立打包、卸载、发布并完成公开读回 | 回填 Core、改写旧 Release |
 
-R0 可以先冻结，但 **R1 不得在 P4 之前启动**。P2–P4 完成后，必须从开放 Ledger 中选择一份精确
-Pattern Corpus 快照，绑定提交与摘要，作为 R1 的输入基线。这样 P 轨反哺 R 轨，但不形成施工耦合。
+R0 可以先冻结，但 **R1 不得在 P4 与 Pattern Corpus 双冻结之前启动**。P2–P4 完成后，必须从开放
+Ledger 中选择一份精确 Pattern Corpus 快照，绑定提交与摘要，作为 R1 的输入基线。该前置门现已完成，
+只允许后继从新的 exact main 独立起草 R1 合同；这样 P 轨反哺 R 轨，但不形成施工耦合。
 
 ## 7. 反例资产的双层冻结
 
@@ -222,7 +224,8 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 2. 文档只通过受保护主线合入，不绕过远端门禁；
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
-   `P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_0.1_FROZEN`，两者不得互相改写；
+   `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
+   R1_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
 
@@ -234,12 +237,14 @@ P2_NOT_STARTED
 ```
 
 本文当前状态只更新并行事实为
-`P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_0.1_FROZEN`；它不把 R0 当时尚未发生的
+`P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
+R1_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
 成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于
 选择 manifest。后继[文档 111](111-review-attention-pattern-corpus-selection-candidate.md)已按合同逐条审议
 Ledger，并只选择 `RA-003 / RA-004 / RA-008 / RA-023` 的 frozen successor 形成
-[manifest 0.1](review-attention-pattern-corpus-0.1.json)。当前仍为
-`CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`；后继 closure 尚未绑定 payload
-合入后的 exact source commit 与 manifest digest，也没有完成匿名公开读回，因此不得进入 R1。
+[manifest 0.1](review-attention-pattern-corpus-0.1.json)。Payload 经 PR #87 合入精确 source commit
+`9bdcef30517309bbc87ed7fdb0fec395197ef58a`；[文档 112](112-review-attention-pattern-corpus-freeze-closure.md)
+外部绑定 manifest digest、四条精确 revision 及匿名公开读回。该状态发布自身闭环成立后，R1 的双前置门
+已满足，但只解除后继 R1 合同入口，不创建 R1 Schema、源码或运行能力。
