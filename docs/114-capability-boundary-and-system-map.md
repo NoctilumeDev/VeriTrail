@@ -127,32 +127,31 @@ Verified Useful Work / Human Attention
 
 ## 4. 体系职责地图
 
-```mermaid
-flowchart LR
-    REALITY["Reality<br/>owns truth"]
-    HUMAN["Human authority<br/>intent · seal · disposition"]
-    FLOW["FlowKernel<br/>planned authority/resource mechanism"]
-    JPYXIS["JPyxis<br/>contract-governed heterogeneous execution"]
-    PLATFORM["External platforms<br/>GitHub and future sources"]
-    PPLUGIN["Platform Evidence plugins<br/>bounded observation"]
-    CORE["VeriTrail Core<br/>evidence discipline · deterministic verdict"]
-    REVIEW["Review Attention<br/>attention allocation · no truth authority"]
-    QUICK["Q / Verification Scheduling<br/>proof scheduling · no verdict authority"]
+```text
+AUTHORITY / EXECUTION
+Human authority
+    +-> FlowKernel -- future bounded action --> JPyxis
+    +----------------------------------------> JPyxis
 
-    HUMAN --> FLOW
-    HUMAN --> JPYXIS
-    FLOW -. "future bounded action" .-> JPYXIS
-    JPYXIS -. "execution artifacts" .-> CORE
-    PLATFORM --> PPLUGIN --> CORE
-    SOURCE["Exact source<br/>and review artifacts"] --> REVIEW --> HUMAN
-    REVIEW -. "future exact handoff" .-> CORE
-    SOURCE -. "future exact change facts" .-> QUICK
-    PPLUGIN -. "standard Evidence" .-> QUICK
-    QUICK -. "schedule and Evidence refs" .-> CORE
-    CORE --> HUMAN
-    REALITY -. "observed, never owned" .-> PLATFORM
-    REALITY -. "observed, never owned" .-> JPYXIS
+OBSERVATION / JUDGMENT
+Reality (owns truth)
+    +-- observed, never owned --> External platforms
+    |                              -> Platform Evidence plugins --+
+    +-- observed, never owned --> JPyxis                          +-> VeriTrail Core
+                                   -> immutable execution artifacts-+
+VeriTrail Core -> deterministic Verdict -> Human authority
+
+REVIEW ATTENTION
+Exact source / review artifacts -> Review Attention -> Human authority
+Review Attention -- future exact handoff --> VeriTrail Core
+
+VERIFICATION SCHEDULING
+Exact source -- future exact change facts --+
+Platform Evidence plugins -- Evidence refs -+-> Q / Verification Scheduling
+Q -- schedule + Evidence refs --> VeriTrail Core
 ```
+
+这里使用静态文本图，使匿名公共读回不依赖 GitHub 的 Mermaid 子资源；展示形式不增加新的集成声明。
 
 这张图只描述候选责任关系，不声明仓库之间已经集成：
 
