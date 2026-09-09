@@ -188,6 +188,9 @@
   `>=0.12,<0.13` 冻结兼容边界、继承该边界的 Authoring Skill 真实 DRAFT 链、GitHub Evidence 的源码
   前向兼容、distribution 声明兼容与公开 clean install；不得让依赖解析把 Core 候选静默替换为
   0.12.2，也不能创建插件 tag ruleset、tag、Release、validation summary 或 checksum。
+  候选 PR #79 原始 11/11 已成立并合入 `main@a5ba0e1bd8f181851db83de611981524da1da8f5`，但该
+  exact main 的首轮 Public CI 在 Python 3.13 `-O` 暴露 M11 正向夹具预算不自洽；修正边界见
+  `docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md`，C2 与 P4 继续阻断。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
