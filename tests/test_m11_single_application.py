@@ -50,6 +50,9 @@ from tests.support import ROOT, single_bootstrap_plan, single_bootstrap_profile
 from tests.test_browser_evidence import _browser_artifact
 
 
+_POSITIVE_BROWSER_LIFECYCLE_TIMEOUT_MS = 120_000
+
+
 def _free_port() -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as candidate:
         candidate.bind(("127.0.0.1", 0))
@@ -250,7 +253,9 @@ class M11SingleApplicationTests(unittest.TestCase):
 
         raw_profile = single_bootstrap_profile()
         raw_profile["subject_watch_roots"] = ["watched"]
-        raw_profile["lifecycle_timeout_ms"] = 15_000
+        # This is a bounded fail-safe for a positive functional path that starts real
+        # Chromium twice. Dedicated lifecycle tests own deadline/cancellation timing.
+        raw_profile["lifecycle_timeout_ms"] = _POSITIVE_BROWSER_LIFECYCLE_TIMEOUT_MS
         application = raw_profile["nodes"][0]
         application["port"] = selected_port
         application["arguments"] = [
