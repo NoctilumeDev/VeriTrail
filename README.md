@@ -3,7 +3,7 @@
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
 [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml)
 [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml)
-[![Core v0.12.2](https://img.shields.io/badge/Core-v0.12.2-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.2)
+[![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)
 [![Starter v0.2.0](https://img.shields.io/badge/Starter-v0.2.0-8A6A2F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
 [![Authoring Skill v0.2.0](https://img.shields.io/badge/Authoring%20Skill-v0.2.0-A22D1F)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)
 [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
@@ -24,20 +24,20 @@ VeriTrail（验迹）是面向独立开发者和小型工程团队的本地优�
 | 十分钟认识验迹 | [从这里开始](START_HERE.md) | 同一预注册标准下的一次真实 `PASS` 和一次故意 `FAIL` |
 | 接入一个本地 Web 项目 | [Starter 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0) | 有界 `single-webapp` / `static-site` 草案；保持 `DRAFT / NOT SEALED` |
 | 用 AI 协助填写合同 | [Authoring Skill 0.2.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0) | 有限 Preset 识别、缺失信息追问和候选草案；不封存、不裁决 |
-| 直接使用稳定内核 | [Core 0.12.2](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.2) | Plan、Evidence、Verdict、Bundle、合成首跑与本地只读 Workbench |
+| 直接使用稳定内核 | [Core 0.13.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) | Plan、Evidence、四 Verdict、Acceptance Bundle、合成首跑与本地只读 Workbench |
 
 ## 发布状态
 
-Core `0.12.2` 已作为有界维护版发布；Starter 与 Authoring Skill 以独立 `0.2.0` 坐标发布，历史 `0.1.0`
-Release 继续保留。入口层只能降低合同填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与
-Browser Smoke 当前共同守住可重复基线。
-
-默认分支当前携带 Core `0.13.0` 发布候选，把已经冻结的 AcceptancePlan、四 Verdict、Bundle 与
-imported-snapshot 公共入口绑定到新的发行身份；它尚未创建 `v0.13.0` 标签、Release 或公开资产，
-稳定下载入口仍是 `0.12.2`。候选范围、消费方坐标与停止线见
+Core `0.13.0` 已作为新的 Latest 稳定内核发布，把已经冻结的 AcceptancePlan、四 Verdict、
+Acceptance Bundle 与 imported-snapshot 公共入口绑定到独立发行身份；五项公开资产已经完成摘要、
+双 Python clean install、真实 Chromium 与匿名下载读回。Core `0.12.2` 及更早版本继续作为不可移动的
+历史维护坐标。Starter 与 Authoring Skill 仍以独立 `0.2.0` 坐标发布，并保持其声明的 Core 0.12.x
+兼容边界；入口层只能降低合同填写成本，不能扩张 Core 的裁决权。范围、消费方坐标与发布证据见
 [发布补全合同](docs/100-core-v0.13.0-acceptance-api-release-contract.md)、
 [C1 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)和
-[0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)。
+[0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)，以及
+[发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)。GitHub 公开 CI 与
+Browser Smoke 当前共同守住可重复基线。
 
 `v0.12.1` 只关闭 wheel 独立首跑缺口，不重开 M0–M14，也不改写不可移动的 `v0.12.0`。新增的
 `veritrail demo` 无需 Git checkout，只从 Core wheel 自身
@@ -62,7 +62,7 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P4 发布准备候选，尚无 tag/Release）
+### 平台证据插件轨（P4 合同已冻结，插件发布待恢复）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
 这类外部平台事实建立独立 `P` 轨。P0 设计合同和 P1 实现均已冻结；P1 现有独立源码包、只读 CLI、
@@ -149,6 +149,11 @@ M11 正向真实浏览器夹具的 15 秒外层预算与其工作量不自洽；
 11/11、合入后 exact-main 11/11、Browser Smoke 1/1 及 README/文档 104 的匿名公开读回已经成立；
 [闭环事实](docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md)的最后状态发布门成立后，C2 才恢复
 施工资格，Core 0.13.0 与 P4 仍未发布。
+[Core 0.13.0 发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)记录后继 C2 从
+`main@cd6f85246c0a789a3117861144af95deeb1b7077` 重新构建五项最终资产、创建受保护注释标签与 Latest
+Release，并完成逐字节匿名下载、双 Python clean install、真实 Chromium 和公开 Release 页面读回。
+该状态补丁自身的门禁、受保护主线合入与合入后 exact-main 匿名读回全部成立后，C3 才关闭并解除
+P4 的 Core 发行阻断；这不表示插件 tag ruleset、tag、Release 或公开资产已经存在，也不启动 R1。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -265,8 +270,8 @@ Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正�
 | M14 | 整改后终局复验与发布收束 | `FROZEN / RELEASED` |
 
 M14 冻结基线仍为不可移动的 [`v0.12.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.0)；
-当前稳定 Core 是在 `0.12.1` 无 checkout 首跑基础上继续修复 demo 最终位置绑定的
-[`v0.12.2`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.2)。M14 没有
+`0.12.1` 与 `0.12.2` 是其后的有界维护坐标；当前稳定 Core 为补齐已冻结 Acceptance 公共入口的
+[`v0.13.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)。M14 没有
 增加能力，而是在安全整改后对 VeriTrail 自证目标与 InkNarratives 精确提交完成常规/优化双轮真实
 复验，并形成首个稳定 Release。最终门禁包括：双 Python 各 `318/318`、Workbench `171/171`、
 lint/type-check/生产构建、依赖审计、wheel/sdist 独立安装运行、Release ZIP 逐文件复核、真实 Chromium、
@@ -282,7 +287,9 @@ lint/type-check/生产构建、依赖审计、wheel/sdist 独立安装运行、R
 [0.12.1 发布读回事实](docs/73-core-v0.12.1-release-readback-facts.md)保存；0.12.2 的有界增量与公开
 读回见[维护合同](docs/74-core-demo-catalog-binding-maintenance-contract.md)、
 [Release Notes](docs/75-v0.12.2-release-notes.md)和
-[发布读回事实](docs/76-core-v0.12.2-release-readback-facts.md)。
+[发布读回事实](docs/76-core-v0.12.2-release-readback-facts.md)；0.13.0 的公共能力边界与最终发行事实见
+[Release Notes](docs/103-v0.13.0-release-notes.md)和
+[发布读回事实](docs/106-core-v0.13.0-release-readback-facts.md)。
 
 M11 的 `m11-v0.12.0` 与 M12 的 `m12-v0.13.0` 是不可移动的里程碑标签；前者不是稳定 Release，
 后者仍使用 `0.12.0.dev1` 包版本。M13 的分层终审事实继续由
@@ -359,7 +366,7 @@ npm audit --audit-level=moderate --registry=https://registry.npmjs.org
 `Public CI` 在每次 main push、PR 更新与 merge queue 上，以 Windows Runner 运行双 Python Core／
 Starter／Authoring Skill 回归、`single-webapp` 与 `static-site` 两条真实 DRAFT 链、wheel/sdist 构建，
 并从 GitHub Release 下载冻结的 E1 0.1.0 资产做 checksum 与 clean-install 回读；独立 Linux Runner
-运行 Workbench test、lint、type-check、生产构建和 moderate 级依赖审计。新的 Core 候选还由独立
+运行 Workbench test、lint、type-check、生产构建和 moderate 级依赖审计。当前 Core 发行线还由独立
 Windows 双 Python matrix 在**不 checkout 仓库**的空工作区里只安装刚构建的 wheel，复核同 Plan
 `PASS`／故意 `FAIL`、Catalog、边界标记和本机绝对路径泄漏。基础门禁通过后，另一独立 Windows
 Runner 还会运行 Starter 的真实 PASS/FAIL 双 Bundle、Catalog 与生产 Workbench 黄金路径。
@@ -585,6 +592,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [VeriTrail 0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)
 - [Core 0.13.0 M11 正向夹具预算修正](docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md)
 - [Core 0.13.0 M11 正向夹具预算修正闭环事实](docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
+- [Core 0.13.0 发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)
 
 ## 项目来源
 

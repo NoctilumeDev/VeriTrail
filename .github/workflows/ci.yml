@@ -61,10 +61,10 @@ jobs:
           python -I -c "import os; from importlib.metadata import version; from pathlib import Path; import veritrail; expected = (Path(os.environ['GITHUB_WORKSPACE']) / 'src').resolve(); actual = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and actual.is_relative_to(expected) else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Verify Starter 0.2.0 rejects the Core 0.13.0 candidate
+      - name: Verify Starter 0.2.0 rejects unsupported Core 0.13.0
         run: >-
           python -m unittest
-          tests.test_core_version_contract.CoreVersionContractTests.test_starter_020_rejects_the_core_0130_candidate
+          tests.test_core_version_contract.CoreVersionContractTests.test_starter_020_rejects_unsupported_core_0130
           -v
 
       - name: Install the frozen Chromium engine

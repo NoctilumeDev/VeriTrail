@@ -52,9 +52,9 @@
   `v0.12.0` 冻结基线。归档审查随后证明 `demo` 在 staging 内生成的 Catalog 会在整目录改名后失去
   Artifact root 绑定；`docs/74-core-demo-catalog-binding-maintenance-contract.md` 至
   `docs/76-core-v0.12.2-release-readback-facts.md` 已完成最小 producer 修复、受保护标签、五项 Release
-  资产、公开下载、双 Python wheel、sdist 与搬移负对照的闭环。Core `0.12.2` 现在是仓库 Latest，
-  状态为 `RELEASED / MAINTENANCE FROZEN`；`v0.12.0`、`v0.12.1`、`v0.12.2` 与 E1/E3 的所有已发布
-  标签和资产均不得移动或静默改写。
+  资产、公开下载、双 Python wheel、sdist 与搬移负对照的闭环。Core `0.12.2` 是不可移动的历史维护
+  Release，状态为 `RELEASED / MAINTENANCE FROZEN`；当前 Latest Core 已由后述 0.13.0 发布闭环更新。
+  `v0.12.0`、`v0.12.1`、`v0.12.2`、`v0.13.0` 与 E1/E3 的所有已发布标签和资产均不得移动或静默改写。
 - `docs/77-post-core-platform-plugin-plan.md` 至 `docs/79-p0-github-plugin-design-review.md` 新开独立
   平台插件 `P` 轨。P0 当前为 `FROZEN / DESIGN_ONLY`：它只冻结 GitHub Evidence Plugin 的权威、
   依赖、权限、数据、失败和后继验收边界，不是 M15 或 E4，也没有创建可运行插件、Schema、CLI、
@@ -144,7 +144,9 @@
   `github-evidence-v0.1.0`、Release、公开资产或 `github-evidence-v*` ruleset。P4 必须区分
   source、distribution、asset、tag/Release 与 public-download
   observation identity；当前 tag ruleset 不覆盖插件标签，这是 tag 创建前的硬门。插件 Release 必须
-  显式 non-Latest，Core `v0.12.2` 的 Latest 身份不得漂移。R1 继续等待 P4 与 Pattern Corpus 双冻结。
+  显式 non-Latest；P4 合同冻结时的 Latest 是 Core `v0.12.2`，后继受控 Core 0.13.0 发布已将 Latest
+  合法更新为 `v0.13.0`，P4 恢复后不得让插件 Release 覆盖该身份。R1 继续等待 P4 与 Pattern Corpus
+  双冻结。
   先前 PR #68 的原始门禁暴露既有 M11 CLI 聚合 `ERROR` 后已停止且未合入；PR #69 只增加分层诊断并以
   原始 11/11 门禁合入当前基线。后继绿灯不覆盖 #68，也不把其未复现解释为已知根因。
   PR #70 合入后的冻结前身份核账又发现 validation summary 不能把自身摘要写入自身；PR #71 只把顺序
@@ -181,10 +183,10 @@
   exact-main 11/11、Browser Smoke 1/1 及 README/合同正文的两个独立匿名产品读回均已成立，冻结事实见
   `docs/101-core-v0.13.0-acceptance-api-contract-freeze.md`。该状态发布自身的门禁、受保护主线合入与
   合入后 exact-main 读回全部成立后，状态为
-  `CORE_0.13.0_CONTRACT_FROZEN / P4_BLOCKED`。C1 已从 exact
+  `CORE_0.13.0_CONTRACT_FROZEN / P4_BLOCKED`。C1 随后从 exact
   `main@e69f3844254947f795564cb845056652f2dcf3ac` 进入
-  `docs/102-core-v0.13.0-release-candidate-plan.md`；当前源码发行身份为 `0.13.0 / RELEASE CANDIDATE /
-  PENDING PUBLIC READBACK`，说明见 `docs/103-v0.13.0-release-notes.md`。必须分开 Starter 0.2.0 的
+  `docs/102-core-v0.13.0-release-candidate-plan.md`；该阶段源码发行身份为 `0.13.0 / RELEASE CANDIDATE /
+  PENDING PUBLIC READBACK`，历史过程见 `docs/103-v0.13.0-release-notes.md`。必须分开 Starter 0.2.0 的
   `>=0.12,<0.13` 冻结兼容边界、继承该边界的 Authoring Skill 真实 DRAFT 链、GitHub Evidence 的源码
   前向兼容、distribution 声明兼容与公开 clean install；不得让依赖解析把 Core 候选静默替换为
   0.12.2，也不能创建插件 tag ruleset、tag、Release、validation summary 或 checksum。
@@ -194,6 +196,15 @@
   已分别取得 11/11，Browser Smoke 1/1 与 README/文档 104 匿名公开读回也已成立；闭环状态发布见
   `docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md`。该发布最后门成立前 C2 继续停止；其后只
   恢复 C2 施工资格，P4 仍等待 Core 0.13.0 公开发行闭环。
+  C2 后继已经从 exact `main@cd6f85246c0a789a3117861144af95deeb1b7077` 重建五项最终资产，创建受保护
+  注释标签 `v0.13.0` 与非 draft、非 prerelease 的 Latest Core Release，并完成五项匿名下载摘要、双
+  Python wheel/sdist clean install、四 Verdict/imported snapshot、Workbench 真实 Chromium 与匿名
+  Release body 读回。精确事实见 `docs/106-core-v0.13.0-release-readback-facts.md`；该状态补丁自己的
+  原始门禁、受保护主线合入与合入后 exact-main README/文档 106 匿名读回全部成立后，状态才是
+  `CORE_0.13.0_RELEASED / MAINTENANCE_FROZEN / C3_CLOSED / P4_RELEASE_NOT_STARTED`。这只解除 P4 的
+  Core 发行阻断；P4 必须从新的 exact main 单独修正插件 distribution 依赖至 `veritrail==0.13.0`、
+  保护 `github-evidence-v*` 标签并重建自身最终资产，不得复用旧候选字节或把 Core Release 继承为
+  插件发布证据。R1 仍等待 P4 与精确 Pattern Corpus 双冻结。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

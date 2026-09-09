@@ -2,11 +2,11 @@
 
 ## Current status
 
-VeriTrail Core 0.12.0 remains the frozen M14 baseline, and Core 0.12.2 is the current released maintenance
-coordinate. The annotated `v0.12.0`, `v0.12.1`, and `v0.12.2` tags and their Release assets have been read
-back from GitHub and must not move. The default branch carries an unreleased Core 0.13.0 candidate that
-publishes already frozen Acceptance APIs under a new distribution identity; it is not a stable download
-coordinate until its protected tag, Release assets, clean installs, and anonymous readback exist.
+VeriTrail Core 0.12.0 remains the frozen M14 baseline, and Core 0.13.0 is the current released stable
+coordinate. The annotated `v0.12.0`, `v0.12.1`, `v0.12.2`, and `v0.13.0` tags and their Release assets have
+been read back from GitHub and must not move. Core 0.13.0 publishes the already frozen Acceptance APIs under
+a distinct distribution identity; its protected tag, five Release assets, clean installs, and anonymous
+readback are recorded in `docs/106-core-v0.13.0-release-readback-facts.md`.
 The independently versioned Starter and Authoring Skill entry layers are released at `0.2.0`. They support
 only the bounded `single-webapp` and `static-site` DRAFT paths and cannot execute Core seal/run, approve a
 Preview, or issue or modify a Verdict. Starter handoff only emits human-review instructions; the Skill stops

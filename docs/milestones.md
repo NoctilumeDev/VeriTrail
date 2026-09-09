@@ -8,7 +8,7 @@
 里程碑标签实际指向的 Git 提交是版本寻址权威；实现提交、合同提交、运行哈希和完整退出条件
 仍以对应的里程碑文档为准。M0–M9 已于 2026-08-11 从 `origin` 核验；M10 当前补丁基线与 M11
 冻结基线于 2026-08-14 核验；M12 冻结基线于 2026-08-22 核验；M13 与 M14 最终发布基线于
-2026-08-23 核验。
+2026-08-23 核验；Core 0.13.0 的公开发行基线于 2026-09-09 核验。
 
 ## 2. 冻结与当前路线索引
 
@@ -273,6 +273,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [VeriTrail 0.13.0 Release Notes](103-v0.13.0-release-notes.md)
 - [Core 0.13.0 M11 正向夹具预算修正](104-core-v0.13.0-m11-positive-fixture-budget-correction.md)
 - [Core 0.13.0 M11 正向夹具预算修正闭环事实](105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
+- [Core 0.13.0 发布与公开读回事实](106-core-v0.13.0-release-readback-facts.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -427,5 +428,17 @@ PR 和 exact-main 门禁成立前继续阻断。
 exact main 的 Public CI 11/11、Browser Smoke 1/1，以及 README/文档 104 的两个 fresh anonymous
 Render 读回均已成立。[文档 105](105-core-v0.13.0-m11-positive-fixture-budget-closure.md)发布该闭环事实；
 它自己的最后门成立后只恢复 C2 施工资格，Core 0.13.0 仍未发布，P4 仍阻断。
+
+C2 随后从 exact `main@cd6f85246c0a789a3117861144af95deeb1b7077` 重新构建最终 Core 0.13.0
+wheel、sdist、Workbench 伴随 ZIP、validation summary 与非自指 checksum；受保护注释标签
+`v0.13.0` 的 tag object `a03c7a1fbcff88291c8cb86f2718c8d76d1ed709` 解引用到同一提交。GitHub
+Release 已成为非 draft、非 prerelease 的 Latest Core；五项上传资产、匿名下载副本与冻结 SHA-256
+逐项一致。公开 wheel/sdist 已在 Python 3.10/3.13 仓库外 clean install 并复算四 Verdict 与同一
+imported snapshot；Workbench ZIP 已完成独立解压与真实 Chromium 5/5。匿名 Release body 三样本稳定、
+无 coverage/Collector/cleanup error，精确事实见
+[文档 106](106-core-v0.13.0-release-readback-facts.md)。该文档自己的原始门禁、受保护主线合入与
+合入后 exact-main 匿名读回全部成立后，状态才推进为
+`CORE_0.13.0_RELEASED / MAINTENANCE_FROZEN / C3_CLOSED / P4_RELEASE_NOT_STARTED`；这只解除 P4
+的 Core 发行阻断，不创建插件发布坐标，也不解除 R1 的 P4/Pattern Corpus 双前置门。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
