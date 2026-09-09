@@ -260,8 +260,10 @@
   `problem_layer` 与 `pattern_class` 必须正交，状态提升必须追加带 `record_revision / supersedes_digest /
   record_digest` 的不可变 revision。P2–P4 的新反例只能按 Schema 追加，不得反向改写 R0 或改变 P 轨
   范围。R1 必须等 P4 冻结并选定 exact commit + manifest digest，且逐项绑定
-  `pattern_id + selected_record_digest` 的 Pattern Corpus 后才能启动。当前仍为
-  `R0_ARCHITECTURE_FROZEN / DESIGN_ONLY`；P2 的新反例可以按 Ledger Schema 追加，但不得借此启动 R1。
+  `pattern_id + selected_record_digest` 的 Pattern Corpus 后才能启动。P4 已冻结；Ledger 已在独立 docs-only
+  候选中把保留的 P2–P4 反例物化至 `RA-027`，并新增 Corpus 选择/manifest/非自指 closure 合同，但当前仍为
+  `CORPUS_CONTRACT_CANDIDATE / CORPUS_NOT_SELECTED / R1_BLOCKED`。不得把合同候选、Ledger 补账或未来
+  manifest 草案冒充 Corpus 冻结，也不得借此启动 R1。
   文档 91 已把 P1/P2 的开放世界观察经验归纳为非合同方法，并在 R 轨 Plan 中补充 R1 的未来
   Semantic Review Slice 边界：slice 由精确 SourceSnapshot 的确定性关系图派生，可以重叠但必须
   有界、可追溯并保留 coverage/truncation；slice derivation、analysis 与 attention ranking 不得合并。

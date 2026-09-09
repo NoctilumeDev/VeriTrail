@@ -246,18 +246,19 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 具体 Schema 仍须等 P4 与 Pattern Corpus 冻结后单独定稿。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
-CLI、CI、标签或 Release；R1 必须等 P4 最终冻结并选定精确 Pattern Corpus 后才能启动。P4 合同冻结
-只解除发布实现的前置门，不解除 R1 阻断。P2 合同的默认
+CLI、CI、标签或 Release；P4 已完成独立插件 Release 并冻结，只解除了 R1 的发布前置门。R1 仍须等
+精确 Pattern Corpus 完成选择、manifest、受保护主线和匿名公开读回后才能启动。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
 可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 的
 快照连续性边界已完成最小修正与再次冻结，后继实现与状态发布完成后当前为
-`P3_FROZEN / P4_CONTRACT_0.1_FROZEN / P4_RELEASE_NOT_STARTED`。`RA-021` 只追加真实 E 暴露的合成夹具结构漂移，
-没有进入 Pattern Corpus。这些后继事实没有改变 R0 范围，也没有启动 R1。
+`P3_FROZEN / P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN`。Ledger 已把 P2–P4 保留的后继反例追加至
+`RA-027`，但没有任何记录进入 Pattern Corpus；当前只是 Corpus 冻结合同候选，仍未启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
 [Review Pattern Ledger](docs/87-review-pattern-ledger.md)；本地找茬、修正和未完成的远端停止线见
-[R0 架构评审](docs/88-r0-review-attention-design-review.md)。
+[R0 架构评审](docs/88-r0-review-attention-design-review.md)，P4 后的选择与冻结边界见
+[Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -585,7 +586,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P1 Structured GitHub API Collector 实现与冻结候选事实 0.1](docs/84-p1-structured-github-api-collector-freeze-candidate.md)
 - [Post-Core Review Attention Plugin Plan v1](docs/85-post-core-review-attention-plugin-plan.md)
 - [Review Attention R0 Contract 0.1](docs/86-review-attention-r0-contract.md)
-- [Review Attention Pattern Ledger 0.1](docs/87-review-pattern-ledger.md)
+- [Review Attention Pattern Ledger 0.2](docs/87-review-pattern-ledger.md)
 - [R0 Review Attention 架构评审与冻结事实](docs/88-r0-review-attention-design-review.md)
 - [P2 Public Render Collector 施工合同 0.1](docs/89-p2-public-render-collector-contract.md)
 - [P2 Public Render Collector 实现与冻结事实 0.1](docs/90-p2-public-render-collector-freeze-candidate.md)
@@ -607,6 +608,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Core 0.13.0 发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)
 - [P4 GitHub Evidence Plugin 发布恢复候选事实 0.1](docs/107-p4-github-evidence-release-resume-candidate.md)
 - [P4 GitHub Evidence Plugin 发布与公开读回事实](docs/108-p4-github-evidence-release-readback-facts.md)
+- [Review Attention Pattern Corpus 冻结合同 0.1](docs/109-review-attention-pattern-corpus-freeze-contract.md)
 
 ## 项目来源
 
