@@ -272,6 +272,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Core 0.13.0 Release Candidate 施工计划](102-core-v0.13.0-release-candidate-plan.md)
 - [VeriTrail 0.13.0 Release Notes](103-v0.13.0-release-notes.md)
 - [Core 0.13.0 M11 正向夹具预算修正](104-core-v0.13.0-m11-positive-fixture-budget-correction.md)
+- [Core 0.13.0 M11 正向夹具预算修正闭环事实](105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -422,5 +423,9 @@ distribution 声明兼容与公开 clean install 分开取证，Starter/插件�
 exact-main Public CI 随后在 Python 3.13 `-O` 暴露 M11 正向真实浏览器夹具的 15 秒外层预算不自洽。
 [文档 104](104-core-v0.13.0-m11-positive-fixture-budget-correction.md)只修正该测试夹具，C2 与 P4 在新的
 PR 和 exact-main 门禁成立前继续阻断。
+独立修正 PR #80 原始 11/11 成功并合入 `main@43c8e9105adf84641d203514594d3e0c5a1251e8`；该
+exact main 的 Public CI 11/11、Browser Smoke 1/1，以及 README/文档 104 的两个 fresh anonymous
+Render 读回均已成立。[文档 105](105-core-v0.13.0-m11-positive-fixture-budget-closure.md)发布该闭环事实；
+它自己的最后门成立后只恢复 C2 施工资格，Core 0.13.0 仍未发布，P4 仍阻断。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
