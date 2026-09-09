@@ -275,6 +275,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Core 0.13.0 M11 正向夹具预算修正闭环事实](105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
 - [Core 0.13.0 发布与公开读回事实](106-core-v0.13.0-release-readback-facts.md)
 - [P4 GitHub Evidence Plugin 发布恢复候选事实 0.1](107-p4-github-evidence-release-resume-candidate.md)
+- [P4 GitHub Evidence Plugin 发布与公开读回事实](108-p4-github-evidence-release-readback-facts.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -449,5 +450,16 @@ P4 随后从 exact `main@ab874d3cfd9ac140654e35d84b0025c2503e10cd` 恢复发布�
 [文档 107](107-p4-github-evidence-release-resume-candidate.md)。当前仍为
 `P4_RELEASE_PREPARATION_CANDIDATE / NO_TAG / NO_RELEASE / NO_PUBLIC_DOWNLOAD_CLAIM`；原始远端门禁与
 受保护主线合入完成前不得建立发布坐标，合入后必须从新的 exact main 重建最终字节。
+
+后继 PR #83 原始 11/11 门禁合入
+`main@548b17ccb1f20d55a9f9beef6666e913af5f65d9`；该 exact main 的 Public CI 11/11 与 Browser Smoke
+1/1 均在 attempt 1 成立。P4 从该坐标重新构建最终 wheel、sdist、pre-tag validation summary 与
+非自指 checksum；tag ruleset `22613490` 先于受保护注释标签 `github-evidence-v0.1.0` 生效。non-Latest
+Release `385275245` 的四项资产、匿名下载摘要、双 Python clean install/runtime/uninstall、真实 GitHub
+正向链及匿名 Release body 均已读回，Core `v0.13.0` 继续是 Latest。精确事实见
+[文档 108](108-p4-github-evidence-release-readback-facts.md)。该状态补丁自己的原始门禁、受保护主线合入
+与合入后 exact-main 匿名读回全部成立后，状态才推进为
+`P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN / R1_BLOCKED_UNTIL_PATTERN_CORPUS_FREEZE`；P4 只解除
+R1 的发布前置条件，不自动选择 Pattern Corpus 或启动 R1。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
