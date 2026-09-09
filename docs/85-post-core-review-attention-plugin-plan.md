@@ -1,11 +1,12 @@
-# Post-Core Review Attention Plugin Plan v1.4
+# Post-Core Review Attention Plugin Plan v1.5
 
 ## 1. 文档身份
 
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；
+  R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
+  Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
@@ -129,7 +130,29 @@ Provider implementation -> R contracts <- Review Attention application
 
 如果一个单体进程同时拥有源码事实、AI 提案、人类决定和 Verdict，哪怕目录拆得很漂亮，也不算分层。
 
-## 5.1 R1 的 Semantic Review Slice 设计边界
+## 5.1 与 Q / Verification Scheduling 的语义边界
+
+R 与 Q 解决不同的瓶颈：
+
+```text
+Review Attention / R
+    -> 人应该看哪里
+    -> 优化 Human Attention
+
+Verification Scheduling / Q
+    -> 已声明的证明义务怎样避免无效重复并有界执行
+    -> 优化 verification wall-clock / recompute
+```
+
+因此 `Dependency != Ownership`、`Consumption != Succession`。未来 Q 可以消费 R Provider 发布的版本化
+Artifact，但不能导入 R 实现、共享 R 的可变状态、把 AttentionProposal 冒充 impact fact，或要求 R1 0.1
+增加 base/head diff 与 change blast radius。R 也不拥有 Q 的 Schedule、Evidence reuse binding 或 Lane/join
+provenance；两者没有上下级关系，也不共享里程碑状态机。
+
+Q 的候选边界见[文档 116](116-q0-quick-verification-scheduling-blueprint.md)。Q0 是短暂 docs-only 支线，
+不会修改 R0/R1 合同或启动实现；闭环后施工入口返回 R1 Schema。
+
+## 5.2 R1 的 Semantic Review Slice 设计边界
 
 源码不是线性文章，而是由 symbol、调用、状态、资源、authority 与变更关系组成的图。R1 不应把每行
 代码唯一切进某个固定“段落”，也不应以等长 token/file chunk 冒充语义边界。未来的确定性语义清单
@@ -230,7 +253,8 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
    `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-   R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
+   R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
+   Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
 
@@ -243,7 +267,8 @@ P2_NOT_STARTED
 
 本文当前状态只更新并行事实为
 `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
+R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
+Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
 成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于

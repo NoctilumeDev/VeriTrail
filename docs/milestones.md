@@ -99,13 +99,17 @@ Plan / Evidence / Verdict
   -> Frozen Palace Evidence presentation system
 ```
 
-当前仍未实现：
+下列内容是**当前未证明/未实现的能力边界**，不是一张统一 TODO、欠债表或交付承诺：
 
-- 计划编辑器与在线写；
-- 任意或不可信项目命令、Shell、npm/Maven、Docker 或中间件生命周期；
-- wave 内真实微并行执行；
-- C2/C3、Docker、跨平台与不可信代码隔离；
-- 统计显著性、生产容量结论和 AI 裁决。
+- 产品表现候选：计划编辑器与在线写；
+- 执行平台候选：结构化 npm/Maven 适配、服务/中间件生命周期、Docker、C2/C3 与跨平台；
+- 独立安全边界：任意或不可信命令与恶意代码隔离，不能由 Shell、Docker、Job Object 或资源上限代替；
+- 证据触发型研究方向：wave 内真实微并行、统计推断与容量表征；
+- 权威非声明：AI 可以解释或提出候选，但 AI 裁决、Seal 与 HumanDisposition 不是待补功能。
+
+这些对象的身份、触发条件、非目标和候选依赖见
+[能力边界与系统认知地图](114-capability-boundary-and-system-map.md)。账册保持开放；R1 仍是当前唯一
+施工优先级，账册条目不会自动获得里程碑身份。
 
 后继里程碑可以提前规划，但只有当前冻结标签仍有效、且新实现没有越过其兼容容差时，才能
 消费这些基线。发现范围上浮时必须回到所有者、消费者和证据矩阵重新评审。
@@ -282,7 +286,9 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention Pattern Corpus manifest 0.1](review-attention-pattern-corpus-0.1.json)
 - [Review Attention Pattern Corpus 冻结闭环](112-review-attention-pattern-corpus-freeze-closure.md)
 - [Review Attention R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
+- [VeriTrail 能力边界与系统认知地图 0.1](114-capability-boundary-and-system-map.md)
 - [Review Attention R1 合同冻结状态发布](115-r1-contract-freeze-publication.md)
+- [Q0 Quick Verification Scheduling Plugin 蓝图 0.1](116-q0-quick-verification-scheduling-blueprint.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -511,5 +517,15 @@ CoverageLedger`，并冻结 Python 3.10 Profile 的能力上限、分阶段 cove
 exact-main 匿名读回全部成立后，状态才是
 `R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。下一步只获准从新的
 exact main 独立起草 Schema 与兼容向量；Schema、源码、CLI、运行 CI、Provider、标签和 Release 均未存在。
+
+R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
+Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
+标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
+[Q0 蓝图](116-q0-quick-verification-scheduling-blueprint.md)只冻结候选身份、权威、分层、反例与实现前置门。
+Q0 不创建 Schema、源码、CLI、缓存、调度器、CI 修改、标签或 Release，不预编 Q1–Qn，也不要求 R1 扩大
+为 base/head diff。当前状态保持
+`Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`；只有候选门禁、主线合入、匿名读回与独立
+docs-only 状态发布全部成立，才可记录
+`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，并返回 R1 Schema。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

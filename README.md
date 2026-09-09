@@ -243,13 +243,14 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 
 R1 不会把源码唯一切成等长“代码段”。它将从精确 Source Snapshot 的确定性关系图派生可重叠、
 可追溯且有界的 Semantic Review Slice，并把 slice derivation、analysis 与 attention ranking 保持分权。
-当前 [R1 0.1 候选合同](docs/113-r1-deterministic-semantic-slice-contract.md)已把首版范围限定为 Python 3.10
-结构语义，并将 SourceSnapshot、CodeFact、Relation、ReviewSlice 与分阶段 CoverageLedger 分开；它仍不
-冻结 Schema，也不创建运行能力。
+当前 [R1 0.1 冻结合同](docs/113-r1-deterministic-semantic-slice-contract.md)已把首版范围限定为 Python 3.10
+结构语义，并将 SourceSnapshot、CodeFact、Relation、ReviewSlice 与分阶段 CoverageLedger 分开；它只冻结
+合同语义，仍未冻结 Schema，也未创建运行能力。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；P4 已完成独立插件 Release 并冻结，首个精确 Pattern Corpus 也已完成选择、
-manifest、受保护主线和匿名公开读回。双前置门只解除 R1 合同入口，R1 实现仍未启动。P2 合同的默认
+manifest、受保护主线和匿名公开读回。双前置门已经解除 R1 合同入口，后继合同也已冻结；当前只允许
+起草 R1 Schema 与兼容向量，R1 实现仍未启动。P2 合同的默认
 Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正并重新冻结；随后 response-budget
 可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 的
 快照连续性边界已完成最小修正与再次冻结，后继实现与状态发布完成后当前为
@@ -273,7 +274,7 @@ Browser Smoke 与 README、合同、里程碑三次匿名产品读回均已成�
 [合同冻结状态发布](docs/115-r1-contract-freeze-publication.md)自身的门禁、受保护主线合入与合入后
 exact-main 匿名读回全部成立后，状态才推进为
 `R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。Schema 获准起草不等于
-Schema 已存在、已冻结或实现已启动；在状态发布闭环前仍保持候选状态。
+Schema 已存在、已冻结或实现已启动。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
@@ -281,9 +282,26 @@ Schema 已存在、已冻结或实现已启动；在状态发布闭环前仍保�
 [R0 架构评审](docs/88-r0-review-attention-design-review.md)，P4 后的选择与冻结边界见
 [Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)，当前 payload 选择见
 [文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)，最终身份与公开读回见
-[文档 112](docs/112-review-attention-pattern-corpus-freeze-closure.md)，R1 的首个候选合同见
+[文档 112](docs/112-review-attention-pattern-corpus-freeze-closure.md)，R1 的首个冻结合同见
 [文档 113](docs/113-r1-deterministic-semantic-slice-contract.md)，合同冻结状态发布见
 [文档 115](docs/115-r1-contract-freeze-publication.md)。
+
+### Quick 验证调度轨（Q0 蓝图候选）
+
+完整门禁守住了证明纪律，也暴露了重复构建、重复取证和可解除串行等待的成本。VeriTrail 因此把
+Verification Scheduling 单独放入顶层 `Q` 轨：`Q = Quick`，但 Quick 只表示减少无效重算，不表示降低
+验收标准。
+
+> **Prove no less. Repeat no more. / 验证不减，重复不做。**
+
+Q 未来可以依据 exact ChangeSet、冻结的 Gate 输入闭包、Evidence 身份和资源 Profile 生成可审计的
+`VerificationSchedule`；它不能输出 `SAFE_TO_SKIP`、修改 Gate、重定义 Evidence 或产生 Core Verdict。
+Q 与 R 也不是上下级：R 优化人的审查注意力，Q 优化既定证明义务的执行时间。
+
+当前仅存在 [Q0 蓝图候选](docs/116-q0-quick-verification-scheduling-blueprint.md)，没有 Schema、源码、CLI、
+缓存、调度器、CI 修改、标签或 Release。Q0 即使冻结，也仍是
+`Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；Q0 闭环后，当前施工入口返回 Review Attention
+R1 Schema。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -536,6 +554,24 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 只完成整改后复验、归档和稳定发布。Post-M8 主线现已全部冻结。
 完整路线见 [Post-M8 收束路线](docs/13-post-m8-roadmap.md)。
 
+### 冻结边界之外的认知地图
+
+里程碑中记录的“未证明/未实现”不自动等于缺陷、欠债或后继承诺。计划编辑、结构化工具链、服务与
+容器生命周期、C2/C3、跨平台、不可信隔离、真实并行、统计与容量属于不同能力域；AI Verdict authority
+则是当前架构主动不拥有的权力，不是一个待补 TODO。
+
+这些边界、触发条件以及 VeriTrail、GitHub Evidence Plugin、Review Attention、Quick Verification
+Scheduling、JPyxis、FlowKernel 与 Human authority 的候选职责关系，集中记录在
+[能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。该文档状态为
+`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；Q0 只把验证调度问题放进独立语义边界，不建立实现入口，
+也不改变当前 R1 Schema 优先级。字母数量不是复杂度指标；不同含义拥有不同身份、单一状态所有者和
+稳定制品边界，才是这里的解耦标准。
+
+这里也不采用“模块多就拆微服务”或“分库就必须拆服务”的机械规则。VeriTrail 的边界由不变量、状态
+所有权、事务、失败恢复与独立生命周期共同揭示：**最小闭环内部允许与语义依赖一致的强耦合，闭环
+之间必须通过稳定合同强解耦。**边界未知时先建立可验证的最小闭环，等待真实反例暴露拆分压力；完整
+判据见能力地图的“何时形成独立子系统”。
+
 ## 文档
 
 建议从以下入口阅读：
@@ -639,7 +675,9 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention Pattern Corpus manifest 0.1](docs/review-attention-pattern-corpus-0.1.json)
 - [Review Attention Pattern Corpus 冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
 - [Review Attention R1 确定性语义切片合同 0.1](docs/113-r1-deterministic-semantic-slice-contract.md)
+- [VeriTrail 能力边界与系统认知地图 0.1](docs/114-capability-boundary-and-system-map.md)
 - [Review Attention R1 合同冻结状态发布](docs/115-r1-contract-freeze-publication.md)
+- [Q0 Quick Verification Scheduling Plugin 蓝图 0.1](docs/116-q0-quick-verification-scheduling-blueprint.md)
 
 ## 项目来源
 
