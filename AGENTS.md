@@ -276,6 +276,13 @@
   合入后 exact-main 匿名读回全部成立后，状态为
   `PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。这只解除
   R1 入口停止线；R1 必须从新的 exact main 另开合同，不得在 Corpus closure 中顺带实现。
+  后继 `docs/113-r1-deterministic-semantic-slice-contract.md` 已从
+  `main@9ab64121350b69ce81e6be79961ad426026bbc39` 建立 docs-only 候选，当前状态为
+  `R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`。R1 0.1 的范围必须保持为
+  `SourceSnapshot -> CodeFacts -> typed structural Relations -> bounded overlapping ReviewSlices ->
+  CoverageLedger`；首个 Profile 只支持 Python 3.10 结构语义，不得外推为整个多语言仓库已被理解。
+  在候选合同完成自身门禁、受保护主线合入、exact-main 匿名读回与独立状态发布前，禁止创建 R1 Schema、
+  源码包、CLI、CI、Provider、标签或 Release。
   文档 91 已把 P1/P2 的开放世界观察经验归纳为非合同方法，并在 R 轨 Plan 中补充 R1 的未来
   Semantic Review Slice 边界：slice 由精确 SourceSnapshot 的确定性关系图派生，可以重叠但必须
   有界、可追溯并保留 coverage/truncation；slice derivation、analysis 与 attention ranking 不得合并。

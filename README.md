@@ -242,8 +242,10 @@ Pattern Ledger。Ledger 以 `problem_layer` 表达问题层、以正交 `pattern
 为账册补充模式，但不会反向改写 R0，也不会被 R 轨改变施工边界。
 
 R1 不会把源码唯一切成等长“代码段”。它将从精确 Source Snapshot 的确定性关系图派生可重叠、
-可追溯且有界的 Semantic Review Slice，并把 slice derivation、analysis 与 attention ranking 保持分权；
-具体 Schema 仍须在后继独立 R1 合同中定稿。
+可追溯且有界的 Semantic Review Slice，并把 slice derivation、analysis 与 attention ranking 保持分权。
+当前 [R1 0.1 候选合同](docs/113-r1-deterministic-semantic-slice-contract.md)已把首版范围限定为 Python 3.10
+结构语义，并将 SourceSnapshot、CodeFact、Relation、ReviewSlice 与分阶段 CoverageLedger 分开；它仍不
+冻结 Schema，也不创建运行能力。
 
 当前状态为 `R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`，没有审查源码包、Schema、
 CLI、CI、标签或 Release；P4 已完成独立插件 Release 并冻结，首个精确 Pattern Corpus 也已完成选择、
@@ -264,8 +266,10 @@ Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正�
 外部绑定该 source commit 与
 `sha256:ef7f65f7384f39d6afe3f1e44ac0463d8d5a0b85888dfe31ef069f0fbf6eea5d`。该状态发布自身的门禁、
 受保护主线合入与合入后读回全部成立后，状态为
-`PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。这只解除
-R1 入口停止线，不在本轮创建 R1 合同或实现。
+`PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED`。后继已从 exact
+`main@9ab64121350b69ce81e6be79961ad426026bbc39` 建立 docs-only R1 合同候选；当前严格状态为
+`R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`，不得把候选合同、Schema
+或实现互相替代。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
@@ -273,7 +277,8 @@ R1 入口停止线，不在本轮创建 R1 合同或实现。
 [R0 架构评审](docs/88-r0-review-attention-design-review.md)，P4 后的选择与冻结边界见
 [Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)，当前 payload 选择见
 [文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)，最终身份与公开读回见
-[文档 112](docs/112-review-attention-pattern-corpus-freeze-closure.md)。
+[文档 112](docs/112-review-attention-pattern-corpus-freeze-closure.md)，R1 的首个候选合同见
+[文档 113](docs/113-r1-deterministic-semantic-slice-contract.md)。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -628,6 +633,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Review Attention Pattern Corpus 选择与 payload 候选](docs/111-review-attention-pattern-corpus-selection-candidate.md)
 - [Review Attention Pattern Corpus manifest 0.1](docs/review-attention-pattern-corpus-0.1.json)
 - [Review Attention Pattern Corpus 冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
+- [Review Attention R1 确定性语义切片合同 0.1](docs/113-r1-deterministic-semantic-slice-contract.md)
 
 ## 项目来源
 
