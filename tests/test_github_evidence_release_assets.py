@@ -38,7 +38,7 @@ METADATA = b"""Metadata-Version: 2.4
 Name: veritrail-github-evidence
 Version: 0.1.0
 Requires-Python: >=3.10
-Requires-Dist: veritrail==0.12.2
+Requires-Dist: veritrail==0.13.0
 Provides-Extra: render
 Requires-Dist: playwright==1.62.0; extra == \"render\"
 
@@ -133,7 +133,7 @@ def prepare_candidate(root: Path) -> tuple[Path, Path, Path]:
                     "import_package": "veritrail_github",
                     "version": VERSION,
                     "requires_python": ">=3.10",
-                    "core_dependency": "veritrail==0.12.2",
+                    "core_dependency": "veritrail==0.13.0",
                     "render_extra": ["playwright==1.62.0"],
                     "cli": "veritrail-github-collect",
                 },

@@ -205,6 +205,13 @@
   Core 发行阻断；P4 必须从新的 exact main 单独修正插件 distribution 依赖至 `veritrail==0.13.0`、
   保护 `github-evidence-v*` 标签并重建自身最终资产，不得复用旧候选字节或把 Core Release 继承为
   插件发布证据。R1 仍等待 P4 与精确 Pattern Corpus 双冻结。
+  P4 已从后继 `main@ab874d3cfd9ac140654e35d84b0025c2503e10cd` 建立新的发布恢复候选，分发
+  绑定提交为 `beaf006574e23d3d3f0c3541d9ea0708d23fa097`，精确事实见
+  `docs/107-p4-github-evidence-release-resume-candidate.md`。当前只允许记为
+  `P4_RELEASE_PREPARATION_CANDIDATE / CORE_0.13.0_BOUND / NO_TAG / NO_RELEASE / NO_PUBLIC_DOWNLOAD_CLAIM`。
+  旧 `00130c0...` 候选已经作废；当前本地候选字节也不得作为最终资产。下一步只能推送候选、等待原始
+  远端门禁并合入受保护主线，再从新的 exact main 重建最终四项资产；tag ruleset 必须先于 tag，插件
+  Release 必须保持 non-Latest，Dependabot #16/#67 不得混入该因果链。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

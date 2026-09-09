@@ -280,7 +280,7 @@ class CoreVersionContractTests(unittest.TestCase):
 
         self.assertIn('"veritrail>=0.12,<0.13"', starter_pyproject)
         self.assertIn("Starter 0.2 requires VeriTrail Core >=0.12,<0.13", starter_doctor)
-        self.assertIn('dependencies = ["veritrail==0.12.2"]', github_plugin_pyproject)
+        self.assertIn('dependencies = ["veritrail==0.13.0"]', github_plugin_pyproject)
         self.assertIn(
             "Verify Starter 0.2.0 rejects unsupported Core 0.13.0",
             public_ci,

@@ -274,6 +274,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Core 0.13.0 M11 正向夹具预算修正](104-core-v0.13.0-m11-positive-fixture-budget-correction.md)
 - [Core 0.13.0 M11 正向夹具预算修正闭环事实](105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
 - [Core 0.13.0 发布与公开读回事实](106-core-v0.13.0-release-readback-facts.md)
+- [P4 GitHub Evidence Plugin 发布恢复候选事实 0.1](107-p4-github-evidence-release-resume-candidate.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -440,5 +441,13 @@ imported snapshot；Workbench ZIP 已完成独立解压与真实 Chromium 5/5。
 合入后 exact-main 匿名读回全部成立后，状态才推进为
 `CORE_0.13.0_RELEASED / MAINTENANCE_FROZEN / C3_CLOSED / P4_RELEASE_NOT_STARTED`；这只解除 P4
 的 Core 发行阻断，不创建插件发布坐标，也不解除 R1 的 P4/Pattern Corpus 双前置门。
+
+P4 随后从 exact `main@ab874d3cfd9ac140654e35d84b0025c2503e10cd` 恢复发布准备；提交
+`beaf006574e23d3d3f0c3541d9ea0708d23fa097` 只把 GitHub Evidence Plugin 0.1.0 的 distribution 与
+发布核验绑定到公开 `veritrail==0.13.0`。双 Python 源码矩阵、base/sdist/render clean install、插件
+卸载后的 Core-only 复算、可重复本地资产与两条匿名真实 GitHub 候选链已经成立，精确事实及保留失败见
+[文档 107](107-p4-github-evidence-release-resume-candidate.md)。当前仍为
+`P4_RELEASE_PREPARATION_CANDIDATE / NO_TAG / NO_RELEASE / NO_PUBLIC_DOWNLOAD_CLAIM`；原始远端门禁与
+受保护主线合入完成前不得建立发布坐标，合入后必须从新的 exact main 重建最终字节。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

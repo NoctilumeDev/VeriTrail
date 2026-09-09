@@ -27,7 +27,7 @@ from veritrail_github.public_render_contracts import derive_public_render_reques
 from veritrail_github.transport import UrllibTransport
 
 
-CORE_VERSION = "0.12.2"
+CORE_VERSION = "0.13.0"
 PLUGIN_VERSION = "0.1.0"
 COLLECTION_ORDER = ("github-api", "github-public-render")
 
