@@ -265,8 +265,13 @@
   经 PR #85 原始 11/11 门禁合入 `main@8526c5551cce3a9a9e916917381e0e0463a082f0`，合入后 exact-main
   Public CI、Browser Smoke、README 与合同正文的匿名产品读回均已成立。最终状态发布见
   `docs/110-review-attention-pattern-corpus-contract-freeze.md`；其自身门禁、合入和合入后读回全部成立后，
-  状态为 `CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN / CORPUS_NOT_SELECTED / R1_BLOCKED`。不得把合同冻结、
-  Ledger 补账或未来 manifest 草案冒充 Corpus 冻结，也不得借此启动 R1。
+  合同状态为 `CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN`。后继 payload 候选见
+  `docs/111-review-attention-pattern-corpus-selection-candidate.md` 与
+  `docs/review-attention-pattern-corpus-0.1.json`：只选择 `RA-003 / RA-004 / RA-008 / RA-023` 的精确
+  `FROZEN_PATTERN` successor，当前仍为
+  `CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`。不得把候选 manifest、本地摘要、
+  候选 branch 或 pre-merge commit 冒充 exact Corpus source commit；只有后继 closure 外部绑定合入后的
+  source commit 与 manifest digest 并完成匿名 exact-SHA 读回后，才可解除 R1 停止线。
   文档 91 已把 P1/P2 的开放世界观察经验归纳为非合同方法，并在 R 轨 Plan 中补充 R1 的未来
   Semantic Review Slice 边界：slice 由精确 SourceSnapshot 的确定性关系图派生，可以重叠但必须
   有界、可追溯并保留 coverage/truncation；slice derivation、analysis 与 attention ranking 不得合并。

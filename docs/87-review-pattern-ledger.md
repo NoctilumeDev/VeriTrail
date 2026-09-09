@@ -794,3 +794,406 @@ Corpus。
 这六条均保持 `GENERALIZED`，没有因为“值得进入候选集”就提前写成 `CONTRACT_CANDIDATE` 或
 `FROZEN_PATTERN`。Pattern Corpus 的选择、状态提升、manifest 与 exact source commit 必须继续按独立合同
 串行完成。
+
+## 12. 首个 Pattern Corpus 的候选 revisions
+
+以下四条 revision 只把首个 R1 Corpus 的最小候选物化为完整记录。它们分别约束来源组合、覆盖声明、
+精确源码坐标与已核验快照连续性；状态仍是 `CONTRACT_CANDIDATE`，尚未进入 Corpus。
+
+### RA-003 rev1：适用来源被错误建模为 fallback
+
+```json
+{
+  "pattern_id": "RA-003",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:98ba9abb407347ce5f8721644aaf75cb9b126a6fb695cd2a8edb2eb21603f60a",
+  "status": "CONTRACT_CANDIDATE",
+  "source_coordinate": [
+    "VeriTrail R0 seed set main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3 docs/87-review-pattern-ledger.md",
+    "VeriTrail P1 implementation main@9b45bd635dedd132dc8333c105c04723991c2670 plugins/github-evidence/src/veritrail_github/collector.py",
+    "VeriTrail required-check layering correction@7bd800fd9962fa4b4baa7a849128f373d7fa294a and merged main@5b363637f59be9786d58eed61a14e3bd663dd6d8 docs/83-p1-structured-github-api-collector-contract.md"
+  ],
+  "problem_layer": "Observation",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "SourceComposition",
+  "suspicious_structure": "One relation or fact source succeeds or returns an empty collection, so other independently applicable sources are skipped as fallbacks.",
+  "possible_interpretations": [
+    "The sources are mutually exclusive.",
+    "One source has precedence and the others apply only when it is unavailable.",
+    "One source completely covers the others.",
+    "The sources are independently applicable and their facts must be layered."
+  ],
+  "required_evidence": [
+    "The contract or external semantics defining whether sources are exclusive, ordered, covering or cumulative.",
+    "A coexistence fixture in which two sources contribute different valid relations.",
+    "An empty-first-source fixture in which another applicable source remains non-empty.",
+    "Normalization rules that retain source provenance while deduplicating semantically identical relations."
+  ],
+  "minimal_counterexample": "Source A derives a call relation and Source B derives an ownership relation for the same SourceSnapshot; A succeeds, B is skipped as fallback, and the resulting semantic inventory is described as complete.",
+  "false_positive_conditions": [
+    "The contract proves the sources are mutually exclusive.",
+    "The preferred source is proven to cover every fact domain of the skipped source and retains that coverage provenance.",
+    "The output is explicitly partial and records every skipped applicable source."
+  ],
+  "detectable_cues": [
+    "fallback, first-success, else-if or coalesce around fact providers",
+    "a successful empty result short-circuits another provider",
+    "multiple relation providers feed one inventory but only the first successful result is retained",
+    "deduplication removes the contributing-source identities"
+  ],
+  "non_claim": "A fallback structure is not automatically wrong. This candidate only requires R1 to make source composition explicit and to preserve partial or conflicting facts when cumulative applicability cannot be disproved.",
+  "provenance": "The seed was frozen in R0 and grounded by the P1 Rulesets plus classic branch-protection counterexample. It was materialized as an R1 contract candidate from exact baseline main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a after Pattern Corpus contract 0.1 froze."
+}
+```
+
+### RA-004 rev1：有界成功被描述成完整覆盖
+
+```json
+{
+  "pattern_id": "RA-004",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:6485945ad3280e33b79c94619323c16e5503544a73ccfbd694a940e81ee5c3c8",
+  "status": "CONTRACT_CANDIDATE",
+  "source_coordinate": [
+    "VeriTrail R0 seed set main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3 docs/87-review-pattern-ledger.md",
+    "VeriTrail R1 Semantic Review Slice design@846d392145703f2406cc244cc1fdc0e573202e21 docs/85-post-core-review-attention-plugin-plan.md",
+    "VeriTrail P2 implementation main@ca6b8aaa33bc06795c96610b9e9085506efef9a0 docs/90-p2-public-render-collector-freeze-candidate.md"
+  ],
+  "problem_layer": "Observation",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "Coverage",
+  "suspicious_structure": "A bounded traversal, parser or provider exits successfully and that local success is promoted to complete semantic or repository coverage without a coverage and truncation ledger.",
+  "possible_interpretations": [
+    "Successful completion means the declared finite scope was fully covered.",
+    "The mechanism reached a symbol, file, depth or time limit and only produced a partial view.",
+    "Unsupported syntax or provider failure omitted part of the source graph.",
+    "The result is intentionally a bounded sample and does not claim completeness."
+  ],
+  "required_evidence": [
+    "The declared source scope and deterministic inventory denominator.",
+    "Visited, emitted, skipped, unsupported and failed item counts with identities.",
+    "Every slice expansion limit, stop condition and truncation reason.",
+    "A fixture where a valid downstream relation exists just beyond one configured boundary."
+  ],
+  "minimal_counterexample": "A call-path slice reaches max_symbols before one downstream call edge, returns exit 0 and is published as a complete call chain without PARTIAL coverage or a truncation reason.",
+  "false_positive_conditions": [
+    "The finite scope and denominator are sealed and every member is accounted for.",
+    "The result is explicitly partial and retains the exact boundary and omitted inventory.",
+    "A separate complete provider proves the same declared coverage and the bounded result is not used as its substitute."
+  ],
+  "detectable_cues": [
+    "exit 0, non-empty output or first match directly sets coverage to COMPLETE",
+    "max_depth, max_symbols, max_files or timeout without a truncation field",
+    "unsupported files disappear from the inventory denominator",
+    "empty proposal or analyzer output is described as no issue"
+  ],
+  "non_claim": "This candidate does not require unbounded graph traversal or claim that every partial result is unusable. It requires bounded R1 views to expose exactly what was covered and why expansion stopped.",
+  "provenance": "The seed was frozen in R0 and materialized for the R1 bounded-slice and coverage-ledger boundary from exact baseline main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a; no R1 implementation defect is claimed."
+}
+```
+
+### RA-008 rev1：可变源码别名替代精确快照坐标
+
+```json
+{
+  "pattern_id": "RA-008",
+  "record_revision": 1,
+  "supersedes_digest": null,
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:49fcdc03c92734c0caf980a9ac37d8724868e94a9263f5da610d96065d6790c1",
+  "status": "CONTRACT_CANDIDATE",
+  "source_coordinate": [
+    "VeriTrail R0 seed set main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3 docs/87-review-pattern-ledger.md",
+    "VeriTrail R1 Semantic Review Slice design@846d392145703f2406cc244cc1fdc0e573202e21 docs/85-post-core-review-attention-plugin-plan.md",
+    "VeriTrail P1 corrected contract main@5b363637f59be9786d58eed61a14e3bd663dd6d8 docs/83-p1-structured-github-api-collector-contract.md"
+  ],
+  "problem_layer": "Identity",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "CoordinateStaleness",
+  "suspicious_structure": "A mutable alias such as HEAD, latest, a branch name or an unbound working directory is used as the identity of the source from which inventories, relations and slices are derived.",
+  "possible_interpretations": [
+    "The alias is resolved once to an immutable commit and every artifact retains that resolution.",
+    "Different pipeline stages resolve the alias at different times.",
+    "The working tree is intentionally the subject and its full dirty-state identity is retained.",
+    "The result is exploratory and makes no reproducibility or continuity claim."
+  ],
+  "required_evidence": [
+    "The exact commit/tree or complete working-tree content identity used for the SourceSnapshot.",
+    "The resolution time and resolver provenance for any mutable input alias.",
+    "A rerun after the alias moves while the original snapshot remains addressable.",
+    "Bindings from every CodeFact, relation, slice and coverage entry back to one SourceSnapshot identity."
+  ],
+  "minimal_counterexample": "Inventory resolves branch main to commit A, main moves to B before slice derivation, and both outputs are labeled as one SourceSnapshot because each stage only records the branch name.",
+  "false_positive_conditions": [
+    "The alias is resolved exactly once and the immutable resolved coordinate is propagated to every consumer.",
+    "The subject is an intentionally mutable working tree whose file set, content digests and dirty state are captured atomically enough for the declared claim.",
+    "The output is clearly marked exploratory and is not used as reproducible review evidence."
+  ],
+  "detectable_cues": [
+    "HEAD, latest or branch names appear where an immutable source identity is required",
+    "separate stages call rev-parse independently",
+    "artifacts record repository URL and branch but no commit/tree or content digest",
+    "dirty files are parsed without entering SourceSnapshot identity"
+  ],
+  "non_claim": "This candidate does not forbid friendly aliases at user entry. It requires R1 to resolve them once and bind all derived artifacts to the resulting exact SourceSnapshot or to retain an explicitly bounded working-tree identity.",
+  "provenance": "The seed was frozen in R0 and materialized as the direct SourceSnapshot identity candidate from exact baseline main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a after P1/P2 demonstrated that friendly coordinates and exact observed coordinates are different identities."
+}
+```
+
+### RA-023 rev2：核验快照必须继续成为消费快照
+
+```json
+{
+  "pattern_id": "RA-023",
+  "record_revision": 2,
+  "supersedes_digest": "sha256:b4cc563222decfaa02c5d84e0ab5d9a239f586399ef8e048eff14dd97b8b9458",
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:cd9f19656476803f5c49138f5269bed3856705e5f3e98d900d631de08ae97d35",
+  "status": "CONTRACT_CANDIDATE",
+  "source_coordinate": [
+    "VeriTrail P3 contract main@589bbad7261cceda1aa3a6412278a48473a9b1b7 docs/92-p3-core-handoff-contract.md",
+    "VeriTrail snapshot correction main@5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8",
+    "VeriTrail P3 implementation main@c0bce6cb7a3c9f3684d1845beda355084f232d0a",
+    "VeriTrail Pattern Corpus contract baseline main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a docs/109-review-attention-pattern-corpus-freeze-contract.md"
+  ],
+  "problem_layer": "Identity",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "SnapshotContinuity",
+  "suspicious_structure": "One layer safely reads and verifies source bytes or an imported artifact, but later derivation receives only the locator or a caller-owned mutable object and independently reconstructs what it consumes.",
+  "possible_interpretations": [
+    "The locator names an immutable content-addressed snapshot and every read is equivalent.",
+    "The locator is mutable and can identify different bytes between verification and derivation.",
+    "The verifier owns a stable copy but later code consumes a shared mutable decoded object.",
+    "A storage or language-service boundary provides snapshot semantics that are not expressed in the API."
+  ],
+  "required_evidence": [
+    "The exact source bytes or canonical imported snapshot and its digest.",
+    "A deterministic replacement or mutation between verification and semantic consumption.",
+    "The ownership and mutability contract of SourceSnapshot and every derived input object.",
+    "Proof that inventory, relation and slice derivation consume the same verified snapshot without locator reread or caller mutation."
+  ],
+  "minimal_counterexample": "R1 verifies source archive A at path p, p is replaced with valid archive B, and a SemanticMapper rereads p while the resulting CodeFacts are described as derived from verified A.",
+  "false_positive_conditions": [
+    "The locator belongs to an independently enforced immutable content-addressed store.",
+    "The later layer verifies and owns its own exact snapshot identity rather than relying on the earlier check.",
+    "The same owned immutable snapshot object is passed across the boundary and its digest is rechecked before use."
+  ],
+  "detectable_cues": [
+    "verify(path) followed by parse(path) or derive(path)",
+    "a digest check returns only a filename or locator",
+    "multiple safe reads are treated as proof of one snapshot",
+    "an imported mapping or source buffer remains shared with mutable caller state"
+  ],
+  "non_claim": "This candidate does not prohibit path-based entry APIs or repeated reads from proven immutable storage. It requires the SourceSnapshot verified at the R1 boundary to remain the snapshot consumed by deterministic derivation.",
+  "provenance": "RA-023 rev1 was materialized from the P3 handoff TOCTOU correction. Rev2 preserves that failure mechanism and narrows its direct R1 application from exact baseline main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a; it does not claim an R1 implementation already exists or is defective."
+}
+```
+
+这四条只完成候选提升。任何摘要不符、链断裂、重复 successor 或选择审查缺口都会阻止后继
+`FROZEN_PATTERN` revision 与 manifest；R1 继续保持 `BLOCKED`。
+
+## 13. 首个 Pattern Corpus 的冻结 revisions
+
+候选 revision 经逐条最小性审议与独立摘要复算后，只有以下四条形成线性 successor。这里的
+`FROZEN_PATTERN` 只表示该 revision 可被首个 R1 Corpus manifest 精确选择；不表示命中即缺陷、自动
+Verdict 或 HumanDisposition，也不关闭其余开放 Ledger。
+
+### RA-003 rev2：适用来源被错误建模为 fallback
+
+```json
+{
+  "pattern_id": "RA-003",
+  "record_revision": 2,
+  "supersedes_digest": "sha256:98ba9abb407347ce5f8721644aaf75cb9b126a6fb695cd2a8edb2eb21603f60a",
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:1e20737718ec5e4056dc39d91f750e81c0ccbfefa965b72c1d918bd679f669f7",
+  "status": "FROZEN_PATTERN",
+  "source_coordinate": [
+    "VeriTrail R0 seed set main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3 docs/87-review-pattern-ledger.md",
+    "VeriTrail P1 implementation main@9b45bd635dedd132dc8333c105c04723991c2670 plugins/github-evidence/src/veritrail_github/collector.py",
+    "VeriTrail required-check layering correction@7bd800fd9962fa4b4baa7a849128f373d7fa294a and merged main@5b363637f59be9786d58eed61a14e3bd663dd6d8 docs/83-p1-structured-github-api-collector-contract.md"
+  ],
+  "problem_layer": "Observation",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "SourceComposition",
+  "suspicious_structure": "One relation or fact source succeeds or returns an empty collection, so other independently applicable sources are skipped as fallbacks.",
+  "possible_interpretations": [
+    "The sources are mutually exclusive.",
+    "One source has precedence and the others apply only when it is unavailable.",
+    "One source completely covers the others.",
+    "The sources are independently applicable and their facts must be layered."
+  ],
+  "required_evidence": [
+    "The contract or external semantics defining whether sources are exclusive, ordered, covering or cumulative.",
+    "A coexistence fixture in which two sources contribute different valid relations.",
+    "An empty-first-source fixture in which another applicable source remains non-empty.",
+    "Normalization rules that retain source provenance while deduplicating semantically identical relations."
+  ],
+  "minimal_counterexample": "Source A derives a call relation and Source B derives an ownership relation for the same SourceSnapshot; A succeeds, B is skipped as fallback, and the resulting semantic inventory is described as complete.",
+  "false_positive_conditions": [
+    "The contract proves the sources are mutually exclusive.",
+    "The preferred source is proven to cover every fact domain of the skipped source and retains that coverage provenance.",
+    "The output is explicitly partial and records every skipped applicable source."
+  ],
+  "detectable_cues": [
+    "fallback, first-success, else-if or coalesce around fact providers",
+    "a successful empty result short-circuits another provider",
+    "multiple relation providers feed one inventory but only the first successful result is retained",
+    "deduplication removes the contributing-source identities"
+  ],
+  "non_claim": "A fallback structure is not automatically wrong. This pattern only requires R1 to make source composition explicit and to preserve partial or conflicting facts when cumulative applicability cannot be disproved.",
+  "provenance": "RA-003 rev1 was independently recomputed and selected only for R1 relation-source composition. Rev2 freezes the same semantics for the first bounded Corpus payload; it does not declare any reviewed code defective."
+}
+```
+
+### RA-004 rev2：有界成功被描述成完整覆盖
+
+```json
+{
+  "pattern_id": "RA-004",
+  "record_revision": 2,
+  "supersedes_digest": "sha256:6485945ad3280e33b79c94619323c16e5503544a73ccfbd694a940e81ee5c3c8",
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:1915e4aba5b7604ed417c640ff54494c720cc2bb72c815bf4305f65f4d439077",
+  "status": "FROZEN_PATTERN",
+  "source_coordinate": [
+    "VeriTrail R0 seed set main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3 docs/87-review-pattern-ledger.md",
+    "VeriTrail R1 Semantic Review Slice design@846d392145703f2406cc244cc1fdc0e573202e21 docs/85-post-core-review-attention-plugin-plan.md",
+    "VeriTrail P2 implementation main@ca6b8aaa33bc06795c96610b9e9085506efef9a0 docs/90-p2-public-render-collector-freeze-candidate.md"
+  ],
+  "problem_layer": "Observation",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "Coverage",
+  "suspicious_structure": "A bounded traversal, parser or provider exits successfully and that local success is promoted to complete semantic or repository coverage without a coverage and truncation ledger.",
+  "possible_interpretations": [
+    "Successful completion means the declared finite scope was fully covered.",
+    "The mechanism reached a symbol, file, depth or time limit and only produced a partial view.",
+    "Unsupported syntax or provider failure omitted part of the source graph.",
+    "The result is intentionally a bounded sample and does not claim completeness."
+  ],
+  "required_evidence": [
+    "The declared source scope and deterministic inventory denominator.",
+    "Visited, emitted, skipped, unsupported and failed item counts with identities.",
+    "Every slice expansion limit, stop condition and truncation reason.",
+    "A fixture where a valid downstream relation exists just beyond one configured boundary."
+  ],
+  "minimal_counterexample": "A call-path slice reaches max_symbols before one downstream call edge, returns exit 0 and is published as a complete call chain without PARTIAL coverage or a truncation reason.",
+  "false_positive_conditions": [
+    "The finite scope and denominator are sealed and every member is accounted for.",
+    "The result is explicitly partial and retains the exact boundary and omitted inventory.",
+    "A separate complete provider proves the same declared coverage and the bounded result is not used as its substitute."
+  ],
+  "detectable_cues": [
+    "exit 0, non-empty output or first match directly sets coverage to COMPLETE",
+    "max_depth, max_symbols, max_files or timeout without a truncation field",
+    "unsupported files disappear from the inventory denominator",
+    "empty proposal or analyzer output is described as no issue"
+  ],
+  "non_claim": "This pattern does not require unbounded graph traversal or claim that every partial result is unusable. It requires bounded R1 views to expose exactly what was covered and why expansion stopped.",
+  "provenance": "RA-004 rev1 was independently recomputed and selected only for R1 bounded coverage and truncation semantics. Rev2 freezes the same semantics for the first Corpus payload; it does not create an unbounded-analysis requirement."
+}
+```
+
+### RA-008 rev2：可变源码别名替代精确快照坐标
+
+```json
+{
+  "pattern_id": "RA-008",
+  "record_revision": 2,
+  "supersedes_digest": "sha256:49fcdc03c92734c0caf980a9ac37d8724868e94a9263f5da610d96065d6790c1",
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:194cd1eae23cf3d063a41a9f0b5b3f664a19b3b4b283034acaee07bbddb2198f",
+  "status": "FROZEN_PATTERN",
+  "source_coordinate": [
+    "VeriTrail R0 seed set main@fd944621ef9de7c4f377fa5bd91759f3f900c9a3 docs/87-review-pattern-ledger.md",
+    "VeriTrail R1 Semantic Review Slice design@846d392145703f2406cc244cc1fdc0e573202e21 docs/85-post-core-review-attention-plugin-plan.md",
+    "VeriTrail P1 corrected contract main@5b363637f59be9786d58eed61a14e3bd663dd6d8 docs/83-p1-structured-github-api-collector-contract.md"
+  ],
+  "problem_layer": "Identity",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "CoordinateStaleness",
+  "suspicious_structure": "A mutable alias such as HEAD, latest, a branch name or an unbound working directory is used as the identity of the source from which inventories, relations and slices are derived.",
+  "possible_interpretations": [
+    "The alias is resolved once to an immutable commit and every artifact retains that resolution.",
+    "Different pipeline stages resolve the alias at different times.",
+    "The working tree is intentionally the subject and its full dirty-state identity is retained.",
+    "The result is exploratory and makes no reproducibility or continuity claim."
+  ],
+  "required_evidence": [
+    "The exact commit/tree or complete working-tree content identity used for the SourceSnapshot.",
+    "The resolution time and resolver provenance for any mutable input alias.",
+    "A rerun after the alias moves while the original snapshot remains addressable.",
+    "Bindings from every CodeFact, relation, slice and coverage entry back to one SourceSnapshot identity."
+  ],
+  "minimal_counterexample": "Inventory resolves branch main to commit A, main moves to B before slice derivation, and both outputs are labeled as one SourceSnapshot because each stage only records the branch name.",
+  "false_positive_conditions": [
+    "The alias is resolved exactly once and the immutable resolved coordinate is propagated to every consumer.",
+    "The subject is an intentionally mutable working tree whose file set, content digests and dirty state are captured atomically enough for the declared claim.",
+    "The output is clearly marked exploratory and is not used as reproducible review evidence."
+  ],
+  "detectable_cues": [
+    "HEAD, latest or branch names appear where an immutable source identity is required",
+    "separate stages call rev-parse independently",
+    "artifacts record repository URL and branch but no commit/tree or content digest",
+    "dirty files are parsed without entering SourceSnapshot identity"
+  ],
+  "non_claim": "This pattern does not forbid friendly aliases at user entry. It requires R1 to resolve them once and bind all derived artifacts to the resulting exact SourceSnapshot or to retain an explicitly bounded working-tree identity.",
+  "provenance": "RA-008 rev1 was independently recomputed and selected only for R1 SourceSnapshot coordinate identity. Rev2 freezes the same semantics for the first Corpus payload without forbidding friendly input aliases."
+}
+```
+
+### RA-023 rev3：核验快照必须继续成为消费快照
+
+```json
+{
+  "pattern_id": "RA-023",
+  "record_revision": 3,
+  "supersedes_digest": "sha256:cd9f19656476803f5c49138f5269bed3856705e5f3e98d900d631de08ae97d35",
+  "record_canonicalization": "veritrail-json-c14n/1",
+  "record_digest": "sha256:fcf5d2a2364aa89413ae6d9884380cf7a3ff3f43a309970230d3e204d91b538b",
+  "status": "FROZEN_PATTERN",
+  "source_coordinate": [
+    "VeriTrail P3 contract main@589bbad7261cceda1aa3a6412278a48473a9b1b7 docs/92-p3-core-handoff-contract.md",
+    "VeriTrail snapshot correction main@5d4e7bbbf706d92c98cf36418d6f86b5caf2d3d8",
+    "VeriTrail P3 implementation main@c0bce6cb7a3c9f3684d1845beda355084f232d0a",
+    "VeriTrail Pattern Corpus contract baseline main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a docs/109-review-attention-pattern-corpus-freeze-contract.md"
+  ],
+  "problem_layer": "Identity",
+  "taxonomy_version": "review-attention-taxonomy/1",
+  "pattern_class": "SnapshotContinuity",
+  "suspicious_structure": "One layer safely reads and verifies source bytes or an imported artifact, but later derivation receives only the locator or a caller-owned mutable object and independently reconstructs what it consumes.",
+  "possible_interpretations": [
+    "The locator names an immutable content-addressed snapshot and every read is equivalent.",
+    "The locator is mutable and can identify different bytes between verification and derivation.",
+    "The verifier owns a stable copy but later code consumes a shared mutable decoded object.",
+    "A storage or language-service boundary provides snapshot semantics that are not expressed in the API."
+  ],
+  "required_evidence": [
+    "The exact source bytes or canonical imported snapshot and its digest.",
+    "A deterministic replacement or mutation between verification and semantic consumption.",
+    "The ownership and mutability contract of SourceSnapshot and every derived input object.",
+    "Proof that inventory, relation and slice derivation consume the same verified snapshot without locator reread or caller mutation."
+  ],
+  "minimal_counterexample": "R1 verifies source archive A at path p, p is replaced with valid archive B, and a SemanticMapper rereads p while the resulting CodeFacts are described as derived from verified A.",
+  "false_positive_conditions": [
+    "The locator belongs to an independently enforced immutable content-addressed store.",
+    "The later layer verifies and owns its own exact snapshot identity rather than relying on the earlier check.",
+    "The same owned immutable snapshot object is passed across the boundary and its digest is rechecked before use."
+  ],
+  "detectable_cues": [
+    "verify(path) followed by parse(path) or derive(path)",
+    "a digest check returns only a filename or locator",
+    "multiple safe reads are treated as proof of one snapshot",
+    "an imported mapping or source buffer remains shared with mutable caller state"
+  ],
+  "non_claim": "This pattern does not prohibit path-based entry APIs or repeated reads from proven immutable storage. It requires the SourceSnapshot verified at the R1 boundary to remain the snapshot consumed by deterministic derivation.",
+  "provenance": "RA-023 rev2 was independently recomputed and selected only for R1 SourceSnapshot continuity. Rev3 freezes the same semantics for the first Corpus payload without transferring source-state authority to the review plugin."
+}
+```
+
+最终 Corpus 仍由独立 manifest 以这四条 frozen revision 的精确 digest 选择。Ledger 中未选记录没有被
+删除、降级或判错；后续 closure 尚未绑定 payload 的 exact merged source commit，R1 仍保持 `BLOCKED`。

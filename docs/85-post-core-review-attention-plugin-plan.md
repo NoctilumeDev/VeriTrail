@@ -238,4 +238,8 @@ P2_NOT_STARTED
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
 成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于
-选择 manifest；当前仍为 `CORPUS_NOT_SELECTED / R1_BLOCKED`。
+选择 manifest。后继[文档 111](111-review-attention-pattern-corpus-selection-candidate.md)已按合同逐条审议
+Ledger，并只选择 `RA-003 / RA-004 / RA-008 / RA-023` 的 frozen successor 形成
+[manifest 0.1](review-attention-pattern-corpus-0.1.json)。当前仍为
+`CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`；后继 closure 尚未绑定 payload
+合入后的 exact source commit 与 manifest digest，也没有完成匿名公开读回，因此不得进入 R1。
