@@ -3,10 +3,11 @@
 ## 1. 文档身份
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
-- 决策：`Q0_BLUEPRINT_CANDIDATE / R1_SCHEMA_CURRENT_PRIORITY`；
+- 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
+  R1_SCHEMA_CURRENT_PRIORITY`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
-- 当前修订基线：`main@5807c53e87ea385d7a1c9de2bc32a64faeafc00e`；
+- 当前修订基线：`main@ca1ce9fbf0dafab74a681fe761b1cee07d4b5269`；
 - 影响等级：`L3_SYSTEM / DOCUMENTATION_ONLY / NON_NORMATIVE_MAP`；
 - 本文不创建源码、Schema、CLI、CI、标签、Release 或空目录；
 - 本文不重开 M0–M14、E 轨、P0–P4、PC 兼容桥、R0 或 Pattern Corpus 的冻结结论；
@@ -97,8 +98,8 @@ R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语�
 HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
 为理由提前创建后继实现。
 
-Q0 是一个短暂、独立的 docs-only 蓝图支线，只把已经显现的验证调度问题放进正确边界；它不修改 R1
-合同，也不创建 Q 实现。Q0 闭环后，当前施工入口返回 R1 Schema。
+Q0 是一个已经闭合的短暂、独立 docs-only 蓝图支线，只把已经显现的验证调度问题放进正确边界；它没有
+修改 R1 合同，也没有创建 Q 实现。当前施工入口已经返回 R1 Schema。
 
 ### 3.3 上位设计空间，不是当前产品声明
 
@@ -160,7 +161,7 @@ Q -- schedule + Evidence refs --> VeriTrail Core
 | VeriTrail Core | 给定 sealed Plan 与 Evidence，怎样确定性推导 Verdict | 已有冻结能力 | 世界真相、执行资源、人工处置 |
 | GitHub Evidence Plugin | GitHub API 与公开页面实际观察到了什么 | P0–P4 首个有界插件已冻结 | Core Verdict、GitHub 真相、其他平台完整性 |
 | Review Attention | 人应该优先看哪些有依据的源码切片 | R0/Corpus/R1 合同已冻结；R1 Schema 是当前入口 | 缺陷真值、HumanDisposition、Core Verdict |
-| Q / Verification Scheduling | 已声明的证明义务怎样避免无效重复并有界执行 | Q0 仅为蓝图候选，没有实现 | Gate 定义、Evidence 语义、`SAFE_TO_SKIP`、Core Verdict |
+| Q / Verification Scheduling | 已声明的证明义务怎样避免无效重复并有界执行 | Q0 蓝图已冻结，没有实现 | Gate 定义、Evidence 语义、`SAFE_TO_SKIP`、Core Verdict |
 | [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算怎样保持控制、定义、运行时与合同分权 | 独立仓库 M0–M6 单机基线已冻结 | VeriTrail Verdict、FlowKernel 权限、业务真相 |
 | [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略怎样在确定性权限、资源、隔离与恢复边界内提出有界动作 | 独立仓库仍为 Planned，R0 尚未关闭 | 当前可运行内核、外部验收真值、VeriTrail Verdict |
 | Human authority | 选择前提、Seal、授权边界并承担最终处置责任 | 系统宪法中的权威边界 | 世界终极真相 |
@@ -183,7 +184,7 @@ independent system
 | 类别 | 命名空间 | 身份 |
 | --- | --- | --- |
 | 长期顶层轨道 | `M` Core Milestones、`E` Entry Layer、`P` Platform Evidence、`R` Review Attention | 各有独立问题域和冻结历史 |
-| 顶层候选轨道 | `Q` Quick / Verification Scheduling | Q0 只在起草蓝图；尚无实现 |
+| 顶层候选轨道 | `Q` Quick / Verification Scheduling | Q0 蓝图已冻结；尚无实现 |
 | E 轨内部产品阶段 | `S` Starter、`A` Authoring Skill | 入口层的子产品/阶段，不是与 E 并列的系统 authority |
 | 一次性兼容桥 | `PC` Platform Compatibility | P0 与 P1 之间已经关闭的临时桥，不是长期轨道 |
 | 一次性发布闭环 | `C` Core 0.13.0 release completion | 已关闭的发行状态机；不是持续产品线 |
@@ -460,7 +461,7 @@ authority 仍是明确的架构非声明，不能因“未实现”被提升成�
 ### CAP-013 · Q / Verification Scheduling Plugin
 
 - **能力域：** Verification Efficiency；
-- **当前身份：** `CONTRACT_CANDIDATE` 之前的 `Q0_BLUEPRINT_CANDIDATE`；
+- **当前身份：** `CANDIDATE_DIRECTION / Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED`；
 - **已观察边界：** 当前完整门禁能守住证明纪律，但 documentation/status-only 等小变更仍会重复运行全部
   Gate；仓库尚无 Gate input closure、Evidence reuse 或隔离 Lane 调度能力；
 - **为什么可能重要：** 在证明义务不变的前提下减少无效重算、重复构建和可安全解除的串行等待；
@@ -552,7 +553,7 @@ P0–P4                          FROZEN
 R0 + Pattern Corpus 0.1        FROZEN
 R1 Contract                    FROZEN
 R1 Schema                      CURRENT PRIORITY
-Q0 Blueprint                   CANDIDATE
+Q0 Blueprint                   FROZEN
 Q implementation               NOT STARTED
 
 Capability Ledger              OPEN
@@ -561,6 +562,8 @@ New capability milestone       NOT COMMITTED
 Ledger-item implementation     NOT STARTED
 ```
 
-因此当前只允许先完成 Q0 的 docs-only 蓝图闭环；它不建立 Q 实现入口。Q0 关闭后回到 R1 Schema，按
-已经冻结的 SourceSnapshot、CodeFact、Relation、ReviewSlice 与 CoverageLedger 语义起草兼容向量，仍不写
-运行实现。本账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。
+Q0 的 docs-only 蓝图已经闭环，冻结事实见
+[文档 117](117-q0-verification-scheduling-freeze-publication.md)；它没有建立 Q 实现入口。当前施工已经返回
+R1 Schema，只允许按冻结的 SourceSnapshot、CodeFact、Relation、ReviewSlice 与 CoverageLedger 语义起草
+兼容向量，仍不写运行实现。本账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”就替项目
+决定必须走哪条路。

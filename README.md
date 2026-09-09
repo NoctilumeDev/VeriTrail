@@ -286,7 +286,7 @@ Schema 已存在、已冻结或实现已启动。
 [文档 113](docs/113-r1-deterministic-semantic-slice-contract.md)，合同冻结状态发布见
 [文档 115](docs/115-r1-contract-freeze-publication.md)。
 
-### Quick 验证调度轨（Q0 蓝图候选）
+### Quick 验证调度轨（Q0 蓝图已冻结）
 
 完整门禁守住了证明纪律，也暴露了重复构建、重复取证和可解除串行等待的成本。VeriTrail 因此把
 Verification Scheduling 单独放入顶层 `Q` 轨：`Q = Quick`，但 Quick 只表示减少无效重算，不表示降低
@@ -298,10 +298,10 @@ Q 未来可以依据 exact ChangeSet、冻结的 Gate 输入闭包、Evidence �
 `VerificationSchedule`；它不能输出 `SAFE_TO_SKIP`、修改 Gate、重定义 Evidence 或产生 Core Verdict。
 Q 与 R 也不是上下级：R 优化人的审查注意力，Q 优化既定证明义务的执行时间。
 
-当前仅存在 [Q0 蓝图候选](docs/116-q0-quick-verification-scheduling-blueprint.md)，没有 Schema、源码、CLI、
-缓存、调度器、CI 修改、标签或 Release。Q0 即使冻结，也仍是
-`Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；Q0 闭环后，当前施工入口返回 Review Attention
-R1 Schema。
+[Q0 蓝图](docs/116-q0-quick-verification-scheduling-blueprint.md)已经完成候选、反例修正、远端门禁、
+受保护主线合入与匿名产品读回；冻结事实见[文档 117](docs/117-q0-verification-scheduling-freeze-publication.md)。
+当前状态是 `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，没有 Schema、
+源码、CLI、缓存、调度器、CI 修改、标签或 Release。当前施工入口已经返回 Review Attention R1 Schema。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -678,6 +678,7 @@ Scheduling、JPyxis、FlowKernel 与 Human authority 的候选职责关系，集
 - [VeriTrail 能力边界与系统认知地图 0.1](docs/114-capability-boundary-and-system-map.md)
 - [Review Attention R1 合同冻结状态发布](docs/115-r1-contract-freeze-publication.md)
 - [Q0 Quick Verification Scheduling Plugin 蓝图 0.1](docs/116-q0-quick-verification-scheduling-blueprint.md)
+- [Q0 Quick Verification Scheduling 蓝图冻结状态发布](docs/117-q0-verification-scheduling-freeze-publication.md)
 
 ## 项目来源
 

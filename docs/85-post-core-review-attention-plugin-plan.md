@@ -1,4 +1,4 @@
-# Post-Core Review Attention Plugin Plan v1.5
+# Post-Core Review Attention Plugin Plan v1.6
 
 ## 1. 文档身份
 
@@ -6,7 +6,7 @@
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
   R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
-  Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`；
+  Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
@@ -149,8 +149,9 @@ Artifact，但不能导入 R 实现、共享 R 的可变状态、把 AttentionPr
 增加 base/head diff 与 change blast radius。R 也不拥有 Q 的 Schedule、Evidence reuse binding 或 Lane/join
 provenance；两者没有上下级关系，也不共享里程碑状态机。
 
-Q 的候选边界见[文档 116](116-q0-quick-verification-scheduling-blueprint.md)。Q0 是短暂 docs-only 支线，
-不会修改 R0/R1 合同或启动实现；闭环后施工入口返回 R1 Schema。
+Q 的候选边界见[文档 116](116-q0-quick-verification-scheduling-blueprint.md)，冻结证据见
+[文档 117](117-q0-verification-scheduling-freeze-publication.md)。Q0 是已经闭合的短暂 docs-only 支线，
+没有修改 R0/R1 合同或启动实现；当前施工入口已经返回 R1 Schema。
 
 ## 5.2 R1 的 Semantic Review Slice 设计边界
 
@@ -254,7 +255,7 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
    `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
    R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
-   Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
+   Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
 
@@ -268,7 +269,7 @@ P2_NOT_STARTED
 本文当前状态只更新并行事实为
 `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
 R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
-Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
+Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
 成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于

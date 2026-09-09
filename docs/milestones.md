@@ -289,6 +289,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [VeriTrail 能力边界与系统认知地图 0.1](114-capability-boundary-and-system-map.md)
 - [Review Attention R1 合同冻结状态发布](115-r1-contract-freeze-publication.md)
 - [Q0 Quick Verification Scheduling Plugin 蓝图 0.1](116-q0-quick-verification-scheduling-blueprint.md)
+- [Q0 Quick Verification Scheduling 蓝图冻结状态发布](117-q0-verification-scheduling-freeze-publication.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -522,10 +523,11 @@ R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Sc
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
 [Q0 蓝图](116-q0-quick-verification-scheduling-blueprint.md)只冻结候选身份、权威、分层、反例与实现前置门。
-Q0 不创建 Schema、源码、CLI、缓存、调度器、CI 修改、标签或 Release，不预编 Q1–Qn，也不要求 R1 扩大
-为 base/head diff。当前状态保持
-`Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`；只有候选门禁、主线合入、匿名读回与独立
-docs-only 状态发布全部成立，才可记录
-`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，并返回 R1 Schema。
+候选经 PR #91 合入后，首次严格公开读回发现能力地图的 Mermaid 子资源使 P2 coverage 保持 `PARTIAL`；
+PR #92 只把关系图改为等价静态文本，并在新的 exact main 上重新完成门禁与三次匿名产品读回。
+[文档 117](117-q0-verification-scheduling-freeze-publication.md)发布完整因果链。当前状态是
+`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`：没有 Schema、源码、CLI、
+缓存、调度器、CI 修改、标签或 Release，不预编 Q1–Qn，也不要求 R1 扩大为 base/head diff。当前施工入口
+已经返回 R1 Schema。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

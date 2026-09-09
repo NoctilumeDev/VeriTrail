@@ -286,18 +286,16 @@
   CoverageLedger`；首个 Profile 只支持 Python 3.10 结构语义，不得外推为整个多语言仓库已被理解。
   `R1_SCHEMA_DRAFTING_ALLOWED` 只允许从新的 exact main 独立起草版本化 Schema 与兼容向量，不表示 Schema
   已存在或已冻结；R1 源码包、CLI、运行 CI、Provider、标签和 Release 继续禁止，直到后继实现入口独立闭合。
-  当前允许在返回 R1 Schema 前先串行关闭一个 docs-only Q0 支线：
-  `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。Q0 只能冻结该候选插件的身份、权威、分层、
-  反例与实现前置门；不得创建 Schema、源码包、CLI、缓存、调度器、执行 Lane、CI 修改、标签、Release 或
-  空插件目录，也不得预编 Q1–Qn。Q 与 R 是不同顶层语义：R 优化 Human Attention，Q 优化既定证明义务的
+  docs-only Q0 支线已经完成：`Q = Quick`，正式能力名为 `Verification Scheduling Plugin`；冻结状态为
+  `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。蓝图见
+  `docs/116-q0-quick-verification-scheduling-blueprint.md`，冻结证据见
+  `docs/117-q0-verification-scheduling-freeze-publication.md`。Q0 只冻结该候选插件的身份、权威、分层、反例与
+  实现前置门；没有创建 Schema、源码包、CLI、缓存、调度器、执行 Lane、CI 修改、标签、Release 或空插件
+  目录，也没有预编 Q1–Qn。Q 与 R 是不同顶层语义：R 优化 Human Attention，Q 优化既定证明义务的
   wall-clock/recompute；Q 不得要求 R1 增加 diff/change blast radius，不得把 AttentionProposal 当 impact fact，
-  也不得导入 R/P 实现或 Core 私有 API。Q 只能在未来形成可审计 Schedule、Evidence reuse binding 与 Lane/join
+  也不得导入 R/P 实现或 Core 私有 API。Q 未来最多形成可审计 Schedule、Evidence reuse binding 与 Lane/join
   provenance；不能输出 `SAFE_TO_SKIP`、PASS、削弱 Gate、重定义 Evidence 或产生 Verdict。Q 缺失、失败或
-  卸载时，完整串行验证与 Core 语义必须保持成立。Q0 候选见
-  `docs/116-q0-quick-verification-scheduling-blueprint.md`；在候选、受保护主线合入、exact-main 匿名读回和独立
-  docs-only 状态发布全部闭合前，只能写
-  `Q0_BLUEPRINT_CANDIDATE / Q_IMPLEMENTATION_NOT_STARTED`。Q0 最终最多推进到
-  `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，随后立即返回 R1 Schema。
+  卸载时，完整串行验证与 Core 语义必须保持成立。当前施工入口已经返回 R1 Schema；没有新的 Q 施工授权。
   仓库前缀必须按层级和全名解释：`M/E/P/R/Q` 是长期或候选顶层轨道，`S/A` 是 E 轨内部产品阶段，`PC/C`
   是已关闭的一次性桥/发布状态机，`RA/CAP/AUTH/L*` 是 Artifact 或治理编号。字母多不构成问题；禁止脱离
   全名复用裸前缀，或把依赖误写成 ownership、消费误写成 succession、组合误写成 integration。
