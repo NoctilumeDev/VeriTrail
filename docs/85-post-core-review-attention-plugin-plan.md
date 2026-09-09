@@ -1,11 +1,11 @@
-# Post-Core Review Attention Plugin Plan v1.3
+# Post-Core Review Attention Plugin Plan v1.4
 
 ## 1. 文档身份
 
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_IMPLEMENTATION_NOT_STARTED`；
+  R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
 - 本文不重开 M0–M14、E 轨、PC 兼容桥或 P0/P1 冻结结论。
@@ -143,9 +143,11 @@ Exact Source Snapshot
     -> coverage ledger
 ```
 
-候选 slice 至少包括 symbol、call path、state transition、ownership/authority、resource lifecycle 与
-change blast radius。一个源码锚可以同时出现在多个 slice 中，因为 slice 是认知视图，不是源码存储或
-唯一真值分区。
+R 轨后继候选 slice 可以包括 symbol、call path、state transition、ownership/authority、resource lifecycle
+与 change blast radius；这些是整条路线的未来能力，不等于 R1 0.1 的首版承诺。R1 0.1 只冻结可由
+Python 3.10 源码直接、确定性复算的 declaration、lexical containment 与 import-literal 结构关系，明确
+不提供 `CALLS`、ownership、authority、resource lifecycle 或 change blast radius。一个源码锚可以同时
+出现在多个 slice 中，因为 slice 是认知视图，不是源码存储或唯一真值分区。
 
 每个派生 slice 必须能解释并复算其：
 
@@ -171,8 +173,11 @@ segmentation / slice derivation != analysis != attention ranking
 ```
 
 本节只补充 R1 的未来施工问题，不冻结 `ReviewSlice` Schema，也不把它加入已冻结 R0 Artifact 清单。
-P4 与首个 Pattern Corpus 双前置门闭合后，本停止线只解除 R1 合同入口；具体 Schema、语言支持、关系
-类型和 coverage 算法仍须从冻结 Corpus 单独定稿，当前没有 R1 实现。
+P4 与首个 Pattern Corpus 双前置门闭合后，本停止线只解除 R1 合同入口；后继
+[R1 0.1 候选合同](113-r1-deterministic-semantic-slice-contract.md)已从新的 exact main 将首版范围收敛为
+`SourceSnapshot -> CodeFacts -> typed structural Relations -> bounded overlapping ReviewSlices ->
+CoverageLedger`，并明确首个 Profile 只支持 Python 3.10 结构语义。该候选仍不冻结 Schema，也没有
+R1 实现；Schema、规范字节、路径编码与遍历端点只能在合同冻结后的独立阶段定稿。
 
 ## 6. 阶段路线
 
@@ -225,7 +230,7 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
    `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-   R1_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
+   R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
 
@@ -238,7 +243,7 @@ P2_NOT_STARTED
 
 本文当前状态只更新并行事实为
 `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-R1_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
+R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
 成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于
@@ -247,4 +252,5 @@ Ledger，并只选择 `RA-003 / RA-004 / RA-008 / RA-023` 的 frozen successor �
 [manifest 0.1](review-attention-pattern-corpus-0.1.json)。Payload 经 PR #87 合入精确 source commit
 `9bdcef30517309bbc87ed7fdb0fec395197ef58a`；[文档 112](112-review-attention-pattern-corpus-freeze-closure.md)
 外部绑定 manifest digest、四条精确 revision 及匿名公开读回。该状态发布自身闭环成立后，R1 的双前置门
-已满足，但只解除后继 R1 合同入口，不创建 R1 Schema、源码或运行能力。
+已满足。后继[文档 113](113-r1-deterministic-semantic-slice-contract.md)只建立 R1 0.1 合同候选；它不创建
+R1 Schema、源码或运行能力，也不能在自身冻结闭环前被写成 `R1_CONTRACT_FROZEN`。

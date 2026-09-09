@@ -281,6 +281,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention Pattern Corpus 选择与 payload 候选](111-review-attention-pattern-corpus-selection-candidate.md)
 - [Review Attention Pattern Corpus manifest 0.1](review-attention-pattern-corpus-0.1.json)
 - [Review Attention Pattern Corpus 冻结闭环](112-review-attention-pattern-corpus-freeze-closure.md)
+- [Review Attention R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -497,5 +498,12 @@ commit 匿名下载并与工作树逐字节一致。[文档 112](112-review-atte
 主线合入与合入后 exact-main 读回全部成立后，状态推进为
 `PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`；R1 必须
 从新的 exact main 单独起草合同，本闭环不创建 R1 实现。
+
+后继 [文档 113](113-r1-deterministic-semantic-slice-contract.md) 已从
+`main@9ab64121350b69ce81e6be79961ad426026bbc39` 建立 docs-only R1 0.1 候选，将首版范围明确为
+`SourceSnapshot -> CodeFacts -> typed structural Relations -> bounded overlapping ReviewSlices ->
+CoverageLedger`，并冻结 Python 3.10 Profile 的能力上限、分阶段 coverage、来源组合与快照连续性原则。
+当前状态为 `R1_CONTRACT_CANDIDATE / R1_SCHEMA_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；合同自己的
+门禁、受保护主线合入、exact-main 匿名读回与独立状态发布成立前，不得开始 Schema 或实现。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
