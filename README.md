@@ -252,17 +252,22 @@ Pages 根坐标反例已由 PR #40 以 `pages_path = ""` 的唯一表示修正�
 可行性反例只重开 P2 的精确计量语义，并已由 PR #42 重新冻结。P2 当前仍为 `P2_FROZEN`；P3 的
 快照连续性边界已完成最小修正与再次冻结，后继实现与状态发布完成后当前为
 `P3_FROZEN / P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN`。Ledger 已把 P2–P4 保留的后继反例追加至
-`RA-027`，但没有任何记录进入 Pattern Corpus。合同候选已经完成 PR #85 原始门禁、受保护主线合入与
+`RA-027`。合同候选已经完成 PR #85 原始门禁、受保护主线合入与
 合入后 exact-main 匿名产品读回；[合同冻结状态发布](docs/110-review-attention-pattern-corpus-contract-freeze.md)
 自身闭环成立后，状态推进为
-`CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN / CORPUS_NOT_SELECTED / R1_BLOCKED`。这只冻结选择与
-manifest 规则，不选择记录、不生成 manifest，也不启动 R1。
+`CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN`。后继候选已逐条审议 `RA-001` 至 `RA-027`，只将
+`RA-003 / RA-004 / RA-008 / RA-023` 的线性 successor 选入非自引用
+[Corpus manifest](docs/review-attention-pattern-corpus-0.1.json)，选择依据与最小性证明见
+[文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)。当前仍只是
+`CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`：没有 payload 合入后的 exact
+source commit、外部绑定的 manifest digest 与匿名公开读回，不得启动 R1。
 设计入口见
 [Review Attention Plugin Plan](docs/85-post-core-review-attention-plugin-plan.md)、
 [R0 Contract](docs/86-review-attention-r0-contract.md)与
 [Review Pattern Ledger](docs/87-review-pattern-ledger.md)；本地找茬、修正和未完成的远端停止线见
 [R0 架构评审](docs/88-r0-review-attention-design-review.md)，P4 后的选择与冻结边界见
-[Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)。
+[Pattern Corpus 冻结合同](docs/109-review-attention-pattern-corpus-freeze-contract.md)，当前 payload 选择见
+[文档 111](docs/111-review-attention-pattern-corpus-selection-candidate.md)。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -614,6 +619,8 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [P4 GitHub Evidence Plugin 发布与公开读回事实](docs/108-p4-github-evidence-release-readback-facts.md)
 - [Review Attention Pattern Corpus 冻结合同 0.1](docs/109-review-attention-pattern-corpus-freeze-contract.md)
 - [Review Attention Pattern Corpus 合同冻结状态发布](docs/110-review-attention-pattern-corpus-contract-freeze.md)
+- [Review Attention Pattern Corpus 选择与 payload 候选](docs/111-review-attention-pattern-corpus-selection-candidate.md)
+- [Review Attention Pattern Corpus manifest 0.1](docs/review-attention-pattern-corpus-0.1.json)
 
 ## 项目来源
 

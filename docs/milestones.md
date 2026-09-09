@@ -472,4 +472,14 @@ Corpus source commit 与后继 closure 的边界。候选经 PR #85 原始 11/11
 `CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN / CORPUS_NOT_SELECTED / R1_BLOCKED`。后继候选 revision、
 manifest 与最终公开 closure 仍须继续串行；合同冻结不等于 Corpus 已经冻结。
 
+下一条独立 payload 候选从 exact `main@37b41f5f8305cc1322c07ae53b72c1bb90a9b78a` 开始，先将
+`RA-003 / RA-004 / RA-008 / RA-023` 物化为完整 `CONTRACT_CANDIDATE` revision 并在双 Python
+normal/`-O` 下独立复算，再完成 `RA-001` 至 `RA-027` 的逐条最小性审议。只有这四条形成线性
+`FROZEN_PATTERN` successor，并由
+[manifest 0.1](review-attention-pattern-corpus-0.1.json)按精确 digest 选择；选择记录见
+[文档 111](111-review-attention-pattern-corpus-selection-candidate.md)。当前状态为
+`CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`。候选没有预填未来合入 commit，
+manifest 也不自含摘要；最终 identity 必须由后继 closure 外部绑定 payload 合入后的 exact source commit
+和 manifest digest，并完成匿名公开读回。
+
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
