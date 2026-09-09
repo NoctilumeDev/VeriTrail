@@ -9,9 +9,12 @@ human-reviewed handoff.
 The latest publicly released Core coordinate is `0.12.2`. Its bounded producer fix, release notes, protected
 tag, public assets, clean-install verification, and readback are recorded in
 `docs/74-core-demo-catalog-binding-maintenance-contract.md` through
-`docs/76-core-v0.12.2-release-readback-facts.md`. Any later change to the Core payload must first introduce a
-new unreleased version coordinate and bounded contract; it must not keep building changed Core bytes as an
-already published version or move or rewrite any immutable Core release tag.
+`docs/76-core-v0.12.2-release-readback-facts.md`. The default branch now carries the unreleased Core `0.13.0`
+candidate defined by `docs/100-core-v0.13.0-acceptance-api-release-contract.md` through
+`docs/103-v0.13.0-release-notes.md`; its source version is not a public install coordinate. Any later change
+to the Core payload must first introduce a new unreleased version coordinate and bounded contract; it must
+not keep building changed Core bytes as an already published version or move or rewrite any immutable Core
+release tag.
 
 Contributions are welcome when they fix a reproducible defect, strengthen a declared gate, improve public
 reproducibility, or propose a separately versioned bounded capability. Do not silently broaden a frozen

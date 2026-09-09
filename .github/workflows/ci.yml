@@ -43,11 +43,29 @@ jobs:
       - name: Install the Core test capabilities
         run: python -m pip install --editable ".[browser,command-windows]"
 
-      - name: Install the independent Starter entry layer
-        run: python -m pip install --editable ./starter
+      - name: Verify the exact editable Core candidate coordinate
+        shell: pwsh
+        run: |
+          python -I -c "import os; from importlib.metadata import version; from pathlib import Path; import veritrail; expected = (Path(os.environ['GITHUB_WORKSPACE']) / 'src').resolve(); actual = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and actual.is_relative_to(expected) else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Install the independent GitHub Evidence plugin
-        run: python -m pip install --editable ./plugins/github-evidence
+      - name: Install Starter only to verify its frozen Core boundary
+        run: python -m pip install --no-deps --editable ./starter
+
+      - name: Install GitHub Evidence for source-forward compatibility only
+        run: python -m pip install --no-deps --editable ./plugins/github-evidence
+
+      - name: Prove consumers did not replace the Core candidate
+        shell: pwsh
+        run: |
+          python -I -c "import os; from importlib.metadata import version; from pathlib import Path; import veritrail; expected = (Path(os.environ['GITHUB_WORKSPACE']) / 'src').resolve(); actual = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and actual.is_relative_to(expected) else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Verify Starter 0.2.0 rejects the Core 0.13.0 candidate
+        run: >-
+          python -m unittest
+          tests.test_core_version_contract.CoreVersionContractTests.test_starter_020_rejects_the_core_0130_candidate
+          -v
 
       - name: Install the frozen Chromium engine
         run: python -m playwright install chromium
@@ -57,12 +75,6 @@ jobs:
 
       - name: Run Core regression tests with assertions disabled
         run: python -O -m unittest -v
-
-      - name: Run Starter contract tests
-        run: python -m unittest discover -s starter/tests -v
-
-      - name: Run Starter contract tests with assertions disabled
-        run: python -O -m unittest discover -s starter/tests -v
 
       - name: Run Authoring Skill contract tests
         run: python -m unittest discover -s skills/veritrail-authoring/tests -v
@@ -76,20 +88,64 @@ jobs:
       - name: Run GitHub Evidence plugin contract tests with assertions disabled
         run: python -O -m unittest discover -s plugins/github-evidence/tests -v
 
-      - name: Run the real Authoring Skill DRAFT chain
-        run: python scripts/authoring_skill_acceptance.py
+      - name: Run Starter and Authoring Skill 0.2.0 on their declared Core 0.12.2 lane
+        shell: pwsh
+        run: |
+          $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.2-py3-none-any.whl'
+          python -I scripts/download_release_asset.py `
+            --url 'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.2/veritrail-0.12.2-py3-none-any.whl' `
+            --output $coreWheel `
+            --sha256 '3a42f28db6f4ed12351dade3fbb6f57fa1d5aa3fdd6d28210492f676bc1562de'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Run the static-site Authoring Skill DRAFT chain
-        run: python scripts/authoring_skill_acceptance.py --preset static-site
+          $venv = Join-Path '${{ runner.temp }}' 'starter-core-0122'
+          python -m venv $venv
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $venvPython = Join-Path $venv 'Scripts/python.exe'
+          & $venvPython -m pip install --no-deps $coreWheel
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -m pip install --no-deps ./starter
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I -c "from importlib.metadata import version; from pathlib import Path; import veritrail, veritrail_starter; raise SystemExit(0 if veritrail.__version__ == '0.12.2' and version('veritrail') == '0.12.2' and version('veritrail-starter') == '0.2.0' and not Path(veritrail.__file__).resolve().is_relative_to(Path('${{ github.workspace }}').resolve()) else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I -m unittest discover -s starter/tests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I -O -m unittest discover -s starter/tests -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -m pip install "playwright==1.62.0" "pywin32==312"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -m playwright install chromium
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I scripts/authoring_skill_acceptance.py --python $venvPython
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I scripts/authoring_skill_acceptance.py --python $venvPython --optimized
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I scripts/authoring_skill_acceptance.py --python $venvPython --preset static-site
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I scripts/authoring_skill_acceptance.py --python $venvPython --preset static-site --optimized
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Build the wheel
         run: python -m pip wheel --no-deps --wheel-dir dist .
+
+      - name: Build the Core source distribution
+        run: |
+          python -m pip install "setuptools==80.9.0"
+          python -c "from setuptools import build_meta; print(build_meta.build_sdist('dist'))"
 
       - name: Upload the Core wheel for checkout-free acceptance
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: core-wheel-${{ matrix.python-version }}
           path: dist/veritrail-*.whl
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload the Core sdist for checkout-free acceptance
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: core-sdist-${{ matrix.python-version }}
+          path: dist/veritrail-0.13.0.tar.gz
           if-no-files-found: error
           retention-days: 1
 
@@ -205,6 +261,8 @@ jobs:
           $wheel = @(Get-ChildItem -File -LiteralPath '${{ runner.temp }}/core-wheel' -Filter 'veritrail-*.whl')
           if ($wheel.Count -ne 1) { throw "expected one Core wheel, found $($wheel.Count)" }
           python -m pip install --no-deps $wheel[0].FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I -c "from importlib.metadata import version; from pathlib import Path; import os, veritrail; workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and not module.is_relative_to(workspace) else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
           $output = Join-Path '${{ runner.temp }}' 'veritrail-wheel-only-demo'
@@ -359,7 +417,7 @@ jobs:
           if ($plugin.Count -ne 1) { throw "expected one plugin wheel, found $($plugin.Count)" }
           python -m pip install --no-deps $core[0].FullName $plugin[0].FullName
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -I -c "from importlib.util import find_spec; from veritrail.canonical import sha256_json; from veritrail_github import GitHubCollector, UrllibTransport, __version__, import_verified_handoff_evidence, publish_handoff_manifest; collector = GitHubCollector(UrllibTransport()); raise SystemExit(0 if find_spec('playwright') is None and collector is not None and callable(import_verified_handoff_evidence) and callable(publish_handoff_manifest) and __version__ == '0.1.0' and sha256_json({}) == '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a' else 1)"
+          python -I -c "import os, veritrail; from importlib.metadata import version; from importlib.util import find_spec; from pathlib import Path; from veritrail.canonical import sha256_json; from veritrail_github import GitHubCollector, UrllibTransport, __version__, import_verified_handoff_evidence, publish_handoff_manifest; collector = GitHubCollector(UrllibTransport()); workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); core_module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if find_spec('playwright') is None and collector is not None and callable(import_verified_handoff_evidence) and callable(publish_handoff_manifest) and veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and not core_module.is_relative_to(workspace) and __version__ == '0.1.0' and sha256_json({}) == '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a' else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           veritrail-github-collect --help | Out-Null
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -418,7 +476,7 @@ jobs:
           $documents | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $evidencePath -Encoding utf8
           python -m pip uninstall --yes veritrail-github-evidence
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -I -c "import json, sys; from importlib.util import find_spec; from pathlib import Path; from veritrail.evidence import import_evidence_document, verify_imported_evidence; documents = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8-sig')); artifacts = [import_evidence_document(document, f'retained-{index}.json') for index, document in enumerate(documents, 1)]; [verify_imported_evidence(artifact) for artifact in artifacts]; raise SystemExit(0 if find_spec('veritrail_github') is None and len(artifacts) == 2 else 1)" $evidencePath
+          python -I -c "import json, sys; from importlib.metadata import distributions; from importlib.util import find_spec; from pathlib import Path; from veritrail.evidence import import_evidence_document, verify_imported_evidence; documents = json.loads(Path(sys.argv[1]).read_text(encoding='utf-8-sig')); artifacts = [import_evidence_document(document, f'retained-{index}.json') for index, document in enumerate(documents, 1)]; [verify_imported_evidence(artifact) for artifact in artifacts]; installed = {(item.metadata.get('Name') or '').casefold() for item in distributions()}; top = find_spec('veritrail_github'); capabilities_absent = top is None or all(find_spec(f'veritrail_github.{name}') is None for name in ('collector', 'handoff', 'public_render_collector')); raise SystemExit(0 if 'veritrail-github-evidence' not in installed and capabilities_absent and len(artifacts) == 2 else 1)" $evidencePath
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -I $env:P3_WHEEL_PROBE verify --output $env:P3_WHEEL_PROBE_OUTPUT
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -448,12 +506,20 @@ jobs:
           name: core-wheel-${{ matrix.python-version }}
           path: ${{ runner.temp }}/acceptance-core-wheel
 
+      - name: Download the built Core source distribution
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          name: core-sdist-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/acceptance-core-sdist
+
       - name: Install only the built wheel
         shell: pwsh
         run: |
           $wheel = @(Get-ChildItem -File -LiteralPath '${{ runner.temp }}/acceptance-core-wheel' -Filter 'veritrail-*.whl')
           if ($wheel.Count -ne 1) { throw "expected one Core wheel, found $($wheel.Count)" }
           python -m pip install --no-deps --force-reinstall $wheel[0].FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I -c "import os, veritrail; from importlib.metadata import version; from pathlib import Path; workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and not module.is_relative_to(workspace) else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Generate and independently recompute PASS and FAIL bundles
@@ -471,6 +537,50 @@ jobs:
           }
           if ($summary.boundary -ne 'PC2_ACCEPTANCE_CORE_FREEZE_NOT_P1') {
             throw 'PC2/P1 boundary marker drifted'
+          }
+
+      - name: Run the Core 0.13.0 four-verdict and snapshot wheel probe
+        shell: pwsh
+        run: |
+          $output = Join-Path '${{ runner.temp }}' 'core-013-wheel-${{ matrix.python-version }}'
+          python scripts/core_013_release_probe.py `
+            --output $output `
+            --expected-source-root '${{ github.workspace }}'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $summary = Get-Content -Raw -LiteralPath (Join-Path $output 'summary.json') | ConvertFrom-Json
+          if ($summary.status -ne 'PASS' -or $summary.package_version -ne '0.13.0') {
+            throw 'wheel release probe did not prove Core 0.13.0'
+          }
+
+      - name: Clean-install the sdist and repeat the Acceptance gate
+        shell: pwsh
+        run: |
+          $sdist = @(Get-ChildItem -File -LiteralPath '${{ runner.temp }}/acceptance-core-sdist' -Filter 'veritrail-*.tar.gz')
+          if ($sdist.Count -ne 1) { throw "expected one Core sdist, found $($sdist.Count)" }
+          $venv = Join-Path '${{ runner.temp }}' 'acceptance-core-sdist-venv'
+          python -m venv $venv
+          $venvPython = Join-Path $venv 'Scripts/python.exe'
+          & $venvPython -m pip install --no-deps $sdist[0].FullName
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & $venvPython -I -c "import os, veritrail; from importlib.metadata import version; from pathlib import Path; workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.13.0' and version('veritrail') == '0.13.0' and not module.is_relative_to(workspace) else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $output = Join-Path '${{ runner.temp }}' 'pc2-acceptance-core-sdist-${{ matrix.python-version }}'
+          & $venvPython -I scripts/pc2_acceptance_core_freeze.py `
+            --output $output `
+            --expected-source-root '${{ github.workspace }}'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $summary = Get-Content -Raw -LiteralPath (Join-Path $output 'pc2-summary.json') | ConvertFrom-Json
+          if ($summary.status -ne 'PASS' -or $summary.package_version -ne '0.13.0') {
+            throw 'sdist Acceptance Core summary did not prove Core 0.13.0'
+          }
+          $releaseOutput = Join-Path '${{ runner.temp }}' 'core-013-sdist-${{ matrix.python-version }}'
+          & $venvPython scripts/core_013_release_probe.py `
+            --output $releaseOutput `
+            --expected-source-root '${{ github.workspace }}'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $releaseSummary = Get-Content -Raw -LiteralPath (Join-Path $releaseOutput 'summary.json') | ConvertFrom-Json
+          if ($releaseSummary.status -ne 'PASS' -or $releaseSummary.package_version -ne '0.13.0') {
+            throw 'sdist release probe did not prove Core 0.13.0'
           }
 
       - name: Upload failed PC2 evidence
@@ -611,10 +721,23 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
 
-      - name: Install Core, Starter, and Chromium
+      - name: Install frozen Core 0.12.2 and compatible Starter 0.2.0
+        shell: pwsh
         run: |
-          python -m pip install --editable ".[browser,command-windows]"
-          python -m pip install --editable ./starter
+          python -m pip install "playwright==1.62.0" "pywin32==312"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.2-py3-none-any.whl'
+          python -I scripts/download_release_asset.py `
+            --url 'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.2/veritrail-0.12.2-py3-none-any.whl' `
+            --output $coreWheel `
+            --sha256 '3a42f28db6f4ed12351dade3fbb6f57fa1d5aa3fdd6d28210492f676bc1562de'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip install --no-deps $coreWheel
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip install --no-deps --editable ./starter
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -I -c "from importlib.metadata import version; from pathlib import Path; import os, veritrail; workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.12.2' and version('veritrail') == '0.12.2' and version('veritrail-starter') == '0.2.0' and not module.is_relative_to(workspace) else 1)"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m playwright install chromium
 
       - name: Build the production Workbench

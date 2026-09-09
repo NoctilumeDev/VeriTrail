@@ -32,6 +32,13 @@ Core `0.12.2` 已作为有界维护版发布；Starter 与 Authoring Skill 以�
 Release 继续保留。入口层只能降低合同填写成本，不能扩张 Core 的裁决权。GitHub 公开 CI 与
 Browser Smoke 当前共同守住可重复基线。
 
+默认分支当前携带 Core `0.13.0` 发布候选，把已经冻结的 AcceptancePlan、四 Verdict、Bundle 与
+imported-snapshot 公共入口绑定到新的发行身份；它尚未创建 `v0.13.0` 标签、Release 或公开资产，
+稳定下载入口仍是 `0.12.2`。候选范围、消费方坐标与停止线见
+[发布补全合同](docs/100-core-v0.13.0-acceptance-api-release-contract.md)、
+[C1 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)和
+[0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)。
+
 `v0.12.1` 只关闭 wheel 独立首跑缺口，不重开 M0–M14，也不改写不可移动的 `v0.12.0`。新增的
 `veritrail demo` 无需 Git checkout，只从 Core wheel 自身
 生成同 Plan 的 `PASS`／故意 `FAIL` Bundle 与 Catalog，并始终标记
@@ -133,9 +140,9 @@ Acceptance API，而准备矩阵使用的是同版本号的当前源码本地构
 已经完成候选原始 11/11 门禁、受保护主线合入、exact-main 11/11 与 Browser Smoke，并由两个独立匿名
 P1 -> P2 -> Core session 读回 README 与合同正文；其[冻结事实](docs/101-core-v0.13.0-acceptance-api-contract-freeze.md)
 的最后门全部成立后，合同状态为 `CORE_0.13.0_CONTRACT_FROZEN / P4_BLOCKED`。C1 已从该 exact main
-进入[Core 0.13.0 Release Candidate 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)；它先分开
-源码前向兼容、distribution 声明兼容与公开 clean install，再建立候选，不能重制 `v0.12.2` 或继续生成
-插件发布资产。
+进入[Core 0.13.0 Release Candidate 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)；它把
+Starter/Authoring Skill 的 Core 0.12.x 历史兼容通道、GitHub Evidence 源码前向兼容、distribution
+声明兼容与公开 clean install 分开取证，再建立候选，不能重制 `v0.12.2` 或继续生成插件发布资产。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -569,6 +576,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Core 0.13.0 Acceptance API 发布补全合同](docs/100-core-v0.13.0-acceptance-api-release-contract.md)
 - [Core 0.13.0 Acceptance API 合同冻结事实](docs/101-core-v0.13.0-acceptance-api-contract-freeze.md)
 - [Core 0.13.0 Release Candidate 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)
+- [VeriTrail 0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)
 
 ## 项目来源
 

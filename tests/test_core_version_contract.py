@@ -12,7 +12,7 @@ PYPROJECT = REPOSITORY_ROOT / "pyproject.toml"
 FROZEN_CORE_BASELINE = "0.12.0"
 PREVIOUS_MAINTENANCE_CORE_VERSION = "0.12.1"
 STABLE_CORE_VERSION = "0.12.2"
-CURRENT_SOURCE_VERSION = "0.12.2"
+CURRENT_SOURCE_VERSION = "0.13.0"
 CURRENT_STATUS_FILES = (
     REPOSITORY_ROOT / "AGENTS.md",
     REPOSITORY_ROOT / "CONTRIBUTING.md",
@@ -38,10 +38,20 @@ CORE_0_12_0_RELEASE_NOTES = REPOSITORY_ROOT / "docs" / "57-v0.12.0-release-notes
 CORE_0_12_1_CONTRACT = REPOSITORY_ROOT / "docs" / "71-core-first-run-maintenance-contract.md"
 CORE_0_12_1_RELEASE_NOTES = REPOSITORY_ROOT / "docs" / "72-v0.12.1-release-notes.md"
 CORE_0_12_1_READBACK = REPOSITORY_ROOT / "docs" / "73-core-v0.12.1-release-readback-facts.md"
+CORE_0_13_0_CONTRACT = (
+    REPOSITORY_ROOT / "docs" / "100-core-v0.13.0-acceptance-api-release-contract.md"
+)
+CORE_0_13_0_CANDIDATE_PLAN = (
+    REPOSITORY_ROOT / "docs" / "102-core-v0.13.0-release-candidate-plan.md"
+)
+CORE_0_13_0_RELEASE_NOTES = REPOSITORY_ROOT / "docs" / "103-v0.13.0-release-notes.md"
+STARTER_PYPROJECT = REPOSITORY_ROOT / "starter" / "pyproject.toml"
+GITHUB_PLUGIN_PYPROJECT = REPOSITORY_ROOT / "plugins" / "github-evidence" / "pyproject.toml"
+PUBLIC_CI = REPOSITORY_ROOT / ".github" / "workflows" / "ci.yml"
 
 
 class CoreVersionContractTests(unittest.TestCase):
-    def test_source_uses_the_current_released_maintenance_coordinate(self) -> None:
+    def test_source_uses_the_unreleased_0_13_0_candidate_coordinate(self) -> None:
         pyproject = PYPROJECT.read_text(encoding="utf-8")
         match = re.search(
             r'(?ms)^\[project\]\s*.*?^version = "([^"]+)"$',
@@ -52,7 +62,7 @@ class CoreVersionContractTests(unittest.TestCase):
 
         self.assertEqual(project_version, CURRENT_SOURCE_VERSION)
         self.assertEqual(__version__, CURRENT_SOURCE_VERSION)
-        self.assertEqual(project_version, STABLE_CORE_VERSION)
+        self.assertNotEqual(project_version, STABLE_CORE_VERSION)
         self.assertNotEqual(project_version, FROZEN_CORE_BASELINE)
         self.assertNotEqual(project_version, PREVIOUS_MAINTENANCE_CORE_VERSION)
 
@@ -90,6 +100,10 @@ class CoreVersionContractTests(unittest.TestCase):
         )
         for content in (agents, contributing, security):
             self.assertNotIn("0.12.1.dev0", content)
+
+        self.assertIn("0.13.0 / RELEASE CANDIDATE", agents)
+        self.assertIn("unreleased Core `0.13.0`", contributing)
+        self.assertIn("unreleased Core 0.13.0 candidate", security)
 
         contract = CURRENT_MAINTENANCE_CONTRACT.read_text(encoding="utf-8")
         self.assertIn(PREVIOUS_MAINTENANCE_CORE_VERSION, contract)
@@ -149,6 +163,10 @@ class CoreVersionContractTests(unittest.TestCase):
         )
         self.assertNotIn("[![Core v0.12.1]", readme)
         self.assertNotIn("| 直接使用稳定内核 | [Core 0.12.1]", readme)
+        self.assertIn(
+            "[0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)",
+            readme,
+        )
 
         start_here = START_HERE.read_text(encoding="utf-8")
         self.assertIn(
@@ -167,6 +185,10 @@ class CoreVersionContractTests(unittest.TestCase):
             "releases/download/v0.12.1/veritrail-0.12.1-py3-none-any.whl",
             start_here,
         )
+        self.assertIn(
+            "[0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)",
+            start_here,
+        )
 
         milestones = MILESTONES.read_text(encoding="utf-8")
         self.assertIn(
@@ -179,9 +201,32 @@ class CoreVersionContractTests(unittest.TestCase):
             r"Core `0\.12\.2` 状态为\s+`RELEASED / MAINTENANCE FROZEN`",
         )
         self.assertNotIn("`0.12.2` 维护发布候选", milestones)
+        self.assertIn(
+            "[0.13.0 Release Notes](103-v0.13.0-release-notes.md)",
+            milestones,
+        )
 
         self.assertIn(CURRENT_SOURCE_VERSION, contributing)
-        self.assertNotIn("pending public readback", contributing.lower())
+        self.assertIn("source version is not a public install coordinate", contributing)
+
+        candidate_contract = CORE_0_13_0_CONTRACT.read_text(encoding="utf-8")
+        candidate_plan = CORE_0_13_0_CANDIDATE_PLAN.read_text(encoding="utf-8")
+        candidate_notes = CORE_0_13_0_RELEASE_NOTES.read_text(encoding="utf-8")
+        self.assertIn("PUBLICATION_IDENTITY_MISMATCH", candidate_contract)
+        self.assertIn("C1_IMPLEMENTING", candidate_plan)
+        self.assertIn("SOURCE_FORWARD_COMPATIBILITY", candidate_plan)
+        self.assertRegex(
+            candidate_notes,
+            r"(?m)^> 状态：`RELEASE CANDIDATE / PENDING PUBLIC READBACK`$",
+        )
+        self.assertRegex(
+            candidate_notes,
+            r"(?m)^> 当前公开稳定 Core：`0\.12\.2`$",
+        )
+        self.assertRegex(
+            candidate_notes,
+            r"(?m)^> 候选源码版本：`0\.13\.0`$",
+        )
 
         bug_template = BUG_TEMPLATE.read_text(encoding="utf-8")
         self.assertIn("placeholder: v0.12.2 or 40-character commit SHA", bug_template)
@@ -206,6 +251,49 @@ class CoreVersionContractTests(unittest.TestCase):
             "current 0.12.1 maintenance release",
             starter_readme,
         )
+
+    def test_consumer_compatibility_coordinates_remain_separate(self) -> None:
+        starter_pyproject = STARTER_PYPROJECT.read_text(encoding="utf-8")
+        starter_doctor = (
+            REPOSITORY_ROOT / "starter" / "src" / "veritrail_starter" / "doctor.py"
+        ).read_text(encoding="utf-8")
+        github_plugin_pyproject = GITHUB_PLUGIN_PYPROJECT.read_text(encoding="utf-8")
+        public_ci = PUBLIC_CI.read_text(encoding="utf-8")
+
+        self.assertIn('"veritrail>=0.12,<0.13"', starter_pyproject)
+        self.assertIn("Starter 0.2 requires VeriTrail Core >=0.12,<0.13", starter_doctor)
+        self.assertIn('dependencies = ["veritrail==0.12.2"]', github_plugin_pyproject)
+        self.assertIn(
+            "Verify Starter 0.2.0 rejects the Core 0.13.0 candidate",
+            public_ci,
+        )
+        self.assertIn(
+            "python -m pip install --no-deps --editable ./plugins/github-evidence",
+            public_ci,
+        )
+        self.assertIn(
+            "Run Starter and Authoring Skill 0.2.0 on their declared Core 0.12.2 lane",
+            public_ci,
+        )
+        self.assertIn(
+            "authoring_skill_acceptance.py --python $venvPython --preset static-site --optimized",
+            public_ci,
+        )
+        self.assertNotIn("Run the real Authoring Skill DRAFT chain", public_ci)
+        self.assertNotIn("Starter for source-forward compatibility only", public_ci)
+        self.assertGreaterEqual(public_ci.count("veritrail.__version__ == '0.13.0'"), 5)
+        self.assertIn("GitHub Evidence for source-forward compatibility only", public_ci)
+        self.assertIn("capabilities_absent", public_ci)
+        self.assertIn("'veritrail-github-evidence' not in installed", public_ci)
+
+    def test_starter_020_rejects_the_core_0130_candidate(self) -> None:
+        from veritrail_starter.doctor import require_compatible_core
+        from veritrail_starter.errors import StarterError
+
+        with self.assertRaises(StarterError) as caught:
+            require_compatible_core()
+        self.assertEqual(caught.exception.code, "CORE_INCOMPATIBLE")
+        self.assertEqual(caught.exception.exit_code, 5)
 
     def test_historical_release_coordinates_remain_explicit(self) -> None:
         m14_facts = M14_FACTS.read_text(encoding="utf-8")

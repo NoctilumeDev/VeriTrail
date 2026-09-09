@@ -8,6 +8,11 @@
 > [0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)，以及
 > [0.12.2 发布与公开读回事实](docs/76-core-v0.12.2-release-readback-facts.md)。
 >
+> 默认分支当前携带 Core `0.13.0` 发布候选，用新的发行身份补齐既有 Acceptance API；它尚未创建
+> `v0.13.0` 标签、Release 或公开资产，不能替代上面的稳定安装入口。边界见
+> [C1 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)与
+> [0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)。
+>
 > 当前稳定入口层：[`VeriTrail Starter 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
 > 与 [`VeriTrail Authoring Skill 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)。
 > 两个带注释标签共同钉在提交 `c9592e1`；七个 GitHub 下载资产已通过 Python 3.10.6/3.13.13、

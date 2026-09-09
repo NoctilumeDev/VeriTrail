@@ -1,6 +1,6 @@
 # Core 0.13.0 Release Candidate 施工计划
 
-> 状态：`C1_PLANNING / CORE_0.13.0_NOT_RELEASED / P4_BLOCKED`
+> 状态：`C1_IMPLEMENTING / CORE_0.13.0_NOT_RELEASED / P4_BLOCKED`
 >
 > 精确施工基线：`main@e69f3844254947f795564cb845056652f2dcf3ac`
 >
@@ -27,6 +27,7 @@ Core candidate source
 
 Starter 0.2.0 source / public wheel
     -> Requires-Dist: veritrail>=0.12,<0.13
+    -> runtime guard: Core >=0.12,<0.13
 
 GitHub Evidence 0.1.0 source
     -> Requires-Dist: veritrail==0.12.2
@@ -37,7 +38,9 @@ GitHub Evidence 0.1.0 source
 ```
 
 若只把 Core 版本改为 `0.13.0` 而不改变验证方法，后续 `pip install` 可以拒绝该环境，或用满足旧依赖的
-Core 替换候选。此时测试结果不能证明实际导入的是当前 C1 Core。
+Core 替换候选。即使使用 `--no-deps` 阻止替换，Starter 自身的运行时守卫仍会正确拒绝 Core 0.13.0；
+因此 `--no-deps` 不能被用来声称 Starter 源码前向兼容。此时测试结果不能证明实际导入的是当前 C1 Core，
+也不能证明 Starter 接受了一个被其冻结合同明确排除的版本。
 
 该问题属于：
 
@@ -61,13 +64,20 @@ Core 自身回归只接受当前 checkout 或本次构建 wheel/sdist。门禁�
 ### 3.2 Starter 0.2.0
 
 Starter `0.2.0` 的公开 wheel/sdist 与依赖 metadata 已冻结，C1 不得在同一版本下静默扩展 `<0.13`。
-它在 C1 只保留两条互不替代的证据：
+其运行时 `require_compatible_core()` 也明确执行同一边界。C1 保留三条互不替代的证据：
 
 1. 既有 E3 公共下载门继续使用其已发布、已声明支持的 Core 坐标；
-2. 当前源码可通过 `--no-deps` 挂接 exact Core 0.13.0 候选，形成明确标注的源码前向兼容探针。
+2. Starter 0.2.0 在 exact Core 0.13.0 候选上必须 fail closed，并给出 `CORE_INCOMPATIBLE`；
+3. 当前 Starter 0.2.0 源码在仓库外新环境中使用匿名下载且摘要匹配的公开 Core 0.12.2 wheel，完成
+   Python 3.10/3.13 normal 与 `-O` 正向合同回归。
 
-第二条不能证明 Starter 0.2.0 的公开 distribution 已声明支持 Core 0.13.0，也不能作为新的 Starter
-发布承诺。若未来需要正式支持，必须使用新的 Starter 版本与独立发布合同。
+第三条只证明 Starter 当前源码仍满足其既有声明范围，不能升级为 Core 0.13.0 兼容证据。若未来需要
+正式支持 Core 0.13.0，必须使用新的 Starter 版本与独立发布合同。
+
+Authoring Skill `0.2.0` 的真实 DRAFT 链通过 Starter 的 `doctor/init/validate/review` 入口运行，因此继承
+同一 Core `>=0.12,<0.13` 边界。其静态合同测试可在 Core 0.13.0 候选环境中运行，但不能替代真实链
+兼容性证据。真实 `single-webapp`、`static-site` 两个 preset 的 normal 与 `-O` 验收必须与 Starter
+一起在公开 Core 0.12.2 的独立环境中完成。
 
 ### 3.3 GitHub Evidence 0.1.0
 
@@ -84,7 +94,8 @@ C1 允许：
 - 把 Core `[project].version` 与 `veritrail.__version__` 更新为 `0.13.0`；
 - 增加 Core 0.13.0 候选 Release Notes；
 - 更新当前状态、文档索引与版本合同测试，但保持公开稳定入口仍为 `v0.12.2`；
-- 让 CI 分开标注 Core 候选、源码前向兼容、历史公开兼容和 wheel-only 证据；
+- 让 CI 分开标注 Core 候选、Starter 冻结边界、GitHub Evidence 源码前向兼容、历史公开兼容和
+  wheel-only 证据；
 - 增加 exact version/import provenance 断言；
 - 明确 C2 最终资产的固定集合、生成顺序与非自指摘要规则。
 
@@ -128,8 +139,11 @@ C1 只冻结名称和生成规则，不冻结最终字节。C2 必须按以下�
 4. Acceptance 四 Verdict 与同一 imported snapshot 纵向门通过；
 5. Workbench tests、lint、type-check、build 与 dependency audit 通过；
 6. Browser Smoke 与 Windows 生命周期/清理门通过；
-7. Starter 源码前向兼容探针以 `--no-deps` 运行，并明确不升级其公开兼容声明；
+7. Starter 0.2.0 对 Core 0.13.0 明确 fail closed，并在公开 Core 0.12.2 独立环境完成双 Python
+   normal/`-O` 正向回归；Authoring Skill 0.2.0 的两个 preset 真实 DRAFT 链也在该历史兼容通道完成；
 8. GitHub Evidence 源码/wheel 前向兼容探针以 `--no-deps` 运行，并确认 Playwright 仍为 optional extra；
+   卸载门验证 distribution 与功能子模块均不可用、Core 仍能复算保留 Evidence，不把仅含解释器缓存的
+   空 namespace 目录误报为插件能力；
 9. E1/E3 历史公开资产下载与既有 Core 坐标复验继续通过；
 10. 敏感信息、绝对本机路径、版本口径与文档链接检查通过；
 11. 候选 PR 的原始 Public CI 全部成功，且没有通过 rerun 覆盖第一次失败。
@@ -140,7 +154,9 @@ C1 只冻结名称和生成规则，不冻结最终字节。C2 必须按以下�
 
 - 实际导入 Core 不是 `0.13.0` 或不来自声明的 checkout/wheel/sdist；
 - 为获得绿灯必须修改已冻结 Acceptance 语义或放宽既有阈值；
-- Starter/插件只能通过改写既有发布 metadata 才能运行；
+- Starter 0.2.0 意外接受 Core 0.13.0，或 Starter/Authoring Skill 无法在公开 Core 0.12.2 的声明范围内
+  完成各自正向回归；
+- GitHub Evidence 只能通过改写既有发布 metadata 才能挂接候选 Core；
 - wheel 与 sdist 提供的公共 API、版本或行为不一致；
 - normal 与 `-O`、Python 3.10 与 3.13、源码与发行物之间出现无法解释的差异；
 - C1 试图提前创建最终标签、Release、资产或插件发布坐标。
