@@ -144,8 +144,11 @@ P1 -> P2 -> Core session 读回 README 与合同正文；其[冻结事实](docs/
 Starter/Authoring Skill 的 Core 0.12.x 历史兼容通道、GitHub Evidence 源码前向兼容、distribution
 声明兼容与公开 clean install 分开取证，再建立候选，不能重制 `v0.12.2` 或继续生成插件发布资产。
 候选 PR #79 原始 11/11 门禁成立并已合入，但首轮 exact-main Public CI 在 Python 3.13 `-O` 暴露
-M11 正向真实浏览器夹具的 15 秒外层预算与其工作量不自洽；C2 已停止，最小边界见
-[文档 104](docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md)。
+M11 正向真实浏览器夹具的 15 秒外层预算与其工作量不自洽；最小边界见
+[文档 104](docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md)。独立修正 PR #80 原始
+11/11、合入后 exact-main 11/11、Browser Smoke 1/1 及 README/文档 104 的匿名公开读回已经成立；
+[闭环事实](docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md)的最后状态发布门成立后，C2 才恢复
+施工资格，Core 0.13.0 与 P4 仍未发布。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -581,6 +584,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Core 0.13.0 Release Candidate 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)
 - [VeriTrail 0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)
 - [Core 0.13.0 M11 正向夹具预算修正](docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md)
+- [Core 0.13.0 M11 正向夹具预算修正闭环事实](docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
 
 ## 项目来源
 

@@ -190,7 +190,10 @@
   0.12.2，也不能创建插件 tag ruleset、tag、Release、validation summary 或 checksum。
   候选 PR #79 原始 11/11 已成立并合入 `main@a5ba0e1bd8f181851db83de611981524da1da8f5`，但该
   exact main 的首轮 Public CI 在 Python 3.13 `-O` 暴露 M11 正向夹具预算不自洽；修正边界见
-  `docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md`，C2 与 P4 继续阻断。
+  `docs/104-core-v0.13.0-m11-positive-fixture-budget-correction.md`。独立 PR #80 与修正后的 exact main
+  已分别取得 11/11，Browser Smoke 1/1 与 README/文档 104 匿名公开读回也已成立；闭环状态发布见
+  `docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md`。该发布最后门成立前 C2 继续停止；其后只
+  恢复 C2 施工资格，P4 仍等待 Core 0.13.0 公开发行闭环。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest
