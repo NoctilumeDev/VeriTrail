@@ -21,7 +21,7 @@ from typing import Any, Mapping, Sequence
 DISTRIBUTION = "veritrail-github-evidence"
 IMPORT_PACKAGE = "veritrail_github"
 VERSION = "0.1.0"
-CORE_REQUIREMENT = "veritrail==0.12.2"
+CORE_REQUIREMENT = "veritrail==0.13.0"
 RENDER_REQUIREMENT = "playwright==1.62.0"
 WHEEL_NAME = "veritrail_github_evidence-0.1.0-py3-none-any.whl"
 SDIST_NAME = "veritrail_github_evidence-0.1.0.tar.gz"

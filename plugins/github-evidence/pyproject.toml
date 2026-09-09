@@ -12,7 +12,7 @@ license = "Apache-2.0"
 authors = [
   { name = "NoctilumeDev" },
 ]
-dependencies = ["veritrail==0.12.2"]
+dependencies = ["veritrail==0.13.0"]
 
 [project.optional-dependencies]
 render = ["playwright==1.62.0"]

@@ -15,7 +15,7 @@ class OptionalRenderBoundaryTests(unittest.TestCase):
         )
         self.assertRegex(
             metadata,
-            re.compile(r'^dependencies = \["veritrail==0\.12\.2"\]$', re.MULTILINE),
+            re.compile(r'^dependencies = \["veritrail==0\.13\.0"\]$', re.MULTILINE),
         )
         self.assertRegex(
             metadata,
