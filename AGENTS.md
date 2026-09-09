@@ -181,8 +181,13 @@
   exact-main 11/11、Browser Smoke 1/1 及 README/合同正文的两个独立匿名产品读回均已成立，冻结事实见
   `docs/101-core-v0.13.0-acceptance-api-contract-freeze.md`。该状态发布自身的门禁、受保护主线合入与
   合入后 exact-main 读回全部成立后，状态为
-  `CORE_0.13.0_CONTRACT_FROZEN / C1_NOT_STARTED / P4_BLOCKED`；下一步只能从新的 exact main 进入 C1，
-  不能创建插件 tag ruleset、tag、Release、validation summary 或 checksum。
+  `CORE_0.13.0_CONTRACT_FROZEN / P4_BLOCKED`。C1 已从 exact
+  `main@e69f3844254947f795564cb845056652f2dcf3ac` 进入
+  `docs/102-core-v0.13.0-release-candidate-plan.md`；当前源码发行身份为 `0.13.0 / RELEASE CANDIDATE /
+  PENDING PUBLIC READBACK`，说明见 `docs/103-v0.13.0-release-notes.md`。必须分开 Starter 0.2.0 的
+  `>=0.12,<0.13` 冻结兼容边界、继承该边界的 Authoring Skill 真实 DRAFT 链、GitHub Evidence 的源码
+  前向兼容、distribution 声明兼容与公开 clean install；不得让依赖解析把 Core 候选静默替换为
+  0.12.2，也不能创建插件 tag ruleset、tag、Release、validation summary 或 checksum。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

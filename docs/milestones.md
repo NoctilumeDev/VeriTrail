@@ -265,6 +265,12 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [P3 Core Handoff 最终冻结状态发布](95-p3-core-handoff-freeze-publication.md)
 - [P4 GitHub Evidence Plugin 独立发布合同 0.1](96-p4-github-evidence-release-contract.md)
 - [P4 GitHub Evidence Plugin 独立发布合同冻结事实](97-p4-github-evidence-release-contract-freeze.md)
+- [Release 资产下载恢复策略修正](98-release-download-recovery-correction.md)
+- [P4 GitHub Evidence Plugin 发布准备候选事实 0.1](99-p4-github-evidence-release-preparation-candidate.md)
+- [Core 0.13.0 Acceptance API 发布补全合同](100-core-v0.13.0-acceptance-api-release-contract.md)
+- [Core 0.13.0 Acceptance API 合同冻结事实](101-core-v0.13.0-acceptance-api-contract-freeze.md)
+- [Core 0.13.0 Release Candidate 施工计划](102-core-v0.13.0-release-candidate-plan.md)
+- [VeriTrail 0.13.0 Release Notes](103-v0.13.0-release-notes.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -404,7 +410,12 @@ Acceptance API，而先前准备矩阵使用了同版本号的当前源码本地
 合同候选经 PR #77 原始 11/11 门禁合入
 `main@5b28ac3076ff4a08added47cbfc66c960c3dbdea`；该 exact main 的 Public CI 11/11、Browser Smoke
 1/1，以及 README/合同正文的两个独立匿名产品读回均已成立。[文档 101](101-core-v0.13.0-acceptance-api-contract-freeze.md)
-的最后门全部成立后，状态为 `CORE_0.13.0_CONTRACT_FROZEN / C1_NOT_STARTED / P4_BLOCKED`；后继只能
-进入 Core 0.13.0 的 C1 候选施工，P4 与 R1 仍保持阻断。
+的最后门全部成立后，合同状态为 `CORE_0.13.0_CONTRACT_FROZEN / P4_BLOCKED`。C1 已从 exact
+`main@e69f3844254947f795564cb845056652f2dcf3ac` 进入
+[Release Candidate 施工计划](102-core-v0.13.0-release-candidate-plan.md)：Starter 0.2.0 的冻结
+`>=0.12,<0.13` 边界、继承该边界的 Authoring Skill 真实 DRAFT 链、GitHub Evidence 的源码前向兼容、
+distribution 声明兼容与公开 clean install 分开取证，Starter/插件历史 metadata 保持只读。当前源码发行身份已进入
+`0.13.0 / RELEASE CANDIDATE / PENDING PUBLIC READBACK`，说明见
+[0.13.0 Release Notes](103-v0.13.0-release-notes.md)；P4 与 R1 仍保持阻断。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
