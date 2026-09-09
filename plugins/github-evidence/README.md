@@ -31,6 +31,20 @@ See the repository-level contracts before using or changing these capabilities:
 - [`docs/89-p2-public-render-collector-contract.md`](../../docs/89-p2-public-render-collector-contract.md)
 - [`docs/92-p3-core-handoff-contract.md`](../../docs/92-p3-core-handoff-contract.md)
 
+## Stable distribution
+
+Version `0.1.0` is published as an independent, non-Latest GitHub Release:
+
+- [GitHub Evidence Plugin 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0)
+- [Core 0.13.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)
+
+Download and verify the Release checksum manifest before installing the Core
+wheel and then the plugin wheel. P4 does not publish this distribution to
+PyPI. The base plugin remains browser-free; P2 additionally requires the
+explicit `render` capability, Playwright 1.62.0, and its matching operator-
+installed Chromium. Core `v0.13.0`, not the plugin Release, remains the
+repository's Latest Release.
+
 ## Reference vertical slice
 
 Install Core and the plugin from the repository, then collect the immutable

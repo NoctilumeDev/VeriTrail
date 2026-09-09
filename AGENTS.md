@@ -212,6 +212,16 @@
   旧 `00130c0...` 候选已经作废；当前本地候选字节也不得作为最终资产。下一步只能推送候选、等待原始
   远端门禁并合入受保护主线，再从新的 exact main 重建最终四项资产；tag ruleset 必须先于 tag，插件
   Release 必须保持 non-Latest，Dependabot #16/#67 不得混入该因果链。
+  后继 PR #83 已以原始 11/11 门禁合入
+  `main@548b17ccb1f20d55a9f9beef6666e913af5f65d9`；该 exact main 的 Public CI 11/11 与 Browser Smoke
+  1/1 均在 attempt 1 成立。P4 已从该提交重新构建最终四项资产，先启用 ruleset `22613490`，再创建
+  受保护注释标签 `github-evidence-v0.1.0` 与 non-Latest Release `385275245`。四项匿名下载摘要、双
+  Python clean install/runtime/uninstall、真实 GitHub 正向链与匿名 Release body 读回事实见
+  `docs/108-p4-github-evidence-release-readback-facts.md`。该状态发布自己的原始门禁、受保护主线合入和
+  合入后 exact-main 匿名读回全部成立后，当前状态为
+  `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN / R1_BLOCKED_UNTIL_PATTERN_CORPUS_FREEZE`。
+  P4 冻结只解除 R1 的第一个前置条件；Pattern Corpus 未按 exact commit、manifest digest 与
+  `pattern_id + selected_record_digest` 冻结前，不得启动 R1。
   P1 起不得在 observation request 中另造 `expected.*` 权威：观察坐标只能由 sealed Plan 机械派生并
   绑定 `plan_digest` 和派生规则版本；独立 Collector Policy 只提供 API 版本、超时和重试等运行边界，
   不得携带验收语义。Plan drafter 不因起草获得 Seal 权，Plan digest

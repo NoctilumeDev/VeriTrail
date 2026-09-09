@@ -62,11 +62,11 @@ Starter/Authoring Skill `0.2.0` 只增加第二个有限 Preset `static-site`：
 [文档 67](docs/67-authoring-skill-0.2-contract.md)，发布事实见
 [文档 70](docs/70-entry-layer-e3-0.2-release-notes.md)。
 
-### 平台证据插件轨（P4 合同已冻结，插件发布准备已恢复）
+### 平台证据插件轨（GitHub Evidence Plugin 0.1.0 已公开发布）
 
 GitHub 上的本地提交、远端分支、PR 门禁、主线、Release 和公开页面是不同证据层。VeriTrail 已为
-这类外部平台事实建立独立 `P` 轨。P0 设计合同和 P1 实现均已冻结；P1 现有独立源码包、只读 CLI、
-离线合同测试、真实 GitHub 纵向切片与公开读回，但仍没有插件标签、Release 或稳定发布坐标。
+这类外部平台事实建立独立 `P` 轨。P0–P3 已冻结；GitHub Evidence Plugin `0.1.0` 现已有受保护注释
+标签、non-Latest GitHub Release、固定四项公开资产、逐字节匿名下载和双 Python clean-install 读回。
 它不是 M15，也不属于 Starter/Authoring Skill；插件只负责只读采集与规范化，最终
 `PASS / FAIL / INCONCLUSIVE / PENDING` 仍由 sealed Plan 和 Core 决定。
 
@@ -156,9 +156,16 @@ Release，并完成逐字节匿名下载、双 Python clean install、真实 Chr
 P4 的 Core 发行阻断；这不表示插件 tag ruleset、tag、Release 或公开资产已经存在，也不启动 R1。
 [P4 发布恢复候选事实](docs/107-p4-github-evidence-release-resume-candidate.md)记录 P4 从后继
 `main@ab874d3cfd9ac140654e35d84b0025c2503e10cd` 将插件 0.1.0 的 distribution 依赖精确绑定到
-公开 Core `0.13.0`，并完成双 Python 源码/分发矩阵、插件卸载复算和匿名真实 GitHub 候选链。当前仍是
+公开 Core `0.13.0`，并完成双 Python 源码/分发矩阵、插件卸载复算和匿名真实 GitHub 候选链。文档 107
+当时记录的状态是
 `P4_RELEASE_PREPARATION_CANDIDATE / NO_TAG / NO_RELEASE / NO_PUBLIC_DOWNLOAD_CLAIM`；候选必须先通过
 自己的原始远端门禁并合入受保护主线，最终字节再从新的 exact main 重建。
+[P4 发布与公开读回事实](docs/108-p4-github-evidence-release-readback-facts.md)记录后继 PR #83 合入 exact
+`main@548b17ccb1f20d55a9f9beef6666e913af5f65d9` 后重新构建最终四项资产，先启用
+`github-evidence-v*` tag protection，再创建受保护注释标签与 non-Latest Release；公开下载摘要、
+CPython 3.10/3.13 wheel/sdist/render、插件卸载后 Core-only 复算、真实 GitHub 正向链和匿名 Release
+页面均已读回。本状态补丁自己的门禁、受保护主线合入与合入后 exact-main 匿名读回全部成立后，P4
+才最终冻结；R1 仍等待精确 Pattern Corpus 冻结，不因插件发布自动启动。
 [P2 Public Render Collector 施工合同](docs/89-p2-public-render-collector-contract.md)只冻结 fresh anonymous
 Chromium、固定公开目标/作用域、页面事实与 API/Render 同会话双 Evidence 的施工边界；合同经
 [PR #38](https://github.com/NoctilumeDev/VeriTrail/pull/38) 11 项最终门禁、受保护主线合入和 exact-SHA
@@ -599,6 +606,7 @@ M12 已在 M11 功能事实稳定后完成并冻结；M13 没有借“代码质�
 - [Core 0.13.0 M11 正向夹具预算修正闭环事实](docs/105-core-v0.13.0-m11-positive-fixture-budget-closure.md)
 - [Core 0.13.0 发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)
 - [P4 GitHub Evidence Plugin 发布恢复候选事实 0.1](docs/107-p4-github-evidence-release-resume-candidate.md)
+- [P4 GitHub Evidence Plugin 发布与公开读回事实](docs/108-p4-github-evidence-release-readback-facts.md)
 
 ## 项目来源
 
