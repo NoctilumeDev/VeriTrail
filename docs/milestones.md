@@ -465,9 +465,11 @@ R1 的发布前置条件，不自动选择 Pattern Corpus 或启动 R1。
 P4 后的首次 Corpus 前置核账确认 Ledger 的完整机器 revision 仍停在 `RA-021`，而 P2–P4 事实文档还
 保留了六类未物化的真实反例。独立 docs-only 候选因此先追加 `RA-022` 至 `RA-027`，并由
 [文档 109](109-review-attention-pattern-corpus-freeze-contract.md)定义最小充分选择、非自指 manifest、exact
-Corpus source commit 与后继 closure 的边界。当前只允许记为
-`CORPUS_CONTRACT_CANDIDATE / LEDGER_CAUGHT_UP_THROUGH_P4 / CORPUS_NOT_SELECTED / R1_BLOCKED`；合同自己的
-原始门禁、受保护主线合入和 exact-main 匿名读回成立前不得冻结合同，后继候选 revision、manifest 与
-最终公开 closure 也必须继续串行。
+Corpus source commit 与后继 closure 的边界。候选经 PR #85 原始 11/11 门禁合入
+`main@8526c5551cce3a9a9e916917381e0e0463a082f0`，合入后的 Public CI、Browser Smoke、README 与合同
+正文匿名产品读回均已成立。[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)自身门禁、受保护
+主线合入和 exact-main 匿名读回成立后，状态推进为
+`CORPUS_CONTRACT_0.1_FROZEN / LEDGER_OPEN / CORPUS_NOT_SELECTED / R1_BLOCKED`。后继候选 revision、
+manifest 与最终公开 closure 仍须继续串行；合同冻结不等于 Corpus 已经冻结。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
