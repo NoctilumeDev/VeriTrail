@@ -222,7 +222,7 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 2. 文档只通过受保护主线合入，不绕过远端门禁；
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
-   `P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_CANDIDATE`，两者不得互相改写；
+   `P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_0.1_FROZEN`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
 
@@ -234,6 +234,8 @@ P2_NOT_STARTED
 ```
 
 本文当前状态只更新并行事实为
-`P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_CANDIDATE`；它不把 R0 当时尚未发生的 P2/P3/P4
-写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；[Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)
-尚未完成自身门禁、合入和匿名读回，也没有选择 manifest，因此 R1 阻断仍然成立。
+`P2_FROZEN / P3_FROZEN / P4_FROZEN / CORPUS_CONTRACT_0.1_FROZEN`；它不把 R0 当时尚未发生的
+P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
+[Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
+成立，最终状态发布见[文档 110](110-review-attention-pattern-corpus-contract-freeze.md)。合同冻结不等于
+选择 manifest；当前仍为 `CORPUS_NOT_SELECTED / R1_BLOCKED`。
