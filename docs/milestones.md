@@ -276,6 +276,11 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Core 0.13.0 发布与公开读回事实](106-core-v0.13.0-release-readback-facts.md)
 - [P4 GitHub Evidence Plugin 发布恢复候选事实 0.1](107-p4-github-evidence-release-resume-candidate.md)
 - [P4 GitHub Evidence Plugin 发布与公开读回事实](108-p4-github-evidence-release-readback-facts.md)
+- [Review Attention Pattern Corpus 冻结合同 0.1](109-review-attention-pattern-corpus-freeze-contract.md)
+- [Review Attention Pattern Corpus 合同冻结状态发布](110-review-attention-pattern-corpus-contract-freeze.md)
+- [Review Attention Pattern Corpus 选择与 payload 候选](111-review-attention-pattern-corpus-selection-candidate.md)
+- [Review Attention Pattern Corpus manifest 0.1](review-attention-pattern-corpus-0.1.json)
+- [Review Attention Pattern Corpus 冻结闭环](112-review-attention-pattern-corpus-freeze-closure.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -481,5 +486,16 @@ normal/`-O` 下独立复算，再完成 `RA-001` 至 `RA-027` 的逐条最小性
 `CORPUS_PAYLOAD_CANDIDATE / CORPUS_CLOSURE_NOT_STARTED / R1_BLOCKED`。候选没有预填未来合入 commit，
 manifest 也不自含摘要；最终 identity 必须由后继 closure 外部绑定 payload 合入后的 exact source commit
 和 manifest digest，并完成匿名公开读回。
+
+Payload 候选提交 `415bc3d28ae86ab298cb99f9e6a16164094e67f4` 经 PR #87 原始 11/11 门禁合入
+`main@9bdcef30517309bbc87ed7fdb0fec395197ef58a`；该 exact main 的 Public CI 11/11 与 Browser Smoke 1/1
+成功。Closure 在双 Python normal/`-O` 下重新验证 20 条 revision、14 条线性 chain 与 4 个 manifest
+entry，并用产品 P2 Collector 匿名读取 README 与文档 111；raw manifest 的 1,085 bytes 也从 exact source
+commit 匿名下载并与工作树逐字节一致。[文档 112](112-review-attention-pattern-corpus-freeze-closure.md)
+外部绑定 source commit 与 manifest digest
+`sha256:ef7f65f7384f39d6afe3f1e44ac0463d8d5a0b85888dfe31ef069f0fbf6eea5d`。该状态发布自身门禁、受保护
+主线合入与合入后 exact-main 读回全部成立后，状态推进为
+`PATTERN_CORPUS_0.1_FROZEN / LEDGER_OPEN / R1_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`；R1 必须
+从新的 exact main 单独起草合同，本闭环不创建 R1 实现。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
