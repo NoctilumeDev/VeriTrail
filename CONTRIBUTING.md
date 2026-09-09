@@ -1,20 +1,19 @@
 # Contributing to VeriTrail
 
-VeriTrail Core `0.12.0` remains the immutable M14 baseline, and Core `0.12.2` is the current released
-maintenance coordinate. The independently versioned Starter and Authoring Skill entry layers are released
+VeriTrail Core `0.12.0` remains the immutable M14 baseline, and Core `0.13.0` is the current released
+stable coordinate. The independently versioned Starter and Authoring Skill entry layers are released
 at `0.2.0` and support two bounded DRAFT-only presets: `single-webapp` and `static-site`. They cannot execute
 Core seal/run, approve a Preview, or issue or modify a Verdict; the Skill also stops before Starter's
 human-reviewed handoff.
 
-The latest publicly released Core coordinate is `0.12.2`. Its bounded producer fix, release notes, protected
-tag, public assets, clean-install verification, and readback are recorded in
-`docs/74-core-demo-catalog-binding-maintenance-contract.md` through
-`docs/76-core-v0.12.2-release-readback-facts.md`. The default branch now carries the unreleased Core `0.13.0`
-candidate defined by `docs/100-core-v0.13.0-acceptance-api-release-contract.md` through
-`docs/103-v0.13.0-release-notes.md`; its source version is not a public install coordinate. Any later change
-to the Core payload must first introduce a new unreleased version coordinate and bounded contract; it must
-not keep building changed Core bytes as an already published version or move or rewrite any immutable Core
-release tag.
+The latest publicly released Core coordinate is `0.13.0`. Its bounded Acceptance API release contract,
+release notes, protected annotated tag, five public assets, clean-install verification, and anonymous
+readback are recorded in `docs/100-core-v0.13.0-acceptance-api-release-contract.md` through
+`docs/106-core-v0.13.0-release-readback-facts.md`. Core `0.12.2` remains an immutable historical maintenance
+coordinate and the declared compatibility lane for the released Starter and Authoring Skill 0.2.0. Any
+later change to the Core payload must first introduce a new unreleased version coordinate and bounded
+contract; it must not keep building changed Core bytes as an already published version or move or rewrite
+any immutable Core release tag.
 
 Contributions are welcome when they fix a reproducible defect, strengthen a declared gate, improve public
 reproducibility, or propose a separately versioned bounded capability. Do not silently broaden a frozen
@@ -36,7 +35,7 @@ must follow the private reporting path in [SECURITY.md](SECURITY.md), not a publ
 4. Name the primary variable, controlled variables, resource budget, stop conditions, and hard invariants
    when the change affects an experiment or acceptance conclusion.
 5. Explain why the change fits an existing frozen contract or provide a new bounded contract and version
-   coordinate. Core `v0.12.0`, Core `v0.12.1`, Core `v0.12.2`, and all published entry-layer release
+   coordinate. Core `v0.12.0`, Core `v0.12.1`, Core `v0.12.2`, Core `v0.13.0`, and all published entry-layer release
    coordinates are immutable facts.
 
 ## Pull requests

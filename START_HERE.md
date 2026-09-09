@@ -1,17 +1,14 @@
 # 从这里开始使用 VeriTrail
 
-> 当前稳定内核：[`VeriTrail Core 0.12.2`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.12.2)
+> 当前稳定内核：[`VeriTrail Core 0.13.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)
 >
-> Core `0.12.2` 只修复 demo Catalog 的最终位置绑定；受保护标签、五项 Release 资产、公开下载摘要、
-> 双 Python wheel、sdist 和搬移负对照均已读回。边界与精确事实见
-> [文档 74](docs/74-core-demo-catalog-binding-maintenance-contract.md)与
-> [0.12.2 Release Notes](docs/75-v0.12.2-release-notes.md)，以及
-> [0.12.2 发布与公开读回事实](docs/76-core-v0.12.2-release-readback-facts.md)。
->
-> 默认分支当前携带 Core `0.13.0` 发布候选，用新的发行身份补齐既有 Acceptance API；它尚未创建
-> `v0.13.0` 标签、Release 或公开资产，不能替代上面的稳定安装入口。边界见
-> [C1 施工计划](docs/102-core-v0.13.0-release-candidate-plan.md)与
-> [0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)。
+> Core `0.13.0` 用新的发行身份补齐已经冻结的 AcceptancePlan、四 Verdict、Acceptance Bundle 与
+> imported-snapshot 公共入口；受保护标签、五项 Release 资产、公开下载摘要、双 Python wheel/sdist
+> clean install 与真实 Chromium 已完成读回。边界与精确事实见
+> [发布补全合同](docs/100-core-v0.13.0-acceptance-api-release-contract.md)、
+> [0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)和
+> [0.13.0 发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)。历史 Core 0.12.2
+> Release 保持不可移动，继续服务于 Starter/Authoring Skill 0.2.0 的冻结兼容通道。
 >
 > 当前稳定入口层：[`VeriTrail Starter 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/starter-v0.2.0)
 > 与 [`VeriTrail Authoring Skill 0.2.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/authoring-skill-v0.2.0)。
@@ -45,7 +42,7 @@ VeriTrail（验迹）不是“再点一次绿色测试按钮”。它把一次�
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install `
-  "https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.2/veritrail-0.12.2-py3-none-any.whl"
+  "https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.13.0/veritrail-0.13.0-py3-none-any.whl"
 
 .\.venv\Scripts\veritrail.exe seal `
   --plan examples\minimal\plan.json `
@@ -58,11 +55,11 @@ python -m venv .venv
   --output artifacts\my-first-run
 ```
 
-上面命令里的 `examples\minimal` 属于 Git 仓库，并不包含在 `v0.12.2` wheel 中。只下载 wheel、
+上面命令里的 `examples\minimal` 属于 Git 仓库，并不包含在 `v0.13.0` wheel 中。只下载 wheel、
 没有 clone 仓库的用户，不能把这组命令当成自包含首跑。这个示例只解释 Plan、Evidence、Verdict
 与 Bundle，不代表完整项目自举已经发生。
 
-只安装 Core `0.12.2` wheel、没有 clone 仓库时，使用自包含首跑命令：
+只安装 Core `0.13.0` wheel、没有 clone 仓库时，使用自包含首跑命令：
 
 ```powershell
 .\.venv\Scripts\veritrail.exe demo --output artifacts\first-run-demo
@@ -145,8 +142,9 @@ AI 可以帮助阅读仓库、推荐最接近的有限预设、解释字段和�
 
 ## 当前支持边界
 
-Core 0.12.2 继承 0.12.0 已冻结的 Windows 11、C1、本地受控进程、真实 Chromium、不可变 Bundle、Catalog、
-Comparison、Paired Analysis 和 Batch Analysis。它没有证明通用项目探测、自动安装、C2/C3、Docker、
-跨平台、多服务编排、恶意代码隔离或生产容量。
+Core 0.13.0 继承 0.12.2 的 Windows 11、C1、本地受控进程、真实 Chromium、不可变 Bundle、Catalog、
+Comparison、Paired Analysis 和 Batch Analysis，并为已经冻结的 AcceptancePlan、四 Verdict、
+Acceptance Bundle 与 imported-snapshot 建立公开发行身份。它没有证明通用项目探测、自动安装、
+C2/C3、Docker、跨平台、多服务编排、恶意代码隔离或生产容量。
 
 遇到边界外项目时，正确结果是 `NOT_PROVEN` 或 `UNSUPPORTED`，不是自动修环境后继续宣布通过。
