@@ -213,9 +213,9 @@ def download_release_asset(
 
     started = monotonic()
     deadline = started + retry_budget_seconds
-    attempts = len(backoff_seconds) + 1
+    attempt = 1
 
-    for attempt in range(1, attempts + 1):
+    while True:
         remaining = deadline - monotonic()
         if remaining <= 0:
             raise RetryBudgetExceeded(
@@ -260,15 +260,17 @@ def download_release_asset(
         finally:
             partial.unlink(missing_ok=True)
 
-        if attempt == attempts:
+        if not backoff_seconds or (
+            attempt > len(backoff_seconds) and backoff_seconds[-1] == 0
+        ):
             error = ReleaseAssetDownloadError(
-                f"release asset download exhausted {attempts} attempts after {failure}"
+                f"release asset download exhausted {attempt} attempts after {failure}"
             )
             if cause is None:
                 raise error
             raise error from cause
 
-        delay = backoff_seconds[attempt - 1]
+        delay = backoff_seconds[min(attempt - 1, len(backoff_seconds) - 1)]
         remaining = deadline - monotonic()
         if remaining <= delay:
             error = RetryBudgetExceeded(
@@ -285,6 +287,7 @@ def download_release_asset(
             f"remaining_budget_seconds={remaining:.3f}"
         )
         sleep(delay)
+        attempt += 1
 
     raise AssertionError("unreachable")
 
