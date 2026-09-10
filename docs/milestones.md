@@ -300,6 +300,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention R1 Schema payload 冻结候选](125-r1-schema-payload-freeze-candidate.md)
 - [Review Attention R1 Schema payload 冻结发布](126-r1-schema-payload-freeze-publication.md)
 - [Review Attention R1 SourceSnapshot 首个运行切片合同 0.1](127-r1-source-snapshot-runtime-contract.md)
+- [Review Attention R1 SourceSnapshot 运行合同冻结发布](128-r1-source-snapshot-runtime-contract-freeze-publication.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -589,6 +590,14 @@ R1_IMPLEMENTATION_NOT_STARTED`。候选自己的原始远端门、受保护主�
 Schema payload。当前状态为
 `R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_CANDIDATE / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`：只有
 候选自己的门禁、受保护主线合入、exact-main 匿名读回与独立状态发布全部成立后，才允许创建首个 runtime。
+
+候选提交 `ac3d4169732529ad7662672222156c7e140d0fc8` 经 PR #107 原始 11/11 门禁合入
+`main@def98c6a116b50fc9c0e7c849dd9118b70285eba`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+与 README、文档 120/127 的匿名 Public Render 读回均成立。[文档 128](128-r1-source-snapshot-runtime-contract-freeze-publication.md)
+只发布这条事实链；它自己的最后门成立后，状态才推进为
+`R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_FROZEN / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_ALLOWED /
+R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`。该授权只覆盖 SourceSnapshot 最小实现，不向
+Fact/Relation/Slice/Coverage 或完整 Derivation Manifest 传播。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
