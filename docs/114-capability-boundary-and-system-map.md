@@ -4,10 +4,10 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SCHEMA_CURRENT_PRIORITY`；
+  R1_SCHEMA_CONTRACT_CANDIDATE`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
-- 当前修订基线：`main@ca1ce9fbf0dafab74a681fe761b1cee07d4b5269`；
+- 当前修订基线：`main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac`；
 - 影响等级：`L3_SYSTEM / DOCUMENTATION_ONLY / NON_NORMATIVE_MAP`；
 - 本文不创建源码、Schema、CLI、CI、标签、Release 或空目录；
 - 本文不重开 M0–M14、E 轨、P0–P4、PC 兼容桥、R0 或 Pattern Corpus 的冻结结论；
@@ -93,8 +93,10 @@ Exact SourceSnapshot
     -> CoverageLedger
 ```
 
-R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语义；Schema 字段、canonical bytes、路径
-可逆编码和遍历端点仍须由下一份独立合同冻结。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
+R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语义。后继
+[Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)正从新的 exact main 独立起草
+字段词汇、canonical bytes、路径可逆编码、源码锚、遍历端点、Coverage 分母与 Artifact 布局；实际
+Schema payload 和运行实现仍未开始。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
 HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
 为理由提前创建后继实现。
 
@@ -552,7 +554,8 @@ M0–M14                         FROZEN
 P0–P4                          FROZEN
 R0 + Pattern Corpus 0.1        FROZEN
 R1 Contract                    FROZEN
-R1 Schema                      CURRENT PRIORITY
+R1 Schema Contract             CANDIDATE
+R1 Schema Payload              NOT STARTED
 Q0 Blueprint                   FROZEN
 Q implementation               NOT STARTED
 
@@ -564,6 +567,6 @@ Ledger-item implementation     NOT STARTED
 
 Q0 的 docs-only 蓝图已经闭环，冻结事实见
 [文档 117](117-q0-verification-scheduling-freeze-publication.md)；它没有建立 Q 实现入口。当前施工已经返回
-R1 Schema，只允许按冻结的 SourceSnapshot、CodeFact、Relation、ReviewSlice 与 CoverageLedger 语义起草
-兼容向量，仍不写运行实现。本账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”就替项目
-决定必须走哪条路。
+R1 Schema Contract，只允许按冻结的 SourceSnapshot、CodeFact、Relation、ReviewSlice 与 CoverageLedger
+语义审查字段、身份、端点、布局和未来兼容向量，仍不创建实际 Schema 或运行实现。本账只负责让未来方向
+不再遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。

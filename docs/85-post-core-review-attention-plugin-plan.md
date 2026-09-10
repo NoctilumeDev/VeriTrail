@@ -283,3 +283,9 @@ Ledger，并只选择 `RA-003 / RA-004 / RA-008 / RA-023` 的 frozen successor �
 [文档 115](115-r1-contract-freeze-publication.md)只发布该候选闭环；它自身的最后门成立后才允许写
 `R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。Schema 起草资格不能
 被解释为 Schema 已存在、已冻结或运行实现已经开始。
+
+README 读者骨架与架构 SVG 已在独立分支完成闭环后，当前施工入口返回 R1。后继
+[R1 Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)只从新的 exact main 起草
+字段词汇、规范字节、可逆路径、源码锚、遍历端点、Coverage 分母与固定 Artifact 布局；当前为
+`R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`。
+Schema 合同候选不得与实际 JSON Schema、兼容向量或运行实现混在同一施工链。

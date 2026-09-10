@@ -1,0 +1,1143 @@
+# Review Attention R1 Schema 与规范身份合同 0.1
+
+> 状态：`R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED /
+> R1_IMPLEMENTATION_NOT_STARTED`
+>
+> 精确基线：`main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac`
+>
+> 上游合同：[R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
+>
+> 影响层级：`L2_CONTRACT + L0_DOCUMENTATION`；本文只冻结候选 Schema 词汇、规范字节、身份投影、
+> 可逆路径、源码锚、遍历端点、结构预算和 Artifact 布局，不创建 JSON Schema、源码包、CLI、Provider、
+> 运行 CI、标签、Release 或空实现骨架
+
+## 1. 目的与停止线
+
+R1 语义合同已经冻结，但实现仍不能替以下问题作决定：
+
+```text
+Git path 怎样无损进入 JSON？
+一个源码锚的起点和终点到底指向哪组字节？
+Fact identity、Evidence identity 与文件 identity 怎样分开？
+重叠 Slice 按什么顺序扩展，预算在哪个端点停止？
+Coverage 的分母怎样证明，而不是只给一个百分比？
+一次完成产物由哪些不可变文件组成？
+```
+
+本文给出 R1 0.1 的候选答案。当前只允许讨论、反证和冻结 Schema 合同；仓库中仍不得出现
+`schemas/review-*.schema.json`、R 轨运行代码、解析器、CLI 或测试实现。只有本文完成自己的受保护主线
+合入、exact-main 门禁、匿名公开读回和后继状态发布后，才允许从新的 exact main 创建实际 JSON Schema
+与数据型兼容向量。
+
+R1 0.1 继续只处理：
+
+```text
+Exact SourceSnapshot
+    -> deterministic CodeFacts
+    -> typed structural Relations
+    -> bounded overlapping ReviewSlices
+    -> staged CoverageLedger
+```
+
+Artifact 依赖保持单向：
+
+```text
+SourceSnapshot      DerivationProfile
+       \                 /
+        \               /
+             ReviewPolicy
+                  |
+          +-------+--------+
+          |                |
+       FactSet      DerivationEvidence
+          |
+      RelationSet
+          |
+    ReviewSliceSet
+          |
+    CoverageLedger
+          |
+   fixed thin Manifest
+```
+
+图表示语义依赖，不表示必须拆成多个进程或微服务。R1 Provider 内部可以高内聚；跨 Artifact 只通过版本化
+身份和不可变文件组合，任何下游对象都不能反向改写上游状态。
+
+本文不扩大为 AI 审查、缺陷判断、动态调用图、跨语言语义、change blast radius 或 Core Verdict。
+
+## 2. Schema 能证明什么
+
+JSON Schema 只负责结构边界：字段、类型、闭集枚举、必填项、禁止的额外字段和局部数值范围。以下性质
+必须由后继 conformance validator 与数据型向量复算，不能因为文档通过 JSON Schema 就宣称成立：
+
+- 摘要是否与规范投影一致；
+- 数组是否按规范顺序排列；
+- Git path hex 是否可逆且满足路径约束；
+- commit、tree、blob 与 SHA-256 是否对应同一组字节；
+- coverage 各集合是否互斥、完备并与分母一致；
+- Fact、Relation、Slice 引用是否存在且属于同一 Snapshot/Profile；
+- Manifest 是否绑定实际读取的同一文件快照；
+- ReviewSlice 是否严格按规范遍历、inclusive budget 与 frontier 规则产生。
+
+因此：
+
+```text
+Schema-valid != Semantically conformant
+Semantically conformant != Defect truth
+Artifact bytes identity != Semantic content identity
+```
+
+## 3. 规范 JSON 与三类摘要
+
+### 3.1 `veritrail-json-c14n/1`
+
+R1 复用 Core 已公开的 `veritrail-json-c14n/1`：
+
+```text
+UTF-8
+no BOM
+JSON object keys sorted by Unicode code point
+compact separators: comma and colon, no insignificant whitespace
+ensure_ascii = false
+NaN / Infinity forbidden
+JSON number limited to integers in R1 identity-bearing fields
+```
+
+规范 JSON 值的字节等于现有公共 `canonical_json_bytes(value)`。每个落盘 JSON Artifact 必须是：
+
+```text
+canonical_json_bytes(document) + LF
+```
+
+文件只允许一个结尾 LF；不允许 BOM、CRLF、缩进、尾随空格或第二个换行。
+
+### 3.2 语义摘要
+
+每一种语义身份使用独立 domain，统一计算：
+
+```text
+identity_envelope = {
+  "domain": <closed versioned identity domain>,
+  "payload": <the exact identity projection>
+}
+
+semantic_digest = sha256(canonical_json_bytes(identity_envelope))
+```
+
+摘要文本始终是 64 位小写十六进制，不带 `sha256:` 前缀。domain 至少冻结为：
+
+```text
+veritrail.review.source-coordinate/0.1
+veritrail.review.source-inventory/0.1
+veritrail.review.source-content/0.1
+veritrail.review.source-snapshot/0.1
+veritrail.review.derivation-profile/0.1
+veritrail.review.analysis-scope/0.1
+veritrail.review.slice-policy/0.1
+veritrail.review.review-policy/0.1
+veritrail.review.fact-subject/0.1
+veritrail.review.code-fact/0.1
+veritrail.review.fact-set/0.1
+veritrail.review.fact-conflict/0.1
+veritrail.review.relation-subject/0.1
+veritrail.review.structural-relation/0.1
+veritrail.review.relation-set/0.1
+veritrail.review.relation-conflict/0.1
+veritrail.review.slice-spec/0.1
+veritrail.review.review-slice/0.1
+veritrail.review.slice-set/0.1
+veritrail.review.coverage-ledger/0.1
+veritrail.review.derivation-evidence/0.1
+```
+
+domain 必须进入被哈希字节；不同 Artifact 即使 payload 恰好相同，也不能共享身份。
+
+本文摘要公式中的 `A + B + C` 表示一个使用各字段原名的 JSON object，不表示文本拼接、数组拼接或
+二进制 concatenation。后继兼容向量必须展开完整 JSON identity envelope 与 expected canonical bytes，
+不允许实现自行选择分隔符。
+
+每个文档的 self-digest 字段都从自己的 identity projection 删除；其他已经计算完成、作为依赖引用的摘要
+仍保留。例如 `fact_set_digest` 不覆盖自身字段，但必须覆盖 `source_snapshot_digest` 与
+`derivation_profile_digest`。禁止用反复迭代直到摘要“稳定”的方式处理自引用。
+
+### 3.3 文件摘要与 Evidence 摘要
+
+Manifest 中的 `sha256` 对**完整落盘字节**计算，包含唯一结尾 LF。它回答“是不是同一个文件”。语义摘要
+只覆盖各节明确列出的 identity projection，回答“是不是同一个语义对象”。
+
+Provider、时间、运行环境与 request instance 不进入 Fact/Relation content identity，但进入
+`DerivationEvidence` 及具体 Artifact 文件身份。因此允许：
+
+```text
+same fact_id
+same fact_set_digest
+different derivation_evidence_digest
+different file sha256
+```
+
+这表示两次独立执行报告了相同规范事实，而不是两份 Evidence 被错误合并。
+
+### 3.4 禁止隐式默认值
+
+所有进入 identity projection 的选项必须显式出现。`missing`、`null`、空数组和默认值不是同义词。Schema
+不得依赖实现语言的 enum ordinal、对象 `repr`、集合迭代顺序、本机路径、locale、时区或随机哈希。
+
+## 4. Git 路径的可逆表示
+
+### 4.1 `GitPathRef`
+
+R1 不把 Git path 直接存成 JSON Unicode 字符串。规范表示只有两种：
+
+```json
+{"path_kind":"REPOSITORY_ROOT"}
+```
+
+或：
+
+```json
+{"git_path_hex":"706c7567696e732f6769746875622d65766964656e6365","path_kind":"GIT_PATH"}
+```
+
+`git_path_hex` 是 repository-relative Git path 原始字节的小写十六进制，每个字节固定两位。它不是宿主
+文件系统路径，也不经过 UTF-8 解码、Unicode normalization、大小写折叠、URL decode 或路径分隔符替换。
+
+`GIT_PATH` 解码后必须满足：
+
+- 至少一个字节；
+- 不以 `/` 开头或结尾；
+- 不含 NUL；
+- 不含空段；
+- 任一段都不等于 ASCII `.` 或 `..`；
+- `/` 只表示 Git tree component separator。
+
+repository root 只能使用 `REPOSITORY_ROOT`，不能用空字符串、`00`、`.`、`/` 或缺字段替代。inventory entry
+只能使用 `GIT_PATH`。
+
+### 4.2 排序与显示
+
+Git path 的规范顺序是解码后的完整原始字节按 unsigned byte lexicographic order。小写定长 hex 的字典序
+与该顺序一致，但 validator 仍须按解码字节定义判断。
+
+R1 0.1 identity Artifact 不保存 `display_path`。Workbench 或后继展示层可以从原始字节安全转义生成显示
+文本，但显示文本不进入任何 R1 身份，也不能被再次解析回路径。
+
+这与 Git 的原始路径观察边界一致：`git ls-tree -z` 用 NUL 分隔并原样输出 path；Git 的 canonical path
+禁止空段、首尾 `/`、`.`、`..` 与 NUL。实现必须使用等价的二进制安全读取，不能解析 Git 的人类可读
+quoted output。
+
+## 5. SourceSnapshot 0.1
+
+### 5.1 固定字段
+
+`source-snapshot.json` 的顶层字段固定为：
+
+```text
+artifact_kind = SOURCE_SNAPSHOT
+schema_version = 0.1
+canonicalization_profile = veritrail-json-c14n/1
+repository_id
+source_coordinate
+inventory
+inventory_digest
+source_coordinate_digest
+source_content_digest
+source_snapshot_digest
+```
+
+`repository_id` 是 Seal authority 选择的精确 UTF-8 subject identifier；R1 不从本地 remote 名称猜测、
+重写或认证它。字符串逐 code point 比较，不做 URL canonicalization。
+
+`source_coordinate` 固定包含：
+
+```text
+commit_oid:        {algorithm: SHA1 | SHA256, hex: ...}
+commit_tree_oid:   {algorithm: SHA1 | SHA256, hex: ...}
+analysis_tree_oid: {algorithm: SHA1 | SHA256, hex: ...}
+analysis_root: GitPathRef
+```
+
+OID 必须是完整摘要；`SHA1` 对应 40 位小写 hex，`SHA256` 对应 64 位。branch、tag、`HEAD`、worktree
+路径和 abbreviated hash 不得进入该对象；它们只可留在 DerivationEvidence 的 request provenance。
+`commit_tree_oid` 是 commit 直接引用的 repository root tree；`analysis_tree_oid` 是 analysis root 解析到的
+exact subtree，repository root 时两者相等。R1 0.1 的 analysis root 必须解析为 tree，不接受单文件 root。
+
+### 5.2 Inventory
+
+`inventory` 是 analysis root 下全部递归 terminal tracked entry 的数组，不另列中间 directory。每项字段：
+
+```text
+git_path: GitPathRef(path_kind = GIT_PATH)
+git_mode
+git_object: {algorithm, hex, object_type}
+entry_kind
+content: {sha256, size_bytes} | absent
+```
+
+闭集枚举：
+
+```text
+object_type = BLOB / COMMIT / OTHER
+
+entry_kind =
+  REGULAR_BLOB
+  EXECUTABLE_BLOB
+  SYMLINK_BLOB
+  GITLINK
+  OTHER_TRACKED_ENTRY
+```
+
+三个 blob kind 必须有 `content`；`content.sha256` 对读取到的 exact blob bytes 计算，`size_bytes` 是同一
+字节串长度。`GITLINK` 的 Git object type 是 `COMMIT` 且没有 `content`；它不会被跟随。未知/特殊 mode
+必须成为 `OTHER_TRACKED_ENTRY`，不能静默删除或伪装成普通文件。
+
+数组按 raw Git path bytes 排序且 path 唯一。目录拓扑由 path 与 exact root tree 决定；不把工作目录、
+ignored file、untracked file、index-only change、`__pycache__` 或构建产物混入 inventory。
+
+### 5.3 四个摘要投影
+
+```text
+inventory_digest
+  payload = inventory
+
+source_coordinate_digest
+  payload = repository_id + commit_oid + commit_tree_oid + analysis_tree_oid + analysis_root
+
+source_content_digest
+  payload = analysis_tree_oid + analysis_root + inventory_digest
+
+source_snapshot_digest
+  payload = source_coordinate_digest + source_content_digest
+```
+
+因此两个 commit 可以拥有相同 `source_content_digest`，但必须拥有不同 `source_coordinate_digest` 与
+`source_snapshot_digest`。两个 commits 若只在 analysis root 外发生变化，该 root 的 content digest 不变，
+但仍由 commit coordinate 区分。Fact 绑定 `source_snapshot_digest`；不得把“字节相同”改写为“交付坐标相同”。
+
+### 5.4 快照连续性
+
+SourceSnapshot 记录的是已经读取并复核的 byte identity。派生阶段必须继续消费同一 owned bytes，或按
+`git_object + content.sha256` 从具有独立不可变性保证的内容寻址存储重新取得并复核；禁止重新读取
+worktree path 或再次解析 branch alias。
+
+R1 完成 Bundle 不强制复制所有源码字节，但实现必须证明：被 hash 的 Snapshot bytes 正是 parser 和
+anchor mapper 消费的 bytes。路径只负责定位，快照负责身份。
+
+## 6. ReviewPolicy 与 DerivationProfile
+
+### 6.1 `review-policy.json`
+
+ReviewPolicy 是 human Seal authority 的输入，不是 Provider 配置回执。固定字段：
+
+```text
+artifact_kind = REVIEW_POLICY
+schema_version
+canonicalization_profile
+policy_id
+version
+source_snapshot_digest
+derivation_profile_digest
+scope_decisions[]
+provider_requirements[]
+python_module_mapping
+slice_policy
+execution_budget
+governance
+analysis_scope_digest
+slice_policy_digest
+policy_digest
+seal
+```
+
+`scope_decisions` 必须对 SourceSnapshot 的每个 terminal entry 恰好给出一次决定，按 Git path 排序：
+
+```text
+disposition = IN_SCOPE / OUT_OF_SCOPE
+source_class = FIRST_PARTY / GENERATED / VENDORED / UNCLASSIFIED
+reason_code
+```
+
+没有命中的 path 不能默认为 first-party 或 in-scope。generated/vendor 不是文件名启发式真值；只能由
+sealed policy 显式分类，`UNCLASSIFIED` 必须保持可见。
+
+`provider_requirements` 以 capability identity 排序，每项显式给出：
+
+```text
+capability_id
+required = true | false
+composition_mode = CUMULATIVE
+```
+
+R1 0.1 只冻结 `CUMULATIVE`：所有适用且 required 的来源都必须被观察；某来源成功或返回空集合不能取消
+其他来源。替代、优先和互斥语义留给后继 Profile，不能由运行时 `first-success` 偷偷实现。
+
+`python_module_mapping` 不从 `sys.path`、editable install 或当前虚拟环境猜测 import namespace。首版固定：
+
+```text
+module_root: GitPathRef
+package_prefix[]
+```
+
+`module_root` 必须等于或位于 analysis root 内；`package_prefix` 是 Seal authority 显式给出的
+Python-normalized identifier 序列。module root 下 `__init__.py` 映射为 prefix 本身，`x.py` 映射为
+`prefix + x`，`x/__init__.py` 映射为 `prefix + x`。其他 `.py` 路径按相同 component 规则映射。不能解码为
+UTF-8、不能成为 Python identifier、产生两个候选或越过 module root 的路径必须显式
+`UNSUPPORTED/CONFLICT/EXTERNAL_TO_SNAPSHOT`，不能依赖宿主 import machinery 任选结果。
+
+`slice_policy` 固定：
+
+```text
+anchor_fact_kinds[]
+allowed_relations[]: {relation_kind, direction}
+max_depth
+max_symbols
+max_files
+max_relations
+```
+
+`direction = OUTBOUND / INBOUND / BOTH`。`execution_budget` 只保存 wall-clock、memory 等安全上限，不进入
+SliceSpec；它不能改变正常完成时的成员身份。`governance` 与 AcceptancePlan 同样区分
+`claim_owner_ref / drafter_ref / seal_authority_ref / seal_decision=CONFIRMED`。
+
+三个摘要职责固定：
+
+```text
+analysis_scope_digest
+  payload = source_snapshot_digest + derivation_profile_digest
+          + scope_decisions + provider_requirements + python_module_mapping
+
+slice_policy_digest
+  payload = analysis_scope_digest + slice_policy
+
+policy_digest
+  payload = 删除 analysis_scope_digest / slice_policy_digest / policy_digest / seal 后的完整 Policy
+```
+
+`policy_digest` 包含 execution budget 与 governance，表示这份完整 sealed Policy；
+`analysis_scope_digest/slice_policy_digest` 只表示正常结构派生语义。`seal.digest` 对删除整个 `seal` 后的完整
+文档计算，因此会绑定三个已复算摘要。调整 wall-clock、memory 或 drafter metadata 可以改变
+`policy_digest` 与具体 Evidence，却不得改变正常 Fact/Relation/Slice content identity。
+
+### 6.2 `derivation-profile.json`
+
+Profile 是版本化语义，不是某个 parser wheel 的版本。固定字段：
+
+```text
+artifact_kind = DERIVATION_PROFILE
+schema_version
+canonicalization_profile
+profile_id
+profile_version
+language = PYTHON
+language_semantics = PYTHON_3_10
+accepted_source_encodings[]
+supported_entry_kinds[]
+fact_kinds[]
+relation_kinds[]
+normalization_rules
+traversal_rules
+profile_digest
+```
+
+首个 Profile 只接受 `UTF-8` 与 `UTF-8-SIG`；其他合法 Python coding declaration 在 R1 0.1 中是
+`UNSUPPORTED_SOURCE_ENCODING`，不是 `PARSE_FAILED`。支持条目只有 `REGULAR_BLOB` 与
+`EXECUTABLE_BLOB`，且 raw path 以 ASCII `.py` 结尾；symlink 不跟随，gitlink 与其他条目不解析。
+
+闭集顺序同时是规范 rank：
+
+```text
+fact_kinds =
+  MODULE
+  CLASS_DECLARATION
+  FUNCTION_DECLARATION
+  METHOD_DECLARATION
+  IMPORT_DECLARATION
+
+relation_kinds =
+  LEXICAL_CONTAINS
+  IMPORT_TARGET_LITERAL
+```
+
+CPython、parser package 与运行解释器版本属于 DerivationEvidence。只有上述语义投影或规则变化才升级
+Profile；不能因为在 CPython 3.13 上运行就接受 3.13-only syntax。
+
+## 7. SourceAnchor 与 Python 3.10 投影
+
+### 7.1 Anchor 端点
+
+每个 Fact 使用：
+
+```text
+source_anchor = {
+  git_path: GitPathRef(GIT_PATH),
+  start_byte,
+  end_byte
+}
+```
+
+端点是 exact raw blob bytes 上的零基、半开区间 `[start_byte, end_byte)`：
+
+```text
+0 <= start_byte <= end_byte <= content.size_bytes
+```
+
+`MODULE` 锚固定为 `[0, size_bytes)`。声明与 import 使用 Python 3.10 AST 节点从第一个语法 token 到
+`end_*` 指示的最后 token 后一位；decorator 不因属于 `decorator_list` 就自动并入 class/function anchor。
+
+Python AST 的列坐标是 parser 使用的 UTF-8 byte offset，且 `end_col_offset` 是末端之后的位置。实现必须
+按 Python 3.10 encoding detection 解码 UTF-8/UTF-8-SIG，并把 `(lineno, col_offset)` 映射回 exact raw
+blob byte offset；必须保留 CRLF、LF、CR 和 UTF-8 BOM 在原始字节中的实际宽度，不能先统一换行再把偏移
+误写成 raw anchor。
+
+行列号可以作为后继展示投影，但不进入 Fact identity。缺失或无法无歧义映射的 AST end position 必须使
+该文件的 Fact Derivation 有类型失败，不能猜测到下一行或文件末尾。
+
+### 7.2 Fact 粒度
+
+`Fact` 固定字段：
+
+```text
+fact_id
+subject_key_digest
+subject_space
+fact_kind
+source_snapshot_digest
+derivation_profile_digest
+source_anchor
+local_ordinal
+semantic_attributes
+provenance_refs[]
+```
+
+`subject_space` 闭集是 `MODULE_ENTITY / DECLARATION_NODE / IMPORT_ALIAS`。`subject_key_digest` 只覆盖
+Snapshot、Profile、path、anchor、subject space 与 `local_ordinal`；`fact_id` 再加入 `fact_kind` 与
+`semantic_attributes`。kind 不进入 subject key，否则两个 Provider 对同一声明是 METHOD 还是 FUNCTION
+的分歧会被错误拆成两个无关 subject。相同 subject 出现不兼容 kind/属性时产生不同 `fact_id`，并由
+FactSet 冲突组关联。
+`provenance_refs` 不进入两者，按 provider-run identity 排序。
+
+声明属性闭集：
+
+```text
+MODULE:
+  module_key_parts[] | null; exact Git path remains the module entity identity
+
+CLASS_DECLARATION:
+  declared_name
+
+FUNCTION_DECLARATION / METHOD_DECLARATION:
+  declared_name
+  function_form = SYNC / ASYNC
+
+IMPORT_DECLARATION:
+  import_form = IMPORT / FROM_IMPORT
+  relative_level
+  module_parts[]
+  imported_name | null
+  alias_name | null
+```
+
+直接位于 class body 的 `FunctionDef/AsyncFunctionDef` 是 `METHOD_DECLARATION`；其他位置的函数声明是
+`FUNCTION_DECLARATION`。多个 alias 共用一个 import statement anchor，但每个 alias 产生一个 Fact，
+`local_ordinal` 按源码 alias 顺序从 0 开始，避免同锚身份碰撞；MODULE 与普通 declaration 固定为 0。
+`module_parts` 和名称使用 Python 3.10 parser-normalized identifier，不声称保留原 token 拼写；exact source
+spelling 仍由 source anchor 定位。
+
+`LEXICAL_CONTAINS` 只表达直接语法包含：module 包含其 body 的直接声明/import，class 包含直接 class body
+成员，function/method 包含其直接 body 中的嵌套声明/import；它不跨过中间 container 建立传递边。除
+`MODULE` 外，每个 Fact 必须恰有一个直接 lexical parent。条件、循环、异常和 with body 不创建新的
+CodeFact container，位于其中的声明仍由最近的 module/class/function/method Fact 直接包含。
+
+`module_key_parts` 只由 sealed `python_module_mapping` 与 exact Git path 机械派生；无法唯一映射时为
+`null` 并进入 Coverage 的 typed gap。它不是通过实际 `import` 获得的运行时模块名。
+
+### 7.3 FactSet
+
+`fact-set.json` 固定字段：
+
+```text
+artifact_kind = FACT_SET
+schema_version
+canonicalization_profile
+source_snapshot_digest
+policy_digest
+analysis_scope_digest
+derivation_profile_digest
+facts[]
+conflicts[]
+fact_set_digest
+```
+
+`facts` 按 `fact_id` 排序；相同 `fact_id` 只出现一次并汇总 provenance。`conflicts` 按 `conflict_id` 排序，
+每项固定包含 `conflict_id / subject_key_digest / candidate_fact_ids[] / provenance_refs[]`，并绑定至少两个
+不兼容 `fact_id`。`conflict_id` 覆盖 subject 与排序后的 candidate IDs，不覆盖 provenance；
+`fact_set_digest` 覆盖 Snapshot、Profile、analysis scope、去除 provenance 后的规范 facts 与 conflict
+semantic records；它不覆盖完整 `policy_digest`。Manifest 文件摘要继续覆盖完整 provenance 与 Policy
+引用。
+
+## 8. RelationSet 0.1
+
+`Relation` 固定字段：
+
+```text
+relation_id
+relation_subject_digest
+relation_space
+relation_kind
+source_fact_id
+local_ordinal
+target
+semantic_attributes
+provenance_refs[]
+```
+
+`LEXICAL_CONTAINS.target` 必须是 `{target_kind: FACT, fact_id: ...}`。
+
+`IMPORT_TARGET_LITERAL.target` 必须是：
+
+```text
+target_kind = IMPORT_LITERAL
+relative_level
+module_parts[]
+imported_name | null
+resolution_status
+topology_status
+resolved_fact_ids[]
+```
+
+闭集：
+
+```text
+resolution_status = RESOLVED / UNRESOLVED / UNSUPPORTED / CONFLICT
+topology_status = IN_SNAPSHOT / EXTERNAL_TO_SNAPSHOT / UNKNOWN
+```
+
+这两个维度正交。`UNRESOLVED + UNKNOWN` 可表示绝对 import 可能来自外部环境；相对引用越过 analysis root
+可以是 `UNRESOLVED + EXTERNAL_TO_SNAPSHOT`；多个确定性候选必须是 `CONFLICT`，不能任选一个。
+`resolved_fact_ids` 只有 `RESOLVED/CONFLICT` 可非空，且只引用 Snapshot 中的 `MODULE` Fact。
+
+`import x.y` 尝试解析完整 `x.y` module key；`from x.y import z` 只解析 base module `x.y`，不声称 `z`
+一定是子模块、属性或运行时对象；`from . import z` 只解析相对 base package。`imported_name` 始终保留为
+声明事实，不因 base module 可解析就获得运行时绑定语义。
+
+`relation_space = CHILD_EDGE / IMPORT_EDGE`。`relation_subject_digest` 覆盖 relation space、source fact 与
+`local_ordinal`；`relation_id` 再加入 relation kind、target 与 semantic attributes。relation kind 不进入
+subject key，使同一 edge slot 的 kind/target 分歧可以形成 conflict。`LEXICAL_CONTAINS` 的 ordinal 按
+parent 直接语法子项顺序，`IMPORT_TARGET_LITERAL` 在每个 import Fact 下固定为 0。Provider provenance
+不进入 content identity。
+
+`relation-set.json` 固定：
+
+```text
+artifact_kind = RELATION_SET
+schema_version
+canonicalization_profile
+source_snapshot_digest
+policy_digest
+analysis_scope_digest
+derivation_profile_digest
+fact_set_digest
+relations[]
+conflicts[]
+relation_set_digest
+```
+
+排序、去重、冲突和摘要规则与 FactSet 同构；`relation_set_digest` 绑定 analysis scope，不绑定会随非语义
+预算变化的完整 Policy。Relation conflict 同样保存
+`conflict_id / relation_subject_digest / candidate_relation_ids[] / provenance_refs[]`，语义摘要不覆盖
+provenance。空来源不取消其他来源。
+
+## 9. ReviewSliceSpec 与规范遍历
+
+### 9.1 Spec
+
+每个机械实例化的 `ReviewSliceSpec` 固定：
+
+```text
+source_snapshot_digest
+analysis_scope_digest
+slice_policy_digest
+derivation_profile_digest
+fact_set_digest
+relation_set_digest
+anchor_fact_id
+allowed_relations[]
+max_depth
+max_symbols
+max_files
+max_relations
+slice_spec_digest
+```
+
+它只能复制 sealed Policy 允许的关系与不超过 Policy 的结构预算。CLI/request 不得覆盖。最小值：
+
+```text
+max_depth >= 0
+max_symbols >= 1
+max_files >= 1
+max_relations >= 0
+```
+
+### 9.2 Inclusive budget
+
+anchor 位于 depth 0，同时计为第 1 个 symbol 和其源码 path 的第 1 个 file。四个 budget 都是**包含式最大
+值**：加入候选后必须继续满足 `count <= max_*`。`max_depth=0` 只保留 anchor；`max_relations=0` 不加入边。
+
+候选 relation 是一个原子加入单元：
+
+- 若遍历方向另一端是尚未包含的 Fact，加入 relation 与该 Fact 后必须同时满足
+  depth/symbol/file/relation；
+- 若另一端 Fact 已在切片中，只增加 relation count；
+- literal target 不增加 symbol/file，但 relation hop 仍受 depth 与 relation budget；
+- 任一限制会被越过时，relation 与新 target 都不加入，frontier 记录全部适用停止原因；
+- 不允许先加入 edge、再因 target 超限留下悬空半结果。
+
+### 9.3 遍历顺序与 tie-break
+
+采用 deterministic breadth-first traversal。queue 先按 `(depth, fact_id)` 排序；对同一 Fact 的候选关系
+按以下 tuple 升序：
+
+```text
+(relation_kind_rank, direction_rank, relation_id)
+```
+
+`relation_kind_rank` 使用 Profile 冻结顺序；`OUTBOUND < INBOUND`，`BOTH` 展开为两个明确方向后去重。
+Fact 以 `fact_id` 去重，Relation 以 `relation_id` 去重。循环不会刷新 depth 或重新入队；更短路径先发现，
+同深度由上述 tie-break 决定。
+
+任何候选因 `DEPTH_LIMIT / SYMBOL_LIMIT / FILE_LIMIT / RELATION_LIMIT` 被拒绝，都进入 frontier。多个原因
+按上述固定 reason rank 排序。只要 frontier 因结构预算非空，Slice coverage 就是 `PARTIAL`；遍历完整
+只表示“相对于当前 Snapshot/Profile/RelationSet/Spec 未再发现 eligible edge”，不表示完整程序语义。
+
+### 9.4 Slice Artifact
+
+`review-slices.json` 固定字段：
+
+```text
+artifact_kind = REVIEW_SLICE_SET
+schema_version
+canonicalization_profile
+source_snapshot_digest
+policy_digest
+analysis_scope_digest
+slice_policy_digest
+derivation_profile_digest
+fact_set_digest
+relation_set_digest
+slices[]
+slice_set_digest
+```
+
+每个 Slice 固定：
+
+```text
+slice_id
+slice_spec
+included_fact_ids[]
+included_relation_ids[]
+frontier[]
+coverage_status = COMPLETE / PARTIAL / UNKNOWN
+```
+
+Slice 数组按 `slice_id` 排序，成员 ID 去重排序。`slice_id` 覆盖 spec、成员与 frontier；同成员但不同 spec
+仍是不同 Slice。CoverageLedger 不进入 Slice identity，避免循环。
+
+## 10. CoverageLedger 0.1
+
+### 10.1 固定阶段
+
+`coverage-ledger.json` 的 `stages` 必须按以下顺序恰好出现一次：
+
+```text
+SNAPSHOT_INVENTORY
+POLICY_SCOPE
+LANGUAGE_SUPPORT
+PARSE
+FACT_DERIVATION
+RELATION_DERIVATION
+SLICE_DERIVATION
+```
+
+每阶段固定：
+
+```text
+stage
+upstream_stage | null
+denominator
+eligible[]: CoverageItemRef
+completed[]: CoverageItemRef
+out_of_scope[]: CoverageDisposition
+unsupported[]: CoverageDisposition
+unresolved[]: CoverageDisposition
+conflicts[]: CoverageDisposition
+parse_failed[]: CoverageDisposition
+execution_failed[]: CoverageDisposition
+truncated[]: CoverageDisposition
+frontier[]
+coverage_status
+reason_codes[]
+```
+
+所有集合元素使用结构化 `CoverageItemRef`：
+
+```text
+item_kind = INVENTORY_ENTRY / PARSE_UNIT / FACT / RELATION / REVIEW_SLICE
+item_id
+```
+
+不同 kind 的相同文本 ID 不是同一 item。
+
+`CoverageDisposition` 固定为：
+
+```text
+item_ref: CoverageItemRef
+reason_codes[]
+```
+
+`eligible` 是通过当前 stage 入口判断的中间集合，不是与 `completed` 并列的最终 disposition。对已知分母：
+
+```text
+denominator
+  = eligible U out_of_scope U unsupported
+
+eligible
+  = completed U unresolved U conflicts U parse_failed U execution_failed U truncated
+```
+
+两条等式右侧各集合分别互斥，所有比较都按 `CoverageItemRef` 身份进行。某 stage 不适用的分类必须为空，
+不能省略字段或把同一 item 同时写进两个终态。
+
+各 stage 的分母来源固定，不能由 Provider 为了提高覆盖率改小：
+
+| Stage | Denominator source | Item kind |
+| --- | --- | --- |
+| `SNAPSHOT_INVENTORY` | exact analysis tree 的全部 terminal tracked entries | `INVENTORY_ENTRY` |
+| `POLICY_SCOPE` | SourceSnapshot inventory | `INVENTORY_ENTRY` |
+| `LANGUAGE_SUPPORT` | Policy 的 `IN_SCOPE` entries | `PARSE_UNIT` |
+| `PARSE` | 当前 Profile 声明 supported 的 parse units | `PARSE_UNIT` |
+| `FACT_DERIVATION` | 成功解析 AST 中按闭集可枚举的 Fact candidates | `FACT` |
+| `RELATION_DERIVATION` | 规范 facts 中按闭集可枚举的 direct relation candidates | `RELATION` |
+| `SLICE_DERIVATION` | Policy 机械选择出的 anchor/spec pairs | `REVIEW_SLICE` |
+
+若任一上游失败使候选全集无法建立，下游 denominator 必须是 `UNKNOWN`；不得只用成功解析或已经派生出的
+子集重新定义全局分母。`FACT/RELATION/REVIEW_SLICE` 的 denominator ID 是候选 subject identity，输出
+Artifact ID 另由完整语义计算；二者必须通过 conformance 规则可追溯。
+
+### 10.2 分母
+
+已知分母：
+
+```text
+denominator = {
+  state: KNOWN,
+  source_digest,
+  item_refs[]
+}
+```
+
+未知分母：
+
+```text
+denominator = {
+  state: UNKNOWN,
+  source_digest | null,
+  known_item_refs[],
+  reason_codes[]
+}
+```
+
+`UNKNOWN` 的 known items 只是已观察前缀，不能被重命名为全局分母。R1 0.1 不存百分比和冗余 count；
+Workbench 从 exact item sets 计算显示值。对 `UNKNOWN`，上述集合关系只适用于 `known_item_refs`，同时
+必须保留导致全局分母未知的原因；已知前缀完整不改变 overall UNKNOWN。
+
+闭集 coverage reason：
+
+```text
+POLICY_EXCLUDED
+UNCLASSIFIED_SOURCE
+UNSUPPORTED_ENTRY_KIND
+UNSUPPORTED_LANGUAGE
+UNSUPPORTED_SOURCE_ENCODING
+UNSUPPORTED_SYNTAX_VERSION
+PARSE_ERROR
+PROVIDER_UNAVAILABLE
+PROVIDER_CONFLICT
+TARGET_UNRESOLVED
+TARGET_EXTERNAL_TO_SNAPSHOT
+UPSTREAM_DENOMINATOR_UNKNOWN
+DEPTH_LIMIT
+SYMBOL_LIMIT
+FILE_LIMIT
+RELATION_LIMIT
+DERIVATION_ERROR
+```
+
+`coverage_status = COMPLETE / PARTIAL / UNKNOWN`。Python Profile 的 COMPLETE 不能显示成 repository
+complete；混合语言与 Policy 排除仍须在前序 stage 分母可见。
+
+### 10.3 Ledger 身份
+
+顶层固定：
+
+```text
+artifact_kind = COVERAGE_LEDGER
+schema_version
+canonicalization_profile
+source_snapshot_digest
+policy_digest
+analysis_scope_digest
+slice_policy_digest
+derivation_profile_digest
+fact_set_digest
+relation_set_digest
+slice_set_digest
+stages[]
+overall_coverage_status
+coverage_ledger_digest
+```
+
+摘要覆盖完整分母、分类、frontier 与状态，不覆盖 UI 派生百分比。`overall_coverage_status` 是固定 stage
+状态的保守机械汇合：任一 UNKNOWN -> UNKNOWN；否则任一 PARTIAL -> PARTIAL；否则 COMPLETE。它不是
+缺陷、质量或 Core Verdict。
+
+## 11. DerivationEvidence 与多来源组合
+
+`derivation-evidence.json` 固定字段：
+
+```text
+artifact_kind = DERIVATION_EVIDENCE
+schema_version
+canonicalization_profile
+derivation_id
+request_provenance
+source_snapshot_digest
+policy_digest
+analysis_scope_digest
+slice_policy_digest
+derivation_profile_digest
+provider_runs[]
+overall_execution_status
+started_at
+finished_at
+diagnostics[]
+derivation_evidence_digest
+```
+
+执行闭集：
+
+```text
+COMPLETED / INTERRUPTED / FAILED / UNAVAILABLE
+```
+
+每个 Provider run 保存 capability、provider implementation/version、parser/runtime identity、实际操作数
+摘要、起止、状态、reported fact/relation IDs 与 typed diagnostics。`provider_runs` 按 provider-run identity
+排序，不能按完成先后排序。
+
+diagnostic code 首版闭集：
+
+```text
+SOURCE_OBJECT_MISSING
+SOURCE_CONTENT_MISMATCH
+PROVIDER_UNAVAILABLE
+PROVIDER_FAILED
+NONCONFORMANT_PROVIDER_OUTPUT
+EXECUTION_DEADLINE
+EXECUTION_CANCELLED
+INTERNAL_DERIVATION_ERROR
+```
+
+`overall_execution_status` 机械汇合：若整个操作因 deadline/cancellation 停止则 `INTERRUPTED`；否则任一
+required Provider 执行或输出验证失败为 `FAILED`；否则任一 required Provider 不可用为 `UNAVAILABLE`；
+其余为 `COMPLETED`。optional Provider 的失败仍保留 Evidence/Coverage，但不单独把整体改成
+`UNAVAILABLE`；一旦其已报告内容与其他适用来源冲突，冲突不能因它 optional 而被删除。
+
+`request_provenance` 可以保存最初 branch/tag alias 与解析时间，但后继所有语义 Artifact 只绑定 exact
+Snapshot。时间使用 UTC RFC 3339；它属于该次 Evidence identity，不进入 Fact/Relation/Profile identity。
+
+required source 的空输出是一个成功但为空的来源事实；required source 不可观察则
+`overall_execution_status` 不能冒充完整成功，Coverage 也必须保留 UNKNOWN。多个 Provider 报告同一
+`fact_id/relation_id` 时合并 content identity 并保留全部 provenance；同 subject 的不兼容内容进入 conflict，
+不能 last-write-wins。
+
+wall-clock timeout 产生 `INTERRUPTED`。此时不得发布普通完成态 FactSet、RelationSet、ReviewSliceSet 或
+CoverageLedger；已观察前缀只能留在 typed diagnostics/Evidence 中，不能获得正常派生产物身份。
+
+## 12. Artifact 布局与 Manifest
+
+R1 产物是一个 create-new-only 目录。文件名固定，不接受 Manifest 提供任意相对路径：
+
+```text
+r1-artifact/
+  manifest.json
+  source-snapshot.json
+  review-policy.json
+  derivation-profile.json
+  derivation-evidence.json
+  fact-set.json
+  relation-set.json
+  review-slices.json
+  coverage-ledger.json
+```
+
+`manifest.json` 顶层固定：
+
+```text
+bundle_kind = R1_DERIVATION
+schema_version = 0.1
+canonicalization_profile = veritrail-json-c14n/1
+outcome_kind = COMPLETE / DIAGNOSTIC
+files[]
+```
+
+每项固定：
+
+```text
+role
+path
+sha256
+size_bytes
+semantic_digest
+```
+
+role 与 path 是闭合一一映射；数组按以下 rank 排序：
+
+```text
+SOURCE_SNAPSHOT      -> source-snapshot.json
+REVIEW_POLICY        -> review-policy.json
+DERIVATION_PROFILE   -> derivation-profile.json
+DERIVATION_EVIDENCE  -> derivation-evidence.json
+FACT_SET             -> fact-set.json
+RELATION_SET         -> relation-set.json
+REVIEW_SLICE_SET     -> review-slices.json
+COVERAGE_LEDGER      -> coverage-ledger.json
+```
+
+`semantic_digest` 分别绑定各文件的
+`source_snapshot_digest / policy_digest / profile_digest / derivation_evidence_digest /
+fact_set_digest / relation_set_digest / slice_set_digest / coverage_ledger_digest`，不能用文件 SHA-256 代替。
+Manifest importer 必须先安全读取一次文件、验证 exact bytes 与 semantic digest，再把同一已读取文档交给
+后继消费者；禁止 `verify(path) -> reread(path)`。
+
+`COMPLETE` 必须包含八个 role，且 Evidence execution 是 `COMPLETED`；parse failure、unsupported entry 或
+结构预算截断仍可产生 COMPLETE bundle，但 Coverage 必须诚实为 PARTIAL/UNKNOWN。这里的 COMPLETE 只指
+派生协议完整结束，不是 coverage complete 或 Core PASS。
+
+`DIAGNOSTIC` 必须包含 Snapshot、Policy、Profile 与 Evidence；Policy 已绑定 Snapshot，因此缺少
+Snapshot 的目录本身无效。它禁止包含正常态 Fact/Relation/Slice/Coverage 文件。
+`INTERRUPTED / FAILED / UNAVAILABLE` 只能发布 DIAGNOSTIC；若连 SourceSnapshot 都不能完整建立，R1
+derivation 尚未取得合法输入，不发布伪造的 R1 Bundle，只保留调用层诊断。
+
+Manifest 自身不包含自摘要；调用方以 exact `manifest.json` 文件 SHA-256 绑定 Bundle。发布必须先在隔离
+staging 中完成所有文件写入、复算与 cross-reference 校验，再原子 create-new 到最终目录；失败不能留下
+可被误读为完整 Bundle 的半目录。
+
+## 13. 兼容向量矩阵
+
+后继实际 Schema payload 必须同时提交纯数据向量及 expected canonical bytes/digests。至少覆盖：
+
+1. repository root 只接受专用对象，空字符串、`.`、`/` 均拒绝；
+2. NFC/NFD、大小写不同与 invalid UTF-8 Git path 的 hex round-trip 保持不同身份；
+3. path 中 LF 可逆，NUL、空段、`.`、`..`、首尾 `/` 拒绝；
+4. 两个 commit 指向同一 tree：content digest 相同，coordinate/snapshot digest 不同；
+5. branch alias 在 resolve 后移动，不改变已建 Snapshot；
+6. mutable path 在 hash 后替换，派生仍消费已核验 bytes 或明确失败；
+7. UTF-8、UTF-8-SIG、LF/CRLF/CR、多字节 identifier 的 raw byte anchor；
+8. 非 UTF-8 coding declaration 进入 UNSUPPORTED，不冒充 PARSE_FAILED；
+9. Python 3.13-only syntax 在 PYTHON_3_10 Profile 下有类型拒绝；
+10. 一个 import statement 的多个 alias 通过 ordinal 得到不同 Fact；
+11. Provider A/B 各报告不同事实时累计；A 为空不取消 B；同一事实汇总 provenance；
+12. 同 subject 不兼容 facts/relations 形成 conflict，不 last-write-wins；
+13. BFS 在 cycle、同深度多边和不同输入顺序下输出相同成员与摘要；
+14. depth/symbol/file/relation 每个预算分别命中端点，并保留完整 frontier；
+15. overlap Slice 以唯一 ID 计 coverage，不按出现次数重复计数；
+16. parse failure、unsupported language、unknown denominator 与 deterministic truncation 保持不同状态；
+17. `INTERRUPTED` 不能携带完成态派生文件；
+18. Manifest 缺文件、多文件、错 role/path、摘要不符、非规范字节或半发布目录全部拒绝；
+19. 同一向量在 CPython 3.10/3.13、normal/`-O` 下得到逐字节相同规范 Artifact 与语义摘要；
+20. 冻结 reference lab 的 22 个普通 Python blob 与 259,553 bytes 能由 Snapshot inventory 重新复算。
+
+向量必须共享事实，不共享实现：未来任意兼容 Provider/validator 都读取同一 corpus。不得把 expected digest
+在被测实现运行后动态生成；expected bytes 与摘要必须作为审查过的不可变 fixture 提交。
+
+冻结 Corpus 的追溯关系固定为：
+
+| Pattern | 本合同约束 | 主要向量 |
+| --- | --- | --- |
+| `RA-003` | required sources 累计、空来源不抵消、冲突和 provenance 保留 | 11–12 |
+| `RA-004` | denominator 不缩小、inclusive budget、frontier、PARTIAL/UNKNOWN | 13–16 |
+| `RA-008` | alias 只解析一次，后继只绑定 exact coordinate/Snapshot | 4–5 |
+| `RA-023` | verified bytes 与 parser/consumer bytes 连续，Manifest 单次安全读取 | 6、18 |
+
+## 14. 首个实现切片仍未开始
+
+本文冻结后，下一阶段仍只允许先创建：
+
+```text
+versioned JSON Schemas
+data-only compatibility corpus
+canonical-byte and digest vectors
+schema/conformance validation tests
+```
+
+该阶段不得顺手加入 Git reader、SourceSnapshot importer、Python parser、Fact mapper、Slice engine 或 CLI。
+实际 R1 运行实现必须等待 Schema payload 自身完成门禁、受保护主线合入、exact-main 复算、匿名读回与后继
+状态发布。
+
+未来运行实现的第一条 vertical slice 才是：
+
+```text
+exact Git commit/tree/root
+    -> binary-safe terminal inventory
+    -> verified SourceSnapshot 0.1
+    -> canonical artifact + manifest
+```
+
+它只证明快照身份和连续性，不提前宣称 Python Facts、Relations、Slices 或 Coverage 已实现。
+
+## 15. 候选验收门
+
+本文只有满足以下条件后才有资格冻结：
+
+1. 与文档 113、R0、Corpus、README、AGENTS、R 轨 Plan 和 milestones 不存在竞争语义；
+2. 路径、锚、事实、关系、切片、coverage、Evidence 与 Bundle 身份均能独立解释；
+3. `Same Path / Snapshot / Fact / Evidence / File` 没有被折叠为一个摘要；
+4. JSON Schema 能力上限与后继 conformance validator 职责明确分开；
+5. 结构预算 inclusive 规则、BFS tie-break、cycle 去重与 frontier 端点没有实现自由度；
+6. Python 3.10 Profile 不随宿主解释器、source encoding 或混合语言仓库偷偷扩大；
+7. 兼容向量覆盖冻结 Pattern `RA-003 / RA-004 / RA-008 / RA-023` 的反例；
+8. diff 只包含本文与状态入口文档，不出现实际 Schema、源码、CLI、Provider、运行 CI、标签或 Release；
+9. 候选经原始远端门禁、受保护主线合入、exact-main 门禁及 README/本文/milestones 匿名读回；
+10. 后继独立 docs-only 状态发布完成同样闭环后，才允许写：
+
+```text
+R1_SCHEMA_CONTRACT_FROZEN
+R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED
+R1_IMPLEMENTATION_NOT_STARTED
+```
+
+若 Schema 审查发现本文与已冻结 R1 合同冲突，必须停止并只重开被反例击穿的边界。门禁全绿不能覆盖
+语义反例。
+
+## 16. 当前候选事实
+
+本补丁只是从 exact main 起草 Schema 合同。它没有生成可被程序导入的 Schema，没有修改 Core/P/Q，
+没有开始 R1 实现，也没有把未来兼容向量写成已经通过的证据。
+
+当前状态保持：
+
+```text
+R1_CONTRACT_FROZEN
+R1_SCHEMA_CONTRACT_CANDIDATE
+R1_SCHEMA_ARTIFACTS_NOT_STARTED
+R1_IMPLEMENTATION_NOT_STARTED
+```
+
+## 17. 规范依据
+
+- [Git `ls-tree`](https://git-scm.com/docs/git-ls-tree.html)：`-z` 以 NUL 分隔并原样输出 path；
+- [Git `fast-import`](https://git-scm.com/docs/git-fast-import.html)：canonical path、原始字节、根路径与 NUL
+  约束；
+- [Python 3.10 `ast`](https://docs.python.org/3.10/library/ast.html)：AST 行列与 UTF-8 byte offset 端点；
+- [Python 3.10 lexical analysis](https://docs.python.org/3.10/reference/lexical_analysis.html)：source encoding、
+  BOM 与物理换行语义。
+
+这些外部文档限制 R1 对 Git/Python 的观察模型，但不替代本合同的项目身份与停止线。

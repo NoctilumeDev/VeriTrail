@@ -286,6 +286,14 @@
   CoverageLedger`；首个 Profile 只支持 Python 3.10 结构语义，不得外推为整个多语言仓库已被理解。
   `R1_SCHEMA_DRAFTING_ALLOWED` 只允许从新的 exact main 独立起草版本化 Schema 与兼容向量，不表示 Schema
   已存在或已冻结；R1 源码包、CLI、运行 CI、Provider、标签和 Release 继续禁止，直到后继实现入口独立闭合。
+  README 读者骨架与对称 SVG 已经在独立受保护主线闭环后退出；后继
+  `docs/120-r1-schema-and-canonical-identity-contract.md` 从
+  `main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac` 建立 docs-only Schema 合同候选，当前状态为
+  `R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`。该候选
+  只定义字段词汇、规范字节、可逆 Git path、raw byte anchor、身份投影、BFS tie-break、inclusive budget、
+  Coverage 分母与固定 Artifact 布局；不得在同一分支创建实际 JSON Schema、兼容向量、源码、CLI、Provider
+  或运行 CI。只有候选及后继状态发布完成各自门禁、合入与 exact-main 匿名读回，才允许从新的 exact main
+  起草 Schema payload。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
