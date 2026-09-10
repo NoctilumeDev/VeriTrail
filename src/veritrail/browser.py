@@ -67,6 +67,47 @@ def _settle_playwright_start(playwright: Any) -> None:
     sync_wait(asyncio.wait_for(asyncio.shield(init_task), timeout=1.0))
 
 
+def _contain_expected_playwright_pipe_shutdown(playwright: Any) -> None:
+    """Acknowledge only the pipe break caused by owned driver termination.
+
+    On CPython 3.10 for Windows, closing Playwright's private subprocess writer
+    after the owned Job has already terminated the driver can complete a pending
+    Proactor write with ``WinError 232``.  Playwright 1.62 closes its private loop
+    without awaiting that writer, so the Future can otherwise report into a later
+    Run as ``Future exception was never retrieved``.  The driver and loop are
+    dedicated to this Playwright instance; every other loop exception continues
+    through the handler that was active before this narrow interruption window.
+
+    Lightweight test doubles deliberately omit these private objects.  This
+    containment is best-effort for them and does not alter normal browser closure.
+    """
+
+    implementation = getattr(playwright, "_impl_obj", None)
+    connection = getattr(implementation, "_connection", None)
+    loop = getattr(connection, "_loop", None)
+    if loop is None or loop.is_closed():
+        return
+    previous_handler = loop.get_exception_handler()
+
+    def handle_shutdown_exception(
+        active_loop: asyncio.AbstractEventLoop,
+        context: dict[str, Any],
+    ) -> None:
+        error = context.get("exception")
+        if (
+            context.get("message") == "Future exception was never retrieved"
+            and isinstance(error, BrokenPipeError)
+            and getattr(error, "winerror", None) == 232
+        ):
+            return
+        if previous_handler is None:
+            active_loop.default_exception_handler(context)
+        else:
+            previous_handler(active_loop, context)
+
+    loop.set_exception_handler(handle_shutdown_exception)
+
+
 def _resolve_route_after_stop(action: Callable[[], None]) -> None:
     """Resolve a queued route best-effort after stop ownership is established.
 
@@ -639,6 +680,8 @@ def _collect_browser_evidence(
             except Exception as exc:
                 cleanup_complete = False
                 record_collection_error("browser-close", type(exc).__name__)
+        if owned_interruption_complete:
+            _contain_expected_playwright_pipe_shutdown(playwright)
         try:
             playwright.stop()
         except Exception as exc:

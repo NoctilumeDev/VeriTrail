@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import copy
 import gc
 import hashlib
@@ -17,6 +18,7 @@ from unittest.mock import Mock, patch
 
 from veritrail.browser import (
     _collect_browser_evidence,
+    _contain_expected_playwright_pipe_shutdown,
     _origin,
     _resolve_route_after_stop,
     _websocket_origin,
@@ -215,6 +217,53 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
 
 
 class BrowserEvidenceTests(unittest.TestCase):
+    def test_owned_driver_pipe_shutdown_does_not_leak_into_the_next_run(
+        self,
+    ) -> None:
+        loop = asyncio.new_event_loop()
+        forwarded: list[dict[str, object]] = []
+        loop.set_exception_handler(
+            lambda _active_loop, context: forwarded.append(context)
+        )
+        playwright = SimpleNamespace(
+            _impl_obj=SimpleNamespace(
+                _connection=SimpleNamespace(_loop=loop),
+            )
+        )
+        try:
+            _contain_expected_playwright_pipe_shutdown(playwright)
+            expected = loop.create_future()
+            expected.set_exception(
+                BrokenPipeError(
+                    32,
+                    "The pipe is being closed",
+                    None,
+                    232,
+                )
+            )
+            del expected
+            gc.collect()
+            self.assertEqual([], forwarded)
+
+            unexpected = loop.create_future()
+            unexpected.set_exception(
+                BrokenPipeError(
+                    32,
+                    "A different pipe failure",
+                    None,
+                    109,
+                )
+            )
+            del unexpected
+            gc.collect()
+            self.assertEqual(1, len(forwarded))
+            self.assertEqual(
+                109,
+                getattr(forwarded[0]["exception"], "winerror", None),
+            )
+        finally:
+            loop.close()
+
     def test_route_resolution_failure_after_stop_does_not_replace_stop_reason(
         self,
     ) -> None:
