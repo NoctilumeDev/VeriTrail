@@ -16,20 +16,9 @@ VeriTrail（验迹）把事先封存的验收条件、来自真实执行或外�
 
 VeriTrail 的核心关系很小：
 
-```text
-Human authority
-  ├─ defines intent and seals acceptance conditions
-  └─ owns final disposition
+![VeriTrail 架构关系：现实经 Evidence Producer 形成标准 Evidence；人封存 Plan；Plan 与 Evidence 只在 Core 中相遇并导出 Verdict 与不可变 Bundle；Workbench 支持最终人工处置；R 分配审查注意力，Q 调度证明工作，但二者均无 Verdict 权。](docs/assets/veritrail-architecture.svg)
 
-sealed Plan ───────────────┐
-                           ├─> VeriTrail Core ─> deterministic Verdict
-standard Evidence ─────────┘          │
-  ├─ bounded local execution          └─> immutable Bundle / Workbench
-  └─ read-only platform observation
-
-Review Attention (R) ─> shows humans where to look
-Verification Scheduling (Q) ─> plans how proof work may run efficiently
-```
+<p align="center"><sub>中轴实线是证据与裁决链，两翼虚线是可替换的辅助能力；图中两端的 Human authority 属于同一权威域。</sub></p>
 
 这不是一条把所有能力串成单体流水线的图。Core 只消费 sealed Plan 与标准 Evidence；R 面向人的审查
 注意力，Q 面向证明义务的执行效率，两者都不能获得 Core Verdict 权。Workbench 负责展示和验真，

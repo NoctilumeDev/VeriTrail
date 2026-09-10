@@ -1,0 +1,138 @@
+digraph VeriTrailArchitecture {
+  graph [
+    rankdir=TB,
+    newrank=true,
+    bgcolor="#f2e9de",
+    pad="0.34",
+    margin="0",
+    nodesep="0.48",
+    ranksep="0.52",
+    splines=spline,
+    outputorder=edgesfirst,
+    fontname="Georgia",
+    fontcolor="#2f2a25",
+    labelloc=t,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2"><TR><TD><FONT FACE="Georgia" POINT-SIZE="25" COLOR="#092b30"><B>VERITRAIL  /  EVIDENCE-BOUND JUDGMENT</B></FONT></TD></TR><TR><TD><FONT FACE="Arial" POINT-SIZE="11" COLOR="#6f6252">Reality and intent meet on one governed axis. Capabilities remain outside judgment authority.</FONT></TD></TR></TABLE>>
+  ];
+
+  node [
+    shape=rect,
+    style="rounded,filled",
+    color="#a48558",
+    fillcolor="#fbf7ef",
+    fontcolor="#2f2a25",
+    fontname="Arial",
+    fontsize=10,
+    penwidth=1.7,
+    margin="0.16,0.13"
+  ];
+
+  edge [
+    color="#6f6252",
+    fontcolor="#6f6252",
+    fontname="Arial",
+    fontsize=8,
+    penwidth=1.4,
+    arrowsize=0.68
+  ];
+
+  human_seal [
+    width=2.72,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.1,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#f3d895"><B>HUMAN · SEAL</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">intent · conditions · authority</FONT></TD></TR></TABLE>>
+  ];
+
+  reality [
+    width=2.72,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.1,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#f3d895"><B>REALITY</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">execution · platforms · outcomes</FONT></TD></TR></TABLE>>
+  ];
+
+  plan [
+    width=2.72,
+    color="#8a2919",
+    penwidth=2.0,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#8a2919"><B>SEALED PLAN</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">claims · conditions · identity</FONT></TD></TR></TABLE>>
+  ];
+
+  evidence [
+    width=2.72,
+    color="#8a2919",
+    penwidth=2.0,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#8a2919"><B>STANDARD EVIDENCE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">facts · provenance · uncertainty</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#6f6252">from bounded runners and P plugins</FONT></TD></TR></TABLE>>
+  ];
+
+  core [
+    width=3.18,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.8,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2"><TR><TD><FONT FACE="Georgia" POINT-SIZE="18" COLOR="#f3d895"><B>VERITRAIL CORE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">sufficiency · integrity · assertions</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#d9d0c2">consumes facts; never invents them</FONT></TD></TR></TABLE>>
+  ];
+
+  quick [
+    width=2.44,
+    style="rounded,filled,dashed",
+    fillcolor="#eee5d9",
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="12" COLOR="#092b30"><B>Q · SCHEDULING</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">proof work · safe reuse</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#8a2919">no gate skip · no PASS</FONT></TD></TR></TABLE>>
+  ];
+
+  review [
+    width=2.44,
+    style="rounded,filled,dashed",
+    fillcolor="#eee5d9",
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="12" COLOR="#092b30"><B>R · REVIEW ATTENTION</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">semantic slices · attention</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#8a2919">no defect truth · no Verdict</FONT></TD></TR></TABLE>>
+  ];
+
+  verdict [
+    width=3.18,
+    color="#8a2919",
+    fillcolor="#8a2919",
+    fontcolor="#fff8ee",
+    penwidth=2.2,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#fff3df"><B>VERDICT + IMMUTABLE BUNDLE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#fff8ee">PASS · FAIL · INCONCLUSIVE · PENDING</FONT></TD></TR></TABLE>>
+  ];
+
+  workbench [
+    width=2.72,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#092b30"><B>WORKBENCH</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">read · trace · compare</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#8a2919">never re-judges</FONT></TD></TR></TABLE>>
+  ];
+
+  human_review [
+    width=2.72,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.1,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#f3d895"><B>HUMAN · DISPOSITION</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">reviews · decides · remains accountable</FONT></TD></TR></TABLE>>
+  ];
+
+  { rank=same; human_seal; reality; }
+  { rank=same; plan; evidence; }
+  { rank=same; quick; core; review; }
+
+  human_seal -> reality [style=invis, weight=40];
+  plan -> evidence [style=invis, weight=40];
+  quick -> core [style=invis, weight=35];
+  core -> review [style=invis, weight=35];
+
+  human_seal -> plan [label="seals", color="#8a2919", penwidth=1.8];
+  reality -> evidence [label="observed by producers", color="#8a2919", penwidth=1.8];
+
+  plan -> core [label="binds", minlen=1];
+  evidence -> core [label="supports", minlen=1];
+
+  core -> verdict [label="derives", color="#a48558", penwidth=2.2];
+  verdict -> workbench [label="presents", color="#a48558", penwidth=1.8];
+  workbench -> human_review [label="supports review", color="#a48558", penwidth=1.8];
+
+  quick -> evidence [label="schedules proof work", style=dashed, constraint=false];
+  review -> human_review [label="allocates attention", style=dashed, constraint=false];
+}
