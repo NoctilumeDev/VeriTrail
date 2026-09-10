@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-relation-set-0.1.schema.json",
+  "title": "VeriTrail Review RelationSet 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "source_snapshot_digest",
+    "policy_digest", "analysis_scope_digest", "derivation_profile_digest", "fact_set_digest",
+    "relations", "conflicts", "relation_set_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "RELATION_SET" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "fact_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "relations": { "type": "array", "items": { "$ref": "#/$defs/Relation" } },
+    "conflicts": { "type": "array", "items": { "$ref": "#/$defs/RelationConflict" } },
+    "relation_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  },
+  "$defs": {
+    "ProviderRefs": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+    },
+    "FactTarget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_kind", "fact_id"],
+      "properties": {
+        "target_kind": { "const": "FACT" },
+        "fact_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+      }
+    },
+    "ImportTarget": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "target_kind", "relative_level", "module_parts", "imported_name", "resolution_status",
+        "topology_status", "resolved_fact_ids"
+      ],
+      "properties": {
+        "target_kind": { "const": "IMPORT_LITERAL" },
+        "relative_level": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "module_parts": {
+          "type": "array",
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" }
+        },
+        "imported_name": {
+          "oneOf": [
+            { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" },
+            { "const": "*" },
+            { "type": "null" }
+          ]
+        },
+        "resolution_status": { "enum": ["RESOLVED", "UNRESOLVED", "UNSUPPORTED", "CONFLICT"] },
+        "topology_status": { "enum": ["IN_SNAPSHOT", "EXTERNAL_TO_SNAPSHOT", "UNKNOWN"] },
+        "resolved_fact_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "resolution_status": { "const": "RESOLVED" },
+            "topology_status": { "const": "IN_SNAPSHOT" },
+            "resolved_fact_ids": { "minItems": 1, "maxItems": 1 }
+          }
+        },
+        {
+          "properties": {
+            "resolution_status": { "const": "CONFLICT" },
+            "topology_status": { "const": "IN_SNAPSHOT" },
+            "resolved_fact_ids": { "minItems": 2 }
+          }
+        },
+        {
+          "properties": {
+            "resolution_status": { "enum": ["UNRESOLVED", "UNSUPPORTED"] },
+            "topology_status": { "enum": ["EXTERNAL_TO_SNAPSHOT", "UNKNOWN"] },
+            "resolved_fact_ids": { "maxItems": 0 }
+          }
+        }
+      ]
+    },
+    "Relation": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "relation_id", "relation_subject_digest", "relation_space", "relation_kind", "source_fact_id",
+        "local_ordinal", "target", "semantic_attributes", "provenance_refs"
+      ],
+      "properties": {
+        "relation_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "relation_subject_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "relation_space": { "enum": ["CHILD_EDGE", "IMPORT_EDGE"] },
+        "relation_kind": { "$ref": "review-r1-common-0.1.schema.json#/$defs/RelationKind" },
+        "source_fact_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "local_ordinal": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "target": { "type": "object" },
+        "semantic_attributes": { "type": "object", "maxProperties": 0 },
+        "provenance_refs": { "$ref": "#/$defs/ProviderRefs" }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "relation_kind": { "const": "LEXICAL_CONTAINS" },
+            "relation_space": { "const": "CHILD_EDGE" },
+            "target": { "$ref": "#/$defs/FactTarget" }
+          }
+        },
+        {
+          "properties": {
+            "relation_kind": { "const": "IMPORT_TARGET_LITERAL" },
+            "relation_space": { "const": "IMPORT_EDGE" },
+            "local_ordinal": { "const": 0 },
+            "target": { "$ref": "#/$defs/ImportTarget" }
+          }
+        }
+      ]
+    },
+    "RelationConflict": {
+      "type": "object", "additionalProperties": false,
+      "required": ["conflict_id", "relation_subject_digest", "candidate_relation_ids", "provenance_refs"],
+      "properties": {
+        "conflict_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "relation_subject_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "candidate_relation_ids": {
+          "type": "array", "minItems": 2, "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        },
+        "provenance_refs": { "$ref": "#/$defs/ProviderRefs" }
+      }
+    }
+  }
+}

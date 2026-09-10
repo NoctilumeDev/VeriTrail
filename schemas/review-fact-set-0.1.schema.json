@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-fact-set-0.1.schema.json",
+  "title": "VeriTrail Review FactSet 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "source_snapshot_digest",
+    "policy_digest", "analysis_scope_digest", "derivation_profile_digest", "facts", "conflicts",
+    "fact_set_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "FACT_SET" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "facts": { "type": "array", "items": { "$ref": "#/$defs/Fact" } },
+    "conflicts": { "type": "array", "items": { "$ref": "#/$defs/FactConflict" } },
+    "fact_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  },
+  "$defs": {
+    "ProviderRefs": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+    },
+    "ModuleAttributes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["module_key_parts"],
+      "properties": {
+        "module_key_parts": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" }
+            },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "ClassAttributes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["declared_name"],
+      "properties": {
+        "declared_name": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" }
+      }
+    },
+    "FunctionAttributes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["declared_name", "function_form"],
+      "properties": {
+        "declared_name": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" },
+        "function_form": { "enum": ["SYNC", "ASYNC"] }
+      }
+    },
+    "ImportAttributes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["import_form", "relative_level", "module_parts", "imported_name", "alias_name"],
+      "properties": {
+        "import_form": { "enum": ["IMPORT", "FROM_IMPORT"] },
+        "relative_level": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "module_parts": {
+          "type": "array",
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" }
+        },
+        "imported_name": {
+          "oneOf": [
+            { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" },
+            { "const": "*" },
+            { "type": "null" }
+          ]
+        },
+        "alias_name": {
+          "oneOf": [
+            { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "import_form": { "const": "IMPORT" },
+            "relative_level": { "const": 0 },
+            "module_parts": { "minItems": 1 },
+            "imported_name": { "type": "null" }
+          }
+        },
+        {
+          "properties": {
+            "import_form": { "const": "FROM_IMPORT" },
+            "imported_name": {
+              "oneOf": [
+                { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" },
+                { "const": "*" }
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "imported_name": { "const": "*" } } },
+              "then": { "properties": { "alias_name": { "type": "null" } } }
+            }
+          ]
+        }
+      ]
+    },
+    "Fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact_id", "subject_key_digest", "subject_space", "fact_kind", "source_snapshot_digest",
+        "derivation_profile_digest", "source_anchor", "local_ordinal", "semantic_attributes",
+        "provenance_refs"
+      ],
+      "properties": {
+        "fact_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "subject_key_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "subject_space": { "enum": ["MODULE_ENTITY", "DECLARATION_NODE", "IMPORT_ALIAS"] },
+        "fact_kind": { "$ref": "review-r1-common-0.1.schema.json#/$defs/FactKind" },
+        "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "source_anchor": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SourceAnchor" },
+        "local_ordinal": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "semantic_attributes": { "type": "object" },
+        "provenance_refs": { "$ref": "#/$defs/ProviderRefs" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "fact_kind": { "const": "MODULE" } } },
+          "then": {
+            "properties": {
+              "subject_space": { "const": "MODULE_ENTITY" },
+              "local_ordinal": { "const": 0 },
+              "semantic_attributes": { "$ref": "#/$defs/ModuleAttributes" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "fact_kind": { "const": "CLASS_DECLARATION" } } },
+          "then": {
+            "properties": {
+              "subject_space": { "const": "DECLARATION_NODE" },
+              "local_ordinal": { "const": 0 },
+              "semantic_attributes": { "$ref": "#/$defs/ClassAttributes" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "fact_kind": { "enum": ["FUNCTION_DECLARATION", "METHOD_DECLARATION"] } } },
+          "then": {
+            "properties": {
+              "subject_space": { "const": "DECLARATION_NODE" },
+              "local_ordinal": { "const": 0 },
+              "semantic_attributes": { "$ref": "#/$defs/FunctionAttributes" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "fact_kind": { "const": "IMPORT_DECLARATION" } } },
+          "then": {
+            "properties": {
+              "subject_space": { "const": "IMPORT_ALIAS" },
+              "semantic_attributes": { "$ref": "#/$defs/ImportAttributes" }
+            }
+          }
+        }
+      ]
+    },
+    "FactConflict": {
+      "type": "object", "additionalProperties": false,
+      "required": ["conflict_id", "subject_key_digest", "candidate_fact_ids", "provenance_refs"],
+      "properties": {
+        "conflict_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "subject_key_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "candidate_fact_ids": {
+          "type": "array", "minItems": 2, "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        },
+        "provenance_refs": { "$ref": "#/$defs/ProviderRefs" }
+      }
+    }
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-source-snapshot-0.1.schema.json",
+  "title": "VeriTrail Review SourceSnapshot 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "repository_id",
+    "source_coordinate", "inventory", "inventory_digest", "source_coordinate_digest",
+    "source_content_digest", "source_snapshot_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "SOURCE_SNAPSHOT" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "repository_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+    "source_coordinate": { "$ref": "#/$defs/SourceCoordinate" },
+    "inventory": { "type": "array", "items": { "$ref": "#/$defs/InventoryEntry" } },
+    "inventory_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "source_coordinate_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "source_content_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  },
+  "$defs": {
+    "SourceCoordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit_oid", "commit_tree_oid", "analysis_tree_oid", "analysis_root"],
+      "properties": {
+        "commit_oid": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitOid" },
+        "commit_tree_oid": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitOid" },
+        "analysis_tree_oid": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitOid" },
+        "analysis_root": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitPathRef" }
+      }
+    },
+    "GitObject": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["algorithm", "hex", "object_type"],
+          "properties": {
+            "algorithm": { "const": "SHA1" },
+            "hex": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+            "object_type": { "enum": ["BLOB", "COMMIT", "OTHER"] }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["algorithm", "hex", "object_type"],
+          "properties": {
+            "algorithm": { "const": "SHA256" },
+            "hex": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "object_type": { "enum": ["BLOB", "COMMIT", "OTHER"] }
+          }
+        }
+      ]
+    },
+    "ContentIdentity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sha256", "size_bytes"],
+      "properties": {
+        "sha256": { "$ref": "review-r1-common-0.1.schema.json#/$defs/Sha256Hex" },
+        "size_bytes": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" }
+      }
+    },
+    "InventoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["git_path", "git_mode", "git_object", "entry_kind"],
+      "properties": {
+        "git_path": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitPathOnly" },
+        "git_mode": { "type": "string", "pattern": "^[0-7]{6}$" },
+        "git_object": { "$ref": "#/$defs/GitObject" },
+        "entry_kind": {
+          "enum": ["REGULAR_BLOB", "EXECUTABLE_BLOB", "SYMLINK_BLOB", "GITLINK", "OTHER_TRACKED_ENTRY"]
+        },
+        "content": { "$ref": "#/$defs/ContentIdentity" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "git_object": { "properties": { "object_type": { "const": "BLOB" } }, "required": ["object_type"] } } },
+          "then": { "required": ["content"] },
+          "else": { "not": { "required": ["content"] } }
+        },
+        {
+          "if": { "properties": { "git_mode": { "const": "100644" }, "git_object": { "properties": { "object_type": { "const": "BLOB" } } } } },
+          "then": { "properties": { "entry_kind": { "const": "REGULAR_BLOB" } } }
+        },
+        {
+          "if": { "properties": { "git_mode": { "const": "100755" }, "git_object": { "properties": { "object_type": { "const": "BLOB" } } } } },
+          "then": { "properties": { "entry_kind": { "const": "EXECUTABLE_BLOB" } } }
+        },
+        {
+          "if": { "properties": { "git_mode": { "const": "120000" }, "git_object": { "properties": { "object_type": { "const": "BLOB" } } } } },
+          "then": { "properties": { "entry_kind": { "const": "SYMLINK_BLOB" } } }
+        },
+        {
+          "if": { "properties": { "git_mode": { "const": "160000" }, "git_object": { "properties": { "object_type": { "const": "COMMIT" } } } } },
+          "then": { "properties": { "entry_kind": { "const": "GITLINK" } } }
+        },
+        {
+          "if": { "properties": { "entry_kind": { "const": "REGULAR_BLOB" } } },
+          "then": {
+            "properties": {
+              "git_mode": { "const": "100644" },
+              "git_object": { "properties": { "object_type": { "const": "BLOB" } } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "entry_kind": { "const": "EXECUTABLE_BLOB" } } },
+          "then": {
+            "properties": {
+              "git_mode": { "const": "100755" },
+              "git_object": { "properties": { "object_type": { "const": "BLOB" } } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "entry_kind": { "const": "SYMLINK_BLOB" } } },
+          "then": {
+            "properties": {
+              "git_mode": { "const": "120000" },
+              "git_object": { "properties": { "object_type": { "const": "BLOB" } } }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "entry_kind": { "const": "GITLINK" } } },
+          "then": {
+            "properties": {
+              "git_mode": { "const": "160000" },
+              "git_object": { "properties": { "object_type": { "const": "COMMIT" } } }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

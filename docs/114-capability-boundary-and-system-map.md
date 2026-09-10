@@ -4,7 +4,7 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；
+  R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
 - 本次状态发布起点：`main@8aa70807c0de9c0f50ad977575d81f2a1d635a91`；
@@ -83,8 +83,10 @@ AcceptancePlan 复算。内部运行 Evidence 与外部平台 Evidence 都可以
 
 R0 与首个 Pattern Corpus 已冻结；R1 上位合同也已通过 PR #89/#90 的候选、门禁、受保护主线合入和匿名
 公开读回。Schema 合同曾由文档 121 完成冻结发布；后继 payload preflight 发现部分嵌套身份仍需由实现
-猜测，文档 123 因而只重开并补齐被击穿边界。文档 124 的最后门成立后，当前状态恢复为
-`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
+猜测，文档 123 因而只重开并补齐被击穿边界。文档 124 的最后门成立后恢复 Schema payload 施工资格；
+后继[文档 125](125-r1-schema-payload-freeze-candidate.md)已从新 exact main 物化 Schema/corpus 测试资产，
+当前状态为 `R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED /
+R1_IMPLEMENTATION_NOT_STARTED`。
 上位 R1 合同冻结范围是：
 
 ```text

@@ -1,0 +1,161 @@
+{
+  "schema_version": "0.1",
+  "contract": "docs/120-r1-schema-and-canonical-identity-contract.md",
+  "cases": [
+    {
+      "case_id": "R1-CV-001",
+      "obligation": "repository-root-and-nested-root-forms",
+      "vectors": [
+        {"value": {"path_kind": "REPOSITORY_ROOT"}, "expected": "ACCEPT"},
+        {"value": {"path_kind": "GIT_PATH", "git_path_hex": "706b67"}, "decoded_utf8": "pkg", "expected": "ACCEPT"}
+      ]
+    },
+    {
+      "case_id": "R1-CV-002",
+      "obligation": "raw-git-path-identities-remain-distinct",
+      "vectors": [
+        {"label": "nfc", "git_path_hex": "636166c3a92e7079"},
+        {"label": "nfd", "git_path_hex": "63616665cc812e7079"},
+        {"label": "case", "git_path_hex": "434146c3892e7079"},
+        {"label": "invalid-utf8", "git_path_hex": "ff2e7079"}
+      ],
+      "expected": "DISTINCT_REVERSIBLE_BYTES"
+    },
+    {
+      "case_id": "R1-CV-003",
+      "obligation": "forbidden-git-path-forms-reject",
+      "vectors": ["", "00", "2e", "2e2e", "2f61", "612f", "612f2f62"],
+      "expected": "REJECT"
+    },
+    {
+      "case_id": "R1-CV-004",
+      "obligation": "same-tree-different-commit-separates-coordinate-from-content",
+      "commit_oids": ["1111111111111111111111111111111111111111", "2222222222222222222222222222222222222222"],
+      "tree_oid": "3333333333333333333333333333333333333333",
+      "expected": {"source_content_digest": "SAME", "source_coordinate_digest": "DIFFERENT", "source_snapshot_digest": "DIFFERENT"}
+    },
+    {
+      "case_id": "R1-CV-005",
+      "obligation": "friendly-ref-movement-does-not-rewrite-built-snapshot",
+      "requested_ref": "refs/heads/main",
+      "resolved_commit_before": "1111111111111111111111111111111111111111",
+      "resolved_commit_after": "2222222222222222222222222222222222222222",
+      "expected_snapshot_commit": "1111111111111111111111111111111111111111"
+    },
+    {
+      "case_id": "R1-CV-006",
+      "obligation": "verified-bytes-equal-consumed-bytes",
+      "path": "pkg/mod.py",
+      "verified_bytes_hex": "696d706f727420706b672e6d6f640a",
+      "replacement_bytes_hex": "72616973652052756e74696d654572726f720a",
+      "expected": "CONSUME_VERIFIED_BYTES_OR_FAIL"
+    },
+    {
+      "case_id": "R1-CV-007",
+      "obligation": "raw-byte-anchors-preserve-encoding-and-newlines",
+      "vectors": [
+        {"label": "utf8-lf", "source_hex": "696d706f727420ceb10a", "start_byte": 0, "end_byte": 9},
+        {"label": "utf8-bom-crlf", "source_hex": "efbbbf696d706f727420ceb10d0a", "start_byte": 3, "end_byte": 12},
+        {"label": "utf8-cr", "source_hex": "696d706f727420ceb10d", "start_byte": 0, "end_byte": 9}
+      ]
+    },
+    {
+      "case_id": "R1-CV-008",
+      "obligation": "non-utf8-python-coding-declaration-is-unsupported",
+      "source_hex": "23202d2a2d20636f64696e673a206c6174696e2d31202d2a2d0a6e616d65203d2027e9270a",
+      "expected_reason": "UNSUPPORTED_SOURCE_ENCODING"
+    },
+    {
+      "case_id": "R1-CV-009",
+      "obligation": "python-3.13-only-syntax-rejects-under-python-3.10-profile",
+      "source_utf8": "type Alias = int\n",
+      "expected_reason": "UNSUPPORTED_SYNTAX_VERSION"
+    },
+    {
+      "case_id": "R1-CV-010",
+      "obligation": "multiple-import-aliases-use-source-order-ordinals",
+      "source_utf8": "import os, sys as system\n",
+      "expected_aliases": [
+        {"module_parts": ["os"], "alias_name": null, "local_ordinal": 0},
+        {"module_parts": ["sys"], "alias_name": "system", "local_ordinal": 1}
+      ]
+    },
+    {
+      "case_id": "R1-CV-011",
+      "obligation": "provider-sources-compose-cumulatively",
+      "vectors": [
+        {"source_a": ["fact-a"], "source_b": ["fact-b"], "expected": ["fact-a", "fact-b"]},
+        {"source_a": [], "source_b": ["fact-b"], "expected": ["fact-b"]}
+      ]
+    },
+    {
+      "case_id": "R1-CV-012",
+      "obligation": "provider-conflicts-never-last-write-win",
+      "subject": "same-subject",
+      "candidate_ids": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"],
+      "expected": "CONFLICT"
+    },
+    {
+      "case_id": "R1-CV-013",
+      "obligation": "breadth-first-traversal-is-cycle-safe-and-deterministic",
+      "anchor": "a",
+      "edges": [["a", "b", "r1"], ["a", "c", "r2"], ["b", "a", "r3"], ["b", "d", "r4"], ["c", "d", "r5"]],
+      "expected_fact_order": ["a", "b", "c", "d"]
+    },
+    {
+      "case_id": "R1-CV-014",
+      "obligation": "each-inclusive-budget-produces-typed-frontier",
+      "vectors": [
+        {"budget": "max_depth", "value": 0, "expected_reason": "DEPTH_LIMIT"},
+        {"budget": "max_symbols", "value": 1, "expected_reason": "SYMBOL_LIMIT"},
+        {"budget": "max_files", "value": 1, "expected_reason": "FILE_LIMIT"},
+        {"budget": "max_relations", "value": 0, "expected_reason": "RELATION_LIMIT"}
+      ]
+    },
+    {
+      "case_id": "R1-CV-015",
+      "obligation": "overlapping-slices-do-not-inflate-coverage",
+      "slice_fact_ids": [["a", "b", "c"], ["b", "c", "d"], ["c", "d", "e"]],
+      "expected_unique_fact_ids": ["a", "b", "c", "d", "e"]
+    },
+    {
+      "case_id": "R1-CV-016",
+      "obligation": "typed-gaps-remain-distinct",
+      "vectors": [
+        {"condition": "parse-error", "disposition": "parse_failed", "reason": "PARSE_ERROR"},
+        {"condition": "unsupported-encoding", "disposition": "unsupported", "reason": "UNSUPPORTED_SOURCE_ENCODING"},
+        {"condition": "unknown-upstream-denominator", "denominator": "UNKNOWN", "reason": "UPSTREAM_DENOMINATOR_UNKNOWN"},
+        {"condition": "slice-budget", "disposition": "truncated", "reason": "DEPTH_LIMIT"}
+      ]
+    },
+    {
+      "case_id": "R1-CV-017",
+      "obligation": "interrupted-execution-cannot-publish-normal-derived-artifacts",
+      "execution_status": "INTERRUPTED",
+      "allowed_manifest_outcome": "DIAGNOSTIC",
+      "allowed_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE"]
+    },
+    {
+      "case_id": "R1-CV-018",
+      "obligation": "manifest-rejects-identity-and-layout-drift",
+      "mutations": ["MISSING_ROLE", "EXTRA_ROLE", "WRONG_ROLE", "WRONG_PATH", "WRONG_SHA256", "WRONG_SEMANTIC_DIGEST", "NONCANONICAL_FILE", "PARTIAL_DIRECTORY"],
+      "expected": "REJECT"
+    },
+    {
+      "case_id": "R1-CV-019",
+      "obligation": "supported-runners-produce-identical-canonical-vectors",
+      "runners": ["CPYTHON_3_10_NORMAL", "CPYTHON_3_10_OPTIMIZED", "CPYTHON_3_13_NORMAL", "CPYTHON_3_13_OPTIMIZED"],
+      "expected": "IDENTICAL_CANONICAL_BYTES_AND_DIGESTS"
+    },
+    {
+      "case_id": "R1-CV-020",
+      "obligation": "reference-lab-coordinate-is-exact-and-bounded",
+      "repository": "NoctilumeDev/VeriTrail",
+      "commit": "9ab64121350b69ce81e6be79961ad426026bbc39",
+      "analysis_root": "plugins/github-evidence/src/veritrail_github",
+      "tracked_ordinary_python_blobs": 22,
+      "total_blob_bytes": 259553,
+      "language_profile": "veritrail-python-source-3.10"
+    }
+  ]
+}

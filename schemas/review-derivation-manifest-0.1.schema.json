@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-derivation-manifest-0.1.schema.json",
+  "title": "VeriTrail Review R1 Derivation Manifest 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_kind", "schema_version", "canonicalization_profile", "outcome_kind", "files"],
+  "properties": {
+    "bundle_kind": { "const": "R1_DERIVATION" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "outcome_kind": { "enum": ["COMPLETE", "DIAGNOSTIC"] },
+    "files": { "type": "array" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome_kind": { "const": "COMPLETE" } } },
+      "then": { "properties": { "files": { "$ref": "#/$defs/CompleteFiles" } } },
+      "else": { "properties": { "files": { "$ref": "#/$defs/DiagnosticFiles" } } }
+    }
+  ],
+  "$defs": {
+    "FileBase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "path", "sha256", "size_bytes", "semantic_digest"],
+      "properties": {
+        "role": {
+          "enum": [
+            "SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE",
+            "FACT_SET", "RELATION_SET", "REVIEW_SLICE_SET", "COVERAGE_LEDGER"
+          ]
+        },
+        "path": {
+          "enum": [
+            "source-snapshot.json", "review-policy.json", "derivation-profile.json", "derivation-evidence.json",
+            "fact-set.json", "relation-set.json", "review-slices.json", "coverage-ledger.json"
+          ]
+        },
+        "sha256": { "$ref": "review-r1-common-0.1.schema.json#/$defs/Sha256Hex" },
+        "size_bytes": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "semantic_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+      }
+    },
+    "SourceSnapshotFile": { "$ref": "#/$defs/FileBaseWithSourceSnapshot" },
+    "FileBaseWithSourceSnapshot": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "SOURCE_SNAPSHOT" }, "path": { "const": "source-snapshot.json" } } }
+      ]
+    },
+    "ReviewPolicyFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "REVIEW_POLICY" }, "path": { "const": "review-policy.json" } } }
+      ]
+    },
+    "DerivationProfileFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "DERIVATION_PROFILE" }, "path": { "const": "derivation-profile.json" } } }
+      ]
+    },
+    "DerivationEvidenceFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "DERIVATION_EVIDENCE" }, "path": { "const": "derivation-evidence.json" } } }
+      ]
+    },
+    "FactSetFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "FACT_SET" }, "path": { "const": "fact-set.json" } } }
+      ]
+    },
+    "RelationSetFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "RELATION_SET" }, "path": { "const": "relation-set.json" } } }
+      ]
+    },
+    "ReviewSliceSetFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "REVIEW_SLICE_SET" }, "path": { "const": "review-slices.json" } } }
+      ]
+    },
+    "CoverageLedgerFile": {
+      "allOf": [
+        { "$ref": "#/$defs/FileBase" },
+        { "properties": { "role": { "const": "COVERAGE_LEDGER" }, "path": { "const": "coverage-ledger.json" } } }
+      ]
+    },
+    "CompleteFiles": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "prefixItems": [
+        { "$ref": "#/$defs/SourceSnapshotFile" },
+        { "$ref": "#/$defs/ReviewPolicyFile" },
+        { "$ref": "#/$defs/DerivationProfileFile" },
+        { "$ref": "#/$defs/DerivationEvidenceFile" },
+        { "$ref": "#/$defs/FactSetFile" },
+        { "$ref": "#/$defs/RelationSetFile" },
+        { "$ref": "#/$defs/ReviewSliceSetFile" },
+        { "$ref": "#/$defs/CoverageLedgerFile" }
+      ],
+      "items": false
+    },
+    "DiagnosticFiles": {
+      "type": "array", "minItems": 4, "maxItems": 4,
+      "prefixItems": [
+        { "$ref": "#/$defs/SourceSnapshotFile" },
+        { "$ref": "#/$defs/ReviewPolicyFile" },
+        { "$ref": "#/$defs/DerivationProfileFile" },
+        { "$ref": "#/$defs/DerivationEvidenceFile" }
+      ],
+      "items": false
+    }
+  }
+}

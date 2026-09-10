@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-slice-set-0.1.schema.json",
+  "title": "VeriTrail ReviewSliceSet 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "source_snapshot_digest",
+    "policy_digest", "analysis_scope_digest", "slice_policy_digest", "derivation_profile_digest",
+    "fact_set_digest", "relation_set_digest", "slices", "slice_set_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "REVIEW_SLICE_SET" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "slice_policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "fact_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "relation_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "slices": { "type": "array", "items": { "$ref": "#/$defs/ReviewSlice" } },
+    "slice_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  },
+  "$defs": {
+    "ReviewSliceSpec": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "source_snapshot_digest", "analysis_scope_digest", "slice_policy_digest", "derivation_profile_digest",
+        "fact_set_digest", "relation_set_digest", "anchor_fact_id", "allowed_relations", "max_depth",
+        "max_symbols", "max_files", "max_relations", "slice_spec_digest"
+      ],
+      "properties": {
+        "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "slice_policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "fact_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "relation_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "anchor_fact_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "allowed_relations": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/AllowedRelation" }
+        },
+        "max_depth": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "max_symbols": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+        "max_files": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+        "max_relations": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "slice_spec_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+      }
+    },
+    "ReviewSlice": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "slice_id", "slice_spec", "included_fact_ids", "included_relation_ids", "frontier", "coverage_status"
+      ],
+      "properties": {
+        "slice_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "slice_spec": { "$ref": "#/$defs/ReviewSliceSpec" },
+        "included_fact_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        },
+        "included_relation_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        },
+        "frontier": {
+          "type": "array",
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SliceFrontierItem" }
+        },
+        "coverage_status": { "enum": ["COMPLETE", "PARTIAL", "UNKNOWN"] }
+      }
+    }
+  }
+}
