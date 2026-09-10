@@ -320,6 +320,15 @@
   候选自身原始远端门、受保护主线合入、exact-main 门与匿名公开读回全部成立前，不得写 payload frozen，
   不得创建 R1 runtime importer、parser、Fact/Relation/Slice/Coverage producer、CLI、Provider、标签或
   Release。
+- 候选提交 `88ece8443904c83cc74b6ee3608d84e03e4951af` 经 PR #105 原始 11/11 门禁合入
+  `main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1、
+  十个 Schema 与十九个 corpus 文件匿名逐字节读回以及 README/文档 125 的公开产品链读回均成立。后继
+  `docs/126-r1-schema-payload-freeze-publication.md` 只发布该闭环；其自身门禁、受保护主线合入与合入后
+  exact-main 匿名读回全部成立后，状态为
+  `R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。
+  该入口只允许从新的 exact main 建立独立运行实现合同或首个最小切片；不得从 payload 分支续写，不得
+  继承 payload 绿灯为运行证据，也不得提前创建完整 Facts/Relations/Slices/Coverage、AI/排序、CLI、
+  Provider、标签或 Release。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约

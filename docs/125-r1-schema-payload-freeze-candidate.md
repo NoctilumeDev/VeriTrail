@@ -7,6 +7,10 @@
 >
 > 精确施工基线：`main@4ef8b6434597b6557d6306100b91aebd9c1b3ecd`
 >
+> 后继状态：[文档 126](126-r1-schema-payload-freeze-publication.md)完成独立状态发布后，当前主线为
+> `R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`；本文
+> 继续保存 payload 候选自身的历史状态。
+>
 > 上位合同：[R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
 >
 > Schema 合同：[R1 Schema 与规范身份合同 0.1](120-r1-schema-and-canonical-identity-contract.md)
