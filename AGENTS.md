@@ -294,6 +294,12 @@
   Coverage 分母与固定 Artifact 布局；不得在同一分支创建实际 JSON Schema、兼容向量、源码、CLI、Provider
   或运行 CI。只有候选及后继状态发布完成各自门禁、合入与 exact-main 匿名读回，才允许从新的 exact main
   起草 Schema payload。
+  候选已经 PR #99 原始 11/11 门禁合入
+  `main@49a2d69d44cca21024808fe5c298db8bac7f64c4`，但后继 docs-only 冻结发布 PR #100 的原始 Python 3.10
+  `-O` 门禁复现 M10 公共自举正向夹具的隐藏 15000 ms lifecycle SLO，因此 PR #100 保持未合入。该失败
+  不得通过 rerun 覆盖，也不重解释为 R1 Schema 合同回归；独立最小修正见
+  `docs/122-m10-public-bootstrap-positive-fixture-budget-alignment.md`。修正 PR 与新 exact-main 门全部成立前，
+  R1 Schema 冻结发布、Schema payload 和运行实现继续停止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
