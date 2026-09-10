@@ -9,9 +9,10 @@
 >
 > 影响等级：`L1_DOCUMENTATION / STATUS_PUBLICATION_ONLY`
 >
-> 后继状态：payload preflight 在写入第一份 Schema 前发现新的 identity 反例；当前修正边界见
-> [文档 123](123-r1-schema-payload-preflight-correction.md)。本文继续保存当时冻结发布已经成立的历史事实，
-> 不代表当前 payload 仍获准施工。
+> 后继状态：payload preflight 在写入第一份 Schema 前发现新的 identity 反例，修正边界见
+> [文档 123](123-r1-schema-payload-preflight-correction.md)，重新冻结发布见
+> [文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)。本文继续保存第一次冻结发布曾经成立的
+> 历史事实，不把后继修正写回旧合同的起点。
 
 本文外部绑定 R1 Schema 合同候选已经取得的仓库、门禁与匿名产品读回事实，并保留首次冻结发布被
 既有 M10 测试夹具否决、独立修正后从新 exact main 重建发布的完整因果链。它不修改文档 120 在候选

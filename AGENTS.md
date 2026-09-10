@@ -302,10 +302,16 @@
   自身门禁、受保护主线合入与合入后 exact-main 匿名读回全部成立后，状态才是
   `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
   后继 payload preflight 从该 exact main 发现 item key、frontier、Coverage 与 provenance identity 仍不足以
-  唯一生成 Schema，当前由 `docs/123-r1-schema-payload-preflight-correction.md` 只重开被反例击穿的边界，
-  状态为 `R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED /
-  R1_IMPLEMENTATION_NOT_STARTED`。在修正重新冻结前，版本化 JSON Schema、兼容 corpus、规范字节/摘要
-  向量、runtime importer、parser、relation/slice engine、CLI、Provider、标签和 Release 全部禁止。
+  唯一生成 Schema；`docs/123-r1-schema-payload-preflight-correction.md` 只重开被反例击穿的边界。修正候选
+  `19a923cae37b057879ae9879296e789c6e348cf2` 经 PR #103 原始 11/11 门禁合入
+  `main@839877ca38489d0518a5b67d5956c7907152529c`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+  与 README、合同、修正文档、milestones 四次匿名产品读回均成立。后继
+  `docs/124-r1-schema-payload-preflight-refreeze-publication.md` 只发布该修正闭环；其自身门禁、受保护主线
+  合入与合入后 exact-main 匿名读回全部成立后，状态才恢复为
+  `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
+  该资格只允许从新的 exact main 创建版本化 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
+  Schema/conformance tests；runtime importer、parser、relation/slice engine、CLI、Provider、标签和
+  Release 继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
