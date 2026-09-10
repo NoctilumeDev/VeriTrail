@@ -132,7 +132,9 @@ Smoke 与 exact-main 匿名产品读回均已成立。本状态发布自身的�
 `RELEASE_DOWNLOAD_RECOVERY_FROZEN / P4_RELEASE_NOT_STARTED`，P4 才能从新的 exact main 继续施工。
 后继 Q0 状态发布的 exact-main 门又证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有
 约 29 秒时提前退出；[文档 118](docs/118-release-download-recovery-deadline-correction.md)只修正这一预算所有权，
-不改变资产坐标、摘要或错误接受边界。
+不改变资产坐标、摘要或错误接受边界。该修正经 PR #94 原始 11/11 门禁合入
+`main@c2f488e8274b43dea6ad39402a94c3f6a1ee7753`；新 exact main 的 Public CI 11/11、Browser Smoke 1/1
+与三次匿名产品读回均已成立。
 当前发布准备已在该后继主线上形成候选：固定 wheel/sdist 构建核验、双 Python base/sdist/render
 clean install、插件卸载后的 Core-only 复算，以及预封存真实 GitHub P1 -> P2 -> P3 正向链均已取得
 本地事实，见[文档 99](docs/99-p4-github-evidence-release-preparation-candidate.md)。这些事实仍不表示
@@ -301,12 +303,13 @@ Q 未来可以依据 exact ChangeSet、冻结的 Gate 输入闭包、Evidence �
 `VerificationSchedule`；它不能输出 `SAFE_TO_SKIP`、修改 Gate、重定义 Evidence 或产生 Core Verdict。
 Q 与 R 也不是上下级：R 优化人的审查注意力，Q 优化既定证明义务的执行时间。
 
-[Q0 蓝图](docs/116-q0-quick-verification-scheduling-blueprint.md)已经完成候选、展示反例修正、受保护主线合入
-与匿名产品读回；状态发布见[文档 117](docs/117-q0-verification-scheduling-freeze-publication.md)。但是该状态
-发布合入后的 exact-main Public CI 只有 10/11，暴露出与 Q 无关的 Release 下载恢复截止时间缺口；修正边界
-见[文档 118](docs/118-release-download-recovery-deadline-correction.md)。因此当前保持
-`Q0_FREEZE_CLOSURE_HELD / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，不以其他绿灯替代失败门禁，
-也不提前进入 README 重构、SVG 或 Review Attention R1 Schema。
+[Q0 蓝图](docs/116-q0-quick-verification-scheduling-blueprint.md)已经完成候选、展示反例修正、失败冻结发布、
+独立下载地基修正与新 exact-main 复验；完整因果链见[文档 117](docs/117-q0-verification-scheduling-freeze-publication.md)、
+[文档 118](docs/118-release-download-recovery-deadline-correction.md)与
+[最终闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)。本状态发布自己的门禁、合入与合入后
+匿名读回全部成立后，状态为
+`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。它不实现 Q，也不允许任何 Gate
+跳过；下一步只从新的 exact main 独立重构 README 读者骨架，尚未返回 Review Attention R1 Schema。
 
 <details>
 <summary>展开 M0–M14 冻结状态与最终发布事实</summary>
@@ -685,6 +688,7 @@ Scheduling、JPyxis、FlowKernel 与 Human authority 的候选职责关系，集
 - [Q0 Quick Verification Scheduling Plugin 蓝图 0.1](docs/116-q0-quick-verification-scheduling-blueprint.md)
 - [Q0 Quick Verification Scheduling 蓝图冻结状态发布](docs/117-q0-verification-scheduling-freeze-publication.md)
 - [Release 资产下载恢复截止时间修正](docs/118-release-download-recovery-deadline-correction.md)
+- [Q0 Quick Verification Scheduling 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源
 

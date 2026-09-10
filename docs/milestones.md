@@ -291,6 +291,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Q0 Quick Verification Scheduling Plugin 蓝图 0.1](116-q0-quick-verification-scheduling-blueprint.md)
 - [Q0 Quick Verification Scheduling 蓝图冻结状态发布](117-q0-verification-scheduling-freeze-publication.md)
 - [Release 资产下载恢复截止时间修正](118-release-download-recovery-deadline-correction.md)
+- [Q0 Quick Verification Scheduling 最终冻结闭环](119-q0-verification-scheduling-final-freeze-closure.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -530,9 +531,13 @@ PR #92 只把关系图改为等价静态文本，并在新的 exact main 上重�
 exact-main Public CI 随后在 E3 0.2 Release 下载门停止：旧实现把四级退避表误作
 五次尝试上限，在 60 秒绝对恢复预算仍有约 29 秒时提前退出。独立
 [文档 118](118-release-download-recovery-deadline-correction.md)只修正这一预算所有权，不改变 Q0、P4、资产坐标、
-冻结 SHA-256 或错误接受边界。在修正与后继 docs-only closure 的各自主线门全部成立前，当前状态保持
-`Q0_FREEZE_CLOSURE_HELD / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`：没有 Schema、源码、CLI、
-缓存、调度器、CI 修改、标签或 Release，不预编 Q1–Qn，也不要求 R1 扩大为 base/head diff；README
-重构、SVG 与 R1 Schema 均未恢复施工。
+冻结 SHA-256 或错误接受边界。该修正经 PR #94 原始 11/11 门禁合入
+`main@c2f488e8274b43dea6ad39402a94c3f6a1ee7753`；新 exact main 的 Public CI 11/11、Browser Smoke 1/1 与
+README、文档 118、milestones 三次匿名产品读回均已成立。完整恢复链见
+[文档 119](119-q0-verification-scheduling-final-freeze-closure.md)；该状态发布自身的门禁、受保护主线合入与
+合入后匿名读回全部成立后，当前状态为
+`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`：没有 Schema、源码、CLI、
+缓存、调度器、CI 修改、标签或 Release，不预编 Q1–Qn，也不要求 R1 扩大为 base/head diff。下一步只
+允许从新的 exact main 独立重构 README 读者骨架；SVG 随后独立施工，R1 Schema 尚未恢复。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。

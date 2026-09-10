@@ -286,22 +286,26 @@
   CoverageLedger`；首个 Profile 只支持 Python 3.10 结构语义，不得外推为整个多语言仓库已被理解。
   `R1_SCHEMA_DRAFTING_ALLOWED` 只允许从新的 exact main 独立起草版本化 Schema 与兼容向量，不表示 Schema
   已存在或已冻结；R1 源码包、CLI、运行 CI、Provider、标签和 Release 继续禁止，直到后继实现入口独立闭合。
-  docs-only Q0 支线的蓝图、展示反例修正、受保护主线合入与匿名产品读回已经完成：`Q = Quick`，正式能力名为
-  `Verification Scheduling Plugin`。但是状态发布合入后的 exact-main Public CI 在 E3 0.2 Release 下载门
-  停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约 29 秒时提前退出。当前状态为
-  `Q0_FREEZE_CLOSURE_HELD / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。蓝图见
+  docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
+  `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
+  曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
+  29 秒时提前退出；该失败没有 rerun。独立 PR #94 只修正预算所有权，其原始 11/11 门禁合入
+  `main@c2f488e8274b43dea6ad39402a94c3f6a1ee7753`，新 exact main 的 Public CI 11/11、Browser Smoke 1/1 与
+  三次匿名产品读回均成立。本状态发布自己的门禁、合入与合入后读回全部成立后，状态为
+  `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。蓝图见
   `docs/116-q0-quick-verification-scheduling-blueprint.md`，状态发布见
-  `docs/117-q0-verification-scheduling-freeze-publication.md`，当前最小修正见
-  `docs/118-release-download-recovery-deadline-correction.md`。修正不得改变 Q0、P4、资产坐标、冻结摘要或错误接受
-  边界；只有 component correction 与后继 docs-only closure 的各自主线门、匿名读回全部成立，Q0 才取得冻结
-  资格。Q0 仍只定义该候选插件的身份、权威、分层、反例与实现前置门；没有创建 Schema、源码包、CLI、缓存、
+  `docs/117-q0-verification-scheduling-freeze-publication.md`，最小修正与最终闭环见
+  `docs/118-release-download-recovery-deadline-correction.md` 和
+  `docs/119-q0-verification-scheduling-final-freeze-closure.md`。Q0 仍只冻结该候选插件的身份、权威、分层、反例
+  与实现前置门；没有创建 Schema、源码包、CLI、缓存、
   调度器、执行 Lane、CI 修改、标签、Release 或空插件
   目录，也没有预编 Q1–Qn。Q 与 R 是不同顶层语义：R 优化 Human Attention，Q 优化既定证明义务的
   wall-clock/recompute；Q 不得要求 R1 增加 diff/change blast radius，不得把 AttentionProposal 当 impact fact，
   也不得导入 R/P 实现或 Core 私有 API。Q 未来最多形成可审计 Schedule、Evidence reuse binding 与 Lane/join
   provenance；不能输出 `SAFE_TO_SKIP`、PASS、削弱 Gate、重定义 Evidence 或产生 Verdict。Q 缺失、失败或
-  卸载时，完整串行验证与 Core 语义必须保持成立。当前施工入口只允许完成 Release 下载截止时间修正与 Q0
-  closure；README 重构、SVG、R1 Schema 和新的 Q 施工均未授权。
+  卸载时，完整串行验证与 Core 语义必须保持成立。下一步只允许从完成本状态发布读回后的新 exact main 独立
+  重构 README 读者骨架；文字骨架闭环后才允许单独增加 SVG，R1 Schema 必须等两项展示施工闭环后恢复，新的
+  Q 施工仍未授权。
   仓库前缀必须按层级和全名解释：`M/E/P/R/Q` 是长期或候选顶层轨道，`S/A` 是 E 轨内部产品阶段，`PC/C`
   是已关闭的一次性桥/发布状态机，`RA/CAP/AUTH/L*` 是 Artifact 或治理编号。字母多不构成问题；禁止脱离
   全名复用裸前缀，或把依赖误写成 ownership、消费误写成 succession、组合误写成 integration。
