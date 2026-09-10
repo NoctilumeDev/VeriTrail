@@ -4,7 +4,7 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED`；
+  R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
 - 本次状态发布起点：`main@8aa70807c0de9c0f50ad977575d81f2a1d635a91`；
@@ -82,9 +82,9 @@ AcceptancePlan 复算。内部运行 Evidence 与外部平台 Evidence 都可以
 ### 3.2 当前合法施工入口
 
 R0 与首个 Pattern Corpus 已冻结；R1 上位合同也已通过 PR #89/#90 的候选、门禁、受保护主线合入和匿名
-公开读回。Schema 合同曾由文档 121 完成冻结发布，但后继 payload preflight 发现部分嵌套身份仍需由实现
-猜测，当前状态更新为
-`R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。
+公开读回。Schema 合同曾由文档 121 完成冻结发布；后继 payload preflight 发现部分嵌套身份仍需由实现
+猜测，文档 123 因而只重开并补齐被击穿边界。文档 124 的最后门成立后，当前状态恢复为
+`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
 上位 R1 合同冻结范围是：
 
 ```text
@@ -96,11 +96,12 @@ Exact SourceSnapshot
 ```
 
 R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语义。后继
-[Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)曾冻结字段词汇、canonical
-bytes、路径可逆编码、源码锚、遍历端点、Coverage 分母与 Artifact 布局；历史冻结事实由
-[文档 121](121-r1-schema-contract-freeze-publication.md)外部绑定。当前
-[文档 123](123-r1-schema-payload-preflight-correction.md)只重开 item key、frontier、Coverage 与 provenance
-identity 的不可编码缺口；Schema payload 与运行实现均未开始。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
+[Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)冻结字段词汇、canonical bytes、
+路径可逆编码、源码锚、遍历端点、Coverage 分母与 Artifact 布局；历史冻结事实由
+[文档 121](121-r1-schema-contract-freeze-publication.md)外部绑定。后继
+[文档 123](123-r1-schema-payload-preflight-correction.md)补齐 item key、frontier、Coverage 与 provenance
+identity 的不可编码缺口，[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)发布重新冻结边界。
+Schema payload 与运行实现仍未产生。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
 HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
 为理由提前创建后继实现。
 

@@ -5,6 +5,10 @@
 >
 > 修正基线：`main@824d50617320d3fe1aecd1e752e4c4f9224257c2`
 >
+> 后继状态：[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)完成独立状态发布后，当前
+> 主线恢复 `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED`；本首屏继续保留修正候选
+> 自身的历史状态。
+>
 > 上游合同：[R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
 >
 > 影响层级：`L2_CONTRACT + L0_DOCUMENTATION`；本文只冻结候选 Schema 词汇、规范字节、身份投影、

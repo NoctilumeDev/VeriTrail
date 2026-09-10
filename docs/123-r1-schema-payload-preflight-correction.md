@@ -5,6 +5,10 @@
 >
 > 审计基线：`main@824d50617320d3fe1aecd1e752e4c4f9224257c2`
 >
+> 后继状态：[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)完成独立状态发布后，当前
+> 主线恢复 `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED`；本文继续保存 preflight
+> 停工与修正候选的历史状态。
+>
 > 规范对象：[R1 Schema 与规范身份合同 0.1](120-r1-schema-and-canonical-identity-contract.md)
 >
 > 影响层级：`L2_CONTRACT + L0_DOCUMENTATION`；不创建 JSON Schema、compatibility corpus、运行源码、

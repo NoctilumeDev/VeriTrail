@@ -549,6 +549,16 @@ provenance identity 仍存在实现自由度，因此[文档 123](123-r1-schema-
 R1_IMPLEMENTATION_NOT_STARTED`。修正重新冻结前，Schema payload、runtime importer、parser、
 relation/slice engine、CLI、Provider、标签和 Release 全部禁止。
 
+修正候选 `19a923cae37b057879ae9879296e789c6e348cf2` 经 PR #103 原始 11/11 门禁合入
+`main@839877ca38489d0518a5b67d5956c7907152529c`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+与 README、文档 120、文档 123、milestones 四次 fresh anonymous 产品读回均成立，规范 summary digest
+为 `sha256:3a77672fd78a8f893117f9f5bfe440496f2b9305528f992d0e4e080b301606f6`。后继
+[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)只发布这条修正链；其自身门禁、受保护主线
+合入与合入后 exact-main 匿名读回全部成立后，状态恢复为
+`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。这只允许
+从新的 exact main 创建十个固定 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
+Schema/conformance tests；运行实现、CLI、Provider、标签和 Release 仍未开始。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

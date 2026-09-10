@@ -5,7 +5,7 @@
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED / R1_IMPLEMENTATION_NOT_STARTED /
+  R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
   Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
@@ -254,7 +254,7 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
    `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-    R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED / R1_IMPLEMENTATION_NOT_STARTED /
+    R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
    Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
@@ -268,7 +268,7 @@ P2_NOT_STARTED
 
 本文当前状态只更新并行事实为
 `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED / R1_IMPLEMENTATION_NOT_STARTED /
+R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
 Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
@@ -289,8 +289,10 @@ README 读者骨架与架构 SVG 已在独立分支完成闭环后，当前施�
 字段词汇、规范字节、可逆路径、源码锚、遍历端点、Coverage 分母与固定 Artifact 布局；候选经 PR #99
 合入后，首次冻结发布 PR #100 被既有 M10 正向夹具的隐藏性能门否决并关闭，独立 PR #101 修正该测试
 证据边界后才从新 exact main 重建[冻结发布](121-r1-schema-contract-freeze-publication.md)。该发布自己的
-最后门成立后，当前状态为
-该状态后来被 payload preflight 的新反例更新；当前见
-[文档 123](123-r1-schema-payload-preflight-correction.md)：
-`R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。
-修正重新冻结前不得创建版本化 JSON Schema、兼容 corpus、运行实现或后继能力。
+最后门成立后，状态曾为
+`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
+该状态后来被 payload preflight 的新反例更新；[文档 123](123-r1-schema-payload-preflight-correction.md)
+记录零改动 payload 分支如何发现并修正不可编码身份。[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)
+的最后门成立后，当前恢复为
+`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
+该资格只允许 Schema payload 与纯数据 conformance 资产，仍不得创建运行实现或后继能力。
