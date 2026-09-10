@@ -4,10 +4,10 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；
+  R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
-- 本次状态发布起点：`main@8aa70807c0de9c0f50ad977575d81f2a1d635a91`；
+- 本次状态发布起点：`main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`；
 - 影响等级：`L3_SYSTEM / DOCUMENTATION_ONLY / NON_NORMATIVE_MAP`；
 - 本文不创建源码、Schema、CLI、CI、标签、Release 或空目录；
 - 本文不重开 M0–M14、E 轨、P0–P4、PC 兼容桥、R0 或 Pattern Corpus 的冻结结论；
@@ -84,9 +84,10 @@ AcceptancePlan 复算。内部运行 Evidence 与外部平台 Evidence 都可以
 R0 与首个 Pattern Corpus 已冻结；R1 上位合同也已通过 PR #89/#90 的候选、门禁、受保护主线合入和匿名
 公开读回。Schema 合同曾由文档 121 完成冻结发布；后继 payload preflight 发现部分嵌套身份仍需由实现
 猜测，文档 123 因而只重开并补齐被击穿边界。文档 124 的最后门成立后恢复 Schema payload 施工资格；
-后继[文档 125](125-r1-schema-payload-freeze-candidate.md)已从新 exact main 物化 Schema/corpus 测试资产，
-当前状态为 `R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED /
-R1_IMPLEMENTATION_NOT_STARTED`。
+后继[文档 125](125-r1-schema-payload-freeze-candidate.md)已从新 exact main 物化 Schema/corpus 测试资产；
+[文档 126](126-r1-schema-payload-freeze-publication.md)外部绑定候选远端门、受保护主线、exact-main 门、
+二十九个文件的匿名字节身份与公开产品读回。其最后门成立后，当前状态为
+`R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。
 上位 R1 合同冻结范围是：
 
 ```text
@@ -102,13 +103,15 @@ R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语�
 路径可逆编码、源码锚、遍历端点、Coverage 分母与 Artifact 布局；历史冻结事实由
 [文档 121](121-r1-schema-contract-freeze-publication.md)外部绑定。后继
 [文档 123](123-r1-schema-payload-preflight-correction.md)补齐 item key、frontier、Coverage 与 provenance
-identity 的不可编码缺口，[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)发布重新冻结边界。
-Schema payload 与运行实现仍未产生。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
+identity 的不可编码缺口，[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)发布重新冻结边界；
+Schema payload 已由文档 125/126 物化并冻结，运行实现仍未产生。R1 只建立确定性理解骨架，不进入 AI 提案、
+自动排序、
 HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
 为理由提前创建后继实现。
 
 Q0 是一个已经闭合的短暂、独立 docs-only 蓝图支线，只把已经显现的验证调度问题放进正确边界；它没有
-修改 R1 合同，也没有创建 Q 实现。当前施工入口已经返回 R1 Schema。
+修改 R1 合同，也没有创建 Q 实现。当前施工入口已经返回 R1；Schema payload 冻结发布完成最后门后，
+只允许从新 exact main 起草独立运行实现合同或首个最小切片。
 
 ### 3.3 上位设计空间，不是当前产品声明
 
@@ -561,8 +564,9 @@ M0–M14                         FROZEN
 P0–P4                          FROZEN
 R0 + Pattern Corpus 0.1        FROZEN
 R1 Contract                    FROZEN
-R1 Schema Contract             CORRECTION CANDIDATE
-R1 Schema Payload              BLOCKED / NOT STARTED
+R1 Schema Contract             FROZEN
+R1 Schema Payload              FROZEN
+R1 implementation entry        UNBLOCKED / NOT STARTED
 Q0 Blueprint                   FROZEN
 Q implementation               NOT STARTED
 
@@ -573,7 +577,7 @@ Ledger-item implementation     NOT STARTED
 ```
 
 Q0 的 docs-only 蓝图已经闭环，冻结事实见
-[文档 117](117-q0-verification-scheduling-freeze-publication.md)；它没有建立 Q 实现入口。当前施工已经返回
-R1 Schema Contract，只允许按冻结的 SourceSnapshot、CodeFact、Relation、ReviewSlice 与 CoverageLedger
-语义审查字段、身份、端点、布局和未来兼容向量，仍不创建实际 Schema 或运行实现。本账只负责让未来方向
-不再遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。
+[文档 117](117-q0-verification-scheduling-freeze-publication.md)；它没有建立 Q 实现入口。R1 Schema payload
+的冻结事实由[文档 126](126-r1-schema-payload-freeze-publication.md)发布；当前只解除独立运行实现合同或
+首个最小切片的入口，实际 importer、parser、Facts、Relations、Slices、Coverage、CLI 与 Provider 均未
+开始。本账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。

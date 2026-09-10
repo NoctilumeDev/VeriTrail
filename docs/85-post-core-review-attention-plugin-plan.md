@@ -5,7 +5,7 @@
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED /
+  R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED /
   Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
@@ -299,6 +299,9 @@ README 读者骨架与架构 SVG 已在独立分支完成闭环后，当前施�
 
 后继 [R1 Schema payload 候选](125-r1-schema-payload-freeze-candidate.md)已从 exact
 `main@4ef8b6434597b6557d6306100b91aebd9c1b3ecd` 创建十个固定 JSON Schema、纯数据兼容 corpus、规范
-字节/摘要向量与 Schema/conformance tests。当前只能写作
-`R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；
-候选自身的远端门、主线合入、exact-main 门与匿名公开读回完成以前，不得冻结 payload 或开始 runtime。
+字节/摘要向量与 Schema/conformance tests。候选经 PR #105 原始 11/11 门禁合入
+`main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`，该 exact main 的 Public CI 11/11、Browser Smoke 1/1、
+二十九个 payload 文件匿名逐字节读回以及 README/候选文档的公开产品链读回均成立。后继
+[冻结发布](126-r1-schema-payload-freeze-publication.md)完成自身最后门后，状态为
+`R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。该入口
+只允许从新 exact main 建立独立运行实现合同或首个最小切片，不把 payload 证据继承为 runtime 证据。

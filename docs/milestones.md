@@ -295,6 +295,10 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention R1 Schema 与规范身份合同 0.1](120-r1-schema-and-canonical-identity-contract.md)
 - [Review Attention R1 Schema 与规范身份合同冻结发布](121-r1-schema-contract-freeze-publication.md)
 - [M10 公共自举正向夹具生命周期预算对齐](122-m10-public-bootstrap-positive-fixture-budget-alignment.md)
+- [R1 Schema payload 前置审计与合同修正候选](123-r1-schema-payload-preflight-correction.md)
+- [R1 Schema payload 前置修正重新冻结发布](124-r1-schema-payload-preflight-refreeze-publication.md)
+- [Review Attention R1 Schema payload 冻结候选](125-r1-schema-payload-freeze-candidate.md)
+- [Review Attention R1 Schema payload 冻结发布](126-r1-schema-payload-freeze-publication.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -566,6 +570,17 @@ Schema/conformance tests；运行实现、CLI、Provider、标签和 Release 仍
 当前状态为 `R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED /
 R1_IMPLEMENTATION_NOT_STARTED`。候选自己的原始远端门、受保护主线合入、exact-main 门与匿名逐字节读回
 成立前，不得冻结 payload 或启动 R1 runtime。
+
+候选提交 `88ece8443904c83cc74b6ee3608d84e03e4951af` 经 PR #105 原始 11/11 门禁合入
+`main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`；新 exact main 的 Public CI 11/11 与 Browser Smoke 1/1
+均在 attempt 1 成功。十个 Schema 与十九个 corpus 文件已从 exact commit 匿名逐字节读回，全部与候选
+一致，汇总摘要为 `sha256:afd3fcca87e873a4a797ff8fd8ffd053d826969202a2ec1da643882e339a8796`；
+公开 Core 0.13.0 与 GitHub Evidence Plugin 0.1.0 又对 README、文档 125 建立两个独立
+`P1 -> P2 -> P3/Core` session，均取得 `PUBLISHED / COMPLETE / PASS`，summary digest 为
+`sha256:1513f6b4df79116cc1eb75243ed44fc725cdc10c6cbda883db84e427cf206a93`。后继
+[文档 126](126-r1-schema-payload-freeze-publication.md)只发布这条冻结链；其自身最后门成立后，状态推进为
+`R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。运行实现
+只能从新的 exact main 另建单一意图坐标，不能把 payload 候选绿灯当成 runtime 证据。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

@@ -43,7 +43,7 @@ VeriTrail 的核心关系很小：
 | Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论 |
 | Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
 | Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
-| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | R1 仅冻结合同，尚无实现 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | R1 合同与 Schema payload 已冻结，运行实现尚未开始 |
 | Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
 
 ![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -179,9 +179,10 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   不外推成整个多语言仓库已经被理解；[payload 前置审计](docs/123-r1-schema-payload-preflight-correction.md)
   在零改动施工前发现并补齐 item key、frontier、Coverage 与 provenance identity 缺口，
   [重新冻结发布](docs/124-r1-schema-payload-preflight-refreeze-publication.md)完成后只允许从新 exact main
-  起草版本化 Schema、纯数据兼容 corpus 与规范摘要向量。当前
-  [payload 候选](docs/125-r1-schema-payload-freeze-candidate.md)已经物化这些数据与测试资产，但尚未完成
-  远端门、主线合入与公开读回，运行实现仍未开始。
+  起草版本化 Schema、纯数据兼容 corpus 与规范摘要向量。[payload 候选](docs/125-r1-schema-payload-freeze-candidate.md)
+  已经物化这些资产；其远端门、主线合入、exact-main 门与匿名读回由
+  [冻结发布](docs/126-r1-schema-payload-freeze-publication.md)外部绑定。最后门成立后只解除独立运行实现合同
+  或首个最小切片的入口，当前仍无 R1 runtime。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -270,7 +271,7 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 3. [GitHub Evidence Plugin 发布读回](docs/108-p4-github-evidence-release-readback-facts.md)
 4. [Review Attention Pattern Corpus 冻结闭环](docs/112-review-attention-pattern-corpus-freeze-closure.md)
 5. [Review Attention R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)
-6. [Review Attention R1 Schema payload 候选](docs/125-r1-schema-payload-freeze-candidate.md)
+6. [Review Attention R1 Schema payload 冻结发布](docs/126-r1-schema-payload-freeze-publication.md)
 7. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
