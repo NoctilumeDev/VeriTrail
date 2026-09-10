@@ -292,6 +292,8 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Q0 Quick Verification Scheduling 蓝图冻结状态发布](117-q0-verification-scheduling-freeze-publication.md)
 - [Release 资产下载恢复截止时间修正](118-release-download-recovery-deadline-correction.md)
 - [Q0 Quick Verification Scheduling 最终冻结闭环](119-q0-verification-scheduling-final-freeze-closure.md)
+- [Review Attention R1 Schema 与规范身份合同 0.1](120-r1-schema-and-canonical-identity-contract.md)
+- [M10 公共自举正向夹具生命周期预算对齐](122-m10-public-bootstrap-positive-fixture-budget-alignment.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -528,6 +530,13 @@ README 读者骨架与对称 SVG 已分别完成独立受保护主线闭环，R1
 半开 byte anchor、确定性 BFS、inclusive budget、Coverage denominator 与固定 Artifact layout。当前状态为
 `R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；实际
 JSON Schema、兼容向量、源码、CLI、Provider 与运行 CI 仍不存在，也不得与候选合同混在同一分支。
+
+该合同候选经 PR #99 原始 11/11 门禁合入
+`main@49a2d69d44cca21024808fe5c298db8bac7f64c4`，后继 docs-only 冻结状态发布 PR #100 的原始门禁却在
+Python 3.10 `-O` 复现 M10 公共自举正向夹具的 15000 ms 隐藏性能门，因此保持未合入。该失败不推翻
+R1 Schema 候选证据，也不能由 rerun 覆盖；[文档 122](122-m10-public-bootstrap-positive-fixture-budget-alignment.md)
+只对齐同文档 104/105 已裁决的正向夹具边界。独立修正及新 exact-main 门成立前，R1 Schema 冻结发布与
+Schema payload 施工继续停止。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

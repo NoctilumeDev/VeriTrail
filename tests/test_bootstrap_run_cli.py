@@ -85,7 +85,8 @@ class BootstrapRunCliTests(unittest.TestCase):
         application_port = _free_port({dependency_port})
         raw_profile = bootstrap_profile()
         raw_profile["subject_watch_roots"] = ["watched"]
-        raw_profile["lifecycle_timeout_ms"] = 15_000
+        # Positive functional paths inherit the canonical bounded fail-safe.
+        # Dedicated lifecycle tests own deadline and cancellation timing.
         nodes = {node["node_id"]: node for node in raw_profile["nodes"]}
         dependency = nodes["dependency"]
         dependency["port"] = dependency_port
@@ -199,6 +200,20 @@ class BootstrapRunCliTests(unittest.TestCase):
             preview,
             [dependency_port, application_port],
         )
+
+    def test_shared_positive_fixture_keeps_canonical_lifecycle_budget(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, _, profile_path, _, _, ports = self._fixture(root)
+            profile = json.loads(profile_path.read_text(encoding="utf-8"))
+
+            self.assertEqual(120_000, bootstrap_profile()["lifecycle_timeout_ms"])
+            self.assertEqual(
+                bootstrap_profile()["lifecycle_timeout_ms"],
+                profile["lifecycle_timeout_ms"],
+            )
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
 
     def _run(
         self,
