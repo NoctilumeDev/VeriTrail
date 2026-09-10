@@ -4,10 +4,10 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SCHEMA_CONTRACT_CANDIDATE`；
+  R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
-- 当前修订基线：`main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac`；
+- 本次状态发布起点：`main@49a2d69d44cca21024808fe5c298db8bac7f64c4`；
 - 影响等级：`L3_SYSTEM / DOCUMENTATION_ONLY / NON_NORMATIVE_MAP`；
 - 本文不创建源码、Schema、CLI、CI、标签、Release 或空目录；
 - 本文不重开 M0–M14、E 轨、P0–P4、PC 兼容桥、R0 或 Pattern Corpus 的冻结结论；
@@ -94,9 +94,10 @@ Exact SourceSnapshot
 ```
 
 R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语义。后继
-[Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)正从新的 exact main 独立起草
-字段词汇、canonical bytes、路径可逆编码、源码锚、遍历端点、Coverage 分母与 Artifact 布局；实际
-Schema payload 和运行实现仍未开始。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
+[Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)也已通过候选、门禁、受保护主线
+合入和匿名产品读回；[冻结发布](121-r1-schema-contract-freeze-publication.md)完成自身最后门后，只开放
+版本化 Schema、纯数据 compatibility corpus、规范字节/摘要向量与 conformance tests 的起草。运行实现
+仍未开始。R1 只建立确定性理解骨架，不进入 AI 提案、自动排序、
 HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
 为理由提前创建后继实现。
 

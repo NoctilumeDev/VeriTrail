@@ -523,11 +523,17 @@ exact main 独立起草 Schema 与兼容向量；Schema、源码、CLI、运行 
 
 README 读者骨架与对称 SVG 已分别完成独立受保护主线闭环，R1 Schema 施工随后从
 `main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac` 恢复。后继
-[文档 120](120-r1-schema-and-canonical-identity-contract.md)当前只建立 docs-only Schema 合同候选，冻结
-候选字段、`veritrail-json-c14n/1` 文件字节、domain-separated semantic digest、可逆 Git path hex、raw blob
-半开 byte anchor、确定性 BFS、inclusive budget、Coverage denominator 与固定 Artifact layout。当前状态为
-`R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`；实际
-JSON Schema、兼容向量、源码、CLI、Provider 与运行 CI 仍不存在，也不得与候选合同混在同一分支。
+[文档 120](120-r1-schema-and-canonical-identity-contract.md)只建立 docs-only Schema 合同候选，冻结候选
+字段、`veritrail-json-c14n/1` 文件字节、domain-separated semantic digest、可逆 Git path hex、raw blob
+半开 byte anchor、确定性 BFS、inclusive budget、Coverage denominator 与固定 Artifact layout。候选提交
+经 PR #99 原始 11/11 门禁合入 `main@49a2d69d44cca21024808fe5c298db8bac7f64c4`；该 exact main 的
+Public CI 11/11、Browser Smoke 1/1 与 README、文档 120、milestones 三次匿名产品读回均成立。
+[文档 121](121-r1-schema-contract-freeze-publication.md)只发布该证据链；其自身门禁、受保护主线合入与
+合入后读回全部成立后，状态推进为
+`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
+下一步只允许从新的 exact main 创建版本化 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
+Schema/conformance tests；runtime importer、parser、relation/slice engine、CLI、Provider、标签和 Release
+继续禁止。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

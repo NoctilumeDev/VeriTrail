@@ -288,12 +288,17 @@
   已存在或已冻结；R1 源码包、CLI、运行 CI、Provider、标签和 Release 继续禁止，直到后继实现入口独立闭合。
   README 读者骨架与对称 SVG 已经在独立受保护主线闭环后退出；后继
   `docs/120-r1-schema-and-canonical-identity-contract.md` 从
-  `main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac` 建立 docs-only Schema 合同候选，当前状态为
-  `R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`。该候选
-  只定义字段词汇、规范字节、可逆 Git path、raw byte anchor、身份投影、BFS tie-break、inclusive budget、
-  Coverage 分母与固定 Artifact 布局；不得在同一分支创建实际 JSON Schema、兼容向量、源码、CLI、Provider
-  或运行 CI。只有候选及后继状态发布完成各自门禁、合入与 exact-main 匿名读回，才允许从新的 exact main
-  起草 Schema payload。
+  `main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac` 建立 docs-only Schema 合同候选，只定义字段词汇、
+  规范字节、可逆 Git path、raw byte anchor、身份投影、BFS tie-break、inclusive budget、Coverage 分母与
+  固定 Artifact 布局。候选经 PR #99 原始 11/11 门禁合入
+  `main@49a2d69d44cca21024808fe5c298db8bac7f64c4`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+  与 README/文档 120/milestones 三次匿名产品读回均已成立。后继
+  `docs/121-r1-schema-contract-freeze-publication.md` 只发布该证据链；其自身门禁、受保护主线合入与合入后
+  exact-main 匿名读回全部成立后，状态才是
+  `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
+  下一阶段只能从新的 exact main 创建版本化 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
+  Schema/conformance tests；runtime importer、parser、relation/slice engine、CLI、Provider、标签和 Release
+  继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
