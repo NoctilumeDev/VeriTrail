@@ -1,0 +1,138 @@
+digraph VeriTrailArchitecture {
+  graph [
+    rankdir=TB,
+    bgcolor="#f2e9de",
+    pad="0.32",
+    margin="0",
+    nodesep="0.38",
+    ranksep="0.48",
+    splines=spline,
+    outputorder=edgesfirst,
+    fontname="Georgia",
+    fontcolor="#2f2a25",
+    labelloc=t,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2"><TR><TD><FONT FACE="Georgia" POINT-SIZE="24" COLOR="#092b30"><B>VERITRAIL  /  EVIDENCE-BOUND JUDGMENT</B></FONT></TD></TR><TR><TD><FONT FACE="Arial" POINT-SIZE="11" COLOR="#6f6252">Reality becomes bounded evidence. A sealed plan and that evidence meet only inside Core.</FONT></TD></TR></TABLE>>
+  ];
+
+  node [
+    shape=rect,
+    style="rounded,filled",
+    color="#a48558",
+    fillcolor="#fbf7ef",
+    fontcolor="#2f2a25",
+    fontname="Arial",
+    fontsize=10,
+    penwidth=1.7,
+    margin="0.16,0.13"
+  ];
+
+  edge [
+    color="#6f6252",
+    fontcolor="#6f6252",
+    fontname="Arial",
+    fontsize=8,
+    penwidth=1.4,
+    arrowsize=0.68
+  ];
+
+  human_seal [
+    width=2.55,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.1,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#f3d895"><B>HUMAN AUTHORITY</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">intent · acceptance conditions</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">confirms the Seal</FONT></TD></TR></TABLE>>
+  ];
+
+  reality [
+    width=2.55,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#092b30"><B>REALITY</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">execution · external platforms</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">uncertain events</FONT></TD></TR></TABLE>>
+  ];
+
+  quick [
+    width=2.55,
+    style="rounded,filled,dashed",
+    fillcolor="#eee5d9",
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="13" COLOR="#092b30"><B>Q · SCHEDULING</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">plans proof work and reuse</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#8a2919">no gate skip · no PASS</FONT></TD></TR></TABLE>>
+  ];
+
+  plan [
+    width=2.65,
+    color="#8a2919",
+    penwidth=2.0,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#8a2919"><B>SEALED PLAN</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">predeclared conditions</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">exact semantic identity</FONT></TD></TR></TABLE>>
+  ];
+
+  producers [
+    width=2.65,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#092b30"><B>EVIDENCE PRODUCERS</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">bounded runners</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">read-only platform plugins</FONT></TD></TR></TABLE>>
+  ];
+
+  core [
+    width=3.15,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.7,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2"><TR><TD><FONT FACE="Georgia" POINT-SIZE="18" COLOR="#f3d895"><B>VERITRAIL CORE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="10" COLOR="#f6efe3">sufficiency · integrity · assertions</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#d9d0c2">consumes facts; never invents them</FONT></TD></TR></TABLE>>
+  ];
+
+  evidence [
+    width=3.15,
+    color="#8a2919",
+    penwidth=2.0,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#8a2919"><B>STANDARD EVIDENCE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">facts · provenance</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">explicit uncertainty</FONT></TD></TR></TABLE>>
+  ];
+
+  verdict [
+    width=3.15,
+    color="#8a2919",
+    fillcolor="#8a2919",
+    fontcolor="#fff8ee",
+    penwidth=2.1,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="2"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#fff3df"><B>VERDICT + BUNDLE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#fff8ee">PASS · FAIL</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#fff8ee">INCONCLUSIVE · PENDING</FONT></TD></TR></TABLE>>
+  ];
+
+  workbench [
+    width=2.7,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#092b30"><B>WORKBENCH</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">read · trace · compare</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#8a2919">never re-judges</FONT></TD></TR></TABLE>>
+  ];
+
+  human_review [
+    width=2.7,
+    color="#d3b775",
+    fillcolor="#092b30",
+    fontcolor="#f6efe3",
+    penwidth=2.1,
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="15" COLOR="#f3d895"><B>HUMAN AUTHORITY</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">reviews retained evidence</FONT></TD></TR><TR><TD><FONT POINT-SIZE="9" COLOR="#f6efe3">owns final disposition</FONT></TD></TR></TABLE>>
+  ];
+
+  review [
+    width=2.7,
+    style="rounded,filled,dashed",
+    fillcolor="#eee5d9",
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="13" COLOR="#092b30"><B>R · REVIEW ATTENTION</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">shows humans where to look</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#8a2919">no defect truth · no Verdict</FONT></TD></TR></TABLE>>
+  ];
+
+  { rank=same; human_seal; reality; }
+  { rank=same; plan; producers; }
+  { rank=same; evidence; quick; }
+  { rank=same; human_review; review; }
+
+  human_seal -> reality [style=invis, weight=20];
+  plan -> producers [style=invis, weight=20];
+  evidence -> quick [style=invis, weight=20];
+  human_review -> review [style=invis, weight=20];
+
+  human_seal -> plan [label="seals", color="#8a2919", penwidth=1.8];
+  plan -> core [label="binds"];
+  reality -> producers [label="observed by"];
+  producers -> evidence [label="publishes"];
+  evidence -> core [label="supports", color="#8a2919", penwidth=1.8];
+  core -> verdict [label="derives", color="#a48558", penwidth=2.1];
+  verdict -> workbench [label="presents"];
+  workbench -> human_review [label="supports review"];
+
+  quick -> producers [label="schedules proof work", style=dashed, constraint=false];
+  review -> human_review [label="allocates attention", style=dashed];
+}
