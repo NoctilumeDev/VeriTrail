@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_CONTRACT_FROZEN / R1_SCHEMA_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_CONTRACT_FROZEN / R1_SCHEMA_CONTRACT_CANDIDATE / R1_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -176,7 +176,8 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
 - GitHub Evidence Plugin `0.1.0` 已完成 P0–P4 的合同、Structured API、匿名 Public Render、同一
   Evidence snapshot handoff、公开资产与下载读回；插件只观察 GitHub，不成为新的事实中心。
 - Review Attention 已冻结 R0、首个 Pattern Corpus 与 R1 合同。R1 首版只针对 Python 3.10 结构语义，
-  不外推成整个多语言仓库已经被理解；Schema 与实现仍未完成。
+  不外推成整个多语言仓库已经被理解；当前只起草
+  [Schema 与规范身份合同](docs/120-r1-schema-and-canonical-identity-contract.md)，实际 Schema 和实现仍未开始。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
