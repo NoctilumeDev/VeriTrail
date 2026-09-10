@@ -329,6 +329,14 @@
   该入口只允许从新的 exact main 建立独立运行实现合同或首个最小切片；不得从 payload 分支续写，不得
   继承 payload 绿灯为运行证据，也不得提前创建完整 Facts/Relations/Slices/Coverage、AI/排序、CLI、
   Provider、标签或 Release。
+- 后继 `docs/127-r1-source-snapshot-runtime-contract.md` 从 exact
+  `main@1409bea0cd75664df181319348e1ca87e643e743` 开始首个运行切片的 docs-only 合同审计。审计确认单文件
+  `source-snapshot.json` 不是 `R1_DERIVATION` closure，冻结 Manifest 不能用占位 Artifact 或第三种
+  outcome 缩短；Snapshot acquisition 另用不进入语义身份的 safety budget，预算耗尽不得发布截断
+  inventory。当前只能写
+  `R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_CANDIDATE / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`；候选完成
+  自己的受保护主线闭环和独立冻结发布前，不得创建 `plugins/review-attention` runtime、测试、CLI、CI、
+  Provider、标签或 Release。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约

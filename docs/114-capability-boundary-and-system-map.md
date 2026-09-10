@@ -4,7 +4,8 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`；
+  R1_SCHEMA_PAYLOAD_FROZEN / R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_CANDIDATE /
+  R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
 - 本次状态发布起点：`main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`；
@@ -566,7 +567,8 @@ R0 + Pattern Corpus 0.1        FROZEN
 R1 Contract                    FROZEN
 R1 Schema Contract             FROZEN
 R1 Schema Payload              FROZEN
-R1 implementation entry        UNBLOCKED / NOT STARTED
+R1 SourceSnapshot contract     CANDIDATE
+R1 SourceSnapshot runtime      NOT STARTED
 Q0 Blueprint                   FROZEN
 Q implementation               NOT STARTED
 
@@ -579,5 +581,7 @@ Ledger-item implementation     NOT STARTED
 Q0 的 docs-only 蓝图已经闭环，冻结事实见
 [文档 117](117-q0-verification-scheduling-freeze-publication.md)；它没有建立 Q 实现入口。R1 Schema payload
 的冻结事实由[文档 126](126-r1-schema-payload-freeze-publication.md)发布；当前只解除独立运行实现合同或
-首个最小切片的入口，实际 importer、parser、Facts、Relations、Slices、Coverage、CLI 与 Provider 均未
-开始。本账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。
+首个最小切片的入口。[文档 127](127-r1-source-snapshot-runtime-contract.md)正在以 docs-only 候选修正
+“单 Artifact != Derivation closure”和“acquisition budget 只控制产出资格”的接缝；实际 importer、parser、
+Facts、Relations、Slices、Coverage、CLI 与 Provider 均未开始。本账只负责让未来方向不再遗忘、不互相
+冒充，也不因为“地图上有路”就替项目决定必须走哪条路。
