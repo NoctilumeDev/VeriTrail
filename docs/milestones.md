@@ -542,9 +542,12 @@ R1 Schema 候选证据，也不能由 rerun 覆盖；[文档 122](122-m10-public
 [文档 121](121-r1-schema-contract-freeze-publication.md)从该新 exact main 重建冻结发布，保留候选闭环、
 首次发布被否决和独立修正的完整因果链。它自己的门禁、受保护主线合入与合入后匿名读回全部成立后，
 状态才推进为
-`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
-下一阶段只允许创建版本化 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与 Schema/conformance
-tests；runtime importer、parser、relation/slice engine、CLI、Provider、标签和 Release 继续禁止。
+`R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。后继
+payload preflight 在写入第一份 Schema 前发现 scope item key、frontier、Coverage denominator 与 Provider
+provenance identity 仍存在实现自由度，因此[文档 123](123-r1-schema-payload-preflight-correction.md)只重开
+该边界；当前为 `R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED /
+R1_IMPLEMENTATION_NOT_STARTED`。修正重新冻结前，Schema payload、runtime importer、parser、
+relation/slice engine、CLI、Provider、标签和 Release 全部禁止。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

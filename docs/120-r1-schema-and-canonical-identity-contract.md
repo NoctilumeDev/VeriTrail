@@ -1,9 +1,9 @@
 # Review Attention R1 Schema 与规范身份合同 0.1
 
-> 状态：`R1_SCHEMA_CONTRACT_CANDIDATE / R1_SCHEMA_ARTIFACTS_NOT_STARTED /
+> 状态：`R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED /
 > R1_IMPLEMENTATION_NOT_STARTED`
 >
-> 精确基线：`main@35774838b3e9aeb5f062cfb101e96d76cea0e8ac`
+> 修正基线：`main@824d50617320d3fe1aecd1e752e4c4f9224257c2`
 >
 > 上游合同：[R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
 >
@@ -146,7 +146,10 @@ veritrail.review.relation-conflict/0.1
 veritrail.review.slice-spec/0.1
 veritrail.review.review-slice/0.1
 veritrail.review.slice-set/0.1
+veritrail.review.coverage-denominator/0.1
 veritrail.review.coverage-ledger/0.1
+veritrail.review.provider-operands/0.1
+veritrail.review.provider-run/0.1
 veritrail.review.derivation-evidence/0.1
 ```
 
@@ -181,6 +184,34 @@ different file sha256
 
 所有进入 identity projection 的选项必须显式出现。`missing`、`null`、空数组和默认值不是同义词。Schema
 不得依赖实现语言的 enum ordinal、对象 `repr`、集合迭代顺序、本机路径、locale、时区或随机哈希。
+
+### 3.5 公共 Schema 原子
+
+后继 Schema 不得自行发明字段类型。R1 0.1 的公共原子固定为：
+
+```text
+schema_version            string, exact "0.1"
+canonicalization_profile  string, exact "veritrail-json-c14n/1"
+Sha256Hex                 string, 64 lower-case hex
+SemanticDigest            Sha256Hex carrying a domain-separated semantic identity
+NonEmptyText              JSON string, at least one Unicode code point
+NonNegativeInteger        JSON integer >= 0
+PositiveInteger           JSON integer >= 1
+UtcTimestamp              RFC 3339 UTC string ending in "Z"
+```
+
+`repository_id / policy_id / profile_id / derivation_id / capability_id / provider_id / parser_id / runtime_id`
+及对应 version/ref 字段均为逐 code point 比较的 `NonEmptyText`；R1 不替所有者做 Unicode normalization、
+URL canonicalization 或大小写折叠。`policy.version` 是 `PositiveInteger`；`profile_version` 及 Provider、
+parser、runtime、resolver version 是 `NonEmptyText`。所有数组都必须显式存在；是否允许空数组由各节决定。
+
+Seal 固定为：
+
+```json
+{"algorithm":"sha256","digest":"<Sha256Hex>"}
+```
+
+`seal.digest` 仍按对应章节定义的无 `seal` 文档投影计算；Schema 只能验证形状，不能证明摘要正确。
 
 ## 4. Git 路径的可逆表示
 
@@ -290,6 +321,21 @@ entry_kind =
 字节串长度。`GITLINK` 的 Git object type 是 `COMMIT` 且没有 `content`；它不会被跟随。未知/特殊 mode
 必须成为 `OTHER_TRACKED_ENTRY`，不能静默删除或伪装成普通文件。
 
+`git_mode` 的规范 JSON 表示是恰好六位 ASCII 八进制字符串。Git tree 中不足六位的 mode 在解析后左侧
+补 `0`，因此 tree directory 的规范形式是 `040000`，但 directory 本身不进入 terminal inventory。已知
+映射固定为：
+
+```text
+100644 + BLOB   -> REGULAR_BLOB
+100755 + BLOB   -> EXECUTABLE_BLOB
+120000 + BLOB   -> SYMLINK_BLOB
+160000 + COMMIT -> GITLINK
+```
+
+其他 terminal mode 必须是 `OTHER_TRACKED_ENTRY`。只要 `git_object.object_type = BLOB`，无论 entry kind
+为何，都必须保存 `content`；非 BLOB 不得保存 `content`。`git_object.algorithm/hex` 继续遵守完整 Git
+object ID 规则，`content.sha256` 使用 `Sha256Hex` 形状，`size_bytes` 是 `NonNegativeInteger`。
+
 数组按 raw Git path bytes 排序且 path 唯一。目录拓扑由 path 与 exact root tree 决定；不把工作目录、
 ignored file、untracked file、index-only change、`__pycache__` 或构建产物混入 inventory。
 
@@ -351,6 +397,7 @@ seal
 `scope_decisions` 必须对 SourceSnapshot 的每个 terminal entry 恰好给出一次决定，按 Git path 排序：
 
 ```text
+git_path: GitPathRef(path_kind = GIT_PATH)
 disposition = IN_SCOPE / OUT_OF_SCOPE
 source_class = FIRST_PARTY / GENERATED / VENDORED / UNCLASSIFIED
 reason_code
@@ -372,6 +419,11 @@ composition_mode = CUMULATIVE
 R1 0.1 只冻结 `CUMULATIVE`：所有适用且 required 的来源都必须被观察；某来源成功或返回空集合不能取消
 其他来源。替代、优先和互斥语义留给后继 Profile，不能由运行时 `first-success` 偷偷实现。
 
+`scope_decisions` 以 `git_path` 唯一定位 inventory item；没有该字段的 decision 无法证明覆盖哪个条目，必须
+拒绝。`provider_requirements` 中 `(capability_id)` 唯一；数组分别按 raw Git path bytes 和
+`capability_id` 的 Unicode code-point 顺序排列。`required` 是 JSON boolean，首版
+`composition_mode` 只能是 `CUMULATIVE`。
+
 `python_module_mapping` 不从 `sys.path`、editable install 或当前虚拟环境猜测 import namespace。首版固定：
 
 ```text
@@ -389,6 +441,11 @@ identifier normalization 使用 Python 3.10 标识符规则的 NFKC 结果，Art
 raw Git path 归一到同一 module key，必须是 `CONFLICT`，不能因为 normalized name 相同而合并路径身份。
 文件名去掉最后一个 ASCII `.py` 后必须恰好是一个合法、非关键字 identifier；额外的点号、空名和关键字
 路径不由首版推测修复。
+
+`python_module_mapping` 是单个对象而不是候选数组；`package_prefix` 是允许为空、保持声明顺序且元素唯一的
+Python-normalized identifier 数组。`slice_policy.anchor_fact_kinds` 必须非空、唯一并按 Profile fact-kind
+rank 排序；`allowed_relations` 可以为空，每个 `(relation_kind, direction)` 唯一，先按 Profile relation-kind
+rank、再按 `OUTBOUND < INBOUND < BOTH` 排序。所有 relation/fact kind 必须属于 Profile 闭集。
 
 `slice_policy` 固定：
 
@@ -475,6 +532,8 @@ Profile；不能因为在 CPython 3.13 上运行就接受 3.13-only syntax。
 ```text
 profile_id = veritrail-python-source-3.10
 profile_version = 0.1
+accepted_source_encodings = [UTF-8, UTF-8-SIG]
+supported_entry_kinds = [REGULAR_BLOB, EXECUTABLE_BLOB]
 
 normalization_rules = {
   path: git-path-hex/1,
@@ -549,6 +608,32 @@ Snapshot、Profile、path、anchor、subject space 与 `local_ordinal`；`fact_i
 FactSet 冲突组关联。
 `provenance_refs` 不进入两者，按 provider-run identity 排序。
 
+上段的“path”就是 `source_anchor.git_path`，不得在 identity envelope 中再复制第二份路径。精确投影为：
+
+```text
+subject_key_digest
+  domain  = veritrail.review.fact-subject/0.1
+  payload = {
+    source_snapshot_digest,
+    derivation_profile_digest,
+    source_anchor,
+    subject_space,
+    local_ordinal
+  }
+
+fact_id
+  domain  = veritrail.review.code-fact/0.1
+  payload = {subject_key_digest, fact_kind, semantic_attributes}
+```
+
+`local_ordinal` 是 `NonNegativeInteger`。`provenance_refs` 是至少一个、排序且唯一的
+`provider_run_id`（`SemanticDigest`）数组；每个引用都必须出现在同一 Bundle 的
+DerivationEvidence。Schema 只验证摘要形状与非空，存在性由 conformance validator 验证。
+
+kind/space 组合固定：`MODULE -> MODULE_ENTITY`，class/function/method declaration ->
+`DECLARATION_NODE`，`IMPORT_DECLARATION -> IMPORT_ALIAS`。MODULE 与 declaration 的
+`local_ordinal=0`；只有同一 import statement anchor 下的 alias 使用源码顺序 ordinal。
+
 声明属性闭集：
 
 ```text
@@ -584,6 +669,33 @@ CodeFact container，位于其中的声明仍由最近的 module/class/function/
 `module_key_parts` 只由 sealed `python_module_mapping` 与 exact Git path 机械派生；无法唯一映射时为
 `null` 并进入 Coverage 的 typed gap。它不是通过实际 `import` 获得的运行时模块名。
 
+`semantic_attributes` 必须按 `fact_kind` 使用以下 exact object，全部拒绝额外字段：
+
+```text
+MODULE:
+  {module_key_parts: [PythonIdentifier, ...] | null}
+
+CLASS_DECLARATION:
+  {declared_name: PythonIdentifier}
+
+FUNCTION_DECLARATION / METHOD_DECLARATION:
+  {declared_name: PythonIdentifier, function_form: SYNC | ASYNC}
+
+IMPORT_DECLARATION:
+  {
+    import_form: IMPORT | FROM_IMPORT,
+    relative_level: NonNegativeInteger,
+    module_parts: [PythonIdentifier, ...],
+    imported_name: PythonIdentifier | "*" | null,
+    alias_name: PythonIdentifier | null
+  }
+```
+
+`PythonIdentifier` 是已经按 Python 3.10 规则 NFKC 规范化、合法且非关键字的非空字符串。
+`IMPORT` 必须有 `relative_level=0`、非空 `module_parts`，且 `imported_name` 必须为 `null`；`FROM_IMPORT` 可有空
+`module_parts`（例如 `from . import x`），但 `imported_name` 必须是 `PythonIdentifier` 或 exact `"*"`。wildcard
+import 的 `alias_name` 必须为 `null`；其他 alias 未声明时也必须显式为 `null`。
+
 ### 7.3 FactSet
 
 `fact-set.json` 固定字段：
@@ -607,6 +719,27 @@ fact_set_digest
 `fact_set_digest` 覆盖 Snapshot、Profile、analysis scope、去除 provenance 后的规范 facts 与 conflict
 semantic records；它不覆盖完整 `policy_digest`。Manifest 文件摘要继续覆盖完整 provenance 与 Policy
 引用。
+
+精确摘要投影固定为：
+
+```text
+conflict_id
+  domain  = veritrail.review.fact-conflict/0.1
+  payload = {subject_key_digest, candidate_fact_ids}
+
+fact_set_digest
+  domain  = veritrail.review.fact-set/0.1
+  payload = {
+    source_snapshot_digest,
+    analysis_scope_digest,
+    derivation_profile_digest,
+    facts: facts with provenance_refs removed,
+    conflicts: conflicts with provenance_refs removed
+  }
+```
+
+`candidate_fact_ids` 必须至少两个、排序且唯一；冲突级 `provenance_refs` 是所有候选来源的排序唯一并集。
+`policy_digest` 保留在文件中用于交付绑定，但不进入 `fact_set_digest`。
 
 ## 8. RelationSet 0.1
 
@@ -632,7 +765,7 @@ provenance_refs[]
 target_kind = IMPORT_LITERAL
 relative_level
 module_parts[]
-imported_name | null
+imported_name: PythonIdentifier | "*" | null
 resolution_status
 topology_status
 resolved_fact_ids[]
@@ -659,6 +792,35 @@ subject key，使同一 edge slot 的 kind/target 分歧可以形成 conflict。
 parent 直接语法子项顺序，`IMPORT_TARGET_LITERAL` 在每个 import Fact 下固定为 0。Provider provenance
 不进入 content identity。
 
+R1 0.1 的 Relation 没有第三类扩展属性；`semantic_attributes` 必须是 exact empty object `{}`。新增可参与
+Relation identity 的属性必须升级 Profile/Schema，不能通过开放 JSON object 偷渡。精确投影为：
+
+```text
+relation_subject_digest
+  domain  = veritrail.review.relation-subject/0.1
+  payload = {
+    source_snapshot_digest,
+    derivation_profile_digest,
+    relation_space,
+    source_fact_id,
+    local_ordinal
+  }
+
+relation_id
+  domain  = veritrail.review.structural-relation/0.1
+  payload = {relation_subject_digest, relation_kind, target, semantic_attributes}
+```
+
+`local_ordinal` 是 `NonNegativeInteger`；`provenance_refs` 与 Fact 使用同一 provider-run 引用规则。
+`resolved_fact_ids` 排序且唯一：`RESOLVED` 必须恰有一个，`CONFLICT` 必须至少两个，
+`UNRESOLVED/UNSUPPORTED` 必须为空。`LEXICAL_CONTAINS` 必须使用 `CHILD_EDGE`；
+`IMPORT_TARGET_LITERAL` 必须使用 `IMPORT_EDGE`。
+
+IMPORT target 的 `relative_level/module_parts/imported_name` 必须逐项等于 source import Fact 的同名属性；
+`module_parts` 使用 `PythonIdentifier` 且允许为空。`RESOLVED/CONFLICT` 的 `topology_status` 必须是
+`IN_SNAPSHOT`；`UNRESOLVED/UNSUPPORTED` 的 topology 只能是 `EXTERNAL_TO_SNAPSHOT/UNKNOWN`。
+`EXTERNAL_TO_SNAPSHOT/UNKNOWN` 不得携带 resolved Fact ID。
+
 `relation-set.json` 固定：
 
 ```text
@@ -679,6 +841,28 @@ relation_set_digest
 预算变化的完整 Policy。Relation conflict 同样保存
 `conflict_id / relation_subject_digest / candidate_relation_ids[] / provenance_refs[]`，语义摘要不覆盖
 provenance。空来源不取消其他来源。
+
+精确摘要投影固定为：
+
+```text
+conflict_id
+  domain  = veritrail.review.relation-conflict/0.1
+  payload = {relation_subject_digest, candidate_relation_ids}
+
+relation_set_digest
+  domain  = veritrail.review.relation-set/0.1
+  payload = {
+    source_snapshot_digest,
+    analysis_scope_digest,
+    derivation_profile_digest,
+    fact_set_digest,
+    relations: relations with provenance_refs removed,
+    conflicts: conflicts with provenance_refs removed
+  }
+```
+
+`candidate_relation_ids` 必须至少两个、排序且唯一；冲突 provenance 使用候选来源的排序唯一并集。
+`policy_digest` 留在文件中但不进入 `relation_set_digest`。
 
 ## 9. ReviewSliceSpec 与规范遍历
 
@@ -711,7 +895,23 @@ max_files >= 1
 max_relations >= 0
 ```
 
+`allowed_relations` 的元素、唯一性与排序沿用 Policy 规则。Spec 中四个 budget 是
+`NonNegativeInteger`，其中 symbol/file 的最小值仍为 1。精确摘要投影为：
+
+```text
+slice_spec_digest
+  domain  = veritrail.review.slice-spec/0.1
+  payload = ReviewSliceSpec with slice_spec_digest removed
+```
+
 ### 9.2 Inclusive budget
+
+R1 0.1 不解释 Provider conflict。若 FactSet 或 RelationSet 的 `conflicts` 非空，ReviewSliceSet 必须使用
+`slices=[]`，不得把任一 candidate 当成 canonical anchor/edge，也不得同时遍历所有候选后冒充单一语义图。
+Coverage 的 `SLICE_DERIVATION` denominator 为 `UNKNOWN`，保留 `PROVIDER_CONFLICT /
+UPSTREAM_DENOMINATOR_UNKNOWN` 与已知上游 item；这仍可
+形成协议 `COMPLETE` 的 Bundle，但不形成 normal ReviewSlice。后继若要对不受冲突影响的连通分量做局部切片，
+必须先定义可复算的 conflict isolation 合同。
 
 anchor 位于 depth 0，同时计为第 1 个 symbol 和其源码 path 的第 1 个 file。四个 budget 都是**包含式最大
 值**：加入候选后必须继续满足 `count <= max_*`。`max_depth=0` 只保留 anchor；`max_relations=0` 不加入边。
@@ -741,6 +941,24 @@ Fact 以 `fact_id` 去重，Relation 以 `relation_id` 去重。循环不会刷�
 任何候选因 `DEPTH_LIMIT / SYMBOL_LIMIT / FILE_LIMIT / RELATION_LIMIT` 被拒绝，都进入 frontier。多个原因
 按上述固定 reason rank 排序。只要 frontier 因结构预算非空，Slice coverage 就是 `PARTIAL`；遍历完整
 只表示“相对于当前 Snapshot/Profile/RelationSet/Spec 未再发现 eligible edge”，不表示完整程序语义。
+
+每个 Slice frontier item 的 exact shape 固定为：
+
+```text
+from_fact_id
+relation_id
+direction = OUTBOUND / INBOUND
+candidate_fact_id: SemanticDigest | null
+candidate_depth: NonNegativeInteger
+reason_codes[]: non-empty subset of
+  DEPTH_LIMIT / SYMBOL_LIMIT / FILE_LIMIT / RELATION_LIMIT
+```
+
+`from_fact_id` 是本次展开队列中的 Fact；`relation_id` 必须来自同一 RelationSet；若候选另一端是 Fact，
+`candidate_fact_id` 保存其 ID，否则 literal target 显式为 `null`。`candidate_depth` 是该 relation hop 若被
+接受时的深度。frontier 按规范遍历中候选被拒绝的 encounter order 保存；相同
+`(from_fact_id, relation_id, direction)` 只出现一次，`reason_codes` 按
+`DEPTH_LIMIT < SYMBOL_LIMIT < FILE_LIMIT < RELATION_LIMIT` 排序且保存全部适用原因。
 
 ### 9.4 Slice Artifact
 
@@ -774,6 +992,35 @@ coverage_status = COMPLETE / PARTIAL / UNKNOWN
 
 Slice 数组按 `slice_id` 排序，成员 ID 去重排序。`slice_id` 覆盖 spec、成员与 frontier；同成员但不同 spec
 仍是不同 Slice。CoverageLedger 不进入 Slice identity，避免循环。
+
+精确投影固定为：
+
+```text
+slice_id
+  domain  = veritrail.review.review-slice/0.1
+  payload = {
+    slice_spec_digest,
+    included_fact_ids,
+    included_relation_ids,
+    frontier
+  }
+
+slice_set_digest
+  domain  = veritrail.review.slice-set/0.1
+  payload = {
+    source_snapshot_digest,
+    analysis_scope_digest,
+    slice_policy_digest,
+    derivation_profile_digest,
+    fact_set_digest,
+    relation_set_digest,
+    slices
+  }
+```
+
+`slice_spec` 必须包含与 `slice_spec_digest` 一致的完整 ReviewSliceSpec。`coverage_status` 是 frontier 与上游
+可用性的机械派生字段：上游集合无法建立为 `UNKNOWN`；否则 frontier 非空为 `PARTIAL`；否则为
+`COMPLETE`。它进入 `slice_set_digest`，但不重复进入 `slice_id`。
 
 ## 10. CoverageLedger 0.1
 
@@ -820,12 +1067,29 @@ item_id
 
 不同 kind 的相同文本 ID 不是同一 item。
 
+`item_id` 不是 Provider 自由生成的标签，映射固定为：
+
+```text
+INVENTORY_ENTRY -> inventory entry 的 git_path.git_path_hex
+PARSE_UNIT      -> 对应 inventory entry 的 git_path.git_path_hex
+FACT            -> candidate subject_key_digest
+RELATION        -> candidate relation_subject_digest
+REVIEW_SLICE    -> candidate slice_spec_digest
+```
+
+因此 path-backed ID 是非空小写偶数位 hex，subject-backed ID 是 `SemanticDigest`。Ledger 顶层已经绑定
+Snapshot/Profile/Policy，`item_id` 不再复制这些上下文。输出 `fact_id / relation_id / slice_id` 必须能从同一
+candidate subject 追溯，但不能替换上述 denominator identity。
+
 `CoverageDisposition` 固定为：
 
 ```text
 item_ref: CoverageItemRef
 reason_codes[]
 ```
+
+`reason_codes` 必须非空、唯一并按本节闭集 rank 排序。同一 `CoverageItemRef` 在同一 stage 的同一数组只出现
+一次。
 
 `eligible` 是通过当前 stage 入口判断的中间集合，不是与 `completed` 并列的最终 disposition。对已知分母：
 
@@ -879,6 +1143,17 @@ denominator = {
 }
 ```
 
+KNOWN denominator 的 `source_digest` 精确计算为：
+
+```text
+domain  = veritrail.review.coverage-denominator/0.1
+payload = {stage, item_refs}
+```
+
+其中 `item_refs` 排序且唯一，并与 `denominator.item_refs` 逐项相同。R1 0.1 的 UNKNOWN denominator 必须
+使用 `source_digest = null`；`known_item_refs` 只是排序唯一的已观察前缀。后继版本若要绑定独立的部分分母
+证明，必须增加新字段或升级 Schema，不能让非空 `source_digest` 看起来像完整 denominator。
+
 `UNKNOWN` 的 known items 只是已观察前缀，不能被重命名为全局分母。R1 0.1 不存百分比和冗余 count；
 Workbench 从 exact item sets 计算显示值。对 `UNKNOWN`，上述集合关系只适用于 `known_item_refs`，同时
 必须保留导致全局分母未知的原因；已知前缀完整不改变 overall UNKNOWN。
@@ -905,8 +1180,39 @@ RELATION_LIMIT
 DERIVATION_ERROR
 ```
 
+reason 与 disposition 的合法映射固定为：
+
+| Disposition / location | Allowed reason codes |
+| --- | --- |
+| `out_of_scope` | `POLICY_EXCLUDED` |
+| `unsupported` | `UNCLASSIFIED_SOURCE / UNSUPPORTED_ENTRY_KIND / UNSUPPORTED_LANGUAGE / UNSUPPORTED_SOURCE_ENCODING / UNSUPPORTED_SYNTAX_VERSION` |
+| `unresolved` | `TARGET_UNRESOLVED / TARGET_EXTERNAL_TO_SNAPSHOT` |
+| `conflicts` | `PROVIDER_CONFLICT` |
+| `parse_failed` | `PARSE_ERROR` |
+| `execution_failed` | `PROVIDER_UNAVAILABLE / DERIVATION_ERROR` |
+| `truncated` and Slice frontier | `DEPTH_LIMIT / SYMBOL_LIMIT / FILE_LIMIT / RELATION_LIMIT` |
+| UNKNOWN denominator/stage reason | `UPSTREAM_DENOMINATOR_UNKNOWN` plus any already observed typed reason above |
+
+不适用于该分类的 reason 必须拒绝；不能把未知原因塞入“最接近”的数组。
+
 `coverage_status = COMPLETE / PARTIAL / UNKNOWN`。Python Profile 的 COMPLETE 不能显示成 repository
 complete；混合语言与 Policy 排除仍须在前序 stage 分母可见。
+
+stage-level `frontier` 只在 `SLICE_DERIVATION` 使用，其他六个 stage 必须为空。每项固定为：
+
+```text
+slice_id
+frontier_item: exact Slice frontier item
+```
+
+数组按 `(slice_id, frontier encounter order)` 排列，且必须等于所有 normal ReviewSlice 的 frontier 并集；
+它保留每个停止点属于哪个 Slice，不能只汇总 reason。`truncated` 则按 `REVIEW_SLICE + slice_spec_digest`
+标识受边界影响的 candidate slice，并保存该 Slice frontier 的 reason union；两者一个回答“哪个候选未完整”，
+一个回答“具体在哪条 edge 停止”，不能相互替代。
+
+stage `reason_codes` 是该 stage 所有 disposition 与 frontier reason 的排序唯一并集。若 denominator 为
+UNKNOWN，stage 状态必须是 `UNKNOWN`；否则任一非 completed terminal disposition 或非空 frontier 使状态为
+`PARTIAL`；其余才是 `COMPLETE`。`eligible` 仍只是中间集合，不单独降低状态。
 
 ### 10.3 Ledger 身份
 
@@ -932,6 +1238,16 @@ coverage_ledger_digest
 摘要覆盖完整分母、分类、frontier 与状态，不覆盖 UI 派生百分比。`overall_coverage_status` 是固定 stage
 状态的保守机械汇合：任一 UNKNOWN -> UNKNOWN；否则任一 PARTIAL -> PARTIAL；否则 COMPLETE。它不是
 缺陷、质量或 Core Verdict。
+
+精确摘要投影为：
+
+```text
+coverage_ledger_digest
+  domain  = veritrail.review.coverage-ledger/0.1
+  payload = CoverageLedger with coverage_ledger_digest removed
+```
+
+这会覆盖完整 `policy_digest`、七个 stage、每个 denominator、分类、frontier、reason 与最终机械汇合状态。
 
 ## 11. DerivationEvidence 与多来源组合
 
@@ -998,9 +1314,63 @@ reported_relation_ids[]
 diagnostics[]
 ```
 
+`operands_digest` 不是无法复算的 Provider 私有 hash。精确投影为：
+
+```text
+domain  = veritrail.review.provider-operands/0.1
+payload = {
+  source_snapshot_digest,
+  policy_digest,
+  analysis_scope_digest,
+  slice_policy_digest,
+  derivation_profile_digest,
+  capability_id,
+  provider_id,
+  provider_version,
+  parser_id,
+  parser_version,
+  runtime_id,
+  runtime_version
+}
+```
+
+R1 0.1 不允许未封存的 Provider 参数影响正常派生。未来若 Provider 需要额外 execution operands，必须先把
+它们加入版本化 Profile/Policy 或独立 Manifest 并升级本合同，不能只提交一个无法验证来源的摘要。
+
+`provider_run_id` 精确计算为：
+
+```text
+domain  = veritrail.review.provider-run/0.1
+payload = {derivation_id, capability_id, provider_id, operands_digest}
+```
+
+`derivation_id` 是调用方在 create-new output namespace 中生成的 opaque request-instance identity；不同
+derivation 不得复用，同一次失败重试若重新发布新 Bundle 也必须获得新 ID。它不宣称是语义内容摘要。
+同一 derivation 中 `(capability_id, provider_id)` 必须唯一；一次 Provider 只产生一个 run record，不用重试
+次数刷新身份。内部重试属于该 run 的执行细节，不能伪装成多个独立来源。`execution_status` 使用与顶层相同
+的 `COMPLETED / INTERRUPTED / FAILED / UNAVAILABLE` 闭集；reported IDs 排序且唯一，成功空来源使用空数组。
+
 每个 diagnostic 固定为 `diagnostic_code / subject_ref | null`。人类可变错误文本、本机绝对路径、stack
 trace 和 locale 文本不进入 R1 0.1 规范 Artifact；如未来需要诊断 attachment，必须另开合同定义身份与
 Manifest 布局，不能在首版塞入未绑定文件。
+
+`subject_ref` 不是开放字符串，exact union 为：
+
+```text
+{ref_kind: ARTIFACT,
+ artifact_role: SOURCE_SNAPSHOT / REVIEW_POLICY / DERIVATION_PROFILE,
+ semantic_digest: SemanticDigest}
+
+{ref_kind: PROVIDER_RUN,
+ provider_run_id: SemanticDigest}
+
+{ref_kind: COVERAGE_ITEM,
+ item_ref: CoverageItemRef}
+```
+
+无法可靠绑定 subject 时必须显式为 `null`。diagnostics 按
+`(diagnostic_code, canonical_json_bytes(subject_ref))` 排序且去重；Provider run 内的 diagnostics 必须能
+绑定该 run 或其观察到的 item，顶层 diagnostics 可以汇总但不能添加自由文本。
 
 diagnostic code 首版闭集：
 
@@ -1031,6 +1401,17 @@ required source 的空输出是一个成功但为空的来源事实；required s
 wall-clock timeout 产生 `INTERRUPTED`。此时不得发布普通完成态 FactSet、RelationSet、ReviewSliceSet 或
 CoverageLedger；已观察前缀只能留在 typed diagnostics/Evidence 中，不能获得正常派生产物身份。
 
+`request_provenance` 的五个字符串字段均为 `NonEmptyText`，`resolved_at` 与所有起止时间为
+`UtcTimestamp`。`resolved_at <= started_at <= finished_at`；每个 Provider run 的 start/end 也有序并落在
+该次 derivation 的起止区间内。
+`provider_runs` 按 `provider_run_id` 排序；diagnostics 使用上述规范顺序。精确 Evidence 摘要为：
+
+```text
+derivation_evidence_digest
+  domain  = veritrail.review.derivation-evidence/0.1
+  payload = DerivationEvidence with derivation_evidence_digest removed
+```
+
 ## 12. Artifact 布局与 Manifest
 
 R1 产物是一个 create-new-only 目录。文件名固定，不接受 Manifest 提供任意相对路径：
@@ -1047,6 +1428,28 @@ r1-artifact/
   review-slices.json
   coverage-ledger.json
 ```
+
+### 12.1 公共 JSON Schema 文件集
+
+Schema payload 使用 JSON Schema Draft 2020-12，文件集固定为：
+
+```text
+schemas/review-r1-common-0.1.schema.json
+schemas/review-source-snapshot-0.1.schema.json
+schemas/review-policy-0.1.schema.json
+schemas/review-derivation-profile-0.1.schema.json
+schemas/review-derivation-evidence-0.1.schema.json
+schemas/review-fact-set-0.1.schema.json
+schemas/review-relation-set-0.1.schema.json
+schemas/review-slice-set-0.1.schema.json
+schemas/review-coverage-ledger-0.1.schema.json
+schemas/review-derivation-manifest-0.1.schema.json
+```
+
+九个 Artifact/Manifest root Schema 只能通过相对 `$ref` 消费同目录 common definitions，不得引用网络资源或
+运行时包。每个 root Schema 的 `$id` 使用仓库公共 URL 与自身文件名，`additionalProperties: false` 递归应用
+到所有闭合对象。common Schema 只提供已在本文冻结的结构原子，不能把跨文件引用、摘要复算、数组排序、
+路径可逆性或 Coverage 集合方程伪装成 JSON Schema 已证明。
 
 `manifest.json` 顶层固定：
 
@@ -1187,17 +1590,22 @@ R1_IMPLEMENTATION_NOT_STARTED
 若 Schema 审查发现本文与已冻结 R1 合同冲突，必须停止并只重开被反例击穿的边界。门禁全绿不能覆盖
 语义反例。
 
-## 16. 当前候选事实
+## 16. 当前修正候选事实
 
-本补丁只是从 exact main 起草 Schema 合同。它没有生成可被程序导入的 Schema，没有修改 Core/P/Q，
-没有开始 R1 实现，也没有把未来兼容向量写成已经通过的证据。
+Schema payload preflight 从已发布的 `main@824d50617320d3fe1aecd1e752e4c4f9224257c2` 发现：原合同虽已列出
+顶层字段，但 `scope_decisions` 的 path key、Coverage item/denominator identity、Slice/Coverage frontier、
+Provider run provenance、typed diagnostic reference 及若干 semantic digest 精确投影仍需由实现猜测。
+因此 payload 分支保持零改动，本补丁只重开这些被反例击穿的 Schema/identity 边界。
+
+它没有生成可被程序导入的 Schema，没有修改 Core/P/Q，没有开始 R1 运行实现，也没有把未来兼容向量写成
+已经通过的证据。
 
 当前状态保持：
 
 ```text
 R1_CONTRACT_FROZEN
-R1_SCHEMA_CONTRACT_CANDIDATE
-R1_SCHEMA_ARTIFACTS_NOT_STARTED
+R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE
+R1_SCHEMA_PAYLOAD_BLOCKED
 R1_IMPLEMENTATION_NOT_STARTED
 ```
 
