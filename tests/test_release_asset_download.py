@@ -10,7 +10,6 @@ from scripts.download_release_asset import (
     DigestMismatch,
     DownloadAttemptResult,
     NonRetryableDownloadError,
-    ReleaseAssetDownloadError,
     RetryBudgetExceeded,
     download_release_asset,
 )
@@ -115,20 +114,39 @@ class ReleaseAssetDownloadTests(unittest.TestCase):
             self.assertEqual(clock.sleeps, [2.0, 4.0])
             self.assertEqual(runner.calls, 3)
 
-    def test_retry_schedule_is_bounded_and_exhausts_after_five_attempts(self) -> None:
+    def test_capped_backoff_can_use_remaining_absolute_budget(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:
             root = Path(raw_temp)
             clock = FakeClock()
             runner = ScriptedAttemptRunner(
-                [AttemptFixture(http_result(500)) for _ in range(5)], clock
+                [
+                    *[AttemptFixture(http_result(500)) for _ in range(5)],
+                    AttemptFixture(success_result(), PAYLOAD),
+                ],
+                clock,
             )
 
-            with self.assertRaises(ReleaseAssetDownloadError):
+            output = self.run_download(root, runner, clock)
+
+            self.assertEqual(output.read_bytes(), PAYLOAD)
+            self.assertEqual(runner.calls, 6)
+            self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0, 16.0])
+            self.assertEqual(clock.now, 46.0)
+
+    def test_capped_backoff_stops_at_the_shared_absolute_budget(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:
+            root = Path(raw_temp)
+            clock = FakeClock()
+            runner = ScriptedAttemptRunner(
+                [AttemptFixture(http_result(500)) for _ in range(6)], clock
+            )
+
+            with self.assertRaises(RetryBudgetExceeded):
                 self.run_download(root, runner, clock)
 
-            self.assertEqual(runner.calls, 5)
-            self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0])
-            self.assertEqual(clock.now, 30.0)
+            self.assertEqual(runner.calls, 6)
+            self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0, 16.0])
+            self.assertEqual(clock.now, 46.0)
             self.assertFalse((root / "asset.bin").exists())
             self.assertEqual(list(root.glob(".*.part")), [])
 
