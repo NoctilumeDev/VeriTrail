@@ -358,6 +358,8 @@ reason_code
 
 没有命中的 path 不能默认为 first-party 或 in-scope。generated/vendor 不是文件名启发式真值；只能由
 sealed policy 显式分类，`UNCLASSIFIED` 必须保持可见。
+`reason_code = POLICY_INCLUDED / POLICY_EXCLUDED`，且必须与 disposition 对应；source class 不改变
+in/out-of-scope 权威。
 
 `provider_requirements` 以 capability identity 排序，每项显式给出：
 
@@ -383,6 +385,11 @@ Python-normalized identifier 序列。module root 下 `__init__.py` 映射为 pr
 UTF-8、不能成为 Python identifier、产生两个候选或越过 module root 的路径必须显式
 `UNSUPPORTED/CONFLICT/EXTERNAL_TO_SNAPSHOT`，不能依赖宿主 import machinery 任选结果。
 
+identifier normalization 使用 Python 3.10 标识符规则的 NFKC 结果，Artifact 只保存规范结果；若两个不同
+raw Git path 归一到同一 module key，必须是 `CONFLICT`，不能因为 normalized name 相同而合并路径身份。
+文件名去掉最后一个 ASCII `.py` 后必须恰好是一个合法、非关键字 identifier；额外的点号、空名和关键字
+路径不由首版推测修复。
+
 `slice_policy` 固定：
 
 ```text
@@ -397,6 +404,9 @@ max_relations
 `direction = OUTBOUND / INBOUND / BOTH`。`execution_budget` 只保存 wall-clock、memory 等安全上限，不进入
 SliceSpec；它不能改变正常完成时的成员身份。`governance` 与 AcceptancePlan 同样区分
 `claim_owner_ref / drafter_ref / seal_authority_ref / seal_decision=CONFIRMED`。
+
+`execution_budget` 的首版字段恰为 `wall_clock_ms / memory_bytes / artifact_bytes`，均为正整数。它们共同
+约束一次 derivation 的安全边界；子阶段只能消费同一个绝对预算，不能各自刷新完整 timeout 或容量。
 
 三个摘要职责固定：
 
@@ -459,6 +469,30 @@ relation_kinds =
 
 CPython、parser package 与运行解释器版本属于 DerivationEvidence。只有上述语义投影或规则变化才升级
 Profile；不能因为在 CPython 3.13 上运行就接受 3.13-only syntax。
+
+首个固定值为：
+
+```text
+profile_id = veritrail-python-source-3.10
+profile_version = 0.1
+
+normalization_rules = {
+  path: git-path-hex/1,
+  anchor: raw-blob-half-open/1,
+  identifier: python-3.10-nfkc/1,
+  fact_projection: r1-python-facts/0.1,
+  import_projection: r1-python-import-literal/0.1
+}
+
+traversal_rules = {
+  algorithm: breadth-first/1,
+  budget: inclusive-atomic-edge/1,
+  tie_break: r1-relation-rank/0.1,
+  cycle_identity: fact-and-relation-digest/1
+}
+```
+
+`profile_digest` 对删除自身字段后的完整 Profile 计算。上述字符串是语义版本，不是实现 package 名。
 
 ## 7. SourceAnchor 与 Python 3.10 投影
 
@@ -931,6 +965,42 @@ COMPLETED / INTERRUPTED / FAILED / UNAVAILABLE
 每个 Provider run 保存 capability、provider implementation/version、parser/runtime identity、实际操作数
 摘要、起止、状态、reported fact/relation IDs 与 typed diagnostics。`provider_runs` 按 provider-run identity
 排序，不能按完成先后排序。
+
+`request_provenance` 固定：
+
+```text
+requested_repository_id
+requested_ref
+resolver_id
+resolver_version
+resolved_at
+```
+
+它记录 friendly coordinate 怎样被解析，不参加 SourceSnapshot content identity。
+
+每个 Provider run 固定：
+
+```text
+provider_run_id
+capability_id
+provider_id
+provider_version
+parser_id
+parser_version
+runtime_id
+runtime_version
+operands_digest
+started_at
+finished_at
+execution_status
+reported_fact_ids[]
+reported_relation_ids[]
+diagnostics[]
+```
+
+每个 diagnostic 固定为 `diagnostic_code / subject_ref | null`。人类可变错误文本、本机绝对路径、stack
+trace 和 locale 文本不进入 R1 0.1 规范 Artifact；如未来需要诊断 attachment，必须另开合同定义身份与
+Manifest 布局，不能在首版塞入未绑定文件。
 
 diagnostic code 首版闭集：
 
