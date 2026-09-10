@@ -7,6 +7,11 @@
 >
 > 基线：`main@1409bea0cd75664df181319348e1ca87e643e743`
 >
+> 后继状态：[文档 128](128-r1-source-snapshot-runtime-contract-freeze-publication.md)完成独立状态发布后，
+> 当前主线为 `R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_FROZEN /
+> R1_SOURCE_SNAPSHOT_IMPLEMENTATION_ALLOWED / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`；本文继续保留
+> 合同候选自身的历史状态。
+>
 > 本文只冻结 SourceSnapshot acquisition、身份连续性、资源停止线和单 Artifact 发布边界；不创建源码包、
 > CLI、运行 CI、Provider、标签或 Release。
 

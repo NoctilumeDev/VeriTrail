@@ -337,6 +337,14 @@
   `R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_CANDIDATE / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`；候选完成
   自己的受保护主线闭环和独立冻结发布前，不得创建 `plugins/review-attention` runtime、测试、CLI、CI、
   Provider、标签或 Release。
+- 候选提交 `ac3d4169732529ad7662672222156c7e140d0fc8` 经 PR #107 原始 11/11 门禁合入 exact
+  `main@def98c6a116b50fc9c0e7c849dd9118b70285eba`；该 main 的 Public CI 11/11、Browser Smoke 1/1 与
+  README、文档 120/127 的匿名 Public Render 读回均成立。后继
+  `docs/128-r1-source-snapshot-runtime-contract-freeze-publication.md` 只发布该闭环；其自身门禁、受保护
+  主线合入、exact-main 门与匿名读回全部成立后，状态才是
+  `R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_FROZEN / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_ALLOWED /
+  R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`。授权仅覆盖 SourceSnapshot 最小实现；Fact、Relation、
+  Slice、Coverage、完整 Derivation Manifest、CLI、Provider、标签与 Release 继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
