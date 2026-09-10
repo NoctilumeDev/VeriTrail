@@ -9,6 +9,10 @@
 > 主线恢复 `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED`；本首屏继续保留修正候选
 > 自身的历史状态。
 >
+> 运行切片校正：[文档 127](127-r1-source-snapshot-runtime-contract.md)只澄清单文件 SourceSnapshot 与
+> `R1_DERIVATION` Manifest、acquisition safety budget 与 ReviewPolicy budget 的边界；不修改本文冻结的
+> Schema、规范字节或身份投影。
+>
 > 上游合同：[R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
 >
 > 影响层级：`L2_CONTRACT + L0_DOCUMENTATION`；本文只冻结候选 Schema 词汇、规范字节、身份投影、
@@ -1565,10 +1569,18 @@ schema/conformance validation tests
 exact Git commit/tree/root
     -> binary-safe terminal inventory
     -> verified SourceSnapshot 0.1
-    -> canonical artifact + manifest
+    -> one canonical create-new SourceSnapshot artifact
 ```
 
-它只证明快照身份和连续性，不提前宣称 Python Facts、Relations、Slices 或 Coverage 已实现。
+该切片只发布 `source-snapshot.json`，不发布 `manifest.json`。冻结的 `R1_DERIVATION` Manifest 是完整
+派生闭环的描述符，只能绑定第 12 节规定的 COMPLETE 八文件或 DIAGNOSTIC 四文件集合；不得用占位
+Policy/Profile/Evidence、空语义 Artifact 或第三种 partial outcome 为单文件切片伪造 Manifest。缺少
+Derivation Manifest 不表示 SourceSnapshot 不完整：它表示派生闭环尚未开始。后继派生必须导入并验证
+这份 create-new Artifact 的 exact canonical bytes，不能重新生成一份“看起来相同”的 Snapshot 替换它。
+
+它只证明快照身份和连续性，不提前宣称 Python Facts、Relations、Slices 或 Coverage 已实现。首切片建立
+Snapshot 时使用独立的非语义 acquisition safety budget，不得倒用尚未存在的
+`ReviewPolicy.execution_budget`；精确运行边界由后继运行合同冻结。
 
 ## 15. 候选验收门
 
