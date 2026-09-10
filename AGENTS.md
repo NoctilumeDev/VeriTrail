@@ -301,9 +301,11 @@
   `docs/121-r1-schema-contract-freeze-publication.md` 从该新 exact main 重建冻结发布并保留完整失败链；其
   自身门禁、受保护主线合入与合入后 exact-main 匿名读回全部成立后，状态才是
   `R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED`。
-  下一阶段只能从新的 exact main 创建版本化 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
-  Schema/conformance tests；runtime importer、parser、relation/slice engine、CLI、Provider、标签和 Release
-  继续禁止。
+  后继 payload preflight 从该 exact main 发现 item key、frontier、Coverage 与 provenance identity 仍不足以
+  唯一生成 Schema，当前由 `docs/123-r1-schema-payload-preflight-correction.md` 只重开被反例击穿的边界，
+  状态为 `R1_SCHEMA_CONTRACT_CORRECTION_CANDIDATE / R1_SCHEMA_PAYLOAD_BLOCKED /
+  R1_IMPLEMENTATION_NOT_STARTED`。在修正重新冻结前，版本化 JSON Schema、兼容 corpus、规范字节/摘要
+  向量、runtime importer、parser、relation/slice engine、CLI、Provider、标签和 Release 全部禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
