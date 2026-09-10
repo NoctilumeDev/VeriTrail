@@ -559,6 +559,14 @@ relation/slice engine、CLI、Provider、标签和 Release 全部禁止。
 从新的 exact main 创建十个固定 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
 Schema/conformance tests；运行实现、CLI、Provider、标签和 Release 仍未开始。
 
+后继 [文档 125](125-r1-schema-payload-freeze-candidate.md)从 exact
+`main@4ef8b6434597b6557d6306100b91aebd9c1b3ecd` 物化十个 Draft 2020-12 Schema、20 项数据型兼容
+义务、24 个 identity domain 的规范字节/摘要向量以及一份九文件 synthetic COMPLETE bundle；
+`jsonschema==4.25.1` 只作为 `schema-test` extra 进入 CI 测试安装，Core base wheel 不获得运行依赖。
+当前状态为 `R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED /
+R1_IMPLEMENTATION_NOT_STARTED`。候选自己的原始远端门、受保护主线合入、exact-main 门与匿名逐字节读回
+成立前，不得冻结 payload 或启动 R1 runtime。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

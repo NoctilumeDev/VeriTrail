@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-coverage-ledger-0.1.schema.json",
+  "title": "VeriTrail Review CoverageLedger 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "source_snapshot_digest",
+    "policy_digest", "analysis_scope_digest", "slice_policy_digest", "derivation_profile_digest",
+    "fact_set_digest", "relation_set_digest", "slice_set_digest", "stages", "overall_coverage_status",
+    "coverage_ledger_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "COVERAGE_LEDGER" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "slice_policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "fact_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "relation_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "slice_set_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "stages": {
+      "type": "array", "minItems": 7, "maxItems": 7,
+      "prefixItems": [
+        { "$ref": "#/$defs/SnapshotInventoryStage" },
+        { "$ref": "#/$defs/PolicyScopeStage" },
+        { "$ref": "#/$defs/LanguageSupportStage" },
+        { "$ref": "#/$defs/ParseStage" },
+        { "$ref": "#/$defs/FactDerivationStage" },
+        { "$ref": "#/$defs/RelationDerivationStage" },
+        { "$ref": "#/$defs/SliceDerivationStage" }
+      ],
+      "items": false
+    },
+    "overall_coverage_status": { "$ref": "#/$defs/CoverageStatus" },
+    "coverage_ledger_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  },
+  "$defs": {
+    "CoverageStatus": { "enum": ["COMPLETE", "PARTIAL", "UNKNOWN"] },
+    "CoverageReason": {
+      "enum": [
+        "POLICY_EXCLUDED", "UNCLASSIFIED_SOURCE", "UNSUPPORTED_ENTRY_KIND", "UNSUPPORTED_LANGUAGE",
+        "UNSUPPORTED_SOURCE_ENCODING", "UNSUPPORTED_SYNTAX_VERSION", "PARSE_ERROR", "PROVIDER_UNAVAILABLE",
+        "PROVIDER_CONFLICT", "TARGET_UNRESOLVED", "TARGET_EXTERNAL_TO_SNAPSHOT",
+        "UPSTREAM_DENOMINATOR_UNKNOWN", "DEPTH_LIMIT", "SYMBOL_LIMIT", "FILE_LIMIT", "RELATION_LIMIT",
+        "DERIVATION_ERROR"
+      ]
+    },
+    "KnownDenominator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "source_digest", "item_refs"],
+      "properties": {
+        "state": { "const": "KNOWN" },
+        "source_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "item_refs": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" }
+        }
+      }
+    },
+    "UnknownDenominator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "source_digest", "known_item_refs", "reason_codes"],
+      "properties": {
+        "state": { "const": "UNKNOWN" },
+        "source_digest": { "type": "null" },
+        "known_item_refs": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" }
+        },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "$ref": "#/$defs/CoverageReason" },
+          "contains": { "const": "UPSTREAM_DENOMINATOR_UNKNOWN" }
+        }
+      }
+    },
+    "Denominator": {
+      "oneOf": [{ "$ref": "#/$defs/KnownDenominator" }, { "$ref": "#/$defs/UnknownDenominator" }]
+    },
+    "OutOfScopeDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true,
+          "items": { "const": "POLICY_EXCLUDED" }
+        }
+      }
+    },
+    "UnsupportedDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {
+            "enum": [
+              "UNCLASSIFIED_SOURCE", "UNSUPPORTED_ENTRY_KIND", "UNSUPPORTED_LANGUAGE",
+              "UNSUPPORTED_SOURCE_ENCODING", "UNSUPPORTED_SYNTAX_VERSION"
+            ]
+          }
+        }
+      }
+    },
+    "UnresolvedDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["TARGET_UNRESOLVED", "TARGET_EXTERNAL_TO_SNAPSHOT"] }
+        }
+      }
+    },
+    "ConflictDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true,
+          "items": { "const": "PROVIDER_CONFLICT" }
+        }
+      }
+    },
+    "ParseFailedDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true,
+          "items": { "const": "PARSE_ERROR" }
+        }
+      }
+    },
+    "ExecutionFailedDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["PROVIDER_UNAVAILABLE", "DERIVATION_ERROR"] }
+        }
+      }
+    },
+    "TruncatedDisposition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["item_ref", "reason_codes"],
+      "properties": {
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" },
+        "reason_codes": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["DEPTH_LIMIT", "SYMBOL_LIMIT", "FILE_LIMIT", "RELATION_LIMIT"] }
+        }
+      }
+    },
+    "StageFrontier": {
+      "type": "object", "additionalProperties": false,
+      "required": ["slice_id", "frontier_item"],
+      "properties": {
+        "slice_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "frontier_item": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SliceFrontierItem" }
+      }
+    },
+    "Stage": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "stage", "upstream_stage", "denominator", "eligible", "completed", "out_of_scope", "unsupported",
+        "unresolved", "conflicts", "parse_failed", "execution_failed", "truncated", "frontier",
+        "coverage_status", "reason_codes"
+      ],
+      "properties": {
+        "stage": {
+          "enum": [
+            "SNAPSHOT_INVENTORY", "POLICY_SCOPE", "LANGUAGE_SUPPORT", "PARSE", "FACT_DERIVATION",
+            "RELATION_DERIVATION", "SLICE_DERIVATION"
+          ]
+        },
+        "upstream_stage": {
+          "oneOf": [
+            {
+              "enum": [
+                "SNAPSHOT_INVENTORY", "POLICY_SCOPE", "LANGUAGE_SUPPORT", "PARSE", "FACT_DERIVATION",
+                "RELATION_DERIVATION"
+              ]
+            },
+            { "type": "null" }
+          ]
+        },
+        "denominator": { "$ref": "#/$defs/Denominator" },
+        "eligible": { "$ref": "#/$defs/ItemRefs" },
+        "completed": { "$ref": "#/$defs/ItemRefs" },
+        "out_of_scope": { "type": "array", "items": { "$ref": "#/$defs/OutOfScopeDisposition" } },
+        "unsupported": { "type": "array", "items": { "$ref": "#/$defs/UnsupportedDisposition" } },
+        "unresolved": { "type": "array", "items": { "$ref": "#/$defs/UnresolvedDisposition" } },
+        "conflicts": { "type": "array", "items": { "$ref": "#/$defs/ConflictDisposition" } },
+        "parse_failed": { "type": "array", "items": { "$ref": "#/$defs/ParseFailedDisposition" } },
+        "execution_failed": { "type": "array", "items": { "$ref": "#/$defs/ExecutionFailedDisposition" } },
+        "truncated": { "type": "array", "items": { "$ref": "#/$defs/TruncatedDisposition" } },
+        "frontier": { "type": "array", "items": { "$ref": "#/$defs/StageFrontier" } },
+        "coverage_status": { "$ref": "#/$defs/CoverageStatus" },
+        "reason_codes": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "#/$defs/CoverageReason" }
+        }
+      }
+    },
+    "ItemRefs": {
+      "type": "array", "uniqueItems": true,
+      "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" }
+    },
+    "SnapshotInventoryStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "SNAPSHOT_INVENTORY" }, "upstream_stage": { "type": "null" }, "frontier": { "maxItems": 0 } } }
+      ]
+    },
+    "PolicyScopeStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "POLICY_SCOPE" }, "upstream_stage": { "const": "SNAPSHOT_INVENTORY" }, "frontier": { "maxItems": 0 } } }
+      ]
+    },
+    "LanguageSupportStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "LANGUAGE_SUPPORT" }, "upstream_stage": { "const": "POLICY_SCOPE" }, "frontier": { "maxItems": 0 } } }
+      ]
+    },
+    "ParseStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "PARSE" }, "upstream_stage": { "const": "LANGUAGE_SUPPORT" }, "frontier": { "maxItems": 0 } } }
+      ]
+    },
+    "FactDerivationStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "FACT_DERIVATION" }, "upstream_stage": { "const": "PARSE" }, "frontier": { "maxItems": 0 } } }
+      ]
+    },
+    "RelationDerivationStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "RELATION_DERIVATION" }, "upstream_stage": { "const": "FACT_DERIVATION" }, "frontier": { "maxItems": 0 } } }
+      ]
+    },
+    "SliceDerivationStage": {
+      "allOf": [
+        { "$ref": "#/$defs/Stage" },
+        { "properties": { "stage": { "const": "SLICE_DERIVATION" }, "upstream_stage": { "const": "RELATION_DERIVATION" } } }
+      ]
+    }
+  }
+}

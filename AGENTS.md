@@ -312,6 +312,14 @@
   该资格只允许从新的 exact main 创建版本化 JSON Schema、纯数据兼容 corpus、规范字节/摘要向量与
   Schema/conformance tests；runtime importer、parser、relation/slice engine、CLI、Provider、标签和
   Release 继续禁止。
+- 后继 `docs/125-r1-schema-payload-freeze-candidate.md` 已从 exact
+  `main@4ef8b6434597b6557d6306100b91aebd9c1b3ecd` 创建十个固定 JSON Schema、纯数据 compatibility corpus、
+  canonical byte/digest vectors 与 Schema/conformance tests；`jsonschema==4.25.1` 只能作为测试 extra，
+  不得成为 Core base runtime dependency。当前状态为
+  `R1_SCHEMA_PAYLOAD_CANDIDATE / R1_SCHEMA_PAYLOAD_FREEZE_NOT_STARTED / R1_IMPLEMENTATION_NOT_STARTED`。
+  候选自身原始远端门、受保护主线合入、exact-main 门与匿名公开读回全部成立前，不得写 payload frozen，
+  不得创建 R1 runtime importer、parser、Fact/Relation/Slice/Coverage producer、CLI、Provider、标签或
+  Release。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约

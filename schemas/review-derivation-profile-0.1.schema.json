@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-derivation-profile-0.1.schema.json",
+  "title": "VeriTrail Review DerivationProfile 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "profile_id", "profile_version",
+    "language", "language_semantics", "accepted_source_encodings", "supported_entry_kinds",
+    "fact_kinds", "relation_kinds", "normalization_rules", "traversal_rules", "profile_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "DERIVATION_PROFILE" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "profile_id": { "const": "veritrail-python-source-3.10" },
+    "profile_version": { "const": "0.1" },
+    "language": { "const": "PYTHON" },
+    "language_semantics": { "const": "PYTHON_3_10" },
+    "accepted_source_encodings": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "prefixItems": [{ "const": "UTF-8" }, { "const": "UTF-8-SIG" }],
+      "items": false
+    },
+    "supported_entry_kinds": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "prefixItems": [{ "const": "REGULAR_BLOB" }, { "const": "EXECUTABLE_BLOB" }],
+      "items": false
+    },
+    "fact_kinds": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "prefixItems": [
+        { "const": "MODULE" }, { "const": "CLASS_DECLARATION" }, { "const": "FUNCTION_DECLARATION" },
+        { "const": "METHOD_DECLARATION" }, { "const": "IMPORT_DECLARATION" }
+      ],
+      "items": false
+    },
+    "relation_kinds": {
+      "type": "array", "minItems": 2, "maxItems": 2,
+      "prefixItems": [{ "const": "LEXICAL_CONTAINS" }, { "const": "IMPORT_TARGET_LITERAL" }],
+      "items": false
+    },
+    "normalization_rules": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "anchor", "identifier", "fact_projection", "import_projection"],
+      "properties": {
+        "path": { "const": "git-path-hex/1" },
+        "anchor": { "const": "raw-blob-half-open/1" },
+        "identifier": { "const": "python-3.10-nfkc/1" },
+        "fact_projection": { "const": "r1-python-facts/0.1" },
+        "import_projection": { "const": "r1-python-import-literal/0.1" }
+      }
+    },
+    "traversal_rules": {
+      "type": "object", "additionalProperties": false,
+      "required": ["algorithm", "budget", "tie_break", "cycle_identity"],
+      "properties": {
+        "algorithm": { "const": "breadth-first/1" },
+        "budget": { "const": "inclusive-atomic-edge/1" },
+        "tie_break": { "const": "r1-relation-rank/0.1" },
+        "cycle_identity": { "const": "fact-and-relation-digest/1" }
+      }
+    },
+    "profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  }
+}

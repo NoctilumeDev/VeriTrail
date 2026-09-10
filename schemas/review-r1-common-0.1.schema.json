@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-r1-common-0.1.schema.json",
+  "title": "VeriTrail Review R1 Common Types 0.1",
+  "$defs": {
+    "SchemaVersion": { "const": "0.1" },
+    "CanonicalizationProfile": { "const": "veritrail-json-c14n/1" },
+    "Sha256Hex": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "SemanticDigest": { "$ref": "#/$defs/Sha256Hex" },
+    "NonEmptyText": { "type": "string", "minLength": 1 },
+    "NonNegativeInteger": { "type": "integer", "minimum": 0 },
+    "PositiveInteger": { "type": "integer", "minimum": 1 },
+    "UtcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z$"
+    },
+    "PythonIdentifier": { "type": "string", "minLength": 1, "pattern": "^(?!\\*$).+$" },
+    "Seal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "digest"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "digest": { "$ref": "#/$defs/Sha256Hex" }
+      }
+    },
+    "GitPathRef": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path_kind"],
+          "properties": { "path_kind": { "const": "REPOSITORY_ROOT" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path_kind", "git_path_hex"],
+          "properties": {
+            "path_kind": { "const": "GIT_PATH" },
+            "git_path_hex": {
+              "type": "string",
+              "pattern": "^(?:[0-9a-f]{2})+$"
+            }
+          }
+        }
+      ]
+    },
+    "GitOid": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "hex"],
+          "properties": {
+            "algorithm": { "const": "SHA1" },
+            "hex": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "hex"],
+          "properties": {
+            "algorithm": { "const": "SHA256" },
+            "hex": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          }
+        }
+      ]
+    },
+    "SourceAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["git_path", "start_byte", "end_byte"],
+      "properties": {
+        "git_path": { "$ref": "#/$defs/GitPathOnly" },
+        "start_byte": { "$ref": "#/$defs/NonNegativeInteger" },
+        "end_byte": { "$ref": "#/$defs/NonNegativeInteger" }
+      }
+    },
+    "GitPathOnly": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path_kind", "git_path_hex"],
+      "properties": {
+        "path_kind": { "const": "GIT_PATH" },
+        "git_path_hex": { "type": "string", "pattern": "^(?:[0-9a-f]{2})+$" }
+      }
+    },
+    "FactKind": {
+      "enum": [
+        "MODULE",
+        "CLASS_DECLARATION",
+        "FUNCTION_DECLARATION",
+        "METHOD_DECLARATION",
+        "IMPORT_DECLARATION"
+      ]
+    },
+    "RelationKind": { "enum": ["LEXICAL_CONTAINS", "IMPORT_TARGET_LITERAL"] },
+    "AllowedRelation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relation_kind", "direction"],
+      "properties": {
+        "relation_kind": { "$ref": "#/$defs/RelationKind" },
+        "direction": { "enum": ["OUTBOUND", "INBOUND", "BOTH"] }
+      }
+    },
+    "CoverageItemRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_kind", "item_id"],
+      "properties": {
+        "item_kind": {
+          "enum": ["INVENTORY_ENTRY", "PARSE_UNIT", "FACT", "RELATION", "REVIEW_SLICE"]
+        },
+        "item_id": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "item_kind": { "enum": ["INVENTORY_ENTRY", "PARSE_UNIT"] } } },
+          "then": { "properties": { "item_id": { "pattern": "^(?:[0-9a-f]{2})+$" } } }
+        },
+        {
+          "if": { "properties": { "item_kind": { "enum": ["FACT", "RELATION", "REVIEW_SLICE"] } } },
+          "then": { "properties": { "item_id": { "$ref": "#/$defs/SemanticDigest" } } }
+        }
+      ]
+    },
+    "SliceFrontierItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from_fact_id",
+        "relation_id",
+        "direction",
+        "candidate_fact_id",
+        "candidate_depth",
+        "reason_codes"
+      ],
+      "properties": {
+        "from_fact_id": { "$ref": "#/$defs/SemanticDigest" },
+        "relation_id": { "$ref": "#/$defs/SemanticDigest" },
+        "direction": { "enum": ["OUTBOUND", "INBOUND"] },
+        "candidate_fact_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/SemanticDigest" },
+            { "type": "null" }
+          ]
+        },
+        "candidate_depth": { "$ref": "#/$defs/NonNegativeInteger" },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["DEPTH_LIMIT", "SYMBOL_LIMIT", "FILE_LIMIT", "RELATION_LIMIT"] }
+        }
+      }
+    }
+  }
+}

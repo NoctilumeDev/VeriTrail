@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-policy-0.1.schema.json",
+  "title": "VeriTrail ReviewPolicy 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "policy_id", "version",
+    "source_snapshot_digest", "derivation_profile_digest", "scope_decisions", "provider_requirements",
+    "python_module_mapping", "slice_policy", "execution_budget", "governance", "analysis_scope_digest",
+    "slice_policy_digest", "policy_digest", "seal"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "REVIEW_POLICY" },
+    "schema_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SchemaVersion" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "policy_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+    "version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "scope_decisions": { "type": "array", "items": { "$ref": "#/$defs/ScopeDecision" } },
+    "provider_requirements": { "type": "array", "items": { "$ref": "#/$defs/ProviderRequirement" } },
+    "python_module_mapping": { "$ref": "#/$defs/PythonModuleMapping" },
+    "slice_policy": { "$ref": "#/$defs/SlicePolicy" },
+    "execution_budget": { "$ref": "#/$defs/ExecutionBudget" },
+    "governance": { "$ref": "#/$defs/Governance" },
+    "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "slice_policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "seal": { "$ref": "review-r1-common-0.1.schema.json#/$defs/Seal" }
+  },
+  "$defs": {
+    "ScopeDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["git_path", "disposition", "source_class", "reason_code"],
+      "properties": {
+        "git_path": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitPathOnly" },
+        "disposition": { "enum": ["IN_SCOPE", "OUT_OF_SCOPE"] },
+        "source_class": { "enum": ["FIRST_PARTY", "GENERATED", "VENDORED", "UNCLASSIFIED"] },
+        "reason_code": { "enum": ["POLICY_INCLUDED", "POLICY_EXCLUDED"] }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "disposition": { "const": "IN_SCOPE" },
+            "reason_code": { "const": "POLICY_INCLUDED" }
+          }
+        },
+        {
+          "properties": {
+            "disposition": { "const": "OUT_OF_SCOPE" },
+            "reason_code": { "const": "POLICY_EXCLUDED" }
+          }
+        }
+      ]
+    },
+    "ProviderRequirement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["capability_id", "required", "composition_mode"],
+      "properties": {
+        "capability_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "required": { "type": "boolean" },
+        "composition_mode": { "const": "CUMULATIVE" }
+      }
+    },
+    "PythonModuleMapping": {
+      "type": "object", "additionalProperties": false,
+      "required": ["module_root", "package_prefix"],
+      "properties": {
+        "module_root": { "$ref": "review-r1-common-0.1.schema.json#/$defs/GitPathRef" },
+        "package_prefix": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PythonIdentifier" }
+        }
+      }
+    },
+    "SlicePolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["anchor_fact_kinds", "allowed_relations", "max_depth", "max_symbols", "max_files", "max_relations"],
+      "properties": {
+        "anchor_fact_kinds": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/FactKind" }
+        },
+        "allowed_relations": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/AllowedRelation" }
+        },
+        "max_depth": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" },
+        "max_symbols": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+        "max_files": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+        "max_relations": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonNegativeInteger" }
+      }
+    },
+    "ExecutionBudget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_clock_ms", "memory_bytes", "artifact_bytes"],
+      "properties": {
+        "wall_clock_ms": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+        "memory_bytes": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" },
+        "artifact_bytes": { "$ref": "review-r1-common-0.1.schema.json#/$defs/PositiveInteger" }
+      }
+    },
+    "Governance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_owner_ref", "drafter_ref", "seal_authority_ref", "seal_decision"],
+      "properties": {
+        "claim_owner_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "drafter_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "seal_authority_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "seal_decision": { "const": "CONFIRMED" }
+      }
+    }
+  }
+}

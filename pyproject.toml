@@ -23,6 +23,7 @@ dependencies = []
 [project.optional-dependencies]
 browser = ["playwright==1.62.0"]
 command-windows = ["pywin32==312; sys_platform == 'win32'"]
+schema-test = ["jsonschema==4.25.1"]
 
 [project.scripts]
 veritrail = "veritrail.cli:main"
