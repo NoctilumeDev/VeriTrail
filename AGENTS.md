@@ -345,6 +345,17 @@
   `R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_FROZEN / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_ALLOWED /
   R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`。授权仅覆盖 SourceSnapshot 最小实现；Fact、Relation、
   Slice、Coverage、完整 Derivation Manifest、CLI、Provider、标签与 Release 继续禁止。
+- SourceSnapshot 最小实现从 exact `main@24c41c0ac9221ba4d8ae642c08ca5cdc08587b20` 独立施工。
+  PR #109 的第一次 head `0f7ba6d84e09187f918f3c855c7c43e47b0415d4` 在 Python 3.10/3.13 的 exact
+  Reference Lab 同时因 Actions shallow checkout 缺少冻结 commit 而 fail closed；该 run 没有 rerun。
+  独立提交 `c4dff3a7d0a6b5b58160da2b3d73151654161a2f` 只让 Python CI checkout 物化完整本地
+  object history，不允许 SourceSnapshot 联网或 lazy fetch。修正 head 原始 11/11 门禁通过后，PR #109
+  以 merge commit `4f5c41a9f163056ed4c2d2cfd686d321ecba5605` 合入；该 exact main 的 Public CI
+  11/11、Browser Smoke 1/1 与 Reference Lab 双版本读回均成立。当前只能写
+  `R1_SOURCE_SNAPSHOT_IMPLEMENTED / FREEZE_CANDIDATE /
+  R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。冻结候选见
+  `docs/129-r1-source-snapshot-implementation-freeze-candidate.md`；其自身门禁、合入、公开读回与后继独立
+  状态发布完成前，不得写 `R1_SOURCE_SNAPSHOT_FROZEN`，也不得启动后继 R1 对象。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
