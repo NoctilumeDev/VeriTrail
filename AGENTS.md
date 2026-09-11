@@ -351,11 +351,19 @@
   独立提交 `c4dff3a7d0a6b5b58160da2b3d73151654161a2f` 只让 Python CI checkout 物化完整本地
   object history，不允许 SourceSnapshot 联网或 lazy fetch。修正 head 原始 11/11 门禁通过后，PR #109
   以 merge commit `4f5c41a9f163056ed4c2d2cfd686d321ecba5605` 合入；该 exact main 的 Public CI
-  11/11、Browser Smoke 1/1 与 Reference Lab 双版本读回均成立。当前只能写
+  11/11、Browser Smoke 1/1 与 Reference Lab 双版本读回均成立。在冻结候选发布前只能写
   `R1_SOURCE_SNAPSHOT_IMPLEMENTED / FREEZE_CANDIDATE /
   R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。冻结候选见
   `docs/129-r1-source-snapshot-implementation-freeze-candidate.md`；其自身门禁、合入、公开读回与后继独立
   状态发布完成前，不得写 `R1_SOURCE_SNAPSHOT_FROZEN`，也不得启动后继 R1 对象。
+- docs-only PR #110 将 SourceSnapshot 实现、二十格合同映射与失败链记录为冻结候选；其 head
+  `e406884a7ead6dcb3498f48af26783e6519f7c32` 的原始 Public CI attempt 1 为 11/11，随后以
+  `main@ee249d35e1000d3f15f0a0b4e1ef9eb66a425b32` 合入。该 exact main 的 Public CI 11/11、
+  Browser Smoke 1/1，以及 README/文档 129 的 fresh anonymous P2 Collector 三样本与 marker 读回均
+  成立。最终状态发布见 `docs/130-r1-source-snapshot-freeze-publication.md`；它自身完成原始门禁、受保护
+  主线合入、新 exact-main 门禁与匿名读回后，状态为 `R1_SOURCE_SNAPSHOT_FROZEN /
+  R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结不授权直接施工后继对象；下一步
+  只能从新 exact main 审计并冻结下一个最小合同闭环。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
