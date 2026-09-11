@@ -611,6 +611,14 @@ R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`，证据边界见
 [文档 129](129-r1-source-snapshot-implementation-freeze-candidate.md)。该文档自己的受保护主线闭环与后继
 独立冻结发布成立前，不得写 `R1_SOURCE_SNAPSHOT_FROZEN`。
 
+冻结候选经 docs-only PR #110 的原始 Public CI attempt 1 取得 11/11，并以
+`main@ee249d35e1000d3f15f0a0b4e1ef9eb66a425b32` 合入。新 exact main 的 Public CI 11/11、Browser
+Smoke 1/1，以及 README 与文档 129 的 fresh anonymous P2 Collector exact-SHA 读回均成立。
+[文档 130](130-r1-source-snapshot-freeze-publication.md)独立发布这些事实；其自身最后门全部成立后，状态为
+`R1_SOURCE_SNAPSHOT_FROZEN / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。
+冻结只覆盖单一 `source-snapshot.json` 最小运行切片；后继 Fact、Relation、Slice、Coverage、conflict /
+UNKNOWN 传播与完整 Derivation Manifest 仍须各自先完成合同闭环。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
