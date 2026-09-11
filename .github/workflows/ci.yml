@@ -29,6 +29,11 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # The frozen SourceSnapshot Reference Lab is an older exact commit.
+          # Product acquisition remains local-only; CI must materialize that
+          # object before the collector runs rather than permit lazy fetching.
+          fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -87,6 +92,12 @@ jobs:
 
       - name: Run GitHub Evidence plugin contract tests with assertions disabled
         run: python -O -m unittest discover -s plugins/github-evidence/tests -v
+
+      - name: Run Review Attention SourceSnapshot contract tests
+        run: python -m unittest discover -s plugins/review-attention/tests -v
+
+      - name: Run Review Attention SourceSnapshot contract tests with assertions disabled
+        run: python -O -m unittest discover -s plugins/review-attention/tests -v
 
       - name: Run Starter and Authoring Skill 0.2.0 on their declared Core 0.12.2 lane
         shell: pwsh
