@@ -4,8 +4,8 @@
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SOURCE_SNAPSHOT_RUNTIME_CONTRACT_FROZEN / R1_SOURCE_SNAPSHOT_IMPLEMENTATION_ALLOWED /
-  R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`；
+  R1_SOURCE_SNAPSHOT_IMPLEMENTED / FREEZE_CANDIDATE /
+  R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
 - 本次状态发布起点：`main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`；
@@ -568,8 +568,8 @@ R1 Contract                    FROZEN
 R1 Schema Contract             FROZEN
 R1 Schema Payload              FROZEN
 R1 SourceSnapshot contract     FROZEN
-R1 SourceSnapshot entry        ALLOWED
-R1 SourceSnapshot runtime      NOT STARTED
+R1 SourceSnapshot runtime      IMPLEMENTED / FREEZE CANDIDATE
+R1 downstream derivation       NOT STARTED
 Q0 Blueprint                   FROZEN
 Q implementation               NOT STARTED
 
@@ -584,6 +584,7 @@ Q0 的 docs-only 蓝图已经闭环，冻结事实见
 的冻结事实由[文档 126](126-r1-schema-payload-freeze-publication.md)发布；当前只解除独立运行实现合同或
 首个最小切片的入口。[文档 127](127-r1-source-snapshot-runtime-contract.md)冻结“单 Artifact != Derivation
 closure”和“acquisition budget 只控制产出资格”的接缝；[文档 128](128-r1-source-snapshot-runtime-contract-freeze-publication.md)
-完成最后门后只解除 SourceSnapshot 最小实现入口。实际 importer、parser、Facts、Relations、Slices、
-Coverage、CLI 与 Provider 均未开始。本账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”
-就替项目决定必须走哪条路。
+完成最后门后只解除 SourceSnapshot 最小实现入口。[文档 129](129-r1-source-snapshot-implementation-freeze-candidate.md)
+记录该最小 runtime 的实现、失败链与 exact-main 证据；它尚未取得冻结资格。parser、Facts、Relations、
+Slices、Coverage、完整 Derivation Manifest、CLI 与 Provider 均未开始。本账只负责让未来方向不再遗忘、
+不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。

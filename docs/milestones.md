@@ -599,6 +599,18 @@ Schema payload。当前状态为
 R1_SOURCE_SNAPSHOT_IMPLEMENTATION_NOT_STARTED`。该授权只覆盖 SourceSnapshot 最小实现，不向
 Fact/Relation/Slice/Coverage 或完整 Derivation Manifest 传播。
 
+SourceSnapshot 最小实现从 exact `main@24c41c0ac9221ba4d8ae642c08ca5cdc08587b20` 另开单一意图分支。
+PR #109 首次 head 的 Python 3.10/3.13 门均在 exact Reference Lab fail closed：Actions shallow checkout
+没有冻结的 `9ab64121350b69ce81e6be79961ad426026bbc39` object，而实现按合同拒绝网络/lazy fetch。该失败没有
+rerun；后继提交只将 Python CI checkout 改为完整本地 history，不修改产品、预算、摘要或验收期望。
+修正 head 原始 Public CI 11/11 后，PR #109 以
+`main@4f5c41a9f163056ed4c2d2cfd686d321ecba5605` 合入；新 exact main 的 Public CI 11/11、Browser Smoke
+1/1 与独立 Reference Lab 读回均成立。当前状态为
+`R1_SOURCE_SNAPSHOT_IMPLEMENTED / FREEZE_CANDIDATE /
+R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`，证据边界见
+[文档 129](129-r1-source-snapshot-implementation-freeze-candidate.md)。该文档自己的受保护主线闭环与后继
+独立冻结发布成立前，不得写 `R1_SOURCE_SNAPSHOT_FROZEN`。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
