@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-derivation-evidence-0.1.1.schema.json",
+  "title": "VeriTrail Review DerivationEvidence 0.1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind", "schema_version", "canonicalization_profile", "derivation_id", "request_provenance",
+    "source_snapshot_digest", "policy_digest", "analysis_scope_digest", "slice_policy_digest",
+    "derivation_profile_digest", "provider_runs", "overall_execution_status", "started_at", "finished_at",
+    "diagnostics", "derivation_evidence_digest"
+  ],
+  "properties": {
+    "artifact_kind": { "const": "DERIVATION_EVIDENCE" },
+    "schema_version": { "const": "0.1.1" },
+    "canonicalization_profile": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile" },
+    "derivation_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+    "request_provenance": { "$ref": "#/$defs/RequestProvenance" },
+    "source_snapshot_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "analysis_scope_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "slice_policy_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "derivation_profile_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+    "provider_runs": { "type": "array", "items": { "$ref": "#/$defs/ProviderRun" } },
+    "overall_execution_status": { "$ref": "#/$defs/ExecutionStatus" },
+    "started_at": { "$ref": "review-r1-common-0.1.schema.json#/$defs/UtcTimestamp" },
+    "finished_at": { "$ref": "review-r1-common-0.1.schema.json#/$defs/UtcTimestamp" },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/Diagnostic" } },
+    "derivation_evidence_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "overall_execution_status": { "enum": ["INTERRUPTED", "FAILED", "UNAVAILABLE"] }
+        },
+        "required": ["overall_execution_status"]
+      },
+      "then": {
+        "properties": {
+          "provider_runs": {
+            "items": {
+              "properties": {
+                "reported_fact_ids": { "maxItems": 0 },
+                "reported_relation_ids": { "maxItems": 0 }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "diagnostics": {
+            "contains": {
+              "properties": {
+                "diagnostic_code": {
+                  "enum": ["EXECUTION_MEMORY_BUDGET", "EXECUTION_ARTIFACT_BUDGET"]
+                }
+              },
+              "required": ["diagnostic_code"]
+            }
+          }
+        },
+        "required": ["diagnostics"]
+      },
+      "then": {
+        "properties": {
+          "overall_execution_status": { "const": "INTERRUPTED" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "ExecutionStatus": { "enum": ["COMPLETED", "INTERRUPTED", "FAILED", "UNAVAILABLE"] },
+    "RequestProvenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requested_repository_id", "requested_ref", "resolver_id", "resolver_version", "resolved_at"],
+      "properties": {
+        "requested_repository_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "requested_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "resolver_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "resolver_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "resolved_at": { "$ref": "review-r1-common-0.1.schema.json#/$defs/UtcTimestamp" }
+      }
+    },
+    "ArtifactSubjectRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref_kind", "artifact_role", "semantic_digest"],
+      "properties": {
+        "ref_kind": { "const": "ARTIFACT" },
+        "artifact_role": { "enum": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE"] },
+        "semantic_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+      }
+    },
+    "ProviderRunSubjectRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref_kind", "provider_run_id"],
+      "properties": {
+        "ref_kind": { "const": "PROVIDER_RUN" },
+        "provider_run_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+      }
+    },
+    "CoverageItemSubjectRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref_kind", "item_ref"],
+      "properties": {
+        "ref_kind": { "const": "COVERAGE_ITEM" },
+        "item_ref": { "$ref": "review-r1-common-0.1.schema.json#/$defs/CoverageItemRef" }
+      }
+    },
+    "SubjectRef": {
+      "oneOf": [
+        { "$ref": "#/$defs/ArtifactSubjectRef" },
+        { "$ref": "#/$defs/ProviderRunSubjectRef" },
+        { "$ref": "#/$defs/CoverageItemSubjectRef" }
+      ]
+    },
+    "Diagnostic": {
+      "type": "object", "additionalProperties": false,
+      "required": ["diagnostic_code", "subject_ref"],
+      "properties": {
+        "diagnostic_code": {
+          "enum": [
+            "SOURCE_OBJECT_MISSING", "SOURCE_CONTENT_MISMATCH", "PROVIDER_UNAVAILABLE", "PROVIDER_FAILED",
+            "NONCONFORMANT_PROVIDER_OUTPUT", "EXECUTION_DEADLINE", "EXECUTION_CANCELLED",
+            "INTERNAL_DERIVATION_ERROR", "EXECUTION_MEMORY_BUDGET", "EXECUTION_ARTIFACT_BUDGET"
+          ]
+        },
+        "subject_ref": {
+          "oneOf": [
+            { "$ref": "#/$defs/SubjectRef" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "diagnostic_code": { "const": "EXECUTION_MEMORY_BUDGET" } },
+            "required": ["diagnostic_code"]
+          },
+          "then": {
+            "properties": { "subject_ref": { "$ref": "#/$defs/ProviderRunSubjectRef" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "diagnostic_code": { "const": "EXECUTION_ARTIFACT_BUDGET" } },
+            "required": ["diagnostic_code"]
+          },
+          "then": {
+            "properties": { "subject_ref": { "type": "null" } }
+          }
+        }
+      ]
+    },
+    "ProviderRunDiagnostic": {
+      "allOf": [
+        { "$ref": "#/$defs/Diagnostic" },
+        {
+          "not": {
+            "properties": { "diagnostic_code": { "const": "EXECUTION_ARTIFACT_BUDGET" } },
+            "required": ["diagnostic_code"]
+          }
+        }
+      ]
+    },
+    "ProviderRun": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "provider_run_id", "capability_id", "provider_id", "provider_version", "parser_id", "parser_version",
+        "runtime_id", "runtime_version", "operands_digest", "started_at", "finished_at", "execution_status",
+        "reported_fact_ids", "reported_relation_ids", "diagnostics"
+      ],
+      "properties": {
+        "provider_run_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "capability_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "provider_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "provider_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "parser_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "parser_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "runtime_id": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "runtime_version": { "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText" },
+        "operands_digest": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" },
+        "started_at": { "$ref": "review-r1-common-0.1.schema.json#/$defs/UtcTimestamp" },
+        "finished_at": { "$ref": "review-r1-common-0.1.schema.json#/$defs/UtcTimestamp" },
+        "execution_status": { "$ref": "#/$defs/ExecutionStatus" },
+        "reported_fact_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        },
+        "reported_relation_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": { "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest" }
+        },
+        "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/ProviderRunDiagnostic" } }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "execution_status": { "enum": ["INTERRUPTED", "FAILED", "UNAVAILABLE"] }
+            },
+            "required": ["execution_status"]
+          },
+          "then": {
+            "properties": {
+              "reported_fact_ids": { "maxItems": 0 },
+              "reported_relation_ids": { "maxItems": 0 }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "diagnostics": {
+                "contains": {
+                  "properties": { "diagnostic_code": { "const": "EXECUTION_MEMORY_BUDGET" } },
+                  "required": ["diagnostic_code"]
+                }
+              }
+            },
+            "required": ["diagnostics"]
+          },
+          "then": {
+            "properties": { "execution_status": { "const": "INTERRUPTED" } }
+          }
+        }
+      ]
+    }
+  }
+}
