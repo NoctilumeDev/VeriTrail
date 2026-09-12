@@ -311,6 +311,9 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [R1 Derivation Attempt 与 Fact Provenance 前置审计](136-r1-derivation-attempt-and-fact-provenance-audit.md)
 - [R1 Derivation Attempt 与 Fact Provenance 最小运行合同 0.1](137-r1-derivation-attempt-and-fact-provenance-contract.md)
 - [R1 Derivation Attempt 与 Fact Provenance 合同冻结发布](138-r1-derivation-provenance-contract-freeze-publication.md)
+- [R1 DerivationEvidence Schema 修正前置审计](139-r1-derivation-evidence-schema-correction-audit.md)
+- [R1 DerivationEvidence Schema 0.1.1 修正合同](140-r1-derivation-evidence-schema-correction-contract.md)
+- [R1 DerivationEvidence Schema 0.1.1 修正合同冻结发布](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -693,11 +696,16 @@ Schema/corpus correction；它不授权 budget primitive、Provider、parser、F
 non-COMPLETED run/overall 的悬空 reported IDs，并拒绝 memory/artifact budget typed diagnostic；同时确认
 文档 126 已冻结的 `0.1` Schema path、`$id` 与 public bytes 不能原位改写。[文档 140](140-r1-derivation-evidence-schema-correction-contract.md)
 因此只建立自描述的 `DerivationEvidence 0.1.1` 补丁合同：旧 Schema/corpus/vector 原字节保留，其他 R1
-Artifact、Manifest 与 digest projection 不升级。当前状态只能写
-`R1_DERIVATION_EVIDENCE_SCHEMA_PRECONTRACT_AUDITED /
-R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_CANDIDATE /
-R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED`；合同冻结以前不得物化 correction payload，之后仍须
-独立完成 budget primitive feasibility 与 runtime 授权。
+Artifact、Manifest 与 digest projection 不升级。候选经 PR #119 原始 Public CI attempt 1 的 11/11、受保护
+主线合入、`main@2973926358c686d86233dbc2054a2e1f064f13ad` 的 Public CI 11/11 与 Browser Smoke 1/1，
+以及 README、文档 139/140 和 milestones 的已安装产品 fresh anonymous exact-SHA 读回后，由
+[文档 141](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)独立发布冻结事实。当前状态为
+`R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_FROZEN /
+R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_IMPLEMENTATION_ALLOWED /
+R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许物化合同限定的 correction payload；其
+独立冻结以后仍须先完成 budget primitive feasibility 与 runtime 授权。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
