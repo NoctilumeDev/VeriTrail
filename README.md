@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_INPUT_FROZEN / R1_DERIVATION_PROVENANCE_CONTRACT_CANDIDATE / R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_REQUIRED / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_INPUT_FROZEN / R1_DERIVATION_PROVENANCE_CONTRACT_FROZEN / R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_REQUIRED / R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -295,7 +295,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 9. [Review Attention R1 Derivation Input Binding 最小运行切片冻结发布](docs/135-r1-derivation-input-freeze-publication.md)
 10. [Review Attention R1 Derivation Attempt 与 Fact Provenance 前置审计](docs/136-r1-derivation-attempt-and-fact-provenance-audit.md)
 11. [Review Attention R1 Derivation Attempt 与 Fact Provenance 合同候选](docs/137-r1-derivation-attempt-and-fact-provenance-contract.md)
-12. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+12. [Review Attention R1 Derivation Attempt 与 Fact Provenance 合同冻结发布](docs/138-r1-derivation-provenance-contract-freeze-publication.md)
+13. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
