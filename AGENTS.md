@@ -394,6 +394,16 @@
   主线合入、新 exact-main 门禁与匿名读回后，状态为 `R1_DERIVATION_INPUT_FROZEN /
   R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只覆盖 Input Binding runtime；下一步
   仍只能从新的 exact main 审计并冻结下一个最小合同闭环。
+- 后继 `docs/136-r1-derivation-attempt-and-fact-provenance-audit.md` 从 exact
+  `main@7e0950ba2544476049e6defe1545f786971a89bd` 审计 attempt、Provider applicability、budget 与 Fact
+  provenance 接缝；`docs/137-r1-derivation-attempt-and-fact-provenance-contract.md` 只建立 docs-only 合同
+  候选。当前状态为 `R1_DERIVATION_PROVENANCE_CONTRACT_CANDIDATE /
+  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_REQUIRED /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选若独立冻结，最多只允许后继先修正 Evidence typed budget
+  diagnostics 与非成功 reported IDs；Schema/corpus 修正独立冻结、budget primitive feasibility 与明确
+  runtime 授权成立前，不得创建真实 parser、Provider runtime、FactSet/DerivationEvidence Artifact、
+  Relation、Slice、Coverage、Manifest、CLI 或 Workbench。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约

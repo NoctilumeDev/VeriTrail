@@ -308,6 +308,8 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [R1 Derivation Input Binding 合同冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)
 - [R1 Derivation Input Binding 实现冻结候选](134-r1-derivation-input-implementation-freeze-candidate.md)
 - [R1 Derivation Input Binding 最小运行切片冻结发布](135-r1-derivation-input-freeze-publication.md)
+- [R1 Derivation Attempt 与 Fact Provenance 前置审计](136-r1-derivation-attempt-and-fact-provenance-audit.md)
+- [R1 Derivation Attempt 与 Fact Provenance 最小运行合同 0.1](137-r1-derivation-attempt-and-fact-provenance-contract.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -664,6 +666,15 @@ Smoke 1/1，以及 README 与文档 134 的 fresh anonymous P2 Collector exact-S
 `R1_DERIVATION_INPUT_FROZEN / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。冻结只覆盖
 不发布 Artifact 的 Input Binding runtime；parser、Fact、Relation、Slice、Coverage、conflict / UNKNOWN
 传播与完整 Derivation Manifest 仍须各自先完成合同闭环。
+
+后继审计从 exact `main@7e0950ba2544476049e6defe1545f786971a89bd` 开始，不写 parser 或运行代码。
+[文档 136](136-r1-derivation-attempt-and-fact-provenance-audit.md)确认必填 request provenance 没有连续来源、
+capability-level Policy 尚未闭合 Provider applicability、memory/artifact budget 缺少 typed terminal code，
+且 ProviderRun 与 Fact 目前只有单向引用。[文档 137](137-r1-derivation-attempt-and-fact-provenance-contract.md)
+因此只建立 docs-only `R1_DERIVATION_PROVENANCE_CONTRACT_CANDIDATE`：exact-only provenance、显式单
+`python-ast` binding、共享绝对预算、application-owned Fact identity 与双向 provenance。候选明确要求先
+完成 Evidence Schema/corpus 修正和真实 budget primitive feasibility；在它们各自独立冻结以前，runtime、
+真实 parser、Relation、Slice、Coverage 与完整 Derivation Manifest 继续禁止。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
