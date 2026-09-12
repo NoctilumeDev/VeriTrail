@@ -688,6 +688,17 @@ R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
 R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许后继从新 exact main 建立独立
 Schema/corpus correction；它不授权 budget primitive、Provider、parser、Fact runtime 或任何下游对象。
 
+后继从 exact `main@f69f2818d06834da0d9e8e95288f6f72aada6beb` 先做 docs-only Schema correction 审计。
+[文档 139](139-r1-derivation-evidence-schema-correction-audit.md)以单变量变体证明旧 Schema 会接受
+non-COMPLETED run/overall 的悬空 reported IDs，并拒绝 memory/artifact budget typed diagnostic；同时确认
+文档 126 已冻结的 `0.1` Schema path、`$id` 与 public bytes 不能原位改写。[文档 140](140-r1-derivation-evidence-schema-correction-contract.md)
+因此只建立自描述的 `DerivationEvidence 0.1.1` 补丁合同：旧 Schema/corpus/vector 原字节保留，其他 R1
+Artifact、Manifest 与 digest projection 不升级。当前状态只能写
+`R1_DERIVATION_EVIDENCE_SCHEMA_PRECONTRACT_AUDITED /
+R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_CANDIDATE /
+R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED`；合同冻结以前不得物化 correction payload，之后仍须
+独立完成 budget primitive feasibility 与 runtime 授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

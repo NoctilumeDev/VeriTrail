@@ -408,6 +408,15 @@
   diagnostics 与非成功 reported IDs；Schema/corpus 修正独立冻结、budget primitive feasibility 与明确
   runtime 授权成立前，不得创建真实 parser、Provider runtime、FactSet/DerivationEvidence Artifact、
   Relation、Slice、Coverage、Manifest、CLI 或 Workbench。
+- 后继 `docs/139-r1-derivation-evidence-schema-correction-audit.md` 从 exact
+  `main@f69f2818d06834da0d9e8e95288f6f72aada6beb` 复现旧 Evidence Schema 会接受 non-COMPLETED
+  run/overall 携带 reported IDs，同时拒绝必要的 memory/artifact budget diagnostic。审计确认文档 126 已
+  逐字节冻结的 `review-derivation-evidence-0.1.schema.json` 不能在相同 path/`$id` 下原位改写；
+  `docs/140-r1-derivation-evidence-schema-correction-contract.md` 只建立自描述的 DerivationEvidence `0.1.1`
+  补丁合同，保留旧 Schema/corpus/vector 原字节，不升级其他 R1 Artifact、Manifest 或 digest projection。
+  当前只允许 docs-only 合同候选；其独立冻结发布完成以前不得创建 `0.1.1` Schema/corpus/test，完成以后也
+  仍须先证明 budget primitive feasibility 并取得明确 runtime 授权。request provenance 的 exact-only
+  约束继续属于首个 runtime conformance，不能借本修正永久收窄通用 alias-aware Schema。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
