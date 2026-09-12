@@ -13,6 +13,10 @@
 > `R1_DERIVATION` Manifest、acquisition safety budget 与 ReviewPolicy budget 的边界；不修改本文冻结的
 > Schema、规范字节或身份投影。
 >
+> 后继 provenance 校正：[文档 137](137-r1-derivation-attempt-and-fact-provenance-contract.md)将 exact-only
+> request provenance、Provider applicability、三类 budget terminal semantics 与双向 Fact provenance
+> 收窄为运行合同候选；它明确要求独立修正 Evidence Schema/corpus 后才可进入 runtime。
+>
 > 上游合同：[R1 确定性语义切片合同 0.1](113-r1-deterministic-semantic-slice-contract.md)
 >
 > 影响层级：`L2_CONTRACT + L0_DOCUMENTATION`；本文只冻结候选 Schema 词汇、规范字节、身份投影、
@@ -1300,7 +1304,10 @@ resolver_version
 resolved_at
 ```
 
-它记录 friendly coordinate 怎样被解析，不参加 SourceSnapshot content identity。
+它记录该次 derivation 真正请求的 coordinate 怎样被解析：只有确实执行 alias resolution 时才能保存
+friendly branch/tag；exact-only runtime 必须保存可由 Snapshot coordinate 复算的 exact OID request，不能
+反向猜测不存在的历史别名。它不参加 SourceSnapshot content identity。首个 runtime 的收窄规则见
+[文档 137](137-r1-derivation-attempt-and-fact-provenance-contract.md)。
 
 每个 Provider run 固定：
 
@@ -1398,8 +1405,9 @@ required Provider 执行或输出验证失败为 `FAILED`；否则任一 require
 其余为 `COMPLETED`。optional Provider 的失败仍保留 Evidence/Coverage，但不单独把整体改成
 `UNAVAILABLE`；一旦其已报告内容与其他适用来源冲突，冲突不能因它 optional 而被删除。
 
-`request_provenance` 可以保存最初 branch/tag alias 与解析时间，但后继所有语义 Artifact 只绑定 exact
-Snapshot。时间使用 UTC RFC 3339；它属于该次 Evidence identity，不进入 Fact/Relation/Profile identity。
+`request_provenance` 只有在本次请求确实经过 alias resolver 时才可以保存最初 branch/tag alias 与解析时间；
+exact-only 请求必须诚实保存 exact OID。后继所有语义 Artifact 只绑定 exact Snapshot。时间使用 UTC
+RFC 3339；它属于该次 Evidence identity，不进入 Fact/Relation/Profile identity。
 
 required source 的空输出是一个成功但为空的来源事实；required source 不可观察则
 `overall_execution_status` 不能冒充完整成功，Coverage 也必须保留 UNKNOWN。多个 Provider 报告同一
