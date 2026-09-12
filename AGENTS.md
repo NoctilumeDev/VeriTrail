@@ -425,6 +425,18 @@
   Schema/corpus/test；其独立冻结完成以后仍须先证明 budget primitive feasibility 并取得明确 runtime 授权。
   request provenance 的 exact-only 约束继续属于首个 runtime conformance，不能借本修正永久收窄通用
   alias-aware Schema。
+- DerivationEvidence `0.1.1` correction payload 随后从 exact
+  `main@19cb4ff4300e6c7aeb08aa315802abb29e183d60` 物化；PR #121 原始 Public CI 11/11 后合入
+  `main@99826ec1564e8447524c477ff9f271fa5d062ea6`，并完成 exact-main Public CI 11/11、Browser Smoke 1/1
+  与匿名公开字节读回。实现冻结候选见
+  `docs/142-r1-derivation-evidence-schema-correction-implementation-freeze-candidate.md`；其 PR #122 原始
+  Public CI 11/11 后合入 `main@a940259a4c286f64d39a92854397eea25c442e0f`，该 exact main 的 Public CI
+  11/11、Browser Smoke 1/1 与 README/文档 142/milestones 三次已安装产品匿名读回均成立。最终状态发布见
+  `docs/143-r1-derivation-evidence-schema-correction-freeze-publication.md`；它自身的门禁、合入与合入后读回
+  全部成立后，状态为 `R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_FROZEN /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。唯一下一步是独立 budget primitive feasibility；
+  它不是 runtime authorization，Provider/parser/Fact、Relation、Slice、Coverage 与完整 Derivation 仍禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
