@@ -730,6 +730,23 @@ R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
 R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许后继建立独立 budget primitive
 feasibility；Provider/parser、canonical Fact runtime 与下游对象仍须等待 feasibility 和后继明确授权。
 
+后继审计从 exact `main@3a1374c2e7c5861ab9746052dceb8f50a1544d3e` 开始，不写 Provider/parser/Fact
+或产品 runtime。[文档 144](144-r1-derivation-budget-primitive-precontract-audit.md)以当前 Windows 11、
+Python 3.10/3.13 与锁定 pywin32 环境攻击旧预算模型：真实 Job 探针在八次 memory case 中均完成 pre-start
+hard containment、positive memory-limit message、whole-Job termination 与 `ACTIVE_PROCESS_ZERO`，但 Win32
+公共合同明确普通 Job completion message 不保证投递，因此 configured hard ceiling 与 terminal attribution
+必须分离；deadline/cancellation tree probe 又证明绝对 deadline 是结果资格边界，物理 cleanup 必须使用一次
+创建、全阶段共享且不恢复语义工作的 release envelope；正常 phase 则只有在 result 与其所有
+execution resources 于 deadline 前一起闭合时才能成功。artifact 探针则证明 exact bytes producer-side
+reservation 可在超限文件写前停止并删除 staging。
+
+[文档 145](145-r1-derivation-budget-primitive-contract.md)据此建立 docs-only
+`R1_DERIVATION_BUDGET_PRIMITIVE_CONTRACT_CANDIDATE`：不改 `ReviewPolicy 0.1` 或
+`DerivationEvidence 0.1.1`，只冻结 positive-event warrant、single terminal-stop latch、absolute acceptance
+deadline、5 秒 cleanup-only release envelope 与 inclusive artifact reservation。当前没有 budget primitive
+runtime、conformance harness、Provider、parser、Fact、Relation、Slice、Coverage 或 Manifest；候选自己的
+远端门、主线合入、exact-main 门、匿名读回与后继独立冻结发布完成前，不得开始实现。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
