@@ -10,7 +10,18 @@ from veritrail_review.contracts import (
     build_source_snapshot_document,
     validate_source_snapshot_document,
 )
-from veritrail_review.errors import SourceSnapshotError, SourceSnapshotFailureCode
+from veritrail_review.derivation_input import bind_derivation_inputs
+from veritrail_review.derivation_input_contracts import (
+    DerivationInputRequest,
+    DerivationInputRuntime,
+    DerivationInputSet,
+)
+from veritrail_review.errors import (
+    DerivationInputError,
+    DerivationInputFailureCode,
+    SourceSnapshotError,
+    SourceSnapshotFailureCode,
+)
 from veritrail_review.source_snapshot import (
     SourceSnapshotPublication,
     SourceSnapshotRuntimeProvenance,
@@ -19,6 +30,11 @@ from veritrail_review.source_snapshot import (
 
 __all__ = [
     "DEFAULT_ACQUISITION_BUDGET",
+    "DerivationInputError",
+    "DerivationInputFailureCode",
+    "DerivationInputRequest",
+    "DerivationInputRuntime",
+    "DerivationInputSet",
     "OwnedSourceSnapshot",
     "SnapshotAcquisitionBudget",
     "SourceSnapshotError",
@@ -29,6 +45,7 @@ __all__ = [
     "SourceSnapshotPublication",
     "SourceSnapshotRuntimeProvenance",
     "build_source_snapshot_document",
+    "bind_derivation_inputs",
     "create_source_snapshot",
     "validate_source_snapshot_document",
 ]

@@ -93,10 +93,10 @@ jobs:
       - name: Run GitHub Evidence plugin contract tests with assertions disabled
         run: python -O -m unittest discover -s plugins/github-evidence/tests -v
 
-      - name: Run Review Attention SourceSnapshot contract tests
+      - name: Run Review Attention contract tests
         run: python -m unittest discover -s plugins/review-attention/tests -v
 
-      - name: Run Review Attention SourceSnapshot contract tests with assertions disabled
+      - name: Run Review Attention contract tests with assertions disabled
         run: python -O -m unittest discover -s plugins/review-attention/tests -v
 
       - name: Run Starter and Authoring Skill 0.2.0 on their declared Core 0.12.2 lane

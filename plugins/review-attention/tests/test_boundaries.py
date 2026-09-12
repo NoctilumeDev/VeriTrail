@@ -15,9 +15,12 @@ if str(SOURCE_ROOT) not in sys.path:
 
 import veritrail_review
 from veritrail_review import (
+    DerivationInputRequest,
+    DerivationInputRuntime,
     SourceSnapshotRequest,
     SourceSnapshotRuntime,
     create_source_snapshot,
+    bind_derivation_inputs,
 )
 
 
@@ -57,9 +60,34 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
 
     def test_top_level_api_does_not_publish_test_controls_or_release_identity(self) -> None:
         self.assertNotIn("tightened_budget_for_testing", veritrail_review.__all__)
+        self.assertNotIn(
+            "tightened_derivation_input_safety_profile_for_testing",
+            veritrail_review.__all__,
+        )
+        self.assertNotIn(
+            "DEFAULT_DERIVATION_INPUT_SAFETY_PROFILE",
+            veritrail_review.__all__,
+        )
         self.assertFalse(hasattr(veritrail_review, "__version__"))
 
-    def test_first_slice_has_no_cli_provider_or_derivation_manifest_module(self) -> None:
+    def test_derivation_input_request_cannot_select_outputs_or_execution_controls(self) -> None:
+        self.assertEqual(
+            {item.name for item in fields(DerivationInputRequest)},
+            {
+                "source_snapshot_path",
+                "review_policy_path",
+                "derivation_profile_path",
+                "repository_path",
+            },
+        )
+        self.assertEqual(
+            {item.name for item in fields(DerivationInputRuntime)},
+            {"git_executable"},
+        )
+        parameters = inspect.signature(bind_derivation_inputs).parameters
+        self.assertEqual(set(parameters), {"request", "runtime"})
+
+    def test_implemented_slices_have_no_cli_provider_or_derivation_products(self) -> None:
         module_names = {
             path.stem
             for path in (SOURCE_ROOT / "veritrail_review").glob("*.py")
@@ -72,6 +100,8 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
                 "git_objects",
                 "publisher",
                 "source_snapshot",
+                "derivation_input",
+                "derivation_input_contracts",
             }
             <= module_names
         )
