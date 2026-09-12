@@ -720,6 +720,16 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该候选自己的原�
 新 exact-main 门与匿名公开读回仍是最终冻结前置条件；budget primitive、Provider/parser、Fact runtime
 及全部下游实现继续禁止。
 
+候选随后经 PR #122 原始 Public CI attempt 1 的 11/11 合入
+`main@a940259a4c286f64d39a92854397eea25c442e0f`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+以及 README、文档 142、milestones 三项已安装产品 fresh anonymous exact-SHA 读回均成立，Core 三次
+均为 `PASS`。[文档 143](143-r1-derivation-evidence-schema-correction-freeze-publication.md)独立发布冻结事实；
+其自身最后门全部成立后，当前状态为
+`R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_FROZEN /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许后继建立独立 budget primitive
+feasibility；Provider/parser、canonical Fact runtime 与下游对象仍须等待 feasibility 和后继明确授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

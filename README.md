@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_INPUT_FROZEN / R1_DERIVATION_PROVENANCE_CONTRACT_FROZEN / R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_IMPLEMENTED / R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_FREEZE_CANDIDATE / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_INPUT_FROZEN / R1_DERIVATION_PROVENANCE_CONTRACT_FROZEN / R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_FROZEN / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -248,7 +248,7 @@ VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统�
 | [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
 | [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
 | Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
-| Review / R | 压缩人的代码审查注意力 | Input runtime 与 Derivation/Fact provenance 合同已冻结；Evidence Schema 0.1.1 修正已实现，正在完成独立冻结闭环 |
+| Review / R | 压缩人的代码审查注意力 | Input runtime、Derivation/Fact provenance 合同与 Evidence Schema 0.1.1 修正已冻结；下一步仅为 budget primitive feasibility |
 | Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
 
 这些关系是认知地图，不是当前集成声明。一个独立系统最多通过不可变 Artifact / Evidence adapter 接入
@@ -305,7 +305,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 14. [Review Attention R1 DerivationEvidence Schema 0.1.1 修正合同](docs/140-r1-derivation-evidence-schema-correction-contract.md)
 15. [Review Attention R1 DerivationEvidence Schema 0.1.1 修正合同冻结发布](docs/141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)
 16. [Review Attention R1 DerivationEvidence Schema 0.1.1 实现冻结候选](docs/142-r1-derivation-evidence-schema-correction-implementation-freeze-candidate.md)
-17. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+17. [Review Attention R1 DerivationEvidence Schema 0.1.1 实现冻结发布](docs/143-r1-derivation-evidence-schema-correction-freeze-publication.md)
+18. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
