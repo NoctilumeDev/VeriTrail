@@ -376,6 +376,16 @@
   R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。
   授权仅覆盖 input binder；parser、Fact、Evidence、Relation、Slice、Coverage 或完整 Derivation runtime
   继续禁止。
+- Derivation Input runtime 从 exact `main@84512755b6475cfa40ca352f43e4cb7be953a761` 独立施工。
+  PR #114 head `5447a0c0947c44cbbd80af6e90f74438b9950d1f` 的原始 Public CI 11/11 后，以
+  `main@46bb81625b9f2dcb4fa1284bd75344e89ed4be5f` 合入；该 exact main 的 Public CI 11/11 与
+  Browser Smoke 1/1 均为 attempt 1 success。实现只建立四路径有界读取、三 Artifact conformance、
+  exact Git byte reacquisition 与 copy-owned `DerivationInputSet`，不发布 Artifact。当前状态为
+  `R1_DERIVATION_INPUT_IMPLEMENTED / FREEZE_CANDIDATE /
+  R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`，候选见
+  `docs/134-r1-derivation-input-implementation-freeze-candidate.md`。候选自己的远端门、合入、exact-main 门、
+  匿名读回与后继独立最终状态发布完成前，不得写 `R1_DERIVATION_INPUT_FROZEN`，也不得启动 parser、Fact、
+  Relation、Slice、Coverage、conflict/UNKNOWN 传播或完整 Derivation runtime。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
