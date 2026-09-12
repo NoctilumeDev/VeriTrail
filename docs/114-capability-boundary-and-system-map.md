@@ -6,7 +6,7 @@
 - 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
   R1_SOURCE_SNAPSHOT_FROZEN /
   R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN /
-  R1_DERIVATION_INPUT_IMPLEMENTED / FREEZE_CANDIDATE /
+  R1_DERIVATION_INPUT_FROZEN /
   R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
@@ -572,7 +572,7 @@ R1 Schema Payload              FROZEN
 R1 SourceSnapshot contract     FROZEN
 R1 SourceSnapshot runtime      FROZEN
 R1 Derivation Input contract   FROZEN
-R1 Derivation Input runtime    FREEZE CANDIDATE
+R1 Derivation Input runtime    FROZEN
 R1 downstream derivation       NOT STARTED
 Q0 Blueprint                   FROZEN
 Q implementation               NOT STARTED
@@ -595,7 +595,8 @@ closure”和“acquisition budget 只控制产出资格”的接缝；[文档 1
 [合同](132-r1-derivation-input-binding-contract.md)只约束输入身份与 owned bytes 连续性，不获得 Artifact、
 Manifest 或派生权；[冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)完成独立最后门后，
 只解除 Input Binding runtime 的实现停止线。[实现候选](134-r1-derivation-input-implementation-freeze-candidate.md)
-已经建立 exact owned input continuity，但仍须完成候选自身门禁、合入、exact-main 复验、匿名读回与独立
-最终状态发布。parser、Facts、Relations、Slices、Coverage、完整 Derivation Manifest、CLI 与 Provider
-均未开始。本账只负责让未来方向不再遗忘、不互相冒充，
+已经建立 exact owned input continuity；[最终冻结发布](135-r1-derivation-input-freeze-publication.md)外部绑定
+候选门禁、合入、exact-main 复验与匿名读回。其自身最后门成立后，Input Binding runtime 才冻结；parser、
+Facts、Relations、Slices、Coverage、完整 Derivation Manifest、CLI 与 Provider 均未开始。本账只负责让
+未来方向不再遗忘、不互相冒充，
 也不因为“地图上有路”就替项目决定必须走哪条路。
