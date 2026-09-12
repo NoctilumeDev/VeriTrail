@@ -301,6 +301,10 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention R1 Schema payload 冻结发布](126-r1-schema-payload-freeze-publication.md)
 - [Review Attention R1 SourceSnapshot 首个运行切片合同 0.1](127-r1-source-snapshot-runtime-contract.md)
 - [Review Attention R1 SourceSnapshot 运行合同冻结发布](128-r1-source-snapshot-runtime-contract-freeze-publication.md)
+- [Review Attention R1 SourceSnapshot 实现冻结候选](129-r1-source-snapshot-implementation-freeze-candidate.md)
+- [Review Attention R1 SourceSnapshot 最小运行切片冻结发布](130-r1-source-snapshot-freeze-publication.md)
+- [R1 SourceSnapshot 后继最小闭环审计](131-r1-post-snapshot-derivation-input-audit.md)
+- [R1 Derivation Input Binding 最小运行合同 0.1](132-r1-derivation-input-binding-contract.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -618,6 +622,15 @@ Smoke 1/1，以及 README 与文档 129 的 fresh anonymous P2 Collector exact-S
 `R1_SOURCE_SNAPSHOT_FROZEN / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。
 冻结只覆盖单一 `source-snapshot.json` 最小运行切片；后继 Fact、Relation、Slice、Coverage、conflict /
 UNKNOWN 传播与完整 Derivation Manifest 仍须各自先完成合同闭环。
+
+后继审计从 exact `main@b1a58143ae2fd359b885a575587aa4682aef8a04` 开始，只检查 Snapshot 之后哪个
+最小边界有资格进入合同，没有写实现。[文档 131](131-r1-post-snapshot-derivation-input-audit.md)确认 FactSet
+必须绑定 DerivationEvidence，而冻结 Manifest 又没有 Fact-only file set；直接施工 Fact 会制造 dangling
+provenance 或占位 Artifact。因而[文档 132](132-r1-derivation-input-binding-contract.md)只建立
+`R1_DERIVATION_INPUT_BINDING_CONTRACT_CANDIDATE`：候选拟将已发布 Snapshot、sealed Policy、固定 Profile
+与 exact local Git bytes 绑定成不发布的新 owned runtime value。它没有创建 runtime、parser、Fact、
+Evidence、Relation、Slice、Coverage 或完整 Derivation Manifest；只有候选自身闭环与后继独立 docs-only
+冻结发布全部成立后，才可能解除这一窄边界的实现停止线。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

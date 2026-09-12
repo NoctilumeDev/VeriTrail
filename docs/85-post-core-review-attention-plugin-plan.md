@@ -5,7 +5,9 @@
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED /
+  R1_SCHEMA_PAYLOAD_FROZEN / R1_SOURCE_SNAPSHOT_FROZEN / R1_DERIVATION_INPUT_BINDING_CONTRACT_CANDIDATE /
+  R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED /
+  R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED /
   Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
 - 本文不创建源码包、Schema、CLI、CI、标签、Release 或可运行审查器；
@@ -305,3 +307,11 @@ README 读者骨架与架构 SVG 已在独立分支完成闭环后，当前施�
 [冻结发布](126-r1-schema-payload-freeze-publication.md)完成自身最后门后，状态为
 `R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。该入口
 只允许从新 exact main 建立独立运行实现合同或首个最小切片，不把 payload 证据继承为 runtime 证据。
+
+SourceSnapshot 最小运行切片随后完成独立合同、实现候选与冻结发布，当前事实见
+[文档 130](130-r1-source-snapshot-freeze-publication.md)。后继
+[最小闭环审计](131-r1-post-snapshot-derivation-input-audit.md)没有直接启动 Fact/Relation/Slice/Coverage，
+而是先证明 FactSet 的 provenance 与冻结 Manifest file set 不允许 Fact-only 发布；因此
+[文档 132](132-r1-derivation-input-binding-contract.md)只建立 `Derivation Input Binding` 合同候选。该边界
+不产生公共 Artifact，只拟约束已发布 Snapshot、sealed Policy、Profile 与 exact Git bytes 的 owned
+continuity；实现与所有后继派生对象继续未开始。
