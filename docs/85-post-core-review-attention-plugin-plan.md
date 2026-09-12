@@ -5,8 +5,8 @@
 - 轨道：顶层 `R` 轨；`R = Review`，不表示 `Risk`；
 - 当前阶段：`R0_ARCHITECTURE_FROZEN / PATTERN_LEDGER_OPEN / DESIGN_ONLY`；
 - 并行状态：`P1_FROZEN / P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-  R1_SCHEMA_PAYLOAD_FROZEN / R1_SOURCE_SNAPSHOT_FROZEN / R1_DERIVATION_INPUT_BINDING_CONTRACT_CANDIDATE /
-  R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED /
+  R1_SCHEMA_PAYLOAD_FROZEN / R1_SOURCE_SNAPSHOT_FROZEN / R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN /
+  R1_DERIVATION_INPUT_IMPLEMENTATION_ALLOWED / R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED /
   R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED /
   Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；
 - 影响等级：`L2_CONTRACT + L3_SYSTEM / DESIGN_ONLY`；
@@ -256,7 +256,9 @@ R0 只有在以下事实全部成立后才可标记 `R0_ARCHITECTURE_FROZEN`：
 3. 精确 main SHA、匿名 README、Plan、合同与冻结事实页完成公开读回；
 4. R0 首次冻结事实继续保留当时的 `P1_FROZEN / P2_NOT_STARTED`；本文当前并行状态另行反映
    `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-    R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
+    R1_SCHEMA_PAYLOAD_FROZEN / R1_SOURCE_SNAPSHOT_FROZEN / R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN /
+    R1_DERIVATION_INPUT_IMPLEMENTATION_ALLOWED / R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED /
+    R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED /
    Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`，两者不得互相改写；
 5. 仓库中不存在 R 轨源码包、Schema、CLI、CI、标签或 Release；
 6. R0 首次冻结记录中的状态继续保留为：
@@ -270,7 +272,9 @@ P2_NOT_STARTED
 
 本文当前状态只更新并行事实为
 `P2_FROZEN / P3_FROZEN / P4_FROZEN / PATTERN_CORPUS_0.1_FROZEN /
-R1_SCHEMA_CONTRACT_FROZEN / R1_SCHEMA_PAYLOAD_DRAFTING_ALLOWED / R1_IMPLEMENTATION_NOT_STARTED /
+R1_SCHEMA_PAYLOAD_FROZEN / R1_SOURCE_SNAPSHOT_FROZEN / R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN /
+R1_DERIVATION_INPUT_IMPLEMENTATION_ALLOWED / R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED /
+R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED /
 Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`；它不把 R0 当时尚未发生的
 P2/P3/P4 写回历史。Ledger 已把后继事实物化至 `RA-027`，但仍保持 open；
 [Corpus 冻结合同](109-review-attention-pattern-corpus-freeze-contract.md)的候选门禁、合入和匿名读回已经
@@ -312,6 +316,7 @@ SourceSnapshot 最小运行切片随后完成独立合同、实现候选与冻�
 [文档 130](130-r1-source-snapshot-freeze-publication.md)。后继
 [最小闭环审计](131-r1-post-snapshot-derivation-input-audit.md)没有直接启动 Fact/Relation/Slice/Coverage，
 而是先证明 FactSet 的 provenance 与冻结 Manifest file set 不允许 Fact-only 发布；因此
-[文档 132](132-r1-derivation-input-binding-contract.md)只建立 `Derivation Input Binding` 合同候选。该边界
-不产生公共 Artifact，只拟约束已发布 Snapshot、sealed Policy、Profile 与 exact Git bytes 的 owned
-continuity；实现与所有后继派生对象继续未开始。
+[文档 132](132-r1-derivation-input-binding-contract.md)只建立 `Derivation Input Binding` 合同；其
+[冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)完成候选、主线、exact-main 与匿名公开
+读回闭环后，只解除这一窄边界的实现停止线。该边界不产生公共 Artifact，只约束已发布 Snapshot、sealed
+Policy、Profile 与 exact Git bytes 的 owned continuity；实现与所有后继派生对象继续未开始。

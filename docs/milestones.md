@@ -305,6 +305,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [Review Attention R1 SourceSnapshot 最小运行切片冻结发布](130-r1-source-snapshot-freeze-publication.md)
 - [R1 SourceSnapshot 后继最小闭环审计](131-r1-post-snapshot-derivation-input-audit.md)
 - [R1 Derivation Input Binding 最小运行合同 0.1](132-r1-derivation-input-binding-contract.md)
+- [R1 Derivation Input Binding 合同冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -631,6 +632,15 @@ provenance 或占位 Artifact。因而[文档 132](132-r1-derivation-input-bindi
 与 exact local Git bytes 绑定成不发布的新 owned runtime value。它没有创建 runtime、parser、Fact、
 Evidence、Relation、Slice、Coverage 或完整 Derivation Manifest；只有候选自身闭环与后继独立 docs-only
 冻结发布全部成立后，才可能解除这一窄边界的实现停止线。
+
+候选提交 `8706a8ecd9978c28615d2d686cbc7ce2727d7c64` 经 PR #112 原始 Public CI attempt 1 的 11/11 门禁
+合入 `main@b807ee095630c14edd73621c43943437b6cdddff`。该 exact main 的 Public CI 11/11、Browser Smoke 1/1，
+以及 README、文档 132 与 milestones 的 fresh anonymous P2 Collector 读回均成立。[文档 133](133-r1-derivation-input-binding-contract-freeze-publication.md)
+只发布该闭环；其自身门禁、受保护主线合入、exact-main 门与匿名读回全部成立后，状态推进为
+`R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN / R1_DERIVATION_INPUT_IMPLEMENTATION_ALLOWED /
+R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。
+下一步只允许从新的 exact main 建立 Input Binding runtime 与合同二十二格证据；parser、Fact、Evidence、
+Relation、Slice、Coverage、conflict / UNKNOWN 传播与完整 Derivation Manifest 仍不得启动。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
