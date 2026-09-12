@@ -292,11 +292,11 @@ run 从 Provider 初始化前开始，直到 application 完成 candidate valida
 summary 组装后才结束；仅“Provider callable 返回”还没有资格写 `COMPLETED`。descriptor 已在 admission
 冻结，因此 Provider 初始化后不可用仍能形成真实 `UNAVAILABLE` run，而不是退回 ambient discovery。
 
-phase result 的顶层状态先服从 whole-phase stop：deadline、cancellation 或 memory limit 在 Provider 执行、
-application validation、canonicalization 或 result 组装期间发生时，顶层均为 `INTERRUPTED`；当时仍 active
-的 run 同为 `INTERRUPTED`，已经终止的 run 不被反写。不存在 whole-phase stop 时，顶层状态才等于唯一
-required Provider Run 的状态。`COMPLETED` 只表示本合同覆盖的 Provider/Fact phase 正常结束，不表示完整
-R1 derivation、Coverage 或 Manifest 已完成。
+phase result 的顶层状态先服从 whole-phase stop：deadline、cancellation，或被正向观察并赢得 terminal
+stop latch 的 memory-limit event，在 Provider 执行、application validation、canonicalization 或 result
+组装期间触发时，顶层均为 `INTERRUPTED`；当时仍 active 的 run 同为 `INTERRUPTED`，已经终止的 run 不被
+反写。不存在 whole-phase stop 时，顶层状态才等于唯一 required Provider Run 的状态。`COMPLETED` 只表示
+本合同覆盖的 Provider/Fact phase 正常结束，不表示完整 R1 derivation、Coverage 或 Manifest 已完成。
 
 ## 6. 一个共享的 execution budget
 
@@ -315,6 +315,11 @@ force termination  -> new full cleanup budget
 future relation    -> new full derivation budget
 ```
 
+这里禁止的是把 derivation execution permission 按 cleanup phase 刷新。terminal stop 后为终止整棵受控
+process tree、关闭 handles/threads 与删除 owned staging 所需的一次性 cleanup-only release envelope，由
+[Budget Primitive 合同](145-r1-derivation-budget-primitive-contract.md)独立收窄；该 envelope 不恢复语义工作，
+也不延长任何结果的成功资格。
+
 后继完整 derivation 必须把同一个 context 继续传给 Relation/Slice/Coverage 与 staging；本切片不得创建一个
 “Fact 已完成，所以后面重新计时”的断点。
 
@@ -324,7 +329,8 @@ future relation    -> new full derivation budget
 
 ```text
 wall_clock_ms
-  从 admission 的 monotonic t0 到 phase/future derivation 终止的绝对 elapsed 上限。
+  从 admission 的 monotonic t0 计算出的绝对结果资格与 stop-decision deadline。deadline 后到达的结果
+  不得接纳；通用 OS 上的物理 process-tree release 另受一次性 cleanup-only envelope 约束。
 
 memory_bytes
   attempt execution cell 的 process-tree memory hard upper bound；worker runtime、Provider、parser、
@@ -345,6 +351,10 @@ memory containment 可以由 Windows Job、受控 worker/cgroup 或未来等价 
 自报用量，不能证明 hard upper bound；无法建立 containment 时在 admission 前返回
 `DERIVATION_RUNTIME_UNAVAILABLE`。
 
+hard containment 与 terminal-cause attribution 是不同事实。只有正向 memory-limit event 已被 controller
+观察、绑定到 owned execution cell，并赢得 terminal stop latch，才可写 `EXECUTION_MEMORY_BUDGET`；配置了
+hard limit、worker OOM/异常退出、非零 exit code、接近上限的 accounting 或缺失 event 均不能反推该原因。
+
 ### 6.3 Evidence 的认识论上限
 
 现有 `DerivationEvidence` 绑定 sealed `policy_digest`、时间、status 与 typed diagnostic，但不保存 peak
@@ -356,8 +366,11 @@ memory、逐阶段 byte counter 或 monotonic deadline。首版不新增这些�
 ```text
 runtime conformance tests prove enforcement mechanism
 Evidence records declared ceilings through policy_digest
-Evidence records terminal dimension through typed diagnostic
+Evidence records the positively observed and latched stop trigger through typed diagnostic
 ```
+
+typed diagnostic 不证明唯一平台根因，也不保存 message chronology。未观察到 memory event 时仍可证明
+hard containment active，但不得构造 `EXECUTION_MEMORY_BUDGET`。
 
 若未来要求第三方仅凭 Bundle 复核 peak/consumption，必须新增版本化测量 Artifact 或升级 Evidence Schema；
 不能把本机日志当成规范证据。
@@ -376,9 +389,9 @@ EXECUTION_ARTIFACT_BUDGET
 
 | 条件 | Provider Run | phase / future overall | diagnostic |
 | --- | --- | --- | --- |
-| wall-clock absolute deadline | `INTERRUPTED` | `INTERRUPTED` | `EXECUTION_DEADLINE` |
-| caller cancellation | `INTERRUPTED` | `INTERRUPTED` | `EXECUTION_CANCELLED` |
-| memory containment limit | `INTERRUPTED` | `INTERRUPTED` | `EXECUTION_MEMORY_BUDGET` |
+| wall-clock absolute deadline 赢得 stop latch | `INTERRUPTED` | `INTERRUPTED` | `EXECUTION_DEADLINE` |
+| caller cancellation 赢得 stop latch | `INTERRUPTED` | `INTERRUPTED` | `EXECUTION_CANCELLED` |
+| positive memory-limit event 赢得 stop latch | `INTERRUPTED` | `INTERRUPTED` | `EXECUTION_MEMORY_BUDGET` |
 | artifact staging limit | 当前 active run 已结束时不反写其状态 | `INTERRUPTED` | `EXECUTION_ARTIFACT_BUDGET` |
 | Provider unavailable | `UNAVAILABLE` | `UNAVAILABLE` | `PROVIDER_UNAVAILABLE` |
 | Provider execution exception | `FAILED` | `FAILED` | `PROVIDER_FAILED` |
@@ -617,9 +630,10 @@ run Provider
 | 11 | Provider runtime 不可用 | UNAVAILABLE；IDs 空 |
 | 12 | candidate anchor 越界 | FAILED / NONCONFORMANT_PROVIDER_OUTPUT |
 | 13 | candidate claimed digest 错误 | application 复算并拒绝 |
-| 14 | wall-clock deadline | INTERRUPTED / EXECUTION_DEADLINE |
-| 15 | caller cancellation | INTERRUPTED / EXECUTION_CANCELLED |
-| 16 | memory containment limit | INTERRUPTED / EXECUTION_MEMORY_BUDGET |
+| 14 | wall-clock deadline 赢得 latch；late result 到达 | 拒绝 late result；INTERRUPTED / EXECUTION_DEADLINE |
+| 15 | caller cancellation 赢得 latch | INTERRUPTED / EXECUTION_CANCELLED |
+| 16 | positive memory-limit event 赢得 latch | INTERRUPTED / EXECUTION_MEMORY_BUDGET |
+| 16a | hard limit active，但 memory event 未观察到 | 禁止 EXECUTION_MEMORY_BUDGET；不猜原因 |
 | 17 | host 无法建立 memory containment | admission 前 DERIVATION_RUNTIME_UNAVAILABLE |
 | 18 | non-COMPLETED run 带 reported ID | Schema/conformance 拒绝 |
 | 19 | run COMPLETED，但 overall 后继中断且仍带 reported ID | DIAGNOSTIC conformance 拒绝 |
@@ -645,9 +659,10 @@ A. DerivationEvidence Schema/corpus semantic correction
    - compatibility/conformance vectors
    ↓
 B. budget primitive feasibility
-   - one absolute monotonic deadline
-   - pre-start process-tree memory containment
-   - cancellation / cleanup / no residue
+   - one absolute monotonic acceptance deadline
+   - pre-start process-tree memory containment + positive-event attribution
+   - one terminal-stop latch
+   - one cleanup-only release envelope / no residue
    ↓
 C. Provider-binding and attempt kernel
    - explicit single binding
@@ -673,7 +688,7 @@ Python parser。Relation、Slice、Coverage、conflict/UNKNOWN、Manifest 与完
 2. `request_provenance` 不再依赖不存在的 branch history；
 3. Provider applicability 不依赖 ambient installation 或 first-success；
 4. Input acquisition budget 与 derivation execution budget 不形成双 authority；
-5. wall/memory/artifact 三类终止语义已唯一，Evidence 认识论上限明确；
+5. wall/memory/artifact 的 containment、正向 stop observation 与 attribution 上限已经分离；
 6. Provider candidate 与 canonical Fact authority 分离；
 7. COMPLETE 与 DIAGNOSTIC file set 下的 `reported_*_ids` 语义均闭合；
 8. phase result 与 Artifact/Manifest 身份分离；

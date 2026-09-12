@@ -136,7 +136,11 @@ FactSet/RelationSet，因此两者不能被压成同一概念。
 
 ## 6. typed budget diagnostic 合同
 
-### 6.1 memory containment stop
+### 6.1 positively observed memory stop
+
+hard memory containment 的配置/readback 本身不授权该 diagnostic。只有 owned execution cell 的正向
+memory-limit event 已被观察，并按后继冻结规则赢得 terminal-stop latch，才进入本节。OOM 文本、异常退出、
+非零 exit code、accounting 接近上限或 completion message 缺失均不得反推 memory cause。
 
 合法最小向量固定为：
 
@@ -152,6 +156,11 @@ run diagnostics contains exactly one:
 
 top-level diagnostics contains the same typed tuple
 ```
+
+这里的 `exactly one` 描述单变量 memory specimen 的 terminal diagnostic，不把 typed code 扩张成平台唯一
+root-cause 证明。竞态选择、absolute deadline 与 cleanup release envelope 由
+[Budget Primitive 合同](145-r1-derivation-budget-primitive-contract.md)冻结；当前 Schema 继续只保存胜出的正向
+stop trigger，不保存 event chronology、peak memory 或轮询轨迹。
 
 新 Schema 至少必须保证 code 只能与 `INTERRUPTED` 的本地/顶层状态组合，并要求 ProviderRun 层的 subject
 shape 为 `PROVIDER_RUN`。conformance test 负责复核 subject ID 恰为同一 run。
