@@ -367,11 +367,15 @@
 - 后继 `docs/131-r1-post-snapshot-derivation-input-audit.md` 从 exact
   `main@b1a58143ae2fd359b885a575587aa4682aef8a04` 审计 Snapshot 之后的接缝。审计确认 FactSet 的
   provenance 与冻结 Manifest file set 不允许 Fact-only 发布，并选择不产生公共 Artifact 的
-  `Derivation Input Binding` 作为下一最小边界。`docs/132-r1-derivation-input-binding-contract.md` 目前只允许
-  写成 `R1_DERIVATION_INPUT_BINDING_CONTRACT_CANDIDATE /
-  R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED`；它的独立候选、受保护主线与后继 docs-only 冻结发布
-  全部成立前，不得创建 input binder、parser、Fact、Evidence、Relation、Slice、Coverage 或完整
-  Derivation runtime。
+  `Derivation Input Binding` 作为下一最小边界。`docs/132-r1-derivation-input-binding-contract.md` 的候选经
+  PR #112 原始 11/11 门禁合入 `main@b807ee095630c14edd73621c43943437b6cdddff`，该 exact main 的 Public CI
+  11/11、Browser Smoke 1/1 与 README/合同/milestones 三次 fresh anonymous P2 Collector 读回均成立。
+  `docs/133-r1-derivation-input-binding-contract-freeze-publication.md` 只发布该闭环；其自身门禁、受保护主线
+  合入、exact-main 门与匿名读回全部成立后，状态才是
+  `R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN / R1_DERIVATION_INPUT_IMPLEMENTATION_ALLOWED /
+  R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。
+  授权仅覆盖 input binder；parser、Fact、Evidence、Relation、Slice、Coverage 或完整 Derivation runtime
+  继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
