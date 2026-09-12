@@ -397,10 +397,14 @@
 - 后继 `docs/136-r1-derivation-attempt-and-fact-provenance-audit.md` 从 exact
   `main@7e0950ba2544476049e6defe1545f786971a89bd` 审计 attempt、Provider applicability、budget 与 Fact
   provenance 接缝；`docs/137-r1-derivation-attempt-and-fact-provenance-contract.md` 只建立 docs-only 合同
-  候选。当前状态为 `R1_DERIVATION_PROVENANCE_CONTRACT_CANDIDATE /
+  候选。候选经 PR #117 原始 Public CI 11/11、受保护主线合入、exact-main Public CI 11/11、Browser Smoke
+  1/1 与已安装产品匿名 exact-SHA 读回后，由
+  `docs/138-r1-derivation-provenance-contract-freeze-publication.md` 独立发布冻结事实。当前状态为
+  `R1_DERIVATION_PROVENANCE_CONTRACT_FROZEN /
   R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_REQUIRED /
+  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED /
   R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
-  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选若独立冻结，最多只允许后继先修正 Evidence typed budget
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结最多只允许后继先修正 Evidence typed budget
   diagnostics 与非成功 reported IDs；Schema/corpus 修正独立冻结、budget primitive feasibility 与明确
   runtime 授权成立前，不得创建真实 parser、Provider runtime、FactSet/DerivationEvidence Artifact、
   Relation、Slice、Coverage、Manifest、CLI 或 Workbench。
