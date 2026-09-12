@@ -707,6 +707,19 @@ R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
 R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许物化合同限定的 correction payload；其
 独立冻结以后仍须先完成 budget primitive feasibility 与 runtime 授权。
 
+后继从 exact `main@19cb4ff4300e6c7aeb08aa315802abb29e183d60` 物化独立的
+`DerivationEvidence 0.1.1` root、`R1-DE-CV-001..010` correction corpus 与兼容守卫；旧 `0.1` 的十个
+Schema 和十九个 corpus 文件继续逐字节不变。实现 PR #121 原始 Public CI attempt 1 为 11/11 success，
+并以 `main@99826ec1564e8447524c477ff9f271fa5d062ea6` 完成 exact-main Public CI 11/11、Browser Smoke 1/1
+与三项匿名逐字节读回。[文档 142](142-r1-derivation-evidence-schema-correction-implementation-freeze-candidate.md)
+因此建立 docs-only 冻结候选，当前状态为
+`R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_IMPLEMENTED /
+R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_FREEZE_CANDIDATE /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该候选自己的原始远端门、受保护主线合入、
+新 exact-main 门与匿名公开读回仍是最终冻结前置条件；budget primitive、Provider/parser、Fact runtime
+及全部下游实现继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
