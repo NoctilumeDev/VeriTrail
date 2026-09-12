@@ -8,8 +8,8 @@
   R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN /
   R1_DERIVATION_INPUT_FROZEN /
   R1_DERIVATION_PROVENANCE_CONTRACT_FROZEN /
-  R1_DERIVATION_EVIDENCE_SCHEMA_PRECONTRACT_AUDITED /
-  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_CANDIDATE /
+  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_FROZEN /
+  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_IMPLEMENTATION_ALLOWED /
   R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED /
   R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；
@@ -114,7 +114,8 @@ R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语�
 identity 的不可编码缺口，[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)发布重新冻结边界；
 Schema payload 已由文档 125/126 物化并冻结。后继[文档 139](139-r1-derivation-evidence-schema-correction-audit.md)
 确认必要预算语义不能覆盖旧 `0.1` 公共资源，[文档 140](140-r1-derivation-evidence-schema-correction-contract.md)
-只为 DerivationEvidence 建立 `0.1.1` 补丁合同；Schema/corpus 修正尚未施工，运行实现仍未产生。R1 只建立确定性理解骨架，不进入 AI 提案、
+只为 DerivationEvidence 建立 `0.1.1` 补丁合同；[文档 141](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)
+完成独立冻结闭环后只授权该 Schema/corpus correction。修正尚未施工，运行实现仍未产生。R1 只建立确定性理解骨架，不进入 AI 提案、
 自动排序、
 HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
 为理由提前创建后继实现。

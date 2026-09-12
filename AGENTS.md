@@ -414,9 +414,17 @@
   逐字节冻结的 `review-derivation-evidence-0.1.schema.json` 不能在相同 path/`$id` 下原位改写；
   `docs/140-r1-derivation-evidence-schema-correction-contract.md` 只建立自描述的 DerivationEvidence `0.1.1`
   补丁合同，保留旧 Schema/corpus/vector 原字节，不升级其他 R1 Artifact、Manifest 或 digest projection。
-  当前只允许 docs-only 合同候选；其独立冻结发布完成以前不得创建 `0.1.1` Schema/corpus/test，完成以后也
-  仍须先证明 budget primitive feasibility 并取得明确 runtime 授权。request provenance 的 exact-only
-  约束继续属于首个 runtime conformance，不能借本修正永久收窄通用 alias-aware Schema。
+  候选经 PR #119 原始 Public CI 11/11、受保护主线合入、exact-main Public CI 11/11、Browser Smoke 1/1 与
+  已安装产品匿名 exact-SHA 读回后，由
+  `docs/141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md` 独立发布冻结事实。当前状态为
+  `R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_FROZEN /
+  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_IMPLEMENTATION_ALLOWED /
+  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许物化文档 140 限定的 `0.1.1`
+  Schema/corpus/test；其独立冻结完成以后仍须先证明 budget primitive feasibility 并取得明确 runtime 授权。
+  request provenance 的 exact-only 约束继续属于首个 runtime conformance，不能借本修正永久收窄通用
+  alias-aware Schema。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
