@@ -747,6 +747,24 @@ deadline、5 秒 cleanup-only release envelope 与 inclusive artifact reservatio
 runtime、conformance harness、Provider、parser、Fact、Relation、Slice、Coverage 或 Manifest；候选自己的
 远端门、主线合入、exact-main 门、匿名读回与后继独立冻结发布完成前，不得开始实现。
 
+该候选经 PR #124 原始 Public CI attempt 1 的 11/11 合入
+`main@9a969af10f705abe66ac7816bc27e9369ea7206a`；candidate tree 与 merge tree 相同。该 exact main 的
+Public CI 11/11、Browser Smoke 1/1、六个候选路径匿名 raw bytes 读回，以及 README、文档 145、milestones
+三次已安装产品 fresh anonymous exact-SHA 读回均成立，Core 三次为 `PASS`。冻结前第二轮系统俯瞰不以
+finding 数量为目标：它只把 `COMPLETED_FOR_PHASE` 错作 BudgetContext terminal state 和 normal completion
+check/terminal-stop latch 竞态认定为 Freeze blocker，并已在候选中最小修正；native binding/cleanup harness
+保留为实现门，无正向 event 的 exit mapping 与跨平台 primitive 延期，单 lane 约 140 秒只记为资源事实。
+
+[文档 146](146-r1-derivation-budget-primitive-contract-freeze-publication.md)独立发布冻结事实；其自身最后门
+全部成立后，当前状态为
+`R1_DERIVATION_BUDGET_PRIMITIVE_CONTRACT_FROZEN /
+R1_DERIVATION_BUDGET_PRIMITIVE_IMPLEMENTATION_ALLOWED /
+R1_DERIVATION_BUDGET_PRIMITIVE_IMPLEMENTATION_NOT_STARTED /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许从新 exact main 实现文档 145 的
+budget primitive 与 `BP-001..016` conformance；Provider/parser/Fact 必须等待该实现自身冻结及后继明确授权，
+Relation、Slice、Coverage、conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
