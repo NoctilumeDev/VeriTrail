@@ -306,6 +306,7 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [R1 SourceSnapshot 后继最小闭环审计](131-r1-post-snapshot-derivation-input-audit.md)
 - [R1 Derivation Input Binding 最小运行合同 0.1](132-r1-derivation-input-binding-contract.md)
 - [R1 Derivation Input Binding 合同冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)
+- [R1 Derivation Input Binding 实现冻结候选](134-r1-derivation-input-implementation-freeze-candidate.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -641,6 +642,19 @@ Evidence、Relation、Slice、Coverage 或完整 Derivation Manifest；只有候
 R1_DERIVATION_INPUT_IMPLEMENTATION_NOT_STARTED / R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。
 下一步只允许从新的 exact main 建立 Input Binding runtime 与合同二十二格证据；parser、Fact、Evidence、
 Relation、Slice、Coverage、conflict / UNKNOWN 传播与完整 Derivation Manifest 仍不得启动。
+
+Derivation Input runtime 从 exact `main@84512755b6475cfa40ca352f43e4cb7be953a761` 建立四路径有界读取、
+三个 canonical Artifact 的独立复算与 cross-binding、exact local Git byte reacquisition，以及不发布的
+copy-owned `DerivationInputSet`。实现审计发现宿主 CPython 3.13 的 `str.isidentifier()` 会接受 Python 3.10
+尚未拥有的 Unicode code point，因此改用冻结 Python 3.10 词汇并以完整 identifier truth-set 摘要复验；
+没有让宿主 runtime identity 倒灌 Profile。PR #114 head
+`5447a0c0947c44cbbd80af6e90f74438b9950d1f` 的原始 Public CI attempt 1 为 11/11，随后以
+`main@46bb81625b9f2dcb4fa1284bd75344e89ed4be5f` 合入。该 exact main 的 Public CI run
+`34685266682` 为 11/11、Browser Smoke run `34685266683` 为 1/1，均为 attempt 1。当前只进入
+`R1_DERIVATION_INPUT_IMPLEMENTED / FREEZE_CANDIDATE /
+R1_FACT_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；[文档 134](134-r1-derivation-input-implementation-freeze-candidate.md)
+记录二十二格合同矩阵、本地/远端证据和停止线。独立最终状态发布成立前不得写
+`R1_DERIVATION_INPUT_FROZEN`，也不得把该绿灯传播为下游派生施工资格。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
