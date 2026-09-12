@@ -444,10 +444,20 @@
   `EXECUTION_MEMORY_BUDGET`，OOM/exit code/已配置上限均不得反推；它还把 absolute monotonic deadline
   收窄为结果资格边界，要求 normal result 与 phase-owned resources 在 deadline 前一起闭合，
   并仅为 terminal-stop 后的 process-tree/staging cleanup 建立一次性共享 release envelope。
-  `docs/145-r1-derivation-budget-primitive-contract.md` 当前只处于
-  `R1_DERIVATION_BUDGET_PRIMITIVE_CONTRACT_CANDIDATE / IMPLEMENTATION_NOT_STARTED`。候选自身完成远端门、
-  受保护主线合入、exact-main 门、匿名读回与后继独立冻结发布以前，不得创建 budget runtime/conformance
-  harness；Provider/parser/Fact、Relation、Slice、Coverage、完整 Derivation 与 Manifest 继续禁止。
+  `docs/145-r1-derivation-budget-primitive-contract.md` 的候选经 PR #124 原始 Public CI 11/11 合入
+  `main@9a969af10f705abe66ac7816bc27e9369ea7206a`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1、
+  匿名 raw bytes 与 README/文档 145/milestones 三次已安装产品读回均成立。第二轮系统俯瞰又修正了
+  `COMPLETED_FOR_PHASE` 被误作 BudgetContext terminal state 以及 normal completion check/stop latch
+  竞态两个 Freeze blocker；其余发现分别归为实现门、延期接缝或仅观察事实，不因审计 KPI 自动修改。
+  最终状态发布见 `docs/146-r1-derivation-budget-primitive-contract-freeze-publication.md`；它自身的门禁、
+  合入、exact-main 门与最终匿名读回全部成立后，状态为
+  `R1_DERIVATION_BUDGET_PRIMITIVE_CONTRACT_FROZEN /
+  R1_DERIVATION_BUDGET_PRIMITIVE_IMPLEMENTATION_ALLOWED /
+  R1_DERIVATION_BUDGET_PRIMITIVE_IMPLEMENTATION_NOT_STARTED /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许实现文档 145 的 primitive 与
+  `BP-001..016`；Provider/parser/Fact 必须等待该实现自身冻结及后继明确授权，Relation、Slice、Coverage、
+  conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
