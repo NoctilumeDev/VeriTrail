@@ -818,6 +818,24 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该候选完成自己�
 独立冻结发布以前，不得实现 transport/test Provider/Fact phase，也不得开始真实 parser、Relation、Slice、
 Coverage、conflict/UNKNOWN 或完整 Derivation/Manifest。
 
+该候选由 PR #130 以提交 `ff801ba9cac96379bad851a1c822c2229dec0df2` 建立；原始 Public CI run
+`34755844078`、attempt 1 完成 11/11 SUCCESS，随后合入 exact
+`main@e1f91a94afb3e3afd4e85d3605240b77d379f57a`。该 main 的 Public CI run `34756474790` attempt 1
+为 11/11 SUCCESS，Browser Smoke run `34756474928` attempt 1 为 1/1 SUCCESS；README、文档 150 与
+milestones 三次 fresh anonymous installed-product paired readback 均由 Core 判为 PASS，summary digest 为
+`481e864bc169ef50afdff0d28e8c3be0d8bbe6661cdddf74125b9ba3037217e9`。冻结前第二轮系统俯瞰只把“不同
+attempt 的完整 Fact bytes 相同”与真实 `provenance_refs` 不可同时满足认定为 blocker，并已最小改为
+provenance-free content/Fact ID invariance；其他 framing/platform/parser 风险保留为实现门或延期接缝。
+
+[文档 151](151-r1-derivation-execution-cell-contract-freeze-publication.md)独立发布冻结事实。其自身最后门全部
+成立后，状态为 `R1_DERIVATION_EXECUTION_CELL_CONTRACT_FROZEN /
+R1_DERIVATION_EXECUTION_CELL_IMPLEMENTATION_ALLOWED /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许文档 150 的 attempt eligibility、bounded
+frame codec、contained application worker、closed deterministic test Provider 与 copy-owned non-published Fact
+phase result；真实 parser、FactSet/DerivationEvidence publication、Relation、conflict/UNKNOWN、Slice、Coverage
+与完整 Derivation/Manifest 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
