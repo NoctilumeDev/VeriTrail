@@ -189,3 +189,53 @@ class BudgetPrimitiveError(Exception):
         self.code = code
         self.safe_message = message or _BUDGET_PRIMITIVE_MESSAGES[code]
         super().__init__(f"{code.value}: {self.safe_message}")
+
+
+class DerivationExecutionCellFailureCode(str, Enum):
+    INVALID_DERIVATION_ATTEMPT_REQUEST = "INVALID_DERIVATION_ATTEMPT_REQUEST"
+    PROVIDER_BINDING_MISMATCH = "PROVIDER_BINDING_MISMATCH"
+    DERIVATION_RUNTIME_UNAVAILABLE = "DERIVATION_RUNTIME_UNAVAILABLE"
+    DERIVATION_TRANSPORT_LIMIT_INSUFFICIENT = (
+        "DERIVATION_TRANSPORT_LIMIT_INSUFFICIENT"
+    )
+    DERIVATION_ADMISSION_DEADLINE = "DERIVATION_ADMISSION_DEADLINE"
+    DERIVATION_ADMISSION_CANCELLED = "DERIVATION_ADMISSION_CANCELLED"
+    INTERNAL_DERIVATION_ADMISSION_ERROR = "INTERNAL_DERIVATION_ADMISSION_ERROR"
+    RELEASE_FAILED = "RELEASE_FAILED"
+
+
+_DERIVATION_EXECUTION_CELL_MESSAGES = {
+    DerivationExecutionCellFailureCode.INVALID_DERIVATION_ATTEMPT_REQUEST: (
+        "the derivation attempt request is invalid"
+    ),
+    DerivationExecutionCellFailureCode.PROVIDER_BINDING_MISMATCH: (
+        "the closed Provider binding does not match its descriptor"
+    ),
+    DerivationExecutionCellFailureCode.DERIVATION_RUNTIME_UNAVAILABLE: (
+        "the derivation execution-cell runtime is unavailable"
+    ),
+    DerivationExecutionCellFailureCode.DERIVATION_TRANSPORT_LIMIT_INSUFFICIENT: (
+        "the execution-cell request exceeds its bounded transport"
+    ),
+    DerivationExecutionCellFailureCode.DERIVATION_ADMISSION_DEADLINE: (
+        "the derivation deadline expired before attempt admission"
+    ),
+    DerivationExecutionCellFailureCode.DERIVATION_ADMISSION_CANCELLED: (
+        "the derivation was cancelled before attempt admission"
+    ),
+    DerivationExecutionCellFailureCode.INTERNAL_DERIVATION_ADMISSION_ERROR: (
+        "derivation attempt admission failed internally"
+    ),
+    DerivationExecutionCellFailureCode.RELEASE_FAILED: (
+        "the derivation execution cell did not release completely"
+    ),
+}
+
+
+class DerivationExecutionCellError(Exception):
+    """Typed, path-free execution-cell controller failure."""
+
+    def __init__(self, code: DerivationExecutionCellFailureCode) -> None:
+        self.code = code
+        self.safe_message = _DERIVATION_EXECUTION_CELL_MESSAGES[code]
+        super().__init__(f"{code.value}: {self.safe_message}")
