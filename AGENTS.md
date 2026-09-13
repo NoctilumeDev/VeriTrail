@@ -545,6 +545,24 @@
   bounded transport、attempt eligibility 与 non-published Fact phase result；真实 parser、FactSet/Evidence
   publication、Relation、conflict/UNKNOWN、Slice、Coverage 与完整 Manifest 继续禁止。本状态发布自己的
   PR/合入/exact-main/匿名读回完成前，分支文字仍不授权实现。
+- Execution Cell 实现已由 PR #132 从冻结合同基线
+  `3c89f8eb94333986fc4901b9a1b91edf47d0059f` 建立；实现提交
+  `02e4d05dcfc7c062c97ecfa21c00b26f601b9140` 经原始 Public CI attempt 1 的 11/11 后，以 merge commit
+  `8b77305cea3a95690660adcb25f76d2b42c6e5e1` 合入受保护主线。该 exact main 的 Public CI 11/11、
+  Browser Smoke 1/1 与全部十二个变更文件的 fresh anonymous exact-SHA bytes 读回均成立。实现只新增
+  private closed test Provider binding、bounded single-terminal transport、hard-contained Windows application
+  worker、不可恢复 attempt eligibility、controller-owned terminal mapping 与 copy-owned non-published Fact
+  phase result；顶层包没有导出 execution-cell API。实施中修正了 rejected terminal run identity 泄漏、
+  primitive commit failure 未显式 revoke、pre-admission runtime loss 异常泄漏、release failure 被误作普通
+  phase result 与 late stop/early terminal 竞态，并作废父进程 `PYTHONPATH` 污染的第一次 BP-014 clean-wheel
+  证据后在 fresh interpreter 世界重建。精确事实见
+  `docs/152-r1-derivation-execution-cell-implementation-freeze-candidate.md`。当前只能记为
+  `R1_DERIVATION_EXECUTION_CELL_IMPLEMENTED /
+  R1_DERIVATION_EXECUTION_CELL_FREEZE_CANDIDATE /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。文档 152 自身的门、受保护主线合入、exact-main
+  门、匿名产品读回与后继独立最终状态发布成立前，不得写成 frozen，也不得审计或实现真实 parser、
+  FactSet/DerivationEvidence publication、Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
