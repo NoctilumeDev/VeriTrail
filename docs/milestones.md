@@ -853,6 +853,21 @@ R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
 R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文候选自己的门、合入、exact-main 门、匿名产品
 读回与后继独立最终状态发布完成前，不得写成 frozen，也不得提前审计或实现下一个 provenance closure。
 
+[文档 153](153-r1-derivation-execution-cell-freeze-publication.md)发布文档 152 候选的完整闭环。PR #133 的
+base/head 为 `8b77305cea3a95690660adcb25f76d2b42c6e5e1` / `84a986010c42ef43f785e3725ea6d65b87d3b063`，
+原始 Public CI attempt 1 为 11/11 SUCCESS；候选以 merge commit
+`c2349b2a7c4d9ed002311d46f7212cb35856caf6`、tree `63239304e6d32479a888ebf1e5a077a4143292bb`
+合入受保护主线。该 exact main 的 Public CI `34770503241` 为 11/11、Browser Smoke `34770503260` 为 1/1，
+均是 attempt 1。fresh anonymous installed-product readback 对 README、文档 152 与 milestones 建立三次独立
+paired session；三者均 HTTP 200、requested/final 相同、三样本稳定、无 stream/cleanup/coverage 残留且 Core
+Verdict 为 PASS，summary digest 为 `94654f6f58fcf82a2a6230521164e8f98176dff1ab40e97d2c695a67d8c98045`。
+文档 153 自身的原始门、受保护主线合入、新 exact-main 门与匿名产品读回全部成立后，状态才成为
+`R1_DERIVATION_EXECUTION_CELL_FROZEN /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。唯一后继是先审计 Provider Run 到 canonical Fact
+admission 与 FactSet/DerivationEvidence closure eligibility；真实 parser、publication、Relation、
+conflict/UNKNOWN、Slice、Coverage 与完整 Manifest 继续没有实现授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
