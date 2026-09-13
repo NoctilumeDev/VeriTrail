@@ -475,6 +475,16 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。文档 147 自身的门、主线合入、exact-main 门、
   匿名产品读回与后继独立状态发布成立前不得写成 frozen；Provider/parser/Fact、Relation、Slice、Coverage、
   conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
+- `docs/148-r1-derivation-budget-primitive-freeze-publication.md` 从候选合入基线
+  `main@571139df5db94159f5e439619176f17a02f86f94` 独立发布最终冻结事实。PR #127 的第一个 docs-only head
+  曾以 `startup_failure` 结束且没有实例化 jobs/check-runs；该 run 未 rerun，后继新 head 原始 Public CI
+  11/11、受保护主线合入、新 exact-main Public CI 11/11、Browser Smoke 1/1 与三次匿名已安装产品 PASS
+  均成立。本文自身的原始门、合入、新 exact-main 门和针对本文坐标的 fresh anonymous 读回全部完成后，
+  状态才为 `R1_DERIVATION_BUDGET_PRIMITIVE_FROZEN /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。唯一下一步是重新审计 Derivation Attempt / Provider
+  Run / Fact provenance 接缝；审计不授权实现。Provider/parser/Fact、Relation、Slice、Coverage、
+  conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
