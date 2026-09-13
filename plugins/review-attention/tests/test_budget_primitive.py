@@ -450,6 +450,8 @@ print(json.dumps({'win32job': find_spec('win32job'), 'code': code}))
 """
         with tempfile.TemporaryDirectory(prefix="veritrail-r1-bp014-") as name:
             root = Path(name)
+            probe_environment = os.environ.copy()
+            probe_environment.pop("PYTHONPATH", None)
             wheelhouse = root / "wheelhouse"
             wheelhouse.mkdir()
             package_source = root / "review-attention"
@@ -474,6 +476,7 @@ print(json.dumps({'win32job': find_spec('win32job'), 'code': code}))
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                env=probe_environment,
             )
             self.assertEqual(
                 wheel_build.returncode,
@@ -496,6 +499,7 @@ print(json.dumps({'win32job': find_spec('win32job'), 'code': code}))
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                env=probe_environment,
             )
             self.assertEqual(
                 wheel_install.returncode,
@@ -504,10 +508,16 @@ print(json.dumps({'win32job': find_spec('win32job'), 'code': code}))
             )
             completed = subprocess.run(
                 [os.fspath(python), "-I", "-c", script],
-                check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                env=probe_environment,
+            )
+            self.assertEqual(
+                completed.returncode,
+                0,
+                "fresh interpreter probe failed:\n"
+                f"{completed.stdout}\n{completed.stderr}",
             )
         result = json.loads(completed.stdout)
         self.assertIsNone(result["win32job"])
