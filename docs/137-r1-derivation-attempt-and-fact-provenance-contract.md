@@ -240,8 +240,8 @@ Snapshot 反向猜测。相同 Snapshot 由不同真实请求解析得到时，F
 3. Policy requirement 与首版 applicability profile 完全一致；
 4. Provider binding 与 requirement 构成一一对应；
 5. descriptor 字段完整且可 copy-own；
-6. monotonic clock、UTC clock、cancellation 与预算执行原语可用；
-7. runtime 能建立本合同要求的 memory containment。
+6. monotonic clock、UTC clock、cancellation 与预算执行原语的 capability surface 可用；
+7. runtime 能进入后继 execution-cell 合同要求的具体 preparation 流程。
 
 这些前置条件失败时，没有一次合法开始的 derivation attempt，因此不构造伪造
 `DerivationEvidence/ProviderRun`。未来实现错误闭集至少区分：
@@ -257,7 +257,9 @@ INTERNAL_DERIVATION_ADMISSION_ERROR
 
 ### 5.2 admission 原子边界
 
-一次 admission 必须在任何 Provider 初始化、parser 加载或 candidate 生成前完成：
+一次 admission 必须在任何 Provider 初始化、parser 加载或 candidate 生成前完成。系统审计 149 进一步发现，
+具体 inactive cell preparation 既不能藏在预算 `t0` 以前，也不能等 attempt admission 后才第一次尝试建立。
+因此精确顺序由[文档 150](150-r1-derivation-execution-cell-terminal-envelope-contract.md)收窄为：
 
 ```text
 freeze request + descriptor
@@ -266,15 +268,25 @@ derive exact request provenance
         ↓
 capture resolved_at
         ↓
-capture monotonic t0 and UTC started_at
+capture monotonic t0 and provisional UTC started_at
         ↓
 deadline = t0 + wall_clock_ms
         ↓
-state = RUNNING
+create one provisional BudgetContext
+        ↓
+prepare inactive contained cell under the same deadline
+        ↓
+final checkpoint
+        ↓
+atomically admit attempt
+        ↓
+capture ProviderRun started_at and resume worker
 ```
 
-`resolved_at <= started_at`。UTC 用于 Artifact provenance；deadline 与 elapsed 判断只使用 monotonic clock，
-不得因系统时钟回拨或 NTP 调整延长预算。
+`resolved_at <= started_at <= ProviderRun.started_at`。步骤中的 provisional context 只覆盖具体 preparation 的
+预算与清理责任；preparation 失败时必须不可恢复地撤销资格，且不构造 attempt/ProviderRun/Evidence。成功
+admission 后，`started_at` 仍绑定原 t0，因此 setup 成本没有被移出 wall-clock 上限。UTC 用于 Artifact
+provenance；deadline 与 elapsed 判断只使用 monotonic clock，不得因系统时钟回拨或 NTP 调整延长预算。
 
 ### 5.3 运行与终止
 
@@ -302,9 +314,10 @@ stop latch 的 memory-limit event，在 Provider 执行、application validation
 
 ### 6.1 所有权
 
-`ReviewPolicy.execution_budget` 是本次 derivation 的 sealed 上限。runtime 在 admission 时只创建一次共享
-budget context；Provider 初始化、执行、candidate 交付、application validation、canonicalization 与 phase
-result 组装只能消费该 context 的剩余量。
+`ReviewPolicy.execution_budget` 是本次 derivation 的 sealed 上限。runtime 在 capability preflight 后、具体
+cell preparation 前只创建一次共享 budget context；preparation、Provider 初始化、执行、candidate 交付、
+application validation、canonicalization 与 phase result 组装只能消费该 context 的剩余量。若 preparation
+未取得 attempt admission，context 也必须由 controller 不可恢复地 revoke，不能留作后继成功提交。
 
 不得出现：
 
@@ -329,7 +342,8 @@ process tree、关闭 handles/threads 与删除 owned staging 所需的一次性
 
 ```text
 wall_clock_ms
-  从 admission 的 monotonic t0 计算出的绝对结果资格与 stop-decision deadline。deadline 后到达的结果
+  从具体 cell preparation 前捕获的 monotonic t0 计算出的绝对结果资格与 stop-decision deadline；只有
+  preparation 成功并完成 attempt admission 时，该 t0 才成为已承认的 attempt started_at。deadline 后到达的结果
   不得接纳；通用 OS 上的物理 process-tree release 另受一次性 cleanup-only envelope 约束。
 
 memory_bytes
@@ -396,7 +410,7 @@ EXECUTION_ARTIFACT_BUDGET
 | Provider unavailable | `UNAVAILABLE` | `UNAVAILABLE` | `PROVIDER_UNAVAILABLE` |
 | Provider execution exception | `FAILED` | `FAILED` | `PROVIDER_FAILED` |
 | candidate conformance/identity failure | `FAILED` | `FAILED` | `NONCONFORMANT_PROVIDER_OUTPUT` |
-| unknown application fault | `FAILED` | `FAILED` | `INTERNAL_DERIVATION_ERROR` |
+| unknown application/runtime continuity fault after ProviderRun start | `FAILED` | `FAILED` | `INTERNAL_DERIVATION_ERROR` |
 
 Artifact limit 发生在后继 staging 时，已经 `COMPLETED` 的 ProviderRun status 是历史事实，不因下游失败
 改写；完整 Evidence 顶层状态必须为 `INTERRUPTED`，同时所有 `reported_*_ids` 必须清空，因为 DIAGNOSTIC
@@ -596,8 +610,10 @@ Standalone 首切片测试返回的 phase result 只证明组件语义，不具�
 
 ### 11.2 admission 后失败
 
-一旦进入 `RUNNING`，runtime 必须收敛到 typed terminal phase result，清理 execution cell，并保证非成功态
-没有 canonical Fact 外泄。已知错误不能降格为 internal error；未知错误不能泄露本机或源码内容。
+一旦 ProviderRun 开始，runtime 必须收敛到 typed terminal phase result并清理 execution cell；若 cleanup 本身
+无法在唯一 release envelope 内完成，则返回不可伪装为 phase result 的 typed `RELEASE_FAILED`。两条路径都
+必须保证非成功态没有 canonical Fact 外泄。已知错误不能降格为 internal error；未知错误不能泄露本机或源码
+内容。精确 terminal framing、epistemic fallback 与 context revoke 语义见文档 150。
 
 ### 11.3 retry
 
