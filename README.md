@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_BUDGET_PRIMITIVE_FROZEN / R1_DERIVATION_EXECUTION_CELL_PRECONTRACT_AUDITED / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_BUDGET_PRIMITIVE_FROZEN / R1_DERIVATION_EXECUTION_CELL_CONTRACT_CANDIDATE / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -216,8 +216,11 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   exact-main 门与匿名已安装产品读回由[最终冻结发布](docs/148-r1-derivation-budget-primitive-freeze-publication.md)
   外部绑定。后继[系统审计](docs/149-r1-derivation-execution-cell-system-audit.md)确认 Budget Primitive 不能被
   直接拼成 Provider/Fact runtime：execution-cell 覆盖、terminal envelope、context invalidation 与未归因
-  worker termination 仍需一个更窄的合同闭环。当前唯一下一步是起草 docs-only Execution Cell / Terminal
-  Envelope 合同，不是直接施工 Provider/parser/Fact；Relations、Slices、Coverage 与完整 Manifest 继续未启动。
+  worker termination 仍需一个更窄的合同闭环。[Execution Cell / Terminal Envelope 合同候选](docs/150-r1-derivation-execution-cell-terminal-envelope-contract.md)
+  现已把 controller/application worker/Provider authority、具体 cell preparation 与 attempt admission、bounded
+  single-terminal framing、closed test binding、未知终止的 epistemic fallback 及不可恢复 context revocation
+  收窄为 docs-only 候选。它没有修改 Evidence Schema，也没有授权直接施工 Provider/parser/Fact；Relations、
+  Slices、Coverage 与完整 Manifest 继续未启动。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -324,7 +327,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 21. [Review Attention R1 Derivation Budget Primitive 实现冻结候选](docs/147-r1-derivation-budget-primitive-implementation-freeze-candidate.md)
 22. [Review Attention R1 Derivation Budget Primitive 实现冻结发布](docs/148-r1-derivation-budget-primitive-freeze-publication.md)
 23. [Review Attention R1 Derivation Execution Cell 与 Terminal Continuity 系统审计](docs/149-r1-derivation-execution-cell-system-audit.md)
-24. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+24. [Review Attention R1 Derivation Execution Cell / Terminal Envelope 合同候选](docs/150-r1-derivation-execution-cell-terminal-envelope-contract.md)
+25. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

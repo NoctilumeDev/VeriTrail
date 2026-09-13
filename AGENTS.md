@@ -523,6 +523,17 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许从新 exact main 起草 docs-only
   Execution Cell / Terminal Envelope 合同；不得创建 transport、Provider、parser、Fact、Schema revision、
   Relation、Slice、Coverage、Manifest、CLI 或 Workbench 实现。
+- `docs/150-r1-derivation-execution-cell-terminal-envelope-contract.md` 从 exact
+  `main@2de46c21997d85a437820decfeb2bd8bb7b69ee1` 起草审计 149 选定的 docs-only 最小合同。它把 trusted
+  controller、contained application worker 与 Provider authority 分层，冻结 preflight/t0/inactive-cell/
+  attempt/run-start 顺序、8-byte length-prefixed single-terminal canonical JSON framing、closed test launch
+  binding、controller-owned terminal mapping，以及 primitive/protocol/cleanup failure 后不可恢复的 attempt
+  eligibility revocation。当前状态为 `R1_DERIVATION_EXECUTION_CELL_CONTRACT_CANDIDATE /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该候选裁决现有 `INTERNAL_DERIVATION_ERROR` 足以作为
+  不声明平台/Provider 根因的 epistemic fallback，因此不修改 `DerivationEvidence 0.1.1` Schema/corpus。候选
+  自身的远端门、主线合入、exact-main 门、匿名读回与独立冻结发布成立以前，不得写 execution-cell transport、
+  test Provider、Fact phase 或任何后继对象。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

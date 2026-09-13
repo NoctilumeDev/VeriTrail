@@ -805,6 +805,19 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能起草 d
 Envelope 合同；Schema 是否需要新 revision 必须由该合同裁决，不能由 runtime 先猜。Provider/parser/Fact、
 Relation、Slice、Coverage、conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
 
+[文档 150](150-r1-derivation-execution-cell-terminal-envelope-contract.md)从 exact
+`main@2de46c21997d85a437820decfeb2bd8bb7b69ee1` 起草上述 docs-only 最小合同。候选将 trusted controller、
+contained application worker 与 Provider 分成不同 authority；具体 cell preparation 从 provisional budget t0
+开始，成功后才原子 admit attempt 并启动 ProviderRun；request/result 使用 bounded、copy-owned、单终态规范
+JSON frame；closed test launch binding 不恢复 ambient discovery；primitive/protocol/cleanup failure 会不可恢复地
+撤销 attempt eligibility。当前裁决是不升级 `DerivationEvidence 0.1.1`：无合法 terminal envelope 且无更窄正向
+warrant 的已启动 run 使用 `INTERNAL_DERIVATION_ERROR` 作为不声明平台/Provider 根因的 epistemic fallback。
+当前状态为 `R1_DERIVATION_EXECUTION_CELL_CONTRACT_CANDIDATE /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该候选完成自己的远端、合入、exact-main、匿名读回与
+独立冻结发布以前，不得实现 transport/test Provider/Fact phase，也不得开始真实 parser、Relation、Slice、
+Coverage、conflict/UNKNOWN 或完整 Derivation/Manifest。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
