@@ -512,6 +512,17 @@
   Semantic Review Slice 边界：slice 由精确 SourceSnapshot 的确定性关系图派生，可以重叠但必须
   有界、可追溯并保留 coverage/truncation；slice derivation、analysis 与 attention ranking 不得合并。
   该补充不新增 R0 Artifact、不冻结 Slice Schema，也不解除 R1 前置阻断。
+- `docs/149-r1-derivation-execution-cell-system-audit.md` 从 exact
+  `main@c33aeac9fa198bd8a0b9b5dc8340372757ba04b7` 审计 Budget Primitive 与后继 Provider/Fact phase 的组合
+  接缝。审计确认 execution-cell memory 覆盖与 application canonicalization、bounded terminal envelope、
+  primitive failure 后 context invalidation、concrete cell preparation/admission 原子边界及未归因 worker
+  termination 的公共表达尚未闭合。当前状态为
+  `R1_DERIVATION_EXECUTION_CELL_PRECONTRACT_AUDITED /
+  R1_DERIVATION_EXECUTION_CELL_CONTRACT_NOT_STARTED /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许从新 exact main 起草 docs-only
+  Execution Cell / Terminal Envelope 合同；不得创建 transport、Provider、parser、Fact、Schema revision、
+  Relation、Slice、Coverage、Manifest、CLI 或 Workbench 实现。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
