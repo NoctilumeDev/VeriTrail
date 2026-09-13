@@ -460,27 +460,31 @@ print(json.dumps({'win32job': find_spec('win32job'), 'code': code}))
                     "__pycache__", "*.pyc", "build", "*.egg-info"
                 ),
             )
-            subprocess.run(
+            wheel_build = subprocess.run(
                 [
                     sys.executable,
                     "-m",
                     "pip",
                     "wheel",
-                    "--no-build-isolation",
                     "--no-deps",
                     "--wheel-dir",
                     os.fspath(wheelhouse),
                     os.fspath(package_source),
                 ],
-                check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                text=True,
+            )
+            self.assertEqual(
+                wheel_build.returncode,
+                0,
+                f"wheel build failed:\n{wheel_build.stdout}\n{wheel_build.stderr}",
             )
             environment = root / "base-environment"
             venv.EnvBuilder(with_pip=True).create(environment)
             python = environment / "Scripts" / "python.exe"
             wheel = next(wheelhouse.glob("veritrail_review_attention-*.whl"))
-            subprocess.run(
+            wheel_install = subprocess.run(
                 [
                     os.fspath(python),
                     "-m",
@@ -489,9 +493,14 @@ print(json.dumps({'win32job': find_spec('win32job'), 'code': code}))
                     "--no-deps",
                     os.fspath(wheel),
                 ],
-                check=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                text=True,
+            )
+            self.assertEqual(
+                wheel_install.returncode,
+                0,
+                f"wheel install failed:\n{wheel_install.stdout}\n{wheel_install.stderr}",
             )
             completed = subprocess.run(
                 [os.fspath(python), "-I", "-c", script],
