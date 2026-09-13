@@ -145,3 +145,47 @@ class DerivationInputError(Exception):
         self.code = code
         self.safe_message = message or _DERIVATION_INPUT_MESSAGES[code]
         super().__init__(f"{code.value}: {self.safe_message}")
+
+
+class BudgetPrimitiveFailureCode(str, Enum):
+    INVALID_BUDGET_INPUT = "INVALID_BUDGET_INPUT"
+    BUDGET_CONTEXT_NOT_RUNNING = "BUDGET_CONTEXT_NOT_RUNNING"
+    PLATFORM_CAPABILITY_UNAVAILABLE = "PLATFORM_CAPABILITY_UNAVAILABLE"
+    PLATFORM_CONTAINMENT_FAILED = "PLATFORM_CONTAINMENT_FAILED"
+    RELEASE_FAILED = "RELEASE_FAILED"
+    ARTIFACT_STAGING_FAILED = "ARTIFACT_STAGING_FAILED"
+
+
+_BUDGET_PRIMITIVE_MESSAGES = {
+    BudgetPrimitiveFailureCode.INVALID_BUDGET_INPUT: (
+        "the derivation budget input is invalid"
+    ),
+    BudgetPrimitiveFailureCode.BUDGET_CONTEXT_NOT_RUNNING: (
+        "the derivation budget context is not running"
+    ),
+    BudgetPrimitiveFailureCode.PLATFORM_CAPABILITY_UNAVAILABLE: (
+        "the derivation budget containment capability is unavailable"
+    ),
+    BudgetPrimitiveFailureCode.PLATFORM_CONTAINMENT_FAILED: (
+        "the derivation budget containment boundary failed"
+    ),
+    BudgetPrimitiveFailureCode.RELEASE_FAILED: (
+        "the derivation execution cell was not released within its cleanup envelope"
+    ),
+    BudgetPrimitiveFailureCode.ARTIFACT_STAGING_FAILED: (
+        "owned artifact staging failed"
+    ),
+}
+
+
+class BudgetPrimitiveError(Exception):
+    """Typed, path-free failure returned by the derivation budget boundary."""
+
+    def __init__(
+        self,
+        code: BudgetPrimitiveFailureCode,
+        message: str | None = None,
+    ) -> None:
+        self.code = code
+        self.safe_message = message or _BUDGET_PRIMITIVE_MESSAGES[code]
+        super().__init__(f"{code.value}: {self.safe_message}")

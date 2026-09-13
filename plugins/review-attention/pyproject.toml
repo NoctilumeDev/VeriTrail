@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veritrail-review-attention"
+version = "0.1.0.dev0"
+description = "Evidence-bound semantic review artifacts for VeriTrail"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+  { name = "NoctilumeDev" },
+]
+dependencies = []
+
+[project.optional-dependencies]
+budget-windows = ["pywin32==312; sys_platform == 'win32'"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

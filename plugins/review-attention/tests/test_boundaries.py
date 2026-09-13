@@ -15,13 +15,17 @@ if str(SOURCE_ROOT) not in sys.path:
 
 import veritrail_review
 from veritrail_review import (
+    BudgetContext,
+    BudgetPrimitiveError,
     DerivationInputRequest,
     DerivationInputRuntime,
     SourceSnapshotRequest,
     SourceSnapshotRuntime,
     create_source_snapshot,
+    admit_derivation_budget,
     bind_derivation_inputs,
 )
+from veritrail_review.budget import ExecutionBudgetLimits
 
 
 class SourceSnapshotBoundaryTests(unittest.TestCase):
@@ -69,6 +73,23 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
             veritrail_review.__all__,
         )
         self.assertFalse(hasattr(veritrail_review, "__version__"))
+        self.assertNotIn("ExecutionBudgetLimits", veritrail_review.__all__)
+        self.assertNotIn("MemoryAttributionState", veritrail_review.__all__)
+        self.assertNotIn("_run_owned_process_cell", veritrail_review.__all__)
+
+    def test_budget_context_has_no_public_caller_selected_limit_entry(self) -> None:
+        self.assertEqual(
+            set(inspect.signature(admit_derivation_budget).parameters), {"inputs"}
+        )
+        with self.assertRaises(BudgetPrimitiveError):
+            BudgetContext(
+                ExecutionBudgetLimits(
+                    wall_clock_ms=1,
+                    memory_bytes=1,
+                    artifact_bytes=1,
+                ),
+                _admission_token=object(),
+            )
 
     def test_derivation_input_request_cannot_select_outputs_or_execution_controls(self) -> None:
         self.assertEqual(
@@ -102,6 +123,9 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
                 "source_snapshot",
                 "derivation_input",
                 "derivation_input_contracts",
+                "budget",
+                "_artifact_budget",
+                "_windows_budget",
             }
             <= module_names
         )
