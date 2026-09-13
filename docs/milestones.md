@@ -793,6 +793,18 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。唯一下一步是重�
 Run / Fact provenance 接缝；审计不授权实现。Provider/parser/Fact、Relation、Slice、Coverage、
 conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
 
+[文档 149](149-r1-derivation-execution-cell-system-audit.md)从 exact
+`main@c33aeac9fa198bd8a0b9b5dc8340372757ba04b7` 重新审计冻结 Budget Primitive 与后继 Provider/Fact phase 的
+组合语义。审计确认 hard memory containment 与 application-owned canonicalization 仍缺少共同 execution
+topology，process primitive 尚无 bounded terminal envelope，primitive failure 后 context 仍可保持 `RUNNING`，
+且无正向原因事件的 worker termination 没有已冻结公共映射。因此当前状态只推进到
+`R1_DERIVATION_EXECUTION_CELL_PRECONTRACT_AUDITED /
+R1_DERIVATION_EXECUTION_CELL_CONTRACT_NOT_STARTED /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能起草 docs-only Execution Cell / Terminal
+Envelope 合同；Schema 是否需要新 revision 必须由该合同裁决，不能由 runtime 先猜。Provider/parser/Fact、
+Relation、Slice、Coverage、conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
