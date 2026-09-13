@@ -836,6 +836,23 @@ frame codec、contained application worker、closed deterministic test Provider 
 phase result；真实 parser、FactSet/DerivationEvidence publication、Relation、conflict/UNKNOWN、Slice、Coverage
 与完整 Derivation/Manifest 继续禁止。
 
+[文档 152](152-r1-derivation-execution-cell-implementation-freeze-candidate.md)记录上述窄实现已经由 PR #132
+从 exact 合同基线 `3c89f8eb94333986fc4901b9a1b91edf47d0059f` 施工。实现提交
+`02e4d05dcfc7c062c97ecfa21c00b26f601b9140` 的原始 Public CI attempt 1 为 11/11 success，随后以
+`main@8b77305cea3a95690660adcb25f76d2b42c6e5e1` 合入受保护主线；该 exact main 的 Public CI 11/11、
+Browser Smoke 1/1 与全部十二个变更文件的匿名 exact-SHA byte readback 均成立。实现保持 controller、
+contained application worker 与 closed test Provider 三层 authority，建立 bounded single-terminal framing、
+不可恢复 attempt eligibility、positive-warrant terminal mapping 与 copy-owned non-published Fact phase result；
+没有公开 execution-cell API，也没有真实 parser、FactSet/Evidence publication、Relation、Slice、Coverage 或
+Manifest。实现后审计修正 rejected terminal identity leakage、primitive commit failure revoke、pre-admission
+runtime loss mapping、release failure 与 late-stop/early-terminal 接缝；第一次受父进程 `PYTHONPATH` 污染的
+BP-014 clean-wheel 结果被作废，并在 fresh interpreter 安装坐标上重建。当前状态只能记为
+`R1_DERIVATION_EXECUTION_CELL_IMPLEMENTED /
+R1_DERIVATION_EXECUTION_CELL_FREEZE_CANDIDATE /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文候选自己的门、合入、exact-main 门、匿名产品
+读回与后继独立最终状态发布完成前，不得写成 frozen，也不得提前审计或实现下一个 provenance closure。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

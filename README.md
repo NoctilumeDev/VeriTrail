@@ -43,7 +43,7 @@ VeriTrail 的核心关系很小：
 | Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论 |
 | Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
 | Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
-| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1 与 Budget Primitive 已冻结；Execution Cell 已完成实现前审计，provenance runtime 仍未开始 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1 与 Budget Primitive 已冻结；Execution Cell 已实现并进入冻结候选，后继 provenance runtime 尚未开始 |
 | Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
 
 ![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_EXECUTION_CELL_CONTRACT_FROZEN / R1_DERIVATION_EXECUTION_CELL_IMPLEMENTATION_ALLOWED / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_DERIVATION_EXECUTION_CELL_IMPLEMENTED / R1_DERIVATION_EXECUTION_CELL_FREEZE_CANDIDATE / R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -222,7 +222,10 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   收窄为 docs-only 候选；[合同冻结发布](docs/151-r1-derivation-execution-cell-contract-freeze-publication.md)
   外部绑定候选的 PR、exact-main 门、匿名产品读回与冻结前第二轮系统俯瞰。它自己的最后门全部成立后，只允许
   实现 closed test Provider / non-published Fact phase；真实 parser、Relations、Slices、Coverage 与完整 Manifest
-  继续未启动。
+  继续未启动。[实现冻结候选](docs/152-r1-derivation-execution-cell-implementation-freeze-candidate.md)已记录
+  private execution-cell、29 项协议/运行义务、PR #132、exact-main 双门、匿名逐字节读回，以及被作废后
+  重建的 clean-wheel provenance 证据。当前仍只是 `IMPLEMENTED / FREEZE_CANDIDATE`，后继 provenance
+  runtime 尚未取得实现授权。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -265,7 +268,7 @@ VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统�
 | [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
 | [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
 | Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
-| Review / R | 压缩人的代码审查注意力 | Input runtime、Evidence Schema 0.1.1、Budget Primitive 与 Execution Cell 合同已冻结；只授权 closed test Provider / non-published Fact phase，runtime 尚未开始 |
+| Review / R | 压缩人的代码审查注意力 | Input runtime、Evidence Schema 0.1.1 与 Budget Primitive 已冻结；Execution Cell 已实现并进入冻结候选，真实 parser 与发布闭环尚未开始 |
 | Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
 
 这些关系是认知地图，不是当前集成声明。一个独立系统最多通过不可变 Artifact / Evidence adapter 接入
@@ -331,7 +334,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 23. [Review Attention R1 Derivation Execution Cell 与 Terminal Continuity 系统审计](docs/149-r1-derivation-execution-cell-system-audit.md)
 24. [Review Attention R1 Derivation Execution Cell / Terminal Envelope 合同候选](docs/150-r1-derivation-execution-cell-terminal-envelope-contract.md)
 25. [Review Attention R1 Derivation Execution Cell / Terminal Envelope 合同冻结发布](docs/151-r1-derivation-execution-cell-contract-freeze-publication.md)
-26. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+26. [Review Attention R1 Derivation Execution Cell 实现冻结候选](docs/152-r1-derivation-execution-cell-implementation-freeze-candidate.md)
+27. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
