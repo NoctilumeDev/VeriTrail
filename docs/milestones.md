@@ -765,6 +765,20 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许从�
 budget primitive 与 `BP-001..016` conformance；Provider/parser/Fact 必须等待该实现自身冻结及后继明确授权，
 Relation、Slice、Coverage、conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
 
+[文档 147](147-r1-derivation-budget-primitive-implementation-freeze-candidate.md)从独立 implementation PR #126
+记录该 primitive 的实现与系统审计事实：base package 不依赖 `pywin32`，Windows extra exact 锁定
+`pywin32==312`；共享 BudgetContext 使用 absolute deadline、single terminal-stop latch、inclusive artifact
+reservation 和 cleanup-only release envelope；Job hard containment 与 terminal attribution 保持分离，只有
+正向 memory-limit event 才能授权 `EXECUTION_MEMORY_BUDGET`。实现后审计修正了 local cleanup 冒充 global
+release、expired context 仍可 resume worker，以及内部 attribution state 顶层导出三处接缝。第一次 PR head
+只因 BP-014 用 `--no-build-isolation` 假设 ambient build backend 而红，未 rerun；独立测试修正后的新 head
+原始 Public CI 11/11，随后合入 `main@8f8af815d1a566bbf35096e318d209bdc17bf7b3`，该 exact main 的
+Public CI 11/11、Browser Smoke 1/1 与四项匿名 raw byte 读回成立。当前仍只是
+`R1_DERIVATION_BUDGET_PRIMITIVE_IMPLEMENTED /
+R1_DERIVATION_BUDGET_PRIMITIVE_FREEZE_CANDIDATE`；文档 147 自身的门、合入、exact-main 门、匿名产品读回
+与后继最终状态发布完成前不得写成 frozen，也不得开始 Provider/parser/Fact、Relation、Slice、Coverage、
+conflict/UNKNOWN 或完整 Derivation/Manifest。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

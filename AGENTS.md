@@ -458,6 +458,23 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该冻结只允许实现文档 145 的 primitive 与
   `BP-001..016`；Provider/parser/Fact 必须等待该实现自身冻结及后继明确授权，Relation、Slice、Coverage、
   conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
+- Derivation Budget Primitive 后继实现由 PR #126 从冻结合同基线
+  `4c4d81bfeed7bea9d159a58bb91097f8d98fb0c8` 建立。主实现提交为
+  `998b6ef52665bcafc0e7f9b6b8f2cbc0bedb2341`；其第一次 Public CI 在双 Python 的 BP-014 同时暴露
+  `pip wheel --no-build-isolation` 对 ambient build backend 的错误测试假设，该失败没有 rerun。独立修正
+  `b23488e7f12b719c6fc331af31ff9bb9032659ca` 让 base-wheel 负向门真正使用 isolated build environment；
+  新 head 的原始 11/11 门禁合入
+  `main@8f8af815d1a566bbf35096e318d209bdc17bf7b3`，该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+  与四项匿名 exact-SHA bytes 读回均成立。实现后系统审计修正 local cleanup 冒充 global release、expired
+  context 仍可 resume worker，以及内部 attribution state 顶层导出；Provider 异常后的 context discard 与
+  非抢占文件系统 cleanup 继续留给后继合同，不能由 primitive 猜测。实现冻结候选见
+  `docs/147-r1-derivation-budget-primitive-implementation-freeze-candidate.md`；当前只能记为
+  `R1_DERIVATION_BUDGET_PRIMITIVE_IMPLEMENTED /
+  R1_DERIVATION_BUDGET_PRIMITIVE_FREEZE_CANDIDATE /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。文档 147 自身的门、主线合入、exact-main 门、
+  匿名产品读回与后继独立状态发布成立前不得写成 frozen；Provider/parser/Fact、Relation、Slice、Coverage、
+  conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
   docs-only Q0 支线的蓝图、展示反例修正、失败冻结发布、独立地基修正与新 exact-main 复验已经完成：
   `Q = Quick`，正式能力名为 `Verification Scheduling Plugin`。旧状态发布合入后的 exact-main Public CI
   曾在 E3 0.2 Release 下载门停止，证明旧实现把四级退避表误作五次尝试上限，在 60 秒绝对恢复预算仍有约
