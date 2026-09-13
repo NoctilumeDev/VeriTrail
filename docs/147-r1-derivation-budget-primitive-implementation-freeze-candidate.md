@@ -218,7 +218,19 @@ isolated build environment，并在失败时保留 stdout/stderr。
 该读回只证明公开 exact bytes 可取得且与 Git tree 相同，不把 raw transport success 提升为 correctness；合同、
 实现审计、conformance 和完整门禁共同承担后者。
 
-## 10. 停止线与下一门
+## 10. 本 docs-only 候选的首次远端启动失败
+
+[PR #127](https://github.com/NoctilumeDev/VeriTrail/pull/127) 的第一个 candidate head 为
+`04215568e0d067cdb62edccffc099b99e6d350d2`。原始
+[Public CI run 34748434202](https://github.com/NoctilumeDev/VeriTrail/actions/runs/34748434202) 在 attempt 1
+以 `startup_failure` 终止；GitHub API 返回 `jobs = []`、`check_runs = []`，且没有 logs 或 Artifact。该事实
+证明工作流没有实例化任何测试，既不能算 required checks 成功，也不能算某一产品测试失败。公开状态页当时
+没有报告 Actions incident，但这同样不能授权把未知平台根因归给 GitHub、代理、仓库或 runner。
+
+该 run 没有 rerun。本段通过后继 docs-only commit 保留第一次失败，并要求新 head 建立自己的原始门禁；后继
+绿灯不能删除或改写 `34748434202`。
+
+## 11. 停止线与下一门
 
 本候选继续禁止：
 
