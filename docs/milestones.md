@@ -779,6 +779,20 @@ R1_DERIVATION_BUDGET_PRIMITIVE_FREEZE_CANDIDATE`；文档 147 自身的门、合
 与后继最终状态发布完成前不得写成 frozen，也不得开始 Provider/parser/Fact、Relation、Slice、Coverage、
 conflict/UNKNOWN 或完整 Derivation/Manifest。
 
+[文档 148](148-r1-derivation-budget-primitive-freeze-publication.md)从候选合入基线
+`main@571139df5db94159f5e439619176f17a02f86f94` 独立发布实现冻结。PR #127 第一个 docs-only head 的
+Public CI 以 `startup_failure` 结束且没有实例化 jobs/check-runs；该 run 未 rerun，后继新 head 原始 Public CI
+11/11、受保护主线合入、新 exact-main Public CI 11/11 与 Browser Smoke 1/1 均成立。第一次匿名已安装产品
+读回又在 README 的 P1 API 命中公开额度 0；同次 P2 Render 完成但没有 Core PASS，输出被保留且未复用。
+额度 reset 后从空 output 重建 README、文档 147 与 milestones 三个 paired session，均为 `PASS`，summary
+digest 为 `0b3ae1e8ae68789c3b30253e1b5557e81404a1b754bed383cdac1e38596a988c`。文档 148 自身的原始门、
+受保护主线合入、新 exact-main 门和针对本文坐标的 fresh anonymous 读回全部成立后，当前状态为
+`R1_DERIVATION_BUDGET_PRIMITIVE_FROZEN /
+R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。唯一下一步是重新审计 Derivation Attempt / Provider
+Run / Fact provenance 接缝；审计不授权实现。Provider/parser/Fact、Relation、Slice、Coverage、
+conflict/UNKNOWN 与完整 Derivation/Manifest 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
