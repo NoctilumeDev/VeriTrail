@@ -578,6 +578,18 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许先审计 Provider Run、candidate Fact
   provenance、canonical Fact admission 与 FactSet/DerivationEvidence closure eligibility；不得直接实现真实
   parser、publication、Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
+- `docs/154-r1-fact-evidence-closure-system-audit.md` 已从 exact
+  `main@a96912fa3f141a783e728f95e0feb26341197a32` 完成上述前合同系统审计。审计拆开 Provider candidate、
+  application-canonical Fact、FactSet admission 与公共 Artifact membership，确认 phase reported IDs 不能
+  原样复制为 final Evidence reported IDs；COMPLETE Manifest 仍禁止 Fact/Evidence standalone publication。
+  审计还以三个均被 `DerivationEvidence 0.1.1` Schema 接受但 digest 不同的 `PROVIDER_FAILED` 单变量向量证明
+  non-budget diagnostic placement 尚未冻结，并确认 terminal stop 后 cleanup-only permission 与 DIAGNOSTIC
+  publication/artifact budget 之间缺少明确 authority。当前状态为
+  `R1_FACT_EVIDENCE_CLOSURE_PRECONTRACT_AUDITED /
+  R1_FACT_EVIDENCE_CLOSURE_CONTRACT_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从新 exact main 起草 docs-only Fact
+  Admission / DerivationEvidence Closure 合同；不得创建 parser、Provider SPI、FactSet/Evidence publisher、
+  Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest 实现。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

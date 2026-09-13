@@ -868,6 +868,19 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。唯一后继是先审�
 admission 与 FactSet/DerivationEvidence closure eligibility；真实 parser、publication、Relation、
 conflict/UNKNOWN、Slice、Coverage 与完整 Manifest 继续没有实现授权。
 
+[文档 154](154-r1-fact-evidence-closure-system-audit.md)从 exact
+`main@a96912fa3f141a783e728f95e0feb26341197a32` 执行该前合同系统审计。它确认 execution cell 已拥有
+application-canonical Fact identity，但 FactSet admission、final Evidence reported-ID projection 与公共 Artifact
+membership 仍是不同边界；COMPLETE 八文件合同禁止把 FactSet 或 completed Evidence 单独发布。审计用三个
+Schema-valid、digest 不同的 `PROVIDER_FAILED` 单变量 Evidence 证明 run/top-level diagnostic placement 仍未
+规范化，并确认 deadline/cancel/memory/artifact stop 后只有 cleanup permission 时，DIAGNOSTIC publication
+是否存在、由哪份 artifact budget/eligibility 拥有尚未冻结。当前状态只推进到
+`R1_FACT_EVIDENCE_CLOSURE_PRECONTRACT_AUDITED /
+R1_FACT_EVIDENCE_CLOSURE_CONTRACT_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从新的 exact main 起草 docs-only Fact
+Admission / DerivationEvidence Closure 最小合同；真实 parser、Provider SPI、FactSet/Evidence publisher、
+Relation、conflict/UNKNOWN、Slice、Coverage 与完整 Manifest implementation 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
