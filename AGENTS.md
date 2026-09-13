@@ -563,6 +563,21 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。文档 152 自身的门、受保护主线合入、exact-main
   门、匿名产品读回与后继独立最终状态发布成立前，不得写成 frozen，也不得审计或实现真实 parser、
   FactSet/DerivationEvidence publication、Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
+- 文档 152 的实现冻结候选已由 PR #133 从 exact `main@8b77305cea3a95690660adcb25f76d2b42c6e5e1`
+  建立；候选提交 `84a986010c42ef43f785e3725ea6d65b87d3b063` 的原始 Public CI attempt 1 为
+  11/11 SUCCESS，并以 merge commit `c2349b2a7c4d9ed002311d46f7212cb35856caf6`、tree
+  `63239304e6d32479a888ebf1e5a077a4143292bb` 合入受保护主线。该 exact main 的 Public CI
+  `34770503241` 为 11/11、Browser Smoke `34770503260` 为 1/1，均是 attempt 1。fresh CPython 3.13.13
+  已安装产品环境在无 GitHub token、无 `PYTHONPATH` 下对 README、文档 152 与 milestones 建立三次独立
+  `P1 API -> P2 Render` session；三者均 HTTP 200、requested/final 相同、三样本稳定、active streams 为 0、
+  无 cleanup/coverage error 且 Core Verdict 为 PASS，summary digest 为
+  `94654f6f58fcf82a2a6230521164e8f98176dff1ab40e97d2c695a67d8c98045`。最终状态发布见
+  `docs/153-r1-derivation-execution-cell-freeze-publication.md`。该文档自己的门禁、合入、exact-main 门与匿名
+  读回全部成立后，状态才是 `R1_DERIVATION_EXECUTION_CELL_FROZEN /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只允许先审计 Provider Run、candidate Fact
+  provenance、canonical Fact admission 与 FactSet/DerivationEvidence closure eligibility；不得直接实现真实
+  parser、publication、Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
