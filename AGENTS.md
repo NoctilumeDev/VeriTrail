@@ -534,6 +534,17 @@
   不声明平台/Provider 根因的 epistemic fallback，因此不修改 `DerivationEvidence 0.1.1` Schema/corpus。候选
   自身的远端门、主线合入、exact-main 门、匿名读回与独立冻结发布成立以前，不得写 execution-cell transport、
   test Provider、Fact phase 或任何后继对象。
+- `docs/151-r1-derivation-execution-cell-contract-freeze-publication.md` 外部绑定文档 150 候选的本地组合审计、
+  PR #130 原始 Public CI attempt 1 的 11/11、受保护主线 `e1f91a94afb3e3afd4e85d3605240b77d379f57a`、
+  exact-main Public CI 11/11、Browser Smoke 1/1 与 README/文档 150/milestones 三次 fresh anonymous
+  installed-product Core PASS。其自身最后门全部成立后，状态为
+  `R1_DERIVATION_EXECUTION_CELL_CONTRACT_FROZEN /
+  R1_DERIVATION_EXECUTION_CELL_IMPLEMENTATION_ALLOWED /
+  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。该授权只允许文档 150 的 closed test Provider、
+  bounded transport、attempt eligibility 与 non-published Fact phase result；真实 parser、FactSet/Evidence
+  publication、Relation、conflict/UNKNOWN、Slice、Coverage 与完整 Manifest 继续禁止。本状态发布自己的
+  PR/合入/exact-main/匿名读回完成前，分支文字仍不授权实现。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
