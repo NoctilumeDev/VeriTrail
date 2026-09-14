@@ -687,6 +687,17 @@
   R1_MULTI_PROVIDER_FACT_COMPOSITION_FREEZE_CANDIDATE /
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文候选自己的门、合入、exact-main 双门、匿名产品
   读回与后继独立最终状态发布完成前，不得写成 frozen，也不得开始任何延期能力。
+- `docs/163-r1-multi-provider-fact-composition-freeze-publication.md` 从候选合入基线
+  `main@66b2252c5261387e1d1b40899f3e009e6ed6cecf` 独立发布实现冻结事实。PR #148 原始 Public CI 为
+  attempt 1、11/11 SUCCESS；候选 exact main 的 Public CI 为 11/11、Browser Smoke 为 1/1。README、文档
+  162 与 milestones 的三次 fresh anonymous installed-product readback 均使用新的 R1 implementation-candidate
+  acceptance identity，P1/P2 coverage COMPLETE、三样本稳定、Core PASS，联合 summary SHA-256 为
+  `c098ffeefea338b9ab220bca0e2c521ec5d0faaae9970699367c20deab8fa7da`。第一次 README 工具尝试因
+  `plan_id` 超过 Core 长度上限在采集前失败，未产生输出；修正后从新目录建立有效 evidence。本文自己的门、
+  合入、新 exact-main 双门与匿名读回全部成立后，状态才是
+  `R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步必须先从新 exact main 做系统级审计，再选择
+  一个最小合同；不得直接开始 parser、publisher、Relation、Slice、Coverage 或完整 Manifest。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
