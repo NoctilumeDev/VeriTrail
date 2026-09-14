@@ -629,6 +629,16 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的门、合入、exact-main 门、匿名产品读回
   与后继独立最终状态发布完成前，不得写成 frozen，也不得开始 output publisher、真实 parser、Provider SPI、
   Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
+- `docs/158-r1-fact-evidence-closure-freeze-publication.md` 从候选合入基线
+  `main@a4c63607d8a586a5ec19eae1cdc4279cda1ffa88` 独立发布实现冻结事实。PR #142 原始 Public CI 为
+  11/11 SUCCESS；候选 exact main 的 Public CI 为 11/11、Browser Smoke 为 1/1。README、文档 157 与
+  milestones 的三次 fresh anonymous installed-product readback 均使用 R1 专属 sealed Plan、acceptance ID、
+  summary kind 与 boundary，由 Core 判为 PASS；最初复用 P4 release-candidate label 的三份运行因 evidence
+  identity 不匹配已作废，未进入联合摘要。本文自己的门禁、合入、新 exact-main 双门与匿名读回全部成立后，
+  状态才是 `R1_FACT_EVIDENCE_CLOSURE_FROZEN /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步必须先从新 exact main 做系统级审计，再
+  选择一个最小合同；不得预先承诺或直接实现 output publisher、真实 parser、multi-Provider Fact、Relation、
+  conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
