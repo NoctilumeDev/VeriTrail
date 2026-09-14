@@ -1026,6 +1026,28 @@ single-Provider child cells、run-local conformance、same-ID merge、same-subje
 `MP-001..028`。real parser、public Provider authorization/SPI/discovery、publisher、Relation、Slice、Coverage、
 Manifest、CLI 与 Workbench 继续未授权；实现必须从新 exact main 独立开始，不能从合同分支续写。
 
+[文档 162](162-r1-multi-provider-fact-composition-implementation-freeze-candidate.md)记录该 private 实现由
+PR #147 以提交 `f23c042cf11f872da2e6413d4c0ee76210fb43e7` 建立；原始 Public CI run
+`34880944564` 为 attempt 1、11/11 SUCCESS。实现以普通 merge commit
+`main@590df332fbd60bdfc857a4ea3f3c35937ce03d8a` 合入，candidate 与 merge tree 均为
+`4814149bc175886bdcc92ffc45fd65376373a4ba`；新 exact main 的 Public CI run `34882727275` 为 attempt 1、
+11/11 SUCCESS，Browser Smoke run `34882727435` 为 attempt 1、1/1 SUCCESS。全部七个变更文件又从该 exact
+SHA 完成无 token raw-byte 读回，逐项与 Git tree 同大小、同 SHA-256 和同 blob identity，规范行摘要为
+`8ecdf360ffea918222c565bd9530bf4990e454b6f56d5a0a8f78ae6ac6fcadda`。实现保持一个 parent budget、严格
+串行 children、run-local closure、Fact merge/conflict、terminal join、private non-published projection 与
+`MP-001..028`；没有新增 public API、默认依赖、Artifact writer 或延期能力。当前状态只能是：
+
+```text
+R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTED
+R1_MULTI_PROVIDER_FACT_COMPOSITION_FREEZE_CANDIDATE
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 162 自己的远端门、受保护主线合入、新 exact-main 双门、R1 专属 fresh anonymous installed-product
+readback 与后继独立最终状态发布完成前，不得写成 frozen。后继不得直接开始 real parser、public Provider
+SPI/discovery、publisher、Relation、Slice、Coverage、Manifest、CLI 或 Workbench；冻结后仍须先做系统级审计，
+再选择一个最小合同闭环。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
