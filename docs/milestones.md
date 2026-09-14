@@ -913,6 +913,31 @@ R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_NOT_STARTED /
 R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖文档 155 第 13 节 A–F 的 private、
 non-published closure；output path/publisher、real parser、Relation、Slice、Coverage 与完整 Manifest 继续禁止。
 
+[文档 157](157-r1-fact-evidence-closure-implementation-freeze-candidate.md)记录文档 155/156 授权的 private
+Fact/Evidence closure 已完成实现、系统审计并由 PR #140 合入受保护主线。实现把 existing execution-cell
+拆成 one-shot prepared attempt 与 consume boundary，在同一 BudgetContext、attempt eligibility、inputs、binding
+与 phase snapshot 上完成 application-canonical Fact admission、owned non-published FactSet construction state、
+non-success Evidence projection 与一次性 diagnostic eligibility；没有 output path、publisher、真实 parser、
+Provider SPI、Relation、conflict/UNKNOWN、Slice、Coverage 或 Manifest 能力。
+
+PR #140 的首次 pre-rebase Public CI 在 Python 3.10 aggregated job 到达既有 15 分钟 outer timeout 后被取消；
+该失败事实被保留，没有称为 flake 或 rerun 洗白。独立 PR #141 只把 workflow 外层 containment 调整为 20 分钟，
+不修改任何 inner product timeout、gate 或 acceptance threshold；其原始 11/11、exact-main 双门与匿名 workflow
+byte readback 均成立。实现以相同 patch-id rebase 后，PR #140 原始有效 Public CI 为 11/11，并以
+`main@86b62464b9eef00a5e9da8d0549f093767be27e2` 合入；该 exact main 的 Public CI 11/11、Browser Smoke
+1/1、五个变更文件匿名 exact-SHA 读回与 clean-wheel isolated site-packages probe 均成立。冻结前系统审计未
+发现新 blocker，focused FA/boundary 27 项在 CPython 3.10/3.13 normal/`-O` 四格均通过。当前状态只能是：
+
+```text
+R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTED
+R1_FACT_EVIDENCE_CLOSURE_FREEZE_CANDIDATE
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 157 自己的远端门、受保护主线合入、新 exact-main 双门、匿名 installed-product readback 与后继独立最终
+状态发布完成前，不得写成 frozen，也不得开始 public Artifact、真实 parser、Relation、Slice、Coverage 或完整
+Derivation 实现。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

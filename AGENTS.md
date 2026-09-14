@@ -617,6 +617,18 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖 private integrated controller、owned
   non-published Fact admission/Evidence projection 与 FA-001..024；output path/publisher、real parser、Provider SPI、
   Relation、conflict/UNKNOWN、Slice、Coverage、完整 Manifest、CLI 与 Workbench 继续禁止。
+- `docs/157-r1-fact-evidence-closure-implementation-freeze-candidate.md` 记录上述窄实现已经由 PR #140 合入
+  `main@86b62464b9eef00a5e9da8d0549f093767be27e2`。实现只新增 private integrated controller、owned
+  non-published FactSet construction state、non-success Evidence projection 与 one-shot diagnostic eligibility；
+  FA-001..024 focused gate 在 CPython 3.10/3.13 normal/`-O` 四格均为 27/27，完整 Review Attention 回归四格
+  均为 133/133。PR 首次 pre-rebase run 因既有 aggregated Python job 的 15 分钟 outer timeout 被取消；该事实
+  保留，独立 PR #141 只把 CI containment 调整为 20 分钟并完成自己的 11/11、exact-main 双门与匿名 workflow
+  byte readback。实现 patch-id 不变地 rebase 后，PR #140 的有效原始门为 11/11；实现 exact main 的 Public CI
+  为 11/11、Browser Smoke 为 1/1。本文状态只能是 `R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTED /
+  R1_FACT_EVIDENCE_CLOSURE_FREEZE_CANDIDATE /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的门、合入、exact-main 门、匿名产品读回
+  与后继独立最终状态发布完成前，不得写成 frozen，也不得开始 output publisher、真实 parser、Provider SPI、
+  Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

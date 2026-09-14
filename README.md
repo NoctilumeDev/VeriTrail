@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_FACT_EVIDENCE_CLOSURE_CONTRACT_FROZEN / R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_ALLOWED / R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTED / R1_FACT_EVIDENCE_CLOSURE_FREEZE_CANDIDATE / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -236,7 +236,11 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   闭合；[独立冻结发布](docs/156-r1-fact-evidence-closure-contract-freeze-publication.md)又完成第二轮系统审计，
   没有发现新 blocker。该发布自己的最后门全部成立后，只允许实现 private integrated controller、non-published
   Fact admission/Evidence projection 与 FA-001..024；output path、publisher、真实 parser、Relation、Slice、
-  Coverage 与完整 Manifest 继续未启动。
+  Coverage 与完整 Manifest 继续未启动。[实现冻结候选](docs/157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
+  已记录该 private closure、FA-001..024、PR #140、独立 Public CI 外层 timeout capacity 修正、exact-main
+  双门、匿名源码字节读回与 clean-wheel installed-product 证据。当前仍只是 implementation freeze candidate；
+  候选自己的门、合入、exact-main 门、匿名产品读回与后继独立最终状态发布完成前，不得写成 frozen，也不得
+  开始 publisher、真实 parser、Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -350,7 +354,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 28. [Review Attention R1 Fact Admission 与 DerivationEvidence Closure 系统审计](docs/154-r1-fact-evidence-closure-system-audit.md)
 29. [Review Attention R1 Fact Admission / DerivationEvidence Closure 最小合同候选](docs/155-r1-fact-admission-and-derivation-evidence-closure-contract.md)
 30. [Review Attention R1 Fact Admission / DerivationEvidence Closure 合同冻结发布](docs/156-r1-fact-evidence-closure-contract-freeze-publication.md)
-31. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+31. [Review Attention R1 Fact Admission / DerivationEvidence Closure 实现冻结候选](docs/157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
+32. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
