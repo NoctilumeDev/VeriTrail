@@ -324,6 +324,8 @@ def run_closed_test_provider(
         "duplicate-terminal",
         "terminal-then-sleep",
         "facts-on-failure",
+        "multi-a",
+        "multi-b",
     }:
         path_hex = sorted(request.supported_paths)[0]
         size = request.source_sizes_by_path_hex[path_hex]
@@ -338,6 +340,22 @@ def run_closed_test_provider(
                 },
                 "local_ordinal": 0,
                 "semantic_attributes": {"module_key_parts": None},
+            }
+        ]
+    if launch_key == "multi-advisory":
+        path_hex = sorted(request.supported_paths)[0]
+        size = request.source_sizes_by_path_hex[path_hex]
+        return [
+            {
+                "subject_space": "MODULE_ENTITY",
+                "fact_kind": "MODULE",
+                "source_anchor": {
+                    "git_path": {"path_kind": "GIT_PATH", "git_path_hex": path_hex},
+                    "start_byte": 0,
+                    "end_byte": size,
+                },
+                "local_ordinal": 0,
+                "semantic_attributes": {"module_key_parts": ["advisory"]},
             }
         ]
     if launch_key == "empty":
@@ -709,7 +727,7 @@ def _descriptor_from_document(value: object) -> ProviderDescriptor:
         raise ValueError
     if any(not _nonempty_text(item) for item in value.values()):
         raise ValueError
-    if value["capability_id"] != "python-ast":
+    if value["capability_id"] not in {"python-ast", "python-ast-advisory"}:
         raise ValueError
     return ProviderDescriptor(**dict(value))  # type: ignore[arg-type]
 

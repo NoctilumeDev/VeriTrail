@@ -33,9 +33,11 @@ class ProviderBinding:
     launch_key: str
 
 
-def _descriptor(provider_id: str) -> ProviderDescriptor:
+def _descriptor(
+    provider_id: str, *, capability_id: str = "python-ast"
+) -> ProviderDescriptor:
     return ProviderDescriptor(
-        capability_id="python-ast",
+        capability_id=capability_id,
         provider_id=provider_id,
         provider_version="0.1-test",
         parser_id="closed-deterministic-test-parser",
@@ -66,8 +68,17 @@ _CLOSED_TEST_PROVIDER_DESCRIPTORS: Mapping[str, ProviderDescriptor] = (
             ),
             "memory": _descriptor("closed-test-provider-memory"),
             "slow": _descriptor("closed-test-provider-slow"),
+            "multi-a": _descriptor("closed-multi-provider-a"),
+            "multi-b": _descriptor("closed-multi-provider-b"),
+            "multi-advisory": _descriptor(
+                "closed-multi-provider-advisory",
+                capability_id="python-ast-advisory",
+            ),
         }
     )
+)
+_MULTI_PROVIDER_ONLY_LAUNCH_KEYS = frozenset(
+    {"multi-a", "multi-b", "multi-advisory"}
 )
 
 
@@ -84,6 +95,14 @@ def binding_matches_closed_allow_list(binding: ProviderBinding) -> bool:
         return False
     expected = _CLOSED_TEST_PROVIDER_DESCRIPTORS.get(binding.launch_key)
     return expected is not None and expected == binding.descriptor
+
+
+def binding_is_multi_provider_only(binding: ProviderBinding) -> bool:
+    return (
+        isinstance(binding, ProviderBinding)
+        and binding.launch_key in _MULTI_PROVIDER_ONLY_LAUNCH_KEYS
+        and binding_matches_closed_allow_list(binding)
+    )
 
 
 def descriptor_for_launch_key(launch_key: str) -> ProviderDescriptor | None:

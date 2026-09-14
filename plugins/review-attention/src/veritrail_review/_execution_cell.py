@@ -17,12 +17,14 @@ from veritrail_review._execution_cell_application import (
 from veritrail_review._execution_cell_binding import (
     ProviderBinding,
     ProviderDescriptor,
+    binding_is_multi_provider_only,
     binding_matches_closed_allow_list,
 )
 from veritrail_review._execution_cell_protocol import (
     MAX_REQUEST_PAYLOAD_BYTES,
     MAX_TERMINAL_PAYLOAD_BYTES,
     AttemptEligibility,
+    AttemptEligibilityState,
     ExecutionCellTransportSafetyLimits,
     FrameProtocolError,
     encode_frame,
@@ -140,7 +142,10 @@ def _prepare_closed_test_execution_attempt(
         cancellation_requested=cancellation_requested,
         transport_limits=transport_limits,
     )
-    if not binding_matches_closed_allow_list(binding):
+    if (
+        not binding_matches_closed_allow_list(binding)
+        or binding_is_multi_provider_only(binding)
+    ):
         raise DerivationExecutionCellError(
             DerivationExecutionCellFailureCode.PROVIDER_BINDING_MISMATCH
         )
@@ -151,19 +156,7 @@ def _prepare_closed_test_execution_attempt(
             DerivationExecutionCellFailureCode.DERIVATION_RUNTIME_UNAVAILABLE
         ) from exc
 
-    snapshot = inputs.source_snapshot_document_copy()
-    coordinate = snapshot["source_coordinate"]
-    commit_oid = coordinate["commit_oid"]
-    request_provenance = {
-        "requested_repository_id": snapshot["repository_id"],
-        "requested_ref": (
-            f"oid:{commit_oid['algorithm'].lower()}:{commit_oid['hex']}"
-        ),
-        "resolver_id": "veritrail-r1-owned-snapshot-exact-oid",
-        "resolver_version": "0.1",
-        "resolved_at": _utc_now(),
-    }
-
+    request_provenance = _owned_request_provenance(inputs)
     attempt_started_at = _utc_now()
     try:
         context = admit_derivation_budget(inputs)
@@ -171,7 +164,51 @@ def _prepare_closed_test_execution_attempt(
         raise DerivationExecutionCellError(
             DerivationExecutionCellFailureCode.INVALID_DERIVATION_ATTEMPT_REQUEST
         ) from exc
-    eligibility = AttemptEligibility()
+    return _build_prepared_closed_test_execution_attempt(
+        inputs,
+        derivation_id=derivation_id,
+        binding=binding,
+        cancellation_requested=cancellation_requested,
+        transport_limits=transport_limits,
+        context=context,
+        eligibility=AttemptEligibility(),
+        request_provenance=request_provenance,
+        attempt_started_at=attempt_started_at,
+    )
+
+
+def _build_prepared_closed_test_execution_attempt(
+    inputs: DerivationInputSet,
+    *,
+    derivation_id: str,
+    binding: ProviderBinding,
+    cancellation_requested: Callable[[], bool] | None,
+    transport_limits: ExecutionCellTransportSafetyLimits,
+    context: BudgetContext,
+    eligibility: AttemptEligibility,
+    request_provenance: dict[str, object],
+    attempt_started_at: str,
+) -> _PreparedExecutionAttempt:
+    """Build one child cell against caller-owned parent attempt state."""
+
+    if (
+        not isinstance(inputs, DerivationInputSet)
+        or not isinstance(binding, ProviderBinding)
+        or not isinstance(binding.descriptor, ProviderDescriptor)
+        or not binding_matches_closed_allow_list(binding)
+        or not isinstance(context, BudgetContext)
+        or context.state is not BudgetState.RUNNING
+        or not isinstance(eligibility, AttemptEligibility)
+        or eligibility.state is not AttemptEligibilityState.PROVISIONAL
+        or not isinstance(request_provenance, dict)
+        or not isinstance(attempt_started_at, str)
+        or not attempt_started_at
+    ):
+        if isinstance(eligibility, AttemptEligibility):
+            eligibility.revoke()
+        raise DerivationExecutionCellError(
+            DerivationExecutionCellFailureCode.INVALID_DERIVATION_ATTEMPT_REQUEST
+        )
     try:
         request_document = build_request_document(
             inputs=inputs,
@@ -213,6 +250,21 @@ def _prepare_closed_test_execution_attempt(
         request_document=request_document,
         request_frame=request_frame,
     )
+
+
+def _owned_request_provenance(
+    inputs: DerivationInputSet,
+) -> dict[str, object]:
+    snapshot = inputs.source_snapshot_document_copy()
+    coordinate = snapshot["source_coordinate"]
+    commit_oid = coordinate["commit_oid"]
+    return {
+        "requested_repository_id": snapshot["repository_id"],
+        "requested_ref": f"oid:{commit_oid['algorithm'].lower()}:{commit_oid['hex']}",
+        "resolver_id": "veritrail-r1-owned-snapshot-exact-oid",
+        "resolver_version": "0.1",
+        "resolved_at": _utc_now(),
+    }
 
 
 def _run_prepared_closed_test_execution_attempt(
