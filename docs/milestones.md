@@ -959,6 +959,26 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 下一步必须从新的 exact main 再做系统级俯瞰，比较延期接缝后只选择一个最小合同；文档 158 不预先承诺
 publisher、parser、multi-Provider Fact 或 Relation 谁先施工，也不授权直接开始 Slice、Coverage 或完整 Derivation。
 
+[文档 159](159-r1-post-fact-evidence-next-closure-system-audit.md)从 exact
+`main@7141999383489f51cf6f87806d2d271496499584` 执行上述系统级俯瞰。审计把 DIAGNOSTIC publisher 认定为
+合法但正交的失败留档闭环，把 COMPLETE publisher 判定为必须等待八文件 closure，并确认 real parser 若先行会让
+首个实现替合同决定 Provider applicability。multi-Provider 的 exact descriptor set、共享 BudgetContext、
+required/optional status join、same-ID provenance merge 与 same-subject conflict 会同时改变 FactSet、Evidence、
+Relation 输入、Slice conflict gate 与 Coverage `UNKNOWN`，因此它是当前多个后继共同依赖的 authority bottleneck。
+本文自己的远端门、受保护主线合入、新 exact-main Public CI / Browser Smoke 与 R1 专属 fresh anonymous
+public readback 全部成立后，状态才是：
+
+```text
+R1_FACT_EVIDENCE_CLOSURE_FROZEN
+R1_MULTI_PROVIDER_FACT_COMPOSITION_PRECONTRACT_AUDITED
+R1_MULTI_PROVIDER_FACT_COMPOSITION_CONTRACT_NOT_STARTED
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步只能从新 exact main 起草 docs-only Multi-Provider Applicability and Fact Composition Contract 0.1；审计不
+授权 runtime。real parser、public Provider SPI/discovery、DIAGNOSTIC/COMPLETE publisher、Relation、Slice、
+Coverage、CLI 与 Workbench 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
