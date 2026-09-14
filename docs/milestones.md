@@ -881,6 +881,21 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从新�
 Admission / DerivationEvidence Closure 最小合同；真实 parser、Provider SPI、FactSet/Evidence publisher、
 Relation、conflict/UNKNOWN、Slice、Coverage 与完整 Manifest implementation 继续禁止。
 
+[文档 155](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)从 exact
+`main@0b2ca79191adc3743b2cf4663cd0cda7574a7912` 起草 docs-only Fact Admission / DerivationEvidence
+Closure 最小合同候选。它冻结四层 Fact identity/membership、phase 与 final Evidence reported-ID 的 immutable
+projection、首个 single-Provider terminal diagnostic 的 run/top-level canonical placement，以及 normal
+continuation、future DIAGNOSTIC closure 与 cleanup-only 三种独立 capability。有合法 phase result、且没有预算
+stop 的 execution-cell non-success，只有在 release 已完成、原 BudgetContext 仍为 RUNNING、没有 stop latch 且
+artifact reservation 为零时，才可取得一次性 future DIAGNOSTIC eligibility；deadline/cancel/memory/artifact
+stop 与 RELEASE_FAILED 均不发布 R1 Artifact。
+候选不定义 output path 或 publisher，当前状态只能是
+`R1_FACT_EVIDENCE_CLOSURE_CONTRACT_CANDIDATE /
+R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的远端门、受保护主线合入、exact-main 门、
+匿名产品读回与后继独立冻结发布完成前，不得开始 runtime、public Artifact、real parser、Relation、Slice、
+Coverage 或完整 Manifest 实现。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

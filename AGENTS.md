@@ -590,6 +590,20 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从新 exact main 起草 docs-only Fact
   Admission / DerivationEvidence Closure 合同；不得创建 parser、Provider SPI、FactSet/Evidence publisher、
   Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest 实现。
+- `docs/155-r1-fact-admission-and-derivation-evidence-closure-contract.md` 已从 exact
+  `main@0b2ca79191adc3743b2cf4663cd0cda7574a7912` 起草上述 docs-only 最小合同候选。它把 Provider
+  candidate、application-canonical Fact、FactSet membership 与 published member 分为四层；成功 path 只建立
+  owned non-published FactSet construction state，不提前构造 final COMPLETED Evidence。首个 single-Provider
+  terminal diagnostic 固定为 run/top-level 同 tuple，artifact-budget 固定 top-only/null；有合法 phase result、
+  且没有预算 stop 的 execution-cell non-success，只有在 release 成功、原 BudgetContext 仍 RUNNING、无 stop 且
+  artifact reservation 为零时，才获得
+  一次性 future DIAGNOSTIC closure eligibility。deadline/cancel/memory/artifact stop 与 RELEASE_FAILED 均不得
+  发布 R1 Artifact。当前状态只能是 `R1_FACT_EVIDENCE_CLOSURE_CONTRACT_CANDIDATE /
+  R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自身的远端门、受保护主线合入、exact-main 门、
+  匿名产品读回与后继独立冻结发布完成前，不得实现 integrated controller、Fact admission、Evidence projection，
+  也不得创建 output path/publisher、real parser、Provider SPI、Relation、conflict/UNKNOWN、Slice、Coverage、
+  COMPLETE Manifest、CLI 或 Workbench。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
