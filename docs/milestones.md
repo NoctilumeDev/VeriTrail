@@ -896,6 +896,23 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的远端�
 匿名产品读回与后继独立冻结发布完成前，不得开始 runtime、public Artifact、real parser、Relation、Slice、
 Coverage 或完整 Manifest 实现。
 
+[文档 156](156-r1-fact-evidence-closure-contract-freeze-publication.md)从候选合入基线
+`main@3c237555b4924f08b7e82c523f675fbd28512e3c` 独立发布冻结事实。PR #136 base/head 为
+`0b2ca79191adc3743b2cf4663cd0cda7574a7912` / `a9eb0c77c311423c14104f50de87a1604438e4e4`，原始
+Public CI run `34793979272` attempt 1 为 11/11 SUCCESS；候选以 merge commit
+`3c237555b4924f08b7e82c523f675fbd28512e3c`、tree `b2bc95fbc51f57cd895634361b5fdae81baad6cf`
+合入受保护主线。该 exact main 的 Public CI `34794900875` 为 11/11、Browser Smoke `34794900949` 为 1/1，
+均是 attempt 1；README、文档 155 与 milestones 三次 fresh anonymous installed-product paired readback 均为
+HTTP 200、三样本稳定、P1/P2 coverage COMPLETE、无 stream/cleanup/conflict 残留且 Core Verdict 为 PASS。
+冻结前第二轮系统审计用现有 Schema/correction fixture 构造 7 个 active-run terminal projection 与 1 个
+artifact-budget projection，全部通过 Schema、固定 status/cardinality、空 reported IDs 与 digest 复算；未发现
+新 blocker。文档 156 自身的远端门、受保护主线合入、新 exact-main 双门与匿名产品读回全部成立后，状态才是
+`R1_FACT_EVIDENCE_CLOSURE_CONTRACT_FROZEN /
+R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_ALLOWED /
+R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_NOT_STARTED /
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖文档 155 第 13 节 A–F 的 private、
+non-published closure；output path/publisher、real parser、Relation、Slice、Coverage 与完整 Manifest 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

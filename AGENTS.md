@@ -604,6 +604,19 @@
   匿名产品读回与后继独立冻结发布完成前，不得实现 integrated controller、Fact admission、Evidence projection，
   也不得创建 output path/publisher、real parser、Provider SPI、Relation、conflict/UNKNOWN、Slice、Coverage、
   COMPLETE Manifest、CLI 或 Workbench。
+- `docs/156-r1-fact-evidence-closure-contract-freeze-publication.md` 从候选合入基线
+  `main@3c237555b4924f08b7e82c523f675fbd28512e3c` 独立发布冻结事实。PR #136 的原始 Public CI 为
+  11/11 SUCCESS；候选合入后的 exact-main Public CI 为 11/11、Browser Smoke 为 1/1，README、文档 155 与
+  milestones 的三次 fresh anonymous installed-product readback 均由 Core 判为 PASS。冻结前第二轮系统审计
+  又用 8 个 in-memory terminal projection 证明现有 `DerivationEvidence 0.1.1` Schema、固定 status、diagnostic
+  placement/cardinality、空 reported IDs 与 digest 复算可同时成立，未发现新 blocker。本文自己的门禁、合入、
+  新 exact-main 双门与匿名读回全部成立后，状态才是
+  `R1_FACT_EVIDENCE_CLOSURE_CONTRACT_FROZEN /
+  R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_ALLOWED /
+  R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖 private integrated controller、owned
+  non-published Fact admission/Evidence projection 与 FA-001..024；output path/publisher、real parser、Provider SPI、
+  Relation、conflict/UNKNOWN、Slice、Coverage、完整 Manifest、CLI 与 Workbench 继续禁止。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
