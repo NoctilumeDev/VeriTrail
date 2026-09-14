@@ -1002,6 +1002,30 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 multi-Provider execution/composition 与 `MP-001..028`；real parser、public Provider authorization/SPI/discovery、
 publisher、Relation、Slice、Coverage、Manifest、CLI 与 Workbench 继续未授权。
 
+[文档 161](161-r1-multi-provider-fact-composition-contract-freeze-publication.md)从候选合入基线
+`main@9c336e02318791b411c9abfa8cf662fb97f61f47` 独立发布冻结事实。PR #145 原始 Public CI attempt 1 为
+11/11 SUCCESS；候选 exact main 的 Public CI 为 11/11、Browser Smoke 为 1/1。fresh CPython 3.13 venv
+匿名下载并复算 Core 0.13.0 与 GitHub Evidence 0.1.0 wheel，安装 Playwright 1.62.0 与 matching Chromium，
+随后针对 README、文档 160 与 milestones 建立三次独立 R1 专属 readback；三者均 HTTP 200、requested/final
+相同、P1/P2 coverage COMPLETE、三样本稳定、零 conflict/coverage reason/cleanup error，Core 均为 PASS。
+三份 canonical summary 的联合 SHA-256 为
+`82a160f94a5e8f5bc8adfaf836e886c6b70f3c7f28cf31e2131b1813a4ff0905`。
+
+文档 161 自身的原始门、受保护主线合入、新 exact-main 双门与 fresh anonymous installed-product readback
+全部成立后，当前状态才是：
+
+```text
+R1_MULTI_PROVIDER_FACT_COMPOSITION_CONTRACT_FROZEN
+R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTATION_ALLOWED
+R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该授权只覆盖 private closed applicability table、一个 parent composition attempt、共享 BudgetContext、严格串行
+single-Provider child cells、run-local conformance、same-ID merge、same-subject FactConflict、terminal join 与
+`MP-001..028`。real parser、public Provider authorization/SPI/discovery、publisher、Relation、Slice、Coverage、
+Manifest、CLI 与 Workbench 继续未授权；实现必须从新 exact main 独立开始，不能从合同分支续写。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

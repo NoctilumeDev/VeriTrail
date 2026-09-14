@@ -663,6 +663,20 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的远端门、主线合入、exact-main 双门、匿名
   产品读回与后继独立冻结发布成立前，不得实现；real parser、public Provider authorization/SPI/discovery、
   publisher、Relation、Slice、Coverage、Manifest、CLI 与 Workbench 继续禁止。
+- `docs/161-r1-multi-provider-fact-composition-contract-freeze-publication.md` 从候选合入基线
+  `main@9c336e02318791b411c9abfa8cf662fb97f61f47` 独立发布合同冻结事实。PR #145 原始 Public CI 为
+  attempt 1、11/11 SUCCESS；candidate exact main 的 Public CI 为 11/11、Browser Smoke 为 1/1。README、
+  文档 160 与 milestones 的三次 fresh anonymous installed-product readback 均使用 R1 专属 acceptance identity，
+  P1/P2 coverage COMPLETE、三样本稳定、Core PASS，canonical summary 联合 SHA-256 为
+  `82a160f94a5e8f5bc8adfaf836e886c6b70f3c7f28cf31e2131b1813a4ff0905`。本文自己的门禁、合入、新
+  exact-main 双门与匿名读回全部成立后，状态才是
+  `R1_MULTI_PROVIDER_FACT_COMPOSITION_CONTRACT_FROZEN /
+  R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTATION_ALLOWED /
+  R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖 private closed applicability table、共享
+  BudgetContext 下串行 single-Provider child cells、run-local conformance、same-ID merge、same-subject conflict、
+  terminal join 与 `MP-001..028`；real parser、public Provider authorization/SPI/discovery、publisher、Relation、
+  Slice、Coverage、Manifest、CLI 与 Workbench 继续禁止。本状态发布自己的最后门成立前，分支文字不授权实现。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
