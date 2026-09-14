@@ -78,8 +78,14 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
         self.assertNotIn("_run_owned_process_cell", veritrail_review.__all__)
         self.assertNotIn("closed_test_binding", veritrail_review.__all__)
         self.assertNotIn("run_closed_test_execution_cell", veritrail_review.__all__)
+        self.assertNotIn(
+            "run_closed_test_fact_evidence_closure", veritrail_review.__all__
+        )
         self.assertFalse(hasattr(veritrail_review, "closed_test_binding"))
         self.assertFalse(hasattr(veritrail_review, "run_closed_test_execution_cell"))
+        self.assertFalse(
+            hasattr(veritrail_review, "run_closed_test_fact_evidence_closure")
+        )
 
     def test_budget_context_has_no_public_caller_selected_limit_entry(self) -> None:
         self.assertEqual(
@@ -179,6 +185,56 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
         self.assertNotIn("output_directory", parameters)
         self.assertNotIn("publisher", parameters)
         self.assertNotIn("manifest", parameters)
+
+    def test_fact_evidence_closure_is_private_and_has_no_publication_surface(self) -> None:
+        from veritrail_review._fact_evidence_closure import (
+            run_closed_test_fact_evidence_closure,
+        )
+
+        parameters = inspect.signature(
+            run_closed_test_fact_evidence_closure
+        ).parameters
+        self.assertEqual(
+            set(parameters),
+            {
+                "inputs",
+                "derivation_id",
+                "binding",
+                "cancellation_requested",
+                "transport_limits",
+            },
+        )
+        for forbidden in (
+            "output_directory",
+            "output_path",
+            "publisher",
+            "manifest",
+            "provider_discovery",
+        ):
+            self.assertNotIn(forbidden, parameters)
+
+        closure_modules = sorted(
+            (SOURCE_ROOT / "veritrail_review").glob("_fact_evidence*.py")
+        )
+        forbidden_imports = {
+            "ast",
+            "veritrail_review.publisher",
+            "veritrail_review._artifact_budget",
+        }
+        violations: list[str] = []
+        for path in closure_modules:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    names = [alias.name for alias in node.names]
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    names = [node.module]
+                else:
+                    names = []
+                for name in names:
+                    if name in forbidden_imports:
+                        violations.append(f"{path.name}:{node.lineno}:{name}")
+        self.assertEqual(violations, [])
 
 
 if __name__ == "__main__":
