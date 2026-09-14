@@ -652,6 +652,17 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。不得因审计选择而直接开始实现，也不得创建 real
   parser、public Provider SPI/discovery、publisher、Relation、Slice、Coverage、CLI、Workbench 或 COMPLETE
   Manifest。
+- `docs/160-r1-multi-provider-applicability-and-fact-composition-contract.md` 从 exact
+  `main@22df05698f05380e910ac8a4e0cc6ba1276842e7` 起草下一份 docs-only 合同候选。它把 requirement、
+  applicability、descriptor、binding 与 ProviderRun 分开，以合同定义的 private conformance table 导出 exact binding
+  tuple；requiredness 由 capability requirement 继承，所有 Provider 串行消费同一 BudgetContext。run-local
+  conformance 先闭合，之后才允许 same-ID semantic merge、provenance union 与 same-subject FactConflict；required/
+  optional terminal join、diagnostic placement 与 final reported-ID 清空保持机械。当前状态只能是
+  `R1_MULTI_PROVIDER_FACT_COMPOSITION_CONTRACT_CANDIDATE /
+  R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的远端门、主线合入、exact-main 双门、匿名
+  产品读回与后继独立冻结发布成立前，不得实现；real parser、public Provider authorization/SPI/discovery、
+  publisher、Relation、Slice、Coverage、Manifest、CLI 与 Workbench 继续禁止。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
