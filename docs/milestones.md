@@ -1048,6 +1048,29 @@ readback 与后继独立最终状态发布完成前，不得写成 frozen。后�
 SPI/discovery、publisher、Relation、Slice、Coverage、Manifest、CLI 或 Workbench；冻结后仍须先做系统级审计，
 再选择一个最小合同闭环。
 
+[文档 163](163-r1-multi-provider-fact-composition-freeze-publication.md)从候选合入基线
+`main@66b2252c5261387e1d1b40899f3e009e6ed6cecf` 独立发布实现冻结事实。实现候选 PR #148 的原始 Public CI
+run `34885652717` 为 attempt 1、11/11 SUCCESS；候选 exact main 的 Public CI run `34887431677` 为 attempt 1、
+11/11 SUCCESS，Browser Smoke run `34887431658` 为 attempt 1、1/1 SUCCESS。fresh venv 匿名下载并复算
+Core 0.13.0 与 GitHub Evidence 0.1.0 固定 Release wheel，安装 Playwright 1.62.0 与 matching Chromium；README、
+文档 162 与 milestones 的三次 R1 专属 readback 均为 HTTP 200、P1/P2 COMPLETE、三样本稳定、零 conflict/
+coverage reason/cleanup error、Core PASS，三 session 与三 sealed Plan 均不复用，联合 summary SHA-256 为
+`c098ffeefea338b9ab220bca0e2c521ec5d0faaae9970699367c20deab8fa7da`。第一次 README readback 的工具
+`plan_id` 长度不合法，在 browser collection 与 output directory 前被 Core validator 拒绝；该尝试未计入通过
+证据，修正后从新目录建立有效 attempt 2。
+
+文档 163 自身的原始门、受保护主线合入、新 exact-main 双门与 fresh anonymous installed-product readback
+全部成立后，当前状态才是：
+
+```text
+R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步必须从新的 exact main 再做系统级俯瞰，比较 DIAGNOSTIC publisher、real parser/provider boundary、
+Relation/conflict/UNKNOWN、Slice、Coverage 与 COMPLETE publisher 后只选择一个最小合同。本文不预先决定顺序，
+也不授权同时启动多条后继实现。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
