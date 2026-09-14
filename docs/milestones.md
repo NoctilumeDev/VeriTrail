@@ -938,6 +938,27 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 状态发布完成前，不得写成 frozen，也不得开始 public Artifact、真实 parser、Relation、Slice、Coverage 或完整
 Derivation 实现。
 
+[文档 158](158-r1-fact-evidence-closure-freeze-publication.md)从候选合入基线
+`main@a4c63607d8a586a5ec19eae1cdc4279cda1ffa88` 独立发布实现冻结事实。实现候选 PR #142 的原始 Public CI
+为 11/11 SUCCESS；候选合入后的 exact-main Public CI 为 11/11、Browser Smoke 为 1/1。fresh venv 中从
+`site-packages` 导入公开 Core 0.13.0、GitHub Evidence 0.1.0 与 Playwright 1.62.0，针对 README、文档 157 与
+milestones 建立三次独立的 R1 专属 anonymous exact-SHA readback，P1/P2 coverage 均为 COMPLETE、三样本稳定、
+Core 均为 PASS，规范 summary 联合 SHA-256 为
+`b967c60409f495245b91727f447c28581adf58adefe98b38d1c92795c62e1ee2`。最初三次运行误用
+`P4_REAL_GITHUB_RELEASE_CANDIDATE` label，虽技术路径通过，但不能证明 R1 candidate intent；这些证据已作废，
+没有进入冻结链。
+
+文档 158 自身的原始门、受保护主线合入、新 exact-main 双门与 fresh anonymous installed-product readback 全部
+成立后，当前状态才是：
+
+```text
+R1_FACT_EVIDENCE_CLOSURE_FROZEN
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步必须从新的 exact main 再做系统级俯瞰，比较延期接缝后只选择一个最小合同；文档 158 不预先承诺
+publisher、parser、multi-Provider Fact 或 Relation 谁先施工，也不授权直接开始 Slice、Coverage 或完整 Derivation。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

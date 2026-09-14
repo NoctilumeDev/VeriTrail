@@ -43,7 +43,7 @@ VeriTrail 的核心关系很小：
 | Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论 |
 | Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
 | Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
-| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive 与 Execution Cell 已冻结；Fact/Evidence closure 正处于 docs-only 合同候选，运行实现尚未开始 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell 与 private Fact/Evidence closure 已冻结；Relation、Slice 与 Coverage 尚未实现 |
 | Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
 
 ![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_FACT_EVIDENCE_CLOSURE_IMPLEMENTED / R1_FACT_EVIDENCE_CLOSURE_FREEZE_CANDIDATE / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_FACT_EVIDENCE_CLOSURE_FROZEN / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -238,9 +238,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   Fact admission/Evidence projection 与 FA-001..024；output path、publisher、真实 parser、Relation、Slice、
   Coverage 与完整 Manifest 继续未启动。[实现冻结候选](docs/157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
   已记录该 private closure、FA-001..024、PR #140、独立 Public CI 外层 timeout capacity 修正、exact-main
-  双门、匿名源码字节读回与 clean-wheel installed-product 证据。当前仍只是 implementation freeze candidate；
-  候选自己的门、合入、exact-main 门、匿名产品读回与后继独立最终状态发布完成前，不得写成 frozen，也不得
-  开始 publisher、真实 parser、Relation、conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
+  双门、匿名源码字节读回与 clean-wheel installed-product 证据。候选又经 PR #142、候选 exact-main 双门及
+  三次 R1 专属 anonymous installed-product readback 闭合；最初误用 P4 acceptance label 的三份结果已作废，
+  没有进入冻结证据。[实现冻结发布](docs/158-r1-fact-evidence-closure-freeze-publication.md)只外部绑定这些
+  已成立事实；该发布自己的门、合入、exact-main 双门与匿名产品读回全部成立后，Fact/Evidence closure 才成为
+  frozen。下一步仍须先做系统审计，再选择一个最小合同；不得直接开始 publisher、真实 parser、Relation、
+  conflict/UNKNOWN、Slice、Coverage 或完整 Manifest。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -355,7 +358,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 29. [Review Attention R1 Fact Admission / DerivationEvidence Closure 最小合同候选](docs/155-r1-fact-admission-and-derivation-evidence-closure-contract.md)
 30. [Review Attention R1 Fact Admission / DerivationEvidence Closure 合同冻结发布](docs/156-r1-fact-evidence-closure-contract-freeze-publication.md)
 31. [Review Attention R1 Fact Admission / DerivationEvidence Closure 实现冻结候选](docs/157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
-32. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+32. [Review Attention R1 Fact Admission / DerivationEvidence Closure 实现冻结发布](docs/158-r1-fact-evidence-closure-freeze-publication.md)
+33. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
