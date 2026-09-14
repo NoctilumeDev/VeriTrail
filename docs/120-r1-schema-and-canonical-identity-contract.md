@@ -1512,8 +1512,11 @@ Manifest importer 必须先安全读取一次文件、验证 exact bytes 与 sem
 
 `DIAGNOSTIC` 必须包含 Snapshot、Policy、Profile 与 Evidence；Policy 已绑定 Snapshot，因此缺少
 Snapshot 的目录本身无效。它禁止包含正常态 Fact/Relation/Slice/Coverage 文件。
-`INTERRUPTED / FAILED / UNAVAILABLE` 只能发布 DIAGNOSTIC；若连 SourceSnapshot 都不能完整建立，R1
-derivation 尚未取得合法输入，不发布伪造的 R1 Bundle，只保留调用层诊断。
+`INTERRUPTED / FAILED / UNAVAILABLE` 若获得后继运行合同的独立发布资格，只能使用 DIAGNOSTIC；该
+Manifest shape 约束不表示每次非完成运行必须发布，也不自行授予 runtime Artifact staging 权。若连
+SourceSnapshot 都不能完整建立，R1 derivation 尚未取得合法输入，不发布伪造的 R1 Bundle，只保留调用层
+诊断。首个 reference runtime 的精确资格矩阵由
+[文档 155](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)收窄。
 
 Manifest 自身不包含自摘要；调用方以 exact `manifest.json` 文件 SHA-256 绑定 Bundle。发布必须先在隔离
 staging 中完成所有文件写入、复算与 cross-reference 校验，再原子 create-new 到最终目录；失败不能留下

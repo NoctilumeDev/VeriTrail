@@ -246,9 +246,13 @@ thread join    -> another 5 s
 staging delete -> another 5 s
 ```
 
-release envelope 内不能继续语义工作、接纳 late candidate、恢复 `COMPLETED` 或发布正常 Artifact。
-`finished_at` 可以晚于 execution deadline，因为它记录终态与 cleanup 完成后的 UTC provenance；这不代表
-deadline 后仍有执行权。
+release envelope 内不能继续语义工作、接纳 late candidate、恢复 `COMPLETED`，也不能启动或继续任何
+Artifact staging/publication（包括 DIAGNOSTIC）。后继若要在有合法 phase result、且没有预算 stop 的
+execution-cell non-success 后形成 DIAGNOSTIC，
+只能等待 execution-cell resources 已成功释放，再按
+[文档 155](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)取得独立资格并继续消费仍为 `RUNNING`
+的原 BudgetContext；terminal stop 后不存在该路径。`finished_at` 可以晚于 execution deadline，因为它记录
+终态与 cleanup 完成后的 UTC provenance；这不代表 deadline 后仍有执行权。
 
 若 release deadline 到达仍有 owned process/thread/handle/staging residue，primitive 为
 `RELEASE_FAILED`，conformance gate 必须失败；不得用原 stop diagnostic 冒充 cleanup 已成功，也不得发布

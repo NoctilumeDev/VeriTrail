@@ -553,12 +553,15 @@ revocation
   -> RELEASED | RELEASE_FAILED
 ```
 
-协议/primitive failure 触发的 revocation 不得伪造 Budget stop diagnostic；cleanup 成功也不能把 eligibility 从
-`REVOKED` 恢复为 `ADMITTED`。若已经有正向 stop latch，原 stop reason 保持不变；后到的 protocol/exit signal
-只能作为非规范运行诊断，不能改写公共原因。
+协议/primitive failure 触发的 revocation 不得伪造 Budget stop diagnostic；cleanup envelope 不得执行任何
+Artifact staging，cleanup 成功也不能把 normal eligibility 从 `REVOKED` 恢复为 `ADMITTED`。若已经有正向
+stop latch，原 stop reason 保持不变；后到的 protocol/exit signal 只能作为非规范运行诊断，不能改写公共原因。
+有合法 phase result、且没有预算 stop 的 execution-cell non-success 在 release 成功后是否获得独立
+DIAGNOSTIC closure eligibility，由
+[文档 155](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)另行收窄；它不是本 gate 的恢复转换。
 
-`RELEASE_FAILED` 是 typed controller failure 和 conformance-gate failure。它禁止 phase result commit、正常
-Fact/Evidence/Manifest 发布与继续执行；现有公共 Evidence 不能证明资源已闭合，因此本切片不为它伪造
+`RELEASE_FAILED` 是 typed controller failure 和 conformance-gate failure。它禁止 phase result commit、任何
+R1 Artifact（包括 DIAGNOSTIC）发布与继续执行；现有公共 Evidence 不能证明资源已闭合，因此本切片不为它伪造
 `INTERNAL_DERIVATION_ERROR` Artifact。成功 release 是返回任何 terminal phase result 的必要条件。
 
 retry 必须使用新 `derivation_id`、重新 copy-own binding、建立新 BudgetContext 与新 execution cell。不得复用
