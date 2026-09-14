@@ -6,6 +6,7 @@ import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from threading import Lock
 from typing import Callable
 
 from veritrail_review._execution_cell_application import (
@@ -40,7 +41,12 @@ from veritrail_review._windows_execution_cell import (
     CellRuntimeUnavailableError,
     run_windows_execution_cell,
 )
-from veritrail_review.budget import BudgetState, BudgetStopTrigger, admit_derivation_budget
+from veritrail_review.budget import (
+    BudgetContext,
+    BudgetState,
+    BudgetStopTrigger,
+    admit_derivation_budget,
+)
 from veritrail_review.canonical import canonical_json_bytes
 from veritrail_review.derivation_input_contracts import DerivationInputSet
 from veritrail_review.errors import (
@@ -56,6 +62,47 @@ DEFAULT_TRANSPORT_LIMITS = ExecutionCellTransportSafetyLimits(
 )
 
 
+class _PreparedExecutionAttempt:
+    """One controller-owned attempt state; it may enter the cell exactly once."""
+
+    def __init__(
+        self,
+        *,
+        inputs: DerivationInputSet,
+        derivation_id: str,
+        binding: ProviderBinding,
+        cancellation_requested: Callable[[], bool] | None,
+        transport_limits: ExecutionCellTransportSafetyLimits,
+        context: BudgetContext,
+        eligibility: AttemptEligibility,
+        request_provenance: dict[str, object],
+        attempt_started_at: str,
+        request_document: dict[str, object],
+        request_frame: bytes,
+    ) -> None:
+        self.inputs = inputs
+        self.derivation_id = derivation_id
+        self.binding = binding
+        self.cancellation_requested = cancellation_requested
+        self.transport_limits = transport_limits
+        self.context = context
+        self.eligibility = eligibility
+        self.request_provenance = copy.deepcopy(request_provenance)
+        self.attempt_started_at = attempt_started_at
+        self.request_document = copy.deepcopy(request_document)
+        self.request_frame = memoryview(request_frame).tobytes()
+        self._lock = Lock()
+        self._consumed = False
+
+    def claim_for_execution(self) -> None:
+        with self._lock:
+            if self._consumed:
+                raise DerivationExecutionCellError(
+                    DerivationExecutionCellFailureCode.INVALID_DERIVATION_ATTEMPT_REQUEST
+                )
+            self._consumed = True
+
+
 def run_closed_test_execution_cell(
     inputs: DerivationInputSet,
     *,
@@ -65,6 +112,26 @@ def run_closed_test_execution_cell(
     transport_limits: ExecutionCellTransportSafetyLimits = DEFAULT_TRANSPORT_LIMITS,
 ) -> OwnedExecutionCellPhaseResult:
     """Run the frozen closed-provider phase without publishing any Artifact."""
+
+    prepared = _prepare_closed_test_execution_attempt(
+        inputs,
+        derivation_id=derivation_id,
+        binding=binding,
+        cancellation_requested=cancellation_requested,
+        transport_limits=transport_limits,
+    )
+    return _run_prepared_closed_test_execution_attempt(prepared)
+
+
+def _prepare_closed_test_execution_attempt(
+    inputs: DerivationInputSet,
+    *,
+    derivation_id: str,
+    binding: ProviderBinding,
+    cancellation_requested: Callable[[], bool] | None,
+    transport_limits: ExecutionCellTransportSafetyLimits,
+) -> _PreparedExecutionAttempt:
+    """Create the one private state shared by the cell and later R1 phases."""
 
     _validate_attempt_request(
         inputs,
@@ -132,6 +199,42 @@ def run_closed_test_execution_cell(
     if not context.checkpoint():
         eligibility.revoke()
         raise _admission_stop_error(context.stop_trigger)
+
+    return _PreparedExecutionAttempt(
+        inputs=inputs,
+        derivation_id=derivation_id,
+        binding=binding,
+        cancellation_requested=cancellation_requested,
+        transport_limits=transport_limits,
+        context=context,
+        eligibility=eligibility,
+        request_provenance=request_provenance,
+        attempt_started_at=attempt_started_at,
+        request_document=request_document,
+        request_frame=request_frame,
+    )
+
+
+def _run_prepared_closed_test_execution_attempt(
+    prepared: _PreparedExecutionAttempt,
+) -> OwnedExecutionCellPhaseResult:
+    """Consume an already-owned attempt without rebuilding its budget or inputs."""
+
+    if not isinstance(prepared, _PreparedExecutionAttempt):
+        raise DerivationExecutionCellError(
+            DerivationExecutionCellFailureCode.INVALID_DERIVATION_ATTEMPT_REQUEST
+        )
+    prepared.claim_for_execution()
+    inputs = prepared.inputs
+    binding = prepared.binding
+    cancellation_requested = prepared.cancellation_requested
+    transport_limits = prepared.transport_limits
+    context = prepared.context
+    eligibility = prepared.eligibility
+    request_document = copy.deepcopy(prepared.request_document)
+    request_provenance = copy.deepcopy(prepared.request_provenance)
+    attempt_started_at = prepared.attempt_started_at
+    request_frame = memoryview(prepared.request_frame).tobytes()
 
     provider_started: list[str] = []
     worker = Path(__file__).with_name("_execution_cell_worker.py").resolve()
@@ -256,7 +359,7 @@ def run_closed_test_execution_cell(
         fact_ids = ()
     phase_finished_at = _utc_now()
     return OwnedExecutionCellPhaseResult(
-        derivation_id=str(derivation_id),
+        derivation_id=str(prepared.derivation_id),
         request_provenance_bytes=canonical_json_bytes(request_provenance),
         source_snapshot_digest=inputs.source_snapshot_digest,
         policy_digest=inputs.policy_digest,
