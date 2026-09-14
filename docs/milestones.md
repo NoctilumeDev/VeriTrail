@@ -979,6 +979,29 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 授权 runtime。real parser、public Provider SPI/discovery、DIAGNOSTIC/COMPLETE publisher、Relation、Slice、
 Coverage、CLI 与 Workbench 继续禁止。
 
+[文档 160](160-r1-multi-provider-applicability-and-fact-composition-contract.md)从 exact
+`main@22df05698f05380e910ac8a4e0cc6ba1276842e7` 建立该 docs-only 候选。首个 closed conformance profile 只由
+application-owned 固定表把 sealed capability requirement 映射为 exact descriptor/binding tuple；不扫描 ambient
+installation，也不创建 public registry。requiredness 由 requirement 继承，所有 run 严格串行消费同一
+BudgetContext；每个来源先完成 run-local conformance，再跨来源执行 same-ID semantic merge/provenance union 与
+same-subject conflict construction。required/optional terminal join、composition-level unknown attribution、final
+reported-ID 清空与 conflict-bearing FactSet continuation 均由机械规则约束。现有 Schema/corpus/vector bytes 保持
+不变，因为本切片仍不发布 Artifact，且现有 shape 已能表达多 run、provenance union、FactConflict 与 optional
+non-success。当前状态只能是：
+
+```text
+R1_FACT_EVIDENCE_CLOSURE_FROZEN
+R1_MULTI_PROVIDER_FACT_COMPOSITION_PRECONTRACT_AUDITED
+R1_MULTI_PROVIDER_FACT_COMPOSITION_CONTRACT_CANDIDATE
+R1_MULTI_PROVIDER_FACT_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+候选自己的原始远端门、受保护主线合入、新 exact-main 双门、R1 专属 fresh anonymous product readback 与后继
+独立 docs-only 冻结发布全部成立前，不得开始实现。即使以后冻结，也只允许 private closed test applicability、
+multi-Provider execution/composition 与 `MP-001..028`；real parser、public Provider authorization/SPI/discovery、
+publisher、Relation、Slice、Coverage、Manifest、CLI 与 Workbench 继续未授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
