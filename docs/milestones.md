@@ -1096,6 +1096,41 @@ Operand Continuity Contract 0.1。审计不授权 Schema/runtime；facts-only re
 不得替 Relation 决定跨阶段 authority；public Provider SPI/discovery、完整 RelationSet composition/admission、
 DIAGNOSTIC/COMPLETE publisher、Slice、Coverage、CLI 与 Workbench 继续禁止。
 
+文档 164 的最后门现已按 `main@41a398783d5eaf25e15574df5beafb8465d0a91e` 核实。PR #150 head 的原始
+11 项 required checks 全绿；合入后 Public CI run `34930110622` attempt 1 保留 10/11 FAILURE：E3 第四份
+Release asset 六次 HTTP 500，在冻结的 60 秒有界恢复预算内停止，clean-install acceptance 当时未运行。
+failed-jobs rerun 的 attempt 2 最终组合 11/11 SUCCESS，仅 E3 在第二次窗口重新执行并通过资产校验与
+acceptance，其他十项沿用首次成功事实；Browser Smoke run `34930110603` attempt 1 为 1/1 SUCCESS。
+fresh CPython 3.13.13 venv 匿名首次下载并复算 Core 0.13.0 与 GitHub Evidence 0.1.0 冻结 wheel，安装
+Playwright 1.62.0 与 matching Chromium；README、文档 164、milestones 按顺序建立三个互不复用的
+P1→P2→P3→Core session，均为 HTTP 200、P1/P2 COMPLETE、三样本稳定、marker 恰好一次、零 conflict/
+coverage reason/cleanup error、Core PASS。三份 canonical summary 的联合 SHA-256 为
+`9fd68f63fc6ce3ea60f1d3aea014b8c61018b8f9adadd9637ad9bc79cbed08bf`。attempt 2 的绿色组合结果
+没有抹掉 attempt 1 的红灯，也不能解释成十一项全部新跑。
+
+[文档 165](165-r1-relation-derivation-authority-and-operand-continuity-contract.md)从该新 exact main 独立复核
+文档 164 第 4.1 节的五项反证，未发现推翻选题的新证据，并起草最小 docs-only 合同候选。首个 closed proof
+候选让 newly sealed `review-relation-derivation` requirement 对应一个 composed FactSet 后的 distinct
+Relation ProviderRun；Relation 候选只归因于真实 Relation run，Fact runs 不回填报告，application 不自造
+Relation target。relation-only operands `/0.2` 是**未冻结的版本化投影提案**，须显式绑定
+`fact_set_digest`，并证明外部 verifier/identity vector 可复算。新 profile 的 Fact-stage private join 必须
+先构造 FactSet，Relation terminal 后才形成 final overall；不得让 required Relation run 与 FactSet 循环
+等待。当前 Fact-only wire 不得冒充 Relation terminal。首版 FactConflict、optional-source gap 与 absent normal FactSet 保留 typed upstream truth，
+不建立较小 normal Relation world。当前分支状态只为：
+
+```text
+R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN
+R1_RELATION_DERIVATION_PRECONTRACT_AUDITED
+R1_RELATION_DERIVATION_CONTRACT_CANDIDATE
+R1_RELATION_DERIVATION_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 165 自己的 focused/local 门、原始远端门、受保护合入、新 exact-main 双门、R1 专属匿名读回与后继独立
+冻结发布成立前不得写成合同 FROZEN 或进入实现。真实 parser、public Provider SPI/discovery、完整 Relation
+算法、RelationSet composition/admission、Schema/runtime correction、publisher/Manifest、Slice、Coverage、
+CLI 与 Workbench 仍未授权；这些问题不能因为本候选选择 producer 模型而自动并入同一施工。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

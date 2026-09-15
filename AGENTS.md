@@ -713,6 +713,23 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。不得因审计选择直接修改 Schema 或实现 Relation；
   public Provider SPI/discovery、完整 RelationSet composition/admission、publisher、Slice、Coverage、Manifest、CLI
   与 Workbench 继续禁止；real parser 若先行也只能是独立 facts-only 合同，不得与本审计自动捆绑。
+- `docs/165-r1-relation-derivation-authority-and-operand-continuity-contract.md` 从文档 164 收口后的 exact
+  `main@41a398783d5eaf25e15574df5beafb8465d0a91e` 独立起草 docs-only 合同候选。文档 164 的 PR #150
+  head 原始 11 项 required checks 全绿；exact-main Public CI run `34930110622` attempt 1 保留 10/11
+  FAILURE（E3 Release 资产六次 HTTP 500），failed-jobs rerun 的 attempt 2 组合 11/11 SUCCESS 中只有 E3
+  新执行，其余十项继承 attempt 1 成功事实；Browser Smoke run `34930110603` attempt 1 为 1/1 SUCCESS。
+  README、文档 164、milestones 的三个新 anonymous installed-product P1→P2→P3→Core session 均 PASS，
+  联合 summary SHA-256 为 `9fd68f63fc6ce3ea60f1d3aea014b8c61018b8f9adadd9637ad9bc79cbed08bf`。
+  §4.1 反证复核未发现能推翻选题的新证据。候选选择 composed FactSet 后一个由 newly sealed requirement
+  支持的 distinct closed Relation ProviderRun，而不回填 Fact Provider 报告或让 application 自造来源；
+  relation-only operands 必须以版本化投影绑定 `fact_set_digest`；新 profile 的 Fact-stage private join 先构造
+  FactSet，Relation terminal 后才能投影 final overall，避免 required Relation run / FactSet 循环等待。
+  同一次 execution 保持 live shared BudgetContext。首版 FactConflict、optional-source gap 和 absent normal FactSet 只保留 upstream truth，
+  不启动 Relation run。当前分支只能是 `R1_RELATION_DERIVATION_CONTRACT_CANDIDATE /
+  R1_RELATION_DERIVATION_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的原始门、受保护主线合入、新 exact-main
+  双门、专属匿名产品读回与后继独立冻结发布成立前不得写成 FROZEN；现有 Fact cell wire、Schema、identity
+  vectors、runtime、real parser/public SPI、完整 RelationSet admission、publisher、Slice 与 Coverage 继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
