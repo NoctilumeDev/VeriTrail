@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN / R1_RELATION_DERIVATION_PRECONTRACT_AUDITED / R1_RELATION_DERIVATION_CONTRACT_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`（文档 164 最后门成立后） |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN / R1_RELATION_DERIVATION_PRECONTRACT_AUDITED / R1_RELATION_DERIVATION_CONTRACT_CANDIDATE / R1_RELATION_DERIVATION_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`（本分支 docs-only 候选，未冻结） |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -263,6 +263,13 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   authority、exact FactSet operand continuity 与 minimum upstream eligibility gate，不预先包办完整 Relation
   算法、conflict/UNKNOWN 账册或 admission。审计不授权 Schema 或 runtime；facts-only real parser 可作为独立
   后继，但不得借机固定 Relation authority，publisher、Slice、Coverage 与完整 Manifest 也仍未授权。
+  [Relation authority / operand continuity 合同候选](docs/165-r1-relation-derivation-authority-and-operand-continuity-contract.md)
+  从文档 164 最后门成立后的 exact main 独立起草：首个 closed proof 候选选择 composed FactSet 后的 distinct
+  Relation capability/ProviderRun，Fact child 不回填 Relation 报告，application 不自造来源；relation-only
+  operands 必须版本化绑定 `fact_set_digest`。新 closed profile 须区分 Fact-stage private join 与 Relation 后的
+  final overall，避免 required Relation run 与 FactSet 相互等待；全程保留同一个共享 BudgetContext。首版 conflict-bearing FactSet、
+  optional-source gap 与 absent normal FactSet 不启动 Relation run，保留 typed upstream truth；完整 Relation
+  算法、import resolution、RelationSet admission、Schema/runtime correction 与后继 publisher 仍未授权。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -384,7 +391,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 36. [Review Attention R1 Multi-Provider Applicability / Fact Composition 实现冻结候选](docs/162-r1-multi-provider-fact-composition-implementation-freeze-candidate.md)
 37. [Review Attention R1 Multi-Provider Applicability / Fact Composition 实现冻结发布](docs/163-r1-multi-provider-fact-composition-freeze-publication.md)
 38. [Review Attention R1 Multi-Provider Fact Composition 冻结后下一闭环系统审计](docs/164-r1-post-composition-next-closure-system-audit.md)
-39. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+39. [Review Attention R1 Relation Derivation Authority / Operand Continuity 最小合同候选](docs/165-r1-relation-derivation-authority-and-operand-continuity-contract.md)
+40. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
