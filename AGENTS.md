@@ -698,6 +698,21 @@
   `R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN /
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步必须先从新 exact main 做系统级审计，再选择
   一个最小合同；不得直接开始 parser、publisher、Relation、Slice、Coverage 或完整 Manifest。
+- `docs/164-r1-post-composition-next-closure-system-audit.md` 从 exact
+  `main@3575cc90faffd41c7172339f461c583e748f2215` 比较 DIAGNOSTIC publisher、real parser/public Provider
+  boundary、Relation derivation、Slice、Coverage 与 COMPLETE publisher。审计确认当前 worker/phase 只产生
+  Facts、`reported_relation_ids=[]`，而完整 fixture 让 ProviderRun 背书 Relations；同时
+  `IMPORT_TARGET_LITERAL` 的 final resolution 必须消费 multi-Provider composition 后的 exact FactSet，现有
+  Provider operands 又不绑定 `fact_set_digest`。因此下一最小合同只选择 Relation derivation authority、exact
+  FactSet operand continuity、provenance/reporting 与 minimum upstream eligibility gate，不预选 Provider 二阶段
+  或 application derivation 模型，也不把完整 Relation 算法、conflict/UNKNOWN 账册或 admission 打包进来。
+  facts-only real parser 可以是独立后继，但不得借机固定 Relation authority。本文自己的远端门、合入、
+  exact-main 双门与 R1 专属匿名读回全部成立后，状态才是
+  `R1_RELATION_DERIVATION_PRECONTRACT_AUDITED /
+  R1_RELATION_DERIVATION_CONTRACT_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。不得因审计选择直接修改 Schema 或实现 Relation；
+  public Provider SPI/discovery、完整 RelationSet composition/admission、publisher、Slice、Coverage、Manifest、CLI
+  与 Workbench 继续禁止；real parser 若先行也只能是独立 facts-only 合同，不得与本审计自动捆绑。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

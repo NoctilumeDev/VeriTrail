@@ -1071,6 +1071,31 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 Relation/conflict/UNKNOWN、Slice、Coverage 与 COMPLETE publisher 后只选择一个最小合同。本文不预先决定顺序，
 也不授权同时启动多条后继实现。
 
+[文档 164](164-r1-post-composition-next-closure-system-audit.md)从 exact
+`main@3575cc90faffd41c7172339f461c583e748f2215` 执行上述系统级俯瞰。审计确认公共 Relation Schema 与
+valid-complete fixture 只能证明 shape/identity capability；当前 runtime 的 Provider terminal 只交付 Facts，
+`reported_relation_ids` 固定为空。`IMPORT_TARGET_LITERAL` 的 resolution 又依赖 multi-Provider composition 后的
+exact FactSet，而现有 Provider operands identity 不绑定 `fact_set_digest`。若先实现 parser、Relation 或 Slice，
+实现将被迫在“原 Provider 自报、第二阶段 Provider、application 派生或隐藏 recipe”之间替合同选择，并可能虚构
+Relation provenance。因此下一最小合同只选择 Relation derivation authority、exact FactSet operand continuity、
+ProviderRun/reporting provenance 以及 minimum upstream eligibility gate；完整 Relation 算法、RelationSet
+composition/admission 与 conflict/UNKNOWN 账册不因本审计自动进入同一合同。
+
+本文自己的远端门、受保护主线合入、新 exact-main Public CI / Browser Smoke 与 R1 专属 fresh anonymous
+installed-product readback 全部成立后，状态才是：
+
+```text
+R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN
+R1_RELATION_DERIVATION_PRECONTRACT_AUDITED
+R1_RELATION_DERIVATION_CONTRACT_NOT_STARTED
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步只能从新 exact main 先复核文档 164 的反证条件，再起草独立 docs-only Relation Derivation Authority and
+Operand Continuity Contract 0.1。审计不授权 Schema/runtime；facts-only real parser 是可独立审议的后继，但
+不得替 Relation 决定跨阶段 authority；public Provider SPI/discovery、完整 RelationSet composition/admission、
+DIAGNOSTIC/COMPLETE publisher、Slice、Coverage、CLI 与 Workbench 继续禁止。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
