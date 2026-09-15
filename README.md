@@ -351,6 +351,14 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 2. [验收标准](docs/03-acceptance.md)
 3. [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)
 
+### 想知道当前主线之外保留了哪些问题
+
+- [Product Delivery D0：真实任务入口的问题定位](docs/166-d0-product-delivery-problem-framing.md)与
+  [Cu0：工程记忆注意力投影的问题定位](docs/167-cu0-engineering-memory-attention-projection-problem-framing.md)
+  是 2026-09-15 的候选认知记录，不授权施工；Review Attention R 仍是当前串行施工主线，继续遵守自身合同门禁。
+- [Q0 Quick Verification Scheduling 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+  已经存在；新的优先顺序不改写 Q0，也不启动 Q 实现。
+
 ### 想复核工程事实
 
 1. [里程碑冻结历史与完整文档索引](docs/milestones.md)
