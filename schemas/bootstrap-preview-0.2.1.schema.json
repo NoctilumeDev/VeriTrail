@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/bootstrap-preview-0.2.1.schema.json",
+  "title": "VeriTrail M11 Single-Application BootstrapPreview 0.2.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "topology", "plan_sha256", "profile_id", "profile_version", "profile_sha256",
+    "subject_root_identity_sha256", "subject_snapshot", "platform", "cold_state", "nodes",
+    "start_order", "teardown_order", "application_origin", "browser_policy_sha256",
+    "resource_policy_sha256", "claims", "preview_sha256"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.2.1" },
+    "topology": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/topology" },
+    "plan_sha256": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/plan_sha256" },
+    "profile_id": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/profile_id" },
+    "profile_version": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/profile_version" },
+    "profile_sha256": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/profile_sha256" },
+    "subject_root_identity_sha256": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/subject_root_identity_sha256" },
+    "subject_snapshot": { "$ref": "bootstrap-preview-0.1.1.schema.json#/$defs/subjectSnapshot" },
+    "platform": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/platform" },
+    "cold_state": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/cold_state" },
+    "nodes": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/nodes" },
+    "start_order": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/start_order" },
+    "teardown_order": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/teardown_order" },
+    "application_origin": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/application_origin" },
+    "browser_policy_sha256": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/browser_policy_sha256" },
+    "resource_policy_sha256": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/resource_policy_sha256" },
+    "claims": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/claims" },
+    "preview_sha256": { "$ref": "bootstrap-preview-0.2.schema.json#/properties/preview_sha256" }
+  }
+}

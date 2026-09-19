@@ -717,9 +717,105 @@ class BootstrapEvidenceTests(unittest.TestCase):
             {item["code"] for item in result["contamination"]},
         )
 
+    def test_comparison_rejects_different_approved_source_states_without_semantic_diff(self) -> None:
+        plan, profile, base_preview = _authorities()
+        resource, base_subject = _observations()
+        lifecycle = _lifecycle(early_exit=True)
+
+        def approved_evidence(fingerprint: str):
+            preview = copy.deepcopy(base_preview)
+            preview["schema_version"] = "0.1.1"
+            preview["subject_snapshot"] = {
+                "policy_version": "subject-tree-sha256/0.1",
+                "watch_roots": list(profile["subject_watch_roots"]),
+                "fingerprint": fingerprint,
+                "file_count": 0,
+                "link_count": 0,
+                "total_bytes": 0,
+            }
+            preview.pop("preview_sha256")
+            preview["preview_sha256"] = sha256_json(preview)
+            subject = dict(base_subject)
+            subject["before_fingerprint"] = fingerprint
+            subject["after_fingerprint"] = fingerprint
+            return collect_bootstrap_evidence(
+                plan,
+                profile,
+                preview,
+                lifecycle,
+                browser_exercise={
+                    "started": False,
+                    "completed": False,
+                    "evidence_sha256": None,
+                    "job_memory_limit_mb": 1024,
+                    "job_memory_limit_enforced": False,
+                    "process_cleanup_complete": None,
+                },
+                resource_observation=resource,
+                subject_observation=subject,
+                run_work_released=True,
+                staging_released=True,
+                captured_at="2026-08-13T00:00:00Z",
+            )
+
+        baseline_evidence = approved_evidence("a" * 64)
+        repeat_evidence = approved_evidence("b" * 64)
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            preflight = _preflight(plan, root)
+            baseline = root / "baseline"
+            repeat = root / "repeat"
+            for output, run_id, evidence in (
+                (baseline, "source-a", baseline_evidence),
+                (repeat, "source-b", repeat_evidence),
+            ):
+                create_bundle(
+                    plan=plan,
+                    project_profile=profile,
+                    evidence_paths=[],
+                    output=output,
+                    run_id=run_id,
+                    execution_status=evidence.execution_status,
+                    generated_evidence=[preflight, evidence.bootstrap],
+                )
+
+            result = create_comparison_bundle(
+                baseline=baseline,
+                repeat=repeat,
+                output=root / "comparison",
+            )
+            comparison = json.loads(
+                (root / "comparison" / "comparison.json").read_text(encoding="utf-8")
+            )
+
+            self.assertEqual("INCONCLUSIVE", result.comparison_status)
+            self.assertFalse(result.comparable)
+            self.assertEqual(0, result.difference_count)
+            self.assertEqual([], comparison["differences"])
+            self.assertIn(
+                "SOURCE_STATE_MISMATCH",
+                {item["code"] for item in comparison["reasons"]},
+            )
+            self.assertEqual(
+                "APPROVED",
+                comparison["sources"]["baseline"]["source_state"]["qualification"],
+            )
+
     def test_bundle_catalog_and_comparison_enforce_plan_profile_authorities(self) -> None:
         plan, profile, preview = _authorities()
         resource, subject = _observations()
+        preview = copy.deepcopy(preview)
+        preview["schema_version"] = "0.1.1"
+        preview["subject_snapshot"] = {
+            "policy_version": "subject-tree-sha256/0.1",
+            "watch_roots": list(profile["subject_watch_roots"]),
+            "fingerprint": subject["before_fingerprint"],
+            "file_count": 0,
+            "link_count": 0,
+            "total_bytes": 0,
+        }
+        preview.pop("preview_sha256")
+        preview["preview_sha256"] = sha256_json(preview)
         bootstrap = collect_bootstrap_evidence(
             plan,
             profile,

@@ -217,6 +217,15 @@ export interface CatalogResponse {
 
 export type ComparisonStatus = 'MATCH' | 'DRIFT' | 'INCONCLUSIVE'
 
+export type ComparisonSourceState =
+  | { qualification: 'NOT_APPLICABLE' | 'UNAVAILABLE' }
+  | {
+      qualification: 'APPROVED' | 'OBSERVED_ONLY'
+      policy_version: 'subject-tree-sha256/0.1'
+      watch_roots: string[]
+      fingerprint: string
+    }
+
 export interface ComparisonSource {
   role: 'BASELINE' | 'REPEAT'
   run_id: string
@@ -227,6 +236,8 @@ export interface ComparisonSource {
   random_seed: number
   bundle_sha256: string
   semantic_sha256: string
+  project_profile_sha256?: string
+  source_state?: ComparisonSourceState
 }
 
 export interface ComparisonDifference {
@@ -238,10 +249,10 @@ export interface ComparisonDifference {
 }
 
 export interface RerunComparison {
-  schema_version: '0.1'
+  schema_version: '0.1' | '0.2'
   comparison_id: string
   comparison_type: 'SAME_PLAN_RERUN'
-  rule_version: 'rerun-semantic/0.1'
+  rule_version: 'rerun-semantic/0.1' | 'rerun-semantic/0.2'
   comparison_status: ComparisonStatus
   comparable: boolean
   reasons: ReportReason[]

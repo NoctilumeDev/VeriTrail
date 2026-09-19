@@ -14,7 +14,7 @@ import unittest
 from contextlib import redirect_stderr
 from pathlib import Path
 
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from veritrail.bootstrap_browser import (
     ObservedBrowserEvidence,
@@ -23,9 +23,14 @@ from veritrail.bootstrap_browser import (
 from veritrail.bootstrap_preview import ResolvedBootstrap, ResolvedBootstrapNode
 from veritrail.bootstrap_run import _BootstrapResourceMonitor, run_observed_bootstrap
 from veritrail.canonical import sha256_json
+from veritrail.errors import SafetyError
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 from veritrail.stop_control import StopSignal
+from veritrail.subject_snapshot import (
+    capture_subject_root_snapshot,
+    subject_snapshot_projection,
+)
 from veritrail.windows_job import inspect_executable_identity
 from veritrail.windows_service import OwnedServiceSession
 
@@ -86,8 +91,14 @@ def _authorities(
         if step["action"] == "goto":
             step["url"] = f"{application_origin}/"
     plan = seal_plan(raw_plan, profile)
+    snapshot = capture_subject_root_snapshot(
+        subject,
+        profile["subject_watch_roots"],
+        max_files=profile["max_watch_files"],
+        max_total_bytes=profile["max_watch_total_bytes"],
+    )
     preview = {
-        "schema_version": "0.1",
+        "schema_version": "0.1.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
@@ -96,6 +107,9 @@ def _authorities(
         "cold_state": profile["cold_state"],
         "start_order": profile["start_order"],
         "teardown_order": profile["teardown_order"],
+        "subject_snapshot": subject_snapshot_projection(
+            snapshot, profile["subject_watch_roots"]
+        ),
     }
     preview["preview_sha256"] = sha256_json(preview)
     environment = {
@@ -244,6 +258,28 @@ class BootstrapObservedRunTests(unittest.TestCase):
             subject / "service.py",
         )
         return subject
+
+    def test_source_change_after_approval_is_rejected_before_workspace_or_service(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject = self._subject(root)
+            plan, profile, resolved = _authorities(subject)
+            (subject / "watched" / "state.txt").write_text(
+                "new state\n", encoding="utf-8"
+            )
+            session_factory = Mock()
+
+            with self.assertRaisesRegex(SafetyError, "approved subject snapshot"):
+                run_observed_bootstrap(
+                    plan,
+                    profile,
+                    resolved,
+                    output_parent=root / "artifacts",
+                    session_factory=session_factory,
+                )
+
+            session_factory.assert_not_called()
+            self.assertFalse((root / "artifacts").exists())
 
     def test_owned_staging_survives_teardown_then_builds_strict_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

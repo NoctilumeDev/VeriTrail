@@ -629,7 +629,11 @@ def _validate_report_and_evidence(
             indexed = {item["path"]: item for item in attachments}
             expected_attachment_count = (
                 2
-                if document.get("source") == "VeriTrail bootstrap-lifecycle/0.3"
+                if document.get("source")
+                in {
+                    "VeriTrail bootstrap-lifecycle/0.3",
+                    "VeriTrail bootstrap-lifecycle/0.3.1",
+                }
                 else 4
             )
             if (

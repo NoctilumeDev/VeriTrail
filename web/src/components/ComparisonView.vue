@@ -210,7 +210,7 @@ function differenceImpact(difference: ComparisonDifference): string {
               <dl class="rerun-source__statuses">
                 <div><dt>Execution Status</dt><dd>{{ source.execution_status }}</dd></div>
                 <div><dt>Run Verdict</dt><dd :class="`is-${source.verdict.toLowerCase()}`">{{ source.verdict }}</dd></div>
-                <div><dt>Source Identity</dt><dd>PRESERVED</dd></div>
+                <div><dt>Source Identity</dt><dd>{{ source.source_state?.qualification ?? 'PRESERVED' }}</dd></div>
               </dl>
               <dl class="rerun-source__facts">
                 <div><dt>Run ID</dt><dd :title="source.run_id">{{ source.run_id }}</dd></div>

@@ -11,9 +11,11 @@ from unittest.mock import Mock
 
 from veritrail.command_execution import collect_command_evidence, sanitize_output
 from veritrail.command_preview import resolve_command
+from veritrail.comparison import create_comparison_bundle
 from veritrail.evidence import import_evidence_document, verify_imported_evidence
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.plan import seal_plan
+from veritrail.reporting import create_bundle
 from veritrail.windows_job import CapturedStream, OwnedProcessResult
 from veritrail.verdict import evaluate
 
@@ -281,25 +283,87 @@ class CommandExecutionTests(unittest.TestCase):
             self.assertEqual(1, facts["subject"]["diff_counts"]["added"])
             self.assertTrue((root / "src" / "changed.txt").is_file())
 
-    def test_snapshot_limit_failure_never_creates_a_process_or_run_work(self) -> None:
+    def test_snapshot_limit_failure_rejects_preview_before_a_run_exists(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            plan, bindings, resolved = self._fixture(root, max_watch_files=1)
+            with self.assertRaisesRegex(ValidationError, "file-count limit"):
+                self._fixture(root, max_watch_files=1)
+            self.assertFalse((root / "artifacts").exists())
 
+    def test_source_change_after_approval_is_rejected_before_process_or_run_work(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan, bindings, resolved = self._fixture(root)
+            (root / "src" / "subject.txt").write_text("new state", encoding="utf-8")
+            runner = Mock()
+
+            with self.assertRaisesRegex(SafetyError, "approved subject snapshot"):
+                collect_command_evidence(
+                    plan,
+                    resolved,
+                    tool_bindings_path=bindings,
+                    output_parent=root / "artifacts",
+                    process_runner=runner,
+                )
+
+            runner.assert_not_called()
+            self.assertFalse((root / "artifacts").exists())
+
+    def test_legacy_command_runs_remain_readable_but_are_source_unqualified(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            plan, bindings, resolved = self._fixture(root)
             result = collect_command_evidence(
                 plan,
                 resolved,
                 tool_bindings_path=bindings,
                 output_parent=root / "artifacts",
+                process_runner=lambda **_: self._owned_result("EXITED"),
+            )
+            document = copy.deepcopy(result.command.document)
+            document["source"] = "VeriTrail trusted-command/0.1"
+            document["facts"]["collector_version"] = "trusted-command/0.1"
+            legacy = import_evidence_document(
+                document,
+                "legacy-command.json",
+                attachments=result.command.attachments,
+            )
+            baseline = root / "baseline"
+            repeat = root / "repeat"
+            for output, run_id in (
+                (baseline, "legacy-command-a"),
+                (repeat, "legacy-command-b"),
+            ):
+                create_bundle(
+                    plan=plan,
+                    evidence_paths=[],
+                    output=output,
+                    run_id=run_id,
+                    execution_status="COMPLETED",
+                    generated_evidence=[legacy],
+                )
+
+            comparison_output = root / "comparison"
+            comparison = create_comparison_bundle(
+                baseline=baseline,
+                repeat=repeat,
+                output=comparison_output,
+            )
+            payload = json.loads(
+                (comparison_output / "comparison.json").read_text(encoding="utf-8")
             )
 
-            facts = result.command.document["facts"]
-            self.assertEqual("ERROR", result.execution_status)
-            self.assertFalse(result.continue_pipeline)
-            self.assertFalse(facts["process_created"])
-            self.assertFalse(facts["run_work_created"])
-            self.assertFalse(facts["subject"]["snapshot_complete"])
-            self.assertTrue(facts["cleanup_complete"])
+            self.assertEqual("INCONCLUSIVE", comparison.comparison_status)
+            self.assertFalse(comparison.comparable)
+            self.assertEqual(0, comparison.difference_count)
+            self.assertIn(
+                "SOURCE_STATE_UNQUALIFIED",
+                {item["code"] for item in payload["reasons"]},
+            )
+            self.assertEqual(
+                "OBSERVED_ONLY",
+                payload["sources"]["baseline"]["source_state"]["qualification"],
+            )
 
     def test_live_binding_drift_is_rejected_before_process_or_run_work(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

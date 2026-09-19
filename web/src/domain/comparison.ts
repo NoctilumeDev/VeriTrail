@@ -4,6 +4,7 @@ import type {
   ComparisonDifference,
   ComparisonManifest,
   ComparisonSource,
+  ComparisonSourceState,
   ComparisonStatus,
   ExecutionStatus,
   LoadedComparison,
@@ -116,7 +117,37 @@ function parseManifest(value: unknown): ComparisonManifest {
   }
 }
 
-function parseSource(value: unknown, role: 'BASELINE' | 'REPEAT'): ComparisonSource {
+function parseSourceState(value: unknown): ComparisonSourceState {
+  const state = record(value, 'source.source_state')
+  const qualification = string(state.qualification, 'source.source_state.qualification')
+  if (qualification === 'NOT_APPLICABLE' || qualification === 'UNAVAILABLE') {
+    return { qualification }
+  }
+  if (qualification !== 'APPROVED' && qualification !== 'OBSERVED_ONLY') {
+    fail('COMPARISON_INVALID', 'Source state qualification 不受支持。')
+  }
+  if (state.policy_version !== 'subject-tree-sha256/0.1') {
+    fail('COMPARISON_INVALID', 'Source snapshot policy 不受支持。')
+  }
+  const watchRoots = array(state.watch_roots, 'source.source_state.watch_roots').map(
+    (item, index) => string(item, `source.source_state.watch_roots[${index}]`),
+  )
+  if (watchRoots.length === 0 || new Set(watchRoots).size !== watchRoots.length) {
+    fail('COMPARISON_INVALID', 'Source snapshot watch roots 无效。')
+  }
+  return {
+    qualification,
+    policy_version: 'subject-tree-sha256/0.1',
+    watch_roots: watchRoots,
+    fingerprint: string(state.fingerprint, 'source.source_state.fingerprint', SHA256),
+  }
+}
+
+function parseSource(
+  value: unknown,
+  role: 'BASELINE' | 'REPEAT',
+  schemaVersion: '0.1' | '0.2',
+): ComparisonSource {
   const source = record(value, `sources.${role.toLowerCase()}`)
   const plan = record(source.plan, 'source.plan')
   const executionStatus = string(source.execution_status, 'source.execution_status') as ExecutionStatus
@@ -125,7 +156,7 @@ function parseSource(value: unknown, role: 'BASELINE' | 'REPEAT'): ComparisonSou
     fail('COMPARISON_INVALID', '来源 Run 的状态或裁决不受支持。')
   }
   if (source.role !== role) fail('COMPARISON_REFERENCE_MISMATCH', 'Comparison 来源角色错位。')
-  return {
+  const parsed: ComparisonSource = {
     role,
     run_id: string(source.run_id, 'source.run_id'),
     created_at: string(source.created_at, 'source.created_at'),
@@ -140,6 +171,15 @@ function parseSource(value: unknown, role: 'BASELINE' | 'REPEAT'): ComparisonSou
     bundle_sha256: string(source.bundle_sha256, 'source.bundle_sha256', SHA256),
     semantic_sha256: string(source.semantic_sha256, 'source.semantic_sha256', SHA256),
   }
+  if (typeof source.project_profile_sha256 === 'string') {
+    parsed.project_profile_sha256 = string(
+      source.project_profile_sha256,
+      'source.project_profile_sha256',
+      SHA256,
+    )
+  }
+  if (schemaVersion === '0.2') parsed.source_state = parseSourceState(source.source_state)
+  return parsed
 }
 
 function parseDifference(value: unknown, index: number): ComparisonDifference {
@@ -167,10 +207,15 @@ function canonicalJson(value: unknown): string {
 
 async function validateComparison(value: unknown, manifest: ComparisonManifest): Promise<RerunComparison> {
   const comparison = record(value, 'comparison.json')
-  if (comparison.schema_version !== '0.1' || comparison.comparison_type !== 'SAME_PLAN_RERUN') {
+  if (
+    !['0.1', '0.2'].includes(String(comparison.schema_version)) ||
+    comparison.comparison_type !== 'SAME_PLAN_RERUN'
+  ) {
     fail('COMPARISON_VERSION_UNSUPPORTED', 'Comparison 类型或版本不受支持。')
   }
-  if (comparison.rule_version !== 'rerun-semantic/0.1') {
+  const schemaVersion = comparison.schema_version as '0.1' | '0.2'
+  const expectedRule = schemaVersion === '0.2' ? 'rerun-semantic/0.2' : 'rerun-semantic/0.1'
+  if (comparison.rule_version !== expectedRule) {
     fail('COMPARISON_RULE_UNSUPPORTED', 'Comparison 规则版本不受支持。')
   }
   const comparisonId = string(comparison.comparison_id, 'comparison_id', COMPARISON_ID)
@@ -181,14 +226,14 @@ async function validateComparison(value: unknown, manifest: ComparisonManifest):
   if (!COMPARISON_STATUSES.has(status)) fail('COMPARISON_INVALID', 'Comparison 状态不受支持。')
   const comparable = boolean(comparison.comparable, 'comparable')
   const sources = record(comparison.sources, 'sources')
-  const baseline = parseSource(sources.baseline, 'BASELINE')
-  const repeat = parseSource(sources.repeat, 'REPEAT')
+  const baseline = parseSource(sources.baseline, 'BASELINE', schemaVersion)
+  const repeat = parseSource(sources.repeat, 'REPEAT', schemaVersion)
   const expectedId = `cmp_${(
     await sha256Hex(
       new Blob([
         canonicalJson({
-          schema_version: '0.1',
-          rule_version: 'rerun-semantic/0.1',
+          schema_version: schemaVersion,
+          rule_version: expectedRule,
           baseline_bundle_sha256: baseline.bundle_sha256,
           repeat_bundle_sha256: repeat.bundle_sha256,
         }),
@@ -228,11 +273,24 @@ async function validateComparison(value: unknown, manifest: ComparisonManifest):
   ) {
     fail('COMPARISON_STATE_CONFLICT', '可比较标记绕过了同 Plan 独立完整 Run 门禁。')
   }
+  if (schemaVersion === '0.2') {
+    const baselineState = baseline.source_state!
+    const repeatState = repeat.source_state!
+    const statesComparable =
+      (baselineState.qualification === 'NOT_APPLICABLE' &&
+        repeatState.qualification === 'NOT_APPLICABLE') ||
+      (baselineState.qualification === 'APPROVED' &&
+        repeatState.qualification === 'APPROVED' &&
+        canonicalJson(baselineState) === canonicalJson(repeatState))
+    if ((comparable && !statesComparable) || (!statesComparable && differences.length !== 0)) {
+      fail('COMPARISON_STATE_CONFLICT', '可比较标记绕过了获批源码状态门禁。')
+    }
+  }
   return {
-    schema_version: '0.1',
+    schema_version: schemaVersion,
     comparison_id: comparisonId,
     comparison_type: 'SAME_PLAN_RERUN',
-    rule_version: 'rerun-semantic/0.1',
+    rule_version: expectedRule,
     comparison_status: status,
     comparable,
     reasons,

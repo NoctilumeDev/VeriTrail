@@ -79,7 +79,11 @@ class BootstrapPreviewCliTests(unittest.TestCase):
             self.assertEqual(0, code)
             self.assertEqual("", stderr.getvalue())
             preview = json.loads(stdout.getvalue())
-            self.assertEqual("0.1", preview["schema_version"])
+            self.assertEqual("0.1.1", preview["schema_version"])
+            self.assertEqual(
+                "subject-tree-sha256/0.1",
+                preview["subject_snapshot"]["policy_version"],
+            )
             self.assertNotIn(str(root.resolve()), stdout.getvalue())
             after = sorted(path.relative_to(root).as_posix() for path in root.rglob("*"))
             self.assertEqual(before, after)

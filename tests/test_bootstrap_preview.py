@@ -66,6 +66,12 @@ class BootstrapPreviewTests(unittest.TestCase):
                     environment=environment,
                 )
             self.assertEqual(first, second)
+            self.assertEqual("0.1.1", first["schema_version"])
+            self.assertEqual(
+                "subject-tree-sha256/0.1",
+                first["subject_snapshot"]["policy_version"],
+            )
+            self.assertEqual(["src", "tests"], first["subject_snapshot"]["watch_roots"])
             self.assertEqual(["dependency", "application"], first["start_order"])
             self.assertEqual("node_origin", first["nodes"][1]["arguments"][3]["kind"])
             self.assertEqual(
@@ -76,12 +82,37 @@ class BootstrapPreviewTests(unittest.TestCase):
             self.assertNotIn(str(bindings.resolve()), encoded)
             self.assertEqual(64, len(first["preview_sha256"]))
             schema = json.loads(
-                (ROOT / "schemas" / "bootstrap-preview-0.1.schema.json").read_text(
+                (ROOT / "schemas" / "bootstrap-preview-0.1.1.schema.json").read_text(
                     encoding="utf-8"
                 )
             )
             self.assertEqual(set(schema["required"]), set(first))
-            self.assertEqual(set(schema["$defs"]["node"]["required"]), set(first["nodes"][0]))
+            legacy = json.loads(
+                (ROOT / "schemas" / "bootstrap-preview-0.1.schema.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+            self.assertEqual(set(legacy["$defs"]["node"]["required"]), set(first["nodes"][0]))
+
+            (subject / "src" / "changed.py").write_text("value = 1\n", encoding="utf-8")
+            with mock.patch(
+                "veritrail.bootstrap_preview._require_windows_bootstrap_capability",
+                return_value=None,
+            ), mock.patch(
+                "veritrail.bootstrap_preview.assert_loopback_ports_free",
+                return_value=None,
+            ):
+                changed = build_bootstrap_preview(
+                    plan,
+                    profile,
+                    subject_root=subject,
+                    tool_bindings_path=bindings,
+                    environment=environment,
+                )
+            self.assertNotEqual(
+                first["subject_snapshot"]["fingerprint"],
+                changed["subject_snapshot"]["fingerprint"],
+            )
 
     def test_port_conflict_and_missing_binding_are_pre_run_rejections(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

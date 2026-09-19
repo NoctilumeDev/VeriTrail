@@ -13,6 +13,10 @@ from veritrail.errors import SafetyError, ValidationError
 from veritrail.jsonio import load_json_object
 from veritrail.plan import PLAN_ID_PATTERN, verify_sealed_plan
 from veritrail.privacy import redact_string
+from veritrail.subject_snapshot import (
+    capture_subject_root_snapshot,
+    subject_snapshot_projection,
+)
 from veritrail.windows_job import (
     inspect_executable_identity,
     require_windows_command_capability as _require_windows_command_capability,
@@ -221,6 +225,12 @@ def resolve_command(
         _resolve_subject_directory(
             resolved_subject, root, f"command.subject_watch_roots[{index}]"
         )
+    subject_snapshot = capture_subject_root_snapshot(
+        resolved_subject,
+        command["subject_watch_roots"],
+        max_files=command["max_watch_files"],
+        max_total_bytes=command["max_watch_total_bytes"],
+    )
 
     resolved_executable, executable_identity = _resolve_executable(binding["executable"])
     inherited, explicit, environment_sha256 = _environment_projection(
@@ -234,7 +244,7 @@ def resolve_command(
     )
 
     preview: dict[str, Any] = {
-        "schema_version": "0.1",
+        "schema_version": "0.1.1",
         "plan_sha256": plan["seal"]["digest"],
         "command_policy_sha256": sha256_json(command),
         "command_id": command["command_id"],
@@ -269,6 +279,9 @@ def resolve_command(
         },
         "write_policy": command["write_policy"],
         "subject_watch_roots": list(command["subject_watch_roots"]),
+        "subject_snapshot": subject_snapshot_projection(
+            subject_snapshot, command["subject_watch_roots"]
+        ),
         "network_policy": command["network_policy"],
         "claims": {
             "filesystem_isolation": "NOT_PROVEN",

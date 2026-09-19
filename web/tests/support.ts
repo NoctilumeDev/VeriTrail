@@ -469,6 +469,8 @@ export async function createSealedPlan(planId: string, version: number) {
 
 export async function createComparisonBundle(
   status: 'MATCH' | 'DRIFT' | 'INCONCLUSIVE' = 'MATCH',
+  schemaVersion: '0.1' | '0.2' = '0.1',
+  sourceStateMismatch = schemaVersion === '0.2',
 ): Promise<Map<string, Blob>> {
   const baselineBundle = 'b'.repeat(64)
   const repeatBundle = 'c'.repeat(64)
@@ -476,8 +478,8 @@ export async function createComparisonBundle(
     await sha256Hex(
       new Blob([
         canonicalJson({
-          schema_version: '0.1',
-          rule_version: 'rerun-semantic/0.1',
+          schema_version: schemaVersion,
+          rule_version: schemaVersion === '0.2' ? 'rerun-semantic/0.2' : 'rerun-semantic/0.1',
           baseline_bundle_sha256: baselineBundle,
           repeat_bundle_sha256: repeatBundle,
         }),
@@ -488,14 +490,30 @@ export async function createComparisonBundle(
     role,
     run_id: role === 'BASELINE' ? 'unit-baseline' : 'unit-repeat',
     created_at: '2026-08-09T00:00:00Z',
-    execution_status: status === 'INCONCLUSIVE' && role === 'REPEAT' ? 'ABORTED' : 'COMPLETED',
+    execution_status:
+      status === 'INCONCLUSIVE' && !sourceStateMismatch && role === 'REPEAT'
+        ? 'ABORTED'
+        : 'COMPLETED',
     verdict: status === 'DRIFT' && role === 'REPEAT' ? 'FAIL' : status === 'INCONCLUSIVE' && role === 'REPEAT' ? 'PENDING' : 'PASS',
     plan: { id: 'unit-plan', version: 1, sha256: 'a'.repeat(64) },
     random_seed: 20260809,
     bundle_sha256: role === 'BASELINE' ? baselineBundle : repeatBundle,
     semantic_sha256: role === 'BASELINE' ? 'd'.repeat(64) : status === 'MATCH' ? 'd'.repeat(64) : 'e'.repeat(64),
+    ...(schemaVersion === '0.2'
+      ? {
+          source_state: {
+            qualification: 'APPROVED',
+            policy_version: 'subject-tree-sha256/0.1',
+            watch_roots: ['src'],
+            fingerprint:
+              status === 'INCONCLUSIVE' && sourceStateMismatch && role === 'REPEAT'
+                ? 'f'.repeat(64)
+                : 'e'.repeat(64),
+          },
+        }
+      : {}),
   })
-  const differences = status === 'MATCH' ? [] : [{
+  const differences = status === 'MATCH' || (schemaVersion === '0.2' && status === 'INCONCLUSIVE') ? [] : [{
     path: '/verdict',
     baseline_present: true,
     repeat_present: true,
@@ -503,14 +521,14 @@ export async function createComparisonBundle(
     repeat: status === 'DRIFT' ? 'FAIL' : 'PENDING',
   }]
   const comparison = {
-    schema_version: '0.1',
+    schema_version: schemaVersion,
     comparison_id: comparisonId,
     comparison_type: 'SAME_PLAN_RERUN',
-    rule_version: 'rerun-semantic/0.1',
+    rule_version: schemaVersion === '0.2' ? 'rerun-semantic/0.2' : 'rerun-semantic/0.1',
     comparison_status: status,
     comparable: status !== 'INCONCLUSIVE',
     reasons: [{
-      code: status === 'MATCH' ? 'RERUN_SEMANTICS_MATCH' : status === 'DRIFT' ? 'RERUN_SEMANTIC_DRIFT' : 'RUN_NOT_COMPLETED',
+      code: status === 'MATCH' ? 'RERUN_SEMANTICS_MATCH' : status === 'DRIFT' ? 'RERUN_SEMANTIC_DRIFT' : sourceStateMismatch ? 'SOURCE_STATE_MISMATCH' : 'RUN_NOT_COMPLETED',
       message: 'Deterministic comparison fixture.',
     }],
     sources: { baseline: source('BASELINE'), repeat: source('REPEAT') },

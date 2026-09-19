@@ -314,6 +314,10 @@ class M11SingleApplicationTests(unittest.TestCase):
 
     def _bootstrap_artifact(self, plan: dict, profile: dict, preview: dict):
         browser = _browser_artifact(plan)
+        subject_observation = _subject_observation()
+        approved_fingerprint = preview["subject_snapshot"]["fingerprint"]
+        subject_observation["before_fingerprint"] = approved_fingerprint
+        subject_observation["after_fingerprint"] = approved_fingerprint
         bootstrap = collect_bootstrap_evidence(
             plan,
             profile,
@@ -328,7 +332,7 @@ class M11SingleApplicationTests(unittest.TestCase):
                 "process_cleanup_complete": True,
             },
             resource_observation=_resource_observation(),
-            subject_observation=_subject_observation(),
+            subject_observation=subject_observation,
             run_work_released=True,
             staging_released=True,
             captured_at="2026-08-14T00:00:00Z",
@@ -339,7 +343,7 @@ class M11SingleApplicationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subject, plan, profile, bindings, preview, port = self._fixture(root)
-            self.assertEqual("0.2", preview["schema_version"])
+            self.assertEqual("0.2.1", preview["schema_version"])
             self.assertEqual("SINGLE_APPLICATION", preview["topology"])
             self.assertEqual(["application"], preview["start_order"])
             self.assertEqual(["application"], preview["teardown_order"])
@@ -370,7 +374,7 @@ class M11SingleApplicationTests(unittest.TestCase):
             _, plan, profile, _, preview, _ = self._fixture(Path(directory))
             _, result = self._bootstrap_artifact(plan, profile, preview)
             document = result.bootstrap.document
-            self.assertEqual("VeriTrail bootstrap-lifecycle/0.3", document["source"])
+            self.assertEqual("VeriTrail bootstrap-lifecycle/0.3.1", document["source"])
             self.assertEqual(1, len(document["facts"]["nodes"]))
             self.assertEqual(2, len(result.bootstrap.attachments))
             self.assertIsNone(

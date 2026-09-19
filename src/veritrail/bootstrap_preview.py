@@ -18,6 +18,10 @@ from veritrail.command_preview import (
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
+from veritrail.subject_snapshot import (
+    capture_subject_root_snapshot,
+    subject_snapshot_projection,
+)
 from veritrail.windows_job import require_windows_command_capability
 from veritrail.windows_tcp import assert_loopback_ports_free
 
@@ -127,6 +131,12 @@ def resolve_bootstrap(
         _resolve_subject_directory(
             resolved_subject, root, f"ProjectProfile.subject_watch_roots[{index}]"
         )
+    subject_snapshot = capture_subject_root_snapshot(
+        resolved_subject,
+        profile["subject_watch_roots"],
+        max_files=profile["max_watch_files"],
+        max_total_bytes=profile["max_watch_total_bytes"],
+    )
 
     nodes_by_id = {node["node_id"]: node for node in profile["nodes"]}
     sealed_ports = [nodes_by_id[node_id]["port"] for node_id in profile["start_order"]]
@@ -190,12 +200,15 @@ def resolve_bootstrap(
 
     application = nodes_by_id[profile["application_node_id"]]
     preview: dict[str, Any] = {
-        "schema_version": "0.2" if plan_version == "0.7" else "0.1",
+        "schema_version": "0.2.1" if plan_version == "0.7" else "0.1.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
         "profile_sha256": profile["seal"]["digest"],
         "subject_root_identity_sha256": _path_identity(resolved_subject),
+        "subject_snapshot": subject_snapshot_projection(
+            subject_snapshot, profile["subject_watch_roots"]
+        ),
         "platform": profile["platform"],
         "cold_state": profile["cold_state"],
         "nodes": preview_nodes,
