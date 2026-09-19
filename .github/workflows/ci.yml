@@ -712,7 +712,7 @@ jobs:
         run: npm run build
 
       - name: Audit Workbench dependencies
-        run: npm audit --audit-level=moderate --registry=https://registry.npmjs.org
+        run: npx --yes npm@11.19.1 audit --audit-level=moderate --registry=https://registry.npmjs.org
 
   starter-golden-path:
     name: Starter PASS/FAIL golden path
