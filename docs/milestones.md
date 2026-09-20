@@ -1235,6 +1235,47 @@ R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_NOT_STARTED
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
+该最后门现已成立：PR #159 head `a00c0fb9f31f4b4282560bb554b59d7aa05627fb` 的原始 Public CI 为
+attempt 1、11/11 SUCCESS，合入后的 exact `main@559bf9b9a052f0b542227b1cea069dd15c696cc8` 上，Public CI
+run `35527351489` 为 attempt 1、11/11 SUCCESS，Browser Smoke run `35527351523` 为 attempt 1、1/1
+SUCCESS。README、文档 173 与 milestones 使用三个不同 sealed Plan 和 collection session 完成 fresh anonymous
+installed-product readback，P1/P2 均 `COMPLETE`、HTTP 200、三样本稳定、唯一 marker、零
+conflict/error/coverage reason/cleanup error/active stream，Core 均为 `PASS`。联合 canonical manifest 的
+`sha256_json` 为 `6a88636093691394ced966199c153bd9cc95e331fadbcc968aebfd48436c6fe1`。
+
+[文档 175](175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md)的首份语义候选最初只从该审计 exact
+main 起草 docs-only 最小合同。候选用 private observation profile 区分 Profile vocabulary 与 required
+observation families；从 exact FactSet 为 lexical target Fact 与 import source Fact 机械建立 observation items，
+再把 items 预先分配给 exact A/B required Relation sources。A 负责 lexical，B 负责 lexical 与 import-literal，
+两者同属 sealed `CUMULATIVE` capability、共享原 live BudgetContext；新的 relation-only operands `/0.3` 与
+private relation-cell `/0.2` 绑定 exact domain，不改写历史 `/0.2` operands 或 `/0.1` wire。
+
+Provider terminal、required source-set terminal closure、source-local item closure 与 candidate composition
+分别保存。冻结 `observation_profile_digest` 绑定 family/negative policy/Provider responsibility semantics；同一个
+FactSet 不能在责任语义变化后沿用旧 domain。与每个 terminal run 绑定的 private relation-cell terminal 另报
+explicit per-item outcomes，application 对 outcomes 与 candidates 双向
+对账；定义 denominator 不等于履行义务，candidate absence 也不能生成 negative。
+`RO-006/007` 固定 non-empty 零 candidate/无 outcomes 与 partial candidate/漏 outcome 都不得 qualification。
+complete-empty 必须同时具有 empty assigned item set、真实 start、`COMPLETED`、empty outcomes/candidates 与
+residue-free release；漏 outcome 或 unexpected candidate 不反写 truthful run terminal，但会否决 qualification。
+same-ID candidate 只合并 provenance；same-subject incompatibility 可以与 observation closure `COMPLETE` 同时
+存在，必须保留 private conflict，不能任选 winner。现有 RelationSet 0.1 与 Evidence 0.1.1 没有 responsibility、
+domain 或 receipt binding，不能凭 shape 证明 qualification；因此本合同不授权 RelationSet 或 public Artifact。
+
+当前状态只能是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_CANDIDATE
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+候选自己的原始远端门、受保护主线合入、exact-main 双门、专属匿名产品读回与后继独立 docs-only 合同冻结
+发布成立前，不得开始 runtime。完整 Relation algorithm/import resolution、public Provider、Schema correction、
+RelationSet admission、final Evidence、publisher、Slice、Coverage、CLI 与 Workbench 继续延期。
+
 本轮没有触发外部 production failure-shape survey：本地冻结 bytes 已提供决定性反例。若后继合同仍无法在
 responsibility/denominator/omission receipt 方案之间选择，才按 failure family 查公开一手案例，再回到本地
 反例验证；外部案例不直接产生 R 的合同 authority。
@@ -1245,9 +1286,13 @@ Python 3.13 Public CI 在真正执行 450 tests 后，由既有 listener-owner-m
 而把寿命延长到 `30s` 又会因端口未在 cleanup deadline 内释放而合法得到 `CLEANUP_ERROR`。最小维护只把
 外部 owner 的建立时刻移到 disputed node 进入既有 readiness adapter 的真实起点，不改变 runtime、timeout、
 合同或错误接受边界。目标用例、完整 bootstrap module 与显式绑定四个当前 source root 的 450-test broader
-suite 已在双 Python normal/`-O` 四格成立；后者不冒充 installed-product/CI topology。维护候选必须先取得自己
-的原始远端门、受保护合入与新 exact-main 双门；之后 PR #160 才能吸收新 main、形成新 head SHA 并重新证明，
-不得以维护绿色或旧 head rerun 覆盖 #160 attempt 1。
+suite 已在双 Python normal/`-O` 四格成立；后者不冒充 installed-product/CI topology。维护 PR #161 原始
+Public CI run `35532371731` attempt 1 为 11/11，随后受保护合入 `main@962251d91bc2695afe984ee47845ac4fe1a80f7e`；该 exact main 的
+Public CI run `35533373276` attempt 1 为 11/11，Browser Smoke run `35533373269` attempt 1 为 1/1。
+
+PR #160 原始 head `44caffaa08ab67bcb83760d86bdbad7e30081b6f` 的正式 Python 3.13 首败继续保留，
+没有以维护绿色或旧 head rerun 覆盖。合同语义没有被 maintenance 改写；文档 175 当前只从上述
+maintenance-qualified exact main 重新绑定 source state、形成新 head 并重新接受完整门禁。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

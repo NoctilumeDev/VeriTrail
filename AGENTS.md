@@ -771,19 +771,45 @@
   bounded observation-domain qualification、RelationSet admission 与 final publication 不能合并。下一问题面识别为
   declared Relation observation domain / composition qualification，只允许后继独立 docs-only 合同审议 source
   responsibility、successful-empty 边界、required/optional observation、multi-source merge/conflict 与 qualification
-  identity。当前分支只能是 `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_SYSTEM_AUDIT_CANDIDATE /
-  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_NOT_STARTED`；本文自己的原始远端门、受保护主线合入、
-  新 exact-main 双门与专属匿名读回全部成立后，才提升为 `PRECONTRACT_AUDITED`。完整 Relation algorithm/import
+  identity。PR #159 原始 Public CI 11/11 后合入
+  `main@559bf9b9a052f0b542227b1cea069dd15c696cc8`；新 exact main 的 Public CI 11/11、Browser Smoke 1/1
+  与 README/文档 173/milestones 三次 fresh anonymous installed-product readback 均成立，联合 manifest
+  `sha256_json=6a88636093691394ced966199c153bd9cc95e331fadbcc968aebfd48436c6fe1`。因此当前审计状态已是
+  `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED`。完整 Relation algorithm/import
   resolution、RelationSet admission、final Evidence、public Provider、publisher、Slice、Coverage、CLI、Workbench、
   D、Cu 与 Q 继续未授权；本地事实已足以选择问题面，因此本轮不以外部 production case 替代本地反例。
 - `docs/174-m10-listener-owner-mismatch-fixture-timing-correction.md` 记录 PR #160 原始 Public CI 在 Python 3.13
   真正执行 450 tests 后暴露的既有 listener-owner-mismatch 测试时序缺口。正式首败保持成立；诊断只把归因
   收窄为夹具从过早坐标开始计算 `1.5s` 外部 listener 寿命。把寿命延长到 `30s` 的本地候选又合法触发
   `CLEANUP_ERROR`，因此被反例否决；最小修正只在 disputed node 进入既有 readiness adapter 时建立原
-  `1.5s` external owner，继续同时证明 no-kill 与 cleanup release。该维护自己的原始远端门、受保护合入与
-  新 exact-main Public CI / Browser Smoke 全部成立前，PR #160 保持停止；随后必须吸收新 main、形成新 head
-  SHA 并重新取得完整门禁，不得用维护绿色或旧 head rerun 覆盖 #160 attempt 1。source-root `PYTHONPATH`
-  四包组合只证明 current-source regression，不等同 installed-product/CI topology。
+  `1.5s` external owner，继续同时证明 no-kill 与 cleanup release。维护 PR #161 原始 Public CI run
+  `35532371731` attempt 1 为 11/11，随后受保护合入 `main@962251d91bc2695afe984ee47845ac4fe1a80f7e`；该 exact main 的 Public CI
+  run `35533373276` attempt 1 为 11/11，Browser Smoke run `35533373269` attempt 1 为 1/1。PR #160
+  的正式首败仍保留；合同候选必须吸收该 exact main、形成新 head SHA 并重新取得完整门禁，不得用维护绿色或
+  旧 head rerun 覆盖 #160 attempt 1。source-root `PYTHONPATH` 四包组合只证明 current-source regression，
+  不等同 installed-product/CI topology。
+- `docs/175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md` 的语义最初从审计
+  exact `main@559bf9b9a052f0b542227b1cea069dd15c696cc8` 起草。PR #160 原始 head 的 Python 3.13 正式首败由独立文档 174 / PR #161
+  维护关闭，首败没有被 rerun 或改写；当前候选从 maintenance-qualified exact `main@962251d91bc2695afe984ee47845ac4fe1a80f7e` 重新绑定
+  source state。候选不把 Profile relation-kind 闭集当 required observation；它以 private versioned
+  observation profile 将 exact FactSet 机械投影为 Fact-backed items，并在 Provider 执行前把 A/B exact
+  responsibilities 固定。A 负责 lexical items，B 同时负责 lexical 与 import-literal items；两者继承 sealed
+  required CUMULATIVE requirement、共享原 live `BudgetContext`，并以 relation-only operands `/0.3` 与 private
+  relation cell `/0.2` 绑定 exact domain。`observation_profile_digest` 同时绑定 FactSet 以外的 family、negative
+  policy 与 Provider responsibility semantics；定义 responsibility 不等于已履责。与每个 terminal run 绑定的
+  private relation-cell terminal 必须另报 explicit per-item outcomes，application 对 outcomes 与 candidates 双向
+  对账，不能从 candidate absence 补 negative。
+  当前 total-obligation families 不允许 non-empty closed negative。Provider terminal、required source-set terminal、
+  source-local item closure 与 candidate composition 分开；same-ID 合并 provenance，same-subject incompatibility 保留 private
+  conflict，complete-empty 必须有空 assigned items 与真实 start/terminal/release。现有 RelationSet 0.1 与
+  Evidence 0.1.1 不能单凭 shape 证明 qualification，因此首个实现即使以后获授权也只能返回 private state，
+  不创建 RelationSet 或公共 Artifact。当前状态只能是
+  `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_CANDIDATE /
+  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；候选自己的远端门、受保护合入、exact-main
+  双门、专属匿名读回与后继独立冻结发布成立前，不得写 runtime。完整 resolver、public Provider、Schema
+  correction、RelationSet admission、final Evidence、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q
+  继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
