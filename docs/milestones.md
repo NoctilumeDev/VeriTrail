@@ -1187,6 +1187,30 @@ readback 与后继独立最终状态发布完成前，不得写成 frozen。后�
 import resolution、RelationSet、publisher、Slice、Coverage、CLI 或 Workbench；冻结后仍须先做系统级俯瞰，
 再选择一个最小合同闭环。
 
+[文档 172](172-r1-relation-derivation-freeze-publication.md)从候选合入基线
+`main@eb75d360b828fd45007be9f94892e4101af27e50` 独立发布实现冻结事实。PR #157 原始 Public CI run
+`35514936331` 为 attempt 1、11/11 SUCCESS；candidate exact main 的 Public CI run `35515864709` 为
+attempt 1、11/11 SUCCESS，Browser Smoke run `35515864729` 为 attempt 1、1/1 SUCCESS。README、文档 171 与
+milestones 三次正式 fresh anonymous installed-product readback 均为 P1/P2 COMPLETE、三样本稳定、唯一 marker、
+零 conflict/error/cleanup error 与 Core PASS，联合 manifest SHA-256 为
+`8cd8efe6499cd754ab2668e87e8534c26858a178fd65da55141ae8a1761746d2`。
+
+第一条 README session `github-paired-79f112178b8a48829710e7d47aaec085` 的 P2 在 final-health 成功后留下
+`PublicRenderNetworkError / ERROR`，继续作为不合格事实保留。源码、合同与后继同型计数证明两个
+coverage-neutral telemetry write 不是已证原因；0.1 Artifact 无法恢复精确 response-stage 根因，因此保持
+`UNKNOWN`。旁路诊断 session 不进入门禁；后继正式成功使用新 sealed execution、session 与输出根，不改写首败。
+
+文档 172 自己的原始远端门、受保护主线合入、新 exact-main 双门与三次 fresh anonymous installed-product
+readback 全部成立后，当前状态才是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+冻结后必须从新 exact main 先做 system audit；完整 Relation algorithm、import resolution、RelationSet、
+conflict/UNKNOWN、publisher、Slice、Coverage、CLI 与 Workbench 不因本状态发布自动取得施工授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

@@ -752,6 +752,18 @@
   `R1_RELATION_DERIVATION_IMPLEMENTED / R1_RELATION_DERIVATION_FREEZE_CANDIDATE /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文自己的门、合入、exact-main 双门、匿名产品
   读回与后继独立最终状态发布完成前不得写成 frozen，也不得开始延期能力。
+- `docs/172-r1-relation-derivation-freeze-publication.md` 从候选合入基线
+  `main@eb75d360b828fd45007be9f94892e4101af27e50` 独立发布实现冻结事实。PR #157 原始 Public CI 为
+  attempt 1、11/11 SUCCESS；candidate exact main 的 Public CI 为 11/11、Browser Smoke 为 1/1。README、文档
+  171 与 milestones 的三次正式 anonymous installed-product session 均为 P1/P2 COMPLETE、稳定样本、唯一
+  marker 与 Core PASS，联合 manifest SHA-256 为
+  `8cd8efe6499cd754ab2668e87e8534c26858a178fd65da55141ae8a1761746d2`。第一条 README session 的
+  late `PublicRenderNetworkError / ERROR` 继续保留，根因为 `UNKNOWN`；coverage-neutral telemetry write 不是
+  已证原因，旁路诊断 session 不进入门禁。本文自己的原始远端门、受保护合入、新 exact-main 双门与三次 fresh
+  anonymous installed-product readback 全部成立后，状态才是 `R1_RELATION_DERIVATION_FROZEN /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。完整 Relation algorithm/import resolution、
+  RelationSet、conflict/UNKNOWN、publisher、Slice、Coverage、CLI 与 Workbench 继续未授权；下一步必须先做
+  post-freeze system audit，不得直接施工。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
