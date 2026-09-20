@@ -1174,40 +1174,52 @@ class BootstrapRunCliTests(unittest.TestCase):
                     output_parent,
                     cancel_event,
                 ):
-                    nonlocal external
-                    external = subprocess.Popen(
-                        [
-                            sys.executable,
-                            "service.py",
-                            "serve-for",
-                            str(ports[contested_index]),
-                            "1.5",
-                        ],
-                        cwd=subject,
-                        env={
-                            key: value
-                            for key, value in os.environ.items()
-                            if key in {"SYSTEMROOT", "WINDIR"}
-                        },
-                        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-                        stdin=subprocess.DEVNULL,
-                        stdout=subprocess.DEVNULL,
-                        stderr=subprocess.DEVNULL,
-                    )
-                    for _ in range(60):
-                        if not _port_is_free(ports[contested_index]):
-                            break
-                        if external.poll() is not None:
-                            self.fail("external listener exited before ownership probing")
-                        threading.Event().wait(0.05)
-                    else:
-                        self.fail("external listener did not become ready")
+                    def mismatch_readiness_probe(session, readiness, **kwargs):
+                        nonlocal external
+                        if session.port == ports[contested_index]:
+                            self.assertIsNone(external)
+                            external = subprocess.Popen(
+                                [
+                                    sys.executable,
+                                    "service.py",
+                                    "serve-for",
+                                    str(ports[contested_index]),
+                                    "1.5",
+                                ],
+                                cwd=subject,
+                                env={
+                                    key: value
+                                    for key, value in os.environ.items()
+                                    if key in {"SYSTEMROOT", "WINDIR"}
+                                },
+                                creationflags=getattr(
+                                    subprocess, "CREATE_NO_WINDOW", 0
+                                ),
+                                stdin=subprocess.DEVNULL,
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL,
+                            )
+                            for _ in range(60):
+                                if not _port_is_free(ports[contested_index]):
+                                    break
+                                if external.poll() is not None:
+                                    self.fail(
+                                        "external listener exited before ownership probing"
+                                    )
+                                threading.Event().wait(0.05)
+                            else:
+                                self.fail("external listener did not become ready")
+                        return probe_owned_http_readiness(
+                            session, readiness, **kwargs
+                        )
+
                     return run_observed_bootstrap(
                         observed_plan,
                         observed_profile,
                         resolved,
                         output_parent=output_parent,
                         cancel_event=cancel_event,
+                        readiness_probe=mismatch_readiness_probe,
                     )
 
                 try:

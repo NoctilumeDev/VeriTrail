@@ -776,6 +776,14 @@
   新 exact-main 双门与专属匿名读回全部成立后，才提升为 `PRECONTRACT_AUDITED`。完整 Relation algorithm/import
   resolution、RelationSet admission、final Evidence、public Provider、publisher、Slice、Coverage、CLI、Workbench、
   D、Cu 与 Q 继续未授权；本地事实已足以选择问题面，因此本轮不以外部 production case 替代本地反例。
+- `docs/174-m10-listener-owner-mismatch-fixture-timing-correction.md` 记录 PR #160 原始 Public CI 在 Python 3.13
+  真正执行 450 tests 后暴露的既有 listener-owner-mismatch 测试时序缺口。正式首败保持成立；诊断只把归因
+  收窄为夹具从过早坐标开始计算 `1.5s` 外部 listener 寿命。把寿命延长到 `30s` 的本地候选又合法触发
+  `CLEANUP_ERROR`，因此被反例否决；最小修正只在 disputed node 进入既有 readiness adapter 时建立原
+  `1.5s` external owner，继续同时证明 no-kill 与 cleanup release。该维护自己的原始远端门、受保护合入与
+  新 exact-main Public CI / Browser Smoke 全部成立前，PR #160 保持停止；随后必须吸收新 main、形成新 head
+  SHA 并重新取得完整门禁，不得用维护绿色或旧 head rerun 覆盖 #160 attempt 1。source-root `PYTHONPATH`
+  四包组合只证明 current-source regression，不等同 installed-product/CI topology。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

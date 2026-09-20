@@ -1239,6 +1239,16 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 responsibility/denominator/omission receipt 方案之间选择，才按 failure family 查公开一手案例，再回到本地
 反例验证；外部案例不直接产生 R 的合同 authority。
 
+[文档 174](174-m10-listener-owner-mismatch-fixture-timing-correction.md)记录后继 docs-only PR #160 的原始
+Python 3.13 Public CI 在真正执行 450 tests 后，由既有 listener-owner-mismatch 测试夹具停止。该正式首败
+继续保留；诊断证明 application 争议场景的 dependency readiness 会提前消耗 `1.5s` external listener 寿命，
+而把寿命延长到 `30s` 又会因端口未在 cleanup deadline 内释放而合法得到 `CLEANUP_ERROR`。最小维护只把
+外部 owner 的建立时刻移到 disputed node 进入既有 readiness adapter 的真实起点，不改变 runtime、timeout、
+合同或错误接受边界。目标用例、完整 bootstrap module 与显式绑定四个当前 source root 的 450-test broader
+suite 已在双 Python normal/`-O` 四格成立；后者不冒充 installed-product/CI topology。维护候选必须先取得自己
+的原始远端门、受保护合入与新 exact-main 双门；之后 PR #160 才能吸收新 main、形成新 head SHA 并重新证明，
+不得以维护绿色或旧 head rerun 覆盖 #160 attempt 1。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
