@@ -764,6 +764,18 @@
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。完整 Relation algorithm/import resolution、
   RelationSet、conflict/UNKNOWN、publisher、Slice、Coverage、CLI 与 Workbench 继续未授权；下一步必须先做
   post-freeze system audit，不得直接施工。
+- `docs/173-r1-declared-relation-observation-domain-and-composition-qualification-system-audit.md` 从 Relation Derivation
+  冻结 exact `main@d54ee43170779f54ec88b9839ad80d48056aa033` 独立审计下一闭环。exact-main 本地反例证明
+  Relation ProviderRun 可以 `COMPLETED` 且只报告 `LEXICAL_CONTAINS`，同时冻结 Profile 仍列有
+  `IMPORT_TARGET_LITERAL`；因此 provider terminal、source-local output closure、required source-set terminal、
+  bounded observation-domain qualification、RelationSet admission 与 final publication 不能合并。下一问题面识别为
+  declared Relation observation domain / composition qualification，只允许后继独立 docs-only 合同审议 source
+  responsibility、successful-empty 边界、required/optional observation、multi-source merge/conflict 与 qualification
+  identity。当前分支只能是 `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_SYSTEM_AUDIT_CANDIDATE /
+  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_NOT_STARTED`；本文自己的原始远端门、受保护主线合入、
+  新 exact-main 双门与专属匿名读回全部成立后，才提升为 `PRECONTRACT_AUDITED`。完整 Relation algorithm/import
+  resolution、RelationSet admission、final Evidence、public Provider、publisher、Slice、Coverage、CLI、Workbench、
+  D、Cu 与 Q 继续未授权；本地事实已足以选择问题面，因此本轮不以外部 production case 替代本地反例。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
