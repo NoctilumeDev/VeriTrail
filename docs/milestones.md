@@ -1294,6 +1294,36 @@ PR #160 原始 head `44caffaa08ab67bcb83760d86bdbad7e30081b6f` 的正式 Python 
 没有以维护绿色或旧 head rerun 覆盖。合同语义没有被 maintenance 改写；文档 175 当前只从上述
 maintenance-qualified exact main 重新绑定 source state、形成新 head 并重新接受完整门禁。
 
+[文档 176](176-r1-relation-observation-composition-qualification-contract-freeze-publication.md)从
+`main@bc495eb92c70f85566505d51d00677ac14f38ff2` 独立发布该最小合同。重新资格化 head
+`fde8df8279c27b5a222d58d2b0a5fd73c261a54f` 的有效 PR Public CI run `35534770529` attempt 1 为
+11/11 SUCCESS；PR body edit 触发的同 head run `35534733454` 被 concurrency 行政取消，没有形成完整测试
+结论。候选合入后的 exact-main Public CI run `35535740629` 为 attempt 1、11/11 SUCCESS，Browser Smoke
+run `35535740617` 为 attempt 1、1/1 SUCCESS。
+
+README、文档 175 与 milestones 使用三个不同 sealed Plan、collection session 与 output root 完成 fresh
+anonymous installed-product readback，P1/P2 均 `COMPLETE`、HTTP 200、requested/final exact SHA path 一致、
+三样本稳定、唯一 marker、零 conflict/error/coverage reason/cleanup error/active stream，Core 均为 `PASS`。
+联合 canonical manifest 的 `sha256_json` 为
+`0df7a15fb0193f2d86d26b07fc96991cdada73d28058e5edb6e7cbf426bc194c`。
+
+本文自己的本地门、原始远端门、受保护合入、新 exact-main 双门与 README/本文/milestones 三次专属 fresh
+anonymous installed-product readback 全部成立后，状态才是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_ALLOWED
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该冻结只允许文档 175 A–H 的 private observation profile、FactSet-derived items、A/B responsibility、
+relation-only operands `/0.3`、private relation-cell `/0.2`、per-item outcomes、receipts、candidate composition 与
+owned qualification result。完整 Relation algorithm/import resolution、public Provider、公共 Schema、RelationSet
+admission、final Evidence、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
