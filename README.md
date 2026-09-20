@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_IMPLEMENTED / R1_RELATION_DERIVATION_FREEZE_CANDIDATE / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -279,7 +279,10 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   fixed identity vector、PR #156、implementation exact-main 双门与十一项匿名源码字节读回。它只证明一条
   Relation candidate 可以在 exact FactSet、真实 Provider identity 与共享预算下诚实存在；本候选自己的门、
   合入、exact-main 门、匿名产品读回及后继独立最终状态发布成立前，不得写成 frozen，也不得进入 RelationSet、
-  Slice 或 Coverage。
+  Slice 或 Coverage。[实现冻结发布](docs/172-r1-relation-derivation-freeze-publication.md)外部绑定 PR #157、
+  candidate exact-main 双门、三次正式 anonymous installed-product readback 与保留的首次 README
+  `PublicRenderNetworkError`。该发布自己的门、合入、exact-main 双门与匿名产品读回全部成立后，Relation
+  第一刀才成为 frozen；后继仍须先做系统级俯瞰，再选择一个最小合同闭环。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -413,7 +416,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 39. [Review Attention R1 Relation Derivation Authority / Operand Continuity 最小合同候选](docs/165-r1-relation-derivation-authority-and-operand-continuity-contract.md)
 40. [Review Attention R1 Relation Derivation Authority / Operand Continuity 合同冻结发布](docs/170-r1-relation-derivation-contract-freeze-publication.md)
 41. [Review Attention R1 Relation Derivation 实现冻结候选](docs/171-r1-relation-derivation-implementation-freeze-candidate.md)
-42. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+42. [Review Attention R1 Relation Derivation 实现冻结发布](docs/172-r1-relation-derivation-freeze-publication.md)
+43. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
