@@ -1131,6 +1131,38 @@ R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 算法、RelationSet composition/admission、Schema/runtime correction、publisher/Manifest、Slice、Coverage、
 CLI 与 Workbench 仍未授权；这些问题不能因为本候选选择 producer 模型而自动并入同一施工。
 
+[文档 170](170-r1-relation-derivation-contract-freeze-publication.md)从当前
+`main@8e5c0007c20b8c495195cdbdbb3a68891d88c3df` 独立发布该最小合同。它绑定候选 PR #151 的
+base `41a398783d5eaf25e15574df5beafb8465d0a91e`、head
+`8ccc1066d665d2b7e290f929c2c84f22645def01`、merge
+`301f5248b77c67284b5e52bf287c23f286590e6b` 与 tree
+`c82cb015516e817304e0ea8804dfc9375c9e1627`。候选 Public CI run `34953748989` attempt 1 保留
+10/11 FAILURE；failed-jobs rerun 只新执行失败的 Python 3.13 wheel-only job。随后同一 head 的全新 run
+`34955710084` attempt 1 为 11/11 SUCCESS。候选 exact main 的 Public CI run `34957252663` 为 11/11，
+Browser Smoke run `34957252725` 为 1/1；README、文档 165、milestones 三次匿名 installed-product
+readback 均为 P1/P2 COMPLETE、三样本稳定、唯一 marker、零 conflict/error/cleanup error、Core PASS，联合
+summary SHA-256 为 `b099b3b49b9092f915f684768807896ac4be616e4dd73f0cac9a326547d04b6c`。
+
+文档 168/169 后续收紧 source-state continuity 与 GitHub workflow/attempt authority，但不改写 R1 候选历史，
+也未提供推翻 Relation authority、FactSet operand continuity、phase join 或 upstream gate 的新证据。本文自己
+的本地门、原始远端门、受保护合入、新 exact-main 双门与三次 fresh anonymous installed-product readback
+全部成立后，状态才是：
+
+```text
+R1_MULTI_PROVIDER_FACT_COMPOSITION_FROZEN
+R1_RELATION_DERIVATION_PRECONTRACT_AUDITED
+R1_RELATION_DERIVATION_CONTRACT_FROZEN
+R1_RELATION_DERIVATION_IMPLEMENTATION_ALLOWED
+R1_RELATION_DERIVATION_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该冻结只允许 relation-only `provider-operands/0.2` identity/vector、固定 Fact/Relation phase join、distinct
+relation-only request/terminal、首版保守 upstream gate、原 live `BudgetContext` 与 `RD-001..017` 的 private
+closed implementation。若 Provider 不实际使用 parser，必须先独立审议最小 Evidence 修正，不得虚填身份。
+完整 Relation algorithm/import resolution、RelationSet composition/admission、conflict/UNKNOWN 扩展资格、
+public Provider、publisher/Manifest、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

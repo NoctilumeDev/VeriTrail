@@ -730,6 +730,19 @@
   R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。候选自己的原始门、受保护主线合入、新 exact-main
   双门、专属匿名产品读回与后继独立冻结发布成立前不得写成 FROZEN；现有 Fact cell wire、Schema、identity
   vectors、runtime、real parser/public SPI、完整 RelationSet admission、publisher、Slice 与 Coverage 继续未授权。
+- `docs/170-r1-relation-derivation-contract-freeze-publication.md` 独立发布文档 165 的最小合同，不实现
+  Relation。它绑定候选 PR #151 的 base/head/merge/tree、保留 Public CI 首次 10/11 与 failed-jobs rerun 的
+  部分重跑事实，并以同一 head 的新鲜 11/11、候选 exact-main 双门和三次专属匿名产品读回支撑冻结判断。
+  文档 168/169 只收紧后续 source-state 与 GitHub workflow/attempt authority，不回填或改写 R1 历史。本文
+  自己的原始远端门、受保护合入、新 exact-main 双门与三次 fresh anonymous installed-product readback
+  全部成立后，状态才是 `R1_RELATION_DERIVATION_CONTRACT_FROZEN /
+  R1_RELATION_DERIVATION_IMPLEMENTATION_ALLOWED /
+  R1_RELATION_DERIVATION_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖 relation-only `/0.2` identity/vector、
+  固定 phase join、distinct relation-only cell、保守 upstream gate、原 live `BudgetContext` 与 `RD-001..017`
+  的 private closed implementation。真实 parser identity 必须实际使用；否则先独立审议最小 Evidence 修正，
+  不得虚填。完整 Relation 算法、RelationSet composition/admission、public Provider、publisher、Slice、Coverage、
+  CLI、Workbench、D、Cu 与 Q 继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
