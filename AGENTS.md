@@ -810,6 +810,20 @@
   双门、专属匿名读回与后继独立冻结发布成立前，不得写 runtime。完整 resolver、public Provider、Schema
   correction、RelationSet admission、final Evidence、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q
   继续未授权。
+- `docs/176-r1-relation-observation-composition-qualification-contract-freeze-publication.md` 独立发布文档 175
+  的最小合同，不实现 runtime。它保留 PR #160 原始 head 的正式 Python 3.13 首败、独立 PR #161 fixture
+  maintenance 与被反例否决的 30s lifetime 候选；重新资格化 head
+  `fde8df8279c27b5a222d58d2b0a5fd73c261a54f` 的有效原始 Public CI 11/11 后合入
+  `main@bc495eb92c70f85566505d51d00677ac14f38ff2`，该 exact main 的 Public CI 11/11、Browser Smoke 1/1 与
+  README/文档 175/milestones 三次 fresh anonymous installed-product readback 均成立，canonical manifest
+  `sha256_json=0df7a15fb0193f2d86d26b07fc96991cdada73d28058e5edb6e7cbf426bc194c`。PR body edit 触发的同 head
+  run `35534733454` 只形成 concurrency 行政取消，不冒充测试失败或成功。本文自己的原始门、受保护合入、
+  新 exact-main 双门与三次 fresh anonymous installed-product readback 全部成立后，状态才是
+  `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_FROZEN /
+  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_ALLOWED /
+  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖文档 175 A–H 的 private closed proof；
+  RelationSet、公共 Schema、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
