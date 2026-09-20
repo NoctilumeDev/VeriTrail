@@ -1163,6 +1163,30 @@ closed implementation。若 Provider 不实际使用 parser，必须先独立审
 完整 Relation algorithm/import resolution、RelationSet composition/admission、conflict/UNKNOWN 扩展资格、
 public Provider、publisher/Manifest、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
 
+[文档 171](171-r1-relation-derivation-implementation-freeze-candidate.md)记录该 private closed 实现由
+PR #156 以提交 `db6148020b3333104a93ec602c7a7c1c5a5e3ab6` 建立；原始 Public CI run
+`35512727369` 为 attempt 1、11/11 SUCCESS。实现以普通 merge commit
+`main@122d0c6b9d3c7a4518f12aec2f503f8979018dda` 合入，candidate 与 merge tree 均为
+`5db4e21a7fceda54eab184b0fea498d365da1fee`；新 exact main 的 Public CI run `35513598312` 为 attempt 1、
+11/11 SUCCESS，Browser Smoke run `35513598411` 为 attempt 1、1/1 SUCCESS。全部十一份变更文件又从该 exact
+SHA 完成无 token raw-byte 读回，逐项与 Git tree 同大小、同 SHA-256 和同 blob identity，规范行摘要为
+`52510795bf4a479d3f6b58cd1aaa643eb0560d6f764f726b89ee0c9e37b8ea4f`。
+
+实现物化 relation-only `provider-operands/0.2`、独立 Relation cell、固定 phase join、保守 upstream gate、共享
+live `BudgetContext`、真实 Python 3.10 grammar parser identity 与 `RD-001..017`。它没有 public export、文件
+publisher、完整 import resolution、RelationSet admission、RelationConflict、Slice 或 Coverage。当前状态只能是：
+
+```text
+R1_RELATION_DERIVATION_IMPLEMENTED
+R1_RELATION_DERIVATION_FREEZE_CANDIDATE
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 171 自己的远端门、受保护主线合入、新 exact-main 双门、R1 专属 fresh anonymous installed-product
+readback 与后继独立最终状态发布完成前，不得写成 frozen。后继不得直接开始完整 Relation algorithm、真实
+import resolution、RelationSet、publisher、Slice、Coverage、CLI 或 Workbench；冻结后仍须先做系统级俯瞰，
+再选择一个最小合同闭环。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
