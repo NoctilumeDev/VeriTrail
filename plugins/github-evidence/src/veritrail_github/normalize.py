@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 import re
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 from veritrail_github.errors import ContractError
 
@@ -50,6 +51,77 @@ def _sha(value: Any, path: str, *, nullable: bool = False) -> str | None:
     if not re.fullmatch(r"[0-9a-f]{40}", normalized):
         raise ContractError([f"{path} must be a 40-character lowercase SHA"])
     return normalized
+
+
+def _external_identifier(value: Any, path: str) -> str | None:
+    normalized = _string(value, path, nullable=True)
+    if normalized is None:
+        return None
+    if not normalized or len(normalized.encode("utf-8")) > 512 or any(
+        character in normalized for character in "\r\n\0"
+    ):
+        raise ContractError([f"{path} must be a bounded single-line identifier"])
+    return normalized
+
+
+def _safe_details_url(value: Any, path: str) -> tuple[str | None, bool]:
+    normalized = _string(value, path, nullable=True)
+    if normalized is None:
+        return None, False
+    if len(normalized.encode("utf-8")) > 2048 or any(
+        character in normalized for character in "\r\n\0"
+    ):
+        raise ContractError([f"{path} must be a bounded HTTPS URL"])
+    parsed = urlsplit(normalized)
+    try:
+        port = parsed.port
+    except ValueError as exc:
+        raise ContractError([f"{path} contains an invalid port"]) from exc
+    if (
+        parsed.scheme.lower() != "https"
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or port not in {None, 443}
+    ):
+        raise ContractError([f"{path} must be a credential-free HTTPS URL"])
+    hostname = parsed.hostname.lower()
+    netloc = hostname if port is None else f"{hostname}:{port}"
+    safe_url = urlunsplit(("https", netloc, parsed.path or "/", "", ""))
+    return safe_url, bool(parsed.query or parsed.fragment)
+
+
+def _github_actions_coordinates(
+    details_url: str | None,
+    *,
+    owner: str,
+    repository: str,
+) -> dict[str, Any] | None:
+    if details_url is None:
+        return None
+    parsed = urlsplit(details_url)
+    if parsed.hostname != "github.com":
+        return None
+    match = re.fullmatch(
+        r"/([^/]+)/([^/]+)/actions/runs/([1-9][0-9]*)/job/([1-9][0-9]*)/?",
+        parsed.path,
+    )
+    if match is None:
+        return None
+    observed_owner, observed_repository, run_id, job_id = match.groups()
+    if (
+        observed_owner.casefold() != owner.casefold()
+        or observed_repository.casefold() != repository.casefold()
+    ):
+        return None
+    return {
+        "workflow_run_id": int(run_id),
+        "workflow_job_id": int(job_id),
+        "identity_source": "GITHUB_ACTIONS_DETAILS_URL_PATH_V1",
+        # The check-runs endpoint does not expose the workflow attempt.  Never
+        # infer it from timestamps or from the mutable current run resource.
+        "run_attempt": None,
+    }
 
 
 def normalize_repository(
@@ -137,12 +209,54 @@ def normalize_pull_request(payload: Any) -> dict[str, Any]:
         "number": _integer(value.get("number"), "pull_request.number"),
         "state": _string(value.get("state"), "pull_request.state"),
         "merged": _boolean(value.get("merged"), "pull_request.merged"),
+        "merged_at": _string(
+            value.get("merged_at"), "pull_request.merged_at", nullable=True
+        ),
         "head_sha": _sha(head.get("sha"), "pull_request.head.sha"),
         "base_sha": _sha(base.get("sha"), "pull_request.base.sha"),
+        # GitHub REST API 2026-03-10 removed merge_commit_sha from pull-request
+        # payloads.  A merged PR is enriched from its explicit timeline event by
+        # normalize_pull_request_merge_event; absence here must not masquerade
+        # as an observed null field.
+        "merge_commit_sha": None,
+        "merge_commit_source": None,
+        "merge_event_id": None,
+        "merge_event_created_at": None,
+    }
+
+
+def normalize_pull_request_merge_event(
+    payload: Any,
+    *,
+    pull_request_number: int,
+    conflicts: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    events = _array(payload, "pull request timeline response")
+    merged_events = [
+        _object(item, f"pull_request.timeline[{index}]")
+        for index, item in enumerate(events)
+        if isinstance(item, dict) and item.get("event") == "merged"
+    ]
+    if len(merged_events) != 1:
+        conflicts.append(
+            {
+                "code": "PULL_REQUEST_MERGE_EVENT_CARDINALITY_MISMATCH",
+                "pull_request_number": pull_request_number,
+                "candidate_count": len(merged_events),
+            }
+        )
+        return None
+    event = merged_events[0]
+    return {
         "merge_commit_sha": _sha(
-            value.get("merge_commit_sha"),
-            "pull_request.merge_commit_sha",
-            nullable=True,
+            event.get("commit_id"), "pull_request.merge_event.commit_id"
+        ),
+        "merge_commit_source": "PULL_REQUEST_TIMELINE_MERGED_EVENT",
+        "merge_event_id": _integer(
+            event.get("id"), "pull_request.merge_event.id"
+        ),
+        "merge_event_created_at": _string(
+            event.get("created_at"), "pull_request.merge_event.created_at"
         ),
     }
 
@@ -314,6 +428,8 @@ def normalize_observed_checks(
     check_runs_payload: Any,
     statuses_payload: Any,
     *,
+    owner: str,
+    repository: str,
     target_commit_sha: str,
     conflicts: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
@@ -334,13 +450,36 @@ def normalize_observed_checks(
             if suite_value is not None
             else None
         )
+        check_run_id = _integer(run.get("id"), f"check_runs[{index}].id")
+        check_suite_id = (
+            _integer(suite.get("id"), f"check_runs[{index}].check_suite.id")
+            if suite
+            else None
+        )
+        details_url, details_url_redacted = _safe_details_url(
+            run.get("details_url"), f"check_runs[{index}].details_url"
+        )
+        github_actions = _github_actions_coordinates(
+            details_url, owner=owner, repository=repository
+        )
+        if (
+            github_actions is not None
+            and github_actions["workflow_job_id"] != check_run_id
+        ):
+            conflicts.append(
+                {
+                    "code": "GITHUB_ACTIONS_JOB_CHECK_RUN_ID_MISMATCH",
+                    "check_run_id": check_run_id,
+                    "workflow_job_id": github_actions["workflow_job_id"],
+                }
+            )
         head_sha = _sha(run.get("head_sha"), f"check_runs[{index}].head_sha")
         if head_sha != target_commit_sha:
             conflicts.append(
                 {
                     "code": "OBSERVED_CHECK_SHA_MISMATCH",
                     "source_kind": "CHECK_RUN",
-                    "run_id": _integer(run.get("id"), f"check_runs[{index}].id"),
+                    "check_run_id": check_run_id,
                     "observed_sha": head_sha,
                 }
             )
@@ -360,12 +499,18 @@ def normalize_observed_checks(
                     if app
                     else None
                 ),
-                "suite_id": (
-                    _integer(suite.get("id"), f"check_runs[{index}].check_suite.id")
-                    if suite
-                    else None
+                "check_suite_id": check_suite_id,
+                "check_run_id": check_run_id,
+                # Backward-readable aliases retained for 0.1 consumers.  They
+                # identify Check API objects, never a GitHub Actions run.
+                "suite_id": check_suite_id,
+                "run_id": check_run_id,
+                "external_id": _external_identifier(
+                    run.get("external_id"), f"check_runs[{index}].external_id"
                 ),
-                "run_id": _integer(run.get("id"), f"check_runs[{index}].id"),
+                "details_url": details_url,
+                "details_url_redacted": details_url_redacted,
+                "github_actions": github_actions,
                 "status": _string(run.get("status"), f"check_runs[{index}].status"),
                 "conclusion": _string(
                     run.get("conclusion"),
@@ -438,14 +583,14 @@ def normalize_observed_checks(
                 {
                     "code": "OBSERVED_CHECK_IDENTITY_INCOMPLETE",
                     "source_kind": "CHECK_RUN",
-                    "run_id": item["run_id"],
+                    "check_run_id": item["check_run_id"],
                     "name": item["name"],
                 }
             )
     source_identities = Counter(
         (
             item["source_kind"],
-            item.get("run_id")
+            item.get("check_run_id")
             if item["source_kind"] == "CHECK_RUN"
             else item.get("status_id"),
         )
@@ -468,7 +613,7 @@ def normalize_observed_checks(
             item["source_kind"],
             item.get("app_id") or -1,
             item.get("creator_id") or -1,
-            item.get("run_id") or item.get("status_id") or -1,
+            item.get("check_run_id") or item.get("status_id") or -1,
         ),
     )
 

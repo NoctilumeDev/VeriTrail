@@ -30,6 +30,7 @@ from veritrail_github.normalize import (
     normalize_observed_checks,
     normalize_pages,
     normalize_pull_request,
+    normalize_pull_request_merge_event,
     normalize_release,
     normalize_repository,
     ref_target,
@@ -49,8 +50,8 @@ _SAFE_HEADER_FIELDS = {
     "link",
 }
 
-COLLECTOR_IMPLEMENTATION_VERSION = "0.1.0"
-PARSER_IMPLEMENTATION_VERSION = "github-rest-parser/0.2"
+COLLECTOR_IMPLEMENTATION_VERSION = "0.1.1.dev0"
+PARSER_IMPLEMENTATION_VERSION = "github-rest-parser/0.3"
 
 
 @dataclass(frozen=True)
@@ -327,6 +328,32 @@ class GitHubCollector:
                                 "observed_number": normalized_pull_request["number"],
                             }
                         )
+                    if normalized_pull_request["merged"] is True:
+                        timeline = self._fetch_pages(
+                            state,
+                            policy,
+                            "pull_request_timeline",
+                            f"{repository_path}/issues/{number}/timeline",
+                            {"per_page": policy["per_page"]},
+                            {"pull_request_number": number},
+                            fatal=False,
+                            mode="list",
+                        )
+                        if timeline is not None:
+                            try:
+                                merge_event = normalize_pull_request_merge_event(
+                                    timeline,
+                                    pull_request_number=number,
+                                    conflicts=conflicts,
+                                )
+                                if merge_event is not None:
+                                    normalized_pull_request.update(merge_event)
+                            except ContractError:
+                                self._record_normalization_failure(
+                                    state,
+                                    "pull_request_timeline",
+                                    fatal=False,
+                                )
                 except ContractError:
                     self._record_normalization_failure(
                         state, "pull_request", fatal=False
@@ -418,6 +445,8 @@ class GitHubCollector:
                     facts["observed_checks"] = normalize_observed_checks(
                         check_runs,
                         statuses,
+                        owner=owner,
+                        repository=repository,
                         target_commit_sha=target_sha,
                         conflicts=conflicts,
                     )

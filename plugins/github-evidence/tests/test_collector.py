@@ -83,7 +83,7 @@ class CollectorPositiveTests(unittest.TestCase):
 
     def test_pull_request_coordinates_remain_descriptive(self) -> None:
         variants = [
-            (False, TARGET_SHA),
+            (False, None),
             (True, TARGET_SHA),
             (True, "c" * 40),
             (True, "d" * 40),
@@ -97,17 +97,85 @@ class CollectorPositiveTests(unittest.TestCase):
                         "number": 28,
                         "state": "closed" if merged else "open",
                         "merged": merged,
+                        "merged_at": "2026-09-20T06:56:11Z" if merged else None,
                         "head": {"sha": BASE_SHA},
                         "base": {"sha": "e" * 40},
-                        "merge_commit_sha": merge_sha,
                     },
                 )
+                if merged:
+                    transport.add(
+                        "/repos/NoctilumeDev/VeriTrail/issues/28/timeline?per_page=100",
+                        [
+                            {
+                                "id": 31473900287,
+                                "event": "merged",
+                                "commit_id": merge_sha,
+                                "created_at": "2026-09-20T06:56:11Z",
+                            }
+                        ],
+                    )
                 facts = collect(plan, transport).artifact.document["facts"][
                     "pull_request"
                 ]
                 self.assertEqual(facts["merged"], merged)
                 self.assertEqual(facts["head_sha"], BASE_SHA)
                 self.assertEqual(facts["merge_commit_sha"], merge_sha)
+                self.assertEqual(
+                    facts["merge_commit_source"],
+                    "PULL_REQUEST_TIMELINE_MERGED_EVENT" if merged else None,
+                )
+
+    def test_merged_pull_request_without_one_merge_event_is_partial(self) -> None:
+        plan = acceptance_plan(["pull_request.merge"], pull_request_number=28)
+        for timeline in ([], [
+            {
+                "id": 1,
+                "event": "merged",
+                "commit_id": TARGET_SHA,
+                "created_at": "2026-09-20T06:56:11Z",
+            },
+            {
+                "id": 2,
+                "event": "merged",
+                "commit_id": "c" * 40,
+                "created_at": "2026-09-20T06:57:11Z",
+            },
+        ]):
+            with self.subTest(candidate_count=len(timeline)):
+                transport = (
+                    base_transport()
+                    .add(
+                        "/repos/NoctilumeDev/VeriTrail/pulls/28",
+                        {
+                            "number": 28,
+                            "state": "closed",
+                            "merged": True,
+                            "merged_at": "2026-09-20T06:56:11Z",
+                            "head": {"sha": BASE_SHA},
+                            "base": {"sha": "e" * 40},
+                        },
+                    )
+                    .add(
+                        "/repos/NoctilumeDev/VeriTrail/issues/28/timeline?per_page=100",
+                        timeline,
+                    )
+                )
+                document = collect(plan, transport).artifact.document
+                self.assertEqual(
+                    document["metadata"]["veritrail_observation"]["coverage"],
+                    "PARTIAL",
+                )
+                self.assertIsNone(document["facts"]["pull_request"]["merge_commit_sha"])
+                self.assertEqual(
+                    document["facts"]["conflicts"],
+                    [
+                        {
+                            "code": "PULL_REQUEST_MERGE_EVENT_CARDINALITY_MISMATCH",
+                            "pull_request_number": 28,
+                            "candidate_count": len(timeline),
+                        }
+                    ],
+                )
 
     def test_required_and_observed_checks_stay_separate_and_keep_producer_identity(
         self,
@@ -142,13 +210,18 @@ class CollectorPositiveTests(unittest.TestCase):
                     "total_count": 2,
                     "check_runs": [
                         {
-                            "id": 100,
+                            "id": 106037284034,
                             "name": "build",
                             "head_sha": TARGET_SHA,
                             "status": "completed",
                             "conclusion": "success",
                             "app": {"id": 10, "slug": "actions"},
                             "check_suite": {"id": 1000},
+                            "external_id": "fb28a184-64b3-51fb-a792-555e2864527e",
+                            "details_url": (
+                                "https://github.com/NoctilumeDev/VeriTrail/"
+                                "actions/runs/35457915755/job/106037284034?token=redacted"
+                            ),
                         },
                         {
                             "id": 101,
@@ -192,6 +265,27 @@ class CollectorPositiveTests(unittest.TestCase):
         self.assertEqual(
             {item["source_kind"] for item in facts["observed_checks"]},
             {"CHECK_RUN", "COMMIT_STATUS"},
+        )
+        actions_check = next(
+            item
+            for item in facts["observed_checks"]
+            if item.get("check_run_id") == 106037284034
+        )
+        self.assertEqual(actions_check["run_id"], actions_check["check_run_id"])
+        self.assertEqual(actions_check["suite_id"], actions_check["check_suite_id"])
+        self.assertEqual(
+            actions_check["details_url"],
+            "https://github.com/NoctilumeDev/VeriTrail/actions/runs/35457915755/job/106037284034",
+        )
+        self.assertTrue(actions_check["details_url_redacted"])
+        self.assertEqual(
+            actions_check["github_actions"],
+            {
+                "workflow_run_id": 35457915755,
+                "workflow_job_id": 106037284034,
+                "identity_source": "GITHUB_ACTIONS_DETAILS_URL_PATH_V1",
+                "run_attempt": None,
+            },
         )
 
     def test_ruleset_and_branch_protection_requirements_are_aggregated(self) -> None:

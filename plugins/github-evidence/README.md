@@ -36,6 +36,13 @@ See the repository-level contracts before using or changing these capabilities:
 Version `0.1.0` is published as an independent, non-Latest GitHub Release:
 
 - [GitHub Evidence Plugin 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0)
+
+The current source tree is the unreleased `0.1.1.dev0` maintenance line. It restores
+merged-commit provenance for GitHub REST API `2026-03-10` and strengthens Check Run
+identity without changing the immutable `0.1.0` release artifacts. Commit-scoped Check
+Run evidence is not workflow-attempt evidence, and the plugin does not infer an Actions
+artifact's producer job or attempt from its run association.
+
 - [Core 0.13.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)
 
 Download and verify the Release checksum manifest before installing the Core
