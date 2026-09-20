@@ -66,7 +66,11 @@ class CommandPreviewCliTests(unittest.TestCase):
             self.assertEqual(0, code)
             self.assertEqual("", stderr.getvalue())
             preview = json.loads(stdout.getvalue())
-            self.assertEqual("0.1", preview["schema_version"])
+            self.assertEqual("0.1.1", preview["schema_version"])
+            self.assertEqual(
+                "subject-tree-sha256/0.1",
+                preview["subject_snapshot"]["policy_version"],
+            )
             self.assertEqual("python-unit-check", preview["command_id"])
             self.assertEqual(64, len(preview["preview_sha256"]))
             self.assertNotIn(str(subject.resolve()), stdout.getvalue())

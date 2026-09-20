@@ -84,6 +84,32 @@ describe('Comparison Loader and View', () => {
     expect(wrapper.get('[data-testid="comparison-view"]').classes()).toContain('rerun-page--inconclusive')
   })
 
+  it('loads Comparison 0.2 and keeps source-state mismatch outside semantic differences', async () => {
+    const loaded = await loadComparisonFromBlobs(
+      await createComparisonBundle('INCONCLUSIVE', '0.2'),
+    )
+    const wrapper = mount(ComparisonView, { props: { loaded } })
+
+    expect(loaded.comparison.schema_version).toBe('0.2')
+    expect(loaded.comparison.comparable).toBe(false)
+    expect(loaded.comparison.differences).toEqual([])
+    expect(loaded.comparison.reasons[0]?.code).toBe('SOURCE_STATE_MISMATCH')
+    expect(loaded.comparison.sources.baseline.source_state?.qualification).toBe('APPROVED')
+    expect(wrapper.get('[data-testid="comparison-source-baseline"]').text()).toContain('APPROVED')
+  })
+
+  it('loads Comparison 0.2 that is inconclusive for a non-source-state reason', async () => {
+    const loaded = await loadComparisonFromBlobs(
+      await createComparisonBundle('INCONCLUSIVE', '0.2', false),
+    )
+
+    expect(loaded.comparison.comparable).toBe(false)
+    expect(loaded.comparison.reasons[0]?.code).toBe('RUN_NOT_COMPLETED')
+    expect(loaded.comparison.sources.baseline.source_state).toEqual(
+      loaded.comparison.sources.repeat.source_state,
+    )
+  })
+
   it('rejects a changed comparison before exposing partial facts', async () => {
     const entries = await createComparisonBundle('MATCH')
     entries.set('comparison.json', new Blob(['{}']))

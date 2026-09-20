@@ -63,6 +63,13 @@ class CommandPreviewTests(unittest.TestCase):
             second = self._preview(subject, bindings)
 
             self.assertEqual(first, second)
+            self.assertEqual("0.1.1", first["schema_version"])
+            self.assertEqual(
+                "subject-tree-sha256/0.1",
+                first["subject_snapshot"]["policy_version"],
+            )
+            self.assertEqual(["src", "tests"], first["subject_snapshot"]["watch_roots"])
+            self.assertEqual(64, len(first["subject_snapshot"]["fingerprint"]))
             unsigned = copy.deepcopy(first)
             digest = unsigned.pop("preview_sha256")
             self.assertEqual(digest, sha256_json(unsigned))
@@ -72,6 +79,14 @@ class CommandPreviewTests(unittest.TestCase):
             self.assertEqual("python.exe", first["executable"]["basename"])
             self.assertEqual(False, first["environment"]["values_persisted"])
             self.assertEqual("NOT_PROVEN", first["claims"]["write_activity"])
+
+            (subject / "src" / "new.py").write_text("value = 1\n", encoding="utf-8")
+            changed = self._preview(subject, bindings)
+            self.assertNotEqual(
+                first["subject_snapshot"]["fingerprint"],
+                changed["subject_snapshot"]["fingerprint"],
+            )
+            self.assertNotEqual(first["preview_sha256"], changed["preview_sha256"])
 
     def test_preview_changes_when_executable_path_or_environment_changes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

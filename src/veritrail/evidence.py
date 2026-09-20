@@ -872,7 +872,10 @@ def _validate_command_evidence(
         errors.append(f"{input_name}.facts is missing command fields: {', '.join(missing)}")
     if unknown:
         errors.append(f"{input_name}.facts has unsupported command fields: {', '.join(unknown)}")
-    if facts.get("collector_version") != "trusted-command/0.1":
+    if facts.get("collector_version") not in {
+        "trusted-command/0.1",
+        "trusted-command/0.2",
+    }:
         errors.append(f"{input_name}.facts.collector_version is unsupported")
     for field in ("plan_sha256", "command_policy_sha256", "preview_sha256", "arguments_sha256"):
         if not _is_sha256(facts.get(field)):
@@ -1416,7 +1419,10 @@ def verify_imported_evidence(artifact: ImportedEvidence) -> None:
         expected_attachment_count = (
             2
             if artifact.document.get("source")
-            == "VeriTrail bootstrap-lifecycle/0.3"
+            in {
+                "VeriTrail bootstrap-lifecycle/0.3",
+                "VeriTrail bootstrap-lifecycle/0.3.1",
+            }
             else 4
         )
         referenced = {

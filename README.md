@@ -283,7 +283,8 @@ VeriTrail 的安全边界同样是有界的：
 
 - 默认只接受显式回环目标，不读取浏览器 Profile，不持久化 Cookie、Authorization 或响应正文；
 - Plan、Evidence、报告与附件通过规范化 JSON、清单和 SHA-256 建立可复核关系；
-- M9/M10 只运行结构化、经预览摘要批准的可信本地命令，不接受 Shell 字符串；
+- M9/M10 只运行结构化、经预览摘要批准的可信本地命令，不接受 Shell 字符串；新版 Preview 还绑定
+  精确受保护源码状态，并在启动前复核，边界见[获批源码状态连续性维护合同](docs/168-approved-source-state-continuity-maintenance-contract.md)；
 - Windows Job Object、listener owner 与资源上限限制误杀和残留，但不构成恶意代码沙箱；
 - AI 可以提出关注候选、解释异常或建议补证，不能确认缺陷真值，也不能决定 `PASS / FAIL`。
 

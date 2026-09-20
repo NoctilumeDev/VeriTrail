@@ -16,10 +16,17 @@ from veritrail.markdown import markdown_code, markdown_text
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 
-COMPARISON_SCHEMA_VERSION = "0.1"
-COMPARISON_RULE_VERSION = "rerun-semantic/0.1"
+COMPARISON_SCHEMA_VERSION = "0.2"
+COMPARISON_MANIFEST_SCHEMA_VERSION = "0.1"
+COMPARISON_RULE_VERSION = "rerun-semantic/0.2"
 COMPARISON_STATUSES = {"MATCH", "DRIFT", "INCONCLUSIVE"}
 COMPARISON_ID_PREFIX = "cmp_"
+SUBJECT_SNAPSHOT_POLICY_VERSION = "subject-tree-sha256/0.1"
+APPROVED_COMMAND_COLLECTOR = "trusted-command/0.2"
+APPROVED_BOOTSTRAP_SOURCES = {
+    "VeriTrail bootstrap-lifecycle/0.2.1",
+    "VeriTrail bootstrap-lifecycle/0.3.1",
+}
 
 
 class ComparisonError(VeriTrailError):
@@ -49,6 +56,7 @@ class _SourceRun:
     semantic_projection: dict[str, Any]
     semantic_sha256: str
     profile_sha256: str | None
+    source_state: dict[str, Any]
 
 
 def _sha256_file(path: Path) -> str:
@@ -170,6 +178,55 @@ def _validate_report_plan_cross_reference(report: dict[str, Any], plan: dict[str
                 )
 
 
+def _source_state(
+    *,
+    plan: dict[str, Any],
+    profile: dict[str, Any] | None,
+    evidence_manifest: dict[str, Any],
+    load_evidence: Any,
+) -> dict[str, Any]:
+    plan_version = plan.get("schema_version")
+    if plan_version not in {"0.5", "0.6", "0.7"}:
+        return {"qualification": "NOT_APPLICABLE"}
+
+    evidence_type = "runtime.command" if plan_version == "0.5" else "runtime.bootstrap"
+    entries = [
+        item
+        for item in evidence_manifest.get("artifacts", [])
+        if item.get("evidence_type") == evidence_type
+    ]
+    if len(entries) != 1:
+        return {"qualification": "UNAVAILABLE"}
+    document = load_evidence(entries[0]["path"])
+    facts = document.get("facts", {})
+    if plan_version == "0.5":
+        subject = facts.get("subject", {})
+        watch_roots = plan["command"]["subject_watch_roots"]
+        approved = facts.get("collector_version") == APPROVED_COMMAND_COLLECTOR
+        complete = subject.get("snapshot_complete") is True
+    else:
+        subject = facts.get("subject_observation", {})
+        if profile is None:
+            return {"qualification": "UNAVAILABLE"}
+        watch_roots = profile["subject_watch_roots"]
+        approved = document.get("source") in APPROVED_BOOTSTRAP_SOURCES
+        complete = subject.get("scan_complete") is True
+    fingerprint = subject.get("before_fingerprint")
+    if (
+        not complete
+        or not isinstance(fingerprint, str)
+        or len(fingerprint) != 64
+        or any(character not in "0123456789abcdef" for character in fingerprint)
+    ):
+        return {"qualification": "UNAVAILABLE"}
+    return {
+        "qualification": "APPROVED" if approved else "OBSERVED_ONLY",
+        "policy_version": SUBJECT_SNAPSHOT_POLICY_VERSION,
+        "watch_roots": list(watch_roots),
+        "fingerprint": fingerprint,
+    }
+
+
 def _load_source(candidate: Path) -> _SourceRun:
     candidate = candidate.absolute()
     try:
@@ -186,6 +243,7 @@ def _load_source(candidate: Path) -> _SourceRun:
     try:
         plan = validated.load_owned_json("sealed-plan.json", label="Sealed Plan")
         report = validated.load_owned_json("report.json", label="Report")
+        profile: dict[str, Any] | None = None
         profile_sha256: str | None = None
         if plan.get("schema_version") in {"0.6", "0.7"}:
             if "sealed-profile.json" not in declared:
@@ -198,6 +256,17 @@ def _load_source(candidate: Path) -> _SourceRun:
             profile_sha256 = profile["seal"]["digest"]
         else:
             verify_sealed_plan(plan)
+        evidence_manifest = validated.load_owned_json(
+            "evidence-manifest.json", label="Evidence Manifest"
+        )
+        state = _source_state(
+            plan=plan,
+            profile=profile,
+            evidence_manifest=evidence_manifest,
+            load_evidence=lambda path: validated.load_owned_json(
+                path, label="Runtime Evidence"
+            ),
+        )
     except Exception as exc:
         raise ComparisonError(
             "SOURCE_SEALED_PLAN_INVALID",
@@ -212,6 +281,7 @@ def _load_source(candidate: Path) -> _SourceRun:
         semantic_projection=projection,
         semantic_sha256=sha256_json(projection),
         profile_sha256=profile_sha256,
+        source_state=state,
     )
 
 
@@ -275,6 +345,7 @@ def _source_reference(source: _SourceRun, role: str) -> dict[str, Any]:
     }
     if source.profile_sha256 is not None:
         reference["project_profile_sha256"] = source.profile_sha256
+    reference["source_state"] = copy.deepcopy(source.source_state)
     return reference
 
 
@@ -297,6 +368,10 @@ def _render_markdown(comparison: dict[str, Any]) -> str:
         f"{markdown_code(repeat['execution_status'])} / {markdown_code(repeat['verdict'])}",
         f"- Plan: {markdown_code(baseline['plan']['id'])} / "
         f"{markdown_code(baseline['plan']['sha256'])}",
+        f"- Baseline source qualification: "
+        f"{markdown_code(baseline['source_state']['qualification'])}",
+        f"- Repeat source qualification: "
+        f"{markdown_code(repeat['source_state']['qualification'])}",
         "",
         "## Reasons",
         "",
@@ -332,9 +407,7 @@ def create_comparison_bundle(
         raise ComparisonError("COMPARISON_OUTPUT_EXISTS", "拒绝覆盖已有 Comparison 输出目录。")
     baseline_source = _load_source(baseline)
     repeat_source = _load_source(repeat)
-    differences = _differences(
-        baseline_source.semantic_projection, repeat_source.semantic_projection
-    )
+    differences: list[dict[str, Any]] = []
     reasons: list[dict[str, str]] = []
     if baseline_source.report["run_id"] == repeat_source.report["run_id"]:
         reasons.append(
@@ -376,25 +449,54 @@ def create_comparison_bundle(
                 "message": f"{', '.join(incomplete)} Run 未完整执行。",
             }
         )
+    source_states = (baseline_source.source_state, repeat_source.source_state)
+    qualifications = tuple(state["qualification"] for state in source_states)
+    if qualifications == ("APPROVED", "APPROVED"):
+        left_identity = {
+            key: baseline_source.source_state[key]
+            for key in ("policy_version", "watch_roots", "fingerprint")
+        }
+        right_identity = {
+            key: repeat_source.source_state[key]
+            for key in ("policy_version", "watch_roots", "fingerprint")
+        }
+        if not _same(left_identity, right_identity):
+            reasons.append(
+                {
+                    "code": "SOURCE_STATE_MISMATCH",
+                    "message": "两侧获批的起始源码状态不同，语义结果不可比较。",
+                }
+            )
+    elif qualifications != ("NOT_APPLICABLE", "NOT_APPLICABLE"):
+        reasons.append(
+            {
+                "code": "SOURCE_STATE_UNQUALIFIED",
+                "message": "至少一侧没有证明运行起点仍是获批源码状态。",
+            }
+        )
     comparable = not reasons
     if not comparable:
         comparison_status = "INCONCLUSIVE"
-    elif differences:
-        comparison_status = "DRIFT"
-        reasons.append(
-            {
-                "code": "RERUN_SEMANTIC_DRIFT",
-                "message": f"冻结语义投影存在 {len(differences)} 处差异。",
-            }
-        )
     else:
-        comparison_status = "MATCH"
-        reasons.append(
-            {
-                "code": "RERUN_SEMANTICS_MATCH",
-                "message": "两次独立 Run 的冻结语义投影一致。",
-            }
+        differences = _differences(
+            baseline_source.semantic_projection, repeat_source.semantic_projection
         )
+        if differences:
+            comparison_status = "DRIFT"
+            reasons.append(
+                {
+                    "code": "RERUN_SEMANTIC_DRIFT",
+                    "message": f"冻结语义投影存在 {len(differences)} 处差异。",
+                }
+            )
+        else:
+            comparison_status = "MATCH"
+            reasons.append(
+                {
+                    "code": "RERUN_SEMANTICS_MATCH",
+                    "message": "两次独立 Run 的冻结语义投影一致。",
+                }
+            )
     comparison_id = COMPARISON_ID_PREFIX + sha256_json(
         {
             "schema_version": COMPARISON_SCHEMA_VERSION,
@@ -417,7 +519,8 @@ def create_comparison_bundle(
         },
         "differences": differences,
         "limits": [
-            "MATCH 表示 M6 冻结语义投影一致，不等于来源 Run 的 Verdict 为 PASS。",
+            "MATCH 只在获批起始源码状态相同或该判据不适用时表示冻结语义投影一致。",
+            "源码状态不匹配或未获资格时停止语义差异计算，difference_count 保持为零。",
             "本比较不支持不同 Plan 的处理组因果归因。",
             "未进入 sealed assertion 或 Evidence 形态的原始业务事实不在本结论范围内。",
         ],
@@ -435,7 +538,7 @@ def create_comparison_bundle(
             _file_entry(stage / "comparison.md", "comparison.md"),
         ]
         manifest = {
-            "schema_version": COMPARISON_SCHEMA_VERSION,
+            "schema_version": COMPARISON_MANIFEST_SCHEMA_VERSION,
             "comparison_id": comparison_id,
             "files": files,
         }

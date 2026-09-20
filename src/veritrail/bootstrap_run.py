@@ -29,18 +29,18 @@ from veritrail.bootstrap_lifecycle import (
 )
 from veritrail.bootstrap_preview import ResolvedBootstrap
 from veritrail.canonical import canonical_json_bytes, sha256_bytes, sha256_json
-from veritrail.command_execution import (
-    SubjectSnapshot,
-    capture_subject_root_snapshot,
-    compare_subject_snapshots,
-    sanitize_output,
-)
+from veritrail.command_execution import sanitize_output
 from veritrail.errors import SafetyError, ValidationError
 from veritrail.evidence import ImportedEvidence, verify_imported_evidence
 from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.resources import MEBIBYTE, host_memory_bytes, process_rss_bytes
 from veritrail.stop_control import StopRequested, StopSignal
+from veritrail.subject_snapshot import (
+    SubjectSnapshot,
+    capture_subject_root_snapshot,
+    compare_subject_snapshots,
+)
 from veritrail.windows_readiness import (
     OwnedListenerIdentity,
     OwnedReadinessObservation,
@@ -458,7 +458,7 @@ def _validate_preview_identity(
     digest = preview.get("preview_sha256")
     unsigned = {key: value for key, value in preview.items() if key != "preview_sha256"}
     expected = {
-        "schema_version": "0.2" if plan["schema_version"] == "0.7" else "0.1",
+        "schema_version": "0.2.1" if plan["schema_version"] == "0.7" else "0.1.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
@@ -474,6 +474,19 @@ def _validate_preview_identity(
         raise SafetyError("M10 approved bootstrap Preview seal is invalid")
     if any(preview.get(key) != value for key, value in expected.items()):
         raise SafetyError("M10 approved bootstrap Preview identity drifted")
+    snapshot = preview.get("subject_snapshot")
+    if (
+        not isinstance(snapshot, dict)
+        or snapshot.get("policy_version") != "subject-tree-sha256/0.1"
+        or snapshot.get("watch_roots") != profile["subject_watch_roots"]
+        or not isinstance(snapshot.get("fingerprint"), str)
+        or len(snapshot["fingerprint"]) != 64
+        or any(
+            character not in "0123456789abcdef"
+            for character in snapshot["fingerprint"]
+        )
+    ):
+        raise SafetyError("M10 approved bootstrap Preview subject snapshot is invalid")
 
 
 def _stream_projection(
@@ -666,6 +679,10 @@ def run_observed_bootstrap(
         max_files=profile["max_watch_files"],
         max_total_bytes=profile["max_watch_total_bytes"],
     )
+    if before.fingerprint != resolved.preview["subject_snapshot"]["fingerprint"]:
+        raise SafetyError(
+            "approved subject snapshot does not match the bootstrap Run start"
+        )
     workspace = _OwnedBootstrapWorkspace.create(output_parent)
     stop_signal = StopSignal(cancel_event)
     monitor = _BootstrapResourceMonitor(

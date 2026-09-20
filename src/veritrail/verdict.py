@@ -13,7 +13,9 @@ DIRECT_INVARIANT_FAILURE_EVIDENCE = {
     "BOOTSTRAP_CLEANUP_INCOMPLETE": "runtime.bootstrap",
 }
 BOOTSTRAP_COLLECTOR_V02 = "VeriTrail bootstrap-lifecycle/0.2"
+BOOTSTRAP_COLLECTOR_V021 = "VeriTrail bootstrap-lifecycle/0.2.1"
 BOOTSTRAP_COLLECTOR_V03 = "VeriTrail bootstrap-lifecycle/0.3"
+BOOTSTRAP_COLLECTOR_V031 = "VeriTrail bootstrap-lifecycle/0.3.1"
 BOOTSTRAP_SERVICES_READY_INTERRUPTION_REASONS = {
     "USER_CANCELLED",
     "LIFECYCLE_TIMEOUT",
@@ -638,7 +640,9 @@ def _detect_bootstrap_contamination(
         resource = facts["resource_observation"]
         if artifact.document.get("source") in {
             BOOTSTRAP_COLLECTOR_V02,
+            BOOTSTRAP_COLLECTOR_V021,
             BOOTSTRAP_COLLECTOR_V03,
+            BOOTSTRAP_COLLECTOR_V031,
         } and (
             resource["available_memory_soft_min_mb"]
             != plan["preflight"]["available_memory_soft_min_mb"]

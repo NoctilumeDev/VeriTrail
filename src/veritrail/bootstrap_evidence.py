@@ -18,8 +18,10 @@ from veritrail.plan import verify_sealed_plan
 from veritrail.project_profile import verify_sealed_project_profile
 from veritrail.windows_job import CapturedStream
 
-COLLECTOR_VERSION = "bootstrap-lifecycle/0.3"
-M10_COLLECTOR_VERSION = "bootstrap-lifecycle/0.2"
+COLLECTOR_VERSION = "bootstrap-lifecycle/0.3.1"
+M10_COLLECTOR_VERSION = "bootstrap-lifecycle/0.2.1"
+PREVIOUS_COLLECTOR_VERSION = "bootstrap-lifecycle/0.3"
+PREVIOUS_M10_COLLECTOR_VERSION = "bootstrap-lifecycle/0.2"
 LEGACY_COLLECTOR_VERSION = "bootstrap-lifecycle/0.1"
 LISTENER_OWNER_BACKEND = "WINDOWS_IP_HELPER_CTYPES_IPV4_IPV6"
 PROCESS_OWNERSHIP_BACKEND = "WINDOWS_JOB_OBJECT_PYWIN32_312"
@@ -189,8 +191,12 @@ def _validate_preview(plan: dict[str, Any], profile: dict[str, Any], preview: di
     unsigned = {key: value for key, value in preview.items() if key != "preview_sha256"}
     if not isinstance(digest, str) or digest != sha256_json(unsigned):
         raise SafetyError("M10 approved bootstrap Preview seal is invalid")
+    allowed_preview_versions = (
+        {"0.2", "0.2.1"} if plan["schema_version"] == "0.7" else {"0.1", "0.1.1"}
+    )
+    if preview.get("schema_version") not in allowed_preview_versions:
+        raise SafetyError("M10 approved bootstrap Preview identity drifted")
     expected = {
-        "schema_version": "0.2" if plan["schema_version"] == "0.7" else "0.1",
         "plan_sha256": plan["seal"]["digest"],
         "profile_id": profile["profile_id"],
         "profile_version": profile["version"],
@@ -204,6 +210,35 @@ def _validate_preview(plan: dict[str, Any], profile: dict[str, Any], preview: di
         expected["topology"] = profile["topology"]
     if any(preview.get(key) != value for key, value in expected.items()):
         raise SafetyError("M10 approved bootstrap Preview identity drifted")
+    if preview["schema_version"] in {"0.1.1", "0.2.1"}:
+        snapshot = preview.get("subject_snapshot")
+        if (
+            not isinstance(snapshot, dict)
+            or set(snapshot)
+            != {
+                "policy_version",
+                "watch_roots",
+                "fingerprint",
+                "file_count",
+                "link_count",
+                "total_bytes",
+            }
+            or snapshot.get("policy_version") != "subject-tree-sha256/0.1"
+            or snapshot.get("watch_roots") != profile["subject_watch_roots"]
+            or not isinstance(snapshot.get("fingerprint"), str)
+            or len(snapshot["fingerprint"]) != 64
+            or any(
+                character not in "0123456789abcdef"
+                for character in snapshot["fingerprint"]
+            )
+            or any(
+                not isinstance(snapshot.get(field), int)
+                or isinstance(snapshot.get(field), bool)
+                or snapshot[field] < 0
+                for field in ("file_count", "link_count", "total_bytes")
+            )
+        ):
+            raise SafetyError("M10 approved bootstrap Preview subject snapshot is invalid")
 
 
 def _validate_observation_inputs(
@@ -281,6 +316,12 @@ def collect_bootstrap_evidence(
         raise SafetyError("bootstrap Evidence requires ExperimentPlan 0.6 or 0.7")
     _validate_preview(plan, profile, preview)
     _validate_observation_inputs(resource_observation, subject_observation)
+    if (
+        preview["schema_version"] in {"0.1.1", "0.2.1"}
+        and subject_observation["before_fingerprint"]
+        != preview["subject_snapshot"]["fingerprint"]
+    ):
+        raise SafetyError("M10 bootstrap Run start differs from the approved subject snapshot")
     if set(browser_exercise) != {
         "started",
         "completed",
@@ -547,9 +588,19 @@ def collect_bootstrap_evidence(
     browser_completed = bool(browser_exercise["completed"])
     execution_status = _execution_status(reason, browser_completed, cleanup_complete)
     stop_stage = lifecycle.events[-1].stage if lifecycle.events else "DISCOVERED"
-    collector_version = (
-        COLLECTOR_VERSION if plan_version == "0.7" else M10_COLLECTOR_VERSION
-    )
+    preview_has_approved_snapshot = preview["schema_version"] in {"0.1.1", "0.2.1"}
+    if plan_version == "0.7":
+        collector_version = (
+            COLLECTOR_VERSION
+            if preview_has_approved_snapshot
+            else PREVIOUS_COLLECTOR_VERSION
+        )
+    else:
+        collector_version = (
+            M10_COLLECTOR_VERSION
+            if preview_has_approved_snapshot
+            else PREVIOUS_M10_COLLECTOR_VERSION
+        )
     observed_variables = (
         {
             "project_bootstrap_topology": (
@@ -669,14 +720,21 @@ def validate_bootstrap_evidence(
     if source not in {
         f"VeriTrail {COLLECTOR_VERSION}",
         f"VeriTrail {M10_COLLECTOR_VERSION}",
+        f"VeriTrail {PREVIOUS_COLLECTOR_VERSION}",
+        f"VeriTrail {PREVIOUS_M10_COLLECTOR_VERSION}",
         f"VeriTrail {LEGACY_COLLECTOR_VERSION}",
     }:
         errors.append(f"{input_name}.source must identify the frozen bootstrap collector")
     current_collector = source in {
         f"VeriTrail {COLLECTOR_VERSION}",
         f"VeriTrail {M10_COLLECTOR_VERSION}",
+        f"VeriTrail {PREVIOUS_COLLECTOR_VERSION}",
+        f"VeriTrail {PREVIOUS_M10_COLLECTOR_VERSION}",
     }
-    single_node_collector = source == f"VeriTrail {COLLECTOR_VERSION}"
+    single_node_collector = source in {
+        f"VeriTrail {COLLECTOR_VERSION}",
+        f"VeriTrail {PREVIOUS_COLLECTOR_VERSION}",
+    }
     expected_variables = (
         {
             "project_bootstrap_topology": (
