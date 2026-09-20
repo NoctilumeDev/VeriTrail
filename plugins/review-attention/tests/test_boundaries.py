@@ -186,6 +186,52 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
         self.assertNotIn("publisher", parameters)
         self.assertNotIn("manifest", parameters)
 
+    def test_relation_cell_and_provider_are_private_and_nonpublishing(self) -> None:
+        relation_modules = sorted(
+            (SOURCE_ROOT / "veritrail_review").glob("_relation_execution_cell*.py")
+        )
+        self.assertTrue(relation_modules)
+        forbidden_imports = {
+            "veritrail_review.publisher",
+            "veritrail_review._artifact_budget",
+        }
+        violations: list[str] = []
+        for path in relation_modules:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    names = [alias.name for alias in node.names]
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    names = [node.module]
+                else:
+                    names = []
+                for name in names:
+                    if name == "ast" or name in forbidden_imports:
+                        violations.append(f"{path.name}:{node.lineno}:{name}")
+        self.assertEqual(violations, [])
+
+        provider_path = SOURCE_ROOT / "veritrail_review" / "_relation_closed_provider.py"
+        provider_tree = ast.parse(
+            provider_path.read_text(encoding="utf-8"), filename=str(provider_path)
+        )
+        provider_imports: list[str] = []
+        for node in ast.walk(provider_tree):
+            if isinstance(node, ast.Import):
+                provider_imports.extend(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                provider_imports.append(node.module)
+        self.assertEqual(provider_imports.count("ast"), 1)
+        self.assertTrue(forbidden_imports.isdisjoint(provider_imports))
+
+        import veritrail_review
+
+        self.assertFalse(
+            hasattr(veritrail_review, "run_closed_test_relation_derivation")
+        )
+        self.assertNotIn(
+            "run_closed_test_relation_derivation", veritrail_review.__all__
+        )
+
     def test_fact_evidence_closure_is_private_and_has_no_publication_surface(self) -> None:
         from veritrail_review._fact_evidence_closure import (
             run_closed_test_fact_evidence_closure,

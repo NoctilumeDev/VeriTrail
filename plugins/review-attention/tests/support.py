@@ -32,6 +32,8 @@ def create_fixture_repository(
     *,
     algorithm: str = "sha1",
     second_commit: bool = False,
+    regular_source: bytes = b"print('regular')\n",
+    nested_source: bytes = b"nested\n",
 ) -> FixtureRepository:
     repo = root / f"repo-{algorithm}"
     command = [os.fspath(git_executable()), "init", "--quiet"]
@@ -40,12 +42,12 @@ def create_fixture_repository(
     command.append(os.fspath(repo))
     subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    regular = write_object(repo, algorithm, "blob", b"print('regular')\n")
+    regular = write_object(repo, algorithm, "blob", regular_source)
     executable = write_object(repo, algorithm, "blob", b"#!/usr/bin/env python\n")
     symlink = write_object(repo, algorithm, "blob", b"target.bin")
     raw_name_blob = write_object(repo, algorithm, "blob", b"raw-name\n")
     unknown_mode_blob = write_object(repo, algorithm, "blob", b"unusual-mode\n")
-    nested_blob = write_object(repo, algorithm, "blob", b"nested\n")
+    nested_blob = write_object(repo, algorithm, "blob", nested_source)
     nested_tree = write_tree(
         repo,
         algorithm,
