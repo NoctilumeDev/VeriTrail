@@ -1211,6 +1211,34 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 冻结后必须从新 exact main 先做 system audit；完整 Relation algorithm、import resolution、RelationSet、
 conflict/UNKNOWN、publisher、Slice、Coverage、CLI 与 Workbench 不因本状态发布自动取得施工授权。
 
+[文档 173](173-r1-declared-relation-observation-domain-and-composition-qualification-system-audit.md)从冻结 exact
+`main@d54ee43170779f54ec88b9839ad80d48056aa033` 独立俯瞰下一闭环。只读本地反例在 source
+`import pkg.mod`、MODULE + IMPORT_DECLARATION FactSet 与冻结双-kind Profile 上得到：Fact stage、Relation
+ProviderRun 与 final private phase 都是 `COMPLETED`，但 Provider 只报告一个 `LEXICAL_CONTAINS` candidate，
+没有 `IMPORT_TARGET_LITERAL`；final Evidence IDs 仍正确保持空。该事实不击穿文档 165/172 的 bounded private
+proof，却证明 `ProviderRun COMPLETED` 不能升级为本轮 declared Relation observation obligations 已全部履行。
+
+Policy 0.1 能固定 capability requiredness 与 `CUMULATIVE`，Profile 能固定 relation-kind 闭集与 rank，现有
+descriptor/Relation request/RelationSet shape 却没有绑定 source responsibility、observation subject denominator
+或 observation-domain qualification。若直接做 RelationSet admission，后继会被迫把“来源正常结束”偷换成“已经看够”。
+因此下一问题面识别为 declared Relation observation domain / composition qualification，先审议 required source-set terminal、
+successful-empty 边界、multi-source same-ID union/conflict 与 qualification identity；RelationSet admission、完整
+algorithm/import resolution、real parser/public Provider、final Evidence、Slice、Coverage 与 publisher继续延期。
+
+文档 173 自己的原始远端门、受保护主线合入、新 exact-main Public CI / Browser Smoke 与三次专属 fresh
+anonymous installed-product readback 全部成立后，当前状态才是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本轮没有触发外部 production failure-shape survey：本地冻结 bytes 已提供决定性反例。若后继合同仍无法在
+responsibility/denominator/omission receipt 方案之间选择，才按 failure family 查公开一手案例，再回到本地
+反例验证；外部案例不直接产生 R 的合同 authority。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
