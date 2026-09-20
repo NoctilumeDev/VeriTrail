@@ -743,6 +743,15 @@
   的 private closed implementation。真实 parser identity 必须实际使用；否则先独立审议最小 Evidence 修正，
   不得虚填。完整 Relation 算法、RelationSet composition/admission、public Provider、publisher、Slice、Coverage、
   CLI、Workbench、D、Cu 与 Q 继续未授权。
+- `docs/171-r1-relation-derivation-implementation-freeze-candidate.md` 记录上述 private closed 实现已经由 PR #156
+  合入 `main@122d0c6b9d3c7a4518f12aec2f503f8979018dda`。实现新增 relation-only `/0.2` identity/vector、固定
+  Fact/Relation phase join、distinct Relation cell、保守 upstream gate、同一个 live `BudgetContext` 与真实使用
+  Python 3.10 grammar 的 closed parser/provider；没有完整 import resolution、RelationSet、publisher、Slice、
+  Coverage 或公共 API。PR 与实现 exact-main Public CI 均为 attempt 1、11/11，exact-main Browser Smoke 为
+  1/1；十一份变更文件匿名 raw-byte readback 与 Git tree 一致。当前状态只能是
+  `R1_RELATION_DERIVATION_IMPLEMENTED / R1_RELATION_DERIVATION_FREEZE_CANDIDATE /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文自己的门、合入、exact-main 双门、匿名产品
+  读回与后继独立最终状态发布完成前不得写成 frozen，也不得开始延期能力。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
