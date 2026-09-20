@@ -328,13 +328,17 @@ conflicts
 关键规则：
 
 - commit 事实必须回显 GitHub 返回的 exact SHA；请求路径中的 SHA 不能替代响应事实；
-- PR 分开保存 `head.sha`、`base.sha`、`merged`、`merge_commit_sha`；合并前的 test merge SHA 不得冒充
-  最终主线提交；
+- PR 分开保存 `head.sha`、`base.sha`、`merged`、`merged_at`、`merge_commit_sha` 与 merge event
+  provenance；API `2026-03-10` 已从 PR payload 移除 `merge_commit_sha`，因此 merged PR 的该事实只能由
+  bounded timeline 中唯一 `merged` event 的 `commit_id` 提供；合并前的 test merge SHA 不得冒充最终
+  主线提交；
 - required check item 至少保存 `context`、可得的 integration/app identity 与 `sources[]`；每个 source
   保存 `RULESET | BRANCH_PROTECTION`，并保留可得的 ruleset identity；
 - Ruleset=A、BranchProtection=B 时有效 items 为 A+B；Ruleset=[] 不得压掉 BranchProtection=B；
   两个来源同时要求同一 A 时只形成一个有效 item，但必须保留两个 source provenance；
-- observed check identity 至少保存 name/context、app id/slug、suite/run id、status、conclusion 与 head SHA；
+- observed check identity 至少保存 name/context、app id/slug、Check Suite ID、Check Run ID、可安全保留的
+  external ID/details URL、status、conclusion 与 head SHA；GitHub Actions details path 可机械派生 workflow
+  run/job ID，但不得据此猜测 `run_attempt`；历史 `suite_id/run_id` 只作为 Check API 身份别名；
 - 同名异源保持多条；身份不足时写显式 ambiguity/conflict，不静默去重；
 - tag 分开保存 `ref_target_sha`、`object_type`、完整 bounded peel chain 与 `peeled_commit_sha`；
 - lightweight 与 annotated tag 可得到相同 `peeled_commit_sha`，但 provenance 不同；

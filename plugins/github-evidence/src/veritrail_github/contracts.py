@@ -23,7 +23,7 @@ OBSERVATION_CONTRACT = MappingProxyType(
     {"id": "github-observation-request", "version": "0.1"}
 )
 EVIDENCE_TYPE = "platform.github.api.snapshot"
-NORMALIZATION_SEMANTICS_VERSION = "github-rest-facts/0.2"
+NORMALIZATION_SEMANTICS_VERSION = "github-rest-facts/0.3"
 
 ALLOWED_PROJECTIONS = frozenset(
     {

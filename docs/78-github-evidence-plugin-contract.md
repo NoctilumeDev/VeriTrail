@@ -61,6 +61,10 @@ VeriTrail 可验证的 Evidence。它用于发现“本地、分支、PR、主�
     facts、资源坐标和 validator 绑定，否则不能重建当前事实。
 21. **Reference identity is not commit identity**：lightweight tag ref、annotated tag object、Release
     metadata 与最终 commit 是不同坐标；比较提交时必须使用有来源的 `peeled_commit_sha`。
+22. **Check Run is not workflow attempt**：Check API 的 run/suite 身份不得冒充 GitHub Actions workflow
+    run 或 rerun attempt；平台未提供 attempt 绑定时必须保留未知。
+23. **Run association is not artifact derivation**：Actions artifact 关联 workflow run 与 head SHA，不证明
+    artifact 字节由该 SHA 单独派生，也不证明 producer job/attempt。
 
 ## 3. 请求合同
 

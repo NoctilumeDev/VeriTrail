@@ -71,7 +71,14 @@ class DerivationBoundaryTests(unittest.TestCase):
             facts=facts,
             normalization_semantics_version="github-rest-facts/0.2",
         )
+        third = facts_digest(
+            observation_spec_digest_value=request["observation_spec_digest"],
+            source_coordinates=request["observation_spec"]["coordinates"],
+            facts=facts,
+            normalization_semantics_version="github-rest-facts/0.3",
+        )
         self.assertNotEqual(first, second)
+        self.assertNotEqual(second, third)
 
 
 class CollectionBoundaryTests(unittest.TestCase):

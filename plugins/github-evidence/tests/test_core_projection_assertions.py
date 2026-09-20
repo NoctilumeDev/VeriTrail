@@ -21,16 +21,30 @@ class CoreProjectionAssertionTests(unittest.TestCase):
             assertion_path="/facts/pull_request/merged",
             assertion_value=True,
         )
-        transport = base_transport().add(
-            "/repos/NoctilumeDev/VeriTrail/pulls/28",
-            {
-                "number": 28,
-                "state": "closed",
-                "merged": True,
-                "head": {"sha": BASE_SHA},
-                "base": {"sha": "e" * 40},
-                "merge_commit_sha": TARGET_SHA,
-            },
+        transport = (
+            base_transport()
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/pulls/28",
+                {
+                    "number": 28,
+                    "state": "closed",
+                    "merged": True,
+                    "merged_at": "2026-09-20T06:56:11Z",
+                    "head": {"sha": BASE_SHA},
+                    "base": {"sha": "e" * 40},
+                },
+            )
+            .add(
+                "/repos/NoctilumeDev/VeriTrail/issues/28/timeline?per_page=100",
+                [
+                    {
+                        "id": 31473900287,
+                        "event": "merged",
+                        "commit_id": TARGET_SHA,
+                        "created_at": "2026-09-20T06:56:11Z",
+                    }
+                ],
+            )
         )
         self._assert_pass(plan, transport)
 
