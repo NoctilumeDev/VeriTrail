@@ -314,6 +314,46 @@ Windows 目录原子发布等地基层缺口。补丁候选从头完成双 Pytho
 - [R1 DerivationEvidence Schema 修正前置审计](139-r1-derivation-evidence-schema-correction-audit.md)
 - [R1 DerivationEvidence Schema 0.1.1 修正合同](140-r1-derivation-evidence-schema-correction-contract.md)
 - [R1 DerivationEvidence Schema 0.1.1 修正合同冻结发布](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)
+- [R1 DerivationEvidence Schema 0.1.1 实现冻结候选](142-r1-derivation-evidence-schema-correction-implementation-freeze-candidate.md)
+- [R1 DerivationEvidence Schema 0.1.1 实现冻结发布](143-r1-derivation-evidence-schema-correction-freeze-publication.md)
+- [R1 Derivation Budget Primitive 前置审计](144-r1-derivation-budget-primitive-precontract-audit.md)
+- [R1 Derivation Budget Primitive 最小合同](145-r1-derivation-budget-primitive-contract.md)
+- [R1 Derivation Budget Primitive 合同冻结发布](146-r1-derivation-budget-primitive-contract-freeze-publication.md)
+- [R1 Derivation Budget Primitive 实现冻结候选](147-r1-derivation-budget-primitive-implementation-freeze-candidate.md)
+- [R1 Derivation Budget Primitive 实现冻结发布](148-r1-derivation-budget-primitive-freeze-publication.md)
+- [R1 Derivation Execution Cell 与 Terminal Continuity 系统审计](149-r1-derivation-execution-cell-system-audit.md)
+- [R1 Derivation Execution Cell / Terminal Envelope 最小合同 0.1](150-r1-derivation-execution-cell-terminal-envelope-contract.md)
+- [R1 Derivation Execution Cell / Terminal Envelope 合同冻结发布](151-r1-derivation-execution-cell-contract-freeze-publication.md)
+- [R1 Derivation Execution Cell 实现冻结候选](152-r1-derivation-execution-cell-implementation-freeze-candidate.md)
+- [R1 Derivation Execution Cell 实现冻结发布](153-r1-derivation-execution-cell-freeze-publication.md)
+- [R1 Fact Admission 与 DerivationEvidence Closure 系统审计](154-r1-fact-evidence-closure-system-audit.md)
+- [R1 Fact Admission / DerivationEvidence Closure 最小合同 0.1](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)
+- [R1 Fact Admission / DerivationEvidence Closure 合同冻结发布](156-r1-fact-evidence-closure-contract-freeze-publication.md)
+- [R1 Fact Admission / DerivationEvidence Closure 实现冻结候选](157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
+- [R1 Fact Admission / DerivationEvidence Closure 实现冻结发布](158-r1-fact-evidence-closure-freeze-publication.md)
+- [R1 Fact/Evidence 冻结后下一闭环系统审计](159-r1-post-fact-evidence-next-closure-system-audit.md)
+- [R1 Multi-Provider Applicability / Fact Composition 最小合同 0.1](160-r1-multi-provider-applicability-and-fact-composition-contract.md)
+- [R1 Multi-Provider Applicability / Fact Composition 合同冻结发布](161-r1-multi-provider-fact-composition-contract-freeze-publication.md)
+- [R1 Multi-Provider Applicability / Fact Composition 实现冻结候选](162-r1-multi-provider-fact-composition-implementation-freeze-candidate.md)
+- [R1 Multi-Provider Applicability / Fact Composition 实现冻结发布](163-r1-multi-provider-fact-composition-freeze-publication.md)
+- [R1 Multi-Provider Fact Composition 冻结后下一闭环系统审计](164-r1-post-composition-next-closure-system-audit.md)
+- [R1 Relation Derivation Authority / Operand Continuity 最小合同 0.1 候选](165-r1-relation-derivation-authority-and-operand-continuity-contract.md)
+- [Product Delivery D0：真实任务入口的问题定位](166-d0-product-delivery-problem-framing.md)
+- [Cu / Curation Cu0：工程记忆注意力投影的问题定位](167-cu0-engineering-memory-attention-projection-problem-framing.md)
+- [Core 获批源码状态连续性维护合同](168-approved-source-state-continuity-maintenance-contract.md)
+- [GitHub Evidence state-bound authority maintenance contract](169-github-evidence-state-bound-authority-maintenance-contract.md)
+- [R1 Relation Derivation Authority / Operand Continuity 合同冻结发布](170-r1-relation-derivation-contract-freeze-publication.md)
+- [R1 Relation Derivation 实现冻结候选](171-r1-relation-derivation-implementation-freeze-candidate.md)
+- [R1 Relation Derivation 实现冻结发布](172-r1-relation-derivation-freeze-publication.md)
+- [R1 Declared Relation Observation Domain / Composition Qualification 系统审计](173-r1-declared-relation-observation-domain-and-composition-qualification-system-audit.md)
+- [M10 listener owner mismatch 测试夹具时序修正](174-m10-listener-owner-mismatch-fixture-timing-correction.md)
+- [R1 Declared Relation Observation Domain / Composition Qualification 最小合同 0.1 候选](175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md)
+- [R1 Declared Relation Observation Domain / Composition Qualification 合同冻结发布](176-r1-relation-observation-composition-qualification-contract-freeze-publication.md)
+- [M10 CI 夹具端口预约与 Browser 首败诊断修正](177-m10-ci-fixture-observation-correction.md)
+- [R1 Relation Observation / Composition Qualification 实现冻结候选](178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)
+- [R1 Relation Observation / Composition Qualification 实现冻结发布](179-r1-relation-observation-composition-qualification-freeze-publication.md)
+- [O / Operations Evidence O0：运行事实观察的问题定位](180-o0-operations-evidence-problem-framing.md)
+- [T / Test Evidence T0：测试事实观察的问题定位](181-t0-test-evidence-problem-framing.md)
 
 文档 58–70 是 `v0.12.0` 发布后的独立入口层规划、验收、发布、公共展示、第二 Preset 实现与 0.2 发布事实，不是 M15，也不改变 M0–M14 的
 冻结结论。Starter S0/S1 与 Authoring Skill A0 已完成源码冻结；E1 随后完成独立版本化、双 Python
@@ -1397,6 +1437,16 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 
 冻结后必须从新的 exact main 先做 system audit；RelationSet admission、公共 Schema、publisher、Slice、
 Coverage、Attention、CLI 与 Workbench 不因本状态发布自动取得施工授权。
+
+[文档 166](166-d0-product-delivery-problem-framing.md)与
+[文档 167](167-cu0-engineering-memory-attention-projection-problem-framing.md)分别保存 Product Delivery 和
+Engineering Memory Curation 的候选问题；[文档 180](180-o0-operations-evidence-problem-framing.md)与
+[文档 181](181-t0-test-evidence-problem-framing.md)从当前 exact main 保存 Operations Evidence 与 Test Evidence
+的候选观察边界。四份 0 号记录都属于 `PRECONSTRUCTION_NOTE / NO_IMPLEMENTATION_AUTHORITY`：没有创建
+正式轨道、Schema、源码、CLI、CI、标签或 Release。O 首先只观察运行事实，不继承 deploy/restart/repair
+等动作权；T 首先只观察 discovery/execution/report identity，selection、runner、retry 与 fixture authority
+仍为 `UNKNOWN`。测试工具 coverage 不等于 R observation coverage，任何插件事实也不能直接成为 Core
+Verdict。当前串行坐标在本支线关闭后返回 R 的 post-freeze system audit。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

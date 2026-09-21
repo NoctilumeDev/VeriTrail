@@ -3,23 +3,20 @@
 ## 1. 文档身份
 
 - 状态：`CAPABILITY_LEDGER_OPEN / DESIGN_SPACE_ONLY`；
-- 决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
-  R1_SOURCE_SNAPSHOT_FROZEN /
-  R1_DERIVATION_INPUT_BINDING_CONTRACT_FROZEN /
-  R1_DERIVATION_INPUT_FROZEN /
-  R1_DERIVATION_PROVENANCE_CONTRACT_FROZEN /
-  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_CONTRACT_FROZEN /
-  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_IMPLEMENTATION_ALLOWED /
-  R1_DERIVATION_EVIDENCE_SCHEMA_CORRECTION_NOT_STARTED /
-  R1_DERIVATION_PROVENANCE_IMPLEMENTATION_NOT_STARTED /
-  R1_RELATION_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；
+- 当前决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
+  R1_RELATION_DERIVATION_FROZEN /
+  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED /
+  D0_CANDIDATE_DIRECTION / CU0_CANDIDATE_DIRECTION /
+  O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION /
+  T0_TEST_EVIDENCE_CANDIDATE_DIRECTION`；
 - 施工状态：`NO_LEDGER_ITEM_IMPLEMENTATION_STARTED`；
 - 首次盘点基线：`main@9ab64121350b69ce81e6be79961ad426026bbc39`；
-- 本次状态发布起点：`main@4a25ef3d4009395f3510e847909f1efbaa29c5ac`；
+- 本次认知同步起点：`main@672a1c121aa3f2fb4cd89cb211b9acc7569f479f`；
 - 影响等级：`L3_SYSTEM / DOCUMENTATION_ONLY / NON_NORMATIVE_MAP`；
 - 本文不创建源码、Schema、CLI、CI、标签、Release 或空目录；
 - 本文不重开 M0–M14、E 轨、P0–P4、PC 兼容桥、R0 或 Pattern Corpus 的冻结结论；
-- 本文不替代已经冻结的 R1 合同，也不改变 R1 Schema 的当前优先级。
+- 本文不替代已经冻结的 R1 合同、实现和状态发布，也不给 D、Cu、O、T 或 Q 新增施工授权。
 
 文档编号 `114` 为本平行支线预留；`113` 已由独立 R1 合同候选使用。两条支线不互相继承未合入内容。
 
@@ -89,40 +86,23 @@ AcceptancePlan 复算。内部运行 Evidence 与外部平台 Evidence 都可以
 
 ### 3.2 当前合法施工入口
 
-R0 与首个 Pattern Corpus 已冻结；R1 上位合同也已通过 PR #89/#90 的候选、门禁、受保护主线合入和匿名
-公开读回。Schema 合同曾由文档 121 完成冻结发布；后继 payload preflight 发现部分嵌套身份仍需由实现
-猜测，文档 123 因而只重开并补齐被击穿边界。文档 124 的最后门成立后恢复 Schema payload 施工资格；
-后继[文档 125](125-r1-schema-payload-freeze-candidate.md)已从新 exact main 物化 Schema/corpus 测试资产；
-[文档 126](126-r1-schema-payload-freeze-publication.md)外部绑定候选远端门、受保护主线、exact-main 门、
-二十九个文件的匿名字节身份与公开产品读回。其最后门成立后，当前状态为
-`R1_SCHEMA_PAYLOAD_FROZEN / R1_IMPLEMENTATION_ENTRY_UNBLOCKED / R1_IMPLEMENTATION_NOT_STARTED`。
-上位 R1 合同冻结范围是：
+R0、首个 Pattern Corpus、R1 Schema/SourceSnapshot/Derivation Input/Budget/Execution Cell、Fact/Evidence
+closure、multi-Provider Fact composition、Relation derivation 以及 private Relation observation / composition
+qualification 均已通过各自合同、实现、门禁、受保护主线和公开读回冻结。当前最窄状态是：
 
 ```text
-Exact SourceSnapshot
-    -> deterministic CodeFacts
-    -> typed semantic relations
-    -> bounded overlapping ReviewSlices
-    -> CoverageLedger
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-R1 合同已经冻结首版语言范围、关系闭集、Slice 与 coverage 语义。后继
-[Schema 与规范身份合同](120-r1-schema-and-canonical-identity-contract.md)冻结字段词汇、canonical bytes、
-路径可逆编码、源码锚、遍历端点、Coverage 分母与 Artifact 布局；历史冻结事实由
-[文档 121](121-r1-schema-contract-freeze-publication.md)外部绑定。后继
-[文档 123](123-r1-schema-payload-preflight-correction.md)补齐 item key、frontier、Coverage 与 provenance
-identity 的不可编码缺口，[文档 124](124-r1-schema-payload-preflight-refreeze-publication.md)发布重新冻结边界；
-Schema payload 已由文档 125/126 物化并冻结。后继[文档 139](139-r1-derivation-evidence-schema-correction-audit.md)
-确认必要预算语义不能覆盖旧 `0.1` 公共资源，[文档 140](140-r1-derivation-evidence-schema-correction-contract.md)
-只为 DerivationEvidence 建立 `0.1.1` 补丁合同；[文档 141](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)
-完成独立冻结闭环后只授权该 Schema/corpus correction。修正尚未施工，运行实现仍未产生。R1 只建立确定性理解骨架，不进入 AI 提案、
-自动排序、
-HumanDisposition、Core Verdict 或自动修改。本能力账和 Q0 都不与 R1 抢合同权，也不以“未来完全体”
-为理由提前创建后继实现。
+这只证明 exact FactSet 上的 observation responsibility、逐项 outcome、candidate reconciliation 与 private
+composition qualification 闭环；它没有创建 RelationSet、公共 Schema、publisher、Slice、Coverage、Attention、
+CLI 或 Workbench。下一步只能从新的 exact main 做 Relation 冻结后 system audit，让反例选择下一 seam，
+不能按路线图自动施工 RelationSet。
 
-Q0 是一个已经闭合的短暂、独立 docs-only 蓝图支线，只把已经显现的验证调度问题放进正确边界；它没有
-修改 R1 合同，也没有创建 Q 实现。当前施工入口已经返回 R1；Schema payload 冻结发布完成最后门后，
-只允许从新 exact main 起草独立运行实现合同或首个最小切片。
+Q0 是已经闭合的独立 docs-only 蓝图，没有 Q 实现。D0、Cu0、O0 与 T0 只是候选问题记忆：它们既不抢
+R 的当前串行坐标，也不因出现在地图上获得合同或实现入口。
 
 ### 3.3 上位设计空间，不是当前产品声明
 
@@ -160,9 +140,11 @@ Human authority
 OBSERVATION / JUDGMENT
 Reality (owns truth)
     +-- observed, never owned --> External platforms
-    |                              -> Platform Evidence plugins --+
-    +-- observed, never owned --> JPyxis                          +-> VeriTrail Core
-                                   -> immutable execution artifacts-+
+    |                              -> Platform Evidence plugins -----+
+    +-- candidate observation --> Operations Evidence (O0)          |
+    +-- candidate observation --> Test Evidence (T0)                +-> standard Evidence -> VeriTrail Core
+    +-- observed, never owned --> JPyxis                             |
+                                   -> immutable execution artifacts---+
 VeriTrail Core -> deterministic Verdict -> Human authority
 
 REVIEW ATTENTION
@@ -183,8 +165,12 @@ Q -- schedule + Evidence refs --> VeriTrail Core
 | --- | --- | --- | --- |
 | VeriTrail Core | 给定 sealed Plan 与 Evidence，怎样确定性推导 Verdict | 已有冻结能力 | 世界真相、执行资源、人工处置 |
 | GitHub Evidence Plugin | GitHub API 与公开页面实际观察到了什么 | P0–P4 首个有界插件已冻结 | Core Verdict、GitHub 真相、其他平台完整性 |
-| Review Attention | 人应该优先看哪些有依据的源码切片 | R0/Corpus/R1 合同已冻结；R1 Schema 是当前入口 | 缺陷真值、HumanDisposition、Core Verdict |
+| Operations Evidence / O | 运行环境和系统状态实际观察到了什么 | O0 只保存问题与边界；没有插件、Provider、Schema 或 runtime | 运维动作、自动诊断真值、Core Verdict |
+| Test Evidence / T | 哪些测试在什么坐标下实际发现、选择、执行并产生什么结果 | T0 只保存问题；执行/选择/重试 authority 仍为 `UNKNOWN` | 系统 PASS、Q 调度、R coverage、Core Verdict |
+| Review Attention | 人应该优先看哪些有依据的源码切片 | R0/Corpus 与 R1 至 private Relation observation/composition qualification 已冻结；RelationSet/Slice/Coverage 未实现 | 缺陷真值、HumanDisposition、Core Verdict |
 | Q / Verification Scheduling | 已声明的证明义务怎样避免无效重复并有界执行 | Q0 蓝图已冻结，没有实现 | Gate 定义、Evidence 语义、`SAFE_TO_SKIP`、Core Verdict |
+| Product Delivery / D | 真实用户任务应从何处进入并理解系统 | D0 候选问题记录，没有正式 D 轨或产品 | Seal、Evidence 来源、Core Verdict |
+| Curation / Cu | 给定任务和工程状态时，哪些工程记忆应先被阅读 | Cu0 候选问题记录，没有算法或 runtime | 原始历史、mandatory context、项目事实 authority |
 | [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算怎样保持控制、定义、运行时与合同分权 | 独立仓库 M0–M6 单机基线已冻结 | VeriTrail Verdict、FlowKernel 权限、业务真相 |
 | [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略怎样在确定性权限、资源、隔离与恢复边界内提出有界动作 | 独立仓库仍为 Planned，R0 尚未关闭 | 当前可运行内核、外部验收真值、VeriTrail Verdict |
 | Human authority | 选择前提、Seal、授权边界并承担最终处置责任 | 系统宪法中的权威边界 | 世界终极真相 |
@@ -208,6 +194,7 @@ independent system
 | --- | --- | --- |
 | 长期顶层轨道 | `M` Core Milestones、`E` Entry Layer、`P` Platform Evidence、`R` Review Attention | 各有独立问题域和冻结历史 |
 | 顶层候选轨道 | `Q` Quick / Verification Scheduling | Q0 蓝图已冻结；尚无实现 |
+| 保留的候选方向 | `D` Product Delivery、`Cu` Curation、`O` Operations Evidence、`T` Test Evidence | 只有 0 号问题记录；尚未证明必须成为独立轨道或产品 |
 | E 轨内部产品阶段 | `S` Starter、`A` Authoring Skill | 入口层的子产品/阶段，不是与 E 并列的系统 authority |
 | 一次性兼容桥 | `PC` Platform Compatibility | P0 与 P1 之间已经关闭的临时桥，不是长期轨道 |
 | 一次性发布闭环 | `C` Core 0.13.0 release completion | 已关闭的发行状态机；不是持续产品线 |
@@ -217,7 +204,9 @@ independent system
 字母多不构成问题；脱离全名、生命周期或层级使用裸前缀才会制造歧义。尤其 `C0–C3` 还曾表示 M10
 项目冷启动拓扑状态，因此未来文档必须写 `Core release C1` 或 `M10 topology C1`，不能只写 `C1`。
 顶层 R 轨也必须继续写 `Review Attention R1`，与历史 `M12-R1` 分开；Q 轨同理应写
-`Q0 Quick Verification Scheduling`，未来包、标签和 Release 不得只使用裸 `q*`。
+`Q0 Quick Verification Scheduling`，未来包、标签和 Release 不得只使用裸 `q*`。O/T 标题也应写全
+`O0 Operations Evidence` 与 `T0 Test Evidence`；Cu 使用双字母，避免与历史 Core release `C` 和 M10
+topology `C0–C3` 混淆。
 
 ### 4.2 Cross-Track Dependency / Authority Matrix
 
@@ -232,24 +221,25 @@ Many Tracks
 
 | 轨道/角色 | 可以读取或消费 | 自己拥有 | 禁止的反向依赖或写入 | 拔除后的预期 |
 | --- | --- | --- | --- | --- |
-| Core / M | sealed Plan、标准 Evidence、public conformance inputs | Core Schema、规则、Bundle、Verdict | 不导入 P/R/Q 实现，不改写 Collector/Provider 状态 | 没有 Core 时不能形成 Core Verdict；插件产物仍保持各自身份 |
-| E / S / A | Core 公开合同、有限 Preset、用户答案 | DRAFT 入口 Artifact 与自身发行 | 不 Seal、不 Run、不写 Verdict，不要求 Core 导入入口实现 | Core/P/R/Q 语义不变，只失去起草便利 |
+| Core / M | sealed Plan、标准 Evidence、public conformance inputs | Core Schema、规则、Bundle、Verdict | 不导入 P/R/Q 或未来 O/T 实现，不改写 Collector/Provider 状态 | 没有 Core 时不能形成 Core Verdict；插件产物仍保持各自身份 |
+| E / S / A | Core 公开合同、有限 Preset、用户答案 | DRAFT 入口 Artifact 与自身发行 | 不 Seal、不 Run、不写 Verdict，不要求 Core 导入入口实现 | Core/P/R/Q 及未来 O/T 语义不变，只失去起草便利 |
 | P | sealed observation request、平台只读事实、Core 公开 Evidence 合同 | Collector Policy、平台 Evidence 与来源 provenance | 不写 AcceptancePlan/Verdict，不导入 R/Q 实现 | Core 仍验其他 Evidence；R 仍可审本地源码；非平台 Gate 不受影响 |
 | R | exact source、版本化事实/分析 Artifact、ReviewPolicy | Review Artifact、AttentionProposal、HumanDisposition 流程边界 | 不修改 P Evidence，不替 Core 裁决，不导入 Q 实现 | Core/P/Q 保持；只失去审查注意力压缩能力 |
 | Q | 未来 exact ChangeSet、Gate contract/closure、标准 Evidence refs、资源 Profile | VerificationSchedule、复用绑定与 Lane/join provenance | 不修改 R/P 事实，不输出 `SAFE_TO_SKIP` 或 Verdict，不导入 Core 私有实现 | 验证语义不变，退回完整串行执行，wall-clock 可能上升 |
+| O（候选） | 未来 bounded runtime observations、Core 公开 Evidence 合同 | 只有在合同成立后才可能拥有 O observation Artifact 与 provenance | 不部署、重启、修复或改写 P/R/T 状态，不输出系统 PASS | 其他轨道语义不变，只失去对应运行观察面 |
+| T（候选） | 未来 runner/report/environment 与 Core 公开 Evidence 合同 | 只有在合同成立后才可能拥有 T observation Artifact 与 provenance | 不把 exit 0 写成系统 PASS，不拥有 Q schedule 或 R coverage | 其他轨道语义不变，只失去对应测试事实面 |
 | Human authority | 事实提醒、Plan 草案、Evidence、Attention 与 Verdict | premise/Seal/授权/HumanDisposition | 不把最终责任转移给 Provider，也不拥有世界真相 | 系统不能替人完成授权或最终处置 |
 
 工程依赖必须保持单向：
 
 ```text
-P implementation -> P standard Evidence ---------\
-R implementation -> R versioned Artifacts --------+-> public Core boundary
-Q implementation -> Schedule -> Gate execution -> standard Evidence ----/
+P implementation -> P standard Evidence ------------------\
+future O/T implementation -> standard Evidence ------------+-> public Core boundary
+R implementation -> R versioned Artifacts -----------------+
+Q implementation -> Schedule -> Gate execution -> Evidence-/
 
-Core -X-> P/R/Q implementation
-P impl -X-> R/Q impl
-R impl -X-> P/Q impl
-Q impl -X-> P/R impl or Core internals
+Core -X-> P/R/Q/O/T implementation
+Track_i implementation -X-> Track_j private implementation or mutable state
 ```
 
 允许的是语义组合，不是实现纠缠：`Track_i` 可以消费 `Artifact_j`，但不能拥有或原地改写 `State_j`。
@@ -322,8 +312,13 @@ SLO 坐标，不能由“多跑几次”或“CI 很快”推出。
 
 ### 5.4 Evidence Ecosystem
 
-负责 GitHub 之外的平台观察适配。新增平台需要新的来源语义、身份、匿名/认证边界和公开读回证据，
-不能把 GitHub 0.1.0 当成通用平台能力。
+负责 Core 之外的有界事实生产与观察适配。新增平台需要新的来源语义、身份、匿名/认证边界和公开读回证据，
+不能把 GitHub 0.1.0 当成通用平台能力；运行事实和测试事实也不能因同属 Evidence 就共用状态机。
+[O0](180-o0-operations-evidence-problem-framing.md)与
+[T0](181-t0-test-evidence-problem-framing.md)进一步把运行事实与测试事实保存成两个候选问题面：O 首先只
+观察 operations reality，不自动获得运维动作权；T 首先只观察 discovery/execution/report identity，是否
+拥有 selection、runner、retry 与 fixture lifecycle 仍为 `UNKNOWN`。两者都不能把领域结果直接提升为
+Core Verdict，也不能把工具 coverage 与 R 的 observation coverage 混成同一个分母。
 
 ### 5.5 Authority / Intelligence
 
@@ -571,46 +566,41 @@ R1–R6 当前也不依赖上述未分配候选；提前施工只会扩大证明
 ## 10. 当前裁决
 
 ```text
-M0–M14                         FROZEN
-P0–P4                          FROZEN
-R0 + Pattern Corpus 0.1        FROZEN
-R1 Contract                    FROZEN
-R1 Schema Contract             FROZEN
-R1 Schema Payload              FROZEN
-R1 SourceSnapshot contract     FROZEN
-R1 SourceSnapshot runtime      FROZEN
-R1 Derivation Input contract   FROZEN
-R1 Derivation Input runtime    FROZEN
-R1 provenance contract         CANDIDATE
-R1 Evidence Schema correction  REQUIRED
-R1 provenance runtime          NOT STARTED
-R1 Relation/Slice/Coverage     NOT STARTED
-Q0 Blueprint                   FROZEN
-Q implementation               NOT STARTED
+M0–M14                                           FROZEN
+P0–P4                                            FROZEN
+R0 + Pattern Corpus 0.1                          FROZEN
+R1 Relation derivation                           FROZEN
+R1 Relation observation/composition qualification FROZEN
+R1 RelationSet / Slice / Coverage                 NOT STARTED
+Q0 Blueprint                                     FROZEN
+Q implementation                                 NOT STARTED
 
-Capability Ledger              OPEN
-New capability milestone       NOT COMMITTED
-“Complete system” claim         NOT PROVEN
-Ledger-item implementation     NOT STARTED
+D0 Product Delivery                              CANDIDATE DIRECTION / NO AUTHORITY
+Cu0 Engineering Memory Curation                  CANDIDATE DIRECTION / NO AUTHORITY
+O0 Operations Evidence                           CANDIDATE DIRECTION / NO AUTHORITY
+T0 Test Evidence                                 CANDIDATE DIRECTION / NO AUTHORITY
+
+Capability Ledger                                OPEN
+New capability milestone                         NOT COMMITTED
+“Complete system” claim                           NOT PROVEN
+Ledger-item implementation                       NOT STARTED
 ```
 
-Q0 的 docs-only 蓝图已经闭环，冻结事实见
-[文档 117](117-q0-verification-scheduling-freeze-publication.md)；它没有建立 Q 实现入口。R1 Schema payload
-的冻结事实由[文档 126](126-r1-schema-payload-freeze-publication.md)发布；当前只解除独立运行实现合同或
-首个最小切片的入口。[文档 127](127-r1-source-snapshot-runtime-contract.md)冻结“单 Artifact != Derivation
-closure”和“acquisition budget 只控制产出资格”的接缝；[文档 128](128-r1-source-snapshot-runtime-contract-freeze-publication.md)
-完成最后门后只解除 SourceSnapshot 最小实现入口。[文档 129](129-r1-source-snapshot-implementation-freeze-candidate.md)
-记录该最小 runtime 的实现、失败链与 exact-main 证据；[文档 130](130-r1-source-snapshot-freeze-publication.md)
-完成独立状态发布与公开读回后，只冻结 SourceSnapshot。后继[审计](131-r1-post-snapshot-derivation-input-audit.md)
-确认 FactSet 不能成为独立发布闭环，并选择 Input Binding 作为下一最小合同；
-[合同](132-r1-derivation-input-binding-contract.md)只约束输入身份与 owned bytes 连续性，不获得 Artifact、
-Manifest 或派生权；[冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)完成独立最后门后，
-只解除 Input Binding runtime 的实现停止线。[实现候选](134-r1-derivation-input-implementation-freeze-candidate.md)
-已经建立 exact owned input continuity；[最终冻结发布](135-r1-derivation-input-freeze-publication.md)外部绑定
-候选门禁、合入、exact-main 复验与匿名读回。其自身最后门成立后，Input Binding runtime 才冻结；parser、
-Facts、Relations、Slices、Coverage、完整 Derivation Manifest、CLI 与 Provider 均未开始。后继
-[文档 136](136-r1-derivation-attempt-and-fact-provenance-audit.md)审计 Input Binding 之后的 attempt 与
-provenance 接缝；[文档 137](137-r1-derivation-attempt-and-fact-provenance-contract.md)只建立显式单 Provider、
-shared budget 与 application-owned Fact identity 的合同候选。Evidence Schema/corpus 仍须先补 typed
-budget diagnostics 与非成功 reported IDs，runtime 与真实 parser 未获授权。本账只负责让未来方向不再
-遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。
+R1 的当前事实由[文档 179](179-r1-relation-observation-composition-qualification-freeze-publication.md)发布：
+Relation derivation 与 private observation/composition qualification 已冻结；RelationSet、公共 Schema、
+publisher、Slice、Coverage、Attention、CLI 和 Workbench 没有因此获得施工权。冻结后必须从新的 exact main
+先做 system audit，让本地反例选择下一条 seam。
+
+[Q0](119-q0-verification-scheduling-final-freeze-closure.md)仍是已经冻结但未实现的 verification scheduling
+蓝图。[D0](166-d0-product-delivery-problem-framing.md)与[Cu0](167-cu0-engineering-memory-attention-projection-problem-framing.md)
+保存 2026-09-15 的候选认知。[O0](180-o0-operations-evidence-problem-framing.md)与
+[T0](181-t0-test-evidence-problem-framing.md)保存 2026-09-21 对运行事实和测试事实的候选观察边界。四份
+0 号记录都遵守 `Memory without mandate`：记录当时为何提出问题、已知边界、UNKNOWN 与反证，但不给
+未来自动授权。
+
+Core 当前没有被前端、后端或数据库名词封闭；其公共抽象仍是 Plan、Subject、Variables、资源边界、
+Evidence、Assertions 与 Verdict。O/T 首先尝试通过可拔除 Evidence producer 扩展观察面。只有真实反例
+证明现有公共合同无法诚实表达通用事实、且插件侧 adapter 只能靠伪造或越权才能工作时，才有资格重开
+Core compatibility。这个顺序保存单变量方法，也防止 Core 变成领域名词的汇集处。
+
+本能力账只负责让未来方向不再遗忘、不互相冒充，也不因为“地图上有路”就替项目决定必须走哪条路。

@@ -65,7 +65,7 @@ digraph VeriTrailArchitecture {
     width=2.72,
     color="#8a2919",
     penwidth=2.0,
-    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#8a2919"><B>STANDARD EVIDENCE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">facts · provenance · uncertainty</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#6f6252">from bounded runners and P plugins</FONT></TD></TR></TABLE>>
+    label=<<TABLE BORDER="0" CELLBORDER="0" CELLPADDING="1"><TR><TD><FONT FACE="Georgia" POINT-SIZE="14" COLOR="#8a2919"><B>STANDARD EVIDENCE</B></FONT></TD></TR><TR><TD><FONT POINT-SIZE="9">facts · provenance · uncertainty</FONT></TD></TR><TR><TD><FONT POINT-SIZE="8" COLOR="#6f6252">bounded runners · read-only plugins</FONT></TD></TR></TABLE>>
   ];
 
   core [

@@ -855,11 +855,23 @@
   manifest `sha256_json=8017762ce4e975dea0da8f71fa9c8388176d794a73f3c4bc2cdb1934b4798220`。
   README 的 wrapper 在完整 PASS Artifact 落盘后因旧中间文件名后处理退出 1，未重跑；文档 178 首次正式
   session 因 anonymous API quota exhausted 保留 `API ERROR / Render COMPLETE`，quota reset 后使用新 Plan、
-  session 与输出根取得 PASS，后继成功不改写首败。本文自己的门、合入、新 exact-main 双门与三次 fresh
-  anonymous installed-product readback 全部成立后，状态才是
+  session 与输出根取得 PASS，后继成功不改写首败。最终发布 head
+  `1a27ca44b526372637fb0a7a67a54fa0182c446f` 经 PR #168 原始 Public CI 11/11 合入
+  `main@672a1c121aa3f2fb4cd89cb211b9acc7569f479f`；该 exact main 的 Public CI run `35592499950`
+  attempt 1 为 11/11、Browser Smoke run `35592499949` attempt 1 为 1/1。README、文档 179 与 milestones
+  又以三个新 Plan/session/output root 完成 fresh anonymous installed-product readback，联合 manifest
+  `sha256_json=6ab7372006e06752edd925b5461f42e0a9c23aefe3c46ce8cea98d36f134b95b`。当前状态是
   `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步必须从新 exact main 做 system audit；
   RelationSet、公共 Schema、publisher、Slice、Coverage、CLI 与 Workbench 继续未授权。
+- `docs/180-o0-operations-evidence-problem-framing.md` 与
+  `docs/181-t0-test-evidence-problem-framing.md` 是 R1 当前冻结闭环后独立形成的 docs-only 候选记忆。
+  `O = Operations Evidence` 首先只观察运行事实，不自动拥有 deploy/restart/repair 等动作权；
+  `T = Test Evidence` 首先只观察 test discovery/execution/report identity，selection、runner、retry 与 fixture
+  authority 仍为 `UNKNOWN`。两者均为 `PRECONSTRUCTION_NOTE / NO_IMPLEMENTATION_AUTHORITY`，不改 Core，
+  不创建插件、Provider、Schema、runtime、CLI、CI、标签或 Release。工具 coverage 不得与 R observation
+  coverage 混用，test pass 不得直接升级为 Core PASS。本支线关闭后，当前串行施工坐标返回 R post-freeze
+  system audit。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
