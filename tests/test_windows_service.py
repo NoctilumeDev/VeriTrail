@@ -76,8 +76,17 @@ class WindowsServiceTests(unittest.TestCase):
             directory = Path(raw_directory)
             port = _free_port()
             session = self._start(directory, port, "child-listener", str(port))
-            readiness = probe_owned_http_readiness(session, _readiness())
-            self.assertTrue(readiness.ready)
+            self.addCleanup(session.terminate)
+            readiness = probe_owned_http_readiness(
+                session,
+                _readiness(timeout_ms=10_000),
+            )
+            if not readiness.ready:
+                stdout, stderr = session.snapshot_streams()
+                self.fail(
+                    "descendant listener did not become ready: "
+                    f"observation={readiness!r}; stdout={stdout!r}; stderr={stderr!r}"
+                )
             self.assertEqual(2, sum(item.result == "SUCCESS" for item in readiness.attempts))
             self.assertTrue(all(item.listener_owner_in_job for item in readiness.attempts[-2:]))
             teardown = session.terminate()

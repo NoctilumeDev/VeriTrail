@@ -1472,6 +1472,41 @@ conflict 与 ProviderRun reverse closure，再形成 private admitted RelationSe
 `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE`，Schema、runtime、publisher、Slice 与
 Coverage 实现均未授权。
 
+[文档 184](184-m10-descendant-readiness-fixture-observation-correction.md)保留后继 docs-only PR #171
+original head `cffd64d941b76bdae746fab4190d5c56c1d33366` 的 Public CI run `35629971691` attempt 1
+正式首败。Python 3.10 normal 成功后，`-O` 的既有
+`test_descendant_listener_becomes_ready_and_job_cleanup_releases_port` 在约 `3.045s` 后只留下
+`readiness.ready == false`；Python 3.13 normal/`-O`、E3 与 Workbench 成功，后继依赖门被跳过。旧夹具
+没有输出 terminal、attempts 或 bounded streams，精确根因保持 `UNKNOWN`；本机同 source state 的 20 次
+CPython 3.10.6 `-O` 独立 session 均在约 `0.391–0.469s` READY，只证明失败未稳定复现。
+
+独立 L0 maintenance 只修可由源码直接证明的夹具缺口：该正向 helper 没有 3 秒 SLO，却被额外的
+`3000ms` runner-latency 假设约束；READY 断言又位于显式 teardown 以前并丢失诊断事实。候选只为此正向用例
+使用 bounded `10s` observation window、启动后立即注册 idempotent cleanup，并在失败时打印 exact
+`OwnedReadinessObservation` 与 bounded streams。它不增加 retry，不改 Core runtime、默认 readiness、
+负向测试、cleanup deadline、产品 Profile/Plan 或 R1 合同。第 5 项闭合以前的历史状态为：
+
+```text
+M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_CANDIDATE
+R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_BLOCKED
+```
+
+精确目标用例已在 CPython 3.10.6/3.13.13 normal 与 `-O` 四格各 1/1 通过；完整 Core
+current-source 451-test 在同一最终字节四格分别以 141.493s、136.204s、134.391s、141.241s 通过。
+该本地门不冒充远端 editable/install topology。maintenance PR #172 original head
+`d3342175aa5611ff1d2c6cefeb300137ac0696ef` 的 Public CI run `35634296113` attempt 1 为
+11/11 PASS；合入 `main@f4aec949258ed16830b2e8dd828273435498764b` 后，exact-main Public CI run
+`35636414037` attempt 1 为 11/11 PASS，Browser Smoke run `35636414038` attempt 1 为 1/1 PASS。
+因此 maintenance 已独立资格化；它不解释或覆盖 PR #171 original head 的 `UNKNOWN` 首败。PR #171 当前
+从该 maintenance-qualified exact main 形成新 head，状态为：
+
+```text
+M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_QUALIFIED
+R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS
+```
+
+PR #171 的新 source-state 资格、后继 exact-main/readback 与独立 freeze publication 仍须各自成立。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

@@ -893,6 +893,19 @@
   R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；Schema、runtime、publisher、Slice、Coverage、
   CLI 与 Workbench 继续未授权。
+- `docs/184-m10-descendant-readiness-fixture-observation-correction.md` 保留后继 docs-only PR #171
+  original Public CI run `35629971691` 的 Python 3.10 `-O` 正式首败。失败用例只留下
+  `readiness.ready == false`，耗时约 `3.045s`、贴合旧正向夹具 `3000ms` budget，但没有保存 terminal、
+  attempts 或 bounded streams，因此精确原因保持 `UNKNOWN`。独立 L0 maintenance 只给该无 3 秒 SLO 的
+  positive helper 使用 bounded `10s` observation window，在启动 session 后立即注册 cleanup，并在失败时输出
+  exact observation/streams；它不改 runtime、默认 readiness、负向测试、cleanup deadline、R1 合同或产品
+  timeout。PR #172 original head `d3342175aa5611ff1d2c6cefeb300137ac0696ef` 的 Public CI run
+  `35634296113` attempt 1 为 11/11；合入 `main@f4aec949258ed16830b2e8dd828273435498764b` 后，
+  exact-main Public CI run `35636414037` attempt 1 为 11/11，Browser Smoke run `35636414038`
+  attempt 1 为 1/1。PR #171 原 head 不 rerun，旧失败仍为 `UNKNOWN`；maintenance 已独立资格化，PR #171
+  正从该新 source state 形成新 head，状态为
+  `M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_QUALIFIED /
+  R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS`。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

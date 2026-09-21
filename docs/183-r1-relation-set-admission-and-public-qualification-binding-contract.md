@@ -7,7 +7,9 @@
 > R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
 >
-> 候选基线：`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`
+> 最初候选基线：`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`
+>
+> 当前重新资格化基线：`main@f4aec949258ed16830b2e8dd828273435498764b`
 >
 > 前置审计：[RelationSet Admission / Qualification Evidence Binding 系统审计](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
 >
@@ -451,6 +453,11 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
 ## 13. 当前候选裁决与 Fresh-Agent 交接
+
+本文 original head `cffd64d941b76bdae746fab4190d5c56c1d33366` 的 Public CI run `35629971691`
+attempt 1 保留 Python 3.10 `-O` 首败；其精确原因仍为 `UNKNOWN`。独立 maintenance 已经由 PR #172、
+`main@f4aec949258ed16830b2e8dd828273435498764b` 及该 exact main 双门取得资格。本文正从该新 source state
+形成新 head；maintenance 的成功不解释旧失败，新 head 必须独立满足第 11–12 项。
 
 当前只能写：
 
