@@ -847,6 +847,19 @@
   R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FREEZE_CANDIDATE /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文自己的门、合入、exact-main 双门、三次
   fresh anonymous installed-product readback 与后继独立最终状态发布全部成立前不得写成 frozen。
+- `docs/179-r1-relation-observation-composition-qualification-freeze-publication.md` 从候选合入基线
+  `main@49b7cbc877049377f78f2c845db75ad89ec189a1` 独立发布实现冻结事实。PR #167 原始 Public CI 为
+  attempt 1、11/11 SUCCESS；candidate exact main 的 Public CI 为 11/11、Browser Smoke 为 1/1。README、
+  文档 178 与 milestones 三次 fresh anonymous installed-product readback 均使用不同 Plan ID、Plan digest、
+  collection session 与输出根，P1/P2 coverage COMPLETE、三样本稳定、唯一 marker 与 Core PASS；canonical
+  manifest `sha256_json=8017762ce4e975dea0da8f71fa9c8388176d794a73f3c4bc2cdb1934b4798220`。
+  README 的 wrapper 在完整 PASS Artifact 落盘后因旧中间文件名后处理退出 1，未重跑；文档 178 首次正式
+  session 因 anonymous API quota exhausted 保留 `API ERROR / Render COMPLETE`，quota reset 后使用新 Plan、
+  session 与输出根取得 PASS，后继成功不改写首败。本文自己的门、合入、新 exact-main 双门与三次 fresh
+  anonymous installed-product readback 全部成立后，状态才是
+  `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步必须从新 exact main 做 system audit；
+  RelationSet、公共 Schema、publisher、Slice、Coverage、CLI 与 Workbench 继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
