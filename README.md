@@ -59,7 +59,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_ALLOWED / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`（本状态发布最后门全部成立后生效） |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTED / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FREEZE_CANDIDATE / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
@@ -302,6 +302,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   PR #160 的正式首败、独立 PR #161 fixture maintenance、重新资格化 head、候选 exact-main 双门与三次专属
   anonymous installed-product readback。它自己的最后门全部成立后，只允许文档 175 A–H 的 private closed
   implementation；RelationSet、公共 Schema、publisher、Slice 与 Coverage 继续未授权。
+- [Relation Observation / Composition Qualification 实现冻结候选](docs/178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)
+  记录文档 175 A–H 的 private closed proof、PR #165 两条保留首败、独立 PR #166 CI 夹具维护、重新资格化
+  implementation head、合入后的 exact-main 11/11 与 Browser Smoke 1/1，以及十一份变更文件的匿名 exact-SHA
+  字节读回。当前只能是 `IMPLEMENTED / FREEZE_CANDIDATE`；本文自己的门、合入、fresh anonymous
+  installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen，也不得开始 RelationSet、
+  公共 Schema、Slice 或 Coverage。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -439,7 +445,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 43. [Review Attention R1 Declared Relation Observation Domain / Composition Qualification 系统审计](docs/173-r1-declared-relation-observation-domain-and-composition-qualification-system-audit.md)
 44. [Review Attention R1 Declared Relation Observation Domain / Composition Qualification 最小合同候选](docs/175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md)
 45. [Review Attention R1 Declared Relation Observation Domain / Composition Qualification 合同冻结发布](docs/176-r1-relation-observation-composition-qualification-contract-freeze-publication.md)
-46. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+46. [Review Attention R1 Relation Observation / Composition Qualification 实现冻结候选](docs/178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)
+47. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
