@@ -1324,6 +1324,33 @@ relation-only operands `/0.3`、private relation-cell `/0.2`、per-item outcomes
 owned qualification result。完整 Relation algorithm/import resolution、public Provider、公共 Schema、RelationSet
 admission、final Evidence、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
 
+[文档 177](177-m10-ci-fixture-observation-correction.md)记录后继 private implementation PR #165 原始 Public CI
+run `35569800950` 的两条不同正式首败。Python 3.13 `-O` 的 emergency-cleanup 用例在 cleanup 调用前发现
+预选端口仍为空；源码审计证明旧夹具先关闭 port-0 probe、稍后才要求 child 绑定该具体端口，把瞬时空闲观察
+误作预约。旧 Artifact 没有 child stderr、exit status 或 listener owner，因而只证明夹具前置条件未成立，
+不能恢复该次失败的唯一底层触发。Python 3.10 `-O` 的 repeat 公共 Run 已完成 service readiness，但 Browser
+collector fail closed 为
+`COLLECTOR_ERROR`；现有冻结 Artifact 与 CLI summary 无法恢复 private error type，定向本地复验也未稳定复现，
+因此精确根因保持 `UNKNOWN`。
+
+独立 L0 maintenance 只让 emergency-cleanup child 自己绑定 port 0，并在 `listen()` 成功后把实际端口报告给
+测试；repeat 用例只在测试层记录并立即重抛 `ObservedBrowserCollectionError`，deterministic sentinel 证明
+诊断钩子不吞错误或改变公共结果。它不修改 runtime、timeout、Browser collector、公共 Evidence、R1 合同或
+#165 实现。三个精确用例已在双 Python normal/`-O` 四格各 3/3 成立，完整 public bootstrap CLI 加 M10
+stress 两个 module 在同一四格各 27/27 成立；完整 Core current-source 451-test 也在双 Python normal/`-O`
+四格分别以 150.647s、139.365s、135.696s、136.843s 全部通过。该本地门不冒充远端 installed/editable
+topology；维护 PR、自身 exact-main Public CI 与 Browser Smoke 仍待完成。
+当前状态只能是：
+
+```text
+M10_CI_FIXTURE_OBSERVATION_CORRECTION_CANDIDATE
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_REQUALIFICATION_BLOCKED
+```
+
+维护候选自己的原始 Public CI、受保护合入、新 exact-main Public CI 与 Browser Smoke 成立前，不得让 #165
+用 rerun 覆盖原始失败。维护地基闭合后，#165 仍须从新的 exact main 形成新 head，重新取得独立完整门禁；
+维护绿色不能冒充 implementation candidate 绿色。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

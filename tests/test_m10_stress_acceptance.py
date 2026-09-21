@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import socket
 import subprocess
 import sys
 import time
@@ -37,20 +36,17 @@ class M10StressAcceptanceTests(unittest.TestCase):
         self.assertEqual(set(partition), {4})
 
     def test_emergency_cleanup_terminates_venv_launcher_tree(self) -> None:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
-            probe.bind(("127.0.0.1", 0))
-            port = int(probe.getsockname()[1])
-
         child_code = (
             "import socket,time;"
             "s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);"
             "s.setsockopt(socket.SOL_SOCKET,socket.SO_EXCLUSIVEADDRUSE,1);"
-            f"s.bind(('127.0.0.1',{port}));s.listen();time.sleep(60)"
+            "s.bind(('127.0.0.1',0));s.listen();"
+            "print(s.getsockname()[1],flush=True);time.sleep(60)"
         )
         parent_code = (
             "import subprocess,sys,time;"
-            f"p=subprocess.Popen([sys.executable,'-c',{child_code!r}]);"
-            "print(p.pid,flush=True);time.sleep(60)"
+            f"subprocess.Popen([sys.executable,'-c',{child_code!r}]);"
+            "time.sleep(60)"
         )
         process = subprocess.Popen(
             [sys.executable, "-c", parent_code],
@@ -65,10 +61,9 @@ class M10StressAcceptanceTests(unittest.TestCase):
         workers = [("probe", process, Path("unused.json"))]
         try:
             self.assertTrue(process.stdout)
-            self.assertTrue(process.stdout.readline().strip().isdigit())
-            deadline = time.monotonic() + 10
-            while port_is_free(port) and time.monotonic() < deadline:
-                time.sleep(0.02)
+            port_text = process.stdout.readline().strip()
+            self.assertTrue(port_text.isdigit())
+            port = int(port_text)
             self.assertFalse(port_is_free(port))
 
             terminate_worker_trees(workers)

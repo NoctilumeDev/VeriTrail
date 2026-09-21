@@ -251,6 +251,42 @@ class BootstrapRunCliTests(unittest.TestCase):
         payload = json.loads(stdout.getvalue()) if stdout.getvalue() else {}
         return code, payload, stderr.getvalue()
 
+    def _run_with_browser_error_trace(
+        self,
+        *,
+        subject: Path,
+        plan: Path,
+        profile: Path,
+        bindings: Path,
+        approval: str,
+        output: Path,
+        run_id: str,
+        browser_collector=collect_observed_browser_evidence,
+    ) -> tuple[int, dict, str, tuple[str, ...]]:
+        error_types: list[str] = []
+
+        def traced_browser_collector(*args, **kwargs):
+            try:
+                return browser_collector(*args, **kwargs)
+            except ObservedBrowserCollectionError as exc:
+                error_types.append(exc.error_type)
+                raise
+
+        with patch(
+            "veritrail.bootstrap_run.collect_observed_browser_evidence",
+            side_effect=traced_browser_collector,
+        ):
+            code, payload, stderr = self._run(
+                subject=subject,
+                plan=plan,
+                profile=profile,
+                bindings=bindings,
+                approval=approval,
+                output=output,
+                run_id=run_id,
+            )
+        return code, payload, stderr, tuple(error_types)
+
     def _evidence_document(self, output: Path, evidence_type: str) -> dict:
         manifest = json.loads(
             (output / "evidence-manifest.json").read_text(encoding="utf-8")
@@ -400,23 +436,30 @@ class BootstrapRunCliTests(unittest.TestCase):
             first_manifest: bytes | None = None
 
             for ordinal, output in enumerate(outputs, start=1):
-                code, payload, stderr = self._run(
-                    subject=subject,
-                    plan=plan,
-                    profile=profile,
-                    bindings=bindings,
-                    approval=preview["preview_sha256"],
-                    output=output,
-                    run_id=f"m10-public-repeat-{ordinal}",
+                code, payload, stderr, browser_error_types = (
+                    self._run_with_browser_error_trace(
+                        subject=subject,
+                        plan=plan,
+                        profile=profile,
+                        bindings=bindings,
+                        approval=preview["preview_sha256"],
+                        output=output,
+                        run_id=f"m10-public-repeat-{ordinal}",
+                    )
                 )
+                diagnostic = {
+                    "payload": payload,
+                    "browser_error_types": browser_error_types,
+                }
                 self.assertEqual("", stderr)
                 self.assertEqual(0, code)
                 self.assertEqual("PROCEED", payload["resource_decision"])
                 self.assertEqual(
-                    "COMPLETED", payload["execution_status"], msg=payload
+                    "COMPLETED", payload["execution_status"], msg=diagnostic
                 )
-                self.assertEqual("PASS", payload["verdict"], msg=payload)
-                self.assertTrue(payload["cleanup_complete"], msg=payload)
+                self.assertEqual("PASS", payload["verdict"], msg=diagnostic)
+                self.assertTrue(payload["cleanup_complete"], msg=diagnostic)
+                self.assertEqual((), browser_error_types, msg=diagnostic)
                 validated = validate_bundle(output, root)
                 self.assertEqual(f"m10-public-repeat-{ordinal}", validated.run_id)
                 self.assertEqual("PASS", validated.verdict)
@@ -790,6 +833,43 @@ class BootstrapRunCliTests(unittest.TestCase):
             validated = validate_bundle(output, root)
             self.assertEqual("ERROR", validated.execution_status)
             self.assertEqual("PENDING", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_browser_collector_error_trace_keeps_the_exact_private_type(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan, profile, bindings, preview, ports = self._fixture(root)
+            output = root / "bundle-browser-collector-error-trace"
+
+            def fail_browser(active_plan: dict, **_kwargs) -> ObservedBrowserEvidence:
+                raise ObservedBrowserCollectionError(
+                    "DiagnosticSentinel",
+                    peak_rss_mb=0.0,
+                    resource_sampling_complete=True,
+                    process_cleanup_complete=True,
+                    job_memory_limit_mb=active_plan["browser"]["max_job_memory_mb"],
+                    job_memory_limit_enforced=True,
+                )
+
+            code, payload, stderr, browser_error_types = (
+                self._run_with_browser_error_trace(
+                    subject=subject,
+                    plan=plan,
+                    profile=profile,
+                    bindings=bindings,
+                    approval=preview["preview_sha256"],
+                    output=output,
+                    run_id="m10-browser-collector-error-trace",
+                    browser_collector=fail_browser,
+                )
+            )
+
+            self.assertEqual("", stderr)
+            self.assertEqual(0, code)
+            self.assertEqual("ERROR", payload["execution_status"])
+            self.assertTrue(payload["cleanup_complete"])
+            self.assertEqual(("DiagnosticSentinel",), browser_error_types)
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
