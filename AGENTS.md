@@ -884,6 +884,15 @@
   R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_NOT_STARTED /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；RelationSet、Evidence correction、Manifest、
   publisher、Slice、Coverage、CLI 与 Workbench 继续未授权。
+- `docs/184-m10-descendant-readiness-fixture-observation-correction.md` 保留后继 docs-only PR #171
+  original Public CI run `35629971691` 的 Python 3.10 `-O` 正式首败。失败用例只留下
+  `readiness.ready == false`，耗时约 `3.045s`、贴合旧正向夹具 `3000ms` budget，但没有保存 terminal、
+  attempts 或 bounded streams，因此精确原因保持 `UNKNOWN`。独立 L0 maintenance 只给该无 3 秒 SLO 的
+  positive helper 使用 bounded `10s` observation window，在启动 session 后立即注册 cleanup，并在失败时输出
+  exact observation/streams；它不改 runtime、默认 readiness、负向测试、cleanup deadline、R1 合同或产品
+  timeout。PR #171 原 head 不 rerun；maintenance 自己完成 PR/exact-main 门以前，状态只能是
+  `M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_CANDIDATE /
+  R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_BLOCKED`。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
