@@ -101,8 +101,9 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 这只证明 exact FactSet 上的 observation responsibility、逐项 outcome、candidate reconciliation 与 private
 composition qualification 闭环；它没有创建 RelationSet、公共 Schema、publisher、Slice、Coverage、Attention、
 CLI 或 Workbench。[文档 182](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
-已经用本地反例选择 RelationSet admission / attempt-level qualification Evidence binding 作为下一问题面，但
-该审计候选尚未取得合同或实现授权，不能按路线图自动施工 RelationSet。
+已经用本地反例选择 RelationSet admission / explicit admission witness / public qualification binding 作为下一
+问题面；Evidence 只是候选 public encoding 位置，Manifest 只绑定文件，不自动拥有 admission authority。该
+审计候选尚未取得合同或实现授权，不能按路线图自动施工 RelationSet。
 
 Q0 是已经闭合的独立 docs-only 蓝图，没有 Q 实现。D0、Cu0、O0 与 T0 只是候选问题记忆：它们既不抢
 R 的当前串行坐标，也不因出现在地图上获得合同或实现入口。
@@ -594,8 +595,8 @@ R1 的冻结事实由[文档 179](179-r1-relation-observation-composition-qualif
 Relation derivation 与 private observation/composition qualification 已冻结；RelationSet、公共 Schema、
 publisher、Slice、Coverage、Attention、CLI 和 Workbench 没有因此获得施工权。当前
 [文档 182](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)只以本地反例选择
-RelationSet admission / attempt-level qualification Evidence binding 作为下一问题面；字段、版本、合同和实现
-仍未授权。
+RelationSet admission / explicit admission witness / public qualification binding 作为下一问题面；witness 的
+public encoding、字段、版本、合同和实现仍未授权。
 
 [Q0](119-q0-verification-scheduling-final-freeze-closure.md)仍是已经冻结但未实现的 verification scheduling
 蓝图。[D0](166-d0-product-delivery-problem-framing.md)与[Cu0](167-cu0-engineering-memory-attention-projection-problem-framing.md)

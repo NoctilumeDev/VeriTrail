@@ -874,10 +874,12 @@
   system audit。
 - `docs/182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md` 从 exact
   `main@de0fdc6f01e1c99ae74259abd77640ad39d28038` 审计 private qualification 与公共 RelationSet/Evidence/
-  Manifest 之间的下一缝隙。双 Python 单变量反例证明：合格与缺一个 outcome 的未合格历史可以保留完全相同的
-  raw candidate projection；现有 application 正确拒绝未合格 composition，但未来 assembler 若绕过该状态，
-  `RelationSet 0.1` shape 无法独立识别。审计只选择 RelationSet admission / attempt-level qualification Evidence
-  binding 作为下一问题面，不冻结字段、Schema 版本或实现。当前只能是
+  Manifest 之间的下一缝隙。双 Python H1/H2/H3 identity matrix 证明：独立合格 attempts 可具有相同
+  `relation_set_digest` 与不同 provenance file bytes；合格与缺一个 outcome 的未合格历史又可以保留完全相同的
+  raw candidate projection。现有 application 正确拒绝未合格 composition，但未来 assembler 若绕过该状态，
+  `RelationSet 0.1` shape 无法独立识别。审计只选择 RelationSet admission / explicit admission witness / public
+  qualification binding 作为下一问题面；Evidence 是候选编码位置而不是自动的 admission authority，Manifest
+  只绑定文件而不裁决 eligibility。本文不冻结 witness 编码、字段、Schema 版本或实现。当前只能是
   `R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE /
   R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_NOT_STARTED /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；RelationSet、Evidence correction、Manifest、

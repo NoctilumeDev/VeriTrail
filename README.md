@@ -321,10 +321,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   后继成功不改写它们。该发布自己的门、合入、新 exact-main 双门与三次匿名读回全部成立后，private
   qualification closure 才成为 frozen；下一步仍须先做 system audit，不直接开始 RelationSet。
 - [RelationSet Admission / Qualification Evidence Binding 系统审计](docs/182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
-  从 exact main 构造双 Python 单变量反例：合格历史与缺一个 outcome 的未合格历史保留相同 raw candidate
-  projection；现有 private application 正确拒绝后者，但当前 RelationSet、Evidence 0.1.1 与 Manifest 不能让
-  完整 Bundle 对外复核 qualification binding。审计只选择下一问题面，不冻结字段或代码；RelationSet、
-  corrected Evidence、Slice 与 Coverage 仍未获实现授权。
+  从 exact main 构造双 Python H1/H2/H3 identity matrix：两个独立合格 attempt 保留相同
+  `relation_set_digest`、不同 provenance file bytes；合格历史与缺一个 outcome 的未合格历史又可保留相同 raw
+  candidate projection。现有 private application 正确拒绝后者，但当前 RelationSet、Evidence 0.1.1 与
+  Manifest 不能让完整 Bundle 对外复核 explicit admission witness。审计只选择 RelationSet admission /
+  admission witness / public qualification binding 这一问题面，不冻结 witness 的 public encoding、字段或代码；
+  RelationSet、corrected Evidence、Slice 与 Coverage 仍未获实现授权。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 

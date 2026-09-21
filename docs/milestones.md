@@ -1449,12 +1449,15 @@ Engineering Memory Curation 的候选问题；[文档 180](180-o0-operations-evi
 Verdict。当前串行坐标在本支线关闭后返回 R 的 post-freeze system audit。
 
 [文档 182](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)从 exact
-`main@de0fdc6f01e1c99ae74259abd77640ad39d28038` 执行该审计。双 Python 单变量反例令合格与缺一个 outcome 的
-未合格历史保留相同 raw candidate projection；现有 private application 正确输出 `NOT_QUALIFIED /
-NOT_COMPOSED`，但未来 assembler 若绕过该状态，`RelationSet 0.1` Schema 仍会接受同 candidate 内容。
-CPython 3.10/3.13 报告字节相同，`sha256_json=d798d8df88d6a6b3ebfbcc6fe14ef0edb3a36d699f0df0538a41fa884416fd5a`。
-本文只选择 RelationSet admission / attempt-level qualification Evidence binding 作为下一问题面；不声称当前
-runtime 已发布错误 RelationSet，也不授权 Schema、Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。
+`main@de0fdc6f01e1c99ae74259abd77640ad39d28038` 执行该审计。双 Python H1/H2/H3 identity matrix 证明：两个
+独立合格 attempt 可具有相同 `relation_set_digest` 与不同 provenance file bytes；合格与缺一个 outcome 的
+未合格历史又保留相同 raw candidate projection。现有 private application 正确输出 `NOT_QUALIFIED /
+NOT_COMPOSED`，但未来 assembler 若绕过该状态，`RelationSet 0.1` Schema 仍会接受同 candidate 内容。原 Q/U
+报告与 identity matrix 均在 CPython 3.10/3.13 间逐字节一致，后者
+`sha256_json=c1c310834ba98947269c637ac83852633a9c2c77372d89850bb47d78f776d3d8`。本文只选择
+RelationSet admission / explicit admission witness / public qualification binding 作为下一问题面；Evidence
+只是候选编码位置，Manifest 只绑定文件。本文不声称当前 runtime 已发布错误 RelationSet，也不授权 Schema、
+Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
