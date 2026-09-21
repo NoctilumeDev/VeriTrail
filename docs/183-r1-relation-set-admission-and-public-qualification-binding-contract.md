@@ -1,15 +1,18 @@
-# R1 RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同 0.1 候选
+# R1 RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同 0.1
 
 > 状态：`R1_RELATION_DERIVATION_FROZEN /
 > R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN /
 > R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED /
-> R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE /
+> R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN /
+> R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_ALLOWED /
 > R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
 >
 > 最初候选基线：`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`
 >
 > 当前重新资格化基线：`main@f4aec949258ed16830b2e8dd828273435498764b`
+>
+> 冻结发布：[文档 185](185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)
 >
 > 前置审计：[RelationSet Admission / Qualification Evidence Binding 系统审计](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
 >
@@ -20,7 +23,7 @@
 > [Relation Observation / Composition Qualification 合同](175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md)与
 > [Qualification 实现冻结发布](179-r1-relation-observation-composition-qualification-freeze-publication.md)
 >
-> 影响层级：`L2_CONTRACT + L3_SYSTEM_DESIGN + L0_DOCUMENTATION`。本候选只冻结 private
+> 影响层级：`L2_CONTRACT + L3_SYSTEM_DESIGN + L0_DOCUMENTATION`。本合同只冻结 private
 > RelationSet admission、explicit admission witness、版本化 Evidence public binding、历史 Schema byte guard
 > 与 cross-object conformance；不创建或修改 Schema、corpus、identity vector、runtime、publisher、Manifest、
 > Slice、Coverage、CLI、Workbench、Core、P/Q/D/Cu/O/T、tag 或 Release。
@@ -452,28 +455,33 @@ R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-## 13. 当前候选裁决与 Fresh-Agent 交接
+## 13. 冻结裁决与 Fresh-Agent 交接
 
 本文 original head `cffd64d941b76bdae746fab4190d5c56c1d33366` 的 Public CI run `35629971691`
 attempt 1 保留 Python 3.10 `-O` 首败；其精确原因仍为 `UNKNOWN`。独立 maintenance 已经由 PR #172、
 `main@f4aec949258ed16830b2e8dd828273435498764b` 及该 exact main 双门取得资格。本文正从该新 source state
 形成新 head；maintenance 的成功不解释旧失败，新 head 必须独立满足第 11–12 项。
 
-当前只能写：
+PR #171 的新 head `53d4b9991e0df4a3c0328e7426f9c7de23c31d67` 已在 maintenance-qualified
+source state 上重新接受两次同-head 11/11，合入 `main@9299c24fdde489957cb39dfc687296ea3dc59718` 后又完成
+exact-main 11/11、Browser Smoke 1/1、三份 fresh anonymous paired readback 与能力地图 render-only readback。
+[文档 185](185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)保留完整因果链，
+包括第一次 README 匿名配额首败。该状态发布自己的最后门全部成立后，当前状态为：
 
 ```text
 R1_RELATION_DERIVATION_FROZEN
 R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
 R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED
-R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_ALLOWED
 R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-新的、没有聊天上下文的 Agent 必须先读文档 113、120、155、165、175、179、182 与本文，并先审查这些
-合同能否同时成立。不得把 `CONTRACT_CANDIDATE` 解释为实现授权，不得因为本文选择 Evidence 0.2 carrier
-就创建 Schema/runtime，更不得把 admission 当成 Relation correctness、Slice eligibility、Coverage COMPLETE
-或 final Evidence publication。
+新的、没有聊天上下文的 Agent 必须先读文档 113、120、155、165、175、179、182、本文与文档 185，并先
+审查这些合同能否同时成立。实现授权只覆盖第 11 节 A–F 的 private closed proof；不得因为 Evidence 0.2
+carrier 已冻结就提前创建 publisher、公共 Bundle、Slice 或 Coverage，更不得把 admission 当成 Relation
+correctness、Slice eligibility、Coverage COMPLETE 或 final Evidence publication。
 
 当前原则冻结为：
 

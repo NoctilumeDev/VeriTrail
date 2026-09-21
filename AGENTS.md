@@ -885,14 +885,15 @@
   `R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED`。早先
   `SYSTEM_AUDIT_CANDIDATE` 仍是历史状态，不被后继闭环改写。
 - `docs/183-r1-relation-set-admission-and-public-qualification-binding-contract.md` 从上述 exact main 起草下一份
-  docs-only 最小合同候选。它冻结 deterministic application 所有的 admission gate、RelationSet exact membership/
+  docs-only 最小合同。它冻结 deterministic application 所有的 admission gate、RelationSet exact membership/
   provenance/conflict closure、explicit admission witness 与 public cross-object binding；RelationSet 0.1 与八文件
   Manifest 0.1 保持不变，候选选择 versioned DerivationEvidence 0.2 只作为 witness carrier，不把 Evidence 或
-  Manifest 升格为 admission authority。当前只能是
-  `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE /
+  Manifest 升格为 admission authority。文档 185 的独立发布链全部成立后，当前状态是
+  `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN /
+  R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_ALLOWED /
   R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED /
-  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；Schema、runtime、publisher、Slice、Coverage、
-  CLI 与 Workbench 继续未授权。
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；只有文档 183 A–F 的 private closed proof 获得
+  有限授权，publisher、Slice、Coverage、CLI 与 Workbench 继续未授权。
 - `docs/184-m10-descendant-readiness-fixture-observation-correction.md` 保留后继 docs-only PR #171
   original Public CI run `35629971691` 的 Python 3.10 `-O` 正式首败。失败用例只留下
   `readiness.ready == false`，耗时约 `3.045s`、贴合旧正向夹具 `3000ms` budget，但没有保存 terminal、
@@ -902,10 +903,13 @@
   timeout。PR #172 original head `d3342175aa5611ff1d2c6cefeb300137ac0696ef` 的 Public CI run
   `35634296113` attempt 1 为 11/11；合入 `main@f4aec949258ed16830b2e8dd828273435498764b` 后，
   exact-main Public CI run `35636414037` attempt 1 为 11/11，Browser Smoke run `35636414038`
-  attempt 1 为 1/1。PR #171 原 head 不 rerun，旧失败仍为 `UNKNOWN`；maintenance 已独立资格化，PR #171
-  正从该新 source state 形成新 head，状态为
-  `M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_QUALIFIED /
-  R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS`。
+  attempt 1 为 1/1。PR #171 原 head 不 rerun，旧失败仍为 `UNKNOWN`；maintenance 已独立资格化，新 head
+  `53d4b999...` 的两次同-head 11/11、合入 `main@9299c24...` 后的 exact-main 11/11、Browser Smoke 1/1
+  与 fresh public readback 均已成立。
+- `docs/185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md` 独立发布
+  文档 183 的最小合同。它保留 #171 的 `UNKNOWN` 首败、#172 maintenance、README 匿名 quota 首败、三份
+  paired PASS 与能力地图 render-only PASS；architecture DOT/SVG 因无拓扑变化保持字节不变。冻结只授权
+  文档 183 A–F，不能扩张到 publisher、公共 Bundle、Slice、Coverage 或 Attention。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
