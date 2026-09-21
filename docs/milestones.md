@@ -1464,13 +1464,13 @@ Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。PR #170 随后�
 `R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED`。
 
 [文档 183](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)从该 exact main 起草
-RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同候选。它要求
+RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同。它要求
 deterministic application 从 exact `QUALIFIED` owned result 重新验证 membership、same-ID provenance、
 conflict 与 ProviderRun reverse closure，再形成 private admitted RelationSet 与 explicit witness。候选保持
 `RelationSet 0.1` content identity 和八文件 `Manifest 0.1` 不变，选择 versioned `DerivationEvidence 0.2`
-作为 public carrier；Evidence 不拥有 admission decision，Manifest 不裁决 eligibility。当前只是
-`R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE`，Schema、runtime、publisher、Slice 与
-Coverage 实现均未授权。
+作为 public carrier；Evidence 不拥有 admission decision，Manifest 不裁决 eligibility。文档 185 的独立发布链
+全部成立后，合同为 `FROZEN`，但 runtime 仍为 `IMPLEMENTATION_NOT_STARTED`；有限授权只覆盖文档 183 A–F，
+publisher、Slice 与 Coverage 实现均未授权。
 
 [文档 184](184-m10-descendant-readiness-fixture-observation-correction.md)保留后继 docs-only PR #171
 original head `cffd64d941b76bdae746fab4190d5c56c1d33366` 的 Public CI run `35629971691` attempt 1
@@ -1497,15 +1497,38 @@ current-source 451-test 在同一最终字节四格分别以 141.493s、136.204s
 `d3342175aa5611ff1d2c6cefeb300137ac0696ef` 的 Public CI run `35634296113` attempt 1 为
 11/11 PASS；合入 `main@f4aec949258ed16830b2e8dd828273435498764b` 后，exact-main Public CI run
 `35636414037` attempt 1 为 11/11 PASS，Browser Smoke run `35636414038` attempt 1 为 1/1 PASS。
-因此 maintenance 已独立资格化；它不解释或覆盖 PR #171 original head 的 `UNKNOWN` 首败。PR #171 当前
-从该 maintenance-qualified exact main 形成新 head，状态为：
+因此 maintenance 已独立资格化；它不解释或覆盖 PR #171 original head 的 `UNKNOWN` 首败。PR #171 随后
+从该 maintenance-qualified exact main 形成新 head `53d4b9991e0df4a3c0328e7426f9c7de23c31d67`；两次
+同-head Public CI 均为 11/11，合入 `main@9299c24fdde489957cb39dfc687296ea3dc59718` 后的 Public CI
+`35643852734` attempt 1 为 11/11，Browser Smoke `35643852850` attempt 1 为 1/1。状态为：
 
 ```text
 M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_QUALIFIED
-R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS
+R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFIED
 ```
 
-PR #171 的新 source-state 资格、后继 exact-main/readback 与独立 freeze publication 仍须各自成立。
+candidate exact main 的第一份 README formal readback 保留匿名 API
+`403 / COLLECTION_BUDGET_EXHAUSTED / ERROR`，同 session Render 为 `COMPLETE`。quota reset 后，README、
+文档 183 与 milestones 使用新的 Plan/session/output root 取得 paired `PASS`；能力地图另以独立 render-only
+Plan 取得 `PASS`。包含首败、四份成功观察、九份公开文件 identity 与 architecture asset continuity 的 manifest
+为 `sha256_json=f8759f0ec46b79b0a0315180d410f6ec6b43ddd0267b87fa40570ef5d01b9cb8`。
+
+[文档 185](185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)发布该合同的
+完整因果链。它自己的原始远端门、受保护主线合入、新 exact-main 双门与 fresh public readback 全部成立后，
+当前状态才是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
+R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_ALLOWED
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一分支只能从新的 exact main 串行实现文档 183 A–F 的 private closed proof；不得顺手开始 publisher、
+公共 Bundle、Slice、Coverage、Attention、CLI 或 Workbench。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
