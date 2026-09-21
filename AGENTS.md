@@ -826,7 +826,8 @@
   RelationSet、公共 Schema、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
 - `docs/177-m10-ci-fixture-observation-correction.md` 记录 private implementation PR #165 原始 Public CI
   run `35569800950` 的两条正式首败：Python 3.13 `-O` 的 emergency-cleanup 测试把已关闭 socket 的空闲端口
-  观察误作后继 child 的端口预约；Python 3.10 `-O` 的 repeat 公共 Run 诚实 fail closed 为
+  观察误作后继 child 的端口预约；旧 Artifact 没有 child stderr/exit/owner 证据，因此只证明夹具前置条件未
+  成立，不恢复该次失败的唯一底层触发。Python 3.10 `-O` 的 repeat 公共 Run 诚实 fail closed 为
   `COLLECTOR_ERROR`，但冻结 Artifact 与 CLI summary 未保存 private collector error type，精确根因保持
   `UNKNOWN`。L0 maintenance 只让 child 在自己的 `listen()` 成功后报告实际 OS-assigned port，并在 repeat
   测试层捕获、记录后立即重抛 `ObservedBrowserCollectionError`；不改 runtime、timeout、公共 Evidence、

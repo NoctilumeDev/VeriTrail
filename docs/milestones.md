@@ -1327,7 +1327,9 @@ admission、final Evidence、publisher、Slice、Coverage、CLI、Workbench、D�
 [文档 177](177-m10-ci-fixture-observation-correction.md)记录后继 private implementation PR #165 原始 Public CI
 run `35569800950` 的两条不同正式首败。Python 3.13 `-O` 的 emergency-cleanup 用例在 cleanup 调用前发现
 预选端口仍为空；源码审计证明旧夹具先关闭 port-0 probe、稍后才要求 child 绑定该具体端口，把瞬时空闲观察
-误作预约。Python 3.10 `-O` 的 repeat 公共 Run 已完成 service readiness，但 Browser collector fail closed 为
+误作预约。旧 Artifact 没有 child stderr、exit status 或 listener owner，因而只证明夹具前置条件未成立，
+不能恢复该次失败的唯一底层触发。Python 3.10 `-O` 的 repeat 公共 Run 已完成 service readiness，但 Browser
+collector fail closed 为
 `COLLECTOR_ERROR`；现有冻结 Artifact 与 CLI summary 无法恢复 private error type，定向本地复验也未稳定复现，
 因此精确根因保持 `UNKNOWN`。
 

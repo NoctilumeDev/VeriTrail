@@ -42,7 +42,7 @@ actual:   port_is_free(port) == true
 
 ## 2. 两条失败必须分开归因
 
-### 2.1 Python 3.13：已证实的端口预约 race
+### 2.1 Python 3.13：已证实的夹具资格缺口，精确触发未保留
 
 旧 emergency-cleanup 夹具先在测试进程里把 loopback `port=0` 解析成一个当时空闲的具体端口，随即关闭
 socket；之后才启动 parent/child process tree，并要求 child 绑定先前端口：
@@ -56,9 +56,13 @@ probe bind(127.0.0.1, 0)
 -> child bind(selected port)
 ```
 
-`port_is_free` 只能观察一个瞬时状态，不拥有预约 authority。probe 关闭后，Windows 可把该端口分配给别的
-进程或连接；child 也可能在报告 parent PID 以后、真正 `listen()` 以前退出。原断言因而可以在
-`terminate_worker_trees(...)` 尚未被调用时失败，不能证明 emergency cleanup 产品行为错误。
+`port_is_free` 只能观察一个瞬时状态，不拥有预约 authority。probe 关闭后到 child `bind()` 之间存在明确的
+unowned TOCTOU window；旧断言又只读到 parent 报告的 child PID，没有保存 child 的 stderr、exit status 或
+listener ownership。原始 Artifact 因而只能证明预选端口在 cleanup 调用前仍为空，不能区分端口在窗口内被
+其他主体占用、child bind/start 失败或其他前置夹具失败，更不能证明 emergency cleanup 产品行为错误。
+
+因此这里已证实的是 **旧夹具没有资格建立它声称的 listener 前置条件**，不是那次远端失败的唯一底层触发已经
+恢复。维护删除这个歧义窗口；它不把未保存的旧 child failure 原因补写成事实。
 
 ### 2.2 Python 3.10：诚实 fail-closed，精确根因仍为 `UNKNOWN`
 
@@ -115,6 +119,9 @@ wrapper 不吞异常、不重试、不改变 timeout、Verdict、Evidence 或 cl
 ```text
 local targeted PASS
 != remote first failure did not happen
+
+new owned-listener fixture PASS
+!= exact trigger of the old 3.13 precondition failure is known
 
 current PR does not touch Core
 != every Core failure may be ignored
