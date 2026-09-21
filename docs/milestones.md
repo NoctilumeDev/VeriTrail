@@ -1339,17 +1339,35 @@ collector fail closed 为
 #165 实现。三个精确用例已在双 Python normal/`-O` 四格各 3/3 成立，完整 public bootstrap CLI 加 M10
 stress 两个 module 在同一四格各 27/27 成立；完整 Core current-source 451-test 也在双 Python normal/`-O`
 四格分别以 150.647s、139.365s、135.696s、136.843s 全部通过。该本地门不冒充远端 installed/editable
-topology；维护 PR、自身 exact-main Public CI 与 Browser Smoke 仍待完成。
+topology。维护 PR #166 final head `189abdfdf73a6b5b2f9e462b81f1b19b9fae8f94` 的 Public CI run
+`35573748557` 为 11/11 SUCCESS；同 PR 先前 run `35573699381` 因后继 push 被 concurrency 取消，不形成
+测试成功或失败结论。PR #166 随后合入 `main@43fd5d3368f962677722d09d962718bced306449`，该 exact main 的
+Public CI run `35575271109` 为 attempt 1、11/11，Browser Smoke run `35575271103` 为 attempt 1、1/1。
+
+#165 从该 maintenance-qualified exact main 形成新 head
+`4bcba01dbdc7fb57c34451d154be8ef8f52bfb87`；old/new implementation patch-id 均为
+`bfbb87ec732a203bd9e8c321a45b2dc3574aeb5c`，`plugins/review-attention` 实现 diff 未变。新 head Public CI
+run `35577081157` attempt 1 为 11/11 SUCCESS，随后以普通 merge commit
+`3b4a55cad4e4f093c27dd8e9736d24d3b905dd54` 合入受保护 main。新 exact main 的 Public CI run
+`35578893674` 为 attempt 1、11/11，Browser Smoke run `35578893670` 为 attempt 1、1/1。这些绿色只证明新
+source state；不解释或覆盖原始两条首败。
+
+[文档 178](178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)记录文档 175
+A–H 的 private closed proof、远端因果链、RQ-001..028 与十一份实现文件的匿名 exact-SHA raw-byte readback。
 当前状态只能是：
 
 ```text
-M10_CI_FIXTURE_OBSERVATION_CORRECTION_CANDIDATE
-R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_REQUALIFICATION_BLOCKED
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_PRECONTRACT_AUDITED
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_CONTRACT_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTED
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FREEZE_CANDIDATE
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-维护候选自己的原始 Public CI、受保护合入、新 exact-main Public CI 与 Browser Smoke 成立前，不得让 #165
-用 rerun 覆盖原始失败。维护地基闭合后，#165 仍须从新的 exact main 形成新 head，重新取得独立完整门禁；
-维护绿色不能冒充 implementation candidate 绿色。
+文档 178 自己的原始远端门、受保护合入、新 exact-main 双门、README/本文/milestones 三次 fresh anonymous
+installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen。RelationSet、公共 Schema、
+publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

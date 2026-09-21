@@ -833,6 +833,20 @@
   测试层捕获、记录后立即重抛 `ObservedBrowserCollectionError`；不改 runtime、timeout、公共 Evidence、
   R1 合同或 #165 实现。维护候选自己的原始远端门、受保护合入与新 exact-main 双门成立前，#165 不得 rerun、
   合入或发布 freeze candidate；之后也必须从 maintenance-qualified exact main 形成新 head 并独立重新资格化。
+- `docs/178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md` 记录文档 175 A–H
+  已由重新资格化后的 PR #165 实现。原始 head `015bf8f19ca1269933749c53f67eebe33186bc58` 的两条正式首败
+  继续保留；独立 PR #166 只修复 CI 夹具前置条件与 test-only 诊断能力，合入
+  `main@43fd5d3368f962677722d09d962718bced306449` 后，#165 形成相同 implementation patch 的新 head
+  `4bcba01dbdc7fb57c34451d154be8ef8f52bfb87` 并以原始 11/11 门禁合入
+  `main@3b4a55cad4e4f093c27dd8e9736d24d3b905dd54`。该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+  与十一份变更文件匿名 raw-byte readback 均成立。实现只新增 private observation profile/domain、A/B exact
+  responsibility、`provider-operands/0.3`、relation-cell `/0.2`、逐 item outcomes、receipts、candidate
+  composition/conflict 与 owned qualification result；没有公共 Schema、RelationSet、final Evidence、publisher、
+  Slice、Coverage、CLI 或 Workbench。当前状态只能是
+  `R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTED /
+  R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FREEZE_CANDIDATE /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文自己的门、合入、exact-main 双门、三次
+  fresh anonymous installed-product readback 与后继独立最终状态发布全部成立前不得写成 frozen。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
