@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -327,6 +327,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   Manifest 不能让完整 Bundle 对外复核 explicit admission witness。审计只选择 RelationSet admission /
   admission witness / public qualification binding 这一问题面，不冻结 witness 的 public encoding、字段或代码；
   RelationSet、corrected Evidence、Slice 与 Coverage 仍未获实现授权。
+- [RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同候选](docs/183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
+  从审计闭合后的 exact main 分离 RelationSet semantics、provenance bytes、qualification 与 admission authority。
+  候选保持 RelationSet 0.1 与八文件 Manifest 0.1 不变，选择 versioned DerivationEvidence 0.2 作为 witness
+  carrier；deterministic application 仍拥有 admission rule 与 witness construction，Evidence 只承载，Manifest
+  只绑定。它只冻结 private admission、可复算 witness 与 public binding shape，尚未授权 Schema、runtime、
+  publisher、Slice 或 Coverage 实现。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -472,7 +478,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 46. [Review Attention R1 Relation Observation / Composition Qualification 实现冻结候选](docs/178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)
 47. [Review Attention R1 Relation Observation / Composition Qualification 实现冻结发布](docs/179-r1-relation-observation-composition-qualification-freeze-publication.md)
 48. [Review Attention R1 RelationSet Admission / Qualification Evidence Binding 系统审计](docs/182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
-49. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+49. [Review Attention R1 RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同候选](docs/183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
+50. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

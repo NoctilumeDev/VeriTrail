@@ -6,7 +6,8 @@
 - 当前决策：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY /
   R1_RELATION_DERIVATION_FROZEN /
   R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN /
-  R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE /
+  R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED /
+  R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED /
   D0_CANDIDATE_DIRECTION / CU0_CANDIDATE_DIRECTION /
   O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION /
@@ -94,7 +95,8 @@ qualification 均已通过各自合同、实现、门禁、受保护主线和公
 ```text
 R1_RELATION_DERIVATION_FROZEN
 R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
-R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE
+R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
@@ -102,8 +104,11 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 composition qualification 闭环；它没有创建 RelationSet、公共 Schema、publisher、Slice、Coverage、Attention、
 CLI 或 Workbench。[文档 182](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
 已经用本地反例选择 RelationSet admission / explicit admission witness / public qualification binding 作为下一
-问题面；Evidence 只是候选 public encoding 位置，Manifest 只绑定文件，不自动拥有 admission authority。该
-审计候选尚未取得合同或实现授权，不能按路线图自动施工 RelationSet。
+问题面，并在 PR #170、exact-main 双门与四份 fresh anonymous paired readback 后取得
+`PRECONTRACT_AUDITED`。后继[文档 183](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
+选择保持 RelationSet 0.1 与 Manifest 0.1 不变，以 versioned DerivationEvidence 0.2 承载可复算 witness；
+application 仍拥有 admission rule，Evidence 只承载，Manifest 只绑定。该文档当前只是合同候选，没有 Schema、
+runtime 或实现授权，不能按路线图自动施工 RelationSet、Slice 或 Coverage。
 
 Q0 是已经闭合的独立 docs-only 蓝图，没有 Q 实现。D0、Cu0、O0 与 T0 只是候选问题记忆：它们既不抢
 R 的当前串行坐标，也不因出现在地图上获得合同或实现入口。
@@ -575,7 +580,8 @@ P0–P4                                            FROZEN
 R0 + Pattern Corpus 0.1                          FROZEN
 R1 Relation derivation                           FROZEN
 R1 Relation observation/composition qualification FROZEN
-R1 post-qualification admission/evidence audit    CANDIDATE
+R1 post-qualification admission/evidence audit    PRECONTRACT AUDITED
+R1 RelationSet admission/evidence binding contract CANDIDATE
 R1 RelationSet / Slice / Coverage                 NOT STARTED
 Q0 Blueprint                                     FROZEN
 Q implementation                                 NOT STARTED
@@ -594,9 +600,10 @@ Ledger-item implementation                       NOT STARTED
 R1 的冻结事实由[文档 179](179-r1-relation-observation-composition-qualification-freeze-publication.md)发布：
 Relation derivation 与 private observation/composition qualification 已冻结；RelationSet、公共 Schema、
 publisher、Slice、Coverage、Attention、CLI 和 Workbench 没有因此获得施工权。当前
-[文档 182](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)只以本地反例选择
-RelationSet admission / explicit admission witness / public qualification binding 作为下一问题面；witness 的
-public encoding、字段、版本、合同和实现仍未授权。
+[文档 182](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)已以本地反例选择
+RelationSet admission / explicit admission witness / public qualification binding，并完成自己的公开闭环；
+[文档 183](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)进一步选择 Evidence 0.2
+carrier 与无环 witness projection。字段与版本目前只是合同候选，Schema/runtime 实现仍未授权。
 
 [Q0](119-q0-verification-scheduling-final-freeze-closure.md)仍是已经冻结但未实现的 verification scheduling
 蓝图。[D0](166-d0-product-delivery-problem-framing.md)与[Cu0](167-cu0-engineering-memory-attention-projection-problem-framing.md)

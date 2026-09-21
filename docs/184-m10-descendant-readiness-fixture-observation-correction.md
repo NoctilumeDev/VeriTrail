@@ -1,8 +1,10 @@
 # M10 descendant readiness 正向夹具观察修正
 
-> 状态：`CORRECTION_CANDIDATE / R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_BLOCKED`
+> 状态：`CORRECTION_QUALIFIED / R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS`
 >
 > 精确基线：`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`
+>
+> 维护闭合基线：`main@f4aec949258ed16830b2e8dd828273435498764b`
 >
 > 影响层级：`L0_TEST_FIXTURE`；不修改 Core runtime、readiness 合同、cleanup 合同、公共 Evidence、R1 合同候选或产品 timeout
 
@@ -107,7 +109,7 @@ docs-only PR
 5. 维护受保护合入，新 exact-main Public CI 与 Browser Smoke 原始门全部成功；
 6. PR #171 从该 maintenance-qualified exact main 形成新 head，并重新取得自己的完整门禁。
 
-第 5 项以前，状态只能是：
+第 5 项以前，历史状态只能是：
 
 ```text
 M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_CANDIDATE
@@ -139,4 +141,22 @@ RelationSet、publisher、Slice、Coverage、CLI 或 Workbench 实现。
 
 完整门通过显式 `PYTHONPATH` 组合本 worktree 的 Core、Starter、GitHub Evidence 与 Review Attention
 `src` roots，证明 current-source broader regression；它不冒充 Public CI 的 editable/install topology。
-maintenance PR、自身 exact-main 双门与 PR #171 的新 source-state 资格仍待远端独立证明。
+## 7. 远端闭合与当前边界
+
+maintenance PR [#172](https://github.com/NoctilumeDev/VeriTrail/pull/172) 的 original head
+`d3342175aa5611ff1d2c6cefeb300137ac0696ef` 在 Public CI
+[run 35634296113](https://github.com/NoctilumeDev/VeriTrail/actions/runs/35634296113) attempt 1 取得
+11/11 PASS。它随后受保护合入 `main@f4aec949258ed16830b2e8dd828273435498764b`；该 exact main 的
+Public CI [run 35636414037](https://github.com/NoctilumeDev/VeriTrail/actions/runs/35636414037) attempt 1
+为 11/11 PASS，Browser Smoke
+[run 35636414038](https://github.com/NoctilumeDev/VeriTrail/actions/runs/35636414038) attempt 1 为 1/1 PASS。
+因此第 1–5 项已经成立，当前状态为：
+
+```text
+M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_QUALIFIED
+R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS
+```
+
+这些新事实不解释、覆盖或重写 PR #171 original head 的首败。PR #171 必须从上述 maintenance-qualified
+exact main 形成新 head，并独立取得自己的完整门禁；只有第 6 项成立后，RelationSet admission 合同候选才可
+进入后继 exact-main/readback 与独立 freeze publication 链。

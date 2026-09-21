@@ -1457,7 +1457,20 @@ NOT_COMPOSED`，但未来 assembler 若绕过该状态，`RelationSet 0.1` Schem
 `sha256_json=c1c310834ba98947269c637ac83852633a9c2c77372d89850bb47d78f776d3d8`。本文只选择
 RelationSet admission / explicit admission witness / public qualification binding 作为下一问题面；Evidence
 只是候选编码位置，Manifest 只绑定文件。本文不声称当前 runtime 已发布错误 RelationSet，也不授权 Schema、
-Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。
+Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。PR #170 随后合入
+`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+与 README/文档 182/能力地图/milestones 四份 fresh anonymous paired readback 全部成立，canonical manifest
+`sha256_json=d4ec2504e8bd2176d76eb6cda46fb44f6edda9dacc8c61c056c0a2a833535ad1`。因此审计当前为
+`R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED`。
+
+[文档 183](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)从该 exact main 起草
+RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同候选。它要求
+deterministic application 从 exact `QUALIFIED` owned result 重新验证 membership、same-ID provenance、
+conflict 与 ProviderRun reverse closure，再形成 private admitted RelationSet 与 explicit witness。候选保持
+`RelationSet 0.1` content identity 和八文件 `Manifest 0.1` 不变，选择 versioned `DerivationEvidence 0.2`
+作为 public carrier；Evidence 不拥有 admission decision，Manifest 不裁决 eligibility。当前只是
+`R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE`，Schema、runtime、publisher、Slice 与
+Coverage 实现均未授权。
 
 [文档 184](184-m10-descendant-readiness-fixture-observation-correction.md)保留后继 docs-only PR #171
 original head `cffd64d941b76bdae746fab4190d5c56c1d33366` 的 Public CI run `35629971691` attempt 1
@@ -1471,8 +1484,7 @@ CPython 3.10.6 `-O` 独立 session 均在约 `0.391–0.469s` READY，只证明�
 `3000ms` runner-latency 假设约束；READY 断言又位于显式 teardown 以前并丢失诊断事实。候选只为此正向用例
 使用 bounded `10s` observation window、启动后立即注册 idempotent cleanup，并在失败时打印 exact
 `OwnedReadinessObservation` 与 bounded streams。它不增加 retry，不改 Core runtime、默认 readiness、
-负向测试、cleanup deadline、产品 Profile/Plan 或 R1 合同。maintenance PR、自身 exact-main 双门与 PR #171
-从新 main 的重新资格化成立前，状态为：
+负向测试、cleanup deadline、产品 Profile/Plan 或 R1 合同。第 5 项闭合以前的历史状态为：
 
 ```text
 M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_CANDIDATE
@@ -1481,7 +1493,19 @@ R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_BLOCKED
 
 精确目标用例已在 CPython 3.10.6/3.13.13 normal 与 `-O` 四格各 1/1 通过；完整 Core
 current-source 451-test 在同一最终字节四格分别以 141.493s、136.204s、134.391s、141.241s 通过。
-该本地门不冒充远端 editable/install topology；维护 PR 与 exact-main 门仍待执行。
+该本地门不冒充远端 editable/install topology。maintenance PR #172 original head
+`d3342175aa5611ff1d2c6cefeb300137ac0696ef` 的 Public CI run `35634296113` attempt 1 为
+11/11 PASS；合入 `main@f4aec949258ed16830b2e8dd828273435498764b` 后，exact-main Public CI run
+`35636414037` attempt 1 为 11/11 PASS，Browser Smoke run `35636414038` attempt 1 为 1/1 PASS。
+因此 maintenance 已独立资格化；它不解释或覆盖 PR #171 original head 的 `UNKNOWN` 首败。PR #171 当前
+从该 maintenance-qualified exact main 形成新 head，状态为：
+
+```text
+M10_DESCENDANT_READINESS_FIXTURE_OBSERVATION_CORRECTION_QUALIFIED
+R1_RELATION_SET_ADMISSION_CONTRACT_REQUALIFICATION_IN_PROGRESS
+```
+
+PR #171 的新 source-state 资格、后继 exact-main/readback 与独立 freeze publication 仍须各自成立。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
