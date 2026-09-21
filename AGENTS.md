@@ -879,11 +879,20 @@
   raw candidate projection。现有 application 正确拒绝未合格 composition，但未来 assembler 若绕过该状态，
   `RelationSet 0.1` shape 无法独立识别。审计只选择 RelationSet admission / explicit admission witness / public
   qualification binding 作为下一问题面；Evidence 是候选编码位置而不是自动的 admission authority，Manifest
-  只绑定文件而不裁决 eligibility。本文不冻结 witness 编码、字段、Schema 版本或实现。当前只能是
-  `R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE /
-  R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_NOT_STARTED /
-  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；RelationSet、Evidence correction、Manifest、
-  publisher、Slice、Coverage、CLI 与 Workbench 继续未授权。
+  只绑定文件而不裁决 eligibility；审计本身不冻结 witness 编码、字段、Schema 版本或实现。PR #170 合入
+  `main@1ffc4494dbbb61a056dcc8beed2530e7313f6116` 后，exact-main Public CI 11/11、
+  Browser Smoke 1/1 与 README/本文/能力地图/milestones 四份 fresh anonymous paired readback 已闭合，状态为
+  `R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED`。早先
+  `SYSTEM_AUDIT_CANDIDATE` 仍是历史状态，不被后继闭环改写。
+- `docs/183-r1-relation-set-admission-and-public-qualification-binding-contract.md` 从上述 exact main 起草下一份
+  docs-only 最小合同候选。它冻结 deterministic application 所有的 admission gate、RelationSet exact membership/
+  provenance/conflict closure、explicit admission witness 与 public cross-object binding；RelationSet 0.1 与八文件
+  Manifest 0.1 保持不变，候选选择 versioned DerivationEvidence 0.2 只作为 witness carrier，不把 Evidence 或
+  Manifest 升格为 admission authority。当前只能是
+  `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE /
+  R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`；Schema、runtime、publisher、Slice、Coverage、
+  CLI 与 Workbench 继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

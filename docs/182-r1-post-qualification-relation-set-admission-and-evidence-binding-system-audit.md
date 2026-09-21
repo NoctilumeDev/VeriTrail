@@ -1,10 +1,14 @@
 # R1 RelationSet Admission / Qualification Evidence Binding 系统审计
 
-> 状态：`R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE /
-> R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_NOT_STARTED /
+> 状态：`R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED /
+> R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
 >
 > 审计基线：`main@de0fdc6f01e1c99ae74259abd77640ad39d28038`
+>
+> 审计闭合基线：`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`
+>
+> 后继候选：[RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
 >
 > 冻结输入：[Relation Observation / Composition Qualification 实现冻结发布](179-r1-relation-observation-composition-qualification-freeze-publication.md)
 >
@@ -399,7 +403,8 @@ Schema、corpus、documents 与 digests 必须逐字节保留。
 
 ## 11. 状态与唯一下一步
 
-在本文自己的 docs-only 门、原始远端门、受保护主线合入、新 exact-main 门与公开读回全部成立以前，状态只能是：
+本文起草时，在自己的 docs-only 门、原始远端门、受保护主线合入、新 exact-main 门与公开读回成立以前，
+历史状态只能是：
 
 ```text
 R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_SYSTEM_AUDIT_CANDIDATE
@@ -413,8 +418,18 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED
 ```
 
-唯一合法下一步是从届时新的 exact main 起草 docs-only RelationSet Admission / Explicit Admission Witness /
-Public Qualification Binding 最小合同候选。不得由本文直接开始：
+该闭环现已成立：PR #170 合入 `main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`；该 exact main 的
+Public CI attempt 1 为 11/11，Browser Smoke attempt 1 为 1/1。README、本文、能力地图与 milestones
+使用四组不同 Plan/session/output root 完成 fresh anonymous API + render paired readback，均为 HTTP 200、
+P1/P2 `COMPLETE`、三样本稳定、唯一 marker 与零 cleanup residue；canonical readback manifest
+`sha256_json=d4ec2504e8bd2176d76eb6cda46fb44f6edda9dacc8c61c056c0a2a833535ad1`，combined summary
+SHA-256 为 `e6c6d1a50d1f9269453cfb978b18cd5d6658f901d6510536fc38869bf69bd0aa`。因此当前状态是
+`R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED`；早先
+`SYSTEM_AUDIT_CANDIDATE` 是可追溯历史，不被改写成当时已经闭合。
+
+唯一合法下一步已从该 exact main 以[文档 183](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
+起草 docs-only RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同候选。
+本文仍不得直接开始：
 
 - RelationSet / corrected Evidence Schema 或 runtime；
 - standalone qualification Artifact 或 Manifest file-set 扩张；

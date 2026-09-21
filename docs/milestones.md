@@ -1457,7 +1457,20 @@ NOT_COMPOSED`，但未来 assembler 若绕过该状态，`RelationSet 0.1` Schem
 `sha256_json=c1c310834ba98947269c637ac83852633a9c2c77372d89850bb47d78f776d3d8`。本文只选择
 RelationSet admission / explicit admission witness / public qualification binding 作为下一问题面；Evidence
 只是候选编码位置，Manifest 只绑定文件。本文不声称当前 runtime 已发布错误 RelationSet，也不授权 Schema、
-Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。
+Evidence、Manifest、RelationSet、Slice 或 Coverage 实现。PR #170 随后合入
+`main@1ffc4494dbbb61a056dcc8beed2530e7313f6116`；该 exact main 的 Public CI 11/11、Browser Smoke 1/1
+与 README/文档 182/能力地图/milestones 四份 fresh anonymous paired readback 全部成立，canonical manifest
+`sha256_json=d4ec2504e8bd2176d76eb6cda46fb44f6edda9dacc8c61c056c0a2a833535ad1`。因此审计当前为
+`R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED`。
+
+[文档 183](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)从该 exact main 起草
+RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同候选。它要求
+deterministic application 从 exact `QUALIFIED` owned result 重新验证 membership、same-ID provenance、
+conflict 与 ProviderRun reverse closure，再形成 private admitted RelationSet 与 explicit witness。候选保持
+`RelationSet 0.1` content identity 和八文件 `Manifest 0.1` 不变，选择 versioned `DerivationEvidence 0.2`
+作为 public carrier；Evidence 不拥有 admission decision，Manifest 不裁决 eligibility。当前只是
+`R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_CANDIDATE`，Schema、runtime、publisher、Slice 与
+Coverage 实现均未授权。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
