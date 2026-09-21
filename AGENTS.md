@@ -824,6 +824,14 @@
   R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_IMPLEMENTATION_NOT_STARTED /
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。授权只覆盖文档 175 A–H 的 private closed proof；
   RelationSet、公共 Schema、publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
+- `docs/177-m10-ci-fixture-observation-correction.md` 记录 private implementation PR #165 原始 Public CI
+  run `35569800950` 的两条正式首败：Python 3.13 `-O` 的 emergency-cleanup 测试把已关闭 socket 的空闲端口
+  观察误作后继 child 的端口预约；Python 3.10 `-O` 的 repeat 公共 Run 诚实 fail closed 为
+  `COLLECTOR_ERROR`，但冻结 Artifact 与 CLI summary 未保存 private collector error type，精确根因保持
+  `UNKNOWN`。L0 maintenance 只让 child 在自己的 `listen()` 成功后报告实际 OS-assigned port，并在 repeat
+  测试层捕获、记录后立即重抛 `ObservedBrowserCollectionError`；不改 runtime、timeout、公共 Evidence、
+  R1 合同或 #165 实现。维护候选自己的原始远端门、受保护合入与新 exact-main 双门成立前，#165 不得 rerun、
+  合入或发布 freeze candidate；之后也必须从 maintenance-qualified exact main 形成新 head 并独立重新资格化。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
