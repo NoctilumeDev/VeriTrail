@@ -1369,6 +1369,35 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen。RelationSet、公共 Schema、
 publisher、Slice、Coverage、CLI、Workbench、D、Cu 与 Q 继续未授权。
 
+[文档 179](179-r1-relation-observation-composition-qualification-freeze-publication.md)从候选合入基线
+`main@49b7cbc877049377f78f2c845db75ad89ec189a1` 独立发布实现冻结事实。实现候选 PR #167 的原始 Public CI
+run `35584243147` 为 attempt 1、11/11 SUCCESS；candidate exact main 的 Public CI run `35585937377` 为
+attempt 1、11/11 SUCCESS，Browser Smoke run `35585937328` 为 attempt 1、1/1 SUCCESS。fresh venv 匿名
+下载并复算 Core 0.13.0 与 GitHub Evidence 0.1.0 固定 Release wheel，安装 Playwright 1.62.0 与 matching
+Chromium；README、文档 178 与 milestones 三次 readback 均为 HTTP 200、P1/P2 COMPLETE、三样本稳定、
+唯一 marker、零 conflict/coverage reason/cleanup error 与 Core PASS，Plan ID、Plan digest、collection session
+与输出根均不复用。canonical manifest `sha256_json` 为
+`8017762ce4e975dea0da8f71fa9c8388176d794a73f3c4bc2cdb1934b4798220`。
+
+README session 的产品 acceptance 已 `COMPLETED / PASS` 且 canonical summary 已落盘；wrapper 随后删除一个
+所选 immutable probe 从未创建的旧中间文件名时退出 1。原 output 保留且没有重跑，联合 verifier 重新校验
+sealed Plan、session、Evidence、report 与 summary。文档 178 第一条正式 session
+`github-paired-fd900203c78547e4917b53a540158190` 则保留匿名 API `403 /
+COLLECTION_BUDGET_EXHAUSTED / ERROR`，同 session Render 为 `COMPLETE`；quota reset 后以新 Plan ID、session
+和输出根取得 PASS。两个不同层级的异常都没有被后继成功改写或揉成一个原因。
+
+文档 179 自身的原始远端门、受保护主线合入、新 exact-main 双门与三次 fresh anonymous installed-product
+readback 全部成立后，当前状态才是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+冻结后必须从新的 exact main 先做 system audit；RelationSet admission、公共 Schema、publisher、Slice、
+Coverage、Attention、CLI 与 Workbench 不因本状态发布自动取得施工授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
