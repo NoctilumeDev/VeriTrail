@@ -105,7 +105,7 @@
 <path fill="#fbf7ef" stroke="#8a2919" stroke-width="2" d="M605.61,-529.1C605.61,-529.1 422.07,-529.1 422.07,-529.1 416.07,-529.1 410.07,-523.1 410.07,-517.1 410.07,-517.1 410.07,-470.88 410.07,-470.88 410.07,-464.88 416.07,-458.88 422.07,-458.88 422.07,-458.88 605.61,-458.88 605.61,-458.88 611.61,-458.88 617.61,-464.88 617.61,-470.88 617.61,-470.88 617.61,-517.1 617.61,-517.1 617.61,-523.1 611.61,-529.1 605.61,-529.1"/>
 <text xml:space="preserve" text-anchor="start" x="424.59" y="-504.44" font-family="Georgia" font-weight="bold" font-size="14.00" fill="#8a2919">STANDARD EVIDENCE</text>
 <text xml:space="preserve" text-anchor="start" x="450.09" y="-487.24" font-family="Arial" font-size="9.00" fill="#2f2a25">facts · provenance · uncertainty</text>
-<text xml:space="preserve" text-anchor="start" x="448.59" y="-473.49" font-family="Arial" font-size="8.00" fill="#6f6252">from bounded runners and P plugins</text>
+<text xml:space="preserve" text-anchor="start" x="439.59" y="-473.49" font-family="Arial" font-size="8.00" fill="#6f6252">bounded runners · read&#45;only plugins</text>
 </g>
 <!-- core -->
 <g id="node5" class="node">

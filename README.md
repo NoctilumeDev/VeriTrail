@@ -24,6 +24,11 @@ VeriTrail 的核心关系很小：
 注意力，Q 面向证明义务的执行效率，两者都不能获得 Core Verdict 权。Workbench 负责展示和验真，
 不在浏览器里重新裁决。
 
+图中的 Evidence producer 是一个权威角色，不等于某个固定插件。当前已交付的是 GitHub Evidence P 轨；
+[O0 Operations Evidence](docs/180-o0-operations-evidence-problem-framing.md) 与
+[T0 Test Evidence](docs/181-t0-test-evidence-problem-framing.md) 只保存新的候选观察问题，没有运行时、
+公共 Schema 或产品坐标。架构图因此只画通用只读 Evidence 边界，不把 O/T 预演成已实现模块。
+
 | 责任 | 谁拥有 | 明确不拥有 |
 | --- | --- | --- |
 | 前提、目标与 Seal 决定 | Human authority | 世界终极真相 |
@@ -40,7 +45,7 @@ VeriTrail 的核心关系很小：
 | 层 | 回答的问题 | 主要产物 | 当前边界 |
 | --- | --- | --- | --- |
 | Entry / Authoring | 怎样更容易起草一个可检查的计划？ | `DRAFT / NOT_SEALED` Plan | Starter 与 Authoring Skill 不 Seal、不运行、不裁决 |
-| Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论 |
+| Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论；P 已发布，O0/T0 仍是候选问题记录 |
 | Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
 | Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
 | Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation 与 private Relation observation / composition qualification 已冻结；RelationSet、Slice 与 Coverage 尚未实现 |
@@ -61,6 +66,8 @@ VeriTrail 的核心关系很小：
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
 | Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
+| Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
+| Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -358,6 +365,8 @@ VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统�
 | Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
 | Review / R | 压缩人的代码审查注意力 | private closed Relation derivation 与 Relation observation / composition qualification 已冻结；RelationSet、Slice、Coverage 与公开产品化尚未开始 |
 | Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
+| Operations Evidence / O | 候选运行事实观察面 | O0 只记录问题与权威边界；没有插件、Provider、Schema 或动作权 |
+| Test Evidence / T | 候选测试事实观察面 | T0 只记录问题；测试选择、执行、重试与 fixture authority 仍为 `UNKNOWN` |
 
 这些关系是认知地图，不是当前集成声明。一个独立系统最多通过不可变 Artifact / Evidence adapter 接入
 VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verdict 权不能跨界。
@@ -400,6 +409,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 - [Product Delivery D0：真实任务入口的问题定位](docs/166-d0-product-delivery-problem-framing.md)与
   [Cu0：工程记忆注意力投影的问题定位](docs/167-cu0-engineering-memory-attention-projection-problem-framing.md)
   是 2026-09-15 的候选认知记录，不授权施工；Review Attention R 仍是当前串行施工主线，继续遵守自身合同门禁。
+- [O0 Operations Evidence：运行事实观察的问题定位](docs/180-o0-operations-evidence-problem-framing.md)与
+  [T0 Test Evidence：测试事实观察的问题定位](docs/181-t0-test-evidence-problem-framing.md)是 2026-09-21
+  从 Core 通用性复核中保留下来的候选方向。两者都不改 Core，也未冻结“两个插件”的最终部署形状。
 - [Q0 Quick Verification Scheduling 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)
   已经存在；新的优先顺序不改写 Q0，也不启动 Q 实现。
 
