@@ -1556,9 +1556,40 @@ R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FREEZE_CANDIDATE
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-文档 186 自己的原始远端门、受保护合入、新 exact-main 双门、README/本文/milestones 三次 fresh anonymous
-installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen。publisher、公共 Bundle、
-Manifest role 扩张、Slice、Coverage、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权。
+文档 186 随后以 PR #175 original head `f4cf6fd64f544b970d0b03a8b573432051f53087` 的 Public CI
+run `35680541051` attempt 1、11/11 资格化，并以 ordinary merge commit
+`bf1d94104283573394db76939051a06da972cd12` 合入受保护 main；candidate 与 merge tree 均为
+`a334ee8bcf37b48033197e1ffe0f47e4764edb37`。新 exact main 的 Public CI run `35681782493` attempt 1
+为 11/11，Browser Smoke run `35681782555` attempt 1 为 1/1。
+
+fresh CPython 3.13 venv 只安装固定 Core 0.13.0、GitHub Evidence 0.1.0、Playwright 1.62.0 与 matching
+Chromium。清空 GitHub token 后，README、文档 186 与 milestones 使用不同 Plan ID、Plan digest、collection
+session 与 output root 完成三份 exact-SHA paired readback：均为 HTTP 200、P1/P2 `COMPLETE`、三样本稳定、
+唯一 marker、零 conflict/error/coverage reason/cleanup error、零 active stream 与 Core `PASS`。三个 canonical
+summary 的联合 SHA-256 为 `02b1ee821cb16682021bbe376ed92f5bb770f629fc2d54d8115fc87f53dc7710`；
+candidate readback manifest `sha256_json` 为
+`dfb4d386143a96df3071d8a2e4fa37e0ad69ba9d42a2783454619578b8bfddf9`。
+
+fresh venv 第一次预检只安装两个公开 wheel，因 Playwright 未显式安装而在任何 Plan/session/Evidence/output root
+建立前停止；这是 setup failure，不是 formal readback。三份 readback 后，联合 verifier 又因错误要求旧 source
+manifest 带尾随 LF，在写 manifest 前停止；修正为绑定历史 canonical bytes 后只重验原 Artifact，没有重跑三份
+正式 session。
+
+[文档 187](187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)从 candidate exact
+`main@bf1d941...` 独立发布实现冻结事实。该发布自己的原始远端门、受保护主线合入、新 exact-main 双门与三份
+fresh anonymous installed-product readback 全部成立后，当前状态才是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
+R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步只能从新的 exact main 做 post-admission system audit。publisher、公共 Bundle、Manifest role 扩张、
+Slice、Coverage、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明

@@ -888,7 +888,7 @@
   docs-only 最小合同。它冻结 deterministic application 所有的 admission gate、RelationSet exact membership/
   provenance/conflict closure、explicit admission witness 与 public cross-object binding；RelationSet 0.1 与八文件
   Manifest 0.1 保持不变，候选选择 versioned DerivationEvidence 0.2 只作为 witness carrier，不把 Evidence 或
-  Manifest 升格为 admission authority。文档 185 的独立发布链全部成立后，当前状态是
+  Manifest 升格为 admission authority。文档 185 的独立发布链全部成立后，该合同冻结坐标的阶段状态是
   `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN /
   R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_ALLOWED /
   R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTATION_NOT_STARTED /
@@ -915,11 +915,17 @@
   main 的 Public CI 11/11、Browser Smoke 1/1 与十五份实现文件 anonymous exact-SHA source identity readback
   均成立。实现只新增 private admission/witness state、Evidence 0.2 Schema/corpus/identity vectors 与 private
   projection；Evidence assembler 不能从 raw candidates 或 caller witness 反向签发 admission，`CONFLICTING`
-  不选择 winner 或生成 Slice/Coverage。当前只能是
-  `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTED /
-  R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FREEZE_CANDIDATE /
-  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。本文自己的门、合入、exact-main 双门、三次
-  fresh anonymous installed-product readback 与后继独立最终状态发布全部成立前不得写成 frozen。
+  不选择 winner 或生成 Slice/Coverage。PR #175 的原始 11/11、受保护主线合入、exact-main Public CI
+  11/11、Browser Smoke 1/1 与 README/本文/milestones 三次 fresh anonymous installed-product readback
+  随后全部成立；候选状态仍作为历史坐标保留，不被最终发布改写。
+- `docs/187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md` 独立发布文档 186 的
+  实现冻结事实。冻结对象只包括 private deterministic admission、explicit witness 与 Evidence 0.2 binding；
+  RelationSet 不能自报 admission，Evidence 不能生成 admission，Manifest 不能裁决 admission。该发布自己的
+  原始远端门、受保护主线合入、新 exact-main 双门与三次 fresh anonymous installed-product readback 全部成立
+  后，当前状态才是
+  `R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能先做 post-admission system audit；
+  publisher、公共 Bundle、Manifest role 扩张、Slice、Coverage、Attention、CLI 与 Workbench 继续未授权。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
