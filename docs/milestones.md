@@ -1530,6 +1530,36 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 下一分支只能从新的 exact main 串行实现文档 183 A–F 的 private closed proof；不得顺手开始 publisher、
 公共 Bundle、Slice、Coverage、Attention、CLI 或 Workbench。
 
+后继实现已由 PR #174 original head `a454b0d4b7ea9b65c191d3849b73a89b817b7479` 的 Public CI
+run `35676753872` attempt 1、11/11 资格化，并以普通 merge commit
+`dc580e0a23d0141982f09f7c19bb55d61e9a30d8` 合入受保护 main。candidate 与 merge tree 均为
+`b89f4534c0c5cfe87b51ba2cf31f7268728d2dd9`。新 exact main 的 Public CI run `35677941414`
+attempt 1 为 11/11，Browser Smoke run `35677941420` attempt 1 为 1/1；清空 GitHub token 后，对十五份实现
+变更文件建立一次 anonymous exact-SHA source identity session，HTTP/final URL、bytes、SHA-256 与 Git blob
+15/15 全部匹配，canonical manifest SHA-256 为
+`faf356c5fd15ccbc2d6788e8c274b922464108257775fd2edb6a1554959d1c9a`。
+
+[文档 186](186-r1-relation-set-admission-and-public-qualification-binding-implementation-freeze-candidate.md)记录 A–F
+的 private implementation：application 从 exact owned `QUALIFIED` result 重新验证 membership、import target、
+same-ID provenance、conflict 与 reverse-run closure，形成 copy-owned RelationSet、explicit witness 与 sealed
+private state；Evidence 0.2 projection 只接受该 admitted state，不能从 raw candidates、ProviderRuns 或 caller
+witness 补资格。`QUALIFIED / CONFLICTING` 保留全部 candidates/conflicts 且不选 winner，仍不创建 Slice 或
+Coverage。当前状态只能是：
+
+```text
+R1_RELATION_DERIVATION_FROZEN
+R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN
+R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTED
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FREEZE_CANDIDATE
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 186 自己的原始远端门、受保护合入、新 exact-main 双门、README/本文/milestones 三次 fresh anonymous
+installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen。publisher、公共 Bundle、
+Manifest role 扩张、Slice、Coverage、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
