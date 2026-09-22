@@ -350,6 +350,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   installed-product readback 的完整因果链。冻结只覆盖 private admission、explicit witness 与 Evidence 0.2
   binding；publisher、公共 Bundle、Manifest role 扩张、Slice、Coverage 与 Attention 仍未获授权。本文自己的
   门、合入、新 exact-main 双门与三份 fresh readback 全部成立后，下一步只能做 post-admission system audit。
+- [Post-Admission ReviewSlice Input / Obligation Closure 系统审计](docs/188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)
+  从 exact admission-freeze main 证明两个独立缺口：Coverage 可以为不存在的 Slice 自报 completed，也可以与
+  SliceSet 一起把 Policy+FactSet 明确存在的 anchor/spec denominator 缩为空后继续自洽地声称 `COMPLETE`。
+  审计同时确认 Slice semantic identity 可以跨合法 attempt 复用，但 execution eligibility 必须从 exact owned
+  admission history 继续，不能靠 raw RelationSet 或 digest 继承。下一问题面只到 admitted-graph input 与
+  anchor/spec obligation closure；合同、BFS、SliceSet、Coverage、publisher 与 Schema 修改均未开始。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -499,7 +505,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 50. [Review Attention R1 RelationSet Admission / Public Qualification Binding 合同冻结发布](docs/185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)
 51. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结候选](docs/186-r1-relation-set-admission-and-public-qualification-binding-implementation-freeze-candidate.md)
 52. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结发布](docs/187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)
-53. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+53. [Review Attention R1 Post-Admission ReviewSlice Input / Obligation Closure 系统审计](docs/188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)
+54. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
