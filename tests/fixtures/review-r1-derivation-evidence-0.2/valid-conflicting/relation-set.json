@@ -1,0 +1,138 @@
+{
+  "analysis_scope_digest": "4888d34c269ade35cea713ad28ed5450d1fcfcb163be5bad9e80c5566f067e8f",
+  "artifact_kind": "RELATION_SET",
+  "canonicalization_profile": "veritrail-json-c14n/1",
+  "conflicts": [
+    {
+      "candidate_relation_ids": [
+        "8c42b063c10c931461df6f2f549e56325b89535ff7a2ccd1711669e9dfa2fb7f",
+        "a4f58b1b55cf50ce8cc934ba7f2fb6438ce23ca3e5b544a7e4cbab469511fa66"
+      ],
+      "conflict_id": "897c9e24b18be09be55fa89fbeb4ff2d491c5c6c1a3e36bf97f6efc02d8c5748",
+      "provenance_refs": [
+        "6d707b9379b4d07fa6f43b3d70d074bfe3c45cb867f963791ff3e217fbbdf94f",
+        "f7aa9d91e1e83614fbb2f8316976e27f5b5fb6ad8c3149c90dea493be9a9eb11"
+      ],
+      "relation_subject_digest": "e7d22b59e5abcc1c9d2c398f7e6f645cc42af2d360d6e7cfdcc0304fb5ce64c7"
+    }
+  ],
+  "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+  "fact_set_digest": "7f9128db1a47a3671a50897d79819889c0b1ee8d25ae210d928b921a3155b629",
+  "policy_digest": "1427b37b13536d89b56aa1ddf68bbece4ebcfdfca846c4198325106bf98486be",
+  "relation_set_digest": "5de9db191258760dff3e4ea2f8967463f9863cec82dfb3fed00794f0c5a7a656",
+  "relations": [
+    {
+      "local_ordinal": 0,
+      "provenance_refs": [
+        "6d707b9379b4d07fa6f43b3d70d074bfe3c45cb867f963791ff3e217fbbdf94f"
+      ],
+      "relation_id": "2ab68da98d2add6edc6d1c6e37a892a08893313555f59a63f3303e710634856f",
+      "relation_kind": "LEXICAL_CONTAINS",
+      "relation_space": "CHILD_EDGE",
+      "relation_subject_digest": "209cdb5bda3694ff6e4d8b109d53b25f41df8c1e6ab2ec68027f838450b81c8a",
+      "semantic_attributes": {},
+      "source_fact_id": "2fa3c0beb2b88f8e170cfeb5019db1d700e6b779c511377ebc036cf7a88838a0",
+      "target": {
+        "fact_id": "8b4bda26b7648014982f879f5d4135c9840d670bc3e1633ef435d82c20226dc1",
+        "target_kind": "FACT"
+      }
+    },
+    {
+      "local_ordinal": 2,
+      "provenance_refs": [
+        "f7aa9d91e1e83614fbb2f8316976e27f5b5fb6ad8c3149c90dea493be9a9eb11"
+      ],
+      "relation_id": "67a621c468155f1fb18d51442adf03d0deeccb464808f862c72f41c6c077d601",
+      "relation_kind": "LEXICAL_CONTAINS",
+      "relation_space": "CHILD_EDGE",
+      "relation_subject_digest": "c2d7096bc355050b66e6f3ae8461002a419ec90bb4f3ef2a761651d925409f3b",
+      "semantic_attributes": {},
+      "source_fact_id": "2fa3c0beb2b88f8e170cfeb5019db1d700e6b779c511377ebc036cf7a88838a0",
+      "target": {
+        "fact_id": "224b163c07947e87e2408b63f61db71edeb5e884e693016b66892242e4b2044e",
+        "target_kind": "FACT"
+      }
+    },
+    {
+      "local_ordinal": 0,
+      "provenance_refs": [
+        "f7aa9d91e1e83614fbb2f8316976e27f5b5fb6ad8c3149c90dea493be9a9eb11"
+      ],
+      "relation_id": "6f70ff7284a55be6e0c00aa81568ae8b6614616c2a0a79aace1f99857ec4f356",
+      "relation_kind": "IMPORT_TARGET_LITERAL",
+      "relation_space": "IMPORT_EDGE",
+      "relation_subject_digest": "ac362e95e1a0413111531ed964df1dae6cc3e02d59b4177aa23db9499d318c3c",
+      "semantic_attributes": {},
+      "source_fact_id": "8b4bda26b7648014982f879f5d4135c9840d670bc3e1633ef435d82c20226dc1",
+      "target": {
+        "imported_name": null,
+        "module_parts": [
+          "pkg",
+          "mod"
+        ],
+        "relative_level": 0,
+        "resolution_status": "UNRESOLVED",
+        "resolved_fact_ids": [],
+        "target_kind": "IMPORT_LITERAL",
+        "topology_status": "UNKNOWN"
+      }
+    },
+    {
+      "local_ordinal": 1,
+      "provenance_refs": [
+        "f7aa9d91e1e83614fbb2f8316976e27f5b5fb6ad8c3149c90dea493be9a9eb11"
+      ],
+      "relation_id": "8c42b063c10c931461df6f2f549e56325b89535ff7a2ccd1711669e9dfa2fb7f",
+      "relation_kind": "LEXICAL_CONTAINS",
+      "relation_space": "CHILD_EDGE",
+      "relation_subject_digest": "e7d22b59e5abcc1c9d2c398f7e6f645cc42af2d360d6e7cfdcc0304fb5ce64c7",
+      "semantic_attributes": {},
+      "source_fact_id": "2fa3c0beb2b88f8e170cfeb5019db1d700e6b779c511377ebc036cf7a88838a0",
+      "target": {
+        "fact_id": "8b4bda26b7648014982f879f5d4135c9840d670bc3e1633ef435d82c20226dc1",
+        "target_kind": "FACT"
+      }
+    },
+    {
+      "local_ordinal": 0,
+      "provenance_refs": [
+        "f7aa9d91e1e83614fbb2f8316976e27f5b5fb6ad8c3149c90dea493be9a9eb11"
+      ],
+      "relation_id": "9e524b4097ea47e8dac0392d032be8168e4f9ad27f73909b0419da215d0787cf",
+      "relation_kind": "IMPORT_TARGET_LITERAL",
+      "relation_space": "IMPORT_EDGE",
+      "relation_subject_digest": "483dd7bc956ecfba31201c12cf02bef656fc1935fe87e145fa695389db0dc9a0",
+      "semantic_attributes": {},
+      "source_fact_id": "224b163c07947e87e2408b63f61db71edeb5e884e693016b66892242e4b2044e",
+      "target": {
+        "imported_name": null,
+        "module_parts": [
+          "other"
+        ],
+        "relative_level": 0,
+        "resolution_status": "UNRESOLVED",
+        "resolved_fact_ids": [],
+        "target_kind": "IMPORT_LITERAL",
+        "topology_status": "UNKNOWN"
+      }
+    },
+    {
+      "local_ordinal": 1,
+      "provenance_refs": [
+        "6d707b9379b4d07fa6f43b3d70d074bfe3c45cb867f963791ff3e217fbbdf94f"
+      ],
+      "relation_id": "a4f58b1b55cf50ce8cc934ba7f2fb6438ce23ca3e5b544a7e4cbab469511fa66",
+      "relation_kind": "LEXICAL_CONTAINS",
+      "relation_space": "CHILD_EDGE",
+      "relation_subject_digest": "e7d22b59e5abcc1c9d2c398f7e6f645cc42af2d360d6e7cfdcc0304fb5ce64c7",
+      "semantic_attributes": {},
+      "source_fact_id": "2fa3c0beb2b88f8e170cfeb5019db1d700e6b779c511377ebc036cf7a88838a0",
+      "target": {
+        "fact_id": "224b163c07947e87e2408b63f61db71edeb5e884e693016b66892242e4b2044e",
+        "target_kind": "FACT"
+      }
+    }
+  ],
+  "schema_version": "0.1",
+  "source_snapshot_digest": "684baa4fb6021d82911a2ed3b9906d081c35153f912d512ecaadcf9240565cef"
+}

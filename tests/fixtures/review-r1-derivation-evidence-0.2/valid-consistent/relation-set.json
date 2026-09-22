@@ -1,0 +1,55 @@
+{
+  "analysis_scope_digest": "89dae7eb1ef413f5f97c97c3b85eb90288020f1ec0e32d875e77ff506724c339",
+  "artifact_kind": "RELATION_SET",
+  "canonicalization_profile": "veritrail-json-c14n/1",
+  "conflicts": [],
+  "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+  "fact_set_digest": "af4f20133b12069300bba8bad79739a2bcff7c8ee6bbe8711f3c12c01725ffa5",
+  "policy_digest": "5306ae1c8cb6d93e538a9db37377cb43566b7d970cb0260cc1196c99d7a4412f",
+  "relation_set_digest": "9be261a89ffa32d328357590567cdc1050b9158979b81f2a24f2c3fe6c5c4749",
+  "relations": [
+    {
+      "local_ordinal": 0,
+      "provenance_refs": [
+        "1baf68dd521b108b92b66ab3bd896a0e9fb410b23bca7d4a47c078e2eaf5fd9c",
+        "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f"
+      ],
+      "relation_id": "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2",
+      "relation_kind": "LEXICAL_CONTAINS",
+      "relation_space": "CHILD_EDGE",
+      "relation_subject_digest": "6817bdfae05c0bbb66859c97d9c15a6b97e55f36302901bdbde4d9f84a5d4da0",
+      "semantic_attributes": {},
+      "source_fact_id": "a2b6df6d807c9dbe0fc1bf8fdc5fbc42568815f3c7ddb23e22bcac1ea586792f",
+      "target": {
+        "fact_id": "be02fa4b10fbc7b31658de79ddb020c895706a800169341ad048bd39c14588dc",
+        "target_kind": "FACT"
+      }
+    },
+    {
+      "local_ordinal": 0,
+      "provenance_refs": [
+        "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f"
+      ],
+      "relation_id": "9872c294f8e9c15128867029ec9fd5845b3ce6cc1220aa8f5cc036605abccdc1",
+      "relation_kind": "IMPORT_TARGET_LITERAL",
+      "relation_space": "IMPORT_EDGE",
+      "relation_subject_digest": "f94f565a69a040adf6807bc0a7d993355fcfd85df4610d739112d8d2839cee4f",
+      "semantic_attributes": {},
+      "source_fact_id": "be02fa4b10fbc7b31658de79ddb020c895706a800169341ad048bd39c14588dc",
+      "target": {
+        "imported_name": null,
+        "module_parts": [
+          "pkg",
+          "mod"
+        ],
+        "relative_level": 0,
+        "resolution_status": "UNRESOLVED",
+        "resolved_fact_ids": [],
+        "target_kind": "IMPORT_LITERAL",
+        "topology_status": "UNKNOWN"
+      }
+    }
+  ],
+  "schema_version": "0.1",
+  "source_snapshot_digest": "f4d6e0f807db334dc40e180cbdb792dff6a5f13966d9766a936d983f7201a1d6"
+}

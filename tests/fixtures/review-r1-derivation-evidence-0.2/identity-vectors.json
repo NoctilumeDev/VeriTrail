@@ -1,0 +1,24 @@
+{
+  "identity_domain": "veritrail.review.derivation-evidence/0.2",
+  "vectors": [
+    {
+      "admission_witness_digest": "029865c7abb407a6c6eb147892ce686bcc1d085cdd6c4b9d4a430bec100b3bc3",
+      "canonical_artifact_sha256": "fbc09ff514e2394e7fac7065c03e135adf4a096757d0b44327c6c64decb37669",
+      "derivation_evidence_digest": "6370abc6b8b5a3e0d344c2ac7c1a3a8139eb0c36b11c2333a8ea09032ebaf64e",
+      "relation_set_digest": "9be261a89ffa32d328357590567cdc1050b9158979b81f2a24f2c3fe6c5c4749",
+      "vector_id": "R1-RAE-ID-001"
+    },
+    {
+      "admission_witness_digest": "91e55a46bc9f7adc8470dd12ec4fb7973de1876dcb93e1ed51f1a27636f4340a",
+      "canonical_artifact_sha256": "3f339dfc39b3752b1e8e2561f6b3cca60636f97bcc98699624675afa2d2a2a9a",
+      "derivation_evidence_digest": "832c1cf43db8fc23743c55a4b22a337b8bea5da28e33147eb188aa0b8103ad79",
+      "relation_set_digest": "5de9db191258760dff3e4ea2f8967463f9863cec82dfb3fed00794f0c5a7a656",
+      "vector_id": "R1-RAE-ID-002"
+    },
+    {
+      "canonical_artifact_sha256": "f137ff548590807e153fb7d59b862af87054556c42741c066f41f36442337a19",
+      "derivation_evidence_digest": "c835c613ea5578380e3ac0a3d5584ee0be1a22b9ce2c2a8a09fe44f5ca25106d",
+      "vector_id": "R1-RAE-ID-003"
+    }
+  ]
+}

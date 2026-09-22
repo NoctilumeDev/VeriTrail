@@ -1,0 +1,299 @@
+{
+  "analysis_scope_digest": "89dae7eb1ef413f5f97c97c3b85eb90288020f1ec0e32d875e77ff506724c339",
+  "artifact_kind": "DERIVATION_EVIDENCE",
+  "canonicalization_profile": "veritrail-json-c14n/1",
+  "derivation_evidence_digest": "6370abc6b8b5a3e0d344c2ac7c1a3a8139eb0c36b11c2333a8ea09032ebaf64e",
+  "derivation_id": "rq-positive",
+  "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+  "diagnostics": [],
+  "finished_at": "2026-09-22T00:41:56.274012Z",
+  "overall_execution_status": "COMPLETED",
+  "policy_digest": "5306ae1c8cb6d93e538a9db37377cb43566b7d970cb0260cc1196c99d7a4412f",
+  "provider_runs": [
+    {
+      "capability_id": "python-ast",
+      "diagnostics": [],
+      "execution_status": "COMPLETED",
+      "finished_at": "2026-09-22T00:41:55.673363Z",
+      "operands_digest": "f4083879bac18a0f2e9d5de0a5a52b5a4da8c20a70ca419d97d8a32648df47f4",
+      "parser_id": "closed-deterministic-test-parser",
+      "parser_version": "0.1-test",
+      "provider_id": "closed-multi-provider-a",
+      "provider_run_id": "6b0eba92ad111784fb7cde24d99fb9aac8bb9cc0ead99c97556992f523d3a97b",
+      "provider_version": "0.1-test",
+      "reported_fact_ids": [
+        "a2b6df6d807c9dbe0fc1bf8fdc5fbc42568815f3c7ddb23e22bcac1ea586792f",
+        "be02fa4b10fbc7b31658de79ddb020c895706a800169341ad048bd39c14588dc"
+      ],
+      "reported_relation_ids": [],
+      "runtime_id": "veritrail-review-test-runtime",
+      "runtime_version": "0.1-test",
+      "started_at": "2026-09-22T00:41:55.489691Z"
+    },
+    {
+      "capability_id": "python-ast",
+      "diagnostics": [],
+      "execution_status": "COMPLETED",
+      "finished_at": "2026-09-22T00:41:55.865864Z",
+      "operands_digest": "be8ee96552d93da77a160c3d616feedecaf38f36c2b391ecfa276ca759e18504",
+      "parser_id": "closed-deterministic-test-parser",
+      "parser_version": "0.1-test",
+      "provider_id": "closed-multi-provider-b",
+      "provider_run_id": "0fdd2ba7307915c28f11dd7d88129796f9a1888093b7958a7aba34cf7ac1c93c",
+      "provider_version": "0.1-test",
+      "reported_fact_ids": [
+        "a2b6df6d807c9dbe0fc1bf8fdc5fbc42568815f3c7ddb23e22bcac1ea586792f",
+        "be02fa4b10fbc7b31658de79ddb020c895706a800169341ad048bd39c14588dc"
+      ],
+      "reported_relation_ids": [],
+      "runtime_id": "veritrail-review-test-runtime",
+      "runtime_version": "0.1-test",
+      "started_at": "2026-09-22T00:41:55.687593Z"
+    },
+    {
+      "capability_id": "review-relation-derivation",
+      "diagnostics": [],
+      "execution_status": "COMPLETED",
+      "finished_at": "2026-09-22T00:41:56.075667Z",
+      "operands_digest": "dc0238d7e781bc647bc83e82191c9c021e18a5533a1c5a004047fcd16115d105",
+      "parser_id": "closed-deterministic-test-parser",
+      "parser_version": "0.1-test",
+      "provider_id": "closed-relation-provider-a",
+      "provider_run_id": "1baf68dd521b108b92b66ab3bd896a0e9fb410b23bca7d4a47c078e2eaf5fd9c",
+      "provider_version": "0.1-test",
+      "reported_fact_ids": [],
+      "reported_relation_ids": [
+        "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2"
+      ],
+      "runtime_id": "veritrail-review-test-runtime",
+      "runtime_version": "0.1-test",
+      "started_at": "2026-09-22T00:41:55.886740Z"
+    },
+    {
+      "capability_id": "review-relation-derivation",
+      "diagnostics": [],
+      "execution_status": "COMPLETED",
+      "finished_at": "2026-09-22T00:41:56.273172Z",
+      "operands_digest": "4f8666586dbad63a5bc02f5cfce822c6ac56e4b7cf5370da39c3f8280169ff2d",
+      "parser_id": "closed-deterministic-test-parser",
+      "parser_version": "0.1-test",
+      "provider_id": "closed-relation-provider-b",
+      "provider_run_id": "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f",
+      "provider_version": "0.1-test",
+      "reported_fact_ids": [],
+      "reported_relation_ids": [
+        "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2",
+        "9872c294f8e9c15128867029ec9fd5845b3ce6cc1220aa8f5cc036605abccdc1"
+      ],
+      "runtime_id": "veritrail-review-test-runtime",
+      "runtime_version": "0.1-test",
+      "started_at": "2026-09-22T00:41:56.089287Z"
+    }
+  ],
+  "relation_admission": {
+    "admission_claim": {
+      "admission_witness_digest": "029865c7abb407a6c6eb147892ce686bcc1d085cdd6c4b9d4a430bec100b3bc3",
+      "admitted_conflict_ids": [],
+      "admitted_relation_ids": [
+        "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2",
+        "9872c294f8e9c15128867029ec9fd5845b3ce6cc1220aa8f5cc036605abccdc1"
+      ],
+      "analysis_scope_digest": "89dae7eb1ef413f5f97c97c3b85eb90288020f1ec0e32d875e77ff506724c339",
+      "derivation_id": "rq-positive",
+      "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+      "fact_set_digest": "af4f20133b12069300bba8bad79739a2bcff7c8ee6bbe8711f3c12c01725ffa5",
+      "observation_domain_digest": "a4e6d12ad43f789fdfc1e370db77080f3ddf1855507c93b9e88818a9bbeae6b9",
+      "policy_digest": "5306ae1c8cb6d93e538a9db37377cb43566b7d970cb0260cc1196c99d7a4412f",
+      "qualification_digest": "8c5fb7b038980920a2fedcf1010c8fc1cb9e8b6103486d308584075b6f173faa",
+      "relation_provider_run_ids": [
+        "1baf68dd521b108b92b66ab3bd896a0e9fb410b23bca7d4a47c078e2eaf5fd9c",
+        "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f"
+      ],
+      "relation_set_digest": "9be261a89ffa32d328357590567cdc1050b9158979b81f2a24f2c3fe6c5c4749",
+      "source_snapshot_digest": "f4d6e0f807db334dc40e180cbdb792dff6a5f13966d9766a936d983f7201a1d6"
+    },
+    "observation_domain": {
+      "analysis_scope_digest": "89dae7eb1ef413f5f97c97c3b85eb90288020f1ec0e32d875e77ff506724c339",
+      "capability_id": "review-relation-derivation",
+      "composition_mode": "CUMULATIVE",
+      "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+      "fact_set_digest": "af4f20133b12069300bba8bad79739a2bcff7c8ee6bbe8711f3c12c01725ffa5",
+      "observation_domain_digest": "a4e6d12ad43f789fdfc1e370db77080f3ddf1855507c93b9e88818a9bbeae6b9",
+      "observation_items": [
+        {
+          "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+          "fact_set_digest": "af4f20133b12069300bba8bad79739a2bcff7c8ee6bbe8711f3c12c01725ffa5",
+          "observation_item_id": "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a",
+          "relation_kind": "LEXICAL_CONTAINS",
+          "source_snapshot_digest": "f4d6e0f807db334dc40e180cbdb792dff6a5f13966d9766a936d983f7201a1d6",
+          "subject_fact_id": "be02fa4b10fbc7b31658de79ddb020c895706a800169341ad048bd39c14588dc",
+          "subject_role": "TARGET_FACT"
+        },
+        {
+          "derivation_profile_digest": "e8bbe54140ff2a082b69d6b6967d8630a423abd135ac6e7be0badc1fe053125b",
+          "fact_set_digest": "af4f20133b12069300bba8bad79739a2bcff7c8ee6bbe8711f3c12c01725ffa5",
+          "observation_item_id": "4a8cd5280abdc5f2e7fcd35cba0193ceb5fa516582ef06732b12c69882e50ca1",
+          "relation_kind": "IMPORT_TARGET_LITERAL",
+          "source_snapshot_digest": "f4d6e0f807db334dc40e180cbdb792dff6a5f13966d9766a936d983f7201a1d6",
+          "subject_fact_id": "be02fa4b10fbc7b31658de79ddb020c895706a800169341ad048bd39c14588dc",
+          "subject_role": "SOURCE_FACT"
+        }
+      ],
+      "observation_profile_digest": "477c22e96f132fb2ce0c1f3ad28985d1010965d455ab60bfabf12a4f3d096bde",
+      "observation_profile_id": "closed-python-import-observation",
+      "observation_profile_version": "0.1-test",
+      "policy_digest": "5306ae1c8cb6d93e538a9db37377cb43566b7d970cb0260cc1196c99d7a4412f",
+      "provider_responsibilities": [
+        {
+          "assigned_observation_item_ids": [
+            "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a"
+          ],
+          "provider_descriptor": {
+            "capability_id": "review-relation-derivation",
+            "parser_id": "closed-deterministic-test-parser",
+            "parser_version": "0.1-test",
+            "provider_id": "closed-relation-provider-a",
+            "provider_version": "0.1-test",
+            "runtime_id": "veritrail-review-test-runtime",
+            "runtime_version": "0.1-test"
+          },
+          "required": true
+        },
+        {
+          "assigned_observation_item_ids": [
+            "4a8cd5280abdc5f2e7fcd35cba0193ceb5fa516582ef06732b12c69882e50ca1",
+            "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a"
+          ],
+          "provider_descriptor": {
+            "capability_id": "review-relation-derivation",
+            "parser_id": "closed-deterministic-test-parser",
+            "parser_version": "0.1-test",
+            "provider_id": "closed-relation-provider-b",
+            "provider_version": "0.1-test",
+            "runtime_id": "veritrail-review-test-runtime",
+            "runtime_version": "0.1-test"
+          },
+          "required": true
+        }
+      ],
+      "required": true,
+      "source_snapshot_digest": "f4d6e0f807db334dc40e180cbdb792dff6a5f13966d9766a936d983f7201a1d6"
+    },
+    "qualification_claim": {
+      "candidate_composition_status": "CONSISTENT",
+      "merged_candidate_relation_ids": [
+        "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2",
+        "9872c294f8e9c15128867029ec9fd5845b3ce6cc1220aa8f5cc036605abccdc1"
+      ],
+      "observation_domain_digest": "a4e6d12ad43f789fdfc1e370db77080f3ddf1855507c93b9e88818a9bbeae6b9",
+      "observation_receipts": [
+        {
+          "accepted_observation_outcomes": [
+            {
+              "disposition": "CANDIDATE_REPORTED",
+              "observation_item_id": "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a",
+              "observation_outcome_id": "e2ccc8e7b42c61102a6ca62d8b0bdc517467f11e424a241b145732c011cd395c",
+              "provider_run_id": "1baf68dd521b108b92b66ab3bd896a0e9fb410b23bca7d4a47c078e2eaf5fd9c",
+              "reported_relation_ids": [
+                "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2"
+              ]
+            }
+          ],
+          "assigned_observation_item_ids": [
+            "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a"
+          ],
+          "duplicate_observation_item_ids": [],
+          "execution_status": "COMPLETED",
+          "invalid_outcome_ids": [],
+          "missing_observation_item_ids": [],
+          "provider_descriptor": {
+            "capability_id": "review-relation-derivation",
+            "parser_id": "closed-deterministic-test-parser",
+            "parser_version": "0.1-test",
+            "provider_id": "closed-relation-provider-a",
+            "provider_version": "0.1-test",
+            "runtime_id": "veritrail-review-test-runtime",
+            "runtime_version": "0.1-test"
+          },
+          "provider_run_id": "1baf68dd521b108b92b66ab3bd896a0e9fb410b23bca7d4a47c078e2eaf5fd9c",
+          "required": true,
+          "unexpected_observation_item_ids": [],
+          "unexpected_relation_ids": [],
+          "unreferenced_relation_ids": []
+        },
+        {
+          "accepted_observation_outcomes": [
+            {
+              "disposition": "CANDIDATE_REPORTED",
+              "observation_item_id": "4a8cd5280abdc5f2e7fcd35cba0193ceb5fa516582ef06732b12c69882e50ca1",
+              "observation_outcome_id": "fb7fab8a9df7bd143befb9cca613cc66cd786b9cf824cbc986b873cf7509543c",
+              "provider_run_id": "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f",
+              "reported_relation_ids": [
+                "9872c294f8e9c15128867029ec9fd5845b3ce6cc1220aa8f5cc036605abccdc1"
+              ]
+            },
+            {
+              "disposition": "CANDIDATE_REPORTED",
+              "observation_item_id": "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a",
+              "observation_outcome_id": "fd69c8d936b2298eef59bc6df557a6b3aa10684e6a547ef691759ef89de37f1c",
+              "provider_run_id": "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f",
+              "reported_relation_ids": [
+                "4e42c7e39960bd9e247da522260afbcd36aa9df49e5d4ac5f9fad6d927df02d2"
+              ]
+            }
+          ],
+          "assigned_observation_item_ids": [
+            "4a8cd5280abdc5f2e7fcd35cba0193ceb5fa516582ef06732b12c69882e50ca1",
+            "d36e434161d7551796938d8bdfaa9fa2ac6623b2de935cc7021d110b3c31577a"
+          ],
+          "duplicate_observation_item_ids": [],
+          "execution_status": "COMPLETED",
+          "invalid_outcome_ids": [],
+          "missing_observation_item_ids": [],
+          "provider_descriptor": {
+            "capability_id": "review-relation-derivation",
+            "parser_id": "closed-deterministic-test-parser",
+            "parser_version": "0.1-test",
+            "provider_id": "closed-relation-provider-b",
+            "provider_version": "0.1-test",
+            "runtime_id": "veritrail-review-test-runtime",
+            "runtime_version": "0.1-test"
+          },
+          "provider_run_id": "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f",
+          "required": true,
+          "unexpected_observation_item_ids": [],
+          "unexpected_relation_ids": [],
+          "unreferenced_relation_ids": []
+        }
+      ],
+      "private_conflict_ids": [],
+      "provider_run_terminals": [
+        {
+          "execution_status": "COMPLETED",
+          "provider_run_id": "1baf68dd521b108b92b66ab3bd896a0e9fb410b23bca7d4a47c078e2eaf5fd9c"
+        },
+        {
+          "execution_status": "COMPLETED",
+          "provider_run_id": "7af376c49ad6c120be33ccd8b47e0f3159bf68d8c4e2c3d9b3f7d81dfb34bc8f"
+        }
+      ],
+      "qualification_digest": "8c5fb7b038980920a2fedcf1010c8fc1cb9e8b6103486d308584075b6f173faa",
+      "qualification_status": "QUALIFIED",
+      "reason_codes": [],
+      "required_observation_closure": "COMPLETE",
+      "required_source_set_terminal_closure": "COMPLETE"
+    },
+    "witness_version": "0.1"
+  },
+  "request_provenance": {
+    "requested_ref": "oid:sha1:a8c028e5ea4abf7c9e811372627e28e06e3ae278",
+    "requested_repository_id": "fixture/import",
+    "resolved_at": "2026-09-22T00:41:55.468969Z",
+    "resolver_id": "veritrail-r1-owned-snapshot-exact-oid",
+    "resolver_version": "0.1"
+  },
+  "schema_version": "0.2",
+  "slice_policy_digest": "c51e6b581082dd4ee6a2a113587ae869fb7527955e24dfb21613224179cd01ff",
+  "source_snapshot_digest": "f4d6e0f807db334dc40e180cbdb792dff6a5f13966d9766a936d983f7201a1d6",
+  "started_at": "2026-09-22T00:41:55.468984Z"
+}
