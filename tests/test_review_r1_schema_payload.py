@@ -42,7 +42,13 @@ CORRECTION_SCHEMA_FILES = {
     "review-derivation-evidence-0.1.1.schema.json",
 }
 
-EXPECTED_SCHEMA_FILES = HISTORICAL_SCHEMA_FILES | CORRECTION_SCHEMA_FILES
+ADMISSION_SCHEMA_FILES = {
+    "review-derivation-evidence-0.2.schema.json",
+}
+
+EXPECTED_SCHEMA_FILES = (
+    HISTORICAL_SCHEMA_FILES | CORRECTION_SCHEMA_FILES | ADMISSION_SCHEMA_FILES
+)
 
 FROZEN_IDENTITY_DOMAINS = {
     "veritrail.review.source-coordinate/0.1",
@@ -268,6 +274,7 @@ class ReviewR1SchemaPayloadTests(unittest.TestCase):
         self.assertEqual(set(self.schemas), EXPECTED_SCHEMA_FILES)
         self.assertEqual(len(HISTORICAL_SCHEMA_FILES), 10)
         self.assertEqual(len(CORRECTION_SCHEMA_FILES), 1)
+        self.assertEqual(len(ADMISSION_SCHEMA_FILES), 1)
         for name, schema in self.schemas.items():
             Draft202012Validator.check_schema(schema)
             self.assertEqual(

@@ -191,6 +191,8 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
             (SOURCE_ROOT / "veritrail_review").glob("_relation_execution_cell*.py")
         ) + sorted(
             (SOURCE_ROOT / "veritrail_review").glob("_relation_observation_cell*.py")
+        ) + sorted(
+            (SOURCE_ROOT / "veritrail_review").glob("_relation_set_admission*.py")
         )
         self.assertTrue(relation_modules)
         forbidden_imports = {
@@ -246,6 +248,12 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
             "run_closed_test_relation_observation_qualification",
             veritrail_review.__all__,
         )
+        for name in (
+            "admit_relation_set_for_private_closed_proof",
+            "project_private_derivation_evidence_0_2",
+        ):
+            self.assertFalse(hasattr(veritrail_review, name))
+            self.assertNotIn(name, veritrail_review.__all__)
 
     def test_fact_evidence_closure_is_private_and_has_no_publication_surface(self) -> None:
         from veritrail_review._fact_evidence_closure import (

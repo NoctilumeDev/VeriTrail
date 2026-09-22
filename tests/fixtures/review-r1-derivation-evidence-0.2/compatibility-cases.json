@@ -1,0 +1,65 @@
+{
+  "identity_domain": "veritrail.review.derivation-evidence/0.2",
+  "negative_cases": [
+    {
+      "base_case_id": "R1-RAE-CV-001",
+      "case_id": "R1-RAE-CV-004",
+      "expected": "SCHEMA_REJECT",
+      "path": "/relation_admission",
+      "target": "evidence",
+      "value": null
+    },
+    {
+      "base_case_id": "R1-RAE-CV-003",
+      "case_id": "R1-RAE-CV-005",
+      "expected": "SCHEMA_REJECT",
+      "path": "/relation_admission",
+      "target": "evidence",
+      "value_from_case": "R1-RAE-CV-001:/relation_admission"
+    },
+    {
+      "base_case_id": "R1-RAE-CV-001",
+      "case_id": "R1-RAE-CV-006",
+      "expected": "CONFORMANCE_REJECT",
+      "path": "/relation_admission/qualification_claim/observation_receipts/0/accepted_observation_outcomes/0/disposition",
+      "recompute_evidence_digest": true,
+      "target": "evidence",
+      "value": "NEGATIVE"
+    },
+    {
+      "base_case_id": "R1-RAE-CV-001",
+      "case_id": "R1-RAE-CV-007",
+      "expected": "CONFORMANCE_REJECT",
+      "path": "/relation_admission/admission_claim/admitted_relation_ids",
+      "recompute_evidence_digest": true,
+      "target": "evidence",
+      "value": []
+    },
+    {
+      "base_case_id": "R1-RAE-CV-001",
+      "case_id": "R1-RAE-CV-008",
+      "expected": "SCHEMA_REJECT",
+      "path": "/admission_status",
+      "target": "relation_set",
+      "value": "ADMITTED"
+    }
+  ],
+  "positive_cases": [
+    {
+      "case_id": "R1-RAE-CV-001",
+      "evidence": "valid-consistent/derivation-evidence.json",
+      "relation_set": "valid-consistent/relation-set.json"
+    },
+    {
+      "case_id": "R1-RAE-CV-002",
+      "evidence": "valid-conflicting/derivation-evidence.json",
+      "relation_set": "valid-conflicting/relation-set.json"
+    },
+    {
+      "case_id": "R1-RAE-CV-003",
+      "evidence": "valid-interrupted-null/derivation-evidence.json",
+      "relation_set": null
+    }
+  ],
+  "schema": "review-derivation-evidence-0.2.schema.json"
+}
