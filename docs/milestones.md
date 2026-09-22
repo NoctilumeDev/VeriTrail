@@ -1591,6 +1591,28 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 下一步只能从新的 exact main 做 post-admission system audit。publisher、公共 Bundle、Manifest role 扩张、
 Slice、Coverage、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权。
 
+[文档 188](188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)从上述 exact main 完成
+post-admission system audit。仓库外双 Python 反例先删除唯一 eligible anchor 的 Slice、保留 Coverage 的
+phantom completed，再把 Slice 与 `SLICE_DERIVATION` denominator/eligible/completed 一起缩为空；两者都能在
+重算 exact bytes、semantic digests 与 Manifest 后通过现有 root Schema、identity、cross-artifact 与 stage
+partition checks。另一个双运行时 probe 证明相同 Fact/Relation semantics 可来自不同合法 attempt 与 witness，
+所以 Slice content identity 可复用，execution eligibility 不能按 digest 继承。
+
+文档 188 自身的门、合入、新 exact-main 双门与三份 fresh anonymous installed-product readback 全部成立后，
+当前状态才是：
+
+```text
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN
+R1_POST_ADMISSION_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步只允许从新的 exact main 起草 `ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure` 的
+docs-only 最小合同。BFS、ReviewSliceSet/CoverageLedger runtime、Schema patch、publisher、公共 Bundle、
+Manifest role 扩张、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权。能力拓扑没有变化，
+architecture DOT/SVG 保持字节不变。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
