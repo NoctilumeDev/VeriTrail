@@ -48,7 +48,7 @@ VeriTrail 的核心关系很小：
 | Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论；P 已发布，O0/T0 仍是候选问题记录 |
 | Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
 | Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
-| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation 与 private Relation observation / composition qualification 已冻结；private RelationSet admission、explicit witness 与 Evidence 0.2 为实现冻结候选；Slice 与 Coverage 尚未实现 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation、private Relation observation / composition qualification，以及 private RelationSet admission / explicit witness / Evidence 0.2 binding 已冻结；Slice 与 Coverage 尚未实现 |
 | Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
 
 ![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_IMPLEMENTED / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FREEZE_CANDIDATE / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -342,9 +342,14 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   记录文档 183 A–F 的 private admission、explicit witness、Evidence 0.2 Schema/corpus/projection、PR #174、
   implementation exact-main 11/11 与 Browser Smoke 1/1，以及十五份变更文件的匿名 exact-SHA 字节读回。
   Evidence projection 只接受已经 admission 的 private state，不能从 raw candidates 或 caller witness 补资格；
-  conflict 保留全部候选且没有 winner。当前只能是 `IMPLEMENTED / FREEZE_CANDIDATE`；本文自己的门、合入、
-  fresh anonymous installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen，也不得开始
-  publisher、Slice 或 Coverage。
+  conflict 保留全部候选且没有 winner。候选随后经 PR #175 原始 11/11、受保护主线合入、exact-main 双门与
+  README/本文/milestones 三份互不复用的 fresh anonymous installed-product readback 闭合；候选历史状态仍不被
+  后继冻结发布改写。
+- [RelationSet Admission / Public Qualification Binding 实现冻结发布](docs/187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)
+  发布 PR #174 implementation、PR #175 docs-only candidate、exact-main 门、十五文件 source identity 与三份
+  installed-product readback 的完整因果链。冻结只覆盖 private admission、explicit witness 与 Evidence 0.2
+  binding；publisher、公共 Bundle、Manifest role 扩张、Slice、Coverage 与 Attention 仍未获授权。本文自己的
+  门、合入、新 exact-main 双门与三份 fresh readback 全部成立后，下一步只能做 post-admission system audit。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -493,7 +498,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 49. [Review Attention R1 RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同](docs/183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
 50. [Review Attention R1 RelationSet Admission / Public Qualification Binding 合同冻结发布](docs/185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)
 51. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结候选](docs/186-r1-relation-set-admission-and-public-qualification-binding-implementation-freeze-candidate.md)
-52. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+52. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结发布](docs/187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)
+53. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
