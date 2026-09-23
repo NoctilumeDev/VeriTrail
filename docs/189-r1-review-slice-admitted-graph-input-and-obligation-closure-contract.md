@@ -1,11 +1,14 @@
 # R1 ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 合同 0.1
 
-> 状态（合同候选）：`R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_CANDIDATE /
+> 状态：`R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN /
+> R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_ALLOWED /
 > R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_NOT_STARTED /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
 >
 > 起始基线：`main@0c2ab31671a89b7c96fb5a44c390c85e7820c8c5`，Git tree
 > `ccc8a8f49aec2c976c9996c952542b25015a4565`
+>
+> 冻结发布：[文档 190](190-r1-review-slice-input-obligation-closure-contract-freeze-publication.md)
 >
 > 前置审计：[Post-Admission ReviewSlice Input / Obligation Closure 系统审计](188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)
 >
@@ -459,8 +462,8 @@ normal closure authority。
 
 ## 11. 首个实现分段与停止线
 
-只有本合同候选自己的原始远端门、受保护主线合入、新 exact-main 双门、fresh anonymous installed-product
-readback 与后继独立 docs-only 冻结发布全部成立后，才允许严格按顺序实现：
+文档 190 自己的原始远端门、受保护主线合入、新 exact-main 双门与 fresh anonymous installed-product
+readback 全部成立后，才允许严格按顺序实现：
 
 ```text
 A. same-attempt continuation and admitted-graph input join
@@ -481,9 +484,9 @@ publisher/public contract 的情况下形成 private proof，必须停下重审�
 不新增 import resolution、CALLS、动态语义、risk finding、base/head diff、完整 Relation algorithm、Attention ranking
 或 human disposition。
 
-## 12. 合同候选门
+## 12. 合同冻结门
 
-合同候选至少必须通过：
+合同及其独立冻结发布至少必须通过：
 
 1. `git diff --check`、文档状态/链接/敏感信息检查；
 2. 现有 contract/documentation gates；
@@ -494,7 +497,7 @@ publisher/public contract 的情况下形成 private proof，必须停下重审�
 7. README、本文与 milestones 使用不同 Plan/session/output root 的 fresh anonymous readback；
 8. architecture DOT/SVG 若无能力拓扑变化必须保持字节不变；若状态投影变化则 README/AGENTS/milestones 同步。
 
-只有上述闭环与独立 freeze publication 成立，状态才能推进为：
+上述闭环与文档 190 的独立 freeze publication 全部成立后，状态为：
 
 ```text
 R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
@@ -503,7 +506,8 @@ R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_NOT_STARTED
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-在此之前，当前状态只能是合同候选；不得按 A–H 施工。
+冻结授权只覆盖 A–H；不得把 `IMPLEMENTATION_ALLOWED` 扩张为公共 SliceSet、Coverage、publisher 或 Schema
+授权。
 
 ## 13. 反证与最小重开
 
@@ -520,7 +524,7 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 
 ## 14. 非声明
 
-本合同候选不声明：
+本合同不声明：
 
 - ReviewSlice BFS、ReviewSliceSet、CoverageLedger 或 publisher 已实现；
 - public Schema、Manifest role 或八文件 Bundle 已修改；
