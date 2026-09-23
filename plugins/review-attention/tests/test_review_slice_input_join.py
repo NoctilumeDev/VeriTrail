@@ -320,10 +320,18 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             foreign_admission.request_provenance_bytes,
             first.qualification.fact_phase_results[0].request_provenance_bytes,
         )
-        self.assertJoinFailure(
-            _ReviewSliceInputFailureCode.ADMISSION_BINDING_REJECTED,
-            lambda: first._bind_admission(foreign_admission),
-        )
+        with mock.patch.object(
+            slice_input,
+            "admit_relation_set_for_private_closed_proof",
+            return_value=foreign_admission,
+        ) as admission_producer:
+            self.assertJoinFailure(
+                _ReviewSliceInputFailureCode.ADMISSION_BINDING_REJECTED,
+                lambda: slice_input.admit_relation_set_for_slice_input_private_closed_proof(
+                    first
+                ),
+            )
+        admission_producer.assert_called_once_with(first.qualification)
 
         authority = (
             slice_input.admit_relation_set_for_slice_input_private_closed_proof(
