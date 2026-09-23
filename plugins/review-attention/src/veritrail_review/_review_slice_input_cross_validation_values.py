@@ -118,6 +118,9 @@ class OwnedCrossValidatedAdmittedGraphSliceInput:
     def _owned_joined_input(self) -> OwnedAdmittedGraphSliceInput:
         return self._joined
 
+    def _claim_obligation_domain(self) -> None:
+        self._joined._claim_obligation_domain()
+
 
 def _validate_cross_validated_input(
     value: OwnedCrossValidatedAdmittedGraphSliceInput,

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from typing import Mapping
 
 from veritrail_review._multi_provider_fact_composition import _fact_set_document
@@ -20,7 +21,15 @@ from veritrail_review._review_slice_input_values import (
     _ReviewSliceInputFailureCode,
     _VALIDATED_ADMISSION_ATTEMPT_TOKEN,
 )
-from veritrail_review.canonical import canonical_json_bytes, sha256_bytes
+from veritrail_review._review_slice_obligation_domain_values import (
+    OwnedReviewSliceObligationDomainGate,
+    _validate_obligation_domain_gate,
+)
+from veritrail_review.canonical import (
+    canonical_json_bytes,
+    semantic_digest,
+    sha256_bytes,
+)
 from veritrail_review.derivation_input import (
     _parse_artifact,
     _validate_cross_artifact_binding,
@@ -221,6 +230,147 @@ def cross_validate_admitted_graph_slice_input(
         raise _ReviewSliceInputError(
             _ReviewSliceInputFailureCode.INPUT_CROSS_VALIDATION_REJECTED
         ) from exc
+
+
+def construct_review_slice_obligation_domain(
+    validated: OwnedCrossValidatedAdmittedGraphSliceInput,
+) -> OwnedReviewSliceObligationDomainGate:
+    """Apply the C-stage conflict gate and construct the exact private domain."""
+
+    if type(validated) is not OwnedCrossValidatedAdmittedGraphSliceInput:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED
+        )
+    try:
+        validated._claim_obligation_domain()
+        _validate_cross_validated_input(validated)
+        if not validated.continuation_permitted():
+            raise ValueError
+        relation_set = validated.relation_set_document_copy()
+        witness = validated.admission_witness_copy()
+        claim = witness.get("qualification_claim")
+        conflicts = relation_set.get("conflicts")
+        if not isinstance(claim, Mapping) or not isinstance(conflicts, list):
+            raise ValueError
+        composition_status = claim.get("candidate_composition_status")
+
+        if composition_status == "CONFLICTING":
+            if not conflicts:
+                raise ValueError
+            result = OwnedReviewSliceObligationDomainGate._create(
+                validated=validated,
+                candidate_composition_status="CONFLICTING",
+                slice_input_status="BLOCKED_BY_RELATION_CONFLICT",
+                obligation_domain_document=None,
+            )
+        elif composition_status == "CONSISTENT":
+            if conflicts:
+                raise ValueError
+            domain = _build_review_slice_obligation_domain(validated)
+            result = OwnedReviewSliceObligationDomainGate._create(
+                validated=validated,
+                candidate_composition_status="CONSISTENT",
+                slice_input_status="ELIGIBLE",
+                obligation_domain_document=domain,
+            )
+        else:
+            raise ValueError
+
+        _validate_obligation_domain_gate(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED
+        ) from exc
+
+
+def _build_review_slice_obligation_domain(
+    validated: OwnedCrossValidatedAdmittedGraphSliceInput,
+) -> dict[str, object]:
+    if not validated.continuation_permitted():
+        raise ValueError
+    policy = validated.review_policy_document_copy()
+    profile = validated.derivation_profile_document_copy()
+    fact_set = validated.fact_set_document_copy()
+    slice_policy = policy.get("slice_policy")
+    facts = fact_set.get("facts")
+    profile_fact_kinds = profile.get("fact_kinds")
+    if (
+        not isinstance(slice_policy, Mapping)
+        or not isinstance(facts, list)
+        or not isinstance(profile_fact_kinds, list)
+    ):
+        raise ValueError
+    anchor_fact_kinds = slice_policy.get("anchor_fact_kinds")
+    allowed_relations = slice_policy.get("allowed_relations")
+    if (
+        not isinstance(anchor_fact_kinds, list)
+        or not isinstance(allowed_relations, list)
+    ):
+        raise ValueError
+    fact_kind_rank = {
+        fact_kind: index
+        for index, fact_kind in enumerate(profile_fact_kinds)
+        if isinstance(fact_kind, str)
+    }
+    if len(fact_kind_rank) != len(profile_fact_kinds):
+        raise ValueError
+    anchors: list[Mapping[str, object]] = []
+    for fact in facts:
+        if not validated.continuation_permitted() or not isinstance(fact, Mapping):
+            raise ValueError
+        fact_kind = fact.get("fact_kind")
+        fact_id = fact.get("fact_id")
+        if fact_kind not in fact_kind_rank or not isinstance(fact_id, str):
+            raise ValueError
+        if fact_kind in anchor_fact_kinds:
+            anchors.append(fact)
+    anchors.sort(key=lambda item: (fact_kind_rank[item["fact_kind"]], item["fact_id"]))
+
+    obligations: list[dict[str, object]] = []
+    for anchor in anchors:
+        if not validated.continuation_permitted():
+            raise ValueError
+        spec: dict[str, object] = {
+            "source_snapshot_digest": validated.source_snapshot_digest,
+            "analysis_scope_digest": validated.analysis_scope_digest,
+            "slice_policy_digest": validated.slice_policy_digest,
+            "derivation_profile_digest": validated.derivation_profile_digest,
+            "fact_set_digest": validated.fact_set_digest,
+            "relation_set_digest": validated.relation_set_digest,
+            "anchor_fact_id": anchor["fact_id"],
+            "allowed_relations": copy.deepcopy(allowed_relations),
+            "max_depth": slice_policy["max_depth"],
+            "max_symbols": slice_policy["max_symbols"],
+            "max_files": slice_policy["max_files"],
+            "max_relations": slice_policy["max_relations"],
+        }
+        spec["slice_spec_digest"] = semantic_digest(
+            "veritrail.review.slice-spec/0.1", spec
+        )
+        obligations.append(spec)
+    if len({item["slice_spec_digest"] for item in obligations}) != len(
+        obligations
+    ):
+        raise ValueError
+
+    domain: dict[str, object] = {
+        "source_snapshot_digest": validated.source_snapshot_digest,
+        "policy_digest": validated.policy_digest,
+        "analysis_scope_digest": validated.analysis_scope_digest,
+        "slice_policy_digest": validated.slice_policy_digest,
+        "derivation_profile_digest": validated.derivation_profile_digest,
+        "fact_set_digest": validated.fact_set_digest,
+        "relation_set_digest": validated.relation_set_digest,
+        "obligations": obligations,
+    }
+    domain["slice_obligation_domain_digest"] = semantic_digest(
+        "veritrail.review.slice-obligation-domain/0.1",
+        {key: copy.deepcopy(item) for key, item in domain.items() if key != "policy_digest"},
+    )
+    return domain
 
 
 class _ContinuationValidationState:
