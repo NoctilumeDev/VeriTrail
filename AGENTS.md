@@ -936,6 +936,19 @@
   R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从新 exact main 起草 admitted-graph
   input / anchor-spec obligation closure docs-only 合同；不得直接实现 BFS、SliceSet、Coverage、publisher、
   Schema patch、Attention、CLI 或 Workbench。
+- `docs/189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md` 从新的 exact
+  `main@0c2ab31671a89b7c96fb5a44c390c85e7820c8c5` 起草 docs-only 最小合同候选。它要求 future Slice
+  application 同时闭合 exact `DerivationInputSet`、owned qualification history、
+  `OwnedRelationSetAdmissionState` 与原 attempt 的 live continuation；raw RelationSet、digest-only、caller
+  witness 或 fresh BudgetContext 都没有启动资格。conflict-free exact FactSet/Policy 机械产生完整
+  anchor/spec obligation domain，conflict world 保持 UNKNOWN，真正零 anchor 才是 KNOWN closed empty；每个
+  obligation 必须 exactly-once 取得允许 outcome，reconciler 只能验账，不能补造 Slice、negative 或 gap。
+  当前状态只能是
+  `R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_CANDIDATE /
+  R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。只有本文自己的远端门、受保护合入、exact-main
+  双门、fresh anonymous readback 与后继独立冻结发布全部成立后，才允许按 A–H 做 private closed proof；
+  现在不得实现 BFS、Schema、ReviewSliceSet、CoverageLedger、publisher、Bundle、Attention、CLI 或 Workbench。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

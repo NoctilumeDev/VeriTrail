@@ -1613,6 +1613,27 @@ docs-only 最小合同。BFS、ReviewSliceSet/CoverageLedger runtime、Schema pa
 Manifest role 扩张、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权。能力拓扑没有变化，
 architecture DOT/SVG 保持字节不变。
 
+[文档 189](189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)从
+`main@0c2ab31671a89b7c96fb5a44c390c85e7820c8c5` 起草 docs-only 合同候选。候选把 exact
+`DerivationInputSet`、owned qualification history、`OwnedRelationSetAdmissionState` 与 same-attempt live
+continuation 组成唯一 Slice input continuity；admission digest、raw RelationSet、caller witness 与 fresh
+BudgetContext 都不能替代。conflict-free world 才建立 normal anchor/spec domain，conflict world 保持 UNKNOWN，
+exact FactSet 没有 eligible anchor 才形成 KNOWN closed empty。domain 与未来 Slice content identity 可以跨合法
+attempt 复用，attempt-bound closure receipt 不可复用；每个 obligation 必须 exactly-once 被 outcome 记账，
+reconciler 不能从空 candidate 或 Coverage 反推 negative/complete。当前状态只能是：
+
+```text
+R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN
+R1_POST_ADMISSION_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文自己的门、合入、exact-main 双门、fresh anonymous readback 与独立 freeze publication 全部成立前，不得按
+A–H 施工。BFS、公共 ReviewSliceSet/CoverageLedger、Schema patch、publisher、Bundle、Attention、CLI、
+Workbench、D、Cu、O、T 与 Q runtime 继续未授权；能力拓扑未变化，architecture DOT/SVG 保持字节不变。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
