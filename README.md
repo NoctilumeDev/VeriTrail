@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_POST_ADMISSION_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRECONTRACT_AUDITED / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_CANDIDATE / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_POST_QUALIFICATION_RELATION_SET_ADMISSION_EVIDENCE_BINDING_PRECONTRACT_AUDITED / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_CONTRACT_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_POST_ADMISSION_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRECONTRACT_AUDITED / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_ALLOWED / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -356,11 +356,16 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   审计同时确认 Slice semantic identity 可以跨合法 attempt 复用，但 execution eligibility 必须从 exact owned
   admission history 继续，不能靠 raw RelationSet 或 digest 继承。下一问题面只到 admitted-graph input 与
   anchor/spec obligation closure；BFS、SliceSet、Coverage、publisher 与 Schema 修改均未开始。
-- [ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 合同候选](docs/189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
-  冻结候选只定义 exact DerivationInputSet、qualification history、admitted RelationSet 与 same-attempt live
+- [ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 合同](docs/189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
+  合同只定义 exact DerivationInputSet、qualification history、admitted RelationSet 与 same-attempt live
   continuation 的输入闭包，以及不可缩小的 anchor/spec domain、逐项 outcome 和 private reconciliation。
-  semantic domain/Slice identity 可以跨合法 attempt 复用，execution closure receipt 不能复用；当前仍未授权
-  runtime、Schema、ReviewSliceSet、CoverageLedger、publisher 或公共 Bundle。
+  semantic domain/Slice identity 可以跨合法 attempt 复用，execution closure receipt 不能复用；实现授权只覆盖
+  文档 189 A–H 的 private closed proof，Schema、ReviewSliceSet、CoverageLedger、publisher 与公共 Bundle 仍未授权。
+- [ReviewSlice Input / Obligation Closure 合同冻结发布](docs/190-r1-review-slice-input-obligation-closure-contract-freeze-publication.md)
+  保存 PR #179 original 11/11、candidate exact-main 双门、README/文档 189/milestones 三份独立 anonymous
+  installed-product readback 与 canonical manifest。该发布自己的门、合入、新 exact-main 双门及 fresh readback
+  全部成立后，合同才成为 frozen 并只授权 A–H；BFS 产品化、公共 Schema、SliceSet、Coverage 与 publisher
+  不因合同冻结自动获得资格。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -511,8 +516,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 51. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结候选](docs/186-r1-relation-set-admission-and-public-qualification-binding-implementation-freeze-candidate.md)
 52. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结发布](docs/187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)
 53. [Review Attention R1 Post-Admission ReviewSlice Input / Obligation Closure 系统审计](docs/188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)
-54. [Review Attention R1 ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 最小合同候选](docs/189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
-55. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+54. [Review Attention R1 ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 最小合同](docs/189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
+55. [Review Attention R1 ReviewSlice Input / Obligation Closure 合同冻结发布](docs/190-r1-review-slice-input-obligation-closure-contract-freeze-publication.md)
+56. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
