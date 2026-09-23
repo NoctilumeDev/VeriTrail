@@ -22,6 +22,7 @@ class _ReviewSliceInputFailureCode(str, Enum):
     CONTINUATION_UNAVAILABLE = "CONTINUATION_UNAVAILABLE"
     ADMISSION_BINDING_REJECTED = "ADMISSION_BINDING_REJECTED"
     INPUT_JOIN_REJECTED = "INPUT_JOIN_REJECTED"
+    INPUT_CROSS_VALIDATION_REJECTED = "INPUT_CROSS_VALIDATION_REJECTED"
 
 
 _FAILURE_MESSAGES = {
@@ -33,6 +34,9 @@ _FAILURE_MESSAGES = {
     ),
     _ReviewSliceInputFailureCode.INPUT_JOIN_REJECTED: (
         "the exact admitted-graph Slice input join is not eligible"
+    ),
+    _ReviewSliceInputFailureCode.INPUT_CROSS_VALIDATION_REJECTED: (
+        "the exact admitted-graph Slice input history cannot be reconstructed"
     ),
 }
 
@@ -135,7 +139,12 @@ class _SameAttemptSliceContinuation:
 class _ClaimedSliceContinuation:
     """Claimed capability retained by one private admitted-graph input."""
 
-    __slots__ = ("__attempt_eligibility", "__context")
+    __slots__ = (
+        "__attempt_eligibility",
+        "__context",
+        "__cross_validation_claimed",
+        "__lock",
+    )
 
     def __init__(
         self,
@@ -150,8 +159,25 @@ class _ClaimedSliceContinuation:
             )
         self.__context = context
         self.__attempt_eligibility = attempt_eligibility
+        self.__lock = Lock()
+        self.__cross_validation_claimed = False
 
     def permits_continuation(self) -> bool:
+        with self.__lock:
+            return self.__permits_continuation_locked()
+
+    def claim_cross_validation(self) -> None:
+        with self.__lock:
+            if (
+                self.__cross_validation_claimed
+                or not self.__permits_continuation_locked()
+            ):
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.INPUT_CROSS_VALIDATION_REJECTED
+                )
+            self.__cross_validation_claimed = True
+
+    def __permits_continuation_locked(self) -> bool:
         return (
             self.__attempt_eligibility.state is AttemptEligibilityState.ADMITTED
             and self.__context.checkpoint()
@@ -332,6 +358,9 @@ class OwnedAdmittedGraphSliceInput:
 
     def _owned_admission(self) -> OwnedRelationSetAdmissionState:
         return self._admitted
+
+    def _claim_cross_validation(self) -> None:
+        self._continuation.claim_cross_validation()
 
 
 def _bind_qualification_continuation(
