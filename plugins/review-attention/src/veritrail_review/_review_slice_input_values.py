@@ -49,6 +49,7 @@ class _ReviewSliceInputError(RuntimeError):
 _CONTINUATION_TOKEN = object()
 _QUALIFICATION_BINDING_TOKEN = object()
 _ADMISSION_BINDING_TOKEN = object()
+_VALIDATED_ADMISSION_ATTEMPT_TOKEN = object()
 _CLAIMED_CONTINUATION_TOKEN = object()
 
 
@@ -192,10 +193,17 @@ class OwnedRelationQualificationContinuation:
         return self.__continuation.available()
 
     def _bind_admission(
-        self, admitted: OwnedRelationSetAdmissionState
+        self,
+        admitted: OwnedRelationSetAdmissionState,
+        *,
+        _validated_attempt_token: object | None = None,
     ) -> "OwnedAdmittedGraphInputAuthority":
         with self.__lock:
             if self.__admission_bound:
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.ADMISSION_BINDING_REJECTED
+                )
+            if _validated_attempt_token is not _VALIDATED_ADMISSION_ATTEMPT_TOKEN:
                 raise _ReviewSliceInputError(
                     _ReviewSliceInputFailureCode.ADMISSION_BINDING_REJECTED
                 )

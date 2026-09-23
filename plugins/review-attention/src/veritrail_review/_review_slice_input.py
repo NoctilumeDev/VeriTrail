@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from veritrail_review._relation_set_admission import (
-    _validate_admitted_state,
+    _validate_admission_attempt_binding,
     admit_relation_set_for_private_closed_proof,
 )
 from veritrail_review._review_slice_input_values import (
@@ -10,6 +10,7 @@ from veritrail_review._review_slice_input_values import (
     OwnedRelationQualificationContinuation,
     _ReviewSliceInputError,
     _ReviewSliceInputFailureCode,
+    _VALIDATED_ADMISSION_ATTEMPT_TOKEN,
 )
 from veritrail_review.derivation_input_contracts import DerivationInputSet
 
@@ -27,8 +28,11 @@ def admit_relation_set_for_slice_input_private_closed_proof(
         admitted = admit_relation_set_for_private_closed_proof(
             qualified.qualification
         )
-        _validate_admitted_state(admitted)
-        return qualified._bind_admission(admitted)
+        _validate_admission_attempt_binding(qualified.qualification, admitted)
+        return qualified._bind_admission(
+            admitted,
+            _validated_attempt_token=_VALIDATED_ADMISSION_ATTEMPT_TOKEN,
+        )
     except _ReviewSliceInputError:
         raise
     except Exception as exc:
@@ -52,7 +56,7 @@ def claim_admitted_graph_slice_input(
         )
     try:
         qualification, admitted, continuation = authority._coordinates()
-        _validate_admitted_state(admitted)
+        _validate_admission_attempt_binding(qualification, admitted)
         if not continuation._bound_to(inputs):
             continuation.revoke()
             raise ValueError

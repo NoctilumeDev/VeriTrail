@@ -301,6 +301,40 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
         )
         self.assertTrue(success[1].continuation_permitted())
 
+    def test_a_009_cross_attempt_admission_cannot_ride_live_continuation(
+        self,
+    ) -> None:
+        first = self._run("slice-input-a-transplant")
+        second = self._run("slice-input-a-transplant")
+        foreign_admission = (
+            slice_input.admit_relation_set_for_private_closed_proof(
+                second.qualification
+            )
+        )
+
+        self.assertEqual(
+            first.qualification.qualification_digest,
+            second.qualification.qualification_digest,
+        )
+        self.assertNotEqual(
+            foreign_admission.request_provenance_bytes,
+            first.qualification.fact_phase_results[0].request_provenance_bytes,
+        )
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.ADMISSION_BINDING_REJECTED,
+            lambda: first._bind_admission(foreign_admission),
+        )
+
+        authority = (
+            slice_input.admit_relation_set_for_slice_input_private_closed_proof(
+                first
+            )
+        )
+        joined = slice_input.claim_admitted_graph_slice_input(
+            self.inputs, authority
+        )
+        self.assertTrue(joined.continuation_permitted())
+
 
 if __name__ == "__main__":
     unittest.main()

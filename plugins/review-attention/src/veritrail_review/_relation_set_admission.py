@@ -117,7 +117,10 @@ def admit_relation_set_for_private_closed_proof(
             _RelationSetAdmissionFailureCode.WITNESS_REJECTED
         ) from exc
 
-    phases = (*qualification.fact_phase_results, *qualification.relation_phase_results)
+    phases = (
+        *qualification.fact_phase_results,
+        *qualification.relation_phase_results,
+    )
     request_provenance_bytes = normalized["request_provenance_bytes"]
     provider_run_bytes = normalized["all_provider_run_bytes"]
     state_values = {
@@ -372,6 +375,40 @@ def _validate_qualification(
         "conflicts": conflicts,
         "all_provider_run_bytes": tuple(canonical_json_bytes(item) for item in all_runs),
     }
+
+
+def _validate_admission_attempt_binding(
+    qualification: OwnedRelationCompositionQualificationResult,
+    admitted: OwnedRelationSetAdmissionState,
+) -> None:
+    """Require admission and qualification to carry one exact attempt history."""
+
+    normalized = _validate_qualification(qualification)
+    _validate_admitted_state(admitted)
+    phases = (*qualification.fact_phase_results, *qualification.relation_phase_results)
+    if (
+        qualification.derivation_id != admitted.derivation_id
+        or qualification.source_snapshot_digest != admitted.source_snapshot_digest
+        or qualification.policy_digest != admitted.policy_digest
+        or qualification.analysis_scope_digest != admitted.analysis_scope_digest
+        or qualification.slice_policy_digest != admitted.slice_policy_digest
+        or qualification.derivation_profile_digest
+        != admitted.derivation_profile_digest
+        or qualification.fact_set_digest != admitted.fact_set_digest
+        or qualification.observation_domain_digest
+        != admitted.observation_domain_digest
+        or qualification.qualification_digest != admitted.qualification_digest
+        or qualification.candidate_composition_status
+        != admitted.candidate_composition_status
+        or admitted.request_provenance_bytes
+        != normalized["request_provenance_bytes"]
+        or admitted.provider_run_bytes != normalized["all_provider_run_bytes"]
+        or admitted.started_at
+        != min(phase.attempt_started_at for phase in phases)
+        or admitted.finished_at
+        != max(phase.phase_finished_at for phase in phases)
+    ):
+        raise ValueError
 
 
 def _merge_and_validate_facts(
