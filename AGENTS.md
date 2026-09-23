@@ -953,6 +953,17 @@
   它绑定 PR #179、candidate exact-main 双门、三份 fresh anonymous installed-product readback 与 canonical
   manifest，并要求自身再通过远端门、受保护合入、新 exact-main 双门和 fresh readback。冻结只授权 A–H；
   architecture DOT/SVG 因能力拓扑未变而保持字节不变。
+- 文档 189 的 private implementation 已严格按序完成 A、B 两段。A 经 PR #181 合入
+  `main@dbe1217f9502dc1f2fbb55da73c2e41845b63439`，该 exact main 的 Public CI attempt 1 与 Browser
+  Smoke attempt 1 均通过；B 经 PR #182 合入 `main@6b9de57d1009e486d4bb5e392cc6791ee1811304`，PR 原始
+  Public CI 11/11、合入后 exact-main Public CI 11/11 与 Browser Smoke 1/1 均在 attempt 1 通过。当前状态为
+  `R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS /
+  R1_REVIEW_SLICE_INPUT_STAGES_A_B_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_C_H_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。A/B 没有独立冻结 claim；下一步只有在重新读取
+  exact-main 停止线且没有新反例推翻问题选择后，才允许进入 C 的 private conflict gate 与 deterministic
+  anchor/spec obligation domain。不得把 A/B 的成功扩张为 obligation domain、BFS、ReviewSliceSet、Coverage、
+  publisher、Schema、Attention、CLI 或 Workbench 已开始；能力拓扑未变化，architecture DOT/SVG 保持字节不变。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
