@@ -1637,6 +1637,32 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 Schema patch、publisher、Bundle、Attention、CLI、Workbench、D、Cu、O、T 与 Q runtime 继续未授权；能力
 拓扑未变化，architecture DOT/SVG 保持字节不变。
 
+2026-09-23 至 2026-09-24，文档 189 的 private implementation 严格按序完成 A、B 两段。A 经 PR #181
+从 `85ea4becee2ff7ae37747bb0771d46e91e6f80f4` 实现 same-attempt continuation 与 admitted-graph input
+join，合入 `main@dbe1217f9502dc1f2fbb55da73c2e41845b63439`；该 exact main 的 Public CI run
+`35853585483` attempt 1 与 Browser Smoke run `35853585590` attempt 1 均通过。B 经 PR #182 从该 exact
+main 实现 exact Snapshot/Policy/Profile/FactSet/blob/qualification/admission history cross-validation，PR
+Public CI run `35864157556` 原始 11/11 通过，随后合入
+`main@6b9de57d1009e486d4bb5e392cc6791ee1811304`；新 exact main 的 Public CI run `35898913879`
+attempt 1 为 11/11 PASS，Browser Smoke run `35898913946` attempt 1 为 1/1 PASS。A/B 都只形成 private
+owned state 与同一 live attempt 的连续性，没有公共 Artifact、Schema、publisher、output root、obligation
+domain、traversal、ReviewSliceSet 或 Coverage。
+
+当前事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_C_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A/B 提升为独立 frozen 状态，也不改写文档 189/190 发布时的 `IMPLEMENTATION_NOT_STARTED` 历史。
+从 `main@6b9de57...` 重新读取停止线后，没有出现 FactSet 无法精确复算、shared BudgetContext 必须在
+admission 后结束或 Slice 不消费 RelationSet 等重开事实；因此下一条仍是 C 的 private conflict gate 与
+deterministic anchor/spec obligation domain，但 C 尚未开始。能力拓扑不变，architecture DOT/SVG 保持字节不变。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
