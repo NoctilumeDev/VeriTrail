@@ -59,6 +59,10 @@ from veritrail_review._relation_observation_domain import (
 from veritrail_review._relation_observation_qualification_values import (
     OwnedRelationCompositionQualificationResult,
 )
+from veritrail_review._review_slice_input_values import (
+    OwnedRelationQualificationContinuation,
+    _bind_qualification_continuation,
+)
 from veritrail_review._windows_budget import require_budget_primitive_capability
 from veritrail_review.budget import (
     BudgetContext,
@@ -132,6 +136,32 @@ def run_closed_test_relation_observation_qualification(
         transport_limits=transport_limits,
     )
     return _ObservationQualificationController(prepared).run()
+
+
+def run_closed_test_relation_observation_qualification_for_slice_input(
+    inputs: DerivationInputSet,
+    *,
+    derivation_id: str,
+    bindings: Sequence[ProviderBinding],
+    cancellation_requested: Callable[[], bool] | None = None,
+    transport_limits: ExecutionCellTransportSafetyLimits = DEFAULT_TRANSPORT_LIMITS,
+) -> OwnedRelationQualificationContinuation:
+    """Run qualification while retaining one opaque same-attempt continuation."""
+
+    prepared = _prepare_observation_qualification(
+        inputs,
+        derivation_id=derivation_id,
+        bindings=bindings,
+        cancellation_requested=cancellation_requested,
+        transport_limits=transport_limits,
+    )
+    result = _ObservationQualificationController(prepared).run()
+    return _bind_qualification_continuation(
+        result,
+        inputs=prepared.inputs,
+        context=prepared.context,
+        attempt_eligibility=prepared.parent_eligibility,
+    )
 
 
 def _prepare_observation_qualification(

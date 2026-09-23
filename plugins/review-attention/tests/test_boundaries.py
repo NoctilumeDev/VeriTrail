@@ -193,6 +193,8 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
             (SOURCE_ROOT / "veritrail_review").glob("_relation_observation_cell*.py")
         ) + sorted(
             (SOURCE_ROOT / "veritrail_review").glob("_relation_set_admission*.py")
+        ) + sorted(
+            (SOURCE_ROOT / "veritrail_review").glob("_review_slice_input*.py")
         )
         self.assertTrue(relation_modules)
         forbidden_imports = {
@@ -251,6 +253,8 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
         for name in (
             "admit_relation_set_for_private_closed_proof",
             "project_private_derivation_evidence_0_2",
+            "admit_relation_set_for_slice_input_private_closed_proof",
+            "claim_admitted_graph_slice_input",
         ):
             self.assertFalse(hasattr(veritrail_review, name))
             self.assertNotIn(name, veritrail_review.__all__)
