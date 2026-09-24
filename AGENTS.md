@@ -964,6 +964,20 @@
   exact-main 停止线且没有新反例推翻问题选择后，才允许进入 C 的 private conflict gate 与 deterministic
   anchor/spec obligation domain。不得把 A/B 的成功扩张为 obligation domain、BFS、ReviewSliceSet、Coverage、
   publisher、Schema、Attention、CLI 或 Workbench 已开始；能力拓扑未变化，architecture DOT/SVG 保持字节不变。
+- 从上述 exact main 继续实现的 C 经 PR #184 合入
+  `main@9b9e401d03634dc9dd9afc7365c4a2a01b849fc5`；PR 原始 Public CI run `35914018955` 为 11/11
+  PASS，合入后的 exact-main Public CI run `35966286794` attempt 1 为 11/11 PASS，Browser Smoke run
+  `35966286690` attempt 1 为 1/1 PASS。C 只形成 private Relation conflict gate 与 deterministic exact
+  anchor/spec obligation domain；conflict world 没有 normal domain，zero-anchor world 只有已知空 domain，二者
+  都没有被升级为 Slice、Coverage 或 closure。当前状态为
+  `R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS /
+  R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_D_H_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。A/B/C 均没有独立 frozen claim。重新读取该 exact
+  main 后，D 仍是下一条最小候选 seam，但任何实现必须由 domain owner 逐项产生 opaque assignment、继续消费原
+  live `BudgetContext`，并停在 private deterministic traversal boundary；caller-supplied spec、fresh budget、
+  public ReviewSliceSet/CoverageLedger、publisher、Schema、Attention、CLI 与 Workbench 仍未授权。能力拓扑未变，
+  architecture DOT/SVG 保持字节不变。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
