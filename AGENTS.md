@@ -978,6 +978,26 @@
   live `BudgetContext`，并停在 private deterministic traversal boundary；caller-supplied spec、fresh budget、
   public ReviewSliceSet/CoverageLedger、publisher、Schema、Attention、CLI 与 Workbench 仍未授权。能力拓扑未变，
   architecture DOT/SVG 保持字节不变。
+- D 从状态同步后的 `main@eabce147092799b38fab5e54fd2659db4d3f17b8` 建立 private obligation
+  assignment 与 deterministic traversal boundary。PR #186 原始 Public CI run `35979172112` attempt 1 为
+  11/11 PASS，并以实现 commit `487df99930eed719753627d00af78e7c0fea0b17` 合入
+  `main@a876a1d2616c81786571d295ecd4aa4a98828d97`。该 exact main 的 Browser Smoke run
+  `35981417298` attempt 1 为 1/1 PASS；Public CI run `35981417295` 则在 Python 3.10 已通过
+  Review Attention normal/`-O`、构建与资产上传后触及既有 20 分钟 aggregated job containment，E1
+  clean-install 被取消，七条后继门跳过，因此正式保持 `CANCELLED`，不得写成 PASS 或 rerun 洗白。独立 PR
+  #187 只把该 outer containment 从 20 调整到 25 分钟，不修改产品 timeout、测试、验收阈值或 D runtime；其
+  原始 Public CI run `35983866207` attempt 1 为 11/11 PASS，随后合入
+  `main@eacc1995236fde60b8e838fda1cef8865ba3e0b5`。该 maintenance-qualified exact main 的 Public CI
+  run `35986138680` attempt 1 为 11/11 PASS，Browser Smoke run `35986138572` attempt 1 为 1/1 PASS。
+  当前状态为
+  `R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS /
+  R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_E_H_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。A–D 均没有独立 frozen claim。D 只允许 domain
+  owner 形成 attempt-bound opaque assignments，并按 domain 顺序一次性给出绑定 exact FactSet、RelationSet 与
+  Profile traversal rules 的 private boundary；它没有执行 BFS，也没有 outcome、frontier、Slice、closed-empty、
+  publisher 或公共 Schema authority。能力拓扑未变，architecture DOT/SVG 保持字节不变；下一步必须重新读取
+  exact-main 停止线后再判断 E，不得因 D 已验证而自动开始 COMPLETE/PARTIAL outcome 或后继 F–H。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
