@@ -1663,6 +1663,31 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 admission 后结束或 Slice 不消费 RelationSet 等重开事实；因此下一条仍是 C 的 private conflict gate 与
 deterministic anchor/spec obligation domain，但 C 尚未开始。能力拓扑不变，architecture DOT/SVG 保持字节不变。
 
+2026-09-24，C 从上述 exact main 实现 private Relation conflict gate 与 deterministic exact anchor/spec
+obligation domain。首次 targeted 运行是 31/32：C-005 的 test helper 没有应用请求的 B-conflict launch key，
+runtime 因而正确观察到 CONSISTENT world；后继只修 helper，使 fixture 真正建立 conflict world，没有把该失败
+改写成 runtime defect。最终字节在 Python 3.10/3.13 normal 与 `-O` 四格中分别通过 targeted A/B/C 33/33 与
+完整 Review Attention 243/243。PR #184 原始 Public CI run `35914018955` 为 11/11 PASS，随后合入
+`main@9b9e401d03634dc9dd9afc7365c4a2a01b849fc5`；该 exact main 的 Public CI run `35966286794`
+attempt 1 为 11/11 PASS，Browser Smoke run `35966286690` attempt 1 为 1/1 PASS。
+
+当前事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_D_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A/B/C 提升为独立 frozen 状态，也不改写文档 189/190 或前一状态投影的历史。C 的 normal world 只拥有
+exact obligation denominator；conflict world 没有 normal domain，zero-anchor world 只有已知空 domain，尚无
+assignment、traversal、outcome、ReviewSlice、SliceSet 或 Coverage authority。从新的 exact main 重新读取停止线
+后，D 仍是下一条最小候选 seam；后继若实现，必须由 domain owner 逐项产生 opaque assignment、继续消费原 live
+`BudgetContext`，并停在 private deterministic traversal boundary。能力拓扑不变，architecture DOT/SVG 保持
+字节不变。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
