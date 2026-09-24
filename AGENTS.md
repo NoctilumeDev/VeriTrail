@@ -1014,6 +1014,22 @@
   R1_REVIEW_SLICE_INPUT_STAGES_F_H_NOT_STARTED`；维护必须独立通过本地适用门、原始 PR 门、受保护合入与新
   exact-main 双门，E 状态发布再从该新 source identity 重建。能力拓扑未变，architecture DOT/SVG 保持字节
   不变，F 不得启动。
+- maintenance PR #192 original head `e7c1bd8e2fe60b648074fae90bda83d2e73331ae` 的 Public CI run
+  `36038413885` attempt 1 为 11/11 PASS，随后合入
+  `main@89a069277c361a55afdd963f2a1e5e75aee9a39a`；该 exact main 的 Public CI run
+  `36041811403` attempt 1 为 11/11 PASS，Browser Smoke run `36041811369` attempt 1 为 1/1 PASS。
+  因此状态为
+  `M10_PUBLIC_CLI_HOST_EXIT_OBSERVATION_CORRECTION_QUALIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_F_H_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。PR #191 保持 closed/unmerged，其 original
+  `FAILURE / UNKNOWN` 没有被维护绿灯覆盖。E 状态发布必须从该 maintenance-qualified exact main 形成新的
+  docs-only source identity，并独立通过自身 PR 与合入后 exact-main 门；A–E 均没有独立 frozen claim。
+  E 仍只证明逐项 normal traversal outcome 与 structural frontier，可以在同一 live attempt 中形成多个
+  assignment/outcome；它不证明整组 missing/duplicate/dangling/cross-attempt reconciliation、zero-anchor
+  closed-empty、conflict/upstream-unknown closure 或 `RS-000..016` hardening。公共 ReviewSliceSet、
+  CoverageLedger、publisher、Schema、Attention、CLI 与 Workbench 均未授权；能力拓扑未变，architecture
+  DOT/SVG 保持字节不变，F 不得因本状态投影自动开始。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

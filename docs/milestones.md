@@ -1754,6 +1754,31 @@ installed topology，也没有形成完整 suite 资格结果；它不计作 PAS
 远端门、受保护合入与新 exact-main 双门成立后取得资格；随后 E 状态发布必须从新的 source identity 重建，
 F 仍不得启动。能力拓扑未变，architecture DOT/SVG 保持字节不变。
 
+maintenance PR #192 original head `e7c1bd8e2fe60b648074fae90bda83d2e73331ae` 的 Public CI run
+`36038413885` attempt 1 为 11/11 PASS，并合入
+`main@89a069277c361a55afdd963f2a1e5e75aee9a39a`；该 exact main 的 Public CI run
+`36041811403` attempt 1 为 11/11 PASS，Browser Smoke run `36041811369` attempt 1 为 1/1 PASS。
+因此维护状态为 `M10_PUBLIC_CLI_HOST_EXIT_OBSERVATION_CORRECTION_QUALIFIED`。PR #191 保持
+closed/unmerged，其 original Public CI `FAILURE / UNKNOWN` 没有被维护 PR 或 exact-main 绿灯覆盖；后继 E
+状态发布从该 maintenance-qualified exact main 建立新的 source identity，而不是 rerun 或更新旧 head。
+
+当前可发布的事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_F_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A–E 提升为独立 frozen 状态。E 证明逐项 normal traversal outcome 与 structural frontier 可以成立，
+并以只读诊断排除了首个 outcome 必然终止同一 live attempt 后继 obligation 的候选假设；它不证明整个 domain
+已经完成 missing/duplicate/dangling/cross-attempt reconciliation。zero-anchor closed-empty、
+conflict/upstream-unknown negative worlds、`RS-000..016` hardening、公共 ReviewSliceSet/CoverageLedger、
+publisher 与 Schema 仍未开始。能力拓扑未变化，architecture DOT/SVG 保持字节不变；本 docs-only 状态发布
+必须独立通过自己的原始 PR 门、受保护合入与新 exact-main 双门，之后才能重新审查 F。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
