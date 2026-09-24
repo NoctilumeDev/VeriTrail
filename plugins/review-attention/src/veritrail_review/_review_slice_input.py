@@ -25,6 +25,10 @@ from veritrail_review._review_slice_obligation_domain_values import (
     OwnedReviewSliceObligationDomainGate,
     _validate_obligation_domain_gate,
 )
+from veritrail_review._review_slice_obligation_closure_values import (
+    OwnedReviewSliceObligationClosure,
+    _validate_slice_obligation_closure,
+)
 from veritrail_review._review_slice_traversal_assignment_values import (
     OwnedReviewSliceTraversalAssignments,
     OwnedReviewSliceTraversalBoundary,
@@ -413,6 +417,119 @@ def derive_review_slice_traversal_outcome(
     except Exception as exc:
         raise _ReviewSliceInputError(
             _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED
+        ) from exc
+
+
+def reconcile_review_slice_traversal_outcomes(
+    assignments: OwnedReviewSliceTraversalAssignments,
+    outcomes: tuple[OwnedReviewSliceTraversalOutcome, ...],
+) -> OwnedReviewSliceObligationClosure:
+    """Close one non-empty F-stage domain from its exact owned outcomes."""
+
+    if type(assignments) is not OwnedReviewSliceTraversalAssignments:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED
+        )
+    try:
+        _validate_traversal_assignments(assignments)
+        if assignments.assignment_count == 0:
+            raise ValueError
+        assignments._claim_normal_reconciliation()
+        if type(outcomes) is not tuple:
+            raise ValueError
+
+        gate = assignments._owned_domain_gate()
+        obligations = gate.obligations_copy()
+        if (
+            obligations is None
+            or len(obligations) != assignments.assignment_count
+        ):
+            raise ValueError
+        by_ordinal: dict[int, OwnedReviewSliceTraversalOutcome] = {}
+        for outcome in outcomes:
+            if type(outcome) is not OwnedReviewSliceTraversalOutcome:
+                raise ValueError
+            _validate_traversal_outcome(outcome)
+            boundary = outcome._owned_boundary()
+            if (
+                boundary._owned_assignments() is not assignments
+                or outcome.derivation_id != assignments.derivation_id
+                or outcome.admission_witness_digest
+                != assignments.admission_witness_digest
+                or outcome.slice_obligation_domain_digest
+                != assignments.slice_obligation_domain_digest
+                or outcome.assignment_ordinal in by_ordinal
+                or outcome.assignment_ordinal < 0
+                or outcome.assignment_ordinal >= assignments.assignment_count
+                or outcome.assignment_digest
+                != assignments.assignment_digests[outcome.assignment_ordinal]
+            ):
+                raise ValueError
+            spec = obligations[outcome.assignment_ordinal]
+            candidate = outcome.normal_slice_candidate_copy()
+            if (
+                outcome.slice_spec_digest != spec["slice_spec_digest"]
+                or canonical_json_bytes(candidate["slice_spec"])
+                != canonical_json_bytes(spec)
+                or canonical_json_bytes(candidate)
+                != canonical_json_bytes(
+                    _derive_normal_review_slice_candidate(boundary)
+                )
+            ):
+                raise ValueError
+            by_ordinal[outcome.assignment_ordinal] = outcome
+
+        expected_ordinals = tuple(range(assignments.assignment_count))
+        if (
+            set(by_ordinal) != set(expected_ordinals)
+            or len({item.traversal_outcome_digest for item in outcomes})
+            != len(outcomes)
+        ):
+            raise ValueError
+        ordered_outcomes = tuple(by_ordinal[index] for index in expected_ordinals)
+        validated = gate._owned_cross_validated_input()
+        document: dict[str, object] = {
+            "derivation_id": assignments.derivation_id,
+            "admission_witness_digest": assignments.admission_witness_digest,
+            "source_snapshot_digest": validated.source_snapshot_digest,
+            "policy_digest": validated.policy_digest,
+            "analysis_scope_digest": validated.analysis_scope_digest,
+            "slice_policy_digest": validated.slice_policy_digest,
+            "derivation_profile_digest": validated.derivation_profile_digest,
+            "fact_set_digest": validated.fact_set_digest,
+            "relation_set_digest": validated.relation_set_digest,
+            "slice_obligation_domain_digest": (
+                assignments.slice_obligation_domain_digest
+            ),
+            "closure_status": "NORMAL_CLOSED",
+            "traversal_outcomes": [
+                item.outcome_document_copy() for item in ordered_outcomes
+            ],
+            "normal_slice_candidates": [
+                item.normal_slice_candidate_copy() for item in ordered_outcomes
+            ],
+        }
+        document["slice_obligation_closure_digest"] = semantic_digest(
+            "veritrail.review.private-slice-obligation-closure/0.1",
+            copy.deepcopy(document),
+        )
+        commit_bytes = canonical_json_bytes(document)
+        committed = assignments._try_complete_obligation_closure(commit_bytes)
+        if committed is None:
+            raise ValueError
+        result = OwnedReviewSliceObligationClosure._create(
+            assignments=assignments,
+            outcomes=ordered_outcomes,
+            closure_document=document,
+            committed_phase=committed,
+        )
+        _validate_slice_obligation_closure(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED
         ) from exc
 
 
