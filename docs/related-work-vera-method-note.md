@@ -199,9 +199,10 @@ VeriTrail 继续由 sealed Plan / Profile 决定 required Evidence；相互冲�
 ### 5.4 不主张学界空白或公开优先权
 
 软件 acceptance、assurance case、testing 与 reproducibility 已有长期研究传统。Vera 的 v1 也早于 VeriTrail
-公开仓库。当前可支持的陈述只是：VeriTrail 的 2026-08-08 初始产品与 Evidence 模型已经独立包含
-sealed Plan、控制变量、四 Verdict、正交 ExecutionStatus、baseline expiry 与 observer effect 等核心边界；
-不能由此推出“首先发现”或“拥有验收定义权”。
+公开仓库。VeriTrail 的 2026-08-08 首个公开提交 `b84300647a0002962b797c43a509e1d799220ee4`
+已经包含 sealed Plan、控制变量、四 Verdict、正交 ExecutionStatus、baseline、paired run 与
+observer effect 等核心边界。这只能证明这些语义不是本次阅读 Vera 后才追加进仓库；它不能单凭 Git 历史
+证明认知来源，也不能推出“首先发现”“独立首创”或“拥有验收定义权”。
 
 ## 6. 后继使用坐标
 
