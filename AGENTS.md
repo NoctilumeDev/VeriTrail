@@ -998,6 +998,22 @@
   Profile traversal rules 的 private boundary；它没有执行 BFS，也没有 outcome、frontier、Slice、closed-empty、
   publisher 或公共 Schema authority。能力拓扑未变，architecture DOT/SVG 保持字节不变；下一步必须重新读取
   exact-main 停止线后再判断 E，不得因 D 已验证而自动开始 COMPLETE/PARTIAL outcome 或后继 F–H。
+- E 从上述状态链继续形成 private deterministic BFS、`NORMAL_COMPLETE / NORMAL_PARTIAL` outcome 与
+  structural frontier proof，并经 PR #190 合入
+  `main@5493007d15b7895fe0dddfd4c7c617424cd15672`；该 exact main 的 Public CI run
+  `36031453261` attempt 1 为 11/11 PASS，Browser Smoke run `36031453255` attempt 1 为 1/1 PASS。
+  后继 docs-only 状态发布 PR #191 的原始 Public CI run `36034293834` attempt 1 在 Python 3.13 `-O`
+  执行 M10 dependency-early-exit 公共 CLI 用例时，只留下测试 identity 与 step exit code 1，没有 terminal
+  unittest outcome、traceback 或 summary；该正式失败保持 `FAILURE / UNKNOWN`，PR 不合并、不 rerun。
+  `docs/191-m10-public-cli-host-exit-observation-correction.md` 只修正这个 negative test 的观察边界：由外层
+  unittest 启动 exact interpreter 的独立 CLI 子进程，保存 return code/stdout/stderr，同时继续验证原 Bundle、
+  cleanup 与 port facts。它不修改 Core runtime、M10 生命周期合同、R1 E、Schema 或 publisher，也不声称已
+  解释或修复 #191 的未知根因。当前只能记为
+  `M10_PUBLIC_CLI_HOST_EXIT_OBSERVATION_CORRECTION_CANDIDATE /
+  R1_E_STATUS_PUBLICATION_REQUALIFICATION_BLOCKED /
+  R1_REVIEW_SLICE_INPUT_STAGES_F_H_NOT_STARTED`；维护必须独立通过本地适用门、原始 PR 门、受保护合入与新
+  exact-main 双门，E 状态发布再从该新 source identity 重建。能力拓扑未变，architecture DOT/SVG 保持字节
+  不变，F 不得启动。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

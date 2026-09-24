@@ -881,18 +881,46 @@ class BootstrapRunCliTests(unittest.TestCase):
             )
             output = root / "bundle-dependency-early-exit"
 
-            code, payload, stderr = self._run(
-                subject=subject,
-                plan=plan,
-                profile=profile,
-                bindings=bindings,
-                approval=preview["preview_sha256"],
-                output=output,
-                run_id="m10-dependency-early-exit",
+            optimization_flag = (
+                ["-" + ("O" * sys.flags.optimize)] if sys.flags.optimize else []
             )
+            completed = subprocess.run(
+                [
+                    sys.executable,
+                    *optimization_flag,
+                    "-m",
+                    "veritrail",
+                    "run",
+                    "--plan",
+                    str(plan),
+                    "--profile",
+                    str(profile),
+                    "--subject-root",
+                    str(subject),
+                    "--tool-bindings",
+                    str(bindings),
+                    "--approve-bootstrap-preview-sha256",
+                    preview["preview_sha256"],
+                    "--output",
+                    str(output),
+                    "--run-id",
+                    "m10-dependency-early-exit",
+                ],
+                cwd=ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            )
+            diagnostic = {
+                "returncode": completed.returncode,
+                "stdout": completed.stdout,
+                "stderr": completed.stderr,
+            }
 
-            self.assertEqual("", stderr)
-            self.assertEqual(0, code)
+            self.assertEqual("", completed.stderr, msg=diagnostic)
+            self.assertEqual(0, completed.returncode, msg=diagnostic)
+            payload = json.loads(completed.stdout)
             self.assertEqual("PROCEED", payload["resource_decision"])
             self.assertTrue(payload["bootstrap_started"])
             self.assertFalse(payload["services_ready"])

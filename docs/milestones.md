@@ -1725,6 +1725,35 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 后继 reconciliation、zero-anchor closed-empty 与 RS hardening 都尚未开始；必须从新的 exact main 重新读取停止线，
 不能把 D 的 traversal boundary 当成 traversal result。能力拓扑未变化，architecture DOT/SVG 保持字节不变。
 
+E 随后从重新绑定的主线形成 private deterministic BFS、`NORMAL_COMPLETE / NORMAL_PARTIAL` outcome 与
+structural frontier proof。PR #190 原始 Public CI run `36027898533` attempt 1 为 11/11 PASS，并合入
+`main@5493007d15b7895fe0dddfd4c7c617424cd15672`；该 exact main 的 Public CI run `36031453261`
+attempt 1 为 11/11 PASS，Browser Smoke run `36031453255` attempt 1 为 1/1 PASS。额外诊断还证明同一 live
+attempt 可按一个 domain 产生三个 assignment 与三个 outcome；这只排除“首个 outcome 会终止 shared
+BudgetContext”的候选假设，不构成 F reconciliation 证据。
+
+后继 docs-only 状态发布 PR #191 原始 head `a19a06431799e05482df7dbb5944ada429389d1f` 的 Public CI run
+`36034293834` attempt 1 在 Python 3.13 `-O` 的 M10 dependency-early-exit 公共 CLI 用例中，只留下测试
+identity 与 step exit code 1，没有 terminal unittest outcome、traceback 或 summary。该正式失败保持
+`FAILURE / UNKNOWN`；PR 不合并、不 rerun，后继成功不得改写它。独立
+[文档 191](191-m10-public-cli-host-exit-observation-correction.md)只把这一个 negative test 从 in-process CLI
+调用改为由外层 unittest 观察 exact interpreter 的 CLI 子进程，以保存 return code/stdout/stderr；Bundle、
+cleanup 与 port 断言不变。临时 `os._exit(1)` mutation 已证明外层 harness 在子进程硬退出时仍能存活并报告
+nonzero return code，随后 mutation 撤销。该修正不修改 Core runtime、M10 生命周期合同、R1 E、Schema 或
+publisher，也不解释 #191 的根因。当前状态只能记为：
+
+```text
+M10_PUBLIC_CLI_HOST_EXIT_OBSERVATION_CORRECTION_CANDIDATE
+R1_E_STATUS_PUBLICATION_REQUALIFICATION_BLOCKED
+R1_REVIEW_SLICE_INPUT_STAGES_F_H_NOT_STARTED
+```
+
+目标用例与完整 `test_bootstrap_run_cli` 已在 Python 3.10/3.13 normal/`-O` 四格通过。一次裸 source-root
+完整 Core 尝试因缺少 `veritrail_github` 且本机真实浏览器用例提前触发 memory soft limit，没有复刻 CI 的
+installed topology，也没有形成完整 suite 资格结果；它不计作 PASS 或产品回归 FAIL。维护只能在自己的原始
+远端门、受保护合入与新 exact-main 双门成立后取得资格；随后 E 状态发布必须从新的 source identity 重建，
+F 仍不得启动。能力拓扑未变，architecture DOT/SVG 保持字节不变。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
