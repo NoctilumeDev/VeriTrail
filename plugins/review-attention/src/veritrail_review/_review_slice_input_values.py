@@ -24,6 +24,8 @@ class _ReviewSliceInputFailureCode(str, Enum):
     INPUT_JOIN_REJECTED = "INPUT_JOIN_REJECTED"
     INPUT_CROSS_VALIDATION_REJECTED = "INPUT_CROSS_VALIDATION_REJECTED"
     OBLIGATION_DOMAIN_REJECTED = "OBLIGATION_DOMAIN_REJECTED"
+    OBLIGATION_ASSIGNMENT_REJECTED = "OBLIGATION_ASSIGNMENT_REJECTED"
+    TRAVERSAL_BOUNDARY_REJECTED = "TRAVERSAL_BOUNDARY_REJECTED"
 
 
 _FAILURE_MESSAGES = {
@@ -41,6 +43,12 @@ _FAILURE_MESSAGES = {
     ),
     _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED: (
         "the admitted graph cannot establish one exact Slice obligation domain"
+    ),
+    _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED: (
+        "the exact Slice obligation domain cannot establish private assignments"
+    ),
+    _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED: (
+        "the next private Slice obligation cannot enter its traversal boundary"
     ),
 }
 
@@ -148,6 +156,7 @@ class _ClaimedSliceContinuation:
         "__context",
         "__cross_validation_claimed",
         "__obligation_domain_claimed",
+        "__traversal_assignments_claimed",
         "__lock",
     )
 
@@ -167,6 +176,7 @@ class _ClaimedSliceContinuation:
         self.__lock = Lock()
         self.__cross_validation_claimed = False
         self.__obligation_domain_claimed = False
+        self.__traversal_assignments_claimed = False
 
     def permits_continuation(self) -> bool:
         with self.__lock:
@@ -194,6 +204,18 @@ class _ClaimedSliceContinuation:
                     _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED
                 )
             self.__obligation_domain_claimed = True
+
+    def claim_traversal_assignments(self) -> None:
+        with self.__lock:
+            if (
+                not self.__obligation_domain_claimed
+                or self.__traversal_assignments_claimed
+                or not self.__permits_continuation_locked()
+            ):
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED
+                )
+            self.__traversal_assignments_claimed = True
 
     def __permits_continuation_locked(self) -> bool:
         return (
@@ -382,6 +404,9 @@ class OwnedAdmittedGraphSliceInput:
 
     def _claim_obligation_domain(self) -> None:
         self._continuation.claim_obligation_domain()
+
+    def _claim_traversal_assignments(self) -> None:
+        self._continuation.claim_traversal_assignments()
 
 
 def _bind_qualification_continuation(

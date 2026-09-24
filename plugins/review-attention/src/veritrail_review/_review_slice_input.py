@@ -25,6 +25,12 @@ from veritrail_review._review_slice_obligation_domain_values import (
     OwnedReviewSliceObligationDomainGate,
     _validate_obligation_domain_gate,
 )
+from veritrail_review._review_slice_traversal_assignment_values import (
+    OwnedReviewSliceTraversalAssignments,
+    OwnedReviewSliceTraversalBoundary,
+    _validate_traversal_assignments,
+    _validate_traversal_boundary,
+)
 from veritrail_review.canonical import (
     canonical_json_bytes,
     semantic_digest,
@@ -283,6 +289,69 @@ def construct_review_slice_obligation_domain(
     except Exception as exc:
         raise _ReviewSliceInputError(
             _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED
+        ) from exc
+
+
+def assign_review_slice_obligations_for_traversal(
+    gate: OwnedReviewSliceObligationDomainGate,
+) -> OwnedReviewSliceTraversalAssignments:
+    """Assign the exact D-stage domain without accepting caller-owned specs."""
+
+    if type(gate) is not OwnedReviewSliceObligationDomainGate:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED
+        )
+    try:
+        gate._claim_traversal_assignments()
+        _validate_obligation_domain_gate(gate)
+        obligations = gate.obligations_copy()
+        if (
+            gate.slice_input_status != "ELIGIBLE"
+            or obligations is None
+            or not gate.continuation_permitted()
+        ):
+            raise ValueError
+        result = OwnedReviewSliceTraversalAssignments._create(
+            gate=gate,
+            obligations=obligations,
+        )
+        _validate_traversal_assignments(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED
+        ) from exc
+
+
+def claim_next_review_slice_traversal(
+    assignments: OwnedReviewSliceTraversalAssignments,
+) -> OwnedReviewSliceTraversalBoundary:
+    """Claim one opaque assignment as an exact D-stage traversal boundary."""
+
+    if type(assignments) is not OwnedReviewSliceTraversalAssignments:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED
+        )
+    try:
+        _validate_traversal_assignments(assignments)
+        assignment_ordinal, assignment_digest, slice_spec_bytes = (
+            assignments._claim_next()
+        )
+        result = OwnedReviewSliceTraversalBoundary._create(
+            assignments=assignments,
+            assignment_ordinal=assignment_ordinal,
+            assignment_digest=assignment_digest,
+            slice_spec_bytes=slice_spec_bytes,
+        )
+        _validate_traversal_boundary(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED
         ) from exc
 
 
