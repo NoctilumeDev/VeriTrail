@@ -24,7 +24,7 @@ jobs:
     # This aggregated lane runs every required product and release gate serially.
     # The outer CI containment budget must leave recovery headroom for normal
     # hosted-runner variance; it does not change any inner product timeout.
-    timeout-minutes: 20
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
