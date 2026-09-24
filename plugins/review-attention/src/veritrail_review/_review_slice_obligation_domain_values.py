@@ -96,6 +96,9 @@ class OwnedReviewSliceObligationDomainGate:
     ) -> OwnedCrossValidatedAdmittedGraphSliceInput:
         return self._validated
 
+    def _claim_traversal_assignments(self) -> None:
+        self._validated._claim_traversal_assignments()
+
 
 def _validate_obligation_domain_gate(
     value: OwnedReviewSliceObligationDomainGate,

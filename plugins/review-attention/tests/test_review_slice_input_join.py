@@ -27,6 +27,9 @@ from veritrail_review import (  # noqa: E402
 from veritrail_review import (  # noqa: E402
     _review_slice_obligation_domain_values as domain_values,
 )
+from veritrail_review import (  # noqa: E402
+    _review_slice_traversal_assignment_values as assignment_values,
+)
 from veritrail_review._execution_cell_binding import ProviderBinding  # noqa: E402
 from veritrail_review._review_slice_input_values import (  # noqa: E402
     _ReviewSliceInputError,
@@ -962,6 +965,303 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             first.obligation_domain_document_bytes,
             second.obligation_domain_document_bytes,
         )
+
+    def test_d_001_exact_domain_forms_private_assignment_and_boundary(self) -> None:
+        _, validated = self._validated("slice-input-d-positive")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+        boundary = slice_input.claim_next_review_slice_traversal(assignments)
+        request = boundary.traversal_request_copy()
+        obligations = gated.obligations_copy()
+
+        self.assertIsNotNone(obligations)
+        assert obligations is not None
+        self.assertEqual(assignments.assignment_count, len(obligations))
+        self.assertEqual(assignments.remaining_assignment_count(), 0)
+        self.assertEqual(boundary.assignment_ordinal, 0)
+        self.assertEqual(
+            boundary.slice_spec_digest,
+            obligations[0]["slice_spec_digest"],
+        )
+        self.assertEqual(request["slice_spec"], obligations[0])
+        self.assertEqual(
+            request["traversal_rules"],
+            validated.derivation_profile_document_copy()["traversal_rules"],
+        )
+        self.assertEqual(request["fact_set"], validated.fact_set_document_copy())
+        self.assertEqual(
+            request["relation_set"],
+            validated.relation_set_document_copy(),
+        )
+        self.assertTrue(boundary.continuation_permitted())
+        for forbidden in (
+            "outcome_status",
+            "frontier",
+            "slice_id",
+            "review_slice",
+            "review_slice_set",
+            "coverage",
+        ):
+            self.assertNotIn(forbidden, request)
+
+    def test_d_002_assignment_construction_is_one_shot(self) -> None:
+        _, validated = self._validated("slice-input-d-one-shot")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+        self.assertTrue(assignments.continuation_permitted())
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED,
+            lambda: slice_input.assign_review_slice_obligations_for_traversal(
+                gated
+            ),
+        )
+
+    def test_d_003_concurrent_single_assignment_has_one_winner(self) -> None:
+        _, validated = self._validated("slice-input-d-concurrent")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+        self.assertEqual(assignments.assignment_count, 1)
+        barrier = Barrier(2)
+
+        def claim():
+            barrier.wait()
+            try:
+                boundary = slice_input.claim_next_review_slice_traversal(
+                    assignments
+                )
+            except _ReviewSliceInputError as exc:
+                return ("ERROR", exc.code)
+            return ("BOUNDARY", boundary)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            outcomes = [
+                future.result()
+                for future in (pool.submit(claim), pool.submit(claim))
+            ]
+        self.assertEqual(
+            sorted(item[0] for item in outcomes), ["BOUNDARY", "ERROR"]
+        )
+        failure = next(item for item in outcomes if item[0] == "ERROR")
+        success = next(item for item in outcomes if item[0] == "BOUNDARY")
+        self.assertIs(
+            failure[1], _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED
+        )
+        self.assertTrue(success[1].continuation_permitted())
+
+    def test_d_004_failed_assignment_validation_consumes_the_claim(self) -> None:
+        _, validated = self._validated("slice-input-d-failed-claim")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        original = gated.obligation_domain_document_bytes
+        object.__setattr__(gated, "obligation_domain_document_bytes", b"{}")
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED,
+            lambda: slice_input.assign_review_slice_obligations_for_traversal(
+                gated
+            ),
+        )
+        object.__setattr__(gated, "obligation_domain_document_bytes", original)
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED,
+            lambda: slice_input.assign_review_slice_obligations_for_traversal(
+                gated
+            ),
+        )
+
+    def test_d_005_assignments_follow_complete_domain_order(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.support.two_import_inputs,
+            ["MODULE", "IMPORT_DECLARATION"],
+        )
+        _, validated = self._validated(
+            "slice-input-d-order",
+            inputs=inputs,
+            two_imports=True,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+        obligations = gated.obligations_copy()
+
+        self.assertIsNotNone(obligations)
+        assert obligations is not None
+        boundaries = [
+            slice_input.claim_next_review_slice_traversal(assignments)
+            for _ in obligations
+        ]
+        self.assertEqual(
+            [item.assignment_ordinal for item in boundaries],
+            list(range(len(obligations))),
+        )
+        self.assertEqual(
+            [item.slice_spec_digest for item in boundaries],
+            [item["slice_spec_digest"] for item in obligations],
+        )
+        self.assertEqual(len(set(assignments.assignment_digests)), len(obligations))
+        self.assertEqual(assignments.remaining_assignment_count(), 0)
+
+    def test_d_006_caller_cannot_supply_spec_anchor_or_traversal_result(self) -> None:
+        assignment_parameters = inspect.signature(
+            slice_input.assign_review_slice_obligations_for_traversal
+        ).parameters
+        boundary_parameters = inspect.signature(
+            slice_input.claim_next_review_slice_traversal
+        ).parameters
+        self.assertEqual(tuple(assignment_parameters), ("gate",))
+        self.assertEqual(tuple(boundary_parameters), ("assignments",))
+        for parameters in (assignment_parameters, boundary_parameters):
+            for forbidden in (
+                "spec",
+                "anchor",
+                "outcome",
+                "frontier",
+                "slice",
+                "budget",
+            ):
+                self.assertNotIn(forbidden, parameters)
+
+    def test_d_007_zero_domain_has_no_assignments_or_closed_empty_claim(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        _, validated = self._validated("slice-input-d-zero-domain", inputs=inputs)
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+
+        self.assertEqual(assignments.assignment_count, 0)
+        self.assertEqual(assignments.assignment_digests, ())
+        self.assertEqual(assignments.remaining_assignment_count(), 0)
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED,
+            lambda: slice_input.claim_next_review_slice_traversal(assignments),
+        )
+        for value in vars(assignments).values():
+            self.assertNotEqual(value, "CLOSED_EMPTY")
+
+    def test_d_008_conflict_gate_cannot_form_assignments(self) -> None:
+        _, validated = self._validated(
+            "slice-input-d-conflict",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        self.assertEqual(
+            gated.slice_input_status, "BLOCKED_BY_RELATION_CONFLICT"
+        )
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED,
+            lambda: slice_input.assign_review_slice_obligations_for_traversal(
+                gated
+            ),
+        )
+
+    def test_d_009_original_budget_stop_rejects_traversal_boundary(self) -> None:
+        contexts: list[object] = []
+        _, validated = self._validated(
+            "slice-input-d-stopped",
+            capture_context=contexts,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+        self.assertEqual(len(contexts), 1)
+        contexts[0].request_cancellation()
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED,
+            lambda: slice_input.claim_next_review_slice_traversal(assignments),
+        )
+
+    def test_d_010_same_domain_does_not_share_assignment_authority(self) -> None:
+        _, first_validated = self._validated("slice-input-d-attempt-one")
+        first_gate = slice_input.construct_review_slice_obligation_domain(
+            first_validated
+        )
+        first = slice_input.assign_review_slice_obligations_for_traversal(
+            first_gate
+        )
+
+        _, second_validated = self._validated("slice-input-d-attempt-two")
+        second_gate = slice_input.construct_review_slice_obligation_domain(
+            second_validated
+        )
+        second = slice_input.assign_review_slice_obligations_for_traversal(
+            second_gate
+        )
+
+        self.assertEqual(
+            first.slice_obligation_domain_digest,
+            second.slice_obligation_domain_digest,
+        )
+        self.assertNotEqual(first.derivation_id, second.derivation_id)
+        self.assertNotEqual(
+            first.admission_witness_digest,
+            second.admission_witness_digest,
+        )
+        self.assertNotEqual(first.assignment_digests, second.assignment_digests)
+
+    def test_d_011_owned_state_seals_detect_mutation(self) -> None:
+        _, first_validated = self._validated("slice-input-d-assignment-seal")
+        first_gate = slice_input.construct_review_slice_obligation_domain(
+            first_validated
+        )
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            first_gate
+        )
+        assignment_values._validate_traversal_assignments(assignments)
+        object.__setattr__(assignments, "assignment_digests", ("0" * 64,))
+        with self.assertRaises(ValueError):
+            assignment_values._validate_traversal_assignments(assignments)
+
+        _, second_validated = self._validated("slice-input-d-boundary-seal")
+        second_gate = slice_input.construct_review_slice_obligation_domain(
+            second_validated
+        )
+        second_assignments = (
+            slice_input.assign_review_slice_obligations_for_traversal(second_gate)
+        )
+        boundary = slice_input.claim_next_review_slice_traversal(
+            second_assignments
+        )
+        assignment_values._validate_traversal_boundary(boundary)
+        object.__setattr__(boundary, "traversal_request_bytes", b"{}")
+        with self.assertRaises(ValueError):
+            assignment_values._validate_traversal_boundary(boundary)
+
+    def test_d_012_surface_remains_private_and_nonpublishing(self) -> None:
+        import veritrail_review
+
+        names = (
+            "assign_review_slice_obligations_for_traversal",
+            "claim_next_review_slice_traversal",
+        )
+        for name in names:
+            self.assertFalse(hasattr(veritrail_review, name))
+            self.assertNotIn(name, veritrail_review.__all__)
+        for callback in (
+            slice_input.assign_review_slice_obligations_for_traversal,
+            slice_input.claim_next_review_slice_traversal,
+        ):
+            parameters = inspect.signature(callback).parameters
+            for forbidden in (
+                "output_path",
+                "output_directory",
+                "publisher",
+                "manifest",
+                "review_slice_set",
+                "coverage",
+            ):
+                self.assertNotIn(forbidden, parameters)
 
 
 if __name__ == "__main__":
