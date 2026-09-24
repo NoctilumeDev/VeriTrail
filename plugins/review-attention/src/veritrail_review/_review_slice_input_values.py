@@ -23,6 +23,7 @@ class _ReviewSliceInputFailureCode(str, Enum):
     ADMISSION_BINDING_REJECTED = "ADMISSION_BINDING_REJECTED"
     INPUT_JOIN_REJECTED = "INPUT_JOIN_REJECTED"
     INPUT_CROSS_VALIDATION_REJECTED = "INPUT_CROSS_VALIDATION_REJECTED"
+    OBLIGATION_DOMAIN_REJECTED = "OBLIGATION_DOMAIN_REJECTED"
 
 
 _FAILURE_MESSAGES = {
@@ -37,6 +38,9 @@ _FAILURE_MESSAGES = {
     ),
     _ReviewSliceInputFailureCode.INPUT_CROSS_VALIDATION_REJECTED: (
         "the exact admitted-graph Slice input history cannot be reconstructed"
+    ),
+    _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED: (
+        "the admitted graph cannot establish one exact Slice obligation domain"
     ),
 }
 
@@ -143,6 +147,7 @@ class _ClaimedSliceContinuation:
         "__attempt_eligibility",
         "__context",
         "__cross_validation_claimed",
+        "__obligation_domain_claimed",
         "__lock",
     )
 
@@ -161,6 +166,7 @@ class _ClaimedSliceContinuation:
         self.__attempt_eligibility = attempt_eligibility
         self.__lock = Lock()
         self.__cross_validation_claimed = False
+        self.__obligation_domain_claimed = False
 
     def permits_continuation(self) -> bool:
         with self.__lock:
@@ -176,6 +182,18 @@ class _ClaimedSliceContinuation:
                     _ReviewSliceInputFailureCode.INPUT_CROSS_VALIDATION_REJECTED
                 )
             self.__cross_validation_claimed = True
+
+    def claim_obligation_domain(self) -> None:
+        with self.__lock:
+            if (
+                not self.__cross_validation_claimed
+                or self.__obligation_domain_claimed
+                or not self.__permits_continuation_locked()
+            ):
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED
+                )
+            self.__obligation_domain_claimed = True
 
     def __permits_continuation_locked(self) -> bool:
         return (
@@ -361,6 +379,9 @@ class OwnedAdmittedGraphSliceInput:
 
     def _claim_cross_validation(self) -> None:
         self._continuation.claim_cross_validation()
+
+    def _claim_obligation_domain(self) -> None:
+        self._continuation.claim_obligation_domain()
 
 
 def _bind_qualification_continuation(

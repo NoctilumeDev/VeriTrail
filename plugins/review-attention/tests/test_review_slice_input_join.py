@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import inspect
 import sys
 import unittest
@@ -23,13 +24,17 @@ from veritrail_review import _review_slice_input as slice_input  # noqa: E402
 from veritrail_review import (  # noqa: E402
     _review_slice_input_cross_validation_values as cross_values,
 )
+from veritrail_review import (  # noqa: E402
+    _review_slice_obligation_domain_values as domain_values,
+)
 from veritrail_review._execution_cell_binding import ProviderBinding  # noqa: E402
 from veritrail_review._review_slice_input_values import (  # noqa: E402
     _ReviewSliceInputError,
     _ReviewSliceInputFailureCode,
 )
-from veritrail_review.canonical import canonical_json_bytes  # noqa: E402
+from veritrail_review.canonical import canonical_json_bytes, semantic_digest  # noqa: E402
 from veritrail_review.derivation_input_contracts import DerivationInputSet  # noqa: E402
+from test_execution_cell import _canonical_artifact, _seal_policy  # noqa: E402
 
 
 class ReviewSliceInputJoinTests(unittest.TestCase):
@@ -55,6 +60,7 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
         *,
         inputs: DerivationInputSet | None = None,
         relation_launch_key: str | None = None,
+        two_imports: bool = False,
         capture_context: list[object] | None = None,
     ):
         original_fact_run = qualification._run_prepared_closed_test_execution_attempt
@@ -63,6 +69,8 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
 
         def fact_run(prepared):
             phase = original_fact_run(prepared)
+            if two_imports:
+                return self.support._phase_with_two_imports(prepared, phase)
             return self.support.helper._phase_with_module_and_import(
                 prepared, phase
             )
@@ -73,6 +81,14 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
                 relation_launch_key == "observation-a-unavailable"
                 and binding.descriptor.provider_id
                 == "closed-relation-provider-a"
+            ):
+                kwargs["binding"] = ProviderBinding(
+                    binding.descriptor, relation_launch_key
+                )
+            elif (
+                relation_launch_key == "observation-b-conflict"
+                and binding.descriptor.provider_id
+                == "closed-relation-provider-b"
             ):
                 kwargs["binding"] = ProviderBinding(
                     binding.descriptor, relation_launch_key
@@ -138,6 +154,60 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             selected_inputs, authority
         )
         return qualified, joined
+
+    def _validated(
+        self,
+        derivation_id: str,
+        *,
+        inputs: DerivationInputSet | None = None,
+        relation_launch_key: str | None = None,
+        two_imports: bool = False,
+        capture_context: list[object] | None = None,
+    ):
+        selected_inputs = self.inputs if inputs is None else inputs
+        qualified = self._run(
+            derivation_id,
+            inputs=selected_inputs,
+            relation_launch_key=relation_launch_key,
+            two_imports=two_imports,
+            capture_context=capture_context,
+        )
+        authority = (
+            slice_input.admit_relation_set_for_slice_input_private_closed_proof(
+                qualified
+            )
+        )
+        joined = slice_input.claim_admitted_graph_slice_input(
+            selected_inputs, authority
+        )
+        return (
+            qualified,
+            slice_input.cross_validate_admitted_graph_slice_input(joined),
+        )
+
+    @staticmethod
+    def _inputs_with_anchor_fact_kinds(
+        inputs: DerivationInputSet,
+        anchor_fact_kinds: list[str],
+    ) -> DerivationInputSet:
+        policy = inputs.review_policy_document_copy()
+        policy["slice_policy"]["anchor_fact_kinds"] = anchor_fact_kinds
+        _seal_policy(policy)
+        return DerivationInputSet.create(
+            source_snapshot_canonical_bytes=inputs.source_snapshot_canonical_bytes,
+            review_policy_canonical_bytes=_canonical_artifact(policy),
+            derivation_profile_canonical_bytes=(
+                inputs.derivation_profile_canonical_bytes
+            ),
+            verified_blob_bytes_by_object_identity=(
+                inputs.verified_blob_bytes_by_object_identity
+            ),
+            source_snapshot_digest=inputs.source_snapshot_digest,
+            policy_digest=policy["policy_digest"],
+            analysis_scope_digest=policy["analysis_scope_digest"],
+            slice_policy_digest=policy["slice_policy_digest"],
+            derivation_profile_digest=inputs.derivation_profile_digest,
+        )
 
     def test_a_001_exact_live_attempt_forms_one_private_input_join(self) -> None:
         qualified = self._run("slice-input-a-positive")
@@ -616,6 +686,282 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
         object.__setattr__(validated, "fact_set_document_bytes", b"{}")
         with self.assertRaises(ValueError):
             cross_values._validate_cross_validated_input(validated)
+
+    def test_c_001_consistent_graph_builds_exact_private_obligation_domain(
+        self,
+    ) -> None:
+        _, validated = self._validated("slice-input-c-positive")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        domain = gated.obligation_domain_document_copy()
+
+        self.assertEqual(gated.slice_input_status, "ELIGIBLE")
+        self.assertEqual(gated.candidate_composition_status, "CONSISTENT")
+        self.assertIsNotNone(domain)
+        assert domain is not None
+        facts = validated.fact_set_document_copy()["facts"]
+        anchors = [item for item in facts if item["fact_kind"] == "MODULE"]
+        self.assertEqual(len(anchors), 1)
+        self.assertEqual(
+            [item["anchor_fact_id"] for item in domain["obligations"]],
+            [anchors[0]["fact_id"]],
+        )
+        spec = domain["obligations"][0]
+        self.assertEqual(
+            spec["slice_spec_digest"],
+            semantic_digest(
+                "veritrail.review.slice-spec/0.1",
+                {
+                    key: copy.deepcopy(value)
+                    for key, value in spec.items()
+                    if key != "slice_spec_digest"
+                },
+            ),
+        )
+        self.assertEqual(
+            domain["slice_obligation_domain_digest"],
+            semantic_digest(
+                "veritrail.review.slice-obligation-domain/0.1",
+                {
+                    key: copy.deepcopy(value)
+                    for key, value in domain.items()
+                    if key not in {"policy_digest", "slice_obligation_domain_digest"}
+                },
+            ),
+        )
+        self.assertTrue(gated.continuation_permitted())
+
+    def test_c_002_domain_claim_is_one_shot(self) -> None:
+        _, validated = self._validated("slice-input-c-one-shot")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        self.assertTrue(gated.continuation_permitted())
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED,
+            lambda: slice_input.construct_review_slice_obligation_domain(validated),
+        )
+
+    def test_c_003_concurrent_domain_claim_has_one_winner(self) -> None:
+        _, validated = self._validated("slice-input-c-concurrent")
+        barrier = Barrier(2)
+
+        def construct():
+            barrier.wait()
+            try:
+                gated = slice_input.construct_review_slice_obligation_domain(
+                    validated
+                )
+            except _ReviewSliceInputError as exc:
+                return ("ERROR", exc.code)
+            return ("DOMAIN", gated)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            outcomes = [
+                future.result()
+                for future in (pool.submit(construct), pool.submit(construct))
+            ]
+        self.assertEqual(sorted(item[0] for item in outcomes), ["DOMAIN", "ERROR"])
+        failure = next(item for item in outcomes if item[0] == "ERROR")
+        success = next(item for item in outcomes if item[0] == "DOMAIN")
+        self.assertIs(
+            failure[1], _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED
+        )
+        self.assertTrue(success[1].continuation_permitted())
+
+    def test_c_004_failed_domain_validation_consumes_claim(self) -> None:
+        _, validated = self._validated("slice-input-c-failed-claim")
+        original = validated.fact_set_document_bytes
+        object.__setattr__(validated, "fact_set_document_bytes", b"{}")
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED,
+            lambda: slice_input.construct_review_slice_obligation_domain(validated),
+        )
+        object.__setattr__(validated, "fact_set_document_bytes", original)
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED,
+            lambda: slice_input.construct_review_slice_obligation_domain(validated),
+        )
+
+    def test_c_005_rs_006_conflict_blocks_without_empty_domain(self) -> None:
+        _, validated = self._validated(
+            "slice-input-c-conflict",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+
+        self.assertEqual(
+            gated.slice_input_status, "BLOCKED_BY_RELATION_CONFLICT"
+        )
+        self.assertEqual(gated.candidate_composition_status, "CONFLICTING")
+        self.assertIsNone(gated.slice_obligation_domain_digest)
+        self.assertIsNone(gated.obligation_domain_document_copy())
+        self.assertIsNone(gated.obligations_copy())
+        self.assertFalse(gated.continuation_permitted())
+        self.assertGreater(
+            len(validated.relation_set_document_copy()["conflicts"]), 0
+        )
+
+    def test_c_006_obligations_follow_profile_kind_rank_then_fact_id(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.support.two_import_inputs,
+            ["MODULE", "IMPORT_DECLARATION"],
+        )
+        _, validated = self._validated(
+            "slice-input-c-order",
+            inputs=inputs,
+            two_imports=True,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        obligations = gated.obligations_copy()
+        self.assertIsNotNone(obligations)
+        assert obligations is not None
+        facts = validated.fact_set_document_copy()["facts"]
+        rank = {
+            item: index
+            for index, item in enumerate(
+                validated.derivation_profile_document_copy()["fact_kinds"]
+            )
+        }
+        expected = sorted(
+            [
+                item
+                for item in facts
+                if item["fact_kind"] in {"MODULE", "IMPORT_DECLARATION"}
+            ],
+            key=lambda item: (rank[item["fact_kind"]], item["fact_id"]),
+        )
+        self.assertEqual(
+            [item["anchor_fact_id"] for item in obligations],
+            [item["fact_id"] for item in expected],
+        )
+        self.assertEqual(
+            len({item["slice_spec_digest"] for item in obligations}),
+            len(obligations),
+        )
+
+    def test_c_007_rs_016_zero_anchor_is_known_empty_domain(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        _, validated = self._validated("slice-input-c-zero-anchor", inputs=inputs)
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        domain = gated.obligation_domain_document_copy()
+
+        self.assertEqual(gated.slice_input_status, "ELIGIBLE")
+        self.assertIsNotNone(domain)
+        assert domain is not None
+        self.assertEqual(domain["obligations"], [])
+        self.assertIsNotNone(gated.slice_obligation_domain_digest)
+        self.assertTrue(gated.continuation_permitted())
+        for forbidden in ("CLOSED_EMPTY", "coverage", "review_slice_set"):
+            self.assertNotIn(forbidden, domain)
+
+    def test_c_008_specs_copy_only_exact_sealed_policy_semantics(self) -> None:
+        _, validated = self._validated("slice-input-c-policy-copy")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        obligations = gated.obligations_copy()
+        self.assertIsNotNone(obligations)
+        assert obligations is not None
+        slice_policy = validated.review_policy_document_copy()["slice_policy"]
+        for spec in obligations:
+            for name in (
+                "allowed_relations",
+                "max_depth",
+                "max_symbols",
+                "max_files",
+                "max_relations",
+            ):
+                self.assertEqual(spec[name], slice_policy[name])
+
+    def test_c_009_original_budget_stop_rejects_domain(self) -> None:
+        contexts: list[object] = []
+        _, validated = self._validated(
+            "slice-input-c-stopped",
+            capture_context=contexts,
+        )
+        self.assertEqual(len(contexts), 1)
+        contexts[0].request_cancellation()
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_DOMAIN_REJECTED,
+            lambda: slice_input.construct_review_slice_obligation_domain(validated),
+        )
+
+    def test_c_010_surface_remains_private_and_nonpublishing(self) -> None:
+        import veritrail_review
+
+        name = "construct_review_slice_obligation_domain"
+        self.assertFalse(hasattr(veritrail_review, name))
+        self.assertNotIn(name, veritrail_review.__all__)
+        parameters = inspect.signature(
+            slice_input.construct_review_slice_obligation_domain
+        ).parameters
+        for forbidden in (
+            "output_path",
+            "output_directory",
+            "publisher",
+            "manifest",
+            "review_slice_set",
+            "coverage",
+            "anchor",
+        ):
+            self.assertNotIn(forbidden, parameters)
+
+    def test_c_011_owned_domain_seal_detects_post_construction_mutation(self) -> None:
+        _, validated = self._validated("slice-input-c-owned-state")
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        domain_values._validate_obligation_domain_gate(gated)
+        object.__setattr__(gated, "obligation_domain_document_bytes", b"{}")
+        with self.assertRaises(ValueError):
+            domain_values._validate_obligation_domain_gate(gated)
+
+    def test_c_012_same_domain_identity_does_not_share_attempt_authority(self) -> None:
+        _, first_validated = self._validated("slice-input-c-identity-one")
+        first = slice_input.construct_review_slice_obligation_domain(
+            first_validated
+        )
+
+        policy = self.inputs.review_policy_document_copy()
+        policy["governance"]["claim_owner_ref"] = "alternate-owner"
+        _seal_policy(policy)
+        second_inputs = DerivationInputSet.create(
+            source_snapshot_canonical_bytes=(
+                self.inputs.source_snapshot_canonical_bytes
+            ),
+            review_policy_canonical_bytes=_canonical_artifact(policy),
+            derivation_profile_canonical_bytes=(
+                self.inputs.derivation_profile_canonical_bytes
+            ),
+            verified_blob_bytes_by_object_identity=(
+                self.inputs.verified_blob_bytes_by_object_identity
+            ),
+            source_snapshot_digest=self.inputs.source_snapshot_digest,
+            policy_digest=policy["policy_digest"],
+            analysis_scope_digest=policy["analysis_scope_digest"],
+            slice_policy_digest=policy["slice_policy_digest"],
+            derivation_profile_digest=self.inputs.derivation_profile_digest,
+        )
+        _, second_validated = self._validated(
+            "slice-input-c-identity-two",
+            inputs=second_inputs,
+        )
+        second = slice_input.construct_review_slice_obligation_domain(
+            second_validated
+        )
+
+        self.assertNotEqual(first_validated.policy_digest, second_validated.policy_digest)
+        self.assertNotEqual(
+            first.admission_witness_digest, second.admission_witness_digest
+        )
+        self.assertEqual(
+            first.slice_obligation_domain_digest,
+            second.slice_obligation_domain_digest,
+        )
+        self.assertEqual(first.obligations_copy(), second.obligations_copy())
+        self.assertNotEqual(
+            first.obligation_domain_document_bytes,
+            second.obligation_domain_document_bytes,
+        )
 
 
 if __name__ == "__main__":
