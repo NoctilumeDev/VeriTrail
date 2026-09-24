@@ -1725,6 +1725,37 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 后继 reconciliation、zero-anchor closed-empty 与 RS hardening 都尚未开始；必须从新的 exact main 重新读取停止线，
 不能把 D 的 traversal boundary 当成 traversal result。能力拓扑未变化，architecture DOT/SVG 保持字节不变。
 
+2026-09-25，E 从重新资格化的 `main@6e9c41f5f200aaf59941884468501a06545c3459` 实现 private
+deterministic breadth-first traversal、`NORMAL_COMPLETE / NORMAL_PARTIAL` outcome 与 structural frontier
+proof。遍历只接受 D 的 opaque assignment，按文档 120 的 `(depth, fact_id)` queue、relation/direction rank、
+inclusive atomic-edge budget、Fact/Relation identity 去重与 frontier encounter order 执行；结构预算命中形成
+normal `PARTIAL`，deadline/cancel/坏 boundary 则不能保留偶然 prefix。最终实现字节在 Python 3.10/3.13
+normal 与 `-O` 四格中分别通过 targeted A–E 54/54 与完整 Review Attention 264/264。
+
+PR #190 的 implementation commit 为 `119f71cef3a5b8a3da6600b38c28c79eed76226e`，原始 Public CI run
+`36027898533` attempt 1 为 11/11 PASS，随后合入
+`main@5493007d15b7895fe0dddfd4c7c617424cd15672`。该 exact main 的 Public CI run
+`36031453261` attempt 1 为 11/11 PASS，Browser Smoke run `36031453255` attempt 1 为 1/1 PASS。合并前审查
+另以只读诊断在 two-import、MODULE+IMPORT_DECLARATION multi-anchor domain 上顺序领取全部 3 个 assignment 并形成
+3 个 outcome；同一 live attempt 保持有效，未因首个 `try_complete_phase()` 提前终止后继 obligation。该诊断是
+多 obligation 生命周期补证，不是 F 的 outcome-set reconciliation 证据。
+
+因此当前事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_F_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A–E 提升为独立 frozen 状态。E 证明逐项正常 traversal outcome 可以成立，不证明整个 domain 的 outcomes
+已经完成 missing/duplicate/dangling/cross-attempt reconciliation；zero-anchor closed-empty、conflict/upstream-unknown
+negative worlds、`RS-000..016` hardening、公共 ReviewSliceSet/CoverageLedger、publisher 与 Schema 仍未开始。
+能力拓扑未变化，architecture DOT/SVG 保持字节不变。下一步只能从新的 exact main 重新读取文档 189 的停止线并
+审查 F，不得继续扩张 traversal 或把正常 outcome 当成整组 closure。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
