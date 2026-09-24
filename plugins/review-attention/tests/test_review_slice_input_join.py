@@ -28,6 +28,9 @@ from veritrail_review import (  # noqa: E402
     _review_slice_obligation_domain_values as domain_values,
 )
 from veritrail_review import (  # noqa: E402
+    _review_slice_obligation_closure_values as closure_values,
+)
+from veritrail_review import (  # noqa: E402
     _review_slice_traversal_assignment_values as assignment_values,
 )
 from veritrail_review import (  # noqa: E402
@@ -280,6 +283,33 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             gated
         )
         return slice_input.claim_next_review_slice_traversal(assignments)
+
+    def _assignments(
+        self,
+        derivation_id: str,
+        *,
+        inputs: DerivationInputSet | None = None,
+        two_imports: bool = False,
+        capture_context: list[object] | None = None,
+    ):
+        _, validated = self._validated(
+            derivation_id,
+            inputs=inputs,
+            two_imports=two_imports,
+            capture_context=capture_context,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        return slice_input.assign_review_slice_obligations_for_traversal(gated)
+
+    @staticmethod
+    def _normal_outcomes(assignments):
+        outcomes = []
+        while assignments.remaining_assignment_count():
+            boundary = slice_input.claim_next_review_slice_traversal(assignments)
+            outcomes.append(
+                slice_input.derive_review_slice_traversal_outcome(boundary)
+            )
+        return tuple(outcomes)
 
     def test_a_001_exact_live_attempt_forms_one_private_input_join(self) -> None:
         qualified = self._run("slice-input-a-positive")
@@ -1533,6 +1563,228 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
         self.assertEqual(
             candidate["included_relation_ids"], [lexical["relation_id"]]
         )
+
+    def test_f_001_multi_obligation_outcomes_close_in_domain_order(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.support.two_import_inputs,
+            ["MODULE", "IMPORT_DECLARATION"],
+        )
+        assignments = self._assignments(
+            "slice-input-f-positive",
+            inputs=inputs,
+            two_imports=True,
+        )
+        self.assertEqual(assignments.assignment_count, 3)
+        outcomes = self._normal_outcomes(assignments)
+
+        closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            assignments,
+            tuple(reversed(outcomes)),
+        )
+        document = closure.closure_document_copy()
+
+        self.assertEqual(closure.closure_status, "NORMAL_CLOSED")
+        self.assertEqual(
+            [item["assignment_ordinal"] for item in document["traversal_outcomes"]],
+            [0, 1, 2],
+        )
+        self.assertEqual(
+            closure.normal_slice_candidates_copy(),
+            [item.normal_slice_candidate_copy() for item in outcomes],
+        )
+        self.assertEqual(
+            closure.slice_obligation_domain_digest,
+            assignments.slice_obligation_domain_digest,
+        )
+
+    def test_f_002_missing_outcome_rejects_and_consumes_claim(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.support.two_import_inputs,
+            ["MODULE", "IMPORT_DECLARATION"],
+        )
+        assignments = self._assignments(
+            "slice-input-f-missing",
+            inputs=inputs,
+            two_imports=True,
+        )
+        outcomes = self._normal_outcomes(assignments)
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, outcomes[:-1]
+            ),
+        )
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, outcomes
+            ),
+        )
+
+    def test_f_003_duplicate_outcome_is_not_two_fulfillments(self) -> None:
+        assignments = self._assignments("slice-input-f-duplicate")
+        outcomes = self._normal_outcomes(assignments)
+        duplicated = (outcomes[0], outcomes[0])
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, duplicated
+            ),
+        )
+
+    def test_f_004_cross_attempt_outcome_cannot_close_domain(self) -> None:
+        first = self._assignments("slice-input-f-cross-attempt-one")
+        second = self._assignments("slice-input-f-cross-attempt-two")
+        foreign = self._normal_outcomes(second)
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                first, foreign
+            ),
+        )
+
+    def test_f_005_dangling_outcome_coordinate_is_rejected(self) -> None:
+        assignments = self._assignments("slice-input-f-dangling")
+        outcomes = self._normal_outcomes(assignments)
+        object.__setattr__(
+            outcomes[0],
+            "assignment_ordinal",
+            assignments.assignment_count,
+        )
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, outcomes
+            ),
+        )
+
+    def test_f_006_reconciliation_claim_is_one_shot_and_concurrent(self) -> None:
+        assignments = self._assignments("slice-input-f-concurrent")
+        outcomes = self._normal_outcomes(assignments)
+        barrier = Barrier(2)
+
+        def reconcile():
+            barrier.wait()
+            try:
+                value = slice_input.reconcile_review_slice_traversal_outcomes(
+                    assignments, outcomes
+                )
+            except _ReviewSliceInputError as exc:
+                return ("ERROR", exc.code)
+            return ("CLOSURE", value)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = [
+                future.result()
+                for future in (
+                    pool.submit(reconcile),
+                    pool.submit(reconcile),
+                )
+            ]
+        self.assertEqual(
+            sorted(item[0] for item in results), ["CLOSURE", "ERROR"]
+        )
+        failure = next(item for item in results if item[0] == "ERROR")
+        self.assertIs(
+            failure[1],
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+        )
+
+    def test_f_007_original_budget_stop_cannot_form_closure(self) -> None:
+        contexts: list[object] = []
+        assignments = self._assignments(
+            "slice-input-f-stopped",
+            capture_context=contexts,
+        )
+        outcomes = self._normal_outcomes(assignments)
+        self.assertEqual(len(contexts), 1)
+        contexts[0].request_cancellation()
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, outcomes
+            ),
+        )
+
+    def test_f_008_zero_domain_does_not_gain_closed_empty_authority(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        assignments = self._assignments(
+            "slice-input-f-zero-domain",
+            inputs=inputs,
+        )
+        self.assertEqual(assignments.assignment_count, 0)
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, ()
+            ),
+        )
+        for value in vars(assignments).values():
+            self.assertNotEqual(value, "CLOSED_EMPTY")
+
+    def test_f_009_same_content_does_not_share_closure_authority(self) -> None:
+        first_assignments = self._assignments("slice-input-f-attempt-one")
+        first = slice_input.reconcile_review_slice_traversal_outcomes(
+            first_assignments,
+            self._normal_outcomes(first_assignments),
+        )
+        second_assignments = self._assignments("slice-input-f-attempt-two")
+        second = slice_input.reconcile_review_slice_traversal_outcomes(
+            second_assignments,
+            self._normal_outcomes(second_assignments),
+        )
+
+        self.assertEqual(
+            first.normal_slice_candidates_copy(),
+            second.normal_slice_candidates_copy(),
+        )
+        self.assertNotEqual(first.derivation_id, second.derivation_id)
+        self.assertNotEqual(
+            first.admission_witness_digest,
+            second.admission_witness_digest,
+        )
+        self.assertNotEqual(
+            first.slice_obligation_closure_digest,
+            second.slice_obligation_closure_digest,
+        )
+
+    def test_f_010_closure_is_private_sealed_and_nonpublishing(self) -> None:
+        import veritrail_review
+
+        assignments = self._assignments("slice-input-f-private")
+        closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            assignments,
+            self._normal_outcomes(assignments),
+        )
+        closure_values._validate_slice_obligation_closure(closure)
+        object.__setattr__(closure, "closure_document_bytes", b"{}")
+        with self.assertRaises(ValueError):
+            closure_values._validate_slice_obligation_closure(closure)
+
+        name = "reconcile_review_slice_traversal_outcomes"
+        self.assertFalse(hasattr(veritrail_review, name))
+        self.assertNotIn(name, veritrail_review.__all__)
+        parameters = inspect.signature(
+            slice_input.reconcile_review_slice_traversal_outcomes
+        ).parameters
+        self.assertEqual(tuple(parameters), ("assignments", "outcomes"))
+        for forbidden in (
+            "output_path",
+            "publisher",
+            "review_slice_set",
+            "coverage",
+            "manifest",
+        ):
+            self.assertNotIn(forbidden, parameters)
 
 
 if __name__ == "__main__":

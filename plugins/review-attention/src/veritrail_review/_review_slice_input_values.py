@@ -28,6 +28,9 @@ class _ReviewSliceInputFailureCode(str, Enum):
     OBLIGATION_ASSIGNMENT_REJECTED = "OBLIGATION_ASSIGNMENT_REJECTED"
     TRAVERSAL_BOUNDARY_REJECTED = "TRAVERSAL_BOUNDARY_REJECTED"
     TRAVERSAL_OUTCOME_REJECTED = "TRAVERSAL_OUTCOME_REJECTED"
+    OBLIGATION_RECONCILIATION_REJECTED = (
+        "OBLIGATION_RECONCILIATION_REJECTED"
+    )
 
 
 _FAILURE_MESSAGES = {
@@ -54,6 +57,9 @@ _FAILURE_MESSAGES = {
     ),
     _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED: (
         "the private Slice traversal cannot form one terminal normal outcome"
+    ),
+    _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED: (
+        "the private Slice obligation outcomes cannot form one normal closure"
     ),
 }
 
@@ -162,6 +168,7 @@ class _ClaimedSliceContinuation:
         "__cross_validation_claimed",
         "__obligation_domain_claimed",
         "__traversal_assignments_claimed",
+        "__normal_reconciliation_claimed",
         "__lock",
     )
 
@@ -182,6 +189,7 @@ class _ClaimedSliceContinuation:
         self.__cross_validation_claimed = False
         self.__obligation_domain_claimed = False
         self.__traversal_assignments_claimed = False
+        self.__normal_reconciliation_claimed = False
 
     def permits_continuation(self) -> bool:
         with self.__lock:
@@ -228,6 +236,42 @@ class _ClaimedSliceContinuation:
         """Commit one private traversal result against the original live budget."""
 
         with self.__lock:
+            if not self.__permits_continuation_locked():
+                return None
+            phase = self.__context.try_complete_phase(
+                canonical_bytes, resources_closed=True
+            )
+            if phase is None:
+                if self.__context.state is BudgetState.STOPPING:
+                    self.__context._mark_release(residue_free=True)
+                return None
+            if (
+                self.__attempt_eligibility.state
+                is not AttemptEligibilityState.ADMITTED
+            ):
+                return None
+            return phase
+
+    def claim_normal_reconciliation(self) -> None:
+        with self.__lock:
+            if (
+                not self.__traversal_assignments_claimed
+                or self.__normal_reconciliation_claimed
+                or not self.__permits_continuation_locked()
+            ):
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED
+                )
+            self.__normal_reconciliation_claimed = True
+
+    def try_complete_obligation_closure(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        """Commit one private closure against the original live budget."""
+
+        with self.__lock:
+            if not self.__normal_reconciliation_claimed:
+                return None
             if not self.__permits_continuation_locked():
                 return None
             phase = self.__context.try_complete_phase(
@@ -439,6 +483,14 @@ class OwnedAdmittedGraphSliceInput:
         self, canonical_bytes: bytes
     ) -> OwnedPhaseResult | None:
         return self._continuation.try_complete_traversal_outcome(canonical_bytes)
+
+    def _claim_normal_reconciliation(self) -> None:
+        self._continuation.claim_normal_reconciliation()
+
+    def _try_complete_obligation_closure(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        return self._continuation.try_complete_obligation_closure(canonical_bytes)
 
 
 def _bind_qualification_continuation(
