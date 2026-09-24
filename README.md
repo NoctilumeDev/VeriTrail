@@ -461,6 +461,12 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 - [Q0 Quick Verification Scheduling 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)
   已经存在；新的优先顺序不改写 Q0，也不启动 Q 实现。
 
+### 想看外部方法参照
+
+- [Vera 方法参照：可吸收经验与边界记录](docs/related-work-vera-method-note.md)只保存一次
+  related-work 对照：它区分可迁移的方法、不可照搬的裁决语义与尚未成立的组合假设，不修改 R1
+  doc189 A–H，不授权 Q、O、T、Core、Schema、publisher、adapter 或 benchmark 施工。
+
 ### 想复核工程事实
 
 1. [里程碑冻结历史与完整文档索引](docs/milestones.md)
