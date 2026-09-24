@@ -1688,6 +1688,43 @@ assignment、traversal、outcome、ReviewSlice、SliceSet 或 Coverage authority
 `BudgetContext`，并停在 private deterministic traversal boundary。能力拓扑不变，architecture DOT/SVG 保持
 字节不变。
 
+同日，D 从状态同步后的 `main@eabce147092799b38fab5e54fd2659db4d3f17b8` 实现 private obligation
+assignment 与 deterministic traversal boundary。assignment 只能由 C 的 owned domain 一次性构造，按完整 domain
+顺序逐项 claim，并继续绑定原 live `BudgetContext`、attempt/witness、exact FactSet、RelationSet 与 Profile
+traversal rules；caller 不能提交 spec/anchor，也不能刷新 budget。D 停在 traversal 输入边界，没有执行 BFS，
+没有形成 outcome、frontier、Slice identity、closed-empty、ReviewSliceSet、Coverage 或公共 Artifact。最终 runtime
+实现字节在 Python 3.10/3.13 normal 与 `-O` 四格中通过完整 Review Attention 255/255；随后仅整理测试文件空白，
+当前最终 source state 又在相同四格中通过 targeted A/B/C/D 45/45。12 个 D 反例覆盖 one-shot/concurrent claim、
+validation failure consumption、完整 domain 顺序、
+zero-domain、conflict、原 budget stop、cross-attempt authority、owned-state mutation 与 private/nonpublishing
+边界。
+
+PR #186 原始 Public CI run `35979172112` attempt 1 为 11/11 PASS，并以 implementation commit
+`487df99930eed719753627d00af78e7c0fea0b17` 合入
+`main@a876a1d2616c81786571d295ecd4aa4a98828d97`。该 exact main 的 Browser Smoke run
+`35981417298` attempt 1 为 1/1 PASS；Public CI run `35981417295` 的 Python 3.10 job 已通过 Core、
+Authoring、GitHub Evidence、Review Attention normal/`-O`、Starter lane、构建与资产上传，但随后在 E1
+clean-install 开始 11 秒后触及 workflow 既有 20 分钟 outer containment，被正式记为 `CANCELLED`，七条依赖门
+跳过。这个结果不是 D 语义失败，也没有资格成为 exact-main PASS；后续成功不改写它。
+
+独立 maintenance PR #187 只把 aggregated Python lane 的 outer containment 从 20 调到 25 分钟，不修改任何
+产品 timeout、预算、测试、acceptance threshold 或 D runtime。其原始 Public CI run `35983866207` attempt 1
+为 11/11 PASS，随后合入 `main@eacc1995236fde60b8e838fda1cef8865ba3e0b5`；该 exact main 的 Public CI
+run `35986138680` attempt 1 为 11/11 PASS，Browser Smoke run `35986138572` attempt 1 为 1/1 PASS。
+因此当前事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_E_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A–D 提升为独立 frozen 状态。E 的 normal COMPLETE/PARTIAL outcome、structural frontier proof，以及
+后继 reconciliation、zero-anchor closed-empty 与 RS hardening 都尚未开始；必须从新的 exact main 重新读取停止线，
+不能把 D 的 traversal boundary 当成 traversal result。能力拓扑未变化，architecture DOT/SVG 保持字节不变。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
