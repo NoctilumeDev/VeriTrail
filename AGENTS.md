@@ -1030,6 +1030,25 @@
   closed-empty、conflict/upstream-unknown closure 或 `RS-000..016` hardening。公共 ReviewSliceSet、
   CoverageLedger、publisher、Schema、Attention、CLI 与 Workbench 均未授权；能力拓扑未变，architecture
   DOT/SVG 保持字节不变，F 不得因本状态投影自动开始。
+- F 从 E 的 owned normal outcomes 继续完成 non-empty domain 的 private reconciliation：逐项拒绝
+  missing、duplicate、dangling 与 cross-attempt outcome，按 authoritative assignment/domain order 重排，
+  从 owned traversal boundary 重新推导完整 normal candidate，并通过原 live `BudgetContext` 原子提交
+  attempt-bound `NORMAL_CLOSED` receipt。实现 commit
+  `74211037af08cc5ce6bf2e851b25864203e82dcf` 经 PR #194 original Public CI run
+  `36068162572` attempt 1 的 11/11 PASS 后合入
+  `main@28e048777341cfa6c9a6d7b546d75a0dc0eb0d33`；该 exact main 的 Public CI run
+  `36070066887` attempt 1 为 11/11 PASS，Browser Smoke run `36070066891` attempt 1 为 1/1 PASS。
+  因此当前可投影为
+  `R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_G_H_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。A–F 仍没有独立 frozen claim。F 没有获得
+  zero-anchor `CLOSED_EMPTY`、conflict/upstream-unknown negative closure、`RS-000..016` hardening、公共
+  ReviewSliceSet/CoverageLedger、publisher、Schema、Attention、CLI 或 Workbench authority。首次本地
+  targeted `61/64` 的三处错误均发生在 F runtime 前的 fixture 构造：两处把 two-import producer 配到
+  one-import blob，一处使用 Policy 不允许的空 anchor-kind 列表；改为既有 two-import input world 与有效但
+  不存在的 `CLASS_DECLARATION` anchor world 后，runtime 不变，最终 A–F 双 Python normal/`-O` 均为
+  `64/64`，完整 Review Attention 四格均为 `274/274`。能力拓扑未变，architecture DOT/SVG 保持字节不变；
+  G 不得因本状态投影自动开始。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
