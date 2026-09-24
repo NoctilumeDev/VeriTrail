@@ -15,6 +15,7 @@ from veritrail_review._relation_set_admission_values import (
     OwnedRelationSetAdmissionState,
 )
 from veritrail_review.budget import BudgetContext, BudgetState
+from veritrail_review.budget import OwnedPhaseResult
 from veritrail_review.derivation_input_contracts import DerivationInputSet
 
 
@@ -26,6 +27,7 @@ class _ReviewSliceInputFailureCode(str, Enum):
     OBLIGATION_DOMAIN_REJECTED = "OBLIGATION_DOMAIN_REJECTED"
     OBLIGATION_ASSIGNMENT_REJECTED = "OBLIGATION_ASSIGNMENT_REJECTED"
     TRAVERSAL_BOUNDARY_REJECTED = "TRAVERSAL_BOUNDARY_REJECTED"
+    TRAVERSAL_OUTCOME_REJECTED = "TRAVERSAL_OUTCOME_REJECTED"
 
 
 _FAILURE_MESSAGES = {
@@ -49,6 +51,9 @@ _FAILURE_MESSAGES = {
     ),
     _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED: (
         "the next private Slice obligation cannot enter its traversal boundary"
+    ),
+    _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED: (
+        "the private Slice traversal cannot form one terminal normal outcome"
     ),
 }
 
@@ -216,6 +221,28 @@ class _ClaimedSliceContinuation:
                     _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED
                 )
             self.__traversal_assignments_claimed = True
+
+    def try_complete_traversal_outcome(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        """Commit one private traversal result against the original live budget."""
+
+        with self.__lock:
+            if not self.__permits_continuation_locked():
+                return None
+            phase = self.__context.try_complete_phase(
+                canonical_bytes, resources_closed=True
+            )
+            if phase is None:
+                if self.__context.state is BudgetState.STOPPING:
+                    self.__context._mark_release(residue_free=True)
+                return None
+            if (
+                self.__attempt_eligibility.state
+                is not AttemptEligibilityState.ADMITTED
+            ):
+                return None
+            return phase
 
     def __permits_continuation_locked(self) -> bool:
         return (
@@ -407,6 +434,11 @@ class OwnedAdmittedGraphSliceInput:
 
     def _claim_traversal_assignments(self) -> None:
         self._continuation.claim_traversal_assignments()
+
+    def _try_complete_traversal_outcome(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        return self._continuation.try_complete_traversal_outcome(canonical_bytes)
 
 
 def _bind_qualification_continuation(

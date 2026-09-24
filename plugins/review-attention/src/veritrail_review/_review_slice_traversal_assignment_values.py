@@ -11,12 +11,14 @@ from veritrail_review._review_slice_obligation_domain_values import (
     OwnedReviewSliceObligationDomainGate,
     _validate_obligation_domain_gate,
 )
+from veritrail_review.budget import OwnedPhaseResult
 from veritrail_review.canonical import canonical_json_bytes, semantic_digest
 
 
 _ASSIGNMENT_SET_TOKEN = object()
 _TRAVERSAL_BOUNDARY_TOKEN = object()
 _CLAIM_STATE_TOKEN = object()
+_OUTCOME_CLAIM_STATE_TOKEN = object()
 
 
 class _TraversalAssignmentClaimState:
@@ -39,6 +41,22 @@ class _TraversalAssignmentClaimState:
     def remaining(self, assignment_count: int) -> int:
         with self.__lock:
             return assignment_count - self.__cursor
+
+
+class _TraversalOutcomeClaimState:
+    __slots__ = ("__claimed", "__lock")
+
+    def __init__(self, *, _construction_token: object) -> None:
+        if _construction_token is not _OUTCOME_CLAIM_STATE_TOKEN:
+            raise ValueError
+        self.__lock = Lock()
+        self.__claimed = False
+
+    def claim(self) -> None:
+        with self.__lock:
+            if self.__claimed:
+                raise ValueError
+            self.__claimed = True
 
 
 @dataclass(frozen=True)
@@ -130,6 +148,9 @@ class OwnedReviewSliceTraversalBoundary:
     _assignments: OwnedReviewSliceTraversalAssignments = field(
         repr=False, compare=False
     )
+    _outcome_claim_state: _TraversalOutcomeClaimState = field(
+        repr=False, compare=False
+    )
     _state_seal: str = field(repr=False, compare=False)
     _construction_token: object = field(repr=False, compare=False)
 
@@ -183,6 +204,9 @@ class OwnedReviewSliceTraversalBoundary:
         }
         return cls(
             **values,
+            _outcome_claim_state=_TraversalOutcomeClaimState(
+                _construction_token=_OUTCOME_CLAIM_STATE_TOKEN
+            ),
             _state_seal=_traversal_boundary_state_seal(values),
             _construction_token=_TRAVERSAL_BOUNDARY_TOKEN,
         )
@@ -195,6 +219,17 @@ class OwnedReviewSliceTraversalBoundary:
 
     def _owned_assignments(self) -> OwnedReviewSliceTraversalAssignments:
         return self._assignments
+
+    def _claim_outcome(self) -> None:
+        self._outcome_claim_state.claim()
+
+    def _try_complete_outcome(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        gate = self._assignments._owned_domain_gate()
+        validated = gate._owned_cross_validated_input()
+        joined = validated._owned_joined_input()
+        return joined._try_complete_traversal_outcome(canonical_bytes)
 
 
 def _validate_traversal_assignments(
@@ -251,6 +286,7 @@ def _validate_traversal_boundary(
     if (
         type(value) is not OwnedReviewSliceTraversalBoundary
         or value._construction_token is not _TRAVERSAL_BOUNDARY_TOKEN
+        or type(value._outcome_claim_state) is not _TraversalOutcomeClaimState
     ):
         raise ValueError
     assignments = value._owned_assignments()

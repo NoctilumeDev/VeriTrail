@@ -30,6 +30,9 @@ from veritrail_review import (  # noqa: E402
 from veritrail_review import (  # noqa: E402
     _review_slice_traversal_assignment_values as assignment_values,
 )
+from veritrail_review import (  # noqa: E402
+    _review_slice_traversal_outcome_values as outcome_values,
+)
 from veritrail_review._execution_cell_binding import ProviderBinding  # noqa: E402
 from veritrail_review._review_slice_input_values import (  # noqa: E402
     _ReviewSliceInputError,
@@ -211,6 +214,72 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             slice_policy_digest=policy["slice_policy_digest"],
             derivation_profile_digest=inputs.derivation_profile_digest,
         )
+
+    @staticmethod
+    def _inputs_with_slice_limits(
+        inputs: DerivationInputSet,
+        **limits: int,
+    ) -> DerivationInputSet:
+        policy = inputs.review_policy_document_copy()
+        policy["slice_policy"].update(limits)
+        _seal_policy(policy)
+        return DerivationInputSet.create(
+            source_snapshot_canonical_bytes=inputs.source_snapshot_canonical_bytes,
+            review_policy_canonical_bytes=_canonical_artifact(policy),
+            derivation_profile_canonical_bytes=(
+                inputs.derivation_profile_canonical_bytes
+            ),
+            verified_blob_bytes_by_object_identity=(
+                inputs.verified_blob_bytes_by_object_identity
+            ),
+            source_snapshot_digest=inputs.source_snapshot_digest,
+            policy_digest=policy["policy_digest"],
+            analysis_scope_digest=policy["analysis_scope_digest"],
+            slice_policy_digest=policy["slice_policy_digest"],
+            derivation_profile_digest=inputs.derivation_profile_digest,
+        )
+
+    @staticmethod
+    def _inputs_with_allowed_relations(
+        inputs: DerivationInputSet,
+        allowed_relations: list[dict[str, str]],
+    ) -> DerivationInputSet:
+        policy = inputs.review_policy_document_copy()
+        policy["slice_policy"]["allowed_relations"] = allowed_relations
+        _seal_policy(policy)
+        return DerivationInputSet.create(
+            source_snapshot_canonical_bytes=inputs.source_snapshot_canonical_bytes,
+            review_policy_canonical_bytes=_canonical_artifact(policy),
+            derivation_profile_canonical_bytes=(
+                inputs.derivation_profile_canonical_bytes
+            ),
+            verified_blob_bytes_by_object_identity=(
+                inputs.verified_blob_bytes_by_object_identity
+            ),
+            source_snapshot_digest=inputs.source_snapshot_digest,
+            policy_digest=policy["policy_digest"],
+            analysis_scope_digest=policy["analysis_scope_digest"],
+            slice_policy_digest=policy["slice_policy_digest"],
+            derivation_profile_digest=inputs.derivation_profile_digest,
+        )
+
+    def _boundary(
+        self,
+        derivation_id: str,
+        *,
+        inputs: DerivationInputSet | None = None,
+        capture_context: list[object] | None = None,
+    ):
+        _, validated = self._validated(
+            derivation_id,
+            inputs=inputs,
+            capture_context=capture_context,
+        )
+        gated = slice_input.construct_review_slice_obligation_domain(validated)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gated
+        )
+        return slice_input.claim_next_review_slice_traversal(assignments)
 
     def test_a_001_exact_live_attempt_forms_one_private_input_join(self) -> None:
         qualified = self._run("slice-input-a-positive")
@@ -1262,6 +1331,208 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
                 "coverage",
             ):
                 self.assertNotIn(forbidden, parameters)
+
+    def test_e_001_depth_bound_forms_partial_with_structural_frontier(self) -> None:
+        boundary = self._boundary("slice-input-e-depth-frontier")
+        outcome = slice_input.derive_review_slice_traversal_outcome(boundary)
+        candidate = outcome.normal_slice_candidate_copy()
+        request = boundary.traversal_request_copy()
+        import_relation = next(
+            item
+            for item in request["relation_set"]["relations"]
+            if item["relation_kind"] == "IMPORT_TARGET_LITERAL"
+        )
+
+        self.assertEqual(outcome.outcome_status, "NORMAL_PARTIAL")
+        self.assertEqual(candidate["coverage_status"], "PARTIAL")
+        self.assertEqual(len(candidate["frontier"]), 1)
+        self.assertEqual(
+            candidate["frontier"][0],
+            {
+                "from_fact_id": import_relation["source_fact_id"],
+                "relation_id": import_relation["relation_id"],
+                "direction": "OUTBOUND",
+                "candidate_fact_id": None,
+                "candidate_depth": 2,
+                "reason_codes": ["DEPTH_LIMIT"],
+            },
+        )
+        self.assertNotIn(
+            import_relation["relation_id"], candidate["included_relation_ids"]
+        )
+
+    def test_e_002_larger_depth_bound_forms_complete_normal_slice(self) -> None:
+        inputs = self._inputs_with_slice_limits(self.inputs, max_depth=2)
+        boundary = self._boundary("slice-input-e-complete", inputs=inputs)
+        outcome = slice_input.derive_review_slice_traversal_outcome(boundary)
+        candidate = outcome.normal_slice_candidate_copy()
+        request = boundary.traversal_request_copy()
+
+        self.assertEqual(outcome.outcome_status, "NORMAL_COMPLETE")
+        self.assertEqual(candidate["coverage_status"], "COMPLETE")
+        self.assertEqual(candidate["frontier"], [])
+        self.assertEqual(
+            candidate["included_fact_ids"],
+            sorted(item["fact_id"] for item in request["fact_set"]["facts"]),
+        )
+        self.assertEqual(
+            candidate["included_relation_ids"],
+            sorted(
+                item["relation_id"]
+                for item in request["relation_set"]["relations"]
+            ),
+        )
+
+    def test_e_003_outcome_claim_is_one_shot_and_concurrent_safe(self) -> None:
+        boundary = self._boundary("slice-input-e-concurrent")
+        barrier = Barrier(2)
+
+        def derive():
+            barrier.wait()
+            try:
+                value = slice_input.derive_review_slice_traversal_outcome(
+                    boundary
+                )
+            except _ReviewSliceInputError as exc:
+                return ("ERROR", exc.code)
+            return ("OUTCOME", value)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = [
+                future.result()
+                for future in (pool.submit(derive), pool.submit(derive))
+            ]
+        self.assertEqual(
+            sorted(item[0] for item in results), ["ERROR", "OUTCOME"]
+        )
+        failure = next(item for item in results if item[0] == "ERROR")
+        self.assertIs(
+            failure[1], _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED
+        )
+
+    def test_e_004_failed_boundary_validation_consumes_outcome_claim(self) -> None:
+        boundary = self._boundary("slice-input-e-failed-claim")
+        original = boundary.traversal_request_bytes
+        object.__setattr__(boundary, "traversal_request_bytes", b"{}")
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED,
+            lambda: slice_input.derive_review_slice_traversal_outcome(boundary),
+        )
+        object.__setattr__(boundary, "traversal_request_bytes", original)
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED,
+            lambda: slice_input.derive_review_slice_traversal_outcome(boundary),
+        )
+
+    def test_e_005_atomic_rejection_records_every_applicable_limit(self) -> None:
+        inputs = self._inputs_with_slice_limits(
+            self.inputs,
+            max_depth=0,
+            max_symbols=1,
+            max_relations=0,
+        )
+        boundary = self._boundary("slice-input-e-limit-union", inputs=inputs)
+        outcome = slice_input.derive_review_slice_traversal_outcome(boundary)
+        candidate = outcome.normal_slice_candidate_copy()
+        spec = boundary.traversal_request_copy()["slice_spec"]
+
+        self.assertEqual(candidate["included_fact_ids"], [spec["anchor_fact_id"]])
+        self.assertEqual(candidate["included_relation_ids"], [])
+        self.assertEqual(len(candidate["frontier"]), 1)
+        self.assertEqual(
+            candidate["frontier"][0]["reason_codes"],
+            ["DEPTH_LIMIT", "SYMBOL_LIMIT", "RELATION_LIMIT"],
+        )
+
+    def test_e_006_original_budget_stop_cannot_leave_normal_prefix(self) -> None:
+        contexts: list[object] = []
+        boundary = self._boundary(
+            "slice-input-e-stopped", capture_context=contexts
+        )
+        self.assertEqual(len(contexts), 1)
+        contexts[0].request_cancellation()
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED,
+            lambda: slice_input.derive_review_slice_traversal_outcome(boundary),
+        )
+
+    def test_e_007_content_can_repeat_but_outcome_authority_cannot(self) -> None:
+        first = slice_input.derive_review_slice_traversal_outcome(
+            self._boundary("slice-input-e-attempt-one")
+        )
+        second = slice_input.derive_review_slice_traversal_outcome(
+            self._boundary("slice-input-e-attempt-two")
+        )
+
+        self.assertEqual(
+            first.normal_slice_candidate_copy(),
+            second.normal_slice_candidate_copy(),
+        )
+        self.assertNotEqual(first.derivation_id, second.derivation_id)
+        self.assertNotEqual(
+            first.admission_witness_digest,
+            second.admission_witness_digest,
+        )
+        self.assertNotEqual(
+            first.traversal_outcome_digest,
+            second.traversal_outcome_digest,
+        )
+
+    def test_e_008_owned_outcome_is_private_sealed_and_nonpublishing(self) -> None:
+        import veritrail_review
+
+        boundary = self._boundary("slice-input-e-owned-state")
+        outcome = slice_input.derive_review_slice_traversal_outcome(boundary)
+        outcome_values._validate_traversal_outcome(outcome)
+        object.__setattr__(outcome, "outcome_document_bytes", b"{}")
+        with self.assertRaises(ValueError):
+            outcome_values._validate_traversal_outcome(outcome)
+
+        name = "derive_review_slice_traversal_outcome"
+        self.assertFalse(hasattr(veritrail_review, name))
+        self.assertNotIn(name, veritrail_review.__all__)
+        parameters = inspect.signature(
+            slice_input.derive_review_slice_traversal_outcome
+        ).parameters
+        self.assertEqual(tuple(parameters), ("boundary",))
+        for forbidden in (
+            "spec",
+            "anchor",
+            "outcome",
+            "frontier",
+            "budget",
+            "output_path",
+            "publisher",
+            "review_slice_set",
+            "coverage",
+        ):
+            self.assertNotIn(forbidden, parameters)
+
+    def test_e_009_disallowed_graph_edges_do_not_expand_or_block(self) -> None:
+        inputs = self._inputs_with_allowed_relations(
+            self.inputs,
+            [
+                {
+                    "direction": "OUTBOUND",
+                    "relation_kind": "LEXICAL_CONTAINS",
+                }
+            ],
+        )
+        boundary = self._boundary("slice-input-e-allowed-subset", inputs=inputs)
+        outcome = slice_input.derive_review_slice_traversal_outcome(boundary)
+        candidate = outcome.normal_slice_candidate_copy()
+        relation_set = boundary.traversal_request_copy()["relation_set"]
+        lexical = next(
+            item
+            for item in relation_set["relations"]
+            if item["relation_kind"] == "LEXICAL_CONTAINS"
+        )
+
+        self.assertEqual(outcome.outcome_status, "NORMAL_COMPLETE")
+        self.assertEqual(candidate["frontier"], [])
+        self.assertEqual(
+            candidate["included_relation_ids"], [lexical["relation_id"]]
+        )
 
 
 if __name__ == "__main__":

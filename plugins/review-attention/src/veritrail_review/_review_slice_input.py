@@ -31,6 +31,13 @@ from veritrail_review._review_slice_traversal_assignment_values import (
     _validate_traversal_assignments,
     _validate_traversal_boundary,
 )
+from veritrail_review._review_slice_traversal import (
+    _derive_normal_review_slice_candidate,
+)
+from veritrail_review._review_slice_traversal_outcome_values import (
+    OwnedReviewSliceTraversalOutcome,
+    _validate_traversal_outcome,
+)
 from veritrail_review.canonical import (
     canonical_json_bytes,
     semantic_digest,
@@ -352,6 +359,60 @@ def claim_next_review_slice_traversal(
     except Exception as exc:
         raise _ReviewSliceInputError(
             _ReviewSliceInputFailureCode.TRAVERSAL_BOUNDARY_REJECTED
+        ) from exc
+
+
+def derive_review_slice_traversal_outcome(
+    boundary: OwnedReviewSliceTraversalBoundary,
+) -> OwnedReviewSliceTraversalOutcome:
+    """Run one assigned deterministic traversal and commit its normal outcome."""
+
+    if type(boundary) is not OwnedReviewSliceTraversalBoundary:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED
+        )
+    try:
+        boundary._claim_outcome()
+        _validate_traversal_boundary(boundary)
+        candidate = _derive_normal_review_slice_candidate(boundary)
+        frontier = candidate["frontier"]
+        if not isinstance(frontier, list):
+            raise ValueError
+        outcome_status = (
+            "NORMAL_PARTIAL" if frontier else "NORMAL_COMPLETE"
+        )
+        document: dict[str, object] = {
+            "derivation_id": boundary.derivation_id,
+            "admission_witness_digest": boundary.admission_witness_digest,
+            "slice_obligation_domain_digest": (
+                boundary.slice_obligation_domain_digest
+            ),
+            "assignment_ordinal": boundary.assignment_ordinal,
+            "assignment_digest": boundary.assignment_digest,
+            "slice_spec_digest": boundary.slice_spec_digest,
+            "outcome_status": outcome_status,
+            "normal_slice_candidate": candidate,
+        }
+        document["traversal_outcome_digest"] = semantic_digest(
+            "veritrail.review.private-slice-traversal-outcome/0.1",
+            copy.deepcopy(document),
+        )
+        commit_bytes = canonical_json_bytes(document)
+        committed = boundary._try_complete_outcome(commit_bytes)
+        if committed is None:
+            raise ValueError
+        result = OwnedReviewSliceTraversalOutcome._create(
+            boundary=boundary,
+            outcome_document=document,
+            committed_phase=committed,
+        )
+        _validate_traversal_outcome(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED
         ) from exc
 
 
