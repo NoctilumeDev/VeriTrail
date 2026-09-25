@@ -69,55 +69,88 @@ from veritrail_review.canonical import canonical_json_bytes, semantic_digest  # 
 
 
 class RelationDerivationTests(unittest.TestCase):
+    _shared_input_state: dict[str, object] | None = None
+
     @classmethod
     def setUpClass(cls) -> None:
-        cls._temporary = tempfile.TemporaryDirectory(prefix="veritrail-r1-relation-")
-        cls.root = Path(cls._temporary.name)
-        cls.fixture = create_fixture_repository(cls.root / "repository")
-        cls.import_fixture = create_fixture_repository(
-            cls.root / "import-repository",
-            nested_source=b"import pkg.mod\n",
-        )
-        cls.invalid_fixture = create_fixture_repository(
-            cls.root / "invalid-repository",
-            nested_source=b"def bad(:\n",
-        )
-        cls.fact_only_inputs = cls._inputs(
-            fixture=cls.fixture,
-            name="fact-only",
-            include_relation=False,
-        )
-        cls.relation_inputs = cls._inputs(
-            fixture=cls.fixture,
-            name="relation",
-        )
-        cls.import_inputs = cls._inputs(
-            fixture=cls.import_fixture,
-            name="import",
-        )
-        cls.invalid_inputs = cls._inputs(
-            fixture=cls.invalid_fixture,
-            name="invalid",
-        )
-        cls.advisory_inputs = cls._inputs(
-            fixture=cls.fixture,
-            name="advisory",
-            include_advisory=True,
-        )
-        cls.short_relation_inputs = cls._inputs(
-            fixture=cls.fixture,
-            name="short-relation",
-            wall_clock_ms=4_000,
-        )
-        cls.memory_relation_inputs = cls._inputs(
-            fixture=cls.fixture,
-            name="memory-relation",
-            memory_bytes=100_663_296,
-        )
+        owner = RelationDerivationTests
+        if owner._shared_input_state is None:
+            temporary = tempfile.TemporaryDirectory(prefix="veritrail-r1-relation-")
+            owner.root = Path(temporary.name)
+            try:
+                fixture = create_fixture_repository(owner.root / "repository")
+                import_fixture = create_fixture_repository(
+                    owner.root / "import-repository",
+                    nested_source=b"import pkg.mod\n",
+                )
+                invalid_fixture = create_fixture_repository(
+                    owner.root / "invalid-repository",
+                    nested_source=b"def bad(:\n",
+                )
+                two_import_fixture = create_fixture_repository(
+                    owner.root / "two-import-repository",
+                    nested_source=b"import pkg.mod\nimport other\n",
+                )
+                owner.fact_only_inputs = owner._inputs(
+                    fixture=fixture,
+                    name="fact-only",
+                    include_relation=False,
+                )
+                owner.relation_inputs = owner._inputs(
+                    fixture=fixture,
+                    name="relation",
+                )
+                owner.import_inputs = owner._inputs(
+                    fixture=import_fixture,
+                    name="import",
+                )
+                owner.invalid_inputs = owner._inputs(
+                    fixture=invalid_fixture,
+                    name="invalid",
+                )
+                owner.advisory_inputs = owner._inputs(
+                    fixture=fixture,
+                    name="advisory",
+                    include_advisory=True,
+                )
+                owner.short_relation_inputs = owner._inputs(
+                    fixture=fixture,
+                    name="short-relation",
+                    wall_clock_ms=4_000,
+                )
+                owner.memory_relation_inputs = owner._inputs(
+                    fixture=fixture,
+                    name="memory-relation",
+                    memory_bytes=100_663_296,
+                )
+                owner.two_import_inputs = owner._inputs(
+                    fixture=two_import_fixture,
+                    name="two-import",
+                )
+            finally:
+                temporary.cleanup()
+            owner._shared_input_state = {
+                name: getattr(owner, name)
+                for name in (
+                    "fact_only_inputs",
+                    "relation_inputs",
+                    "import_inputs",
+                    "invalid_inputs",
+                    "advisory_inputs",
+                    "short_relation_inputs",
+                    "memory_relation_inputs",
+                    "two_import_inputs",
+                )
+            }
+        for name, value in owner._shared_input_state.items():
+            setattr(cls, name, value)
 
     @classmethod
     def tearDownClass(cls) -> None:
-        cls._temporary.cleanup()
+        # The temporary repositories are removed immediately after the
+        # DerivationInputSet values have copy-owned their exact artifact and
+        # blob bytes. Downstream suites reuse only those immutable values.
+        pass
 
     @classmethod
     def _inputs(
@@ -201,6 +234,11 @@ class RelationDerivationTests(unittest.TestCase):
                 include_advisory=include_advisory
             ),
         )
+
+    def test_downstream_support_reuses_exact_inputs_without_reacquisition(self) -> None:
+        with mock.patch.object(sys.modules[__name__], "create_source_snapshot") as acquire:
+            RelationDerivationTests.setUpClass()
+        acquire.assert_not_called()
 
     @staticmethod
     def _phase_with_module_and_import(prepared, phase):
