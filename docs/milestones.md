@@ -1779,6 +1779,38 @@ conflict/upstream-unknown negative worlds、`RS-000..016` hardening、公共 Rev
 publisher 与 Schema 仍未开始。能力拓扑未变化，architecture DOT/SVG 保持字节不变；本 docs-only 状态发布
 必须独立通过自己的原始 PR 门、受保护合入与新 exact-main 双门，之后才能重新审查 F。
 
+F 已从该状态发布后的 exact main 独立实现 non-empty normal obligation reconciliation。实现 commit
+`74211037af08cc5ce6bf2e851b25864203e82dcf` 只新增 private closure value、one-shot reconciliation claim、
+原 live `BudgetContext` 原子提交与对应测试；它从 authoritative assignments 和 owned E outcomes 双向验账，
+拒绝 missing、duplicate、dangling 与 cross-attempt outcome，按 domain order 重排，并从每个 owned
+traversal boundary 重新推导完整 normal candidate。它不形成 `CLOSED_EMPTY`、negative closure、公共
+ReviewSliceSet、CoverageLedger、Schema、publisher 或 output root。
+
+首次本地 targeted 运行是 `61/64`，三处 `ERROR` 均发生在 F runtime 之前的 fixture world 构造：两个测试
+把既有 two-import producer 配到 one-import blob，另一个用冻结 Policy 不允许的空 anchor-kind 列表表达
+zero-domain。测试随后只复用仓库既有的 two-import input world 与有效但不存在的 `CLASS_DECLARATION`
+anchor world；runtime 没有为这些 setup error 修改。最终同一 source bytes 上 A–F targeted 在 Python
+3.10/3.13 normal/`-O` 四格均为 `64/64`，完整 Review Attention 四格均为 `274/274`。
+
+PR #194 original head `74211037af08cc5ce6bf2e851b25864203e82dcf` 的 Public CI run
+`36068162572` attempt 1 为 11/11 PASS，随后合入
+`main@28e048777341cfa6c9a6d7b546d75a0dc0eb0d33`。该 exact main 的 Public CI run
+`36070066887` attempt 1 为 11/11 PASS，Browser Smoke run `36070066891` attempt 1 为 1/1 PASS。
+当前可发布的事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_G_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A–F 提升为独立 frozen 状态。G 的 zero-anchor closed-empty 与 conflict/upstream-unknown negative
+worlds、H 的 `RS-000..016` hardening，以及公共 ReviewSliceSet/CoverageLedger 仍未开始。能力拓扑没有
+变化，architecture DOT/SVG 保持字节不变；本 docs-only 状态发布必须独立通过原始 PR 门、受保护合入与新
+exact-main 双门，之后才能重新审查 G。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
