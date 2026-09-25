@@ -17,7 +17,6 @@ for location in (SOURCE_ROOT, TEST_ROOT):
     if str(location) not in sys.path:
         sys.path.insert(0, str(location))
 
-from support import create_fixture_repository  # noqa: E402
 from test_execution_cell import _canonical_artifact, _seal_policy  # noqa: E402
 import test_relation_derivation as relation_test_support  # noqa: E402
 from veritrail_review import (  # noqa: E402
@@ -76,14 +75,7 @@ class RelationObservationQualificationTests(unittest.TestCase):
         cls.helper = support()
         cls.inputs = support.import_inputs
         cls.empty_inputs = support.relation_inputs
-        cls.two_import_fixture = create_fixture_repository(
-            support.root / "two-import-repository",
-            nested_source=b"import pkg.mod\nimport other\n",
-        )
-        cls.two_import_inputs = support._inputs(
-            fixture=cls.two_import_fixture,
-            name="two-import",
-        )
+        cls.two_import_inputs = support.two_import_inputs
         cls.contexts: list[object] = []
         cls.admitted_contexts: list[object] = []
         cls.positive = cls._run_with_import_facts(
