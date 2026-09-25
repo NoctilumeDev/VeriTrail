@@ -1,7 +1,6 @@
 # M10 Browser 业务失败分类首败诊断覆盖修正
 
-> 状态：`CORRECTION_CANDIDATE /
-> R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_AUDIT_REQUALIFICATION_BLOCKED`
+> 状态：`M10_BROWSER_BUSINESS_FAILURE_OBSERVATION_CORRECTION_QUALIFIED`
 >
 > 精确基线：`main@042654e8f9467fbaa8e26cf31690b8f878541eda`
 >
@@ -179,3 +178,28 @@ Schema、Evidence、Manifest、runtime、publisher、output root、公共 Bundle
 完整 suite 使用当前 worktree 的 Core、Starter、GitHub Evidence 与 Review Attention `src` roots，证明的是
 current-source regression，不冒充 GitHub runner 的 editable-install topology。维护 PR、自身 exact-main 双门与
 后继状态发布仍未执行，因此当前仍是 correction candidate 与 audit requalification blocked。
+
+## 7. 远端资格与后继状态发布
+
+maintenance PR [#201](https://github.com/NoctilumeDev/VeriTrail/pull/201) 的 original head
+`657f17c5d312fa239e76b55833c13b9ee01ed97a` 在 Public CI
+[run 36133008016](https://github.com/NoctilumeDev/VeriTrail/actions/runs/36133008016) attempt 1 取得
+11/11 PASS。该 PR 随后受保护合入
+`main@f9a493b73754b198745f6d92055d85516aa0a7cd`；该 exact main 的 Public CI
+[run 36135275911](https://github.com/NoctilumeDev/VeriTrail/actions/runs/36135275911) attempt 1 为
+11/11 PASS，Browser Smoke
+[run 36135275948](https://github.com/NoctilumeDev/VeriTrail/actions/runs/36135275948) attempt 1 为
+1/1 PASS。因此测试观察修正已独立资格化：
+
+```text
+M10_BROWSER_BUSINESS_FAILURE_OBSERVATION_CORRECTION_QUALIFIED
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+PR #200 exact-main Public CI run `36128804576` 仍保持 `FAILURE / UNKNOWN`；#201 与新 exact-main 的成功
+没有解释、覆盖或改写该历史观察。它们只证明 test-only diagnostic coverage 在新的 source state 上取得资格，
+从而解除审计状态发布阻塞。后继最小合同仍必须从本状态发布最终闭合后的新 exact main 独立起草；当前不因此
+获得 Schema、Evidence、Manifest、runtime、publisher、output root、公共 Bundle、Attention、CLI 或
+Workbench 实现授权。

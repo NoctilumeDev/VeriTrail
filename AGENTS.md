@@ -1108,6 +1108,17 @@
   只把文档 177 已有的 test-only transparent error-type tracing 接到该 business-failure world；不改 runtime、
   timeout、公共 Evidence、Schema、CI 或 R1 审计结论，也不声称修复旧 `UNKNOWN`。维护自身的新 exact-main
   双门与独立状态发布成立前，不得发布 `...PRECONTRACT_AUDITED`，不得起草后继合同或开始 Schema/runtime。
+- maintenance PR #201 original head `657f17c5d312fa239e76b55833c13b9ee01ed97a` 的 Public CI run
+  `36133008016` attempt 1 为 11/11 PASS，随后合入
+  `main@f9a493b73754b198745f6d92055d85516aa0a7cd`；该 exact main 的 Public CI run
+  `36135275911` attempt 1 为 11/11 PASS，Browser Smoke run `36135275948` attempt 1 为 1/1 PASS。
+  因此测试观察修正已独立资格化，post-closure audit 可以投影为
+  `R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED /
+  R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。PR #200 exact-main Public CI run
+  `36128804576` 的 `FAILURE / UNKNOWN` 永久保留；后继绿灯不解释或覆盖它。该状态发布必须独立通过自身
+  original PR 门、受保护合入与新 exact-main 双门；在最终门闭合前仍不得起草后继合同或开始 Schema、
+  Evidence、Manifest、runtime、publisher、output root、公共 Bundle、Attention、CLI 或 Workbench。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
