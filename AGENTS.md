@@ -1382,3 +1382,60 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 fixture、Schema、Profile、Policy 或 corpus，也不授权 shared receipt、classifier、Parse、Fact、ReviewSliceSet、
 CoverageLedger、Evidence、publisher 或 Bundle。其 original PR 门、受保护合入与新 exact-main 双门闭合后，下一步
 也只能从新 exact main 起草 Language Support 最小合同。
+
+## R1 Language Support Qualification 最小合同候选
+
+PR #206 的 docs-only semantic candidate 在 Python 3.10 Review Attention 门正式失败；失败发生在 nested test
+support 重复 acquisition 同一个 fact-only exact input world，最终由 frozen 30 秒 SourceSnapshot budget 正确
+fail closed。该失败没有击穿 Language Support 语义，但候选资格不成立。独立 PR #207 只让测试进程复用
+copy-owned、immutable、attempt-neutral `DerivationInputSet`，不共享 `BudgetContext`、ProviderRun、qualification、
+admission、continuation 或 terminal receipt，也不放宽产品预算；其 merge
+`main@36c82c9c5445b83c33e714c1288d79d27e1fe2bb` 的 Public CI 11/11 与 Browser Smoke 1/1 均在 attempt 1
+成立。相同语义 patch 随后以新 source identity 重建为 PR #208，original Public CI 11/11、受保护合入
+`main@de4eee7e953a0b95d52b973bee35a033e3901254`、exact-main Public CI 11/11 与 Browser Smoke 1/1 均成立。
+PR #206 的失败、PR #207 maintenance 与 PR #208 qualification 必须继续保持独立历史。
+
+从该 exact main 起，[文档 198](docs/198-r1-language-support-qualification-contract.md)只冻结 Language Support
+0.1 的 semantic contract：
+
+```text
+exact IN_SCOPE inventory world
+  + relevant sealed Policy semantics
+  + relevant frozen Profile support semantics
+  + r1-python-language-support/0.1
+    -> all applicable predicates
+    -> complete canonical failed-reason set
+    -> exactly one eligible / unsupported disposition
+```
+
+contract identity 只绑定 exact inventory item、matching `IN_SCOPE` decision、相关 Profile support semantics 与
+versioned function；whole `policy_digest` / `analysis_scope_digest` 继续作为历史闭包坐标，不能把 governance、budget、
+Provider requirements 或 module mapping 的无关变化塞进 Language Support semantic content。Python 3.10 encoding
+qualification 必须依次完成 BOM/前两行 declaration detection、版本化 codec normalization/lookup、BOM/cookie
+consistency、whole-source decode 与 Profile accepted-set membership；宿主 Python、locale、ambient codec registry
+和 Provider tolerance 没有规则 authority。
+
+所有 applicable 且失败的 reasons 必须按固定 rank
+`UNCLASSIFIED_SOURCE / UNSUPPORTED_ENTRY_KIND / UNSUPPORTED_LANGUAGE /
+UNSUPPORTED_SOURCE_ENCODING` 完整保存；first-failure 或执行顺序不得改变结果。encoding predicate 只在 entry-kind
+和 language/path predicate 通过时适用。`POLICY_EXCLUDED` 属于 `POLICY_SCOPE`；
+`UNSUPPORTED_SYNTAX_VERSION / PARSE_ERROR` 只属于 `PARSE`，Language Support 不得运行 parser 或解释 AST。
+每个 denominator member 必须恰好进入 eligible 或 unsupported；input/integrity failure 使整个 qualification 不成立，
+不得伪装成 per-item unsupported。
+
+当前状态为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+semantic classification 可以在相同 exact inputs 与 function 下复算，但不继承 attempt、`BudgetContext`、deadline、
+resource ownership 或 Parse continuation。persistence 明确保留为 non-decision：live recomputation 与 canonical
+derived projection 均未被选择。本文不修改 runtime、tests、fixture、Schema、Profile、Policy、corpus 或 identity
+vector，也不授权 classifier、carrier、Parse、Fact、shared receipt、ReviewSliceSet、CoverageLedger、Evidence、
+publisher 或 Bundle。候选 original PR、受保护合入、candidate exact-main 双门与 fresh public readback 成立后，
+仍须独立 freeze publication 自己完成同等级最后门；在 publication 闭合以前不得把合同写成 frozen 或开始代码。

@@ -1,13 +1,17 @@
 # R1 Language Support Qualification 最小合同前置审计
 
-> 状态（候选）：`R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDIT_CANDIDATE /
-> R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_NOT_STARTED /
+> 状态：`R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED /
+> R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_CANDIDATE /
 > R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
 >
 > 基线：`main@26b235cda3ba220e7de222a8e8ab8d2effedb5f4`
 >
+> 审计闭合基线：`main@de4eee7e953a0b95d52b973bee35a033e3901254`
+>
 > 上游审计：[Language Support Qualification Authority 问题审计](196-r1-language-support-qualification-authority-problem-audit.md)
+>
+> 后继候选：[Language Support Qualification 最小合同](198-r1-language-support-qualification-contract.md)
 
 本文只把文档 196 留下的八个问题压成下一份最小合同必须覆盖的语义面。它不发布合同，不命名 public
 Artifact，不选择持久化路线，也不实现 classifier、Parse、Fact、Coverage 或共同 carrier。
@@ -393,3 +397,18 @@ Attention / CLI / Workbench
 
 第 7–8 项完成以前，当前公开主线状态不变。即使本候选闭合，下一步也只能从新的 exact main 起草 Language
 Support 最小合同；不得直接实现 classifier、Parse、Fact、ReviewSliceSet、Coverage、publisher 或 Bundle。
+
+上述条件现已闭合。PR #206 保留 original Python 3.10 正式失败；独立 PR #207 只修复 test-support 重复 acquisition
+拓扑，不放宽产品 30 秒预算，也不共享 attempt authority。语义补丁随后从 maintenance-qualified
+`main@36c82c9c5445b83c33e714c1288d79d27e1fe2bb` 以相同 patch-id 重建为 PR #208，并取得：
+
+```text
+PR #208 Public CI     36190024077  pull_request / attempt 1  11/11 SUCCESS
+candidate merge      de4eee7e953a0b95d52b973bee35a033e3901254
+Public CI             36192106963  push / attempt 1          11/11 SUCCESS
+Browser Smoke         36192106965  push / attempt 1           1/1 SUCCESS
+```
+
+因此本文现在是 `PRECONTRACT_AUDITED` 历史，只授权文档 198 的 docs-only semantic contract candidate。旧失败、
+maintenance 与新候选资格仍是三条独立事实链；本文不因此授权 classifier、Parse、Fact、Coverage、Schema、
+publisher 或 Bundle。

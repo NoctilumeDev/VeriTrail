@@ -2099,6 +2099,50 @@ compatibility corpus 或 frozen history，也不授权 classifier、Parse、Fact
 CoverageLedger、Evidence、publisher 或 Bundle。候选 original PR 门、受保护合入与新 exact-main 双门成立后，
 后继也只能从新的 exact main 起草 Language Support 最小合同。
 
+PR #206 保留 original Python 3.10 正式失败；独立 PR #207 只修 test-support 重复 acquisition 拓扑，并在
+`main@36c82c9c5445b83c33e714c1288d79d27e1fe2bb` 完成 Public CI 11/11 与 Browser Smoke 1/1。相同
+semantic patch 随后从该 qualified exact main 重建为 PR #208；其 original Public CI 11/11、受保护合入
+`main@de4eee7e953a0b95d52b973bee35a033e3901254`、exact-main Public CI 11/11 与 Browser Smoke 1/1 均在
+attempt 1 成立。因此文档 197 现为 `R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED` 历史；旧失败、
+maintenance 与新候选资格仍保持独立。
+
+[文档 198](198-r1-language-support-qualification-contract.md)从该 exact main 起草 Language Support Qualification
+最小合同 0.1 候选。合同把 exact history binding 与 semantic content 分开：完整 Snapshot/Policy/Profile digests
+继续逐次核账，classification payload 只包含 exact inventory item、matching `IN_SCOPE` semantics、相关 Profile
+support semantics 与 `r1-python-language-support/0.1`，不把 governance、budget、Provider requirements 或 module
+mapping 的无关变化塞入 classification identity。
+
+Python 3.10 encoding qualification 固定为 BOM/前两行 declaration detection、版本化 codec
+normalization/lookup、BOM/cookie consistency、whole-source decode、canonical encoding 与 Profile accepted-set
+membership；ambient host Python、locale、codec registry 与 Provider tolerance 不拥有规则 authority。对每个
+denominator member，application 求值所有 applicable predicates，并按固定 rank 输出全部失败 reasons：
+
+```text
+UNCLASSIFIED_SOURCE
+UNSUPPORTED_ENTRY_KIND
+UNSUPPORTED_LANGUAGE
+UNSUPPORTED_SOURCE_ENCODING
+```
+
+每个 member 必须恰好进入 eligible 或 unsupported；input/integrity failure 使整个 qualification 不成立，不能伪装成
+per-item unsupported。`POLICY_EXCLUDED` 继续属于 `POLICY_SCOPE`；`UNSUPPORTED_SYNTAX_VERSION / PARSE_ERROR`
+只属于 `PARSE`。semantic result 可复算但不继承 attempt、BudgetContext 或 Parse continuation。persistence 明确保留
+为 non-decision，live recomputation 与 canonical derived projection 均未选择。
+
+当前候选状态为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文不创建或修改 Schema、corpus、identity vector、runtime、classifier、carrier、Parse、Fact、Coverage、Evidence、
+publisher 或 Bundle。只有候选 PR、受保护合入、candidate exact-main 双门与 fresh public readback，以及后继独立
+freeze publication 自己的同等级最后门全部成立后，合同才可写成 frozen；在此以前不得开始代码。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
