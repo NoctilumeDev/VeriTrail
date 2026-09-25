@@ -1896,20 +1896,33 @@ attempt-bound fulfillment authority 不能继承。
 tracked entry 与下一 stage 的一个 item。变体仍是 Schema-valid、stage partition self-consistent、overall
 `COMPLETE`，并可重算得到
 `coverage_ledger_digest=8dda8565035886d57f3765a564e44269d7d83bd13573bc3284433c28c138c721`。
-因此 Schema、digest 与单 stage 自洽不能证明七阶段 denominator 来自 exact world。当前事实投影为：
+因此 Schema、digest 与单 stage 自洽不能证明七阶段 denominator 来自 exact world。PR #200 original Public CI
+run `36126771319` attempt 1 为 11/11 PASS，随后合入
+`main@042654e8f9467fbaa8e26cf31690b8f878541eda`。该 exact main 的 Browser Smoke run
+`36128804624` attempt 1 为 1/1 PASS，Public CI run `36128804576` attempt 1 则在 Python 3.13 的
+`test_browser_business_failure_is_completed_fail_not_contamination` 中把预期 `BROWSER_HARD_FAILURE`
+分类成 `COLLECTOR_ERROR`。原 workflow 没有 rerun；失败位置已知，private error type 与根因保持
+`UNKNOWN`。相同 exact main 的五次 Python 3.13 本地 transparent-trace 诊断均得到预期
+`BROWSER_HARD_FAILURE / COMPLETED / FAIL` 且 private error list 为空；它们不能覆盖或解释远端首败。
+
+因此审计内容已经进入 main，但 exact-main qualification 没有成立。当前事实投影为：
 
 ```text
 R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED
 R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
-R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_AUDIT_MERGED
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_AUDIT_REQUALIFICATION_BLOCKED
 R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 ```
 
-下一 blocking seam 是 ReviewSliceSet semantic projection eligibility、七阶段 Coverage composition
-qualification 与 public closure binding。本文只完成 docs-only audit；没有取得 Schema、Evidence、Manifest、
-runtime、publisher、output root 或公共 Bundle 修改权。下一步必须从本文闭合后的新 exact main 起草独立最小
-合同，不能把同 semantic bytes、Coverage 自洽或 Manifest binding 当成履责资格。
+审计识别出的 blocking seam 仍是 ReviewSliceSet semantic projection eligibility、七阶段 Coverage composition
+qualification 与 public closure binding，但当前不得开始合同。[文档 193](193-m10-browser-business-failure-observation-correction.md)
+只把文档 177 已有的 test-only transparent private error-type tracing 接到此次失败的 business-failure world；
+不改 runtime、timeout、公共 Evidence、Schema、CI 或审计结论，也不声称修复旧 `UNKNOWN`。维护自己的
+original PR 门、受保护合入、新 exact-main 双门与后继独立状态发布成立前，不得恢复
+`...PRECONTRACT_AUDITED`，也不得开始 Schema、Evidence、Manifest、runtime、publisher、output root、
+公共 Bundle、Attention、CLI 或 Workbench。
 
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
