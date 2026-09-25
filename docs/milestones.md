@@ -1946,6 +1946,39 @@ qualification 与 public closure binding。该 docs-only 状态发布必须独�
 新 exact-main 双门；在最终门闭合前，不得起草后继合同或开始 Schema、Evidence、Manifest、runtime、
 publisher、output root、公共 Bundle、Attention、CLI 或 Workbench。
 
+后继从该 qualified exact main 重新核对文档 192 所要求的“同一 exact owned history 机械建立七个 Coverage
+stages”，发现 `PARSE / FACT_DERIVATION` 尚无足够履责历史。current closed multi-Provider fixture 的 exact
+Snapshot 中有四个按 entry-kind 与 `.py` raw-path 后缀进入 `supported_paths` 的 candidate parse-unit paths；该
+private 字段不证明 encoding/syntax/parse 已完成。两个 required ProviderRuns 均 `COMPLETED`、overall
+`COMPLETED`、FactSet 与 normal continuation 均成立，但实际只形成一个 path 的一个 Fact。该结果符合早期
+private mechanism-test 合同：文档 137 明确真实 parser 未实现，文档 155/160 只关闭 reported candidate 的
+canonical identity、membership、composition 与 provenance，不定义 Fact observation domain 或逐项 negative
+outcome。
+
+因此：
+
+```text
+Provider completion                         != parse-unit fulfillment
+FactSet membership/provenance closure       != Fact observation-domain closure
+Relation/Slice downstream qualification     != upstream Fact/Parse Coverage repair
+public Slice/Coverage seam identified       != seven-stage contract ready
+```
+
+[文档 194](194-r1-fact-parse-observation-fulfillment-coverage-prerequisite-system-audit.md)把该事实收敛为
+Fact/Parse Observation Domain and Fulfillment Qualification 前置 seam。当前候选状态为：
+
+```text
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED
+R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 audit candidate 不修改既有 runtime、Schema、tests、fixtures 或 frozen history，也不把 private test Provider
+改名成真实 parser。其自身原始 PR 门、受保护合入与新 exact-main 双门成立以前，当前公开主线状态不变；闭合
+以后也只能从新 exact main 继续 Fact/Parse observation fulfillment precontract audit，不能直接实现
+ReviewSliceSet、CoverageLedger、Evidence/Manifest carrier、publisher 或 public Bundle。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
