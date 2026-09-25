@@ -89,6 +89,7 @@ class _SameAttemptSliceContinuation:
 
     __slots__ = (
         "__attempt_eligibility",
+        "__bound_context",
         "__bound_inputs",
         "__consumed",
         "__context",
@@ -114,6 +115,7 @@ class _SameAttemptSliceContinuation:
                 _ReviewSliceInputFailureCode.CONTINUATION_UNAVAILABLE
             )
         self.__bound_inputs = inputs
+        self.__bound_context = context
         self.__context = context
         self.__attempt_eligibility = attempt_eligibility
         self.__lock = Lock()
@@ -146,7 +148,12 @@ class _SameAttemptSliceContinuation:
         return inputs is self.__bound_inputs
 
     def __available_locked(self) -> bool:
-        if self.__consumed or self.__revoked:
+        if (
+            self.__consumed
+            or self.__revoked
+            or self.__context is not self.__bound_context
+        ):
+            self.__revoked = True
             return False
         if self.__attempt_eligibility.state is not AttemptEligibilityState.ADMITTED:
             self.__revoked = True
@@ -168,6 +175,7 @@ class _ClaimedSliceContinuation:
 
     __slots__ = (
         "__attempt_eligibility",
+        "__bound_context",
         "__context",
         "__cross_validation_claimed",
         "__obligation_domain_claimed",
@@ -189,6 +197,7 @@ class _ClaimedSliceContinuation:
             raise _ReviewSliceInputError(
                 _ReviewSliceInputFailureCode.CONTINUATION_UNAVAILABLE
             )
+        self.__bound_context = context
         self.__context = context
         self.__attempt_eligibility = attempt_eligibility
         self.__lock = Lock()
@@ -368,7 +377,9 @@ class _ClaimedSliceContinuation:
 
     def __permits_continuation_locked(self) -> bool:
         return (
-            self.__attempt_eligibility.state is AttemptEligibilityState.ADMITTED
+            self.__context is self.__bound_context
+            and self.__attempt_eligibility.state
+            is AttemptEligibilityState.ADMITTED
             and self.__context.checkpoint()
             and self.__context.state is BudgetState.RUNNING
             and self.__context.stop_trigger is None

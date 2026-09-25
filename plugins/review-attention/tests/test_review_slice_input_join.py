@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import inspect
 import sys
 import unittest
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import replace
 from pathlib import Path
 from threading import Barrier
 from types import MappingProxyType
@@ -21,6 +23,7 @@ for location in (SOURCE_ROOT, TEST_ROOT):
 import test_relation_observation_qualification as qualification_support  # noqa: E402
 from veritrail_review import _relation_observation_qualification as qualification  # noqa: E402
 from veritrail_review import _review_slice_input as slice_input  # noqa: E402
+from veritrail_review import _review_slice_traversal as traversal  # noqa: E402
 from veritrail_review import (  # noqa: E402
     _review_slice_input_cross_validation_values as cross_values,
 )
@@ -47,6 +50,7 @@ from veritrail_review._review_slice_input_values import (  # noqa: E402
     _ReviewSliceInputError,
     _ReviewSliceInputFailureCode,
 )
+from veritrail_review.budget import BudgetContext  # noqa: E402
 from veritrail_review.canonical import canonical_json_bytes, semantic_digest  # noqa: E402
 from veritrail_review.derivation_input_contracts import DerivationInputSet  # noqa: E402
 from test_execution_cell import _canonical_artifact, _seal_policy  # noqa: E402
@@ -2108,6 +2112,403 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
             lambda: slice_input.record_blocked_review_slice_input(gate),
         )
+
+    def test_h_001_rs_010_fresh_budget_with_equal_limits_is_not_same_attempt(
+        self,
+    ) -> None:
+        preclaim_contexts: list[object] = []
+        preclaim = self._run(
+            "slice-input-h-fresh-budget-preclaim",
+            capture_context=preclaim_contexts,
+        )
+        preclaim_continuation = getattr(
+            preclaim,
+            "_OwnedRelationQualificationContinuation__continuation",
+        )
+        preclaim_fresh = BudgetContext._admit_for_testing(
+            preclaim_contexts[0].limits
+        )
+        object.__setattr__(
+            preclaim_continuation,
+            "_SameAttemptSliceContinuation__context",
+            preclaim_fresh,
+        )
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.ADMISSION_BINDING_REJECTED,
+            lambda: slice_input.admit_relation_set_for_slice_input_private_closed_proof(
+                preclaim
+            ),
+        )
+
+        contexts: list[object] = []
+        qualified = self._run(
+            "slice-input-h-fresh-budget",
+            capture_context=contexts,
+        )
+        authority = (
+            slice_input.admit_relation_set_for_slice_input_private_closed_proof(
+                qualified
+            )
+        )
+        joined = slice_input.claim_admitted_graph_slice_input(
+            self.inputs, authority
+        )
+        self.assertEqual(len(contexts), 1)
+        original = contexts[0]
+        fresh = BudgetContext._admit_for_testing(original.limits)
+        self.assertIsNot(fresh, original)
+        self.assertEqual(fresh.limits, original.limits)
+
+        object.__setattr__(
+            joined._continuation,
+            "_ClaimedSliceContinuation__context",
+            fresh,
+        )
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.INPUT_CROSS_VALIDATION_REJECTED,
+            lambda: slice_input.cross_validate_admitted_graph_slice_input(
+                joined
+            ),
+        )
+
+    def test_h_002_rs_008_mid_traversal_stop_leaves_no_normal_prefix(
+        self,
+    ) -> None:
+        contexts: list[object] = []
+        boundary = self._boundary(
+            "slice-input-h-mid-traversal-stop",
+            capture_context=contexts,
+        )
+        self.assertEqual(len(contexts), 1)
+        original = traversal._relation_candidates
+        stopped = False
+
+        def stop_after_candidate_discovery(*args, **kwargs):
+            nonlocal stopped
+            candidates = original(*args, **kwargs)
+            if candidates and not stopped:
+                stopped = True
+                contexts[0].request_cancellation()
+            return candidates
+
+        with mock.patch.object(
+            traversal,
+            "_relation_candidates",
+            side_effect=stop_after_candidate_discovery,
+        ):
+            self.assertJoinFailure(
+                _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED,
+                lambda: slice_input.derive_review_slice_traversal_outcome(
+                    boundary
+                ),
+            )
+        self.assertTrue(stopped)
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.TRAVERSAL_OUTCOME_REJECTED,
+            lambda: slice_input.derive_review_slice_traversal_outcome(boundary),
+        )
+
+    def test_h_003_rs_013_partial_frontier_cannot_self_report_complete(
+        self,
+    ) -> None:
+        outcome = slice_input.derive_review_slice_traversal_outcome(
+            self._boundary("slice-input-h-status-frontier")
+        )
+        document = outcome.outcome_document_copy()
+        self.assertTrue(document["normal_slice_candidate"]["frontier"])
+        document["outcome_status"] = "NORMAL_COMPLETE"
+        document["traversal_outcome_digest"] = semantic_digest(
+            "veritrail.review.private-slice-traversal-outcome/0.1",
+            {
+                key: copy.deepcopy(value)
+                for key, value in document.items()
+                if key != "traversal_outcome_digest"
+            },
+        )
+        raw = canonical_json_bytes(document)
+        object.__setattr__(outcome, "outcome_status", "NORMAL_COMPLETE")
+        object.__setattr__(
+            outcome,
+            "traversal_outcome_digest",
+            document["traversal_outcome_digest"],
+        )
+        object.__setattr__(outcome, "outcome_document_bytes", raw)
+        values = {
+            "derivation_id": outcome.derivation_id,
+            "admission_witness_digest": outcome.admission_witness_digest,
+            "slice_obligation_domain_digest": (
+                outcome.slice_obligation_domain_digest
+            ),
+            "assignment_ordinal": outcome.assignment_ordinal,
+            "assignment_digest": outcome.assignment_digest,
+            "slice_spec_digest": outcome.slice_spec_digest,
+            "outcome_status": outcome.outcome_status,
+            "traversal_outcome_digest": outcome.traversal_outcome_digest,
+            "outcome_document_bytes": outcome.outcome_document_bytes,
+            "_boundary": outcome._boundary,
+        }
+        object.__setattr__(
+            outcome,
+            "_state_seal",
+            outcome_values._private_state_seal(values),
+        )
+
+        with self.assertRaises(ValueError):
+            outcome_values._validate_traversal_outcome(outcome)
+
+    def test_h_004_rs_014_graph_external_membership_fails_reconciliation(
+        self,
+    ) -> None:
+        assignments = self._assignments("slice-input-h-membership")
+        boundary = slice_input.claim_next_review_slice_traversal(assignments)
+        candidate = traversal._derive_normal_review_slice_candidate(boundary)
+        graph_external_fact_id = "f" * 64
+        self.assertNotIn(
+            graph_external_fact_id,
+            [
+                item["fact_id"]
+                for item in boundary.traversal_request_copy()["fact_set"][
+                    "facts"
+                ]
+            ],
+        )
+        candidate["included_fact_ids"] = sorted(
+            candidate["included_fact_ids"] + [graph_external_fact_id]
+        )
+        candidate["slice_id"] = semantic_digest(
+            "veritrail.review.review-slice/0.1",
+            {
+                "slice_spec_digest": boundary.slice_spec_digest,
+                "included_fact_ids": candidate["included_fact_ids"],
+                "included_relation_ids": candidate["included_relation_ids"],
+                "frontier": copy.deepcopy(candidate["frontier"]),
+            },
+        )
+        with mock.patch.object(
+            slice_input,
+            "_derive_normal_review_slice_candidate",
+            return_value=candidate,
+        ):
+            outcome = slice_input.derive_review_slice_traversal_outcome(
+                boundary
+            )
+        self.assertIn(
+            graph_external_fact_id,
+            outcome.normal_slice_candidate_copy()["included_fact_ids"],
+        )
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED,
+            lambda: slice_input.reconcile_review_slice_traversal_outcomes(
+                assignments, (outcome,)
+            ),
+        )
+
+    def test_h_005_rs_015_closure_receipt_cannot_move_between_attempts(
+        self,
+    ) -> None:
+        first_assignments = self._assignments("slice-input-h-receipt-one")
+        first = slice_input.reconcile_review_slice_traversal_outcomes(
+            first_assignments,
+            self._normal_outcomes(first_assignments),
+        )
+        second_assignments = self._assignments("slice-input-h-receipt-two")
+        second = slice_input.reconcile_review_slice_traversal_outcomes(
+            second_assignments,
+            self._normal_outcomes(second_assignments),
+        )
+        self.assertEqual(
+            first.normal_slice_candidates_copy(),
+            second.normal_slice_candidates_copy(),
+        )
+        transplanted_values = {
+            "derivation_id": first.derivation_id,
+            "admission_witness_digest": first.admission_witness_digest,
+            "slice_obligation_domain_digest": (
+                first.slice_obligation_domain_digest
+            ),
+            "closure_status": first.closure_status,
+            "slice_obligation_closure_digest": (
+                first.slice_obligation_closure_digest
+            ),
+            "closure_document_bytes": first.closure_document_bytes,
+            "_assignments": second._assignments,
+            "_outcomes": first._outcomes,
+            "_committed_phase": first._committed_phase,
+        }
+        transplanted = replace(
+            second,
+            **transplanted_values,
+            _state_seal=closure_values._private_state_seal(
+                transplanted_values
+            ),
+        )
+
+        with self.assertRaises(ValueError):
+            closure_values._validate_slice_obligation_closure(transplanted)
+
+    def test_h_006_rs_016_caller_cannot_supply_empty_denominator(self) -> None:
+        _, validated = self._validated("slice-input-h-no-caller-domain")
+        self.assertEqual(
+            tuple(
+                inspect.signature(
+                    slice_input.construct_review_slice_obligation_domain
+                ).parameters
+            ),
+            ("validated",),
+        )
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+        obligations = gate.obligations_copy()
+        self.assertIsNotNone(obligations)
+        self.assertGreater(len(obligations), 0)
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gate
+        )
+        self.assertGreater(assignments.assignment_count, 0)
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+            lambda: slice_input.close_empty_review_slice_obligation_domain(
+                assignments
+            ),
+        )
+
+    def test_h_007_cross_runtime_golden_private_closure_identities(self) -> None:
+        def identity(raw: bytes, digest: str) -> dict[str, str]:
+            return {
+                "semantic_digest": digest,
+                "canonical_sha256": hashlib.sha256(raw).hexdigest(),
+            }
+
+        partial_assignments = self._assignments(
+            "slice-input-h-golden-partial"
+        )
+        partial_outcomes = self._normal_outcomes(partial_assignments)
+        partial_closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            partial_assignments,
+            partial_outcomes,
+        )
+
+        complete_inputs = self._inputs_with_slice_limits(
+            self.inputs,
+            max_depth=2,
+        )
+        complete_assignments = self._assignments(
+            "slice-input-h-golden-complete",
+            inputs=complete_inputs,
+        )
+        complete_outcomes = self._normal_outcomes(complete_assignments)
+        complete_closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            complete_assignments,
+            complete_outcomes,
+        )
+
+        empty_inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        empty_assignments = self._assignments(
+            "slice-input-h-golden-empty",
+            inputs=empty_inputs,
+        )
+        empty_closure = slice_input.close_empty_review_slice_obligation_domain(
+            empty_assignments
+        )
+
+        _, conflict_validated = self._validated(
+            "slice-input-h-golden-conflict",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        conflict_gate = slice_input.construct_review_slice_obligation_domain(
+            conflict_validated
+        )
+        blocked = slice_input.record_blocked_review_slice_input(conflict_gate)
+
+        summary = {
+            "normal_partial_outcome": identity(
+                partial_outcomes[0].outcome_document_bytes,
+                partial_outcomes[0].traversal_outcome_digest,
+            ),
+            "normal_partial_closure": identity(
+                partial_closure.closure_document_bytes,
+                partial_closure.slice_obligation_closure_digest,
+            ),
+            "normal_complete_outcome": identity(
+                complete_outcomes[0].outcome_document_bytes,
+                complete_outcomes[0].traversal_outcome_digest,
+            ),
+            "normal_complete_closure": identity(
+                complete_closure.closure_document_bytes,
+                complete_closure.slice_obligation_closure_digest,
+            ),
+            "closed_empty": identity(
+                empty_closure.closure_document_bytes,
+                empty_closure.empty_domain_closure_digest,
+            ),
+            "conflict_blocked": identity(
+                blocked.receipt_document_bytes,
+                blocked.blocked_input_receipt_digest,
+            ),
+        }
+        self.assertEqual(
+            summary,
+            {
+                "normal_partial_outcome": {
+                    "semantic_digest": "75403302066a400158a0070a3c5c133e15dc7e70b4905eb3f78d510b9f4bfdbd",
+                    "canonical_sha256": "3d590d36a77bce44a6cf576e4a7461dd8f7fa772e30f0dbb37fe595cd2a2d761",
+                },
+                "normal_partial_closure": {
+                    "semantic_digest": "31bd200a9f135c52d2a17911996489cc092a59943a95e093efadd7cf1416d770",
+                    "canonical_sha256": "216b3c4c44d27ed5b56294815356ab6f5be3e0b96e8470fadaed273846796eef",
+                },
+                "normal_complete_outcome": {
+                    "semantic_digest": "468a7195f8a1cbb8daab4e1e05758860321375939258698732dfd3930baf099a",
+                    "canonical_sha256": "e43d46b3f46a3d579cfd1808812793e201c3341b764ffb6da830dbf68ec5f208",
+                },
+                "normal_complete_closure": {
+                    "semantic_digest": "9259ca6744511e8f6662d3a00528a1c923a2dfa9ae8b345c4188186d64776bbd",
+                    "canonical_sha256": "7a9b7b1358f1c3bde1672506d4d40992218619988e1cf6e5c620859085e97621",
+                },
+                "closed_empty": {
+                    "semantic_digest": "7bbe46ad1b03659052d7c75241b0464101b7dcc7939d6b867c37ca07be58fe7a",
+                    "canonical_sha256": "792f655bb17d55392d147b0c138e7f21a4c6c851dc2bed16f903a299db04ca9f",
+                },
+                "conflict_blocked": {
+                    "semantic_digest": "3af34a95a6186c6ae76baa8a5ec37c61967228ad9333dde10247eedb1fcca8ab",
+                    "canonical_sha256": "01cae545842dd2b24355f78522df980a17ce8dc8283d0b3d5536819573b900ab",
+                },
+            },
+        )
+        self.assertEqual(
+            hashlib.sha256(canonical_json_bytes(summary)).hexdigest(),
+            "b3f8d2b1848f89996b625abeff43ee97cf689e82878bb9abbeed9a0d58b86a6c",
+        )
+
+    def test_h_008_rs_000_007_are_private_precursors_only(self) -> None:
+        assignments = self._assignments("slice-input-h-private-precursors")
+        closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            assignments,
+            self._normal_outcomes(assignments),
+        )
+        document = closure.closure_document_copy()
+        self.assertEqual(document["closure_status"], "NORMAL_CLOSED")
+        self.assertTrue(
+            document["normal_slice_candidates"][0]["frontier"]
+        )
+        self.assertNotIn("review_slice_set", document)
+        self.assertNotIn("coverage_ledger", document)
+        self.assertNotIn("coverage_frontier", document)
+
+        import veritrail_review
+
+        for name in (
+            "ReviewSliceSet",
+            "CoverageLedger",
+            "publish_review_slice_set",
+            "publish_coverage_ledger",
+        ):
+            self.assertFalse(hasattr(veritrail_review, name))
+            self.assertNotIn(name, veritrail_review.__all__)
 
 
 if __name__ == "__main__":
