@@ -31,6 +31,7 @@ class _ReviewSliceInputFailureCode(str, Enum):
     OBLIGATION_RECONCILIATION_REJECTED = (
         "OBLIGATION_RECONCILIATION_REJECTED"
     )
+    OBLIGATION_ACCOUNTING_REJECTED = "OBLIGATION_ACCOUNTING_REJECTED"
 
 
 _FAILURE_MESSAGES = {
@@ -60,6 +61,9 @@ _FAILURE_MESSAGES = {
     ),
     _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED: (
         "the private Slice obligation outcomes cannot form one normal closure"
+    ),
+    _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED: (
+        "the private Slice input cannot form one exact terminal accounting result"
     ),
 }
 
@@ -169,6 +173,8 @@ class _ClaimedSliceContinuation:
         "__obligation_domain_claimed",
         "__traversal_assignments_claimed",
         "__normal_reconciliation_claimed",
+        "__closed_empty_reconciliation_claimed",
+        "__blocked_input_receipt_claimed",
         "__lock",
     )
 
@@ -190,6 +196,8 @@ class _ClaimedSliceContinuation:
         self.__obligation_domain_claimed = False
         self.__traversal_assignments_claimed = False
         self.__normal_reconciliation_claimed = False
+        self.__closed_empty_reconciliation_claimed = False
+        self.__blocked_input_receipt_claimed = False
 
     def permits_continuation(self) -> bool:
         with self.__lock:
@@ -257,12 +265,43 @@ class _ClaimedSliceContinuation:
             if (
                 not self.__traversal_assignments_claimed
                 or self.__normal_reconciliation_claimed
+                or self.__closed_empty_reconciliation_claimed
+                or self.__blocked_input_receipt_claimed
                 or not self.__permits_continuation_locked()
             ):
                 raise _ReviewSliceInputError(
                     _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED
                 )
             self.__normal_reconciliation_claimed = True
+
+    def claim_closed_empty_reconciliation(self) -> None:
+        with self.__lock:
+            if (
+                not self.__traversal_assignments_claimed
+                or self.__normal_reconciliation_claimed
+                or self.__closed_empty_reconciliation_claimed
+                or self.__blocked_input_receipt_claimed
+                or not self.__permits_continuation_locked()
+            ):
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED
+                )
+            self.__closed_empty_reconciliation_claimed = True
+
+    def claim_blocked_input_receipt(self) -> None:
+        with self.__lock:
+            if (
+                not self.__obligation_domain_claimed
+                or self.__traversal_assignments_claimed
+                or self.__normal_reconciliation_claimed
+                or self.__closed_empty_reconciliation_claimed
+                or self.__blocked_input_receipt_claimed
+                or not self.__permits_continuation_locked()
+            ):
+                raise _ReviewSliceInputError(
+                    _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED
+                )
+            self.__blocked_input_receipt_claimed = True
 
     def try_complete_obligation_closure(
         self, canonical_bytes: bytes
@@ -287,6 +326,45 @@ class _ClaimedSliceContinuation:
             ):
                 return None
             return phase
+
+    def try_complete_closed_empty_obligation_closure(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        """Commit one exact empty-domain closure against the live budget."""
+
+        with self.__lock:
+            if not self.__closed_empty_reconciliation_claimed:
+                return None
+            return self.__try_complete_private_phase_locked(canonical_bytes)
+
+    def try_complete_blocked_input_receipt(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        """Commit one conflict-blocked receipt against the live budget."""
+
+        with self.__lock:
+            if not self.__blocked_input_receipt_claimed:
+                return None
+            return self.__try_complete_private_phase_locked(canonical_bytes)
+
+    def __try_complete_private_phase_locked(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        if not self.__permits_continuation_locked():
+            return None
+        phase = self.__context.try_complete_phase(
+            canonical_bytes, resources_closed=True
+        )
+        if phase is None:
+            if self.__context.state is BudgetState.STOPPING:
+                self.__context._mark_release(residue_free=True)
+            return None
+        if (
+            self.__attempt_eligibility.state
+            is not AttemptEligibilityState.ADMITTED
+        ):
+            return None
+        return phase
 
     def __permits_continuation_locked(self) -> bool:
         return (
@@ -491,6 +569,24 @@ class OwnedAdmittedGraphSliceInput:
         self, canonical_bytes: bytes
     ) -> OwnedPhaseResult | None:
         return self._continuation.try_complete_obligation_closure(canonical_bytes)
+
+    def _claim_closed_empty_reconciliation(self) -> None:
+        self._continuation.claim_closed_empty_reconciliation()
+
+    def _try_complete_closed_empty_obligation_closure(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        return self._continuation.try_complete_closed_empty_obligation_closure(
+            canonical_bytes
+        )
+
+    def _claim_blocked_input_receipt(self) -> None:
+        self._continuation.claim_blocked_input_receipt()
+
+    def _try_complete_blocked_input_receipt(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        return self._continuation.try_complete_blocked_input_receipt(canonical_bytes)
 
 
 def _bind_qualification_continuation(

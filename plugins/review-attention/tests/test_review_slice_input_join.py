@@ -25,7 +25,13 @@ from veritrail_review import (  # noqa: E402
     _review_slice_input_cross_validation_values as cross_values,
 )
 from veritrail_review import (  # noqa: E402
+    _review_slice_blocked_input_receipt_values as blocked_values,
+)
+from veritrail_review import (  # noqa: E402
     _review_slice_obligation_domain_values as domain_values,
+)
+from veritrail_review import (  # noqa: E402
+    _review_slice_empty_domain_closure_values as empty_values,
 )
 from veritrail_review import (  # noqa: E402
     _review_slice_obligation_closure_values as closure_values,
@@ -1785,6 +1791,323 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             "manifest",
         ):
             self.assertNotIn(forbidden, parameters)
+
+    def test_g_001_rs_005_exact_zero_anchor_domain_closes_empty(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        assignments = self._assignments(
+            "slice-input-g-closed-empty",
+            inputs=inputs,
+        )
+
+        closure = slice_input.close_empty_review_slice_obligation_domain(
+            assignments
+        )
+        document = closure.closure_document_copy()
+
+        self.assertEqual(closure.closure_status, "CLOSED_EMPTY")
+        self.assertEqual(document["traversal_outcomes"], [])
+        self.assertEqual(document["normal_slice_candidates"], [])
+        self.assertEqual(assignments.assignment_count, 0)
+        self.assertEqual(
+            closure.slice_obligation_domain_digest,
+            assignments.slice_obligation_domain_digest,
+        )
+        empty_values._validate_empty_domain_closure(closure)
+        object.__setattr__(closure, "closure_document_bytes", b"{}")
+        with self.assertRaises(ValueError):
+            empty_values._validate_empty_domain_closure(closure)
+
+    def test_g_002_nonempty_domain_cannot_use_closed_empty_path(self) -> None:
+        assignments = self._assignments("slice-input-g-not-empty")
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+            lambda: slice_input.close_empty_review_slice_obligation_domain(
+                assignments
+            ),
+        )
+        outcomes = self._normal_outcomes(assignments)
+        closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            assignments,
+            outcomes,
+        )
+        self.assertEqual(closure.closure_status, "NORMAL_CLOSED")
+
+    def test_g_003_closed_empty_claim_is_one_shot_and_concurrent(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        assignments = self._assignments(
+            "slice-input-g-empty-concurrent",
+            inputs=inputs,
+        )
+        barrier = Barrier(2)
+
+        def close():
+            barrier.wait()
+            try:
+                value = slice_input.close_empty_review_slice_obligation_domain(
+                    assignments
+                )
+            except _ReviewSliceInputError as exc:
+                return ("ERROR", exc.code)
+            return ("CLOSURE", value)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = [
+                future.result()
+                for future in (pool.submit(close), pool.submit(close))
+            ]
+        self.assertEqual(
+            sorted(item[0] for item in results), ["CLOSURE", "ERROR"]
+        )
+        failure = next(item for item in results if item[0] == "ERROR")
+        self.assertIs(
+            failure[1],
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+        )
+
+    def test_g_004_stopped_budget_cannot_form_closed_empty(self) -> None:
+        contexts: list[object] = []
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        assignments = self._assignments(
+            "slice-input-g-empty-stopped",
+            inputs=inputs,
+            capture_context=contexts,
+        )
+        self.assertEqual(len(contexts), 1)
+        contexts[0].request_cancellation()
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+            lambda: slice_input.close_empty_review_slice_obligation_domain(
+                assignments
+            ),
+        )
+
+    def test_g_005_same_empty_domain_does_not_share_attempt_receipt(self) -> None:
+        inputs = self._inputs_with_anchor_fact_kinds(
+            self.inputs,
+            ["CLASS_DECLARATION"],
+        )
+        first_assignments = self._assignments(
+            "slice-input-g-empty-one",
+            inputs=inputs,
+        )
+        second_assignments = self._assignments(
+            "slice-input-g-empty-two",
+            inputs=inputs,
+        )
+        first = slice_input.close_empty_review_slice_obligation_domain(
+            first_assignments
+        )
+        second = slice_input.close_empty_review_slice_obligation_domain(
+            second_assignments
+        )
+
+        self.assertEqual(
+            first.slice_obligation_domain_digest,
+            second.slice_obligation_domain_digest,
+        )
+        self.assertNotEqual(first.derivation_id, second.derivation_id)
+        self.assertNotEqual(
+            first.admission_witness_digest,
+            second.admission_witness_digest,
+        )
+        self.assertNotEqual(
+            first.empty_domain_closure_digest,
+            second.empty_domain_closure_digest,
+        )
+
+    def test_g_006_conflict_forms_unknown_denominator_receipt(self) -> None:
+        _, validated = self._validated(
+            "slice-input-g-conflict",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+
+        receipt = slice_input.record_blocked_review_slice_input(gate)
+        document = receipt.receipt_document_copy()
+        relation_set = validated.relation_set_document_copy()
+
+        self.assertEqual(receipt.receipt_status, "BLOCKED_BY_RELATION_CONFLICT")
+        self.assertEqual(
+            document["slice_derivation_denominator_status"], "UNKNOWN"
+        )
+        self.assertEqual(
+            receipt.reason_codes_copy(),
+            ["PROVIDER_CONFLICT", "UPSTREAM_DENOMINATOR_UNKNOWN"],
+        )
+        self.assertIsNone(document["slice_obligation_domain_digest"])
+        self.assertEqual(document["normal_slice_candidates"], [])
+        self.assertEqual(
+            document["relation_conflict_ids"],
+            [item["conflict_id"] for item in relation_set["conflicts"]],
+        )
+        blocked_values._validate_blocked_input_receipt(receipt)
+
+    def test_g_007_blocked_receipt_claim_is_one_shot_and_concurrent(self) -> None:
+        _, validated = self._validated(
+            "slice-input-g-conflict-concurrent",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+        barrier = Barrier(2)
+
+        def close():
+            barrier.wait()
+            try:
+                value = slice_input.record_blocked_review_slice_input(gate)
+            except _ReviewSliceInputError as exc:
+                return ("ERROR", exc.code)
+            return ("RECEIPT", value)
+
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            results = [
+                future.result()
+                for future in (pool.submit(close), pool.submit(close))
+            ]
+        self.assertEqual(sorted(item[0] for item in results), ["ERROR", "RECEIPT"])
+        failure = next(item for item in results if item[0] == "ERROR")
+        self.assertIs(
+            failure[1],
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+        )
+
+    def test_g_008_consistent_gate_cannot_claim_blocked_receipt(self) -> None:
+        _, validated = self._validated("slice-input-g-not-conflicting")
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+            lambda: slice_input.record_blocked_review_slice_input(gate),
+        )
+        assignments = slice_input.assign_review_slice_obligations_for_traversal(
+            gate
+        )
+        closure = slice_input.reconcile_review_slice_traversal_outcomes(
+            assignments,
+            self._normal_outcomes(assignments),
+        )
+        self.assertEqual(closure.closure_status, "NORMAL_CLOSED")
+
+    def test_g_009_conflict_cannot_form_assignments_or_closed_empty(self) -> None:
+        _, validated = self._validated(
+            "slice-input-g-conflict-not-empty",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ASSIGNMENT_REJECTED,
+            lambda: slice_input.assign_review_slice_obligations_for_traversal(gate),
+        )
+        self.assertIsNone(gate.obligations_copy())
+        self.assertIsNone(gate.slice_obligation_domain_digest)
+
+    def test_g_010_blocked_receipt_is_private_sealed_and_nonpublishing(self) -> None:
+        import veritrail_review
+
+        _, validated = self._validated(
+            "slice-input-g-conflict-private",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+        )
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+        receipt = slice_input.record_blocked_review_slice_input(gate)
+        blocked_values._validate_blocked_input_receipt(receipt)
+        object.__setattr__(receipt, "receipt_document_bytes", b"{}")
+        with self.assertRaises(ValueError):
+            blocked_values._validate_blocked_input_receipt(receipt)
+
+        for name in (
+            "close_empty_review_slice_obligation_domain",
+            "record_blocked_review_slice_input",
+        ):
+            self.assertFalse(hasattr(veritrail_review, name))
+            self.assertNotIn(name, veritrail_review.__all__)
+        for callback in (
+            slice_input.close_empty_review_slice_obligation_domain,
+            slice_input.record_blocked_review_slice_input,
+        ):
+            for forbidden in (
+                "output_path",
+                "publisher",
+                "review_slice_set",
+                "coverage",
+                "manifest",
+            ):
+                self.assertNotIn(forbidden, inspect.signature(callback).parameters)
+
+    def test_g_011_same_conflict_content_does_not_share_attempt_receipt(self) -> None:
+        receipts = []
+        for derivation_id in (
+            "slice-input-g-conflict-one",
+            "slice-input-g-conflict-two",
+        ):
+            _, validated = self._validated(
+                derivation_id,
+                inputs=self.support.two_import_inputs,
+                relation_launch_key="observation-b-conflict",
+                two_imports=True,
+            )
+            gate = slice_input.construct_review_slice_obligation_domain(validated)
+            receipts.append(slice_input.record_blocked_review_slice_input(gate))
+
+        self.assertEqual(
+            receipts[0].receipt_document_copy()["relation_conflict_ids"],
+            receipts[1].receipt_document_copy()["relation_conflict_ids"],
+        )
+        self.assertNotEqual(receipts[0].derivation_id, receipts[1].derivation_id)
+        self.assertNotEqual(
+            receipts[0].admission_witness_digest,
+            receipts[1].admission_witness_digest,
+        )
+        self.assertNotEqual(
+            receipts[0].blocked_input_receipt_digest,
+            receipts[1].blocked_input_receipt_digest,
+        )
+
+    def test_g_012_not_qualified_world_cannot_enter_slice_negative_path(self) -> None:
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.CONTINUATION_UNAVAILABLE,
+            lambda: self._run(
+                "slice-input-g-not-qualified",
+                relation_launch_key="observation-a-unavailable",
+            ),
+        )
+
+    def test_g_013_stopped_budget_cannot_form_blocked_receipt(self) -> None:
+        contexts: list[object] = []
+        _, validated = self._validated(
+            "slice-input-g-conflict-stopped",
+            inputs=self.support.two_import_inputs,
+            relation_launch_key="observation-b-conflict",
+            two_imports=True,
+            capture_context=contexts,
+        )
+        gate = slice_input.construct_review_slice_obligation_domain(validated)
+        self.assertEqual(len(contexts), 1)
+        contexts[0].request_cancellation()
+
+        self.assertJoinFailure(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED,
+            lambda: slice_input.record_blocked_review_slice_input(gate),
+        )
 
 
 if __name__ == "__main__":

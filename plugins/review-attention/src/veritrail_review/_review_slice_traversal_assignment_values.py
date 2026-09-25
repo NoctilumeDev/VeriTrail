@@ -144,6 +144,19 @@ class OwnedReviewSliceTraversalAssignments:
             canonical_bytes
         )
 
+    def _claim_closed_empty_reconciliation(self) -> None:
+        validated = self._gate._owned_cross_validated_input()
+        validated._owned_joined_input()._claim_closed_empty_reconciliation()
+
+    def _try_complete_closed_empty_obligation_closure(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        validated = self._gate._owned_cross_validated_input()
+        return (
+            validated._owned_joined_input()
+            ._try_complete_closed_empty_obligation_closure(canonical_bytes)
+        )
+
 
 @dataclass(frozen=True)
 class OwnedReviewSliceTraversalBoundary:

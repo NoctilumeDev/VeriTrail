@@ -10,6 +10,7 @@ from veritrail_review._review_slice_input_cross_validation_values import (
     OwnedCrossValidatedAdmittedGraphSliceInput,
     _validate_cross_validated_input,
 )
+from veritrail_review.budget import OwnedPhaseResult
 from veritrail_review.canonical import canonical_json_bytes, semantic_digest
 
 
@@ -98,6 +99,14 @@ class OwnedReviewSliceObligationDomainGate:
 
     def _claim_traversal_assignments(self) -> None:
         self._validated._claim_traversal_assignments()
+
+    def _claim_blocked_input_receipt(self) -> None:
+        self._validated._claim_blocked_input_receipt()
+
+    def _try_complete_blocked_input_receipt(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        return self._validated._try_complete_blocked_input_receipt(canonical_bytes)
 
 
 def _validate_obligation_domain_gate(
