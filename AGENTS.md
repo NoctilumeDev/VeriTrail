@@ -1049,6 +1049,27 @@
   不存在的 `CLASS_DECLARATION` anchor world 后，runtime 不变，最终 A–F 双 Python normal/`-O` 均为
   `64/64`，完整 Review Attention 四格均为 `274/274`。能力拓扑未变，architecture DOT/SVG 保持字节不变；
   G 不得因本状态投影自动开始。
+- G 已把两类可达 negative world 留在独立 private identity 中：`QUALIFIED / CONSISTENT` 且 exact
+  obligation domain 真正为零时，domain owner 通过 one-shot empty reconciliation claim 与原 live
+  `BudgetContext` 原子提交 attempt-bound `CLOSED_EMPTY` closure；已 admission 的 `QUALIFIED /
+  CONFLICTING` graph 则只形成 denominator `UNKNOWN`、固定记录 `PROVIDER_CONFLICT /
+  UPSTREAM_DENOMINATOR_UNKNOWN` 且没有 normal Slice candidate 的 blocked-input receipt。更早的
+  `NOT_QUALIFIED / NOT_COMPOSED` world 仍停在 qualification，不得借 G 进入 Slice。最终实现 commit
+  `fc5fd83bd0dac01dd7b04f89b261411eb9287195` 经 PR #196 original Public CI run
+  `36090158284` attempt 1 的 11/11 PASS 后合入
+  `main@1efba63d720d8faa39cc5ca3f82433c8b0e14d42`；该 exact main 的 Public CI run
+  `36091900312` attempt 1 为 11/11 PASS，Browser Smoke run `36091900308` attempt 1 为 1/1 PASS。
+  因此当前可投影为
+  `R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGE_H_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。A–G 仍没有独立 frozen claim。一次中间实现
+  曾原位扩张 F 已验证的 private `obligation-closure/0.1` identity；最终 diff review 拒绝该路径，恢复 F
+  文件原字节，并为 G 建立两个独立 private identity 后重跑全部门。首次使用仓库 `.venv` 的完整 suite
+  尝试因测试环境缺少 `jsonschema` 在 discovery 阶段形成两处 import error，不构成 qualified full-suite
+  observation；依赖完整的 Python 3.10/3.13 normal/`-O` 最终字节上，A–G targeted 四格均为 `77/77`，
+  完整 Review Attention 四格均为 `287/287`。G 不形成公共 ReviewSliceSet/CoverageLedger、Schema、
+  publisher、output root、Attention、CLI 或 Workbench authority。能力拓扑未变，architecture DOT/SVG
+  保持字节不变；H 不得因本状态投影自动开始。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

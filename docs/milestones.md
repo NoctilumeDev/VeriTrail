@@ -1811,6 +1811,46 @@ worlds、H 的 `RS-000..016` hardening，以及公共 ReviewSliceSet/CoverageLed
 变化，architecture DOT/SVG 保持字节不变；本 docs-only 状态发布必须独立通过原始 PR 门、受保护合入与新
 exact-main 双门，之后才能重新审查 G。
 
+G 已从该状态发布后的 exact main 分别闭合两个可达的 private negative world。对
+`QUALIFIED / CONSISTENT` 且 exact obligation domain 真正为零的 world，domain owner 通过 one-shot empty
+reconciliation claim 与原 live `BudgetContext` 原子提交 attempt-bound `CLOSED_EMPTY` closure；该 closure
+明确固定零 assignment、零 traversal outcome 与零 normal Slice candidate。对已经 admission 的
+`QUALIFIED / CONFLICTING` graph，G 只形成 denominator `UNKNOWN`、固定记录 `PROVIDER_CONFLICT /
+UPSTREAM_DENOMINATOR_UNKNOWN` 且没有 normal Slice candidate 的 blocked-input receipt。更早的
+`NOT_QUALIFIED / NOT_COMPOSED` world 继续停在 qualification，不能借 G 进入 Slice。
+
+实现过程中一版中间字节曾把 `CLOSED_EMPTY` 原位加入 F 已经 exact-main verified 的 private
+`veritrail.review.private-slice-obligation-closure/0.1` identity；虽然当时完整测试通过，最终 diff review 仍
+判定这会改写既有 identity。该实现已被撤回，F 的 `_review_slice_obligation_closure_values.py` 恢复为 base
+原字节，G 改用两个新的独立 private identity：
+`veritrail.review.private-slice-empty-domain-closure/0.1` 与
+`veritrail.review.private-slice-blocked-input-receipt/0.1`，随后在最终分离字节上重新运行全部验证。
+
+首次尝试用仓库 `.venv` 运行完整 Review Attention suite 时，235 项执行后在 discovery 阶段因测试环境
+缺少 test-only `jsonschema` 形成两处 import error；这属于本地测试环境 setup failure，不是 G runtime
+failure，也不是 qualified full-suite observation。改用依赖完整的 Python 3.10 与 3.13 后，最终同一 source
+bytes 上 A–G targeted 在 normal/`-O` 四格均为 `77/77`，完整 Review Attention 四格均为 `287/287`；
+`compileall`、`git diff --check`、scope 与 sensitive-path 检查也通过。
+
+PR #196 original head `fc5fd83bd0dac01dd7b04f89b261411eb9287195` 的 Public CI run
+`36090158284` attempt 1 为 11/11 PASS，随后合入
+`main@1efba63d720d8faa39cc5ca3f82433c8b0e14d42`。该 exact main 的 Public CI run
+`36091900312` attempt 1 为 11/11 PASS，Browser Smoke run `36091900308` attempt 1 为 1/1 PASS。
+当前可发布的事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_IMPLEMENTATION_IN_PROGRESS
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGE_H_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A–G 提升为独立 frozen 状态。H 的 `RS-000..016` hardening、公共 ReviewSliceSet/CoverageLedger、
+Schema、publisher、output root、Attention、CLI 与 Workbench 仍未开始。能力拓扑没有变化，architecture
+DOT/SVG 保持字节不变；本 docs-only 状态发布必须独立通过原始 PR 门、受保护合入与新 exact-main 双门，
+之后才能重新审查 H。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
