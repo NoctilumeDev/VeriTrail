@@ -1884,6 +1884,33 @@ output root、Attention、CLI 或 Workbench authority。能力拓扑没有变化
 新的 exact main 先做 post-closure system audit，再判断公共 ReviewSliceSet/Coverage 门是否已有足够合同；
 不能因为 doc189 A–H 已完成就机械开工。
 
+[文档 192](192-r1-post-slice-input-closure-slice-coverage-qualification-system-audit.md)随后从状态发布后的
+`main@1ca6a4740f13cbb9cb70eb0836dbbabf81c076d0` 完成 post-closure system audit。审计没有先实现公共
+SliceSet/Coverage，而是复用 current private helper 构造两个独立合法 attempts：两者的 Slice candidates、
+`slice_id=7723d617...656bf` 与
+`slice_set_digest=882e75aa...f936c` 完全相同，admission witness、Slice obligation closure digest 与
+closure bytes 则全部不同；Python 3.10/3.13 canonical report 逐字节相同。它证明 semantic content 可以复用，
+attempt-bound fulfillment authority 不能继承。
+
+第二个反例把 frozen `valid-complete` Coverage 首阶段缩成 KNOWN empty，同时保留 exact Snapshot 的一个
+tracked entry 与下一 stage 的一个 item。变体仍是 Schema-valid、stage partition self-consistent、overall
+`COMPLETE`，并可重算得到
+`coverage_ledger_digest=8dda8565035886d57f3765a564e44269d7d83bd13573bc3284433c28c138c721`。
+因此 Schema、digest 与单 stage 自洽不能证明七阶段 denominator 来自 exact world。当前事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一 blocking seam 是 ReviewSliceSet semantic projection eligibility、七阶段 Coverage composition
+qualification 与 public closure binding。本文只完成 docs-only audit；没有取得 Schema、Evidence、Manifest、
+runtime、publisher、output root 或公共 Bundle 修改权。下一步必须从本文闭合后的新 exact main 起草独立最小
+合同，不能把同 semantic bytes、Coverage 自洽或 Manifest binding 当成履责资格。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
