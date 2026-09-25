@@ -1276,3 +1276,37 @@ Fact/Parse observation domain、逐项 terminal outcome 与 same-attempt fulfill
 也只能从新 exact main 做 Fact/Parse observation fulfillment precontract audit；不得直接开始完整
 ReviewSliceSet/Coverage 合同、real parser、Schema、Evidence/Manifest、publisher、Bundle、Attention、CLI 或
 Workbench。
+
+## R1 Language Support / Parse / Fact 履责问题边界审计候选
+
+从 `main@a07266661ec66e79b3658c32da69e79494d8ae0e` 起，
+`docs/195-r1-language-support-parse-fact-fulfillment-problem-boundary-audit.md` 不预选通用
+`ObservationObligation / ObservationReceipt / FulfillmentLedger`，而是先复核 frozen Coverage 三个上游 stage 的
+denominator source。`LANGUAGE_SUPPORT` 的责任域来自 exact Policy `IN_SCOPE` inventory；`PARSE` 的责任域依赖
+逐项 support classification；`FACT_DERIVATION` 的候选分母只有在 exact parse result / AST 成立后才可按 frozen
+Profile projection 枚举。共享 attempt identity 或 terminal vocabulary 不证明三者共享 domain construction、
+authority owner 或一个通用 receipt。
+
+本轮实际运行三个单变量 falsifier：`LPF-000` 证明 raw `.py` request candidate 可以不满足 Profile accepted
+encoding；`LPF-001` 证明 accepted UTF-8 request candidate 可以在 Python 3.10 grammar 下 parse failed；
+`LPF-002` 证明可成功解析且含 MODULE/import/class/method/function 的 exact AST，current closed Provider 仍可只
+报告 MODULE。三个世界中 required ProviderRuns 都保持 `COMPLETED`、diagnostics 为空、overall
+`COMPLETED`、normal continuation 成立。该结果符合现有 mechanism-test 合同，不是 runtime defect；它只证明
+request enumeration、whole-run completion 与 reported Fact composition 分别不能替代对应的逐项履责事实。
+首次并发复跑因仓库外脚本在三个 world 全部结束后才读取首 world 的 live continuation，形成越过 10 秒
+budget 的非一致 projection；该 audit-harness timing failure 不计作合格结果。把 projection 移到每个 world
+自己的运行终点后，并发四格 canonical report 才逐字节一致；产品 runtime 与预算没有修改。
+
+当前候选状态为：
+
+```text
+R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE
+R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文不推翻文档 192 对 private Slice closure 的既有 claim，也不发布 Fact/Parse precontract、真实 parser、AST
+carrier、Fact projection runtime、公共 ReviewSliceSet/CoverageLedger、Schema、Evidence、publisher 或 Bundle。
+候选自己的原始 PR 门、受保护合入与新 exact-main 双门成立前，公开主线状态不变；即使候选闭合，下一步也只
+能从新 exact main 选择并审计最小 contract problem，不能直接实现统一 Ledger 或完整七阶段 Coverage。

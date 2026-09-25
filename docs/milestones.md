@@ -1979,6 +1979,46 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 以后也只能从新 exact main 继续 Fact/Parse observation fulfillment precontract audit，不能直接实现
 ReviewSliceSet、CoverageLedger、Evidence/Manifest carrier、publisher 或 public Bundle。
 
+[文档 195](195-r1-language-support-parse-fact-fulfillment-problem-boundary-audit.md)没有因三个 stage 都缺
+fulfillment evidence 就先发明统一 receipt，而是从 `main@a07266661ec66e79b3658c32da69e79494d8ae0e`
+分别构造三个单变量 world。`LPF-000` 让一个仍进入 current request 的 `.py` exact blob 不满足 Profile
+accepted encoding；`LPF-001` 保持 accepted UTF-8、只令 source 在 Python 3.10 grammar 下 parse failed；
+`LPF-002` 让 current Provider 实际报告 MODULE 的同一路径拥有可成功解析且含 import/class/method/function 的
+rich AST，而 Provider 仍只报告 MODULE。三个 world 的 required ProviderRuns 均为 `COMPLETED`、diagnostics
+为空、overall `COMPLETED`、normal continuation 成立；Python 3.10/3.13 normal/`-O` 的 canonical report
+逐字节一致。
+
+首次并发四格复跑没有取得该一致性：仓库外脚本先运行完三个 world，最后才回读首 world 的 live
+continuation，host contention 使三份首 world projection 越过 10 秒 budget。该结果被分类为 audit-harness
+observation-timing failure，不计作 PASS。脚本只把 projection 移到每个 world 自己的运行结束点后，并发四格
+才逐字节一致；仓库 runtime、fixture 与预算语义均未修改。
+
+该结果把前置问题精确拆成：`LANGUAGE_SUPPORT` 的责任域在 exact in-scope inventory 已知后可枚举；`PARSE`
+的责任域依赖逐项 support outcome，terminal fact 来自固定 parser 的真实执行；`FACT_DERIVATION` 的 denominator
+依赖成功 exact AST，并需要独立解决 projection owner 与 producer 自缩分母风险。因此：
+
+```text
+shared lifecycle vocabulary                 != shared domain construction
+request candidate                            != language-support classification
+language-supported                           != parse fulfillment
+successful AST                               != Fact projection fulfillment
+ProviderRun COMPLETED                        != any of the above closures
+```
+
+当前候选状态为：
+
+```text
+R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE
+R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 docs-only candidate 不修改现有 runtime、tests、fixture、Schema 或 frozen history，不选择共同 envelope、
+contract name、parser、AST carrier、ObservationOutcome、receipt 或 Ledger。它自己的 original PR 门、受保护
+合入与新 exact-main 双门成立以前，公开主线状态不变；闭合以后下一步也只是从新 exact main 选择并审计最小
+contract problem，不能直接实现 ReviewSliceSet、CoverageLedger、publisher 或 public Bundle。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
