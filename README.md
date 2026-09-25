@@ -48,7 +48,7 @@ VeriTrail 的核心关系很小：
 | Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论；P 已发布，O0/T0 仍是候选问题记录 |
 | Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
 | Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
-| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation、private Relation observation / composition qualification，以及 private RelationSet admission / explicit witness / Evidence 0.2 binding 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；post-closure audit 已识别 public SliceSet/Coverage seam，后继 audit candidate 又发现完整七阶段 Coverage 仍缺上游履责资格；当前问题边界审计把它拆成 language-support classification、parse fulfillment 与 Fact projection fulfillment 三种责任语义，尚未选择共同 primitive、合同或实现 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation、private Relation observation / composition qualification，以及 private RelationSet admission / explicit witness / Evidence 0.2 binding 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；post-closure audit 已识别 public SliceSet/Coverage seam，后继审计把上游缺口拆成 language-support classification、parse fulfillment 与 Fact projection fulfillment；当前 Language Support precontract audit candidate 只收敛 total function、reason ownership 与 composition proof，未选择 public carrier、持久化路线或实现 |
 | Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
 
 ![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_AUTHORITY_PROBLEM_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_NOT_STARTED / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_AUTHORITY_PROBLEM_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_NOT_STARTED / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -392,6 +392,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   分类所需 live 数据，而 current `supported_paths` 只是 positive structural projection。total function 尚未冻结；
   same-attempt 可重算与 public/offline 可复核并不相同，其派生 result 是否持久化仍待 precontract，不能预设为
   execution receipt。
+- [Language Support Qualification 最小合同前置审计](docs/197-r1-language-support-qualification-precontract-audit.md)
+  从 exact inputs 与 Python 3.10 encoding semantics 收敛下一合同边界：path-only 不能独立承担 classification
+  identity；encoding detection 与 whole-source decode 必须分开；多个适用失败须形成完整 canonical reason set；
+  `UNSUPPORTED_SYNTAX_VERSION` 只属于 Parse。每个 exact denominator member 必须恰好闭合一次，而 semantic
+  reuse 不继承 live attempt authority。derived projection 是否需要持久化继续保持 OPEN；本文不发布合同、
+  carrier、Schema 或 runtime。
 - [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
   保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
   既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
@@ -439,7 +445,7 @@ VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统�
 | [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
 | [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
 | Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
-| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；post-closure audit 已识别 public SliceSet/Coverage seam；前置问题边界审计正把 language support、parse 与 Fact projection 的履责语义分开，尚未选择共同 primitive、合同、公共 Artifact 或产品实现 |
+| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；post-closure audit 已识别 public SliceSet/Coverage seam；Language Support precontract audit candidate 已收敛 total classification 与 stage ownership，仍未选择持久化路线、共同 primitive、公共 Artifact 或产品实现 |
 | Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
 | Operations Evidence / O | 候选运行事实观察面 | O0 只记录问题与权威边界；没有插件、Provider、Schema 或动作权 |
 | Test Evidence / T | 候选测试事实观察面 | T0 只记录问题；测试选择、执行、重试与 fixture authority 仍为 `UNKNOWN` |
@@ -558,8 +564,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 57. [Review Attention R1 Fact / Parse Observation Fulfillment / Coverage Prerequisite 系统审计](docs/194-r1-fact-parse-observation-fulfillment-coverage-prerequisite-system-audit.md)
 58. [Review Attention R1 Language Support / Parse / Fact Fulfillment 问题边界审计](docs/195-r1-language-support-parse-fact-fulfillment-problem-boundary-audit.md)
 59. [Review Attention R1 Language Support Qualification Authority 问题审计](docs/196-r1-language-support-qualification-authority-problem-audit.md)
-60. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-61. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+60. [Review Attention R1 Language Support Qualification 最小合同前置审计](docs/197-r1-language-support-qualification-precontract-audit.md)
+61. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+62. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

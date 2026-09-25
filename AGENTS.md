@@ -1344,3 +1344,41 @@ same-attempt 可重算不等于 public/offline 可复核。现有 frozen materia
 写成 total contract。候选 original PR 门、受保护合入与新 exact-main 双门成立以前，
 公开主线状态不变；闭合后下一步也只能做 Language Support precontract audit，不能开始 Parse、Fact、
 ReviewSliceSet、CoverageLedger、publisher 或 Bundle。
+
+## R1 Language Support Qualification 最小合同前置审计候选
+
+从 `main@26b235cda3ba220e7de222a8e8ab8d2effedb5f4` 起，
+`docs/197-r1-language-support-qualification-precontract-audit.md` 只收敛下一份 Language Support 合同必须冻结的
+semantic input identity、Python 3.10 encoding qualification、predicate applicability、complete reason composition、
+stage ownership、exactly-one proof 与 Parse consumer boundary。path-only `PARSE_UNIT` ref 只能在 broader-bound
+Ledger 内定位成员；它不能脱离 exact inventory bytes、matching Policy decision、Profile 与 versioned function
+identity 独立承担 classification identity。
+
+仓库外 audit-only oracle 区分 encoding detection 与 whole-source decode，并覆盖 default UTF-8、cookie/alias、BOM、
+explicit ASCII、Latin-1、unknown codec、BOM/cookie conflict、invalid body 与第二行 cookie 边界。current Schema
+同时接受 complete multi-reason、first-only reason 与 `UNSUPPORTED_SYNTAX_VERSION` 的 Language Support/Parse 两种
+placement，因此 Schema 不能替合同定义 totality 或 stage authority。Python 3.10/3.13 normal/`-O` 四格 canonical
+report 逐字节相同：
+
+```text
+sha256 = 5666fcda8e61e16664cc46f01e12778499c56b8d56f4638e32dd08e3acc6615c
+bytes  = 4404
+```
+
+当前候选状态为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_AUTHORITY_PROBLEM_AUDIT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDIT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一合同必须让每个 exact denominator member 恰好形成 `eligible` 或带完整适用失败理由的 `unsupported`，并固定
+`POLICY_EXCLUDED -> POLICY_SCOPE`、四个 support reason -> `LANGUAGE_SUPPORT`、
+`UNSUPPORTED_SYNTAX_VERSION/PARSE_ERROR -> PARSE`。semantic classification 可以在相同 exact inputs 下复算，
+不能继承另一 attempt 的 live continuation。persistence route 继续保持 OPEN；本候选不修改 runtime、tests、
+fixture、Schema、Profile、Policy 或 corpus，也不授权 shared receipt、classifier、Parse、Fact、ReviewSliceSet、
+CoverageLedger、Evidence、publisher 或 Bundle。其 original PR 门、受保护合入与新 exact-main 双门闭合后，下一步
+也只能从新 exact main 起草 Language Support 最小合同。

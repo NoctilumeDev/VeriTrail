@@ -2058,6 +2058,47 @@ receipt、共同 carrier 或 persistence route。它自己的 original PR 门、
 以后下一步也只能从新 exact main 做 Language Support precontract audit，不能开始 Parse、Fact、ReviewSliceSet、
 CoverageLedger、publisher 或 Bundle。
 
+[文档 197](197-r1-language-support-qualification-precontract-audit.md)从
+`main@26b235cda3ba220e7de222a8e8ab8d2effedb5f4` 把文档 196 留下的八个问题收敛为下一合同的最小语义面。
+同一 `PARSE_UNIT` path ref 在 UTF-8 与 Latin-1 exact worlds 中保持相同，但 exact blob、Snapshot 与 analysis scope
+identity 不同，证明 path-only 不能独立承担 classification identity；whole Policy 与现有 `analysis_scope_digest`
+又分别绑定 governance/budget 或 Provider/module-mapping 等 broader semantics，下一合同必须明确选择 canonical
+semantic payload，不能任取现有 digest 充当答案。
+
+仓库外 audit-only oracle 进一步证明 encoding declaration detection 与 whole-source decode 是两个独立步骤；
+explicit ASCII/Latin-1、unknown codec、BOM/cookie conflict、invalid UTF-8 body 与第二行 cookie 不能靠 `.py` suffix
+或一次字符串匹配分类。current Schema 同时接受 complete multi-reason 与 first-only reason，也接受
+`UNSUPPORTED_SYNTAX_VERSION` 在 Language Support 或 Parse 两种 stage placement。Python 3.13-only syntax 与普通
+invalid syntax 在 Python 3.10 parser 下又都只给出 syntax failure，因此 Language Support 没有资格声明 syntax
+version outcome。
+
+本轮选择下一合同必须冻结：所有适用且失败的 Language Support predicates 形成完整 canonical reason set；
+encoding predicate 只在 supported blob kind 与 Python path candidate 上适用；每个 denominator member 恰好形成一个
+terminal disposition；`UNCLASSIFIED_SOURCE / UNSUPPORTED_ENTRY_KIND / UNSUPPORTED_LANGUAGE /
+UNSUPPORTED_SOURCE_ENCODING` 属于 Language Support，`UNSUPPORTED_SYNTAX_VERSION / PARSE_ERROR` 属于 Parse。
+semantic result 可跨 attempt 复算不等于 live continuation authority 可继承。四格 audit report 逐字节相同：
+
+```text
+sha256 = 5666fcda8e61e16664cc46f01e12778499c56b8d56f4638e32dd08e3acc6615c
+bytes  = 4404
+```
+
+当前候选状态为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_AUTHORITY_PROBLEM_AUDIT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDIT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文不选择 Route A live recomputation 或 Route B canonical derived projection；public/offline consumer 是否拥有
+exact Git object reacquisition authority 仍未冻结。它不修改 runtime、tests、fixture、Schema、Profile、Policy、
+compatibility corpus 或 frozen history，也不授权 classifier、Parse、Fact、shared receipt、ReviewSliceSet、
+CoverageLedger、Evidence、publisher 或 Bundle。候选 original PR 门、受保护合入与新 exact-main 双门成立后，
+后继也只能从新的 exact main 起草 Language Support 最小合同。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
