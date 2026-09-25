@@ -2019,6 +2019,45 @@ contract name、parser、AST carrier、ObservationOutcome、receipt 或 Ledger�
 合入与新 exact-main 双门成立以前，公开主线状态不变；闭合以后下一步也只是从新 exact main 选择并审计最小
 contract problem，不能直接实现 ReviewSliceSet、CoverageLedger、publisher 或 public Bundle。
 
+[文档 196](196-r1-language-support-qualification-authority-problem-audit.md)从
+`main@2ce608ce80a39a3bbd3dd15bdab60d3940a1c21d` 单独审计 `LANGUAGE_SUPPORT`。审计确认 denominator 不是由
+Profile 或 Provider 单独拥有，而是 SourceSnapshot terminal inventory 与 sealed Policy `IN_SCOPE` decisions 的 exact
+join；Snapshot 提供 subject/path/kind/content identity，Policy 提供 scope/source class，Profile 提供 Python 3.10、
+entry-kind、path 与 accepted-encoding 规则。exact inputs 已包含机械分类所需数据；total function 一旦冻结，
+deterministic application 可以执行，Provider 不需要也不应取得该 authority。
+
+仓库外 audit-only oracle 运行 UTF-8、UTF-8-SIG、合法 Latin-1 declaration、invalid UTF-8、Policy
+`IN_SCOPE + UNCLASSIFIED` 与 `OUT_OF_SCOPE` 六个 exact-input world。前五个 world 都有 7 个 `IN_SCOPE`
+entries、4 个 current request candidates、两个 required `COMPLETED` ProviderRuns、零 diagnostics、overall
+`COMPLETED` 与 terminal-point normal continuation；
+current carrier 均没有逐项 Language Support terminal classification。审计同时复核：一个 raw path 不能按 UTF-8
+解码的 regular `.py` 仍进入 `supported_paths`，而 symlink、unknown-mode blob 与 gitlink 只被结构过滤，不保存
+为什么未进入的终态；真正 `OUT_OF_SCOPE` 的 `regular.py` 也仍在 `supported_paths`，只是从 `in_scope_paths` 被
+排除。Python 3.10/3.13 normal/`-O` 四格 canonical report 逐字节相同：
+
+```text
+sha256 = 168401b563292ab157db02b648787657b7cdc4788c07636d8ba5a9a0e0999498
+bytes  = 23888
+```
+
+该一致性只资格化 falsifier projection；宿主 `tokenize.detect_encoding` 不因此成为产品规范。live
+DerivationInputSet copy-own verified blob bodies，但 public SourceSnapshot 只保存 Git/content identity、size 与 hash；
+same-attempt 可重算不等于 public/offline 可复核。现有 frozen materials 尚未闭合 coding-declaration detection、
+多条件 reason composition、reason 的 stage ownership、canonical terminal identity 与 current-attempt continuation；
+也未证明 derived result 必须持久化而不是按需重算。因此当前候选状态为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_AUTHORITY_PROBLEM_AUDIT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该候选不修改 runtime、tests、fixture、Schema、Profile、Policy、Coverage 或 frozen history，也不选择 terminal enum、
+receipt、共同 carrier 或 persistence route。它自己的 original PR 门、受保护合入与新 exact-main 双门成立前，公开主线状态不变；闭合
+以后下一步也只能从新 exact main 做 Language Support precontract audit，不能开始 Parse、Fact、ReviewSliceSet、
+CoverageLedger、publisher 或 Bundle。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

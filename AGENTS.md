@@ -1310,3 +1310,37 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 carrier、Fact projection runtime、公共 ReviewSliceSet/CoverageLedger、Schema、Evidence、publisher 或 Bundle。
 候选自己的原始 PR 门、受保护合入与新 exact-main 双门成立前，公开主线状态不变；即使候选闭合，下一步也只
 能从新 exact main 选择并审计最小 contract problem，不能直接实现统一 Ledger 或完整七阶段 Coverage。
+
+## R1 Language Support Qualification Authority 问题审计候选
+
+从 `main@2ce608ce80a39a3bbd3dd15bdab60d3940a1c21d` 起，
+`docs/196-r1-language-support-qualification-authority-problem-audit.md` 只审计 `LANGUAGE_SUPPORT`。责任域由 exact
+SourceSnapshot terminal inventory 与 sealed Policy `IN_SCOPE` decisions 机械 join；Snapshot 提供 path/kind/content
+identity，Policy 提供 scope/source class，Profile 提供 Python 3.10、entry-kind、path 与 accepted-encoding 规则。
+Provider 不拥有 denominator 或 classification authority；total function 一旦冻结，deterministic application 可以
+执行规则，但不能自行扩张规则。
+
+本轮实际运行 UTF-8、UTF-8-SIG、合法 Latin-1 declaration、invalid UTF-8、Policy `IN_SCOPE + UNCLASSIFIED` 与
+`OUT_OF_SCOPE` 六个 exact-input world。前五个 world 都有 7 个 `IN_SCOPE` entries、4 个 current request
+candidates、两个 required `COMPLETED` ProviderRuns、零 diagnostics、overall `COMPLETED` 与 terminal-point normal
+continuation；current carrier 均没有逐项
+Language Support terminal classification。Python 3.10/3.13 normal/`-O` 四格 canonical report 逐字节相同，SHA-256
+为 `168401b563292ab157db02b648787657b7cdc4788c07636d8ba5a9a0e0999498`。`OUT_OF_SCOPE` control 的
+`regular.py` 仍在 `supported_paths`，但不属于 denominator。
+
+当前候选状态为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_AUTHORITY_PROBLEM_AUDIT_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该候选不选择 terminal enum、receipt、共同 carrier、Schema 或 runtime，也不预判 derived qualification 是否必须
+持久化。live DerivationInputSet copy-own verified blob bodies，但 public SourceSnapshot 只保存 content identity；
+same-attempt 可重算不等于 public/offline 可复核。现有 frozen materials 尚未把 coding-declaration detection、
+多条件 reason composition、reason 的 stage ownership、canonical classification identity 与 same-attempt continuation
+写成 total contract。候选 original PR 门、受保护合入与新 exact-main 双门成立以前，
+公开主线状态不变；闭合后下一步也只能做 Language Support precontract audit，不能开始 Parse、Fact、
+ReviewSliceSet、CoverageLedger、publisher 或 Bundle。
