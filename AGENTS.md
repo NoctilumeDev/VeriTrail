@@ -1091,6 +1091,18 @@
   `8/8`、A–H join 四格均为 `85/85`、完整 Review Attention 四格均为 `295/295`。能力拓扑未变，
   architecture DOT/SVG 保持字节不变；下一步只能先做 post-closure system audit，不能自动开始公共
   ReviewSliceSet、CoverageLedger、Schema、publisher、output root、Attention、CLI 或 Workbench。
+- `docs/192-r1-post-slice-input-closure-slice-coverage-qualification-system-audit.md` 已从
+  `main@1ca6a4740f13cbb9cb70eb0836dbbabf81c076d0` 完成 A–H 后的 post-closure system audit。实际
+  `SCQ-000` 证明两个独立合法 attempts 可共享 Slice candidates、`slice_id` 与 `slice_set_digest`，同时保留
+  不同 admission witness、obligation closure digest 与 closure bytes；content identity 不得继承 fulfillment
+  authority。`SCQ-001` 又证明与 exact Snapshot 及相邻 stage 矛盾的 CoverageLedger 仍可保持 Schema-valid、
+  stage-partition-self-consistent 与 digest-valid。因此当前只能投影为
+  `R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED /
+  R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从本文闭合后的新 exact main 起草
+  ReviewSliceSet semantic projection eligibility、七阶段 Coverage composition qualification 与 public
+  closure binding 的 docs-only 最小合同；不得先改 Schema/Evidence/Manifest，或开始 runtime、publisher、
+  output root、公共 Bundle、Attention、CLI、Workbench。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
