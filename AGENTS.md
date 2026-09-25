@@ -1249,3 +1249,30 @@
 - 保持提交单一意图，提交前检查 `git diff --check`、敏感信息和生成物。
 - `artifacts/`、本地数据库、浏览器 trace/HAR、截图和运行日志默认不提交；只有经过脱敏的最小夹具可进入仓库。
 - 修改模型或结论语义时同步更新全部相关文档，并写明迁移或兼容边界。
+
+## R1 Fact / Parse Coverage 前置审计候选
+
+从 `main@0b2df206756bd07ddd5075fa1bd9b63b656a16dc` 起草的
+`docs/194-r1-fact-parse-observation-fulfillment-coverage-prerequisite-system-audit.md` 只审计完整七阶段
+Coverage 的上游资格。current closed multi-Provider fixture 实际有四个按 entry-kind 与 `.py` raw-path 后缀进入
+`supported_paths` 的 candidate parse-unit paths；该 private 字段不证明 encoding/syntax/parse 已完成。两个 required
+ProviderRuns 均 `COMPLETED`、overall `COMPLETED`、FactSet 与 normal continuation 均成立，但只报告一个 path
+的一个 Fact。该结果符合文档 137/155/160 的 private mechanism-test 边界，不是 runtime defect；它证明
+Fact membership/provenance closure 不能替代 parse-unit / Fact observation fulfillment。
+
+当前候选状态为：
+
+```text
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED
+R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文不推翻 Relation qualification、RelationSet admission 或 ReviewSlice A–H private closure；它只禁止在没有
+Fact/Parse observation domain、逐项 terminal outcome 与 same-attempt fulfillment receipt 时，把
+`ProviderRun COMPLETED` 或 FactSet members 升格为 `PARSE / FACT_DERIVATION` authoritative Coverage。
+候选自己的原始 PR 门、受保护合入和新 exact-main 双门成立以前，公开主线状态不变。即使候选闭合，下一步
+也只能从新 exact main 做 Fact/Parse observation fulfillment precontract audit；不得直接开始完整
+ReviewSliceSet/Coverage 合同、real parser、Schema、Evidence/Manifest、publisher、Bundle、Attention、CLI 或
+Workbench。
