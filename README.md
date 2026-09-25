@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_AUDIT_MERGED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_AUDIT_REQUALIFICATION_BLOCKED / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -370,7 +370,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   从 A–H exact-main verified 状态证明两个新边界：相同 Slice semantics 可以来自不同 attempt closure，公共
   content identity 不能继承履责权威；Schema-valid 且逐阶段自洽的 Coverage 仍可与 exact Snapshot 及相邻
   stage 矛盾。下一问题面因此收窄为 ReviewSliceSet semantic projection eligibility、七阶段 Coverage
-  composition qualification 与 public closure binding；合同、Schema、runtime、publisher 与公共 Bundle 均未开始。
+  composition qualification 与 public closure binding。审计内容已合入，但该 exact main 的 Public CI 保留
+  Python 3.13 Browser 业务失败分类漂移，因此 `PRECONTRACT_AUDITED` 尚未取得发布资格；合同、Schema、
+  runtime、publisher 与公共 Bundle 均未开始。
+- [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+  保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
+  既有 transparent private error-type tracing 接到该失败 world。它不修改产品行为，也不声称修复 collector。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
 
@@ -530,7 +535,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 54. [Review Attention R1 ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 最小合同](docs/189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
 55. [Review Attention R1 ReviewSlice Input / Obligation Closure 合同冻结发布](docs/190-r1-review-slice-input-obligation-closure-contract-freeze-publication.md)
 56. [Review Attention R1 Post-Slice-Input Closure / Slice-Coverage Qualification 系统审计](docs/192-r1-post-slice-input-closure-slice-coverage-qualification-system-audit.md)
-57. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+57. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+58. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

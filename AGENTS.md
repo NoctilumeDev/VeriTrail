@@ -1096,13 +1096,18 @@
   `SCQ-000` 证明两个独立合法 attempts 可共享 Slice candidates、`slice_id` 与 `slice_set_digest`，同时保留
   不同 admission witness、obligation closure digest 与 closure bytes；content identity 不得继承 fulfillment
   authority。`SCQ-001` 又证明与 exact Snapshot 及相邻 stage 矛盾的 CoverageLedger 仍可保持 Schema-valid、
-  stage-partition-self-consistent 与 digest-valid。因此当前只能投影为
-  `R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED /
+  stage-partition-self-consistent 与 digest-valid。PR #200 original Public CI 11/11 后合入
+  `main@042654e8f9467fbaa8e26cf31690b8f878541eda`；该 exact main 的 Browser Smoke attempt 1 成功，
+  Public CI attempt 1 却在 Python 3.13 把预注册 Browser business failure world 从预期
+  `BROWSER_HARD_FAILURE` 分类成 `COLLECTOR_ERROR`。原 Artifact 只保留公共 stop reason，精确 private
+  error type 与根因保持 `UNKNOWN`；五次 Python 3.13 本地诊断均未稳定复现。当前只能投影为
+  `R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_AUDIT_MERGED /
+  R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_AUDIT_REQUALIFICATION_BLOCKED /
   R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
-  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。下一步只能从本文闭合后的新 exact main 起草
-  ReviewSliceSet semantic projection eligibility、七阶段 Coverage composition qualification 与 public
-  closure binding 的 docs-only 最小合同；不得先改 Schema/Evidence/Manifest，或开始 runtime、publisher、
-  output root、公共 Bundle、Attention、CLI、Workbench。
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。`docs/193-m10-browser-business-failure-observation-correction.md`
+  只把文档 177 已有的 test-only transparent error-type tracing 接到该 business-failure world；不改 runtime、
+  timeout、公共 Evidence、Schema、CI 或 R1 审计结论，也不声称修复旧 `UNKNOWN`。维护自身的新 exact-main
+  双门与独立状态发布成立前，不得发布 `...PRECONTRACT_AUDITED`，不得起草后继合同或开始 Schema/runtime。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和

@@ -514,23 +514,34 @@ class BootstrapRunCliTests(unittest.TestCase):
             )
             output = root / "bundle-fail"
 
-            code, payload, stderr = self._run(
-                subject=subject,
-                plan=plan,
-                profile=profile,
-                bindings=bindings,
-                approval=preview["preview_sha256"],
-                output=output,
-                run_id="m10-public-fail",
+            code, payload, stderr, browser_error_types = (
+                self._run_with_browser_error_trace(
+                    subject=subject,
+                    plan=plan,
+                    profile=profile,
+                    bindings=bindings,
+                    approval=preview["preview_sha256"],
+                    output=output,
+                    run_id="m10-public-fail",
+                )
             )
+            diagnostic = {
+                "payload": payload,
+                "browser_error_types": browser_error_types,
+            }
 
             self.assertEqual("", stderr)
             self.assertEqual(0, code)
-            self.assertEqual("BROWSER_HARD_FAILURE", payload["stop_reason"])
-            self.assertFalse(payload["browser_capture_complete"])
-            self.assertTrue(payload["cleanup_complete"])
-            self.assertEqual("COMPLETED", payload["execution_status"])
-            self.assertEqual("FAIL", payload["verdict"])
+            self.assertEqual(
+                "BROWSER_HARD_FAILURE", payload["stop_reason"], msg=diagnostic
+            )
+            self.assertFalse(payload["browser_capture_complete"], msg=diagnostic)
+            self.assertTrue(payload["cleanup_complete"], msg=diagnostic)
+            self.assertEqual(
+                "COMPLETED", payload["execution_status"], msg=diagnostic
+            )
+            self.assertEqual("FAIL", payload["verdict"], msg=diagnostic)
+            self.assertEqual((), browser_error_types, msg=diagnostic)
             report = json.loads((output / "report.json").read_text(encoding="utf-8"))
             self.assertNotIn(
                 "BROWSER_STATUS_CONFLICT",
