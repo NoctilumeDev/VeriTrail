@@ -1851,6 +1851,39 @@ Schema、publisher、output root、Attention、CLI 与 Workbench 仍未开始。
 DOT/SVG 保持字节不变；本 docs-only 状态发布必须独立通过原始 PR 门、受保护合入与新 exact-main 双门，
 之后才能重新审查 H。
 
+H 随后从该状态发布后的 exact main 完成 doc189 最后一组 private hardening。真实反例证明 fresh
+`BudgetContext` 即使 limits 与原 attempt 相同，也不能继承 same-attempt authority；两个 private
+continuation 因此保存并复核原始 context 对象身份。H 又直接固化 `RS-008 / 013 / 014 / 015 / 016`，保存
+normal partial、normal complete、closed empty 与 conflict blocked 四类 private world 的 cross-runtime
+identity，并明确 `RS-000/007` 在当前只能证明 private precursor，不能冒充未来公共
+ReviewSliceSet/CoverageLedger 的 cross-object closure。
+
+首次本地完整 Review Attention 尝试因选用的 venv 缺少仓库声明的 `schema-test` 能力，在 243 项执行后留下
+两个 `jsonschema` import error；这属于 local gate setup failure，不是 H runtime failure，也不是 qualified
+full-suite result。补齐锁定的 `jsonschema==4.25.1` 后，最终同一 source bytes 上 H focused 在 Python
+3.10/3.13 normal/`-O` 四格均为 `8/8`，A–H join 四格均为 `85/85`，完整 Review Attention 四格均为
+`295/295`；`git diff --check`、scope 与 private/public boundary review 也成立。
+
+实现 commit `195c52ab2790af5cb987f7b10b73bcafe7516685` 经 PR #198 original Public CI run
+`36114737357` attempt 1 的 11/11 PASS 后合入
+`main@59c2ccfc886a92824abea748ae8f9749330adb67`。该 exact main 的 Public CI run
+`36116922092` attempt 1 为 11/11 PASS，Browser Smoke run `36116922116` attempt 1 为 1/1 PASS。
+当前可发布的事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SYSTEM_AUDIT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这不把 A–H 提升为独立 frozen 状态，也不创建公共 ReviewSliceSet/CoverageLedger、Schema、publisher、
+output root、Attention、CLI 或 Workbench authority。能力拓扑没有变化，architecture DOT/SVG 保持字节不变；
+本 docs-only 状态发布必须独立通过原始 PR 门、受保护合入与新 exact-main 双门。最后门闭合后，下一步只能从
+新的 exact main 先做 post-closure system audit，再判断公共 ReviewSliceSet/Coverage 门是否已有足够合同；
+不能因为 doc189 A–H 已完成就机械开工。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

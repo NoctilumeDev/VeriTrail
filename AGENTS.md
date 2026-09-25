@@ -1070,6 +1070,27 @@
   完整 Review Attention 四格均为 `287/287`。G 不形成公共 ReviewSliceSet/CoverageLedger、Schema、
   publisher、output root、Attention、CLI 或 Workbench authority。能力拓扑未变，architecture DOT/SVG
   保持字节不变；H 不得因本状态投影自动开始。
+- H 已从重新绑定的 exact main 完成 doc189 最后一组 private hardening。真实反例证明 fresh
+  `BudgetContext` 即使 limits 与原 attempt 相同，也不能继承 same-attempt authority；两个 private
+  continuation 因此保存并复核原始 context 对象身份。H 又直接固化 `RS-008 / 013 / 014 / 015 / 016`，
+  保存 normal partial、normal complete、closed empty 与 conflict blocked 四类 private world 的
+  cross-runtime identity，并明确 `RS-000/007` 在当前只能证明 private precursor，不得冒充未来公共
+  ReviewSliceSet/CoverageLedger 的 cross-object closure。实现 commit
+  `195c52ab2790af5cb987f7b10b73bcafe7516685` 经 PR #198 original Public CI run `36114737357`
+  attempt 1 的 11/11 PASS 后合入
+  `main@59c2ccfc886a92824abea748ae8f9749330adb67`；该 exact main 的 Public CI run
+  `36116922092` attempt 1 为 11/11 PASS，Browser Smoke run `36116922116` attempt 1 为 1/1 PASS。
+  因此当前可投影为
+  `R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED /
+  R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED /
+  R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SYSTEM_AUDIT_NOT_STARTED /
+  R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`。A–H 仍没有独立 frozen claim。首次本地完整
+  suite 尝试因选用的 venv 缺少仓库声明的 `schema-test` 能力，在 243 项执行后留下两个
+  `jsonschema` import error；这属于 local gate setup failure，不是 H runtime failure，也不是 qualified
+  full-suite result。补齐锁定的 `jsonschema==4.25.1` 后，最终同一 source bytes 上 H focused 四格均为
+  `8/8`、A–H join 四格均为 `85/85`、完整 Review Attention 四格均为 `295/295`。能力拓扑未变，
+  architecture DOT/SVG 保持字节不变；下一步只能先做 post-closure system audit，不能自动开始公共
+  ReviewSliceSet、CoverageLedger、Schema、publisher、output root、Attention、CLI 或 Workbench。
 - M9 独立合同 0.2 位于 `docs/14-m9-controlled-command-execution.md`，已在 `290b618` 进入
   `IMPLEMENTING`；`4d2bc84` 完成 Plan 0.5、ToolBindings 0.1、CommandPreview 0.1 与
   `command-preview` CLI，`9f979c8` 完成锁定 `pywin32==312` 的 Windows Job Object 所有权后端和
