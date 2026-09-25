@@ -1924,6 +1924,28 @@ original PR 门、受保护合入、新 exact-main 双门与后继独立状态�
 `...PRECONTRACT_AUDITED`，也不得开始 Schema、Evidence、Manifest、runtime、publisher、output root、
 公共 Bundle、Attention、CLI 或 Workbench。
 
+maintenance PR #201 original head `657f17c5d312fa239e76b55833c13b9ee01ed97a` 的 Public CI run
+`36133008016` attempt 1 为 11/11 PASS，随后受保护合入
+`main@f9a493b73754b198745f6d92055d85516aa0a7cd`；该 exact main 的 Public CI run
+`36135275911` attempt 1 为 11/11 PASS，Browser Smoke run `36135275948` attempt 1 为 1/1 PASS。
+这条新 source-state 证明链只资格化 test-only diagnostic coverage，不解释或覆盖 PR #200 exact-main Public CI
+run `36128804576` 的 `FAILURE / UNKNOWN`。
+
+当前可发布的事实投影为：
+
+```text
+R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED
+R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+审计识别出的 blocking seam 仍是 ReviewSliceSet semantic projection eligibility、七阶段 Coverage composition
+qualification 与 public closure binding。该 docs-only 状态发布必须独立通过 original PR 门、受保护合入与
+新 exact-main 双门；在最终门闭合前，不得起草后继合同或开始 Schema、Evidence、Manifest、runtime、
+publisher、output root、公共 Bundle、Attention、CLI 或 Workbench。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
