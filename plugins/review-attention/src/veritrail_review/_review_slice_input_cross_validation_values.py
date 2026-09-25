@@ -9,6 +9,7 @@ from typing import Mapping
 from veritrail_review._review_slice_input_values import (
     OwnedAdmittedGraphSliceInput,
 )
+from veritrail_review.budget import OwnedPhaseResult
 from veritrail_review.canonical import semantic_digest
 
 
@@ -123,6 +124,14 @@ class OwnedCrossValidatedAdmittedGraphSliceInput:
 
     def _claim_traversal_assignments(self) -> None:
         self._joined._claim_traversal_assignments()
+
+    def _claim_blocked_input_receipt(self) -> None:
+        self._joined._claim_blocked_input_receipt()
+
+    def _try_complete_blocked_input_receipt(
+        self, canonical_bytes: bytes
+    ) -> OwnedPhaseResult | None:
+        return self._joined._try_complete_blocked_input_receipt(canonical_bytes)
 
 
 def _validate_cross_validated_input(

@@ -21,6 +21,14 @@ from veritrail_review._review_slice_input_values import (
     _ReviewSliceInputFailureCode,
     _VALIDATED_ADMISSION_ATTEMPT_TOKEN,
 )
+from veritrail_review._review_slice_blocked_input_receipt_values import (
+    OwnedReviewSliceBlockedInputReceipt,
+    _validate_blocked_input_receipt,
+)
+from veritrail_review._review_slice_empty_domain_closure_values import (
+    OwnedReviewSliceEmptyDomainClosure,
+    _validate_empty_domain_closure,
+)
 from veritrail_review._review_slice_obligation_domain_values import (
     OwnedReviewSliceObligationDomainGate,
     _validate_obligation_domain_gate,
@@ -530,6 +538,144 @@ def reconcile_review_slice_traversal_outcomes(
     except Exception as exc:
         raise _ReviewSliceInputError(
             _ReviewSliceInputFailureCode.OBLIGATION_RECONCILIATION_REJECTED
+        ) from exc
+
+
+def close_empty_review_slice_obligation_domain(
+    assignments: OwnedReviewSliceTraversalAssignments,
+) -> OwnedReviewSliceEmptyDomainClosure:
+    """Close one exact zero-anchor domain without inferring absence from output."""
+
+    if type(assignments) is not OwnedReviewSliceTraversalAssignments:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED
+        )
+    try:
+        _validate_traversal_assignments(assignments)
+        gate = assignments._owned_domain_gate()
+        obligations = gate.obligations_copy()
+        if (
+            gate.candidate_composition_status != "CONSISTENT"
+            or gate.slice_input_status != "ELIGIBLE"
+            or obligations != []
+            or assignments.assignment_count != 0
+            or assignments.remaining_assignment_count() != 0
+        ):
+            raise ValueError
+        assignments._claim_closed_empty_reconciliation()
+        validated = gate._owned_cross_validated_input()
+        document: dict[str, object] = {
+            "derivation_id": assignments.derivation_id,
+            "admission_witness_digest": assignments.admission_witness_digest,
+            "source_snapshot_digest": validated.source_snapshot_digest,
+            "policy_digest": validated.policy_digest,
+            "analysis_scope_digest": validated.analysis_scope_digest,
+            "slice_policy_digest": validated.slice_policy_digest,
+            "derivation_profile_digest": validated.derivation_profile_digest,
+            "fact_set_digest": validated.fact_set_digest,
+            "relation_set_digest": validated.relation_set_digest,
+            "slice_obligation_domain_digest": (
+                assignments.slice_obligation_domain_digest
+            ),
+            "closure_status": "CLOSED_EMPTY",
+            "assignment_count": 0,
+            "traversal_outcomes": [],
+            "normal_slice_candidates": [],
+        }
+        document["empty_domain_closure_digest"] = semantic_digest(
+            "veritrail.review.private-slice-empty-domain-closure/0.1",
+            copy.deepcopy(document),
+        )
+        commit_bytes = canonical_json_bytes(document)
+        committed = assignments._try_complete_closed_empty_obligation_closure(
+            commit_bytes
+        )
+        if committed is None:
+            raise ValueError
+        result = OwnedReviewSliceEmptyDomainClosure._create(
+            assignments=assignments,
+            closure_document=document,
+            committed_phase=committed,
+        )
+        _validate_empty_domain_closure(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED
+        ) from exc
+
+
+def record_blocked_review_slice_input(
+    gate: OwnedReviewSliceObligationDomainGate,
+) -> OwnedReviewSliceBlockedInputReceipt:
+    """Record one admitted conflict world without inventing a normal domain."""
+
+    if type(gate) is not OwnedReviewSliceObligationDomainGate:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED
+        )
+    try:
+        _validate_obligation_domain_gate(gate)
+        if (
+            gate.candidate_composition_status != "CONFLICTING"
+            or gate.slice_input_status != "BLOCKED_BY_RELATION_CONFLICT"
+            or gate.slice_obligation_domain_digest is not None
+            or gate.obligation_domain_document_copy() is not None
+            or gate.obligations_copy() is not None
+        ):
+            raise ValueError
+        gate._claim_blocked_input_receipt()
+        validated = gate._owned_cross_validated_input()
+        relation_set = validated.relation_set_document_copy()
+        conflicts = relation_set.get("conflicts")
+        if not isinstance(conflicts, list) or not conflicts:
+            raise ValueError
+        conflict_ids = [item.get("conflict_id") for item in conflicts]
+        if any(not isinstance(item, str) for item in conflict_ids):
+            raise ValueError
+        document: dict[str, object] = {
+            "derivation_id": gate.derivation_id,
+            "admission_witness_digest": gate.admission_witness_digest,
+            "source_snapshot_digest": validated.source_snapshot_digest,
+            "policy_digest": validated.policy_digest,
+            "analysis_scope_digest": validated.analysis_scope_digest,
+            "slice_policy_digest": validated.slice_policy_digest,
+            "derivation_profile_digest": validated.derivation_profile_digest,
+            "fact_set_digest": validated.fact_set_digest,
+            "relation_set_digest": validated.relation_set_digest,
+            "candidate_composition_status": "CONFLICTING",
+            "slice_input_status": "BLOCKED_BY_RELATION_CONFLICT",
+            "slice_obligation_domain_digest": None,
+            "slice_derivation_denominator_status": "UNKNOWN",
+            "reason_codes": [
+                "PROVIDER_CONFLICT",
+                "UPSTREAM_DENOMINATOR_UNKNOWN",
+            ],
+            "relation_conflict_ids": conflict_ids,
+            "normal_slice_candidates": [],
+        }
+        document["blocked_input_receipt_digest"] = semantic_digest(
+            "veritrail.review.private-slice-blocked-input-receipt/0.1",
+            copy.deepcopy(document),
+        )
+        commit_bytes = canonical_json_bytes(document)
+        committed = gate._try_complete_blocked_input_receipt(commit_bytes)
+        if committed is None:
+            raise ValueError
+        result = OwnedReviewSliceBlockedInputReceipt._create(
+            gate=gate,
+            receipt_document=document,
+            committed_phase=committed,
+        )
+        _validate_blocked_input_receipt(result)
+        return result
+    except _ReviewSliceInputError:
+        raise
+    except Exception as exc:
+        raise _ReviewSliceInputError(
+            _ReviewSliceInputFailureCode.OBLIGATION_ACCOUNTING_REJECTED
         ) from exc
 
 
