@@ -1651,3 +1651,49 @@ exact-main Public CI / Browser Smoke，以及 README、文档 202、文档 203 �
 public readback 和 independent byte/state reconciliation 后生效。此轮不实现 classifier/carrier，不选择 persistence，
 不运行 Parse/Fact，不修改 public Schema/corpus，不创建 shared receipt，也不启动 ReviewSliceSet/Coverage。最后门
 闭合后必须先回到 CONTROL LOOP，重新审计 minimal private implementation 是否仍是最小合法问题。
+
+## R1 Language Support Qualification private classifier 实现授权审计候选
+
+文档 203 经 PR #215 final head `969648a04a2d885725faba7f2c10273cdda4cbca` 合入
+`main@fa74ae22872691eebf2fe8bdb2209da34b64b56e`。PR Public CI `36252309763` attempt 1 11/11、
+exact-main Public CI `36253391449` attempt 1 11/11 与 Browser Smoke `36253391478` attempt 1 1/1 均成立。
+README、文档 202、文档 203 与 milestones 四份 fresh installed-product observations 均为 P1/P2 `COMPLETE`
+和 Core `PASS`；五份 anonymous raw source bytes 与 exact Git blobs 一致，最终 reconciliation manifest 为：
+
+```text
+sha256_json  = 4783ae6c0ef3da1abb9a0d2e8cd18038a29c83360dca96c579fee817eb103c9a
+sha256_bytes = 7bc122c5f699331be91eab30f6fd041be503cb11126aedc6e72354b13c97074e
+```
+
+因此 `R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN` 已生效。首次准备脚本 assertion failure、
+Playwright executable-path diagnostic 的 pending-task warning 与非 Git root `gh` 调用形成的空 setup files 继续
+保留原身份；它们没有启动或替代四份正式 readback。
+
+[文档 204](docs/204-r1-language-support-private-classifier-implementation-authorization-audit.md)重新执行 CONTROL LOOP，
+只把当前最小施工面限定为 private deterministic classifier：exact input/history revalidation、0.2 compatibility 与
+closed UTF-8 resolver、完整 canonical reason composition、exactly-one denominator closure 和 immutable private
+semantic result。`DerivationInputSet` 可以 copy-own exact semantic world，但 dataclass/type/digest 本身不是
+qualification；实现仍须重新验证 canonical Snapshot/Policy/Profile bytes、cross-artifact binding 与全部 Git object
+bytes/size/SHA-256。
+
+当前 execution-cell 0.1 request 会携带 Snapshot 中全部 blob bodies，且 immutable request frame 在最终 cell
+admission 前已经构造；所以 classifier 成立不等于 eligible-only Parse operation projection 或 same-attempt
+continuation 已成立。文档 204 不授权修改 `_execution_cell*`、request/protocol、Provider input、Parse/AST/Fact、
+persistence Route A/B、public Schema/carrier、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+本 docs-only 候选的条件化 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_IMPLEMENTATION_ALLOWED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 204 最终字节通过本层 local gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 204 与 milestones fresh installed-product readback 和 independent reconciliation
+以后生效。生效以前不得提前创建 implementation branch；生效以后也只允许实现 private classifier，完成自己的
+资格链后必须返回 CONTROL LOOP，另行审计 Parse gate，而不是按文档编号自动施工。

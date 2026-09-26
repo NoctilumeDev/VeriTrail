@@ -2347,3 +2347,73 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 该 target 必须由文档 203 自己的 original PR gates、受保护合入、new exact-main 双门、README/doc202/doc203/
 milestones fresh installed-product readback 与独立 reconciliation 生效。冻结不授予实现；persistence、Parse、Fact、
 shared carrier、ReviewSliceSet/Coverage、Schema、Evidence、publisher 与 Bundle 仍未开始。
+
+## R1 Language Support Qualification private classifier 实现授权审计候选
+
+文档 203 的冻结发布已经完成自己的最终资格链。PR #215 final head
+`969648a04a2d885725faba7f2c10273cdda4cbca` 的 Public CI `36252309763` attempt 1 为 11/11 SUCCESS；受保护合入
+`main@fa74ae22872691eebf2fe8bdb2209da34b64b56e` 后，exact-main Public CI `36253391449` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36253391478` attempt 1 为 1/1 SUCCESS。该 exact main 的 Git tree 为
+`21d72d18e5d86fd3d3b5aabdf62dac5d7f8fa475`。
+
+README、文档 202、文档 203 与 milestones 四份 fresh CPython 3.13.13 installed-product observations 使用独立
+Plan/session/output，P1/P2 均 `COMPLETE`、Core 均 `PASS`。五份 anonymous raw source bytes 逐字节等于 exact
+Git blobs；独立 verifier 重新核对 Plan、Evidence、handoff、Core report、source bytes、merge ancestry/tree 与 CI
+source identity。最终 canonical manifest 为：
+
+```text
+sha256_json  = 4783ae6c0ef3da1abb9a0d2e8cd18038a29c83360dca96c579fee817eb103c9a
+sha256_bytes = 7bc122c5f699331be91eab30f6fd041be503cb11126aedc6e72354b13c97074e
+```
+
+首次准备脚本 source-substring assertion failure、Playwright executable-path diagnostic 退出后的 pending-task
+warning，以及从非 Git root 调用 `gh` 形成的三个空 setup files 都继续保留 setup/diagnostic identity；它们没有
+启动或替代正式 readback。因此 0.2 frozen target 已经生效，不再追加事后冻结条件。
+
+[文档 204](204-r1-language-support-private-classifier-implementation-authorization-audit.md)从这个 frozen exact main
+重新审计最小施工面。`DerivationInputSet` 已 copy-own canonical Snapshot/Policy/Profile bytes、verified blob bytes 与
+历史 digests，但 caller 可以直接构造 dataclass；所以未来 private classifier 必须重新验证 canonical bytes/digests、
+cross-artifact binding、exact blob key set、Git object bytes、size 与 SHA-256，不能把 object/type/digest 当作 authority。
+
+0.2 的 closed resolver 与 compatibility domain 已使 private classifier 成为有界施工：它可以确定性形成完整
+per-subject reason set、eligible/unsupported exactly-one closure 与 immutable private semantic result。它不需要
+Provider、parser、Coverage 或 persistence 决策。与此同时，当前 execution-cell 0.1 request 固定携带 Snapshot 中全部
+blob bodies，且 immutable request frame 在最终 cell admission 前已构造；因此同一 classifier 不能自动建立
+eligible-only Parse request、same-attempt continuation 或 execution-cell integration。
+
+本文只条件化授权：
+
+```text
+exact owned input/history revalidation
+  + r1-python-language-support/0.2 compatibility and closed UTF-8 resolver
+  + deterministic complete reason composition
+  + exactly-one denominator closure
+  + immutable private semantic result
+```
+
+不授权 live continuation、Parse operation projection、execution-cell request/protocol、Provider filtering、persistence
+Route A/B、public carrier/Schema/corpus、real parser/AST/Fact、shared receipt、ReviewSliceSet/Coverage、Evidence、
+publisher 或 Bundle。条件化 target 为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_IMPLEMENTATION_ALLOWED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 204 自己的 docs/link/boundary gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 204 与 milestones fresh installed-product readback 和 independent reconciliation
+以后生效。此前实现保持 `NOT_STARTED` 且未获授权；生效后下一分支也只能实现 private classifier，并须完成自己的
+资格链后返回 CONTROL LOOP，重新审计 Parse gate 是否仍是最小合法问题。
+
+本候选首轮 CPython 3.10 normal invocation 未绑定 current-source `PYTHONPATH`；37 个 Schema tests 已执行，
+`tests.test_markdown` 则在 import 阶段以 `ModuleNotFoundError: veritrail` 停止。该次保留为
+`INVALID_LOCAL_TEST_SETUP`，不记作产品或文档失败。绑定 exact checkout 的 Core 与 Review Attention source paths
+以后，`test_markdown + admission Evidence Schema + derivation correction Schema + R1 Schema payload` 在
+CPython 3.10.6/3.13.13 normal/`-O` 四格各 40/40 PASS。独立静态 checker 同时确认四文件 docs-only scope、
+relative links、UTF-8/LF/final-LF、fence、markers、base identity、七份 frozen SHA-256 与 `git diff --check`。
+这些结果只使本地候选可提交，不替代 original PR、exact-main 或 fresh product readback 门。
