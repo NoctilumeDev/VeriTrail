@@ -1486,3 +1486,52 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 exact main 重读文档 198 第 13 节，做独立 minimal private implementation audit；本文不先授予 classifier、
 carrier 或 runtime implementation authority。persistence 继续 OPEN；Parse、Fact、shared receipt、ReviewSliceSet、
 Coverage、Schema、Evidence、publisher 与 Bundle 均未获得施工权。architecture DOT/SVG 不因状态发布重画。
+
+## R1 Language Support Qualification private implementation 可行性审计候选
+
+从 `main@791fb093e19165808243258abdad4a1e208dcb70` 起，
+[文档 200](docs/200-r1-language-support-private-implementation-feasibility-audit.md)重新读取文档 198 第 13 节。
+`DerivationInputSet` 已提供 copy-owned exact world；private denominator、complete reason composition、exactly-one
+closure 与 same-attempt claim 都有既有结构可以承载，但这些 structural facts 不自动授予实现权。
+
+审计以 `windows-31j` concrete world 证明 ambient host codec registry 会漂移：CPython 3.10.6 将其拒为 unknown
+encoding，Python 3.13.13 则通过 `cp932` alias detection 与 strict decode。冻结 0.1 应取 3.10.6 结果；直接调用 host
+`tokenize.detect_encoding / codecs.lookup` 没有 rule authority。
+
+100,000 个固定 byte worlds 的 audit-only reducer 在 Python 3.10/3.13 normal/`-O` 四格取得同一 terminal report：
+
+```text
+sha256 = e96dc9dadb2afd896439d103788a541dece8cfbac2fcacde45a8b6c70769cf0d
+mismatch_count = 0
+```
+
+但 reducer 对 Profile non-accepted codec 在 whole-source decode 前直接返回 unsupported；它只证明 coarse terminal
+projection 相同，明确没有实现文档 198 §5.2 的 frozen algorithm。另一个 101 codecs × 2,000 samples 的 3.10/3.13
+probe 未发现 decoder 差异，也只是 finite witness，不是 total per-input equivalence proof。
+
+进一步枚举 CPython 3.10.6 `encodings` ordinary modules 得到 120 个 lookupable names，其中 24 个 C-backed
+multibyte decoders、7 个 non-text codecs 与 1 个依赖 Windows ANSI code page 的 `mbcs`。该 universe 是有限的，
+不能写成“无限 codec 世界”；但它已经超出当前最小 private classifier 的既有 authority surface。审计不宣称 0.1
+绝对不可实现，只确认当前 §13 minimal boundary 下不能直接实现完整 0.1 classifier。
+
+因此当前候选 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在候选 original PR、受保护合入与 new exact-main Public CI / Browser Smoke 全部成立后生效。下一步
+只能从新的 exact main 审计最小 codec-conformance / pipeline-order correction：保留 0.1 原顺序需要 version-bound
+decoder semantics 或同强度 per-input equivalence；把 Profile membership 提到 non-accepted whole-source decode 以前则
+必须发布新 function identity。两条路线均未由本文选择或授权。
+
+禁止在本候选中修改合同 0.1、实现 classifier/carrier、选择 persistence、运行 real parser/AST/Fact、修改 public
+Schema/corpus、创建 shared receipt、启动 ReviewSliceSet/Coverage 或改变 Evidence/publisher/Bundle。未来即使
+classification 成立，Parse operation request 也必须落实 `available input != authorized input`，不能把 unsupported
+blob bytes 全部交给 Provider 后只过滤输出。

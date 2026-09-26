@@ -2168,6 +2168,51 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 文档 198 第 13 节的 minimal private implementation boundary；classifier、carrier、Parse、Fact、Coverage、
 Schema、Evidence、publisher 与 Bundle 仍未开始。
 
+[文档 200](200-r1-language-support-private-implementation-feasibility-audit.md)从
+`main@791fb093e19165808243258abdad4a1e208dcb70` 重新执行外层控制回路。该 base 已包含 always-read
+[证据反馈工作法](working-method.md)，且 PR #211 original Public CI `36239489966` attempt 1 11/11、受保护
+合入、exact-main Browser Smoke `36240656866` attempt 1 1/1 与 Public CI `36240656834` attempt 1 11/11
+均成立；工作法维护不改变 R1 contract state。
+
+审计确认 private exact-history validation、denominator construction、complete reason composition、exactly-one
+closure 与 same-attempt claim 都有既有结构可以承载，但这不足以授权 classifier。具体 `windows-31j` world 在
+CPython 3.10.6 被拒为 unknown encoding，在 Python 3.13.13 通过新增 `cp932` alias detection 与 strict decode，
+证明 ambient host lookup 不能实现 frozen 0.1 authority。
+
+audit-only reducer 固定 3.10 cookie/BOM placement 与 UTF-8 aliases，只对可能属于 Profile accepted set 的
+`UTF-8 / UTF-8-SIG` 做 whole-source decode；100,000 个固定 byte worlds 在 3.10/3.13 normal/`-O` 四格
+逐字节一致：
+
+```text
+sha256 = e96dc9dadb2afd896439d103788a541dece8cfbac2fcacde45a8b6c70769cf0d
+mismatch_count = 0
+```
+
+该证据只证明 coarse terminal projection 相同。reducer 跳过了文档 198 §5.2 对 non-accepted known codec 的
+whole-source decode，因此不能冒充 0.1 implementation。101 codecs × 2,000 samples 的双宿主 decoder probe
+未发现差异，也不能把 finite corpus 升格为 total per-input equivalence proof。
+
+CPython 3.10.6 `encodings` ordinary-module inventory 又得到 120 个 lookupable names，其中 24 个 C-backed
+multibyte decoders、7 个 non-text codecs 与 platform-bound `mbcs`。这说明 conformance surface 有限但广泛；
+它不证明 0.1 绝对不可实现，却足以否定在当前 §13 minimal boundary 内直接实现完整 classifier。
+
+本候选自己的 original PR、受保护合入与 new exact-main 双门成立后，目标状态才是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步只能审计最小 codec-conformance / pipeline-order correction。保留 0.1 原顺序需要 version-bound decoder
+semantics 或同强度 per-input equivalence；把 accepted-set membership 提前、只 strict-decode 可能 eligible 的
+UTF-8 world 则必须发布新 function identity。本文不选择路线，不修改 0.1，不实现 classifier/carrier，不选择
+persistence，也不启动 Parse、Fact、shared receipt、ReviewSliceSet/Coverage、Schema、Evidence、publisher 或 Bundle。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
