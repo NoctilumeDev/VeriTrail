@@ -2462,3 +2462,42 @@ protocol correction、persistence、public carrier、Fact、ReviewSliceSet/Cover
 施工期的 Windows wildcard literal、docs path separator filter、malformed regex、PowerShell heredoc、
 `git diff --quiet` no-output 误读和 `HEAD^{tree}` encoded-token 诊断失败均保留为 setup/operator observations；它们
 没有修改 repo bytes，也不被后继绿色改写成“没有发生”。
+
+### R1 Language Support private classifier 实现冻结发布（条件状态）
+
+[PR #218](https://github.com/NoctilumeDev/VeriTrail/pull/218) 的 exact head
+`8c6dc1e1e5227fff5d50e80de0711b8ad3a52bbc` 以 original Public CI `36268364383` attempt 1 的
+11/11 SUCCESS 取得候选资格，并以 ordinary merge commit
+`f79d6d1d470f36b553874492bdd35b53a1b042dd` 合入受保护 main。merge parents 为 implementation main
+`c3f8a0762e5fecfeb3ed7b6d492d67773a44ab84` 与 candidate head；candidate / merge tree 都是
+`83d3c74784cf6bc29ee97de478b140477c84e889`。该 exact main 的 Public CI `36269612657` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36269612652` attempt 1 为 1/1 SUCCESS。
+
+README、文档 205 与 milestones 随后分别使用 fresh sealed Plan/session/output 完成匿名 installed-product
+P1/P2 readback；三者均 `COMPLETE`、三样本稳定、marker 恰好一次、Core `PASS`。四份 candidate public raw
+bytes 又与 exact Git blobs 一致，independent reconciliation manifest 为：
+
+```text
+sha256_json  = 2bc041af39faefdf3872397b72f3d18ede5e1364ee4cfc9f92c8a4e10e233384
+sha256_bytes = b1bdbb3b79a01b42dee69fe281f87e635b982e9c60254a81100ccdc4e5551a54
+```
+
+准备阶段的 `HEAD^{tree}` PowerShell 解析失败、Windows `rg` wildcard failure 与正式观察以前的 Playwright
+shutdown warning 均保留为 setup observations；它们没有形成 classifier runtime failure，也没有复用或修改三次正式
+readback。
+
+[文档 206](206-r1-language-support-private-classifier-implementation-freeze-publication.md)据此条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 206 的 local gates、original PR checks、受保护合入、new exact-main Public CI / Browser Smoke，
+以及 README、文档 206 与 milestones 的 fresh anonymous installed-product readback 和 independent reconciliation
+全部成立后生效。冻结后必须回到 CONTROL LOOP；不得自动开始 Parse，也不得从 classifier 绿灯取得 persistence、
+public carrier/Schema、Fact、Coverage、Evidence、publisher 或 Bundle authority。

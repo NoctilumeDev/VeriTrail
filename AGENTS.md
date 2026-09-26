@@ -1736,3 +1736,38 @@ Browser Smoke，以及 README、文档 205 与 milestones 的 fresh anonymous in
 独立最终冻结发布完成自己的同等级门禁，才能写成 private classifier `FROZEN`。Parse operation projection、
 same-attempt continuation、execution-cell request/protocol correction、Provider filtering、persistence Route A/B、public
 carrier/Schema、real parser/AST/Fact、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 与 Bundle 均未获授权。
+
+## R1 Language Support Qualification private classifier 实现冻结发布
+
+文档 205 的候选随后以 [PR #218](https://github.com/NoctilumeDev/VeriTrail/pull/218) 完成自己的 original
+Public CI `36268364383` attempt 1 11/11 SUCCESS，并以 ordinary merge commit
+`f79d6d1d470f36b553874492bdd35b53a1b042dd` 合入受保护 main；candidate 与 merge tree 均为
+`83d3c74784cf6bc29ee97de478b140477c84e889`。该 exact main 的 Public CI `36269612657` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36269612652` attempt 1 为 1/1 SUCCESS。
+
+README、文档 205 与 milestones 三份 fresh anonymous installed-product observations 使用互不复用的 sealed Plan、
+session 与 output，均为 P1/P2 `COMPLETE`、三样本稳定、唯一 marker、零 error/conflict/coverage reason/cleanup
+error/active stream，Core 为 `PASS`。AGENTS、README、文档 205 与 milestones 的 anonymous raw bytes 又逐字节等于
+exact Git blobs。最终 reconciliation manifest 为：
+
+```text
+sha256_json  = 2bc041af39faefdf3872397b72f3d18ede5e1364ee4cfc9f92c8a4e10e233384
+sha256_bytes = b1bdbb3b79a01b42dee69fe281f87e635b982e9c60254a81100ccdc4e5551a54
+```
+
+[文档 206](docs/206-r1-language-support-private-classifier-implementation-freeze-publication.md)据此只条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 206 最终字节完成 local gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 206 与 milestones 的 fresh anonymous installed-product readback 和 independent
+reconciliation 后生效。随后必须返回 CONTROL LOOP，重新审计 eligible-only operation projection 与 same-attempt
+Parse gate 是否仍是最小合法问题；不得自动开始 Parse。persistence、public carrier/Schema、Fact、Coverage、Evidence、
+publisher 与 Bundle 继续未获授权。
