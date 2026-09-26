@@ -1,5 +1,25 @@
 # VeriTrail 项目指令
 
+## 0. 必读工作法
+
+开始任何 VeriTrail 施工、审计、状态判断或“下一步”选择以前，**MUST READ**
+[证据反馈工作法](docs/working-method.md)。该文件规定本项目的 `CONTROL LOOP` 与
+`QUALIFICATION PIPELINE`；文档编号、README、roadmap 和绿色 CI 均不得替代这两个过程。
+
+最小不变量如下：
+
+- 工作法只规定**怎样判断与施工**，不保存当前项目事实；当前 SHA、状态、authority 与下一合法 seam 必须每次从
+  exact main 和保留证据重新构造；
+- 用户在聊天中提供的日志、判断与草稿只作线索；material claim 必须回到源码、冻结合同、原始 PR attempt、
+  exact-main gates、Artifact 与 fresh product readback 复核；
+- 先执行外层证据反馈回路，确认当前问题与最小授权仍成立；之后才允许进入本轮资格链；
+- target state 可以条件化写入 publication，但全部冻结门闭合以前不得宣称生效；
+- 测试只作 witness，不拥有合同扩张、reason 解释、状态升级或下一阶段授权；
+- 相同 patch、内容、摘要或 semantic result 不继承另一个 exact coordinate、attempt 或 continuation 的资格；
+- 碰到矛盾先保现场并归层，不能先修、先重跑或把后来的 PASS 用来覆盖先前事实；
+- frozen scope 禁止静默修改；真实反例可以显式 reopen/version bump 被击穿的最小边界并重新资格化；
+- publication 形成新事实后必须返回外层回路；不得按文档编号自动进入下一阶段。
+
 ## 当前阶段
 
 - 当前阶段是 `v0 Implementation`。M0 已在提交 `64497779add1351014d802b38d46f73a4ce394ac`
