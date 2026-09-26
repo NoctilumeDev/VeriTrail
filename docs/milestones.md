@@ -2417,3 +2417,48 @@ Browser Smoke，以及 README、文档 204 与 milestones fresh installed-produc
 CPython 3.10.6/3.13.13 normal/`-O` 四格各 40/40 PASS。独立静态 checker 同时确认四文件 docs-only scope、
 relative links、UTF-8/LF/final-LF、fence、markers、base identity、七份 frozen SHA-256 与 `git diff --check`。
 这些结果只使本地候选可提交，不替代 original PR、exact-main 或 fresh product readback 门。
+
+## R1 Language Support Qualification private classifier 实现冻结候选
+
+文档 204 的授权发布已经闭合。private classifier 从 exact
+`main@ad52dbbd361872b2d8de1fbb35d5be152d4e03f1` 建立，最终只新增三个 private 文件、
+`1136 insertions / 0 deletions`。实现 head `dac2892a173844c4cb288e6381895577e0b46f33` 经 PR #217
+original Public CI `36263694668` attempt 1 的 11/11 SUCCESS 后合入
+`main@c3f8a0762e5fecfeb3ed7b6d492d67773a44ab84`。candidate 与 merge tree 均为
+`c75855d78ea00d061bac1234533dd536c9e44c33`；该 exact main 的 Public CI `36264888477` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36264888553` attempt 1 为 1/1 SUCCESS。
+
+实现重新验证 canonical Snapshot/Policy/Profile bytes、cross-artifact binding、exact blob key set 与每个 Git object
+的 bytes/size/SHA-256，随后按 `r1-python-language-support/0.2` 形成 complete canonical reason set、
+eligible/unsupported exactly-one closure 与 immutable private semantic result。它不形成 continuation、Parse request、
+Provider input、public Artifact 或 persistence 决策；顶层 package 没有新增 export。
+
+最终 targeted suite 在 CPython 3.10.6/3.13.13 normal/`-O` 四格均为 20/20 PASS，full Review Attention 四格均为
+316/316 PASS，五个 canonical worlds 逐字节一致。三个 exact-SHA source files 的 fresh anonymous raw readback
+均为 HTTP 200、无重定向且等于 exact Git blobs；仓库外 canonical manifest SHA-256 为：
+
+```text
+daa0d098b2b3024e5f93945a020704009ac92d8715b8bea38db8d63a2aefb404
+```
+
+[文档 205](205-r1-language-support-private-classifier-implementation-freeze-candidate.md)据此条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_IMPLEMENTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FREEZE_CANDIDATE
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 205 自己的 docs/link/boundary gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 205 与 milestones 的 fresh anonymous installed-product readback 后生效。后继还
+必须建立独立最终冻结发布，完成自己的同等级门、合入、new exact-main 双门与 readback，才允许把 private classifier
+写成 `FROZEN`。在此以前不得开始 eligible-only Parse operation projection、same-attempt continuation、execution-cell
+protocol correction、persistence、public carrier、Fact、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+施工期的 Windows wildcard literal、docs path separator filter、malformed regex、PowerShell heredoc、
+`git diff --quiet` no-output 误读和 `HEAD^{tree}` encoded-token 诊断失败均保留为 setup/operator observations；它们
+没有修改 repo bytes，也不被后继绿色改写成“没有发生”。
