@@ -2213,6 +2213,46 @@ semantics 或同强度 per-input equivalence；把 accepted-set membership 提�
 UTF-8 world 则必须发布新 function identity。本文不选择路线，不修改 0.1，不实现 classifier/carrier，不选择
 persistence，也不启动 Parse、Fact、shared receipt、ReviewSliceSet/Coverage、Schema、Evidence、publisher 或 Bundle。
 
+[文档 201](201-r1-language-support-codec-conformance-correction-precontract-audit.md)从
+`main@943300a4d6b3d708be8f4196cc0ee67a86eee64b` 重新读取文档 200 的两条候选路线。该 base 的 Public CI
+`36243585555` attempt 1 11/11 与 Browser Smoke `36243585552` attempt 1 1/1 均已成立。
+
+审计证明：当前 frozen Profile 只接受 `UTF-8 / UTF-8-SIG`，而 0.1 把 detection failure、unknown codec、
+BOM conflict、non-accepted decode success/failure 与 accepted decoder failure 统一投影到
+`UNSUPPORTED_SOURCE_ENCODING`。对 non-accepted world 执行完整 decoder 不增加本 stage 的 terminal 区分力，
+却要求一个当前不存在的 broad version-bound decoder substrate。因此后继选择显式 function version bump，把
+accepted-set rejection 移到 non-accepted whole-source decode 之前；0.1 继续保持已冻结历史身份。
+
+审计保留两次失败身份。首次 136,228-world run 因 audit regex 多转义一层产生 20,270 mismatches，归为
+`INVALID_AUDIT_HARNESS`。修正 harness 后，naive resolver 又把 `utf.8` 错当成 canonical `utf_8`，产生 10 个
+真实 counterexamples；只有修正 CPython 3.10 alias/direct-module lookup 顺序后才取得最终 witness。最终
+Python 3.10/3.13 normal/`-O` 四格逐字节一致：
+
+```text
+report sha256            = 03b540bcbf2cccd2f2d43f6b8287e2821168337503405d09abf7a0935a8cdc03
+terminal digest          = b7ec84502db8e2f506c866748f85a4d3c0f8fb974116736f738c27cddfbe3f7a
+worlds                   = 136228
+reference mismatch count = 0
+```
+
+finite corpus 只作 witness；路线资格来自 detection/BOM-conflict/non-accepted/accepted 四类世界的全称 case partition。
+本候选自己的 original PR、受保护合入与 new exact-main 双门成立后，目标状态才是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+下一步最多起草最小 `r1-python-language-support/0.2` correction contract candidate。本文不修改 0.1、不发布
+0.2、不实现 classifier/carrier、不选择 persistence，也不启动 Parse、Fact、shared receipt、ReviewSliceSet/Coverage、
+Schema、Evidence、Manifest、publisher 或 Bundle。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，

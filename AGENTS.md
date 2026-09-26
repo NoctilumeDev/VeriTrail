@@ -1535,3 +1535,42 @@ decoder semantics 或同强度 per-input equivalence；把 Profile membership �
 Schema/corpus、创建 shared receipt、启动 ReviewSliceSet/Coverage 或改变 Evidence/publisher/Bundle。未来即使
 classification 成立，Parse operation request 也必须落实 `available input != authorized input`，不能把 unsupported
 blob bytes 全部交给 Provider 后只过滤输出。
+
+从 `main@943300a4d6b3d708be8f4196cc0ee67a86eee64b` 起，
+[文档 201](docs/201-r1-language-support-codec-conformance-correction-precontract-audit.md)重新审计文档 200 留下的
+codec-conformance / pipeline-order seam。文档 200 的 PR #212 original Public CI、受保护合入、exact-main
+Public CI `36243585555` attempt 1 11/11 与 Browser Smoke `36243585552` attempt 1 1/1 均已成立。
+
+审计把 `0.1` terminal semantics 按 detection failure、BOM conflict、non-accepted encoding 与 accepted UTF-8
+四类世界分解。当前 frozen Profile 只接受 `UTF-8 / UTF-8-SIG`；non-accepted whole-source decoder 的成功、失败
+与 decoded text 均不改变 terminal disposition 或 canonical reason，因此完整 3.10 decoder substrate 不是当前最小
+authority surface。后继选择显式 function version bump，不静默修改已冻结的 `0.1`。
+
+第一次 136,228-world harness 因 raw regex 多转义一层产生 20,270 mismatches，保留为
+`INVALID_AUDIT_HARNESS`。修正后又以 `utf.8` 打出 10 个真实 resolver mismatches：CPython 只对 alias table 做
+dotted fallback，不能借此直接导入 canonical `utf_8` module。修正 lookup 顺序后，3.10/3.13 normal/`-O` 四格
+得到同一 report：
+
+```text
+sha256 = 03b540bcbf2cccd2f2d43f6b8287e2821168337503405d09abf7a0935a8cdc03
+worlds = 136228
+reference_mismatch_count = 0
+```
+
+该 corpus 只作 witness；Route B 的资格来自四类世界的全称 case partition 与显式 version bump。当前候选 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在本候选 original PR、受保护合入与 new exact-main Public CI / Browser Smoke 成立后生效。随后最多
+从新的 exact main 起草 `r1-python-language-support/0.2` correction contract candidate；不得修改 0.1 历史字节、
+直接实现 classifier/carrier、选择 persistence、运行 Parse/Fact、修改 public Schema/corpus、创建 shared receipt、
+启动 ReviewSliceSet/Coverage 或改变 Evidence/publisher/Bundle。
