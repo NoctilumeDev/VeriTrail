@@ -1810,3 +1810,48 @@ new exact-main Public CI / Browser Smoke，以及 README、文档 207 与 milest
 installed-product readback 和 independent reconciliation 后生效。生效后最多从新的 exact main 起草 docs-only 最小
 合同；不得提前修改 request/protocol/runtime、运行 Parse/Fact、选择 persistence、创建 public carrier/Schema 或 shared
 receipt，也不得启动 ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+## R1 Language Support eligible operation projection / same-attempt gate 合同候选
+
+文档 207 的 source qualification 已由 PR #220 original Public CI `36277119012` attempt 1 的 11/11 SUCCESS、
+ordinary merge `main@940b6fc9ad974c4e4afb4f6f3e2f635efe780e1c`、exact-main Public CI
+`36278154174` attempt 1 11/11、Browser Smoke `36278154195` attempt 1 1/1，以及 README、文档 207、
+milestones 三份 fresh anonymous installed-product readback 闭合。四份 public raw bytes 与 exact Git blobs 一致；
+independent reconciliation manifest 为：
+
+```text
+sha256_json  = 12e7bf7555c9d088163bb9499435d54aee9d5829cba306d0551f0e703718cf85
+sha256_bytes = ea13418d60d2818a9c52b67110e9276e10b28628d141de0a7f7e5d61b4647f5f
+```
+
+因此 `PRECONTRACT_AUDITED` 已成为当前事实。重新执行 CONTROL LOOP 后没有出现推翻问题选择的新反例；
+[文档 208](docs/208-r1-language-support-eligible-operation-projection-contract.md)只冻结 private source-body input authority：
+
+- `r1-python-language-support/0.2` 拥有 exact eligible subject upper bound；
+- application 从 FactSet/domain/assignment 机械建立每个 child 的 exact operation subject set；
+- Provider-visible source bodies 必须与 operation set 恰好相等，不能只证明是 eligible subset；
+- classification/projection semantic equality 不继承 original `BudgetContext`、parent/child `AttemptEligibility` 或
+  one-shot request claim；
+- Fact、Relation derivation、Relation observation 分别使用新 versioned wire 与 operands identities，旧
+  `0.1/0.1/0.2` wire 及 `0.1/0.2/0.3` operands 继续只读；
+- empty projection 按既有 applicable-child contracts 真实运行 empty-body child，但不升级成 Parse/Fact/Coverage
+  fulfillment。
+
+本文当前只条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_CANDIDATE
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 208 final bytes、local docs/Schema/static gates、original PR checks、受保护合入、new exact-main
+Public CI / Browser Smoke，以及 README、文档 208 与 milestones 的 fresh anonymous installed-product readback 和
+independent reconciliation 后生效；随后仍须独立 docs-only freeze publication 完成同等级最后门，才可能授予
+文档 208 A–G 的 private implementation。当前不得修改 runtime/protocol、选择 persistence、运行 Parse/Fact、创建
+public carrier/Schema/shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。

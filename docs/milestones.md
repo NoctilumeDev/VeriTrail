@@ -2554,3 +2554,55 @@ Public CI / Browser Smoke，以及 README、文档 207 与 milestones 的 fresh 
 independent reconciliation 后生效。此轮不修改 runtime/tests/Schema/Profile/Policy/corpus/identity vector 或 frozen
 protocol，不运行 parser/AST/Fact，不选择 persistence，也不创建 shared receipt、ReviewSliceSet/Coverage、Evidence、
 publisher 或 Bundle。后继最多从 qualified exact main 起草 docs-only 最小合同，不能按文档编号自动施工。
+
+### R1 Language Support eligible operation projection / same-attempt gate 最小合同候选（条件状态）
+
+前合同审计 PR #220 head `486214c7e42518c1437b991ca5e1fa61227fa9e0` 的 original Public CI
+`36277119012` attempt 1 为 11/11 SUCCESS，并以 ordinary merge commit
+`940b6fc9ad974c4e4afb4f6f3e2f635efe780e1c` 合入受保护 main；candidate/merge tree 都是
+`5af79de7314a8f1c2447d3563b1905c0397eee63`。该 exact main 的 Public CI `36278154174` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36278154195` attempt 1 为 1/1 SUCCESS。
+
+README、文档 207 与 milestones 随后分别使用 fresh sealed Plan/session/output 完成 anonymous installed-product
+P1/P2 readback，三者均 `COMPLETE`、三样本稳定、marker 恰好一次、Core `PASS`；四份 public raw bytes 与 exact
+Git blobs 一致。independent reconciliation manifest 为：
+
+```text
+sha256_json  = 12e7bf7555c9d088163bb9499435d54aee9d5829cba306d0551f0e703718cf85
+sha256_bytes = ea13418d60d2818a9c52b67110e9276e10b28628d141de0a7f7e5d61b4647f5f
+```
+
+因此文档 207 的 `PRECONTRACT_AUDITED` 已成为 qualified history。重新绑定该 exact main 与冻结合同后，
+[文档 208](208-r1-language-support-eligible-operation-projection-contract.md)形成 docs-only 最小合同候选：
+
+```text
+exact classifier eligibility
+    -> provider-bound stage operation projection
+    -> original shared BudgetContext / parent eligibility
+    -> distinct one-shot child claims
+    -> exact Provider-visible source bodies
+```
+
+Fact、Relation derivation 与 Relation observation 的 operation set 分别由全部 eligible subjects、exact FactSet source
+anchors 与 assigned observation items 机械导出；Provider-visible bodies 必须与该 set 恰好相等。旧 wire/operands
+identities 不被重解释；新候选分别使用 Fact wire `0.2`、Relation wire `0.3/0.4` 与 operands `0.4/0.5/0.6`。
+empty projection 保持 denominator-empty、all-unsupported 与 later-empty-assignment 的不同 identity，并按既有
+applicability 合同真实运行 empty-body child；其 terminal 不授予 Parse/Coverage closure。
+
+当前只条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_CANDIDATE
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在本文四文件 final bytes 完成 local gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 208 与 milestones 的 fresh anonymous installed-product readback 和 independent
+reconciliation 后生效。生效后仍须独立 freeze publication；在其最后门以前，A–G runtime、persistence、Parse/Fact
+fulfillment、public carrier/Schema、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 与 Bundle 继续未获授权。
