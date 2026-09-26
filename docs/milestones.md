@@ -2253,6 +2253,42 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 0.2、不实现 classifier/carrier、不选择 persistence，也不启动 Parse、Fact、shared receipt、ReviewSliceSet/Coverage、
 Schema、Evidence、Manifest、publisher 或 Bundle。
 
+[文档 202](202-r1-language-support-codec-conformance-correction-contract.md)从
+`main@41bd7cd3d6d486c780aeda91b86ae8845ef90ae7` 起草
+`r1-python-language-support/0.2` 修正合同候选。前态 PR #213 original Public CI
+`36245636110` attempt 1 11/11、受保护合入、exact-main Public CI `36246765819` attempt 1 11/11 与
+Browser Smoke `36246765806` attempt 1 1/1 均已成立，所以文档 201 的 precontract audited target 已成为事实。
+
+0.2 不修改文档 198 的 frozen 0.1 字节，而把其 Git blob
+`5a0145629edf427cd873f525e75f486218d6896e` 绑定为 inherited semantic baseline。新 function 只适用于 exact
+`PYTHON / PYTHON_3_10 / {UTF-8, UTF-8-SIG}` Profile compatibility domain，并冻结 CPython 3.10.6 cookie/BOM
+placement、accepted UTF-8 closed resolver、`_get_normal_name()` BOM consistency、non-accepted early rejection 与
+accepted UTF-8 / UTF-8-SIG strict whole-source decode。`utf.8` 继续是 non-accepted；no-BOM `cp65001` 属于
+accepted UTF-8 alias，BOM `cp65001 / utf8` 仍是 conflict。
+
+0.2 继承 0.1 的 denominator、applicability、complete reason composition、exactly-one closure、stage ownership、
+semantic-result / live-authority separation 与 eligible-only Parse boundary。四类世界 partition 证明 0.1/0.2 在当前
+compatibility domain 具有相同 terminal projection，但 versioned function identity 不同，不能互相继承历史
+qualification。persistence 继续保持 non-decision。
+
+本候选自己的 original PR、受保护合入、new exact-main 双门与 fresh installed-product public readback 成立后，
+条件化目标才生效为：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+候选闭合后仍须独立 freeze publication 自己完成同等级 gates 与 readback；在此以前不得写成
+`R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN`，也不得实现 classifier/carrier、选择 persistence、运行
+Parse/Fact、修改 public Schema/corpus、创建 shared receipt 或启动 ReviewSliceSet/Coverage。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
