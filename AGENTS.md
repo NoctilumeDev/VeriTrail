@@ -1617,3 +1617,37 @@ Public CI / Browser Smoke 与 fresh installed-product public readback 后生效�
 
 本文不实现 classifier/carrier/request projection，不选择 persistence，不运行 Parse/Fact，不修改 public Schema/corpus/
 identity vector，不创建 shared receipt/ledger，不启动 ReviewSliceSet/Coverage，也不改变 Evidence/Manifest/publisher/Bundle。
+
+## R1 Language Support Qualification codec-conformance 修正合同 0.2 冻结发布
+
+PR #214 的最终 head `10f4a6e22afa8931b29cec79134216521861cd80` 已经以 original Public CI
+`36248704418` attempt 1 11/11 合入 `main@936e6037deef899da9403988bb86f5fc8f6ddc10`；该 exact main 的
+Public CI `36249925950` attempt 1 11/11 与 Browser Smoke `36249925954` attempt 1 1/1 均成立。README、文档 202
+与 milestones 的三个 fresh anonymous installed-product observations 使用独立 Plan/session/output，P1/P2 均
+`COMPLETE`、Core 均 `PASS`；联合 verifier 与四份 exact-SHA source-byte 核账也为 `PASS`。因此
+`R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_CANDIDATE` 已成为 qualified history。
+
+[文档 203](docs/203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)只发布
+`r1-python-language-support/0.2`：0.1 historical identity 与文档 198 bytes 不变；0.2 冻结 exact Profile
+compatibility、accepted UTF-8 closed resolver、BOM consistency、non-accepted early rejection 与 strict accepted-source
+decode，并继承 0.1 的 denominator、reason composition、exactly-one closure、stage ownership 与 attempt-authority
+分离。persistence 继续 OPEN。
+
+本发布的条件化 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 203 最终字节通过 docs/link/boundary gates、original PR required checks、受保护合入、new
+exact-main Public CI / Browser Smoke，以及 README、文档 202、文档 203 与 milestones 的 fresh installed-product
+public readback 和 independent byte/state reconciliation 后生效。此轮不实现 classifier/carrier，不选择 persistence，
+不运行 Parse/Fact，不修改 public Schema/corpus，不创建 shared receipt，也不启动 ReviewSliceSet/Coverage。最后门
+闭合后必须先回到 CONTROL LOOP，重新审计 minimal private implementation 是否仍是最小合法问题。
