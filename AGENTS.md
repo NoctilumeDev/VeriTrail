@@ -1574,3 +1574,46 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 从新的 exact main 起草 `r1-python-language-support/0.2` correction contract candidate；不得修改 0.1 历史字节、
 直接实现 classifier/carrier、选择 persistence、运行 Parse/Fact、修改 public Schema/corpus、创建 shared receipt、
 启动 ReviewSliceSet/Coverage 或改变 Evidence/publisher/Bundle。
+
+## R1 Language Support Qualification codec-conformance 修正合同 0.2 候选
+
+从 `main@41bd7cd3d6d486c780aeda91b86ae8845ef90ae7` 起，
+[文档 202](docs/202-r1-language-support-codec-conformance-correction-contract.md)只起草
+`r1-python-language-support/0.2` 的最小语义修正。前态 PR #213 original Public CI `36245636110`
+attempt 1 11/11、受保护合入、exact-main Public CI `36246765819` attempt 1 11/11 与 Browser Smoke
+`36246765806` attempt 1 1/1 均已成立，因此文档 201 的 precontract audited target 已生效。
+
+0.1 继续绑定 frozen historical bytes 与 `r1-python-language-support/0.1` identity。0.2 只在 exact Profile
+compatibility 为 `PYTHON / PYTHON_3_10 / {UTF-8, UTF-8-SIG}` 时适用，并以新 function identity 冻结：
+
+```text
+Python 3.10 cookie/BOM placement
+versioned accepted UTF-8 closed resolver
+BOM conflict by _get_normal_name result
+non-accepted early rejection without ambient lookup/decoder
+strict whole-source UTF-8 / UTF-8-SIG decode for possibly eligible inputs
+```
+
+它继承 0.1 的 denominator、complete reason composition、exactly-one closure、stage ownership、
+semantic-result / live-authority separation 与 eligible-only Parse boundary。terminal projection equality 不等于
+contract identity equality；0.1 与 0.2 不能互相继承历史 qualification 或 attempt authority。
+
+候选形成阶段的条件化 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在最终字节通过 docs/link/boundary gates、original PR required checks、受保护合入、new exact-main
+Public CI / Browser Smoke 与 fresh installed-product public readback 后生效。随后仍须独立 docs-only freeze publication
+完成自己的同等级门禁与 readback，才能发布 `R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN`。
+
+本文不实现 classifier/carrier/request projection，不选择 persistence，不运行 Parse/Fact，不修改 public Schema/corpus/
+identity vector，不创建 shared receipt/ledger，不启动 ReviewSliceSet/Coverage，也不改变 Evidence/Manifest/publisher/Bundle。
