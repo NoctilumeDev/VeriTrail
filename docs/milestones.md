@@ -2501,3 +2501,56 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 以及 README、文档 206 与 milestones 的 fresh anonymous installed-product readback 和 independent reconciliation
 全部成立后生效。冻结后必须回到 CONTROL LOOP；不得自动开始 Parse，也不得从 classifier 绿灯取得 persistence、
 public carrier/Schema、Fact、Coverage、Evidence、publisher 或 Bundle authority。
+
+### R1 Language Support eligible-only operation projection / same-attempt gate 前合同审计（条件状态）
+
+文档 206 的最终发布 PR #219 head `a857597a7691aaedca68fa8457dd00143d4f85e5` 已以 merge commit
+`476fa8c1740e96be80e068265a9af210f860f420` 合入受保护 main；candidate 与 merge tree 均为
+`adc6fbf93620f24dbff2d90ef5d65540e7d2d768`。PR original Public CI `36273175628` attempt 1 为
+11/11 SUCCESS；exact-main Public CI `36274415270` attempt 1 为 11/11 SUCCESS，Browser Smoke
+`36274415265` attempt 1 为 1/1 SUCCESS。README、文档 206 与 milestones 的三份 fresh anonymous
+installed-product observations 及 independent reconciliation 随后闭合，最终 manifest 摘要为：
+
+```text
+sha256_json  = 50ca3ac1f7e03ba1ef93d6d7c7903165954b1c973c3de3b2246446f2c9ae21a9
+sha256_bytes = 8df9dbd272e0569dd97c822d04ee16e2bb09bca073fe5de50709f0110ea6ee58
+```
+
+因此 private classifier 已是 `FROZEN` 当前事实。后继 CONTROL LOOP 没有自动开始 Parse，而是以
+[文档 207](207-r1-language-support-eligible-operation-projection-precontract-audit.md)重新核对 Provider input authority。
+current Fact、Relation derivation 与 Relation observation 三类 source-body-carrying protocol 都把全量 Snapshot BLOB
+bytes 交给 request/Provider。六个 concrete worlds 在 CPython 3.10.6/3.13.13 normal/`-O` 四格严格串行后生成
+逐字节相同的 3072-byte canonical report：
+
+```text
+audit_script_sha256 = 103611f30be851ed56c1f128a941879be348916f199c6bcf960418b55ebb1817
+canonical_sha256    = fec549e3181d02c0ef200c0d3ddc91ebec5d32866519ea0de6f6b9e3d2737ca0
+```
+
+mixed-encoding world 中，classifier 仅允许 `pkg/z_good.py`，旧 cell 却在 rejected `pkg/a_bad.py` 上完成 Fact；
+该 Fact 又进入 FactSet，normal continuation 仍为 permitted。该观察只证明 current downstream closure 不能反向建立
+upstream projection authority，不把旧 execution-cell / FactSet 合同倒填成 runtime defect。
+
+审计同时确认原 `BudgetContext`、parent/child `AttemptEligibility` 与 one-shot prepared request 能保留 same-attempt
+substrate；但 classification digest、path set、caller boolean、另一个 attempt 的同字节 result 或 limits 相同的新 context
+都不能恢复 live authority。三个 frozen request protocol 还要求全量 source-blob continuity，因此 eligible-only cardinality
+必须由显式 versioned contract 处理，不能静默改变旧 identity。
+
+[文档 207](207-r1-language-support-eligible-operation-projection-precontract-audit.md)据此只条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在最终四文件 docs-only bytes 通过 local gates、original PR checks、受保护合入、new exact-main
+Public CI / Browser Smoke，以及 README、文档 207 与 milestones 的 fresh anonymous installed-product readback 和
+independent reconciliation 后生效。此轮不修改 runtime/tests/Schema/Profile/Policy/corpus/identity vector 或 frozen
+protocol，不运行 parser/AST/Fact，不选择 persistence，也不创建 shared receipt、ReviewSliceSet/Coverage、Evidence、
+publisher 或 Bundle。后继最多从 qualified exact main 起草 docs-only 最小合同，不能按文档编号自动施工。

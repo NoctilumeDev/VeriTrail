@@ -1771,3 +1771,42 @@ Browser Smoke，以及 README、文档 206 与 milestones 的 fresh anonymous in
 reconciliation 后生效。随后必须返回 CONTROL LOOP，重新审计 eligible-only operation projection 与 same-attempt
 Parse gate 是否仍是最小合法问题；不得自动开始 Parse。persistence、public carrier/Schema、Fact、Coverage、Evidence、
 publisher 与 Bundle 继续未获授权。
+
+## R1 Language Support eligible-only operation projection / same-attempt gate 前合同审计候选
+
+文档 206 的最后门已经闭合，`R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN` 在
+`main@476fa8c1740e96be80e068265a9af210f860f420` 成为当前事实。重新执行 CONTROL LOOP 后，
+[文档 207](docs/207-r1-language-support-eligible-operation-projection-precontract-audit.md)确认当前最小 seam 不是运行
+真实 parser，而是先限制 Provider 可以收到哪些 source bodies，并把该 projection 绑定到原 live attempt。
+
+current Fact execution cell、Relation derivation cell 与 Relation observation cell 都会把 Snapshot 中全部 BLOB bytes
+写入 request 或 Provider copy。六个 concrete worlds 在 CPython 3.10.6/3.13.13 normal/`-O` 四格严格串行后形成
+逐字节相同的 3072-byte canonical report，SHA-256 为
+`fec549e3181d02c0ef200c0d3ddc91ebec5d32866519ea0de6f6b9e3d2737ca0`。mixed world 中，
+private classifier 只允许 `pkg/z_good.py`，旧 cell 仍在 rejected `pkg/a_bad.py` 上完成 Fact；该 Fact 又能进入
+FactSet，且 normal continuation 仍被允许。这不倒填旧 runtime defect，只证明 terminal/FactSet reconciliation 不能
+补做 upstream input authority。
+
+original `BudgetContext`、不可逆 `AttemptEligibility` 与 one-shot prepared request 提供 same-attempt substrate；
+classification value、path set、digest、boolean 或 limits 相同的新 context 都不拥有 continuation authority。与此同时，
+frozen `veritrail-review-derivation-cell/0.1`、`veritrail-review-relation-cell/0.1` 与
+`veritrail-review-relation-cell/0.2` 都要求全量 source-blob continuity，不能在原 identity 下静默改变 cardinality。
+
+本 docs-only 候选只条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 207 的最终字节通过 local docs/Schema/static gates、original PR required checks、受保护合入、
+new exact-main Public CI / Browser Smoke，以及 README、文档 207 与 milestones 的 fresh anonymous
+installed-product readback 和 independent reconciliation 后生效。生效后最多从新的 exact main 起草 docs-only 最小
+合同；不得提前修改 request/protocol/runtime、运行 Parse/Fact、选择 persistence、创建 public carrier/Schema 或 shared
+receipt，也不得启动 ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
