@@ -2143,6 +2143,31 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 publisher 或 Bundle。只有候选 PR、受保护合入、candidate exact-main 双门与 fresh public readback，以及后继独立
 freeze publication 自己的同等级最后门全部成立后，合同才可写成 frozen；在此以前不得开始代码。
 
+[文档 199](199-r1-language-support-qualification-contract-freeze-publication.md)从 candidate-qualified
+`main@78014cd32cf539c3141ae066f6a7c40c0ac707ab` 独立发布文档 198。候选 PR #209 original Public CI
+`36195619550` attempt 1 11/11、exact-main Public CI `36197451442` attempt 1 11/11 与 Browser Smoke
+`36197451327` attempt 1 1/1 均已成立。
+
+候选首次 README 正式观察保留 P1 `ERROR / HTTP 403 / remaining=0` 与 P2 `COMPLETE`；未生成 handoff
+或 Core report。新网络条件下，以全新 Plan/session/output 分别完成 README #2、文档 198 与 milestones
+三个正式 PASS。历史不是“无失败三连绿”；诊断与 raw-source byte check 都不计入正式产品观察。
+联合 verifier 重算 Core fields、核对原 ERROR 字节不变、exact Git/public source bytes、CI 与 wheel identities，
+canonical manifest `sha256_json=285d72da03869e77e850a752912629acaa3455d56f200231946ed1c1970260f1`。
+
+文档 199 自身 original PR、受保护合入、新 exact-main 双门与 fresh readback 全部成立后，发布目标才生效：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该发布只同步状态，不修改语义、不选择 persistence，也不授权实现。冻结后仍须从新 exact main 独立审计
+文档 198 第 13 节的 minimal private implementation boundary；classifier、carrier、Parse、Fact、Coverage、
+Schema、Evidence、publisher 与 Bundle 仍未开始。
+
 R1 Schema 施工前又从真实门禁成本中显现出独立的 Verification Scheduling 问题。该问题不并入 R 轨或
 Core，而以顶层候选 `Q` 轨建模：`Q = Quick`，只表示减少无效重算和可解除的串行等待，不授予降低证明
 标准的权力。[能力地图](114-capability-boundary-and-system-map.md)记录跨轨道 Dependency/Authority Matrix，
