@@ -64,10 +64,13 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
+
+Language Support 合同冻结状态仅在[独立发布](docs/199-r1-language-support-qualification-contract-freeze-publication.md)
+自身最后门全部闭合后生效；此前仍是合格合同候选。合同冻结不授予实现授权。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -399,11 +402,14 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   reuse 不继承 live attempt authority。derived projection 是否需要持久化继续保持 OPEN；本文不发布合同、
   carrier、Schema 或 runtime。PR #206 的正式失败、PR #207 的独立 test-support maintenance 与 PR #208 的
   重新资格化保持独立；新 exact main 双门闭合后，该审计现为 `PRECONTRACT_AUDITED` 历史。
-- [Language Support Qualification 最小合同 0.1 候选](docs/198-r1-language-support-qualification-contract.md)
+- [Language Support Qualification 最小合同 0.1](docs/198-r1-language-support-qualification-contract.md)
   从 `main@de4eee7e953a0b95d52b973bee35a033e3901254` 冻结 deterministic semantic function：exact
   inventory/Policy/Profile/function payload、Python 3.10 encoding detection + whole-source decode、predicate
   applicability、完整 reason set、stage ownership、exactly-one closure 与 same-attempt continuation 分离。
-  persistence 仍是 non-decision；本候选不创建 carrier、Schema、classifier、Parse、Fact 或 Coverage runtime。
+  persistence 仍是 non-decision；该合同不创建 carrier、Schema、classifier、Parse、Fact 或 Coverage runtime。
+- [Language Support Qualification 合同冻结发布](docs/199-r1-language-support-qualification-contract-freeze-publication.md)
+  保存 #209 source qualification、README 首轮匿名限流 ERROR 与三个后继正式 PASS；冻结目标仅在本发布
+  自己的 PR、受保护合入、exact-main 双门与 fresh readback 全部成立后生效。合同冻结不授予实现授权。
 - [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
   保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
   既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
@@ -571,9 +577,10 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 58. [Review Attention R1 Language Support / Parse / Fact Fulfillment 问题边界审计](docs/195-r1-language-support-parse-fact-fulfillment-problem-boundary-audit.md)
 59. [Review Attention R1 Language Support Qualification Authority 问题审计](docs/196-r1-language-support-qualification-authority-problem-audit.md)
 60. [Review Attention R1 Language Support Qualification 最小合同前置审计](docs/197-r1-language-support-qualification-precontract-audit.md)
-61. [Review Attention R1 Language Support Qualification 最小合同 0.1 候选](docs/198-r1-language-support-qualification-contract.md)
-62. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-63. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+61. [Review Attention R1 Language Support Qualification 最小合同 0.1](docs/198-r1-language-support-qualification-contract.md)
+62. [Review Attention R1 Language Support Qualification 合同冻结发布](docs/199-r1-language-support-qualification-contract-freeze-publication.md)
+63. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+64. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

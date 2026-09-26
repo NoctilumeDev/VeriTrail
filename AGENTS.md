@@ -1423,7 +1423,7 @@ UNSUPPORTED_SOURCE_ENCODING` 完整保存；first-failure 或执行顺序不得�
 每个 denominator member 必须恰好进入 eligible 或 unsupported；input/integrity failure 使整个 qualification 不成立，
 不得伪装成 per-item unsupported。
 
-当前状态为：
+候选形成阶段状态为：
 
 ```text
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED
@@ -1439,3 +1439,30 @@ derived projection 均未被选择。本文不修改 runtime、tests、fixture�
 vector，也不授权 classifier、carrier、Parse、Fact、shared receipt、ReviewSliceSet、CoverageLedger、Evidence、
 publisher 或 Bundle。候选 original PR、受保护合入、candidate exact-main 双门与 fresh public readback 成立后，
 仍须独立 freeze publication 自己完成同等级最后门；在 publication 闭合以前不得把合同写成 frozen 或开始代码。
+
+## R1 Language Support Qualification 合同冻结发布
+
+[文档 199](docs/199-r1-language-support-qualification-contract-freeze-publication.md)只发布文档 198 的语义合同，不修改 classification 规则。
+PR #209 original Public CI run `36195619550` attempt 1 11/11 成立后，候选合入
+`main@78014cd32cf539c3141ae066f6a7c40c0ac707ab`；该 exact main 的 Public CI `36197451442`
+attempt 1 11/11 与 Browser Smoke `36197451327` attempt 1 1/1 均成立。
+
+首次 README 正式读回的 P1 为 `ERROR / HTTP 403 / anonymous remaining=0`，P2 为 `COMPLETE`；
+它没有 handoff 或 Core report，不能写成 Core FAIL 或合同 FAIL。该 session 与原字节永久保留。
+三个后继 fresh installed-product observations 分别独立 PASS，不能倒写成读回从无失败；诊断与 raw-source
+byte equality 不替代产品资格路径。联合 verifier 已重新调用安装产品 Core 核账，并将原 ERROR 纳入 manifest。
+
+本发布 original PR 门、受保护合入、new exact-main 双门与 fresh readback 自己全部成立后，当前目标状态才是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+最后门以前，最后合格事实仍是合同候选；不得因 marker 已写入而提前授予实现权。冻结以后也只允许从新
+exact main 重读文档 198 第 13 节，做独立 minimal private implementation audit；本文不先授予 classifier、
+carrier 或 runtime implementation authority。persistence 继续 OPEN；Parse、Fact、shared receipt、ReviewSliceSet、
+Coverage、Schema、Evidence、publisher 与 Bundle 均未获得施工权。architecture DOT/SVG 不因状态发布重画。

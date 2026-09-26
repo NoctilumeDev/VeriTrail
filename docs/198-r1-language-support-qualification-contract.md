@@ -1,7 +1,7 @@
-# R1 Language Support Qualification 最小合同 0.1 候选
+# R1 Language Support Qualification 最小合同 0.1
 
-> 状态：`R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED /
-> R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_CANDIDATE /
+> 状态目标（仅[独立冻结发布](199-r1-language-support-qualification-contract-freeze-publication.md)最后门闭合后生效）：`R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED /
+> R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED /
 > R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
@@ -465,7 +465,8 @@ Attention / CLI / Workbench / Core / Q / O / T
 
 ## 14. 候选冻结门
 
-本文当前只是 contract candidate。只有以下链条完整成立后，独立 docs-only freeze publication 才可把它发布为
+本节保留合同候选的冻结门。[独立冻结发布](199-r1-language-support-qualification-contract-freeze-publication.md)
+记录候选资格与发布目标；只有以下链条完整成立后，合同状态才可生效为
 `R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN`：
 
 1. `LSC-000..011` 能从 frozen inputs、文档 197 反例与本合同独立复核；
