@@ -2309,3 +2309,41 @@ README、文档 118、milestones 三次匿名产品读回均已成立。完整�
 允许从新的 exact main 独立重构 README 读者骨架；SVG 随后独立施工，R1 Schema 尚未恢复。
 
 - M11–M14 的规划边界见 [Post-M8 收束路线 Plan v1](13-post-m8-roadmap.md) 第 7–10 节。
+
+## R1 Language Support Qualification codec-conformance 修正合同 0.2 冻结发布
+
+[文档 202](202-r1-language-support-codec-conformance-correction-contract.md)经 PR #214 形成最终候选。原始 Public CI
+`36248704418` attempt 1 11/11、受保护合入 `main@936e6037deef899da9403988bb86f5fc8f6ddc10`、exact-main
+Public CI `36249925950` attempt 1 11/11 与 Browser Smoke `36249925954` attempt 1 1/1 均成立。
+
+候选 readback 使用 fresh CPython 3.13.13 venv、已安装 Core 0.13.0、GitHub Evidence 0.1.0 与 matching
+Playwright/Chromium。README、文档 202、milestones 三份正式观察使用独立 Plan/session/output，均为 exact-SHA
+HTTP 200、P1/P2 `COMPLETE`、三样本稳定、唯一 marker、零 observation defect 与 Core `PASS`。联合 verifier
+重新计算 Core fields，并把 AGENTS、README、文档 202 与 milestones 的匿名 raw bytes 逐字节核对 Git blob；本地
+canonical manifest 为：
+
+```text
+sha256_json  = f93564b0d0b57560a2ad63c2c37148165958b8e6f8566e002abdb1227b25626d
+sha256_bytes = 98aea23cfacec530e1acfa0891fc8c03347e08c6f1a5f65aae80241f0c4a41eb
+```
+
+环境准备时误用主机默认 Python 3.10 创建的 venv 没有启动任何正式观察；后继只用 fresh `venv313`。doc202
+marker 的终端乱码经 canonical JSON Unicode 比对确认只是 PTY 显示问题。候选形成期的 `PYTHONPATH` setup failure、
+special-case oracle quoting failure、boundary-checker false negative 与 lowercase contract correction 均继续保留原身份。
+
+[文档 203](203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)据此发布条件化 target：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 必须由文档 203 自己的 original PR gates、受保护合入、new exact-main 双门、README/doc202/doc203/
+milestones fresh installed-product readback 与独立 reconciliation 生效。冻结不授予实现；persistence、Parse、Fact、
+shared carrier、ReviewSliceSet/Coverage、Schema、Evidence、publisher 与 Bundle 仍未开始。

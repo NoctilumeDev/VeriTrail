@@ -1,12 +1,12 @@
-# R1 Language Support Qualification codec-conformance 修正合同 0.2 候选
+# R1 Language Support Qualification codec-conformance 修正合同 0.2
 
 日期：2026-09-26
 
-> 状态目标（仅本候选自己的全部资格门闭合后生效）：
+> 状态目标（仅[独立冻结发布](203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)最后门闭合后生效）：
 > `R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED /
-> R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_CANDIDATE /
+> R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_STARTED /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_IMPLEMENTATION_NOT_AUTHORIZED /
 > R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
@@ -14,7 +14,7 @@
 >
 > 候选基线：`main@41bd7cd3d6d486c780aeda91b86ae8845ef90ae7`
 >
-> 本文是语义合同候选，不是 classifier、carrier、Schema、测试、fixture 或 runtime 实现。
+> 本文是语义合同；冻结状态仅在文档 203 的最后门闭合后生效。本文不是 classifier、carrier、Schema、测试、fixture 或 runtime 实现。
 
 ## 1. 目的与停止线
 
@@ -458,9 +458,9 @@ LSC2-000..011 hardening
 该列表不是施工授权。若 private proof 必须先选择 persistence、修改 public identity、运行 real parser，或取得
 Fact/Coverage authority 才能成立，必须停止并把反例反馈给对应最小边界。
 
-## 14. 候选资格与冻结门
+## 14. 候选历史与冻结门
 
-### 14.1 本候选的状态上限
+### 14.1 候选资格历史
 
 本候选只允许修改：
 
@@ -471,19 +471,21 @@ AGENTS exact boundary
 milestones history
 ```
 
-最终字节必须通过本层声明的 docs/link/boundary gates、original PR required checks、受保护主线合入与 new exact-main
-Public CI / Browser Smoke。随后还必须以 fresh installed-product public readback 核对 README、本文与 milestones 的
-公开内容、exact Git bytes 与状态强度。在这些门闭合以前：
+最终字节已经通过本层声明的 docs/link/boundary gates、PR #214 original required checks、受保护主线合入、
+new exact-main Public CI / Browser Smoke，以及 README、本文与 milestones 的 fresh installed-product public
+readback 和 independent byte/state reconciliation。因此：
 
 ```text
-R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_CANDIDATE
 ```
 
-仍是最后合格事实，candidate marker 即使已经写入目标字节也未生效。
+已成为 qualified history。精确坐标、Plan/session 与 manifest 摘要由
+[独立冻结发布](203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)保存；candidate qualification
+仍不等于 frozen。
 
 ### 14.2 独立 freeze publication
 
-candidate-qualified 以后，仍须由独立 docs-only freeze publication：
+candidate-qualified 以后，仍须由[独立 docs-only freeze publication](203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)：
 
 1. 保存 0.1 frozen identity 与本文 candidate qualification；
 2. 明确发布 `r1-python-language-support/0.2`，不倒写 0.1；
@@ -498,9 +500,9 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
 
 也不得启动实现。
 
-## 15. 候选原则
+## 15. 合同原则
 
-本候选把修正原则压成：
+本合同把修正原则压成：
 
 > A versioned qualification function should own only the semantic distinctions its stage can observe and is
 > authorized to decide; changing the normative path requires a new identity even when terminal projections agree.
