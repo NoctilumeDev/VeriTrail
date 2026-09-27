@@ -1899,3 +1899,50 @@ readback 和 independent reconciliation 后生效。此前当前事实仍是 `CO
 IMPLEMENTATION_NOT_AUTHORIZED`。生效后也必须先回到 CONTROL LOOP；`IMPLEMENTATION_ALLOWED` 只覆盖 doc208
 第 14 节 A–G，不选择 persistence，不授权 real parser/AST、Parse/Fact fulfillment、public carrier/Schema、shared
 receipt/ledger、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+## R1 Language Support eligible operation projection / same-attempt gate 实现冻结候选
+
+文档 209 的最后门闭合后，CONTROL LOOP 重新确认文档 208 A–G 仍是最小合法施工面。A–G 已通过七个独立 PR
+#223–#229 串行合入；每个 PR 的 original Public CI 都是 attempt 1、11/11 SUCCESS，每个 merge coordinate 的
+Public CI / Browser Smoke 也都是 attempt 1 success。最终实现 exact main 为
+`b69527ec3a4c3037be730144c29b0ce2468940fc`。
+
+七个 stage 分别建立：attempt-neutral operation projection；绑定 original `BudgetContext` 与 parent/child
+`AttemptEligibility` 的 one-shot same-attempt gate；Fact `0.2/0.4`、Relation derivation `0.3/0.5`、Relation
+observation `0.4/0.6` corrected wire/operands；三个 controller 与 downstream admission 的 exact-history
+revalidation；以及 `LSPC-000..018` hardening。Provider-visible bodies 必须与 stage operation set 恰好相等，filtered
+request 在 encoding 前建立，旧 wire 不 fallback，相同 semantic result 或 limits 不继承 attempt authority。
+
+G exact-main final bytes 在 CPython 3.10.6 / 3.13.13 normal / `-O` 四格中取得 G direct `20/20`、A–G focused
+`100/100`、related Language Support/controller/Relation `182/182` 与 full Review Attention `417/417`。canonical
+hardening report 四格 SHA-256 均为：
+
+```text
+dc6ef339570c83af99e7882c3de703ea51e9df91c5b0fd9265bc1b65cbc9ca22
+```
+
+[文档 210](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)据此只条件化
+发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FREEZE_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 210 自己的 final docs/static gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 210、milestones 的 fresh anonymous installed-product readback 与 independent
+reconciliation 后生效。后继还必须建立独立最终冻结发布，并完成同等级 final bytes、PR、merge、exact-main 双门与
+fresh readback/reconciliation，才允许写
+`R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN`。
+
+当前不得自动开始 real parser / AST、Parse terminal、Fact fulfillment、persistence、public carrier/Schema、shared
+receipt/ledger、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。implementation exact-main verified 与
+implementation frozen 必须继续分离。

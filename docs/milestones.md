@@ -2649,3 +2649,52 @@ README / 文档 208 / 文档 209 / milestones fresh installed-product readback �
 在此以前当前事实仍是 `CONTRACT_CANDIDATE / IMPLEMENTATION_NOT_AUTHORIZED`。生效后先回到 CONTROL LOOP；
 authorization 只覆盖 doc208 A–G，不选择 persistence，不开始 parser/AST、Parse/Fact fulfillment、public
 carrier/Schema、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+### R1 Language Support eligible operation projection / same-attempt gate 实现冻结候选（条件状态）
+
+文档 209 的最后门闭合后，A–G 从重新绑定的 exact main 严格串行施工。七个 implementation PR #223–#229
+都只有一个实现 commit，original Public CI 都是 attempt 1、11/11 SUCCESS；各自 ordinary merge 后的 new
+exact-main Public CI / Browser Smoke 也都是 attempt 1 success，没有 rerun：
+
+| Stage | PR head | Merge / exact main | PR CI | Main CI / Browser |
+| --- | --- | --- | ---: | ---: |
+| A | `1484420de9461a0360b754e80f16d17c9e6c162a` | `aaad8ea2808513b268e8d39cad0f82c370b29fde` | `36289355151` | `36290394026 / 36290394010` |
+| B | `0934dec2bb2f767864b73def39ae2de3f3cd9dd4` | `e81ddbbdad6b436e3edf5e9e7dbbc36b6bbb2caf` | `36294946569` | `36296004496 / 36296004471` |
+| C | `ab5e2884be8d1dddf9b3bec50d0dba72454f6ee6` | `82d1887b1b413ebd9a2179240f78e6e8749b4a94` | `36300898706` | `36301942808 / 36301942810` |
+| D | `5a92458407b0a20c256aa7528a94c728d228f8f6` | `b0a5a035ec1401c346850d2b00d54b156a23545e` | `36304549283` | `36305623390 / 36305623405` |
+| E | `03d23aa5df51c82bbde344e8985b8173c2da23f3` | `07116fc4d9830470b6adf9c534222ee1b1feecee` | `36308341038` | `36309512627 / 36309512693` |
+| F | `b5fc19500836b65d1812945988a9872467b5ef7d` | `7658db401d1a78ff324c3c1776013c1f9ce22ffa` | `36317868121` | `36319123131 / 36319123124` |
+| G | `0d9319a1906c5ab5a7ccc3639f4b48944cb3cd79` | `b69527ec3a4c3037be730144c29b0ce2468940fc` | `36328081523` | `36329453405 / 36329453485` |
+
+A 建立 attempt-neutral operation projection；B 绑定 original BudgetContext / parent / child eligibility 与 one-shot
+claim；C–E 建立 Fact、Relation derivation、Relation observation 的 corrected private wire/operands；F 把三个
+controller 和 downstream admission 接到 exact-history chain；G 为 `LSPC-000..018` 建立 direct falsifier 与四格
+canonical hardening report。
+
+最终 exact main 的 CPython 3.10.6 / 3.13.13 normal / `-O` 四格均为 G direct `20/20`、A–G focused
+`100/100`、related matrix `182/182`、full Review Attention `417/417`。canonical report SHA-256 均为：
+
+```text
+dc6ef339570c83af99e7882c3de703ea51e9df91c5b0fd9265bc1b65cbc9ca22
+```
+
+[文档 210](210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)据此条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FREEZE_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 210 的 final docs/static gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke，以及 README、文档 210 与 milestones 的 fresh anonymous installed-product readback 和 independent
+reconciliation 后生效。后继仍须独立最终冻结发布；在其最后门以前，不得写成 private implementation `FROZEN`，
+也不得开始 persistence、real parser / AST、Parse/Fact fulfillment、public carrier、shared receipt、
+ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
