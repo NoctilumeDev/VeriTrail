@@ -1946,3 +1946,44 @@ fresh readback/reconciliation，才允许写
 当前不得自动开始 real parser / AST、Parse terminal、Fact fulfillment、persistence、public carrier/Schema、shared
 receipt/ledger、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。implementation exact-main verified 与
 implementation frozen 必须继续分离。
+
+## R1 Language Support eligible operation projection / same-attempt gate 实现冻结发布
+
+文档 210 候选经 PR #230 original Public CI `36334206045` attempt 1、11/11 SUCCESS，ordinary merge
+`main@e69ff64333300fc01bd89eb3dfbe69f447048b40`，以及 exact-main Public CI `36335678882` attempt 1、
+11/11 SUCCESS 与 Browser Smoke `36335678884` attempt 1、1/1 SUCCESS。candidate / merge tree 均为
+`cbf4e9597e1e719f7388080d788c5e40afc0f8e9`。
+
+README、文档 210 与 milestones 三份 fresh anonymous installed-product observations 使用互不复用的 sealed
+Plan/session/output，P1/P2 均 `COMPLETE`、三样本稳定、marker 恰好一次、Core `PASS`。AGENTS、README、
+文档 210 与 milestones 四份 anonymous raw bytes 等于 exact Git blobs；independent reconciliation manifest 为：
+
+```text
+sha256_json  = dafb28072bd4d1e7e0969c2a19734101ccd3177d5fd186dd75f41c4d132a32fc
+sha256_bytes = d6a8b6eb33ed053144a9d3563615d91edeea56772ff4ae732006e228b1fee5aa
+```
+
+正式观察前的 installed-environment / anonymous API preflight 已 HTTP 200，但 Playwright shutdown 留下 pending-task /
+`TargetClosedError` warning；它没有正式 Plan/session/Evidence/output identity，继续保留为 setup history。
+
+[文档 211](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)只发布 A–G
+已有 private implementation closure，不新增 wire、runtime、Parse、Fact 或 Coverage 语义。本发布的条件化 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 211 final bytes、local docs/Schema/static gates、original PR checks、受保护合入、new exact-main
+Public CI / Browser Smoke，以及 README、文档 211、milestones 的 fresh installed-product readback 与 independent
+reconciliation 后生效。生效后必须先返回 CONTROL LOOP；不得由 implementation frozen 自动开始 real parser /
+AST、Parse terminal、Fact fulfillment、persistence、public carrier/Schema、shared receipt/ledger、ReviewSliceSet /
+Coverage、Evidence、publisher 或 Bundle。

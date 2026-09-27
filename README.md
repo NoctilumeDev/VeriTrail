@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FREEZE_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -88,10 +88,12 @@ reconciliation 取得候选资格；[独立冻结发布](docs/209-r1-language-su
 完成自己的同等级最后门后，合同的 `CONTRACT_FROZEN / IMPLEMENTATION_ALLOWED` 已生效。A–G 随后经
 PR #223–#229 严格串行实现；每个 stage 的 original PR 与 exact-main Public CI / Browser Smoke 都独立成功，最终
 `main@b69527ec3a4c3037be730144c29b0ce2468940fc` 的 G hardening 四格为 `20/20`、A–G focused
-`100/100`、related matrix `182/182`、full Review Attention `417/417`。当前
-[实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
-只条件化发布 `IMPLEMENTED / STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`；其自身门与
-后继独立最终冻结发布闭合前，不得写成 implementation `FROZEN`。
+`100/100`、related matrix `182/182`、full Review Attention `417/417`。
+[实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)经
+PR #230 original 11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 210 /
+milestones 三份 fresh installed-product readback 与 independent reconciliation 取得资格。
+[最终冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)只条件化
+发布 private implementation `FROZEN`；其自身最后门闭合前，frozen marker 只是 publication target。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -469,6 +471,10 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
 - [Language Support eligible operation projection / same-attempt gate 实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
   记录 #223–#229 的 A–G private implementation、各自 original PR / exact-main 双门与最终四格 hardening；其自身
   资格链和后继独立最终状态发布闭合前，只能写成 `IMPLEMENTED / EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`。
+- [Language Support eligible operation projection / same-attempt gate 实现冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+  保存 #230 候选资格、三份 fresh installed-product PASS、四份 exact-SHA raw bytes 与 independent Core
+  reconciliation；private implementation frozen target 只有在本发布自己的 PR、合入、new exact-main 双门和
+  final readback 全部闭合后生效，persistence、Parse/Fact fulfillment 与 public carrier 继续未获授权。
 - [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
   保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
   既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
@@ -649,8 +655,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 71. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 最小合同 0.1](docs/208-r1-language-support-eligible-operation-projection-contract.md)
 72. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 合同冻结发布](docs/209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
 73. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
-74. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-75. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+74. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+75. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+76. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

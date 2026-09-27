@@ -2698,3 +2698,46 @@ Browser Smoke，以及 README、文档 210 与 milestones 的 fresh anonymous in
 reconciliation 后生效。后继仍须独立最终冻结发布；在其最后门以前，不得写成 private implementation `FROZEN`，
 也不得开始 persistence、real parser / AST、Parse/Fact fulfillment、public carrier、shared receipt、
 ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+### R1 Language Support eligible operation projection / same-attempt gate 实现冻结发布（条件状态）
+
+文档 210 候选 PR #230 head `91cda857de363ea82b5866d9870f49cc8e58ab46` 的 original Public CI
+`36334206045` attempt 1 为 11/11 SUCCESS。候选以 ordinary merge
+`main@e69ff64333300fc01bd89eb3dfbe69f447048b40` 合入受保护 main；merge parents 为前置 exact main 与
+candidate head，candidate / merge tree 都是 `cbf4e9597e1e719f7388080d788c5e40afc0f8e9`。该 exact main 的
+Public CI `36335678882` attempt 1 为 11/11 SUCCESS，Browser Smoke `36335678884` attempt 1 为 1/1 SUCCESS。
+
+README、文档 210 与 milestones 随后分别使用 fresh sealed Plan/session/output 完成 anonymous installed-product
+P1/P2 readback；三者均为 exact-SHA HTTP 200、`COMPLETE`、三样本稳定、唯一 marker、零 observation defect 与
+Core `PASS`。AGENTS、README、文档 210、milestones 四份 anonymous raw bytes 与 exact Git blobs 相等；联合
+verifier 重新计算 Core fields 后生成 canonical manifest：
+
+```text
+sha256_json  = dafb28072bd4d1e7e0969c2a19734101ccd3177d5fd186dd75f41c4d132a32fc
+sha256_bytes = d6a8b6eb33ed053144a9d3563615d91edeea56772ff4ae732006e228b1fee5aa
+```
+
+正式观察前的 installed-environment / anonymous exact-SHA API preflight 已成功，但 Playwright shutdown 留下
+pending-task / `TargetClosedError` warning；它没有正式 Plan/session/Evidence/output identity，继续保留为 setup
+history，不是 product observation。
+
+[文档 211](211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)据此发布
+条件化 target：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 必须由文档 211 自己的 final local gates、original PR checks、受保护合入、new exact-main 双门、README /
+文档 211 / milestones fresh installed-product readback 与 independent reconciliation 生效。在此以前 frozen marker
+只是 publication target。生效后先返回 CONTROL LOOP；不得自动开始 persistence、real parser / AST、Parse/Fact
+fulfillment、public carrier、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
