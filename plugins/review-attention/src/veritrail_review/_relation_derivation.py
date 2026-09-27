@@ -6,10 +6,7 @@ from typing import Callable, Mapping, Sequence
 
 from veritrail_review._execution_cell import (
     DEFAULT_TRANSPORT_LIMITS,
-    _PreparedExecutionAttempt,
-    _build_prepared_closed_test_execution_attempt,
     _owned_request_provenance,
-    _run_prepared_closed_test_execution_attempt,
     _utc_now,
 )
 from veritrail_review._execution_cell_binding import (
@@ -27,6 +24,10 @@ from veritrail_review._multi_provider_applicability import (
     _descriptor_rank,
     closed_test_multi_provider_bindings,
 )
+from veritrail_review._language_support import classify_language_support
+from veritrail_review._language_support_values import (
+    OwnedLanguageSupportClassification,
+)
 from veritrail_review._multi_provider_fact_composition import (
     _ClosedProviderRun,
     _FactIdentityCollision,
@@ -40,14 +41,16 @@ from veritrail_review._relation_derivation_values import (
     _RelationDerivationError,
     _RelationDerivationFailureCode,
 )
-from veritrail_review._relation_execution_cell import (
-    _PreparedRelationExecutionAttempt,
-    _build_prepared_relation_execution_attempt,
-    _run_prepared_relation_execution_attempt,
-)
 from veritrail_review._relation_execution_cell_binding import (
     closed_test_relation_binding,
     relation_binding_matches_closed_allow_list,
+)
+from veritrail_review import (
+    _source_operation_controller_cell as _source_operation_cell,
+)
+from veritrail_review._source_operation_gate import (
+    OwnedSourceOperationAttemptGate,
+    create_source_operation_attempt_gate,
 )
 from veritrail_review._relation_execution_cell_values import (
     OwnedRelationExecutionCellPhaseResult,
@@ -57,6 +60,26 @@ from veritrail_review.budget import BudgetContext, BudgetState, admit_derivation
 from veritrail_review.canonical import canonical_json_bytes
 from veritrail_review.derivation_input_contracts import DerivationInputSet
 from veritrail_review.errors import BudgetPrimitiveError
+
+
+_PreparedExecutionAttempt = getattr(
+    _source_operation_cell, "_PreparedFactSourceOperationAttempt"
+)
+_PreparedRelationExecutionAttempt = getattr(
+    _source_operation_cell, "_PreparedRelationSourceOperationAttempt"
+)
+_build_prepared_closed_test_execution_attempt = getattr(
+    _source_operation_cell, "build_prepared_fact_source_operation_attempt"
+)
+_build_prepared_relation_execution_attempt = getattr(
+    _source_operation_cell, "build_prepared_relation_source_operation_attempt"
+)
+_run_prepared_closed_test_execution_attempt = getattr(
+    _source_operation_cell, "run_prepared_fact_source_operation_attempt"
+)
+_run_prepared_relation_execution_attempt = getattr(
+    _source_operation_cell, "run_prepared_relation_source_operation_attempt"
+)
 
 
 _ALLOWED_REQUIREMENTS = {
@@ -75,6 +98,8 @@ class _PreparedRelationDerivation:
     required_by_capability: Mapping[str, bool]
     context: BudgetContext
     parent_eligibility: AttemptEligibility
+    classification: OwnedLanguageSupportClassification
+    source_operation_gate: OwnedSourceOperationAttemptGate
     fact_child_attempts: tuple[_PreparedExecutionAttempt, ...]
     cancellation_requested: Callable[[], bool] | None
     transport_limits: ExecutionCellTransportSafetyLimits
@@ -143,6 +168,10 @@ def _prepare_closed_test_relation_derivation(
     parent = AttemptEligibility()
     children: list[_PreparedExecutionAttempt] = []
     try:
+        classification = classify_language_support(inputs)
+        gate = create_source_operation_attempt_gate(
+            inputs, context, parent, classification
+        )
         for binding in fact_bindings:
             children.append(
                 _build_prepared_closed_test_execution_attempt(
@@ -152,12 +181,16 @@ def _prepare_closed_test_relation_derivation(
                     cancellation_requested=cancellation_requested,
                     transport_limits=transport_limits,
                     context=context,
+                    parent_eligibility=parent,
                     eligibility=AttemptEligibility(),
                     request_provenance=request_provenance,
                     attempt_started_at=attempt_started_at,
+                    classification=classification,
+                    source_operation_gate=gate,
                 )
             )
-        if not parent.admit() or not context.checkpoint():
+        gate.admit_parent()
+        if not context.checkpoint():
             raise ValueError
     except Exception as exc:
         parent.revoke()
@@ -174,6 +207,8 @@ def _prepare_closed_test_relation_derivation(
         required_by_capability=copy.deepcopy(requirements),
         context=context,
         parent_eligibility=parent,
+        classification=classification,
+        source_operation_gate=gate,
         fact_child_attempts=tuple(children),
         cancellation_requested=cancellation_requested,
         transport_limits=transport_limits,
@@ -212,6 +247,9 @@ class _RelationDerivationController:
                     request_provenance=_owned_object(
                         prepared.request_provenance_bytes
                     ),
+                    expected_operands_digest=child.request_document[
+                        "operands_digest"
+                    ],
                 )
             except Exception as exc:
                 prepared.parent_eligibility.revoke()
@@ -336,10 +374,13 @@ def _join_fact_stage_and_continue(
             cancellation_requested=prepared.cancellation_requested,
             transport_limits=prepared.transport_limits,
             context=prepared.context,
+            parent_eligibility=prepared.parent_eligibility,
             eligibility=AttemptEligibility(),
             request_provenance=_owned_object(prepared.request_provenance_bytes),
             attempt_started_at=prepared.attempt_started_at,
             fact_set_document=fact_set_document,
+            classification=prepared.classification,
+            source_operation_gate=prepared.source_operation_gate,
         )
         relation_phase = _run_prepared_relation_execution_attempt(relation_attempt)
         relation_run = _relation_provider_run_document(relation_phase)

@@ -6,10 +6,7 @@ from typing import Callable, Mapping, Sequence
 
 from veritrail_review._execution_cell import (
     DEFAULT_TRANSPORT_LIMITS,
-    _PreparedExecutionAttempt,
-    _build_prepared_closed_test_execution_attempt,
     _owned_request_provenance,
-    _run_prepared_closed_test_execution_attempt,
     _utc_now,
 )
 from veritrail_review._execution_cell_binding import (
@@ -49,6 +46,17 @@ from veritrail_review._fact_evidence_values import (
     _DiagnosticClosureEligibility,
     _NormalContinuationEligibility,
 )
+from veritrail_review._language_support import classify_language_support
+from veritrail_review._language_support_values import (
+    OwnedLanguageSupportClassification,
+)
+from veritrail_review import (
+    _source_operation_controller_cell as _source_operation_cell,
+)
+from veritrail_review._source_operation_gate import (
+    OwnedSourceOperationAttemptGate,
+    create_source_operation_attempt_gate,
+)
 from veritrail_review._windows_budget import require_budget_primitive_capability
 from veritrail_review.budget import (
     BudgetContext,
@@ -60,6 +68,17 @@ from veritrail_review.derivation_input_contracts import DerivationInputSet
 from veritrail_review.errors import BudgetPrimitiveError
 
 
+_PreparedExecutionAttempt = getattr(
+    _source_operation_cell, "_PreparedFactSourceOperationAttempt"
+)
+_build_prepared_closed_test_execution_attempt = getattr(
+    _source_operation_cell, "build_prepared_fact_source_operation_attempt"
+)
+_run_prepared_closed_test_execution_attempt = getattr(
+    _source_operation_cell, "run_prepared_fact_source_operation_attempt"
+)
+
+
 @dataclass(frozen=True)
 class _PreparedMultiProviderComposition:
     inputs: DerivationInputSet
@@ -68,6 +87,8 @@ class _PreparedMultiProviderComposition:
     required_by_capability: Mapping[str, bool]
     context: BudgetContext
     parent_eligibility: AttemptEligibility
+    classification: OwnedLanguageSupportClassification
+    source_operation_gate: OwnedSourceOperationAttemptGate
     child_attempts: tuple[_PreparedExecutionAttempt, ...]
     request_provenance_bytes: bytes
     attempt_started_at: str
@@ -134,6 +155,10 @@ def _prepare_closed_test_multi_provider_composition(
     parent = AttemptEligibility()
     children: list[_PreparedExecutionAttempt] = []
     try:
+        classification = classify_language_support(inputs)
+        gate = create_source_operation_attempt_gate(
+            inputs, context, parent, classification
+        )
         for binding in normalized:
             children.append(
                 _build_prepared_closed_test_execution_attempt(
@@ -143,12 +168,16 @@ def _prepare_closed_test_multi_provider_composition(
                     cancellation_requested=cancellation_requested,
                     transport_limits=transport_limits,
                     context=context,
+                    parent_eligibility=parent,
                     eligibility=AttemptEligibility(),
                     request_provenance=request_provenance,
                     attempt_started_at=attempt_started_at,
+                    classification=classification,
+                    source_operation_gate=gate,
                 )
             )
-        if not parent.admit() or not context.checkpoint():
+        gate.admit_parent()
+        if not context.checkpoint():
             raise ValueError
     except Exception as exc:
         parent.revoke()
@@ -167,6 +196,8 @@ def _prepare_closed_test_multi_provider_composition(
         required_by_capability=copy.deepcopy(requirements),
         context=context,
         parent_eligibility=parent,
+        classification=classification,
+        source_operation_gate=gate,
         child_attempts=tuple(children),
         request_provenance_bytes=canonical_json_bytes(request_provenance),
         attempt_started_at=attempt_started_at,
@@ -206,6 +237,9 @@ class _MultiProviderCompositionController:
                     request_provenance=_object_copy(
                         prepared.request_provenance_bytes
                     ),
+                    expected_operands_digest=child.request_document[
+                        "operands_digest"
+                    ],
                 )
             except Exception as exc:
                 prepared.parent_eligibility.revoke()
@@ -234,12 +268,14 @@ def _close_provider_run(
     *,
     binding: ProviderBinding,
     request_provenance: Mapping[str, object],
+    expected_operands_digest: str | None = None,
 ) -> _ClosedProviderRun:
     _validate_phase_continuity(
         inputs,
         phase,
         binding=binding,
         request_provenance=request_provenance,
+        expected_operands_digest=expected_operands_digest,
     )
     if phase.release_outcome is not ReleaseOutcome.RELEASED:
         raise ValueError

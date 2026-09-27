@@ -28,10 +28,16 @@ from veritrail_review import (  # noqa: E402
 from veritrail_review import (  # noqa: E402
     _relation_observation_qualification as qualification,
 )
+from veritrail_review import _language_support as language_support  # noqa: E402
+from veritrail_review import (  # noqa: E402
+    _source_operation_projection as source_projection,
+)
+from veritrail_review import (  # noqa: E402
+    _source_operation_relation_observation_application as observation_source_app,
+)
 from veritrail_review._execution_cell import _owned_request_provenance  # noqa: E402
-from veritrail_review._execution_cell_application import (  # noqa: E402
-    canonicalize_candidates,
-    validate_request_document,
+from veritrail_review import (  # noqa: E402
+    _source_operation_fact_application as fact_source_app,
 )
 from veritrail_review._execution_cell_binding import (  # noqa: E402
     ProviderBinding,
@@ -174,7 +180,7 @@ class RelationObservationQualificationTests(unittest.TestCase):
 
     @classmethod
     def _phase_with_two_imports(cls, prepared, phase):
-        request = validate_request_document(
+        request = fact_source_app.validate_fact_source_operation_request_document(
             prepared.request_document,
             launch_key=prepared.binding.launch_key,
         )
@@ -223,7 +229,7 @@ class RelationObservationQualificationTests(unittest.TestCase):
                     },
                 }
             )
-        facts = canonicalize_candidates(request, candidates)
+        facts = fact_source_app.canonicalize_fact_candidates(request, candidates)
         return replace(
             phase,
             canonical_fact_bytes=tuple(canonical_json_bytes(item) for item in facts),
@@ -349,32 +355,51 @@ class RelationObservationQualificationTests(unittest.TestCase):
         phase = self.positive.relation_phase_results[0]
         descriptor = phase.provider_descriptor
         assigned = phase.assigned_observation_item_ids
-        digest = observation_app.relation_observation_provider_operands_digest(
+        classification = language_support.classify_language_support(self.inputs)
+        projection = (
+            source_projection.build_relation_observation_source_operation_projection(
+                classification,
+                descriptor,
+                self.fact_set,
+                self.positive.observation_domain_copy(),
+            )
+        )
+        operands_digest = (
+            observation_source_app.
+            relation_observation_source_operation_operands_digest
+        )
+        digest = operands_digest(
             self.inputs,
             descriptor,
             self.positive.fact_set_digest,
             self.positive.observation_domain_digest,
             assigned,
+            classification,
+            projection,
         )
         self.assertEqual(digest, phase.operands_digest)
         self.assertNotEqual(
             digest,
-            observation_app.relation_observation_provider_operands_digest(
+            operands_digest(
                 self.inputs,
                 descriptor,
                 "0" * 64,
                 self.positive.observation_domain_digest,
                 assigned,
+                classification,
+                projection,
             ),
         )
         self.assertNotEqual(
             digest,
-            observation_app.relation_observation_provider_operands_digest(
+            operands_digest(
                 self.inputs,
                 descriptor,
                 self.positive.fact_set_digest,
                 self.positive.observation_domain_digest,
                 (*assigned, "f" * 64),
+                classification,
+                projection,
             ),
         )
         domain = self.positive.observation_domain_copy()
@@ -776,7 +801,7 @@ class RelationObservationQualificationTests(unittest.TestCase):
         )
         self.assertEqual(
             self.positive.qualification_digest,
-            "8c5fb7b038980920a2fedcf1010c8fc1cb9e8b6103486d308584075b6f173faa",
+            "3b8c59513325874a506264d52ac743657f3279d2c59d67fa2980cd384c8835fc",
         )
         self.assertEqual(
             [item["relation_id"] for item in self.positive.merged_candidates_copy()],

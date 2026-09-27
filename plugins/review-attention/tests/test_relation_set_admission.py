@@ -129,6 +129,39 @@ class RelationSetAdmissionTests(unittest.TestCase):
             lambda: admission.project_private_derivation_evidence_0_2(missing_run),
         )
 
+    def test_rae_004a_source_operation_history_is_revalidated(self) -> None:
+        variants = (
+            replace(
+                self.positive,
+                _language_support_classification=replace(
+                    self.positive._language_support_classification,
+                    classification_digest="0" * 64,
+                ),
+            ),
+            replace(
+                self.positive,
+                _fact_source_operation_projections=tuple(
+                    reversed(self.positive._fact_source_operation_projections)
+                ),
+            ),
+            replace(
+                self.positive,
+                _relation_source_operation_projections=tuple(
+                    reversed(
+                        self.positive._relation_source_operation_projections
+                    )
+                ),
+            ),
+        )
+        for forged in variants:
+            with self.subTest(forged=forged):
+                self.assertAdmissionFailure(
+                    _RelationSetAdmissionFailureCode.QUALIFICATION_REJECTED,
+                    lambda: admission.admit_relation_set_for_private_closed_proof(
+                        forged
+                    ),
+                )
+
     def test_relation_target_is_revalidated_against_the_exact_fact(self) -> None:
         phases = list(self.positive.relation_phase_results)
         phase = phases[1]
@@ -355,13 +388,13 @@ class RelationSetAdmissionTests(unittest.TestCase):
         )
         self.assertEqual(
             self.admitted.admission_witness_digest,
-            "029865c7abb407a6c6eb147892ce686bcc1d085cdd6c4b9d4a430bec100b3bc3",
+            "cc14c3ebd156c48e229d9fec85d5c9dcf02c69d3fa294dd3b69276ffc7796316",
         )
         self.assertEqual(
             hashlib.sha256(
                 self.admitted.canonical_relation_set_artifact_bytes
             ).hexdigest(),
-            "8ee1ab118ac2add04e9ce8e55cb1f070df0ad3f8f6cec2a22a9c64a7f3a080d1",
+            "6ba7fa03729202cdc363a7af8d98688e90864b8d94140c33ecd35368f271b121",
         )
 
 
