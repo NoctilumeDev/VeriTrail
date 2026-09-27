@@ -1,4 +1,4 @@
-# R1 Language Support eligible operation projection / same-attempt gate 最小合同 0.1 候选
+# R1 Language Support eligible operation projection / same-attempt gate 最小合同 0.1
 
 日期：2026-09-27
 
@@ -8,8 +8,9 @@
 > `R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN /
 > R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED /
-> R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_CANDIDATE /
-> R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_AUTHORIZED /
+> R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN /
+> R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_ALLOWED /
+> R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_STARTED /
 > R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN /
 > R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED /
 > R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED`
@@ -18,6 +19,8 @@
 > `5af79de7314a8f1c2447d3563b1905c0397eee63`
 >
 > 前置审计：[文档 207](207-r1-language-support-eligible-operation-projection-precontract-audit.md)
+>
+> 冻结发布：[文档 209](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
 >
 > 冻结上游：[Language Support 0.2 合同](202-r1-language-support-codec-conformance-correction-contract.md)、
 > [private classifier 冻结发布](206-r1-language-support-private-classifier-implementation-freeze-publication.md)、
@@ -42,8 +45,8 @@ exact frozen inputs
 
 它回答“哪些 exact bytes 有资格进入这次 source-body operation，以及该资格是否仍属于原 live attempt”。它不运行
 真实 parser，不定义 Parse terminal outcome，不证明 Fact/Relation/Coverage fulfillment，也不选择 classification
-persistence。`CONTRACT_CANDIDATE` 不授权代码施工；只有后继独立冻结发布完成自己的同等级资格链后，才能授予本文
-第 14 节的有限 private implementation。
+persistence。候选资格已经闭合；上述 frozen / allowed target 只有[文档 209](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
+完成自己的同等级资格链后才生效，并且只授权本文第 14 节的有限 private implementation。
 
 ## 2. 合同结论
 
@@ -579,11 +582,13 @@ R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_STARTED
 
 授权只覆盖第 14 节 A–G。合同候选、candidate PR 绿灯、merge 或 exact-main CI 都不能单独授予 implementation。
 
-## 16. 当前候选事实与 Fresh-Agent 交接
+## 16. 已资格化候选与冻结发布交接
 
-当前只允许把第 1 节的唯一完整 marker block 解释为条件化 candidate target：上游 0.2/classifier freeze 与
-precontract audit 已成立；本合同仍是候选，runtime 未授权，persistence 与 SliceSet/Coverage 后继保持未开始。不得把
-同一组词在本文另处重复成第二个可读回状态源。
+PR #221 original Public CI、受保护合入 `main@f4d531bd49de330bd7a186633699262997e949f4`、该 exact main
+Public CI / Browser Smoke、README / 本文 / milestones 的 fresh installed-product readback 与 independent
+reconciliation 已成立；本合同候选因而成为 qualified history。第 1 节的唯一完整 marker block 仍只是
+[文档 209](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)的条件化 target；
+冻结发布自己的最后门闭合以前，runtime 继续未授权，persistence 与 SliceSet/Coverage 后继保持未开始。
 
 新的 Agent 必须先读文档 150、165、175、202、206、207 与本文，然后重点攻击：operation denominator 是否能从
 existing frozen Facts/domain 唯一导出、provider-bound projection 是否仍可跨 purpose 移植、worker validation 是否偷信
