@@ -1855,3 +1855,47 @@ Public CI / Browser Smoke，以及 README、文档 208 与 milestones 的 fresh 
 independent reconciliation 后生效；随后仍须独立 docs-only freeze publication 完成同等级最后门，才可能授予
 文档 208 A–G 的 private implementation。当前不得修改 runtime/protocol、选择 persistence、运行 Parse/Fact、创建
 public carrier/Schema/shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+## R1 Language Support eligible operation projection / same-attempt gate 合同冻结发布
+
+文档 208 候选已完成自己的资格链：PR #221 head
+`63e05d4b8d2715d91d78c1cf2487449c5e70b142` 的 original Public CI `36280563559` attempt 1 为
+11/11 SUCCESS；ordinary merge `main@f4d531bd49de330bd7a186633699262997e949f4` 的 tree 为
+`74726f76aa0952af65c656de7441bab8c95296c4`，exact-main Public CI `36281621834` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36281621765` attempt 1 为 1/1 SUCCESS。
+
+README、文档 208 与 milestones 三份 fresh anonymous installed-product observations 使用互不复用的 sealed
+Plan/session/output，P1/P2 均 `COMPLETE`、三样本稳定、marker 恰好一次、Core `PASS`。AGENTS、README、
+文档 208 与 milestones 四份 anonymous raw bytes 等于 exact Git blobs；independent reconciliation manifest 为：
+
+```text
+sha256_json  = dfa90985976a28e9b5f821b49d80ee2ab1bafa98f0e2db726b302ed94b19bf4e
+sha256_bytes = de204fc9df0d53e49d0c91c42f646e86a79fb395617c3ba6cec69d2cac8b5b32
+```
+
+候选 readback 前置阶段保留两次 exact-User-Agent anonymous API 403、后 reset PASS 及 Playwright shutdown
+warning；正式 observations 没有复用这些 diagnostics。独立 reconciliation 首次又因 CI JSON 漏
+`databaseId` 在 Core 复算前停止，一次 PowerShell metadata correction command 随后在解析阶段失败；后继只补齐
+相同 immutable run metadata 并重新启动 reconciliation，没有重跑正式 observations。后继 PASS 不抹掉这些记录。
+
+[文档 209](docs/209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)只发布 doc208 已有
+input-authority 合同；不新增 classifier、Parse、Fact 或 Coverage 语义。本发布的条件化 target 是：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_ALLOWED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 只有在文档 209 final bytes、local docs/Schema/static gates、original PR checks、受保护合入、new
+exact-main Public CI / Browser Smoke，以及 README、文档 208、文档 209、milestones 的 fresh installed-product
+readback 和 independent reconciliation 后生效。此前当前事实仍是 `CONTRACT_CANDIDATE /
+IMPLEMENTATION_NOT_AUTHORIZED`。生效后也必须先回到 CONTROL LOOP；`IMPLEMENTATION_ALLOWED` 只覆盖 doc208
+第 14 节 A–G，不选择 persistence，不授权 real parser/AST、Parse/Fact fulfillment、public carrier/Schema、shared
+receipt/ledger、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。

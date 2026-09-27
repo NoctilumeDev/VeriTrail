@@ -2606,3 +2606,46 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 Browser Smoke，以及 README、文档 208 与 milestones 的 fresh anonymous installed-product readback 和 independent
 reconciliation 后生效。生效后仍须独立 freeze publication；在其最后门以前，A–G runtime、persistence、Parse/Fact
 fulfillment、public carrier/Schema、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 与 Bundle 继续未获授权。
+
+### R1 Language Support eligible operation projection / same-attempt gate 合同冻结发布（条件状态）
+
+文档 208 候选 PR #221 的 original Public CI `36280563559` attempt 1 为 11/11 SUCCESS。候选以 ordinary merge
+`main@f4d531bd49de330bd7a186633699262997e949f4` 合入受保护 main；merge parents 为前置 exact main 与
+candidate head，candidate / merge tree 都是 `74726f76aa0952af65c656de7441bab8c95296c4`。该 exact main 的
+Public CI `36281621834` attempt 1 为 11/11 SUCCESS，Browser Smoke `36281621765` attempt 1 为 1/1 SUCCESS。
+
+README、文档 208 与 milestones 随后分别使用 fresh sealed Plan/session/output 完成 anonymous installed-product
+P1/P2 readback；三者均为 exact-SHA HTTP 200、`COMPLETE`、三样本稳定、唯一 marker、零 observation defect 与
+Core `PASS`。AGENTS、README、文档 208、milestones 四份 anonymous raw bytes 与 exact Git blobs 相等；联合
+verifier 重新计算 Core fields 后生成 canonical manifest：
+
+```text
+sha256_json  = dfa90985976a28e9b5f821b49d80ee2ab1bafa98f0e2db726b302ed94b19bf4e
+sha256_bytes = de204fc9df0d53e49d0c91c42f646e86a79fb395617c3ba6cec69d2cac8b5b32
+```
+
+正式观察开始前，指定 preflight User-Agent 的 anonymous API path 两次返回明确 403 / quota exhausted；默认 curl
+User-Agent 命中另一个有余额的池，但没有被当作路径等价替代。等待精确 reset 后，指定路径才取得 HTTP 200。
+这些 preflight 均无正式 Plan/session，Playwright shutdown warning 也继续保留为 setup history。独立 verifier 首次又因
+CI JSON 缺 `databaseId` 在 Core 复算前停止；一次 PowerShell correction command 随后在解析阶段失败。后继只补齐
+同一 immutable run metadata 后重启 reconciliation，没有重跑三份正式 observations。
+
+[文档 209](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)据此发布条件化 target：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_ALLOWED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 必须由文档 209 自己的 final local gates、original PR checks、受保护合入、new exact-main 双门、
+README / 文档 208 / 文档 209 / milestones fresh installed-product readback 与 independent reconciliation 生效。
+在此以前当前事实仍是 `CONTRACT_CANDIDATE / IMPLEMENTATION_NOT_AUTHORIZED`。生效后先回到 CONTROL LOOP；
+authorization 只覆盖 doc208 A–G，不选择 persistence，不开始 parser/AST、Parse/Fact fulfillment、public
+carrier/Schema、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
