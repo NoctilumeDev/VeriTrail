@@ -92,8 +92,13 @@ PR #223–#229 严格串行实现；每个 stage 的 original PR 与 exact-main 
 [实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)经
 PR #230 original 11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 210 /
 milestones 三份 fresh installed-product readback 与 independent reconciliation 取得资格。
-[最终冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)只条件化
-发布 private implementation `FROZEN`；其自身最后门闭合前，frozen marker 只是 publication target。
+[首次最终冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+的 original PR 11/11 与 exact-main Browser 1/1 成立，但 exact-main Public CI `36343474761` 在 Python 3.10 `-O`
+保留正式 FAILURE，因此 frozen target 没有生效。独立 PR #232 只修复 test-support wall-clock coupling，并在
+`main@df7f3d5a190d317a47c0fc1fb9405419e6b76828` 完成 original 11/11 与 exact-main 11/11 + Browser 1/1。
+[重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+以新 source identity 条件化发布同一 private implementation `FROZEN`；其自身最后门闭合前，frozen marker 仍只是
+publication target。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -474,7 +479,11 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
 - [Language Support eligible operation projection / same-attempt gate 实现冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
   保存 #230 候选资格、三份 fresh installed-product PASS、四份 exact-SHA raw bytes 与 independent Core
   reconciliation；private implementation frozen target 只有在本发布自己的 PR、合入、new exact-main 双门和
-  final readback 全部闭合后生效，persistence、Parse/Fact fulfillment 与 public carrier 继续未获授权。
+  final readback 全部闭合后生效。其 exact-main Public CI `36343474761` 正式失败，因此 target 没有生效。
+- [Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+  保留文档 211 的 exact-main FAILURE，记录 #232 test-support maintenance 的 original PR、受保护合入与新
+  exact-main 双门，并以新 source identity 重新发布同一 frozen target；本发布自己的门和 final readback 闭合前，
+  persistence、Parse/Fact fulfillment 与 public carrier 继续未获授权。
 - [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
   保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
   既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
@@ -656,8 +665,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 72. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 合同冻结发布](docs/209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
 73. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
 74. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
-75. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-76. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+75. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+76. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+77. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

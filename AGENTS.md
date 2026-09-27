@@ -1987,3 +1987,33 @@ Public CI / Browser Smoke，以及 README、文档 211、milestones 的 fresh in
 reconciliation 后生效。生效后必须先返回 CONTROL LOOP；不得由 implementation frozen 自动开始 real parser /
 AST、Parse terminal、Fact fulfillment、persistence、public carrier/Schema、shared receipt/ledger、ReviewSliceSet /
 Coverage、Evidence、publisher 或 Bundle。
+
+## R1 Language Support eligible operation projection 实现冻结重新资格化
+
+文档 211 的 publication PR #231 original Public CI `36342051676` attempt 1 为 11/11 SUCCESS，并以 ordinary
+merge `main@fd5628123e5460de21039c81dc7f9e9ed7ae9772` 合入。该 exact main 的 Browser Smoke
+`36343474807` attempt 1 为 1/1 SUCCESS，但 Public CI `36343474761` attempt 1 在 Python 3.10 `-O`
+Review Attention 正式失败：`test_d_004_failed_assignment_validation_consumes_the_claim` 在约 `10.085s`
+后跨过 sealed 10 秒 wall-clock budget，runtime 正确返回 `ADMISSION_BINDING_REJECTED`。因此文档 211 的
+frozen target 没有生效；该 run 永久保持 FAILURE。
+
+独立 PR #232 只修改 Slice-input test-support：保留真实 `BudgetContext`、limits、attempt identity、one-shot claim
+与 cancellation semantics，把该 semantic suite 的 attempt-local test clock 固定在 admission 时刻，避免 hosted-runner
+scheduling 把 identity / ownership 测试静默变成 deadline 测试。它没有修改 runtime、产品 timeout、budget、合同或
+public state。
+
+PR #232 head `f7651732ea419865814bb9e755916795c4cc9fa1` 的 original Public CI `36349719735`
+attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 main 为
+`df7f3d5a190d317a47c0fc1fb9405419e6b76828`，tree 为
+`7bcfa7788ee929e2b60b22246eac01cb977ac0cb`。该 exact main 的 Public CI `36351246640` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36351246642` attempt 1 为 1/1 SUCCESS。maintenance 已成为合格 source
+state，但不追溯使文档 211 生效。
+
+[文档 212](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)以新
+source identity 重新发布同一 private implementation frozen target。该 target 只有在文档 212 final bytes、local
+docs/Schema/static gates、original PR checks、受保护合入、new exact-main Public CI / Browser Smoke，以及 README、
+文档 212、milestones 的 fresh anonymous installed-product readback 与 independent reconciliation 后生效。
+
+在此以前 frozen marker 仍只是 publication target。生效后也必须先返回 CONTROL LOOP；不得自动开始 real parser /
+AST、Parse terminal、Fact fulfillment、persistence、public carrier/Schema、shared receipt/ledger、ReviewSliceSet /
+Coverage、Evidence、publisher 或 Bundle。
