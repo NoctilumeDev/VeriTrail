@@ -2786,3 +2786,65 @@ exact-main 双门、README / 文档 212 / milestones fresh installed-product rea
 生效。在此以前 frozen marker 只是 publication target；生效后先返回 CONTROL LOOP，不自动授权 persistence、real
 parser / AST、Parse/Fact fulfillment、public carrier、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher
 或 Bundle。
+
+文档 212 的 publication PR #233 head `ced2984fcf79c9b391bbbea681b8ba658f2a68dd`，original Public CI
+`36353138086` attempt 1 为 11/11 SUCCESS。ordinary merge 后的新 exact main 为
+`0c82c55a521750698c969b26221bf776530aec16`，tree 为 `5ca3bb0952360ec05c9c4a3ba1ee8e46cfe6843d`；
+Public CI `36354589236` attempt 1 为 11/11 SUCCESS，Browser Smoke `36354589265` attempt 1 为
+1/1 SUCCESS。
+
+README 与文档 212 的 fresh formal readback 直接 `COMPLETE / PASS`。milestones 前两次 formal readback 都已完成
+产品采集与 Core `PASS`，但 runner 在 Windows 长路径 final-summary 写入阶段退出 1，因此两个 identity 永久保持
+`ERROR / NON_QUALIFYING`：
+
+| Identity | Plan | Session | Qualification |
+| --- | --- | --- | --- |
+| `FORMAL-MILESTONES-001` | `r1-lspg-impl-requal-milestones` | `github-paired-3c9af6b236e54351a55a06de52e9da71` | `ERROR` |
+| `FORMAL-MILESTONES-002` | `r1-lspg-impl-requal-milestones-2` | `github-paired-9ecd7e20cb46460ebe542af0803e994a` | `ERROR` |
+
+资产只做 byte-preserving short-root copy，没有覆盖旧 output。第三次 milestones observation 使用 fresh Plan
+`r1-lspg-impl-requal-milestones-3` 与 session `github-paired-18a6303cca2e43e0b64a5776d2d1582c` 取得
+`COMPLETE / PASS`。三份 successful observations、四份 exact Git raw bytes 与 CI identities 经 independent verifier
+重新核账，final manifest 为：
+
+```text
+sha256_json  = 0354060769104d5647c322838740fc64af0c8e96d333698bdef963345fd16e82
+sha256_bytes = 669c4af61877e8c9287a742bacb20b9dfc794ee0c30c4c0cc4f287ca6da00b08
+```
+
+至此 `R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN` 已生效。旧 exact-main FAILURE、
+两次 milestones formal ERROR 与后继 PASS 同时保留；后继成功不重写先前 observation identity。
+
+### R1 Parse fulfillment authority 问题审计（条件状态）
+
+CONTROL LOOP 从 `main@0c82c55a521750698c969b26221bf776530aec16` 重新确认：上游已经有 exact
+Language Support `ELIGIBLE` subjects、attempt-neutral operation projection、same-attempt one-shot gate 与
+Provider-visible exact bytes，但没有逐项 parser execution、terminal Parse outcome、parse-result/AST identity 或
+Parse denominator reconciliation。
+
+[文档 213](213-r1-parse-fulfillment-authority-problem-audit.md)记录一个 paired exact-world falsifier。valid 与
+syntax-error world 都是 13-byte source，保持 path、Policy/Profile、Provider set 与 controller 不变；独立
+Python 3.10 parse 分别为 `SUCCESS / SYNTAX_ERROR`，但 current system 对二者都产生两个 ProviderRun
+`COMPLETED`、无 diagnostic、一个 `MODULE` Fact、overall `COMPLETED` 与 normal continuation。closed Fact
+Provider 不运行 parser，downstream Relation Provider 对 Fact/domain subset 的 parse 也不能补齐 upstream Parse
+denominator。CPython 3.10.6 / 3.13.13 normal / `-O` 四格 4479-byte reports 完全相同：
+
+```text
+a942cf2662706b35a75140c16d5332754e9665ef2ca937068101a60ae61c4ce4
+```
+
+本文据此只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_PRECONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 candidate 必须由 final README / AGENTS / milestones / doc213 bytes、local docs/Schema/static gates、original PR
+checks、受保护合入、new exact-main Public CI / Browser Smoke、fresh README / doc213 / milestones installed-product
+readback 与 independent reconciliation 生效。本文不是 Parse precontract，不授权 parser/AST、Parse terminal、
+Fact fulfillment、persistence、shared carrier、public Artifact/Schema 或 Coverage。最后门闭合后仍须返回 CONTROL
+LOOP，重新判断 Parse fulfillment precontract audit 是否仍是最小合法问题。

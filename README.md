@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -97,8 +97,21 @@ milestones 三份 fresh installed-product readback 与 independent reconciliatio
 保留正式 FAILURE，因此 frozen target 没有生效。独立 PR #232 只修复 test-support wall-clock coupling，并在
 `main@df7f3d5a190d317a47c0fc1fb9405419e6b76828` 完成 original 11/11 与 exact-main 11/11 + Browser 1/1。
 [重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
-以新 source identity 条件化发布同一 private implementation `FROZEN`；其自身最后门闭合前，frozen marker 仍只是
-publication target。
+经 PR #233 original 11/11、ordinary merge `main@0c82c55a521750698c969b26221bf776530aec16`、new exact-main
+11/11 + Browser Smoke 1/1，以及 README / 文档 212 / milestones 三份 fresh installed-product PASS 与独立
+reconciliation，private implementation `FROZEN` 已成为当前事实。milestones 前两次正式 observation 虽然
+product/Core 为 `COMPLETED / PASS`，runner 都在长路径 final-summary 写入阶段退出 1，因此继续保留为两个
+`ERROR / NON_QUALIFYING` identity；第三次 fresh identity 才取得 PASS。final manifest 为：
+
+```text
+sha256_json  = 0354060769104d5647c322838740fc64af0c8e96d333698bdef963345fd16e82
+sha256_bytes = 669c4af61877e8c9287a742bacb20b9dfc794ee0c30c4c0cc4f287ca6da00b08
+```
+
+[Parse fulfillment authority 问题审计](docs/213-r1-parse-fulfillment-authority-problem-audit.md)据此只条件化发布
+Parse fulfillment authority problem-audit candidate。它证明 current exact history 仍不能区分 parser
+success、syntax failure 与 parser never executed；它不是 precontract，不授权 parser/AST、Parse terminal、Fact、
+persistence、共享 carrier、public Artifact 或 Coverage。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -482,8 +495,13 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   final readback 全部闭合后生效。其 exact-main Public CI `36343474761` 正式失败，因此 target 没有生效。
 - [Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
   保留文档 211 的 exact-main FAILURE，记录 #232 test-support maintenance 的 original PR、受保护合入与新
-  exact-main 双门，并以新 source identity 重新发布同一 frozen target；本发布自己的门和 final readback 闭合前，
-  persistence、Parse/Fact fulfillment 与 public carrier 继续未获授权。
+  exact-main 双门，并以新 source identity 重新发布同一 frozen target；本发布自己的 original PR、合入、new
+  exact-main 双门、三份 fresh readback 与 independent reconciliation 已闭合，因此 private implementation
+  `FROZEN` 已生效。两次 milestones path-boundary 正式 `ERROR` 仍永久保留。
+- [Parse fulfillment authority 问题审计](docs/213-r1-parse-fulfillment-authority-problem-audit.md)
+  从 frozen exact operation projection 重新审查下一 seam，以 valid / syntax-error paired world 证明 Provider
+  `COMPLETED`、MODULE Fact 与 normal continuation 都不能证明逐项 parser 执行。本文只发布 problem-audit
+  candidate；Parse precontract、runtime、AST carrier、Fact fulfillment、persistence 与 Coverage 尚未获授权。
 - [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
   保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
   既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
@@ -531,7 +549,7 @@ VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统�
 | [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
 | [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
 | Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
-| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support 0.2 与 private classifier 已冻结；eligible operation projection / same-attempt gate A–G 已 exact-main verified并进入实现冻结候选；Parse fulfillment、持久化路线、共同 primitive、公共 Artifact、Fact fulfillment 与 Coverage 仍未开始 |
+| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support 0.2、private classifier 与 eligible operation projection / same-attempt gate A–G private implementation 已冻结；Parse fulfillment authority problem audit 处于 candidate，Parse precontract/runtime、持久化路线、共同 primitive、公共 Artifact、Fact fulfillment 与 Coverage 仍未开始 |
 | Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
 | Operations Evidence / O | 候选运行事实观察面 | O0 只记录问题与权威边界；没有插件、Provider、Schema 或动作权 |
 | Test Evidence / T | 候选测试事实观察面 | T0 只记录问题；测试选择、执行、重试与 fixture authority 仍为 `UNKNOWN` |
@@ -666,8 +684,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 73. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
 74. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
 75. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
-76. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-77. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+76. [Review Attention R1 Parse fulfillment authority 问题审计](docs/213-r1-parse-fulfillment-authority-problem-audit.md)
+77. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+78. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
