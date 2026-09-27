@@ -1,11 +1,17 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from veritrail_review._execution_cell_values import OwnedExecutionCellPhaseResult
+from veritrail_review._language_support_values import (
+    OwnedLanguageSupportClassification,
+)
 from veritrail_review._relation_observation_cell_values import (
     OwnedRelationObservationCellPhaseResult,
+)
+from veritrail_review._source_operation_projection_values import (
+    OwnedSourceOperationProjection,
 )
 
 
@@ -34,6 +40,16 @@ class OwnedRelationCompositionQualificationResult:
     private_conflict_bytes: tuple[bytes, ...]
     reason_codes: tuple[str, ...]
     qualification_digest: str
+    _language_support_classification: OwnedLanguageSupportClassification = field(
+        repr=False,
+        compare=False,
+    )
+    _fact_source_operation_projections: tuple[
+        OwnedSourceOperationProjection, ...
+    ] = field(repr=False, compare=False)
+    _relation_source_operation_projections: tuple[
+        OwnedSourceOperationProjection, ...
+    ] = field(repr=False, compare=False)
 
     def observation_domain_copy(self) -> dict[str, object]:
         return _object(self.observation_domain_bytes)

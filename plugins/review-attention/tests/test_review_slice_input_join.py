@@ -2454,34 +2454,70 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             summary,
             {
                 "normal_partial_outcome": {
-                    "semantic_digest": "75403302066a400158a0070a3c5c133e15dc7e70b4905eb3f78d510b9f4bfdbd",
-                    "canonical_sha256": "3d590d36a77bce44a6cf576e4a7461dd8f7fa772e30f0dbb37fe595cd2a2d761",
+                    "semantic_digest": (
+                        "97292926c1746f6997b29c4b0b4158cd459acef88e80da9d90"
+                        "cf238f2b54b0ee"
+                    ),
+                    "canonical_sha256": (
+                        "79233ff16c80786b097d7a72bbef8cbfa34d55e3e4d85ea229"
+                        "2d7e63a4035f71"
+                    ),
                 },
                 "normal_partial_closure": {
-                    "semantic_digest": "31bd200a9f135c52d2a17911996489cc092a59943a95e093efadd7cf1416d770",
-                    "canonical_sha256": "216b3c4c44d27ed5b56294815356ab6f5be3e0b96e8470fadaed273846796eef",
+                    "semantic_digest": (
+                        "160ee9240dfb71fc50e96d15e0fa9cd6193b0d936ad9ae502a"
+                        "8e6e4a0a479fb7"
+                    ),
+                    "canonical_sha256": (
+                        "8f8813eddef444a6c3989a152dbb031f59a20fa3d0310909a64"
+                        "12110cd0f37a8"
+                    ),
                 },
                 "normal_complete_outcome": {
-                    "semantic_digest": "468a7195f8a1cbb8daab4e1e05758860321375939258698732dfd3930baf099a",
-                    "canonical_sha256": "e43d46b3f46a3d579cfd1808812793e201c3341b764ffb6da830dbf68ec5f208",
+                    "semantic_digest": (
+                        "fcd4ab5f9b4c20aeb5e8a26ff915c24713a49bce9f0a39a34"
+                        "1e47567751a9d26"
+                    ),
+                    "canonical_sha256": (
+                        "9d1e7b394b64a1dd34923e3e4044f2b3aecdffc5cc4a4adf44"
+                        "1bdb42688321f0"
+                    ),
                 },
                 "normal_complete_closure": {
-                    "semantic_digest": "9259ca6744511e8f6662d3a00528a1c923a2dfa9ae8b345c4188186d64776bbd",
-                    "canonical_sha256": "7a9b7b1358f1c3bde1672506d4d40992218619988e1cf6e5c620859085e97621",
+                    "semantic_digest": (
+                        "eafa864ad6e7ec361bc2d37dbb3d99895bb44ad6d4e76432fe"
+                        "417c28b4f92860"
+                    ),
+                    "canonical_sha256": (
+                        "0066f01206e32e682be41485ec09e7454a5dada3c48b3ba0ec"
+                        "49aeb3b0590e8d"
+                    ),
                 },
                 "closed_empty": {
-                    "semantic_digest": "7bbe46ad1b03659052d7c75241b0464101b7dcc7939d6b867c37ca07be58fe7a",
-                    "canonical_sha256": "792f655bb17d55392d147b0c138e7f21a4c6c851dc2bed16f903a299db04ca9f",
+                    "semantic_digest": (
+                        "b8ff89149613d5bfbfdd9eb0134a14fff92d072e4390a8efa3"
+                        "11ba8de9797634"
+                    ),
+                    "canonical_sha256": (
+                        "9bcbb534f7b1ca9008e02cbedc21a7532affa6319d23508d960"
+                        "3e9369451562a"
+                    ),
                 },
                 "conflict_blocked": {
-                    "semantic_digest": "3af34a95a6186c6ae76baa8a5ec37c61967228ad9333dde10247eedb1fcca8ab",
-                    "canonical_sha256": "01cae545842dd2b24355f78522df980a17ce8dc8283d0b3d5536819573b900ab",
+                    "semantic_digest": (
+                        "04ee69a3a6646a648e45e757dd5c8303c3b5d7670f0cb9a27b"
+                        "6995cfc42bc370"
+                    ),
+                    "canonical_sha256": (
+                        "4c7fd48b946e1e1ea4d90300bd131bda5d731ea7f0841d1c35"
+                        "807f2ae151bfb9"
+                    ),
                 },
             },
         )
         self.assertEqual(
             hashlib.sha256(canonical_json_bytes(summary)).hexdigest(),
-            "b3f8d2b1848f89996b625abeff43ee97cf689e82878bb9abbeed9a0d58b86a6c",
+            "698a31058de0ca7ab67cd7a290880699fc40d896fc9f865ccf29aa73a736b0c4",
         )
 
     def test_h_008_rs_000_007_are_private_precursors_only(self) -> None:

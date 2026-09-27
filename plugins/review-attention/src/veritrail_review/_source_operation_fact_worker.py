@@ -62,9 +62,17 @@ def main(arguments: list[str] | None = None) -> int:
     facts: list[dict[str, object]] = []
     try:
         with contextlib.redirect_stdout(io.StringIO()):
-            candidates = run_closed_test_provider(
-                request, launch_key=launch_key  # type: ignore[arg-type]
-            )
+            if request.supported_paths or launch_key in {
+                "failed",
+                "unavailable",
+                "slow",
+                "memory",
+            }:
+                candidates = run_closed_test_provider(
+                    request, launch_key=launch_key  # type: ignore[arg-type]
+                )
+            else:
+                candidates = []
         facts = canonicalize_fact_candidates(request, candidates)
     except ClosedProviderUnavailable:
         terminal_kind = "PROVIDER_UNAVAILABLE"

@@ -7,10 +7,7 @@ from typing import Callable, Mapping, Sequence
 
 from veritrail_review._execution_cell import (
     DEFAULT_TRANSPORT_LIMITS,
-    _PreparedExecutionAttempt,
-    _build_prepared_closed_test_execution_attempt,
     _owned_request_provenance,
-    _run_prepared_closed_test_execution_attempt,
     _utc_now,
 )
 from veritrail_review._execution_cell_binding import ProviderBinding, ProviderDescriptor
@@ -27,6 +24,10 @@ from veritrail_review._execution_cell_values import (
 from veritrail_review._multi_provider_applicability import (
     _descriptor_rank,
     closed_test_multi_provider_bindings,
+)
+from veritrail_review._language_support import classify_language_support
+from veritrail_review._language_support_values import (
+    OwnedLanguageSupportClassification,
 )
 from veritrail_review._multi_provider_fact_composition import (
     _ClosedProviderRun,
@@ -45,12 +46,15 @@ from veritrail_review._relation_observation_binding import (
     relation_observation_binding_matches_allow_list,
     relation_observation_descriptor_rank,
 )
-from veritrail_review._relation_observation_cell import (
-    build_prepared_relation_observation_attempt,
-    run_prepared_relation_observation_attempt,
-)
 from veritrail_review._relation_observation_cell_values import (
     OwnedRelationObservationCellPhaseResult,
+)
+from veritrail_review import (
+    _source_operation_controller_cell as _source_operation_cell,
+)
+from veritrail_review._source_operation_gate import (
+    OwnedSourceOperationAttemptGate,
+    create_source_operation_attempt_gate,
 )
 from veritrail_review._relation_observation_domain import (
     build_declared_relation_observation_domain,
@@ -72,6 +76,25 @@ from veritrail_review.budget import (
 from veritrail_review.canonical import canonical_json_bytes, semantic_digest
 from veritrail_review.derivation_input_contracts import DerivationInputSet
 from veritrail_review.errors import BudgetPrimitiveError
+
+
+_PreparedExecutionAttempt = getattr(
+    _source_operation_cell, "_PreparedFactSourceOperationAttempt"
+)
+_build_prepared_closed_test_execution_attempt = getattr(
+    _source_operation_cell, "build_prepared_fact_source_operation_attempt"
+)
+build_prepared_relation_observation_attempt = getattr(
+    _source_operation_cell,
+    "build_prepared_relation_observation_source_operation_attempt",
+)
+_run_prepared_closed_test_execution_attempt = getattr(
+    _source_operation_cell, "run_prepared_fact_source_operation_attempt"
+)
+run_prepared_relation_observation_attempt = getattr(
+    _source_operation_cell,
+    "run_prepared_relation_observation_source_operation_attempt",
+)
 
 
 _REASON_RANK = {
@@ -105,6 +128,8 @@ class _PreparedObservationQualification:
     required_by_capability: Mapping[str, bool]
     context: BudgetContext
     parent_eligibility: AttemptEligibility
+    classification: OwnedLanguageSupportClassification
+    source_operation_gate: OwnedSourceOperationAttemptGate
     fact_child_attempts: tuple[_PreparedExecutionAttempt, ...]
     cancellation_requested: Callable[[], bool] | None
     transport_limits: ExecutionCellTransportSafetyLimits
@@ -198,6 +223,10 @@ def _prepare_observation_qualification(
     parent = AttemptEligibility()
     children: list[_PreparedExecutionAttempt] = []
     try:
+        classification = classify_language_support(inputs)
+        gate = create_source_operation_attempt_gate(
+            inputs, context, parent, classification
+        )
         for binding in fact_bindings:
             children.append(
                 _build_prepared_closed_test_execution_attempt(
@@ -207,12 +236,16 @@ def _prepare_observation_qualification(
                     cancellation_requested=cancellation_requested,
                     transport_limits=transport_limits,
                     context=context,
+                    parent_eligibility=parent,
                     eligibility=AttemptEligibility(),
                     request_provenance=request_provenance,
                     attempt_started_at=attempt_started_at,
+                    classification=classification,
+                    source_operation_gate=gate,
                 )
             )
-        if not parent.admit() or not context.checkpoint():
+        gate.admit_parent()
+        if not context.checkpoint():
             raise ValueError
     except Exception as exc:
         parent.revoke()
@@ -229,6 +262,8 @@ def _prepare_observation_qualification(
         copy.deepcopy(requirements),
         context,
         parent,
+        classification,
+        gate,
         tuple(children),
         cancellation_requested,
         transport_limits,
@@ -380,6 +415,9 @@ class _ObservationQualificationController:
                     request_provenance=_owned_object(
                         base.request_provenance_bytes
                     ),
+                    expected_operands_digest=child.request_document[
+                        "operands_digest"
+                    ],
                 )
             except Exception as exc:
                 base.parent_eligibility.revoke()
@@ -404,6 +442,7 @@ class _ObservationQualificationController:
                         cancellation_requested=base.cancellation_requested,
                         transport_limits=base.transport_limits,
                         context=base.context,
+                        parent_eligibility=base.parent_eligibility,
                         eligibility=AttemptEligibility(),
                         request_provenance=_owned_object(
                             base.request_provenance_bytes
@@ -411,6 +450,8 @@ class _ObservationQualificationController:
                         attempt_started_at=base.attempt_started_at,
                         fact_set_document=fact_set_document,
                         observation_domain=observation_domain,
+                        classification=base.classification,
+                        source_operation_gate=base.source_operation_gate,
                     )
                 )
         except Exception as exc:
@@ -469,6 +510,7 @@ class _ObservationQualificationController:
             relation_bindings=self.__prepared.relation_bindings,
             fact_phases=tuple(run.phase for run in closed_runs),
             phases=tuple(phases),
+            relation_attempts=tuple(attempts),
             shared_failure=shared_failure,
             release_failure=release_failure,
         )
@@ -494,6 +536,7 @@ class _ObservationQualificationController:
                 relation_bindings=self.__prepared.relation_bindings,
                 fact_phases=tuple(run.phase for run in closed_runs),
                 phases=tuple(phases),
+                relation_attempts=tuple(attempts),
                 shared_failure=True,
                 release_failure=release_failure,
             )
@@ -560,6 +603,7 @@ def _project_qualification(
     relation_bindings: Sequence[ProviderBinding],
     fact_phases: tuple[object, ...],
     phases: tuple[OwnedRelationObservationCellPhaseResult, ...],
+    relation_attempts: tuple[object, ...],
     shared_failure: bool,
     release_failure: bool,
 ) -> OwnedRelationCompositionQualificationResult:
@@ -708,6 +752,13 @@ def _project_qualification(
         ),
         reason_codes=reasons,
         qualification_digest=qualification_digest,
+        _language_support_classification=prepared.classification,
+        _fact_source_operation_projections=tuple(
+            child.projection for child in prepared.fact_child_attempts
+        ),
+        _relation_source_operation_projections=tuple(
+            attempt.projection for attempt in relation_attempts
+        ),
     )
 
 

@@ -411,6 +411,7 @@ def _validate_phase_continuity(
     *,
     binding: ProviderBinding,
     request_provenance: Mapping[str, object],
+    expected_operands_digest: str | None = None,
 ) -> None:
     if not isinstance(phase, OwnedExecutionCellPhaseResult):
         raise ValueError
@@ -424,7 +425,13 @@ def _validate_phase_continuity(
         or phase.derivation_profile_digest != inputs.derivation_profile_digest
     ):
         raise ValueError
-    expected_operands = provider_operands_digest(inputs, binding.descriptor)
+    expected_operands = (
+        provider_operands_digest(inputs, binding.descriptor)
+        if expected_operands_digest is None
+        else expected_operands_digest
+    )
+    if not isinstance(expected_operands, str) or len(expected_operands) != 64:
+        raise ValueError
     expected_run_id = provider_run_id(
         phase.derivation_id, binding.descriptor, expected_operands
     )

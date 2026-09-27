@@ -381,11 +381,14 @@ class MultiProviderFactCompositionTests(unittest.TestCase):
             phase = multi._run_prepared_closed_test_execution_attempt(child)
             closed.append(
                 multi._close_provider_run(
-                self.required_inputs,
-                phase,
-                binding=child.binding,
-                request_provenance=json.loads(prepared.request_provenance_bytes),
-            )
+                    self.required_inputs,
+                    phase,
+                    binding=child.binding,
+                    request_provenance=json.loads(prepared.request_provenance_bytes),
+                    expected_operands_digest=child.request_document[
+                        "operands_digest"
+                    ],
+                )
             )
         altered = json.loads(closed[0].canonical_fact_bytes[0])
         altered["semantic_attributes"] = {"module_key_parts": ["collision"]}

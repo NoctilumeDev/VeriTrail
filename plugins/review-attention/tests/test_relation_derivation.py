@@ -46,9 +46,14 @@ from veritrail_review import _relation_closed_provider as relation_provider  # n
 from veritrail_review import (  # noqa: E402
     _relation_execution_cell_application as relation_app,
 )
-from veritrail_review._execution_cell_application import (  # noqa: E402
-    canonicalize_candidates,
-    validate_request_document,
+from veritrail_review import (  # noqa: E402
+    _source_operation_fact_application as fact_source_app,
+)
+from veritrail_review import (  # noqa: E402
+    _source_operation_projection as source_projection,
+)
+from veritrail_review import (  # noqa: E402
+    _source_operation_relation_derivation_application as relation_source_app,
 )
 from veritrail_review._execution_cell_binding import (  # noqa: E402
     ProviderBinding,
@@ -242,13 +247,13 @@ class RelationDerivationTests(unittest.TestCase):
 
     @staticmethod
     def _phase_with_module_and_import(prepared, phase):
-        request = validate_request_document(
+        request = fact_source_app.validate_fact_source_operation_request_document(
             prepared.request_document,
             launch_key=prepared.binding.launch_key,
         )
         path_hex = sorted(request.supported_paths)[0]
         size = request.source_sizes_by_path_hex[path_hex]
-        facts = canonicalize_candidates(
+        facts = fact_source_app.canonicalize_fact_candidates(
             request,
             [
                 {
@@ -406,16 +411,32 @@ class RelationDerivationTests(unittest.TestCase):
                 transport_limits=relation.DEFAULT_TRANSPORT_LIMITS,
             )
 
-    def test_rd_002_005_013_relation_operands_v02_have_exact_vector(self) -> None:
-        result = self._run(derivation_id="operand-vector")
+    def test_rd_002_005_013_relation_operands_v05_have_exact_vector(self) -> None:
+        prepared = relation._prepare_closed_test_relation_derivation(
+            self.relation_inputs,
+            derivation_id="operand-vector",
+            bindings=relation.closed_test_relation_derivation_bindings(),
+            cancellation_requested=None,
+            transport_limits=relation.DEFAULT_TRANSPORT_LIMITS,
+        )
+        result = relation._RelationDerivationController(prepared).run()
         descriptor = closed_test_relation_binding().descriptor
-        digest = relation_app.relation_provider_operands_digest(
+        projection = (
+            source_projection.build_relation_derivation_source_operation_projection(
+                prepared.classification,
+                descriptor,
+                result.fact_set_document_copy(),
+            )
+        )
+        digest = relation_source_app.relation_source_operation_operands_digest(
             self.relation_inputs,
             descriptor,
             result.fact_set_digest,
+            prepared.classification,
+            projection,
         )
         manual = semantic_digest(
-            "veritrail.review.provider-operands/0.2",
+            "veritrail.review.provider-operands/0.5",
             {
                 "source_snapshot_digest": self.relation_inputs.source_snapshot_digest,
                 "policy_digest": self.relation_inputs.policy_digest,
@@ -426,11 +447,16 @@ class RelationDerivationTests(unittest.TestCase):
                 ),
                 **descriptor.document(),
                 "fact_set_digest": result.fact_set_digest,
+                "language_support_function": (
+                    prepared.classification.language_support_function
+                ),
+                "classification_digest": (
+                    prepared.classification.classification_digest
+                ),
+                "source_operation_projection_digest": (
+                    projection.source_operation_projection_digest
+                ),
             },
-        )
-        self.assertEqual(
-            digest,
-            "4218eb9a094ad94287e8ff1628498a26e3189bc4dd3112ec6b4f0b5a57f83406",
         )
         self.assertEqual(digest, manual)
         self.assertEqual(
@@ -439,10 +465,12 @@ class RelationDerivationTests(unittest.TestCase):
         )
         self.assertNotEqual(
             digest,
-            relation_app.relation_provider_operands_digest(
+            relation_source_app.relation_source_operation_operands_digest(
                 self.relation_inputs,
                 descriptor,
                 "0" * 64,
+                prepared.classification,
+                projection,
             ),
         )
         other_run = relation_app.provider_run_id(

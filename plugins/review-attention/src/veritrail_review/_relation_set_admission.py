@@ -14,6 +14,9 @@ from veritrail_review._execution_cell_values import (
     ProviderRunStatus,
     ReleaseOutcome,
 )
+from veritrail_review._language_support_values import (
+    OwnedLanguageSupportClassification,
+)
 from veritrail_review._multi_provider_applicability import (
     closed_test_multi_provider_bindings,
 )
@@ -34,6 +37,19 @@ from veritrail_review._relation_observation_qualification import (
 )
 from veritrail_review._relation_observation_qualification_values import (
     OwnedRelationCompositionQualificationResult,
+)
+from veritrail_review._source_operation_fact_application import (
+    OPERANDS_DOMAIN as FACT_SOURCE_OPERATION_OPERANDS_DOMAIN,
+)
+from veritrail_review._source_operation_projection import (
+    build_fact_derivation_source_operation_projection,
+    build_relation_observation_source_operation_projection,
+)
+from veritrail_review._source_operation_projection_values import (
+    OwnedSourceOperationProjection,
+)
+from veritrail_review._source_operation_relation_observation_application import (
+    OPERANDS_DOMAIN as RELATION_OBSERVATION_SOURCE_OPERATION_OPERANDS_DOMAIN,
 )
 from veritrail_review._relation_set_admission_values import (
     OwnedDerivationEvidence02Projection,
@@ -243,6 +259,26 @@ def _validate_qualification(
         != tuple(binding.descriptor for binding in expected_relation)
     ):
         raise ValueError
+    classification, fact_projections, relation_projections = (
+        _source_operation_history(value, fact_phases, relation_phases)
+    )
+    for phase, projection in zip(fact_phases, fact_projections, strict=True):
+        expected_projection = build_fact_derivation_source_operation_projection(
+            classification, phase.provider_descriptor
+        )
+        if (
+            projection.projection_document_copy()
+            != expected_projection.projection_document_copy()
+            or phase.operands_digest
+            != _source_operation_operands_digest(
+                FACT_SOURCE_OPERATION_OPERANDS_DOMAIN,
+                value,
+                phase.provider_descriptor,
+                classification,
+                projection,
+            )
+        ):
+            raise ValueError
 
     request_provenance_bytes: bytes | None = None
     for phase in (*fact_phases, *relation_phases):
@@ -290,10 +326,24 @@ def _validate_qualification(
         or domain["observation_domain_digest"] != value.observation_domain_digest
     ):
         raise ValueError
+    fact_set = {
+        "artifact_kind": "FACT_SET",
+        "schema_version": "0.1",
+        "canonicalization_profile": "veritrail-json-c14n/1",
+        "source_snapshot_digest": value.source_snapshot_digest,
+        "policy_digest": value.policy_digest,
+        "analysis_scope_digest": value.analysis_scope_digest,
+        "derivation_profile_digest": value.derivation_profile_digest,
+        "facts": copy.deepcopy(list(facts)),
+        "conflicts": [],
+        "fact_set_digest": value.fact_set_digest,
+    }
 
     relation_runs: list[dict[str, object]] = []
     receipts: list[dict[str, object]] = []
-    for phase in relation_phases:
+    for phase, projection in zip(
+        relation_phases, relation_projections, strict=True
+    ):
         if (
             phase.fact_set_digest != value.fact_set_digest
             or phase.observation_domain_digest != value.observation_domain_digest
@@ -304,24 +354,30 @@ def _validate_qualification(
             for item in domain["provider_responsibilities"]
             if item["provider_descriptor"] == phase.provider_descriptor.document()
         )
-        expected_operands = semantic_digest(
-            "veritrail.review.provider-operands/0.3",
-            {
-                "source_snapshot_digest": value.source_snapshot_digest,
-                "policy_digest": value.policy_digest,
-                "analysis_scope_digest": value.analysis_scope_digest,
-                "slice_policy_digest": value.slice_policy_digest,
-                "derivation_profile_digest": value.derivation_profile_digest,
-                **phase.provider_descriptor.document(),
-                "fact_set_digest": value.fact_set_digest,
-                "observation_domain_digest": value.observation_domain_digest,
-                "assigned_observation_item_ids": responsibility[
-                    "assigned_observation_item_ids"
-                ],
-            },
+        expected_projection = (
+            build_relation_observation_source_operation_projection(
+                classification,
+                phase.provider_descriptor,
+                fact_set,
+                domain,
+            )
+        )
+        expected_operands = _source_operation_operands_digest(
+            RELATION_OBSERVATION_SOURCE_OPERATION_OPERANDS_DOMAIN,
+            value,
+            phase.provider_descriptor,
+            classification,
+            projection,
+            fact_set_digest=value.fact_set_digest,
+            observation_domain_digest=value.observation_domain_digest,
+            assigned_observation_item_ids=responsibility[
+                "assigned_observation_item_ids"
+            ],
         )
         if (
-            phase.operands_digest != expected_operands
+            projection.projection_document_copy()
+            != expected_projection.projection_document_copy()
+            or phase.operands_digest != expected_operands
             or list(phase.assigned_observation_item_ids)
             != responsibility["assigned_observation_item_ids"]
         ):
@@ -375,6 +431,70 @@ def _validate_qualification(
         "conflicts": conflicts,
         "all_provider_run_bytes": tuple(canonical_json_bytes(item) for item in all_runs),
     }
+
+
+def _source_operation_history(
+    value: OwnedRelationCompositionQualificationResult,
+    fact_phases: tuple[OwnedExecutionCellPhaseResult, ...],
+    relation_phases: tuple[OwnedRelationObservationCellPhaseResult, ...],
+) -> tuple[
+    OwnedLanguageSupportClassification,
+    tuple[OwnedSourceOperationProjection, ...],
+    tuple[OwnedSourceOperationProjection, ...],
+]:
+    classification = value._language_support_classification
+    fact_projections = value._fact_source_operation_projections
+    relation_projections = value._relation_source_operation_projections
+    if (
+        type(classification) is not OwnedLanguageSupportClassification
+        or len(fact_projections) != len(fact_phases)
+        or len(relation_projections) != len(relation_phases)
+        or any(
+            type(item) is not OwnedSourceOperationProjection
+            for item in fact_projections
+        )
+        or any(
+            type(item) is not OwnedSourceOperationProjection
+            for item in relation_projections
+        )
+        or classification.source_snapshot_digest != value.source_snapshot_digest
+        or classification.policy_digest != value.policy_digest
+        or classification.analysis_scope_digest != value.analysis_scope_digest
+        or classification.derivation_profile_digest
+        != value.derivation_profile_digest
+    ):
+        raise ValueError
+    classification.classification_document_copy()
+    return classification, fact_projections, relation_projections
+
+
+def _source_operation_operands_digest(
+    domain: str,
+    value: OwnedRelationCompositionQualificationResult,
+    descriptor: ProviderDescriptor,
+    classification: OwnedLanguageSupportClassification,
+    projection: OwnedSourceOperationProjection,
+    **coordinates: object,
+) -> str:
+    return semantic_digest(
+        domain,
+        {
+            "source_snapshot_digest": value.source_snapshot_digest,
+            "policy_digest": value.policy_digest,
+            "analysis_scope_digest": value.analysis_scope_digest,
+            "slice_policy_digest": value.slice_policy_digest,
+            "derivation_profile_digest": value.derivation_profile_digest,
+            **descriptor.document(),
+            **copy.deepcopy(coordinates),
+            "language_support_function": (
+                classification.language_support_function
+            ),
+            "classification_digest": classification.classification_digest,
+            "source_operation_projection_digest": (
+                projection.source_operation_projection_digest
+            ),
+        },
+    )
 
 
 def _validate_admission_attempt_binding(
