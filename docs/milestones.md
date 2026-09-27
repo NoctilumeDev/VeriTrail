@@ -2741,3 +2741,48 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 文档 211 / milestones fresh installed-product readback 与 independent reconciliation 生效。在此以前 frozen marker
 只是 publication target。生效后先返回 CONTROL LOOP；不得自动开始 persistence、real parser / AST、Parse/Fact
 fulfillment、public carrier、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+### R1 Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布（条件状态）
+
+文档 211 的 publication PR #231 original Public CI `36342051676` attempt 1 为 11/11 SUCCESS，并以 ordinary
+merge `main@fd5628123e5460de21039c81dc7f9e9ed7ae9772` 合入。该 exact main 的 Browser Smoke
+`36343474807` attempt 1 为 1/1 SUCCESS；Public CI `36343474761` attempt 1 则在 Python 3.10 `-O`
+Review Attention 正式失败。
+
+失败测试 `test_d_004_failed_assignment_validation_consumes_the_claim` 在约 `10.085s` 后跨过 sealed
+`wall_clock_ms = 10000`，从而在原计划的 assignment-validation world 前由 runtime 正确 fail closed 为
+`ADMISSION_BINDING_REJECTED`。该 observation 证明 test-support topology 把 semantic identity / ownership 测试
+耦合到 hosted-runner wall clock；它没有证明合同或 A–G runtime 错误。run `36343474761` 永久保持 FAILURE，
+文档 211 的 frozen target 没有生效。
+
+独立 PR #232 只让该 semantic suite 的 attempt-local test clock 固定在 admission 时刻；真实 `BudgetContext`、
+limits、attempt identity、one-shot claim、cancellation behavior 与 dedicated budget/runtime deadline tests 均保留。
+maintenance final bytes 的 triggering test 与 Slice-input module 在 Python 3.10 / 3.13、normal / `-O` 四格全部
+通过；related matrix 为 `182/182 × 4`，full Review Attention 为 `417/417 × 4`。
+
+PR #232 head `f7651732ea419865814bb9e755916795c4cc9fa1` 的 original Public CI `36349719735`
+attempt 1 为 11/11 SUCCESS。ordinary merge `main@df7f3d5a190d317a47c0fc1fb9405419e6b76828` 的 tree
+是 `7bcfa7788ee929e2b60b22246eac01cb977ac0cb`；该 exact main 的 Public CI `36351246640` attempt 1
+为 11/11 SUCCESS，Browser Smoke `36351246642` attempt 1 为 1/1 SUCCESS。
+
+[文档 212](212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)从该 qualified
+source state 以新 identity 重新发布文档 211 的同一条件化 target：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 target 必须由文档 212 自己的 final local docs/Schema/static gates、original PR checks、受保护合入、new
+exact-main 双门、README / 文档 212 / milestones fresh installed-product readback 与 independent reconciliation
+生效。在此以前 frozen marker 只是 publication target；生效后先返回 CONTROL LOOP，不自动授权 persistence、real
+parser / AST、Parse/Fact fulfillment、public carrier、shared receipt、ReviewSliceSet/Coverage、Evidence、publisher
+或 Bundle。
