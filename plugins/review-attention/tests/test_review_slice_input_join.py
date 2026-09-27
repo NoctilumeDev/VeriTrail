@@ -116,6 +116,17 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
 
         def admit(inputs):
             context = original_admit(inputs)
+            admitted_at = context.started_at_monotonic
+            # This suite falsifies Slice identity, ownership, and one-shot
+            # continuation semantics. Deadline transitions have their own
+            # budget/runtime tests; holding this attempt-local test clock at
+            # admission prevents hosted-runner scheduling from silently
+            # turning an unrelated semantic test into a wall-clock test.
+            object.__setattr__(
+                context,
+                "_clock",
+                lambda admitted_at=admitted_at: admitted_at,
+            )
             if capture_context is not None:
                 capture_context.append(context)
             return context
@@ -443,6 +454,14 @@ class ReviewSliceInputJoinTests(unittest.TestCase):
             "slice-input-a-stopped", capture_context=contexts
         )
         self.assertEqual(len(contexts), 1)
+        self.assertEqual(
+            contexts[0]._clock(),
+            contexts[0].started_at_monotonic,
+        )
+        self.assertLess(
+            contexts[0]._clock(),
+            contexts[0].execution_deadline_monotonic,
+        )
         authority = (
             slice_input.admit_relation_set_for_slice_input_private_closed_proof(
                 qualified
