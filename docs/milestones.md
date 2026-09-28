@@ -3011,8 +3011,9 @@ UTF-8/LF/final-LF、fences、marker、audit hashes 与 `git diff --check` 全部
 R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
 R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
 R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
-R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDIT_CANDIDATE
-R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED
+R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
 R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
@@ -3024,3 +3025,49 @@ Smoke、fresh README / doc216 / milestones installed-product readback 与 indepe
 qualified history。它把合法顺序收紧为先冻结 application-owned admitted Parse product/reconciliation semantics，
 再由后继 correction contract 定义 Provider consumer binding；不授权 parser/AST/product carrier/new wire/Fact、
 persistence、public Artifact 或 Coverage。最后门闭合后仍须返回 CONTROL LOOP。
+
+### R1 Parse fulfillment 最小合同 0.1（条件状态）
+
+文档 216 候选 PR #239 的 exact coordinates 为：
+
+```text
+base  = 34b58014b1eadd0b30bc4deb73ab2cc97e2ed675
+head  = ca90402e23e7dcf07f7d085882843eba19dd5dde
+merge = 63daada4157e0068bb2a1333953f821f56f61894
+tree  = 4ff61ed57f6b88c8dfbe4d1adb53c9652eab106a
+```
+
+original Public CI `36414215832` attempt 1 为 11/11 SUCCESS；new exact-main Public CI `36416676877`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `36416676883` attempt 1 为 1/1 SUCCESS。README、doc216 与
+milestones 三份 fresh installed-product readback 均为 `COMPLETE / PASS`，independent reconciliation manifest 为：
+
+```text
+sha256_json  = 9b896e85c11efbd90cb4a19c8a12674652de568e80e7ed9619f80aba95649dc2
+sha256_bytes = fd04d68753dff54f1b6f6f64d854cf3eb0267ac5b0bc5697286dd31544e22d5
+```
+
+因此文档 216 已成为 `PRECONTRACT_AUDITED` qualified history。托管 worktree root、template literal、PATH Python、
+PowerShell marker counter 与 Playwright shutdown warning 均继续保留为 setup/preflight history，没有被后继 PASS
+删除，也没有进入正式 Plan/session/Evidence。
+
+[文档 217](217-r1-parse-fulfillment-contract.md)据此只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
+R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
+R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED
+R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该候选冻结 Parse denominator、`r1-python-parse/0.1` 的 CPython 3.10.6 reference semantics、grammar-only terminal、
+semantic/lifecycle/reconciliation 分离、complete closure、application-owned admitted product/product-set identity 与
+same-attempt immutable/copy-owned access。product carrier/digest/persistence、Fact Provider product-use proof、
+zero-accepted scheduling、new wire、Fact fulfillment 与 Coverage 没有取得 authority。候选必须完成自己的原始门、
+受保护合入、new exact-main 双门、fresh readback 与 independent reconciliation；独立 freeze publication 的同等级门
+全部成立以前，不能升级为 `CONTRACT_FROZEN`，也不能开始 runtime。

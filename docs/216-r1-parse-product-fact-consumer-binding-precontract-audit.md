@@ -1,6 +1,8 @@
 # R1 Parse product → Fact consumer binding 最小前合同审计
 
-> 状态：`AUDIT_CANDIDATE / DOCS_ONLY / NO_CONTRACT_AUTHORITY / NO_RUNTIME`
+> 状态：`R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED /
+> R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE /
+> R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED / NO_RUNTIME`
 >
 > 基线：`main@34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`
 >
@@ -425,8 +427,9 @@ independent reconciliation，也不授予 contract/runtime authority。
 R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
 R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
 R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
-R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDIT_CANDIDATE
-R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED
+R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
 R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
@@ -462,3 +465,43 @@ Provider output 与 CI 都只作 witness，不拥有 contract authority。
 
 若后继反例证明 product identity、product-use enforcement 或 zero-accepted scheduling 仍缺更早 authority seam，只重开
 被击穿的最小边界；不得用本审计的四格一致性或绿色门禁替代该判断。
+
+## 19. candidate qualification closure
+
+上述 candidate gate 已从本文最终字节独立闭合。PR #239 的 exact coordinates 为：
+
+```text
+base  = 34b58014b1eadd0b30bc4deb73ab2cc97e2ed675
+head  = ca90402e23e7dcf07f7d085882843eba19dd5dde
+merge = 63daada4157e0068bb2a1333953f821f56f61894
+tree  = 4ff61ed57f6b88c8dfbe4d1adb53c9652eab106a
+```
+
+PR original Public CI `36414215832` attempt 1 为 11/11 SUCCESS；new exact main 的 Public CI
+`36416676877` attempt 1 为 11/11 SUCCESS，Browser Smoke `36416676883` attempt 1 为 1/1 SUCCESS。
+
+README、本文与 milestones 使用三个 fresh Plan/session 完成 anonymous installed-product readback：
+
+| Path | Plan | Session | Result |
+| --- | --- | --- | --- |
+| README | `r1-pfc-binding-readme` | `github-paired-b20148f0cbda4f2fb9c67aedac10334f` | `COMPLETE / PASS` |
+| doc216 | `r1-pfc-binding-doc216` | `github-paired-da6fe8913e3b4c78b800b8ad4e2b4066` | `COMPLETE / PASS` |
+| milestones | `r1-pfc-binding-milestones` | `github-paired-37b13845823947228e8c345f754f453f` | `COMPLETE / PASS` |
+
+三份 observation 均为 exact-SHA HTTP 200、三样本稳定、唯一 marker、零 active stream / cleanup error / conflict。
+README、AGENTS、本文与 milestones 四份 public raw bytes 与 exact Git blobs 相等。独立 verifier 重新核对 original PR、
+merge/tree、exact-main gates、Plan-before-observation、Core fields 与 source bytes，final manifest 为：
+
+```text
+sha256_json  = 9b896e85c11efbd90cb4a19c8a12674652de568e80e7ed9619f80aba95649dc2
+sha256_bytes = fd04d68753dff54f1b6f6f64d854cf3eb0267ac5b0bc5697286dd31544e22d5
+```
+
+readback preparation 期间，托管 worktree 因聊天根目录不是 Git repository 而拒绝、第一版脚本误判 template literal、
+PATH `python` 误建 3.10.6 venv、两个 PowerShell marker counter 错误与一次 Playwright shutdown warning 均保留为
+setup/preflight history；它们没有创建或改写正式 Plan/session/Evidence。最终三份 fresh readback 与 reconciliation 使用
+明确的 CPython 3.13.13 venv，旧 setup outputs 没有被复用。
+
+因此本文现在是 `PRECONTRACT_AUDITED` qualified history，只授权
+[Parse fulfillment 最小合同 0.1](217-r1-parse-fulfillment-contract.md)的 docs-only candidate。它不授权 parser、AST
+carrier、Fact correction、persistence、public Artifact 或 Coverage。

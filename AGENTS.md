@@ -2223,8 +2223,9 @@ relative links、UTF-8/LF/final-LF、fences、marker、audit hashes 与 `git dif
 R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
 R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
 R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
-R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDIT_CANDIDATE
-R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED
+R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
 R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
@@ -2236,3 +2237,38 @@ fresh README / doc216 / milestones installed-product readback 与 independent re
 history。它不冻结 Parse product、consumer correction 或 zero-accepted scheduling；最后门闭合后必须返回 CONTROL
 LOOP，最多重新判断 Parse minimal contract 是否仍是最小合法问题，不得直接实现 parser/AST/product/new wire/Fact、
 选择 persistence 或恢复 Coverage。
+
+## R1 Parse fulfillment 最小合同 0.1 候选
+
+文档 216 候选 PR #239 head `ca90402e23e7dcf07f7d085882843eba19dd5dde` 的 original Public CI
+`36414215832` attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 exact main 是
+`63daada4157e0068bb2a1333953f821f56f61894`，tree 为
+`4ff61ed57f6b88c8dfbe4d1adb53c9652eab106a`。该 exact main 的 Public CI `36416676877` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36416676883` attempt 1 为 1/1 SUCCESS。
+
+README、文档 216 与 milestones 使用三个 fresh Plan/session 取得 `COMPLETE / PASS`；四份 public raw bytes 与
+exact Git blobs 相等。独立 verifier 的 final manifest 为：
+
+```text
+sha256_json  = 9b896e85c11efbd90cb4a19c8a12674652de568e80e7ed9619f80aba95649dc2
+sha256_bytes = fd04d68753dff54f1b6f6f64d854cf3eb0267ac5b0bc5697286dd31544e22d5
+```
+
+因此 `R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED` 已成为 qualified history。重新执行 CONTROL
+LOOP 后，没有新反例击穿 Parse contract 的最小边界；[文档 217](docs/217-r1-parse-fulfillment-contract.md)只冻结：
+
+```text
+exact Language Support ELIGIBLE denominator
+one shared Parse obligation per subject / parent attempt
+r1-python-parse/0.1 with CPython 3.10.6 reference semantics
+grammar-only ACCEPTED(product) / REJECTED(PARSE_ERROR)
+semantic result / execution lifecycle / reconciliation separation
+complete denominator closure and admitted product-set identity
+same-attempt immutable/copy-owned product access
+semantic value != live continuation authority
+```
+
+carrier、digest algorithm、persistence、Fact product-use enforcement、zero-accepted scheduling、new wire、Fact
+fulfillment 与 Coverage 仍是 non-decision / not authorized。本文是 docs-only contract candidate；它必须完成自己的
+original PR、受保护合入、new exact-main gates、fresh public readback 与 independent reconciliation，再由独立 freeze
+publication 取得同等级资格，才可成为 `CONTRACT_FROZEN`。在此以前 runtime 继续 `NOT_STARTED`。
