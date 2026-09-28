@@ -3176,3 +3176,61 @@ installed-product readback 与 independent reconciliation 全部成立以前，a
 先返回 CONTROL LOOP，并以独立 docs-only publication 明确发布 implementation authorization；该 publication 自身门
 闭合以前不得开始 runtime。Fact consumer correction、persistence、public carrier/Schema、shared ledger、Fact
 fulfillment 与 Coverage 继续未授权。
+
+### R1 Parse fulfillment private implementation 实现授权发布（条件状态）
+
+文档 219 候选 PR #242 的 exact coordinates 为：
+
+```text
+base  = bb912680d55ca8c96df4d5b9ded88187bbaf42ef
+head  = ed3cfa2871df864e84068cc32f52081863de8878
+merge = 23f9825e61791a78056d5154e4dfd3626a1167b1
+tree  = ae1496ba1978ddb40b3a74e414b4e6f58f9bddd5
+```
+
+original Public CI `36440677161` attempt 1 为 11/11 SUCCESS；new exact-main Public CI `36443544885`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `36443544713` attempt 1 为 1/1 SUCCESS。README、doc219 与
+milestones 三份 fresh anonymous installed-product readback 均为 P1/P2 COMPLETE 与 Core PASS；AGENTS、README、
+doc217、doc218、doc219、milestones 六份 raw source bytes 等于 exact Git blobs。independent reconciliation
+manifest 为：
+
+```text
+sha256_json  = decd28d53dc3bfb7af0d9033e1e4ca1feadaa7e4daf300df29babe65bcb07ff7
+sha256_bytes = 6624609f0b1ee6c7e78f7200f785a39fb69462f161bcefaeda70a10a480fca2f
+```
+
+PR 与 exact-main 轮询期间的两个 PR API EOF、两个 exact-main API EOF、一次 direct GitHub connect timeout 与
+一次 proxy TLS handshake error 均是无 mutation 的 read-only network observations；它们没有改变 original run
+identity。installed-environment preflight 在 exit 0 后产生的 Playwright async shutdown `TargetClosedError`
+也在正式 Plan/session 前保留为 nonqualifying history。后继 PASS 没有删除或重新解释这些观察。
+
+因此文档 219 已成为 `R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED` qualified history。
+重新绑定 `main@23f9825e61791a78056d5154e4dfd3626a1167b1` 并执行 CONTROL LOOP 后，没有新反例击穿
+exact-runtime boundary、private canonical product、application-owned complete reconciliation、same-attempt
+continuation 或 current Fact-wire stop line。
+
+[文档 220](220-r1-parse-private-implementation-authorization-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+授权范围严格等于 doc219 A–H：exact input/classification/blob history revalidation、exact ELIGIBLE denominator、
+explicit CPython 3.10.6 runtime capability、per-subject one-shot claims、contained worker/private canonical
+product、semantic/lifecycle separation、complete reconciliation、application-owned product/product-set identity 与
+attempt-bound one-shot continuation。current Fact request/projection/wire、Provider scheduling/product-use enforcement、
+persistence Route B、public Schema/carrier、runtime distribution/attestation、Fact fulfillment、shared ledger、
+ReviewSliceSet/Coverage、Evidence/publisher/Bundle、CLI/Workbench/Core 与其他顶层轨继续未授权。
+
+本文只允许 AGENTS、README、milestones 与新增 doc220 四个文档文件。final-byte local gates、original PR checks、
+受保护合入、new exact-main Public CI / Browser Smoke、README / doc219 / doc220 / milestones fresh anonymous
+installed-product readback 与 independent reconciliation 全部成立以前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是
+publication target，runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后必须重新回到 CONTROL LOOP，
+再次确认 A–H 仍是最小合法 implementation；绿色 publication 不自动创建代码施工事实。

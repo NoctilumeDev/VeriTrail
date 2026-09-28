@@ -2349,3 +2349,51 @@ README / doc219 / milestones fresh anonymous installed-product readback 与 inde
 qualified history。随后必须先返回 CONTROL LOOP，并通过独立 docs-only implementation authorization publication；
 该 publication 自己的门闭合前，不得创建 parser runtime branch。即使获得授权，下一 implementation 也最多覆盖
 doc219 A–H；不得修改 current Fact wire、选择 persistence、启动 Fact fulfillment 或 Coverage。
+
+## R1 Parse fulfillment private implementation 实现授权发布（条件状态）
+
+文档 219 候选 PR #242 head `ed3cfa2871df864e84068cc32f52081863de8878` 的 original Public CI
+`36440677161` attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 exact main 为
+`23f9825e61791a78056d5154e4dfd3626a1167b1`，tree 为
+`ae1496ba1978ddb40b3a74e414b4e6f58f9bddd5`。该 exact main 的 Public CI `36443544885`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `36443544713` attempt 1 为 1/1 SUCCESS。
+
+README、doc219 与 milestones 使用三个 fresh Plan/session 取得 P1/P2 COMPLETE 与 Core PASS；AGENTS、README、
+doc217、doc218、doc219、milestones 六份匿名 raw source bytes 等于 exact Git blobs。independent reconciliation
+manifest 为：
+
+```text
+sha256_json  = decd28d53dc3bfb7af0d9033e1e4ca1feadaa7e4daf300df29babe65bcb07ff7
+sha256_bytes = 6624609f0b1ee6c7e78f7200f785a39fb69462f161bcefaeda70a10a480fca2f
+```
+
+资格轮询期间的六次只读网络错误与 installed-environment preflight 的 Playwright shutdown
+`TargetClosedError` 均以各自 nonqualifying identity 保留；它们没有修改 candidate/remote run，也没有启动正式
+readback。由此 `R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED` 已成为 qualified history。
+
+重新执行 CONTROL LOOP 后，没有新证据击穿 exact CPython 3.10.6 reference runtime、private canonical product、
+application-owned reconciliation 或 current Fact-wire stop line。[文档 220](docs/220-r1-parse-private-implementation-authorization-publication.md)
+因此只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+`PRIVATE_IMPLEMENTATION_ALLOWED` 只授权 doc219 A–H 的 private implementation：exact input/classification/history
+重验、ELIGIBLE denominator、显式 exact 3.10.6 runtime、per-subject one-shot child、contained worker/private
+canonical product、semantic/lifecycle 分离、完整 reconciliation、application-owned product set 与 same-attempt
+one-shot continuation。它不授权 current Fact projection/request/wire、Provider scheduling、persistence、public
+Schema/carrier、Fact fulfillment、shared ledger、Coverage、publisher、Bundle、CLI 或其他顶层轨。
+
+doc220 只允许 AGENTS、README、milestones 与新增 publication 四个文档文件。其 final-byte local gates、original PR、
+受保护合入、new exact-main Public CI / Browser Smoke、fresh README / doc219 / doc220 / milestones installed-product
+readback 与 independent reconciliation 全部成立以前，target marker 只是条件目标，runtime 继续
+`NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后仍须重新绑定新 exact main 并返回 CONTROL LOOP；不能按文档编号
+自动开始实现。
