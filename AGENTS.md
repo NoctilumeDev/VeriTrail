@@ -2389,3 +2389,40 @@ milestones 与自身四个文档文件；runtime、tests、workflow、Starter、
 Smoke、README / doc221 / milestones fresh installed-product readback 与 independent reconciliation 全部成立后，
 只获得 qualified problem boundary。后继仍须先返回 CONTROL LOOP，只能重新审计最小 correction /
 release-consumer precontract；不得直接重发 Parse implementation authorization 或提交 current-source 映射。
+
+## M10 Browser 主机 socket 分类修正与发行消费最小前合同审计（条件状态）
+
+doc221 已经 PR #244 original Public CI `36454917831` attempt 1 的 11/11、ordinary merge
+`main@02ba60fd4f2e78f273485ba84110540cef209509`、new exact-main Public CI `36457785860` attempt 1 的
+11/11 与 Browser Smoke `36457786007` attempt 1 的 1/1，以及 README / doc221 / milestones 三份 fresh
+installed-product PASS 和 independent reconciliation 成为 qualified problem boundary。final manifest 为：
+
+```text
+sha256_json  = 0333b6ddf4489fcd2d4ac8d64ba47b122f76106dc9c2b10e57d805a2f8997a74
+sha256_bytes = 1f45742e782e15ec95306b5a3619d11127bc61f42d7012babe9820aa1e46eede
+```
+
+[文档 222](docs/222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+据此只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_PRECONTRACT_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+该审计把 Browser classification authority、Starter compatibility authority、workflow consumer selection 与每个
+Core distribution 自己的发行资格分开。仓库外诊断证明：从精确 v0.12.2 release 谱系加入窄映射并构建的
+Core 0.12.3 wheel，可由 SHA-256
+`ce6e9ea0730adc891aba97f8148fdb861fffdd5164989c980b5cbbaaa950771f` 的公开 Starter 0.2.0 wheel
+接受，并完成真实 PASS/FAIL、Catalog、Workbench 与清理链；acceptance 摘要 SHA-256 为
+`570a853ac5f6b544e8d48168afb533a22cce739f7b39dcf94b39701dbe37faa6`。全部结果仍是
+`DIAGNOSTIC_ONLY_NON_QUALIFYING`，没有 candidate、tag、Release 或 public 0.12.3。
+
+0.12.3 不得从 current main 构建，必须来自 exact v0.12.2 谱系上的受治理 maintenance coordinate；current
+0.13 source correction、public 0.12.3 repair 与任何 future public 0.13.x repair claim 都必须独立取得资格。
+doc222 只允许 AGENTS、README、milestones 与自身四个文档文件。它自己的 final-byte local gates、original PR、
+受保护合入、new exact-main 双门、fresh README / doc222 / milestones installed-product readback 与 independent
+reconciliation 全部闭合后，只授权起草最小 correction / release-consumer contract。runtime、tests、workflow、
+version、maintenance branch、ruleset、tag、Release、assets 与 Parse authorization 仍未开始。

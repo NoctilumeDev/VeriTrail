@@ -3231,3 +3231,38 @@ exact-main 双门、fresh README / doc221 / milestones installed-product readbac
 成立以前，audit 不能升级为 qualified history。闭合以后仍须返回 CONTROL LOOP，仅允许重新审计最小
 classification correction / release-consumer precontract；不得修改 runtime、tests、workflow、Starter、timeout、retry、
 tag 或 Release，也不得重发 Parse implementation authorization。
+
+## M10 Browser 主机 socket 分类修正与发行消费最小前合同审计（条件状态）
+
+doc221 经 PR #244 original Public CI `36454917831` attempt 1 的 11/11、ordinary merge
+`main@02ba60fd4f2e78f273485ba84110540cef209509`、new exact-main Public CI `36457785860` attempt 1 的
+11/11 与 Browser Smoke `36457786007` attempt 1 的 1/1，以及 README / doc221 / milestones fresh
+installed-product PASS 与 independent reconciliation，已经成为 qualified problem boundary。final manifest 为：
+
+```text
+sha256_json  = 0333b6ddf4489fcd2d4ac8d64ba47b122f76106dc9c2b10e57d805a2f8997a74
+sha256_bytes = 1f45742e782e15ec95306b5a3619d11127bc61f42d7012babe9820aa1e46eede
+```
+
+[文档 222](222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_PRECONTRACT_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+审计证明最小 required-lane 候选是 exact v0.12.2 谱系上的新 Core 0.12.3 maintenance release，而不是从
+current main 重包装 0.13 能力，也不是修改不可移动 v0.12.2 asset。诊断 Core 0.12.3 wheel 已由 unchanged public
+Starter 0.2.0 wheel 完成 compatibility、真实 PASS/FAIL、Catalog、Workbench 与清理链；acceptance SHA-256 为
+`570a853ac5f6b544e8d48168afb533a22cce739f7b39dcf94b39701dbe37faa6`。该观察仍是
+`DIAGNOSTIC_ONLY_NON_QUALIFYING`，没有 release candidate、tag、Release 或 public 0.12.3。
+
+current 0.13 source correction、历史谱系 backport、public 0.12.3 发行、required lane migration 与任何 future
+public 0.13.x repair claim 必须各自绑定自己的 exact coordinate 和资格链。doc222 的 final-byte local gates、
+original PR、受保护合入、new exact-main 双门、fresh README / doc222 / milestones installed-product readback 与
+independent reconciliation 全部成立后，才可成为 qualified precontract audit；随后仍须返回 CONTROL LOOP。
+本文不授权 runtime、tests、workflow、version、maintenance branch、ruleset、tag、Release、assets 或 Parse
+implementation authorization。
