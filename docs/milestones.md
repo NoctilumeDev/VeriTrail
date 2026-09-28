@@ -3071,3 +3071,52 @@ same-attempt immutable/copy-owned access。product carrier/digest/persistence、
 zero-accepted scheduling、new wire、Fact fulfillment 与 Coverage 没有取得 authority。候选必须完成自己的原始门、
 受保护合入、new exact-main 双门、fresh readback 与 independent reconciliation；独立 freeze publication 的同等级门
 全部成立以前，不能升级为 `CONTRACT_FROZEN`，也不能开始 runtime。
+
+
+### R1 Parse fulfillment 最小合同 0.1 冻结发布（条件状态）
+
+文档 217 候选 PR #240 的 exact coordinates 为：
+
+```text
+base  = 63daada4157e0068bb2a1333953f821f56f61894
+head  = cf26f4224ef17549d5e086bfcd599de3163358d4
+merge = 446604ffc437ff710faf524c1634839dc1a0ddd7
+tree  = aa9099f6c4667c39c7493743245a523ca9626351
+```
+
+original Public CI `36422575750` attempt 1 为 11/11 SUCCESS；new exact-main Public CI `36425303909`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `36425303740` attempt 1 为 1/1 SUCCESS。README 第一次正式
+readback 已保存 sealed Plan `r1-parse-contract-readme` 与 session
+`github-paired-9f6eba497a094517b190d2ad5c9a1d18`，但 P1 明确返回匿名 API `HTTP 403 /
+COLLECTION_BUDGET_EXHAUSTED / remaining 0`；P2 同 session 为 COMPLETE。该观察保持
+`ERROR / NON_QUALIFYING`，没有 handoff 或 Core report，也没有被后继成功覆盖。
+
+reset 后 README #2、doc217 与 milestones 使用三个 fresh Plan/session 取得 exact-SHA HTTP 200、P1/P2 COMPLETE、
+三样本稳定、唯一 marker、零 conflict / coverage reason / cleanup error / active stream 与 Core PASS。五份 public
+raw bytes 等于 exact Git blobs。独立 verifier 在 normal / `-O` 下得到相同 canonical manifest：
+
+```text
+sha256_json  = f76d687ab15a06a5e20172429176774c2c65ecc82616b2628dfcf043bcb3a292
+sha256_bytes = 78bddb62cf980afb79fca85d8cd201b6fda3bca6e7ca426bb73280da51e6d76b
+```
+
+由此 doc217 成为 qualified contract candidate。setup history 继续保留 installed-environment preflight 的 Playwright
+shutdown warning、一次漏注入 command-local proxy 的 `git ls-remote` DNS failure，以及复用 worktree clean checker
+误把 PowerShell `$null -ne ''` 当作 dirty；三者都没有创建或改变产品 observation。正式 README 首败另以自己的
+Plan/session/Evidence 身份保留，不能归入 setup。
+
+[文档 218](218-r1-parse-fulfillment-contract-freeze-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 218 自己的 original PR、受保护合入、new exact-main Public CI / Browser Smoke、README / doc217 / doc218 /
+milestones fresh installed-product readback 与 independent reconciliation 全部成立以前，frozen target 不生效，runtime
+继续 `NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后仍须返回 CONTROL LOOP；本文不选择 product carrier、digest、
+persistence，不启动 parser/AST、Fact consumer correction、new wire、Fact fulfillment、Coverage 或其他顶层轨。

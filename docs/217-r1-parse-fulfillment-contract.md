@@ -1,6 +1,6 @@
 # R1 Parse fulfillment 最小合同 0.1
 
-> 状态：`R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE /
+> 状态目标（仅[独立冻结发布](218-r1-parse-fulfillment-contract-freeze-publication.md)最后门闭合后生效）：`R1_PARSE_FULFILLMENT_CONTRACT_FROZEN /
 > R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED / DOCS_ONLY / NO_RUNTIME`
 >
 > 候选基线：`main@63daada4157e0068bb2a1333953f821f56f61894`
@@ -525,7 +525,8 @@ independent reconciliation 或独立 freeze publication，也不授予 runtime a
 
 ## 16. candidate freeze gates
 
-本合同只有在以下链条完整成立后，才有资格经独立 freeze publication 发布为
+本节保留合同候选的冻结门。[独立冻结发布](218-r1-parse-fulfillment-contract-freeze-publication.md)记录候选资格与
+发布目标；只有以下链条完整成立后，合同状态才可生效为
 `R1_PARSE_FULFILLMENT_CONTRACT_FROZEN`：
 
 1. 文档 213–216 都已经形成 qualified history，且其 authority claim 没有被扩大或推翻；
