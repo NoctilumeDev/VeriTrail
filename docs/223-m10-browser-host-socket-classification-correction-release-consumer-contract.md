@@ -3,7 +3,7 @@
 日期：2026-09-29
 
 > 当前条件状态：
-> `M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_CANDIDATE /
+> `M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_FROZEN /
 > M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_IMPLEMENTATION_NOT_STARTED /
 > CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED /
 > R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED /
@@ -373,25 +373,34 @@ CONTROL LOOP
 前一阶段未闭合，后一阶段不得开工。各阶段只继承明确列出的合格 source fact，不继承 attempt、continuation、
 release 或 observation authority。
 
-## 13. 本候选停止线与资格链
+## 13. 合同冻结发布状态
 
-本文只条件化发布：
+本文的 docs-only candidate 已经完成 PR #246 original Public CI `36473865925` attempt 1 的 11/11、ordinary
+merge `main@5703ac4126e9645569b4631b4cc359ebca70e6d9`、new exact-main Public CI `36476517678`
+attempt 1 的 11/11 与 Browser Smoke `36476517518` attempt 1 的 1/1。README、本文与 milestones 三份
+fresh anonymous installed-product readback 均为 `COMPLETED / PASS`；七份 public raw bytes 等于 exact Git
+blobs，independent reconciliation manifest 为：
 
 ```text
-M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_CANDIDATE
+sha256_json  = 37c1fb9620a4d1524188903b9ee34fb3f293a96a9847764ffc605ece2fb9f7b0
+sha256_bytes = 6b38ee7a7931d60b4a7880652db8d7f851e8efaff6b96c8377fbc4fbd8be4d6c
+```
+
+因此 candidate source 已取得资格。[文档 224](224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
+只条件化发布以下目标：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_FROZEN
 M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_IMPLEMENTATION_NOT_STARTED
 CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
 R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
 ```
 
-候选只能修改 AGENTS、README、milestones 与本文四个文档文件。它必须完成 final-byte local gates、original
-PR required checks、受保护 main 合入、new exact-main Public CI / Browser Smoke、fresh README / doc223 /
-milestones installed-product readback 与 independent reconciliation，才可成为 qualified contract candidate。
-
-qualified candidate 仍不是 frozen contract。它必须再经过独立 docs-only freeze publication、该 publication
-自己的 original PR / merge / exact-main 双门与 fresh final readback，目标状态才可生效。冻结以前不得创建
-`core-0.12-maintenance`、ruleset、runtime patch、version、tag、Release 或 workflow migration。
+文档 224 自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README /
+doc223 / doc224 / milestones installed-product readback 与 independent reconciliation 全部闭合以前，当前事实仍是
+qualified contract candidate；写出 frozen marker 不替代最后门。冻结以前不得创建 `core-0.12-maintenance`、
+ruleset、runtime patch、version、tag、Release 或 workflow migration。
 
 ## 14. 当前 final-byte 本地证据
 

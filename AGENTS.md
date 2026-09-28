@@ -2462,3 +2462,32 @@ PR、受保护 main 合入、new exact-main 双门、fresh README / doc223 / mil
 independent reconciliation 全部闭合后，只成为 qualified contract candidate；仍须独立 freeze publication 才能
 生效。冻结以前不得创建 maintenance branch、ruleset、runtime patch、version、tag、Release、asset 或 workflow
 migration，也不得重发 Parse implementation authorization。
+
+## M10 Browser 主机 socket 分类修正与发行消费合同冻结发布（条件状态）
+
+doc223 已经 PR #246 original Public CI `36473865925` attempt 1 的 11/11、ordinary merge
+`main@5703ac4126e9645569b4631b4cc359ebca70e6d9`、new exact-main Public CI `36476517678`
+attempt 1 的 11/11 与 Browser Smoke `36476517518` attempt 1 的 1/1，以及 README / doc223 /
+milestones 三份 fresh installed-product PASS、七份 raw public bytes 与 independent reconciliation 成为
+qualified contract candidate。manifest 为：
+
+```text
+sha256_json  = 37c1fb9620a4d1524188903b9ee34fb3f293a96a9847764ffc605ece2fb9f7b0
+sha256_bytes = 6b38ee7a7931d60b4a7880652db8d7f851e8efaff6b96c8377fbc4fbd8be4d6c
+```
+
+[文档 224](docs/224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
+只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_FROZEN
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_IMPLEMENTATION_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+doc224 只允许 AGENTS、README、doc223、milestones 与自身五个文档文件。它自己的 final-byte local gates、
+original PR、受保护 main 合入、new exact-main 双门、fresh README / doc223 / doc224 / milestones installed-product
+readback 与 independent reconciliation 全部闭合后，frozen target 才生效。最后门以前不得开始 runtime、
+maintenance branch、ruleset、version、tag、Release、asset、workflow migration 或 Parse implementation。
