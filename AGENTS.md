@@ -2426,3 +2426,39 @@ doc222 只允许 AGENTS、README、milestones 与自身四个文档文件。它�
 受保护合入、new exact-main 双门、fresh README / doc222 / milestones installed-product readback 与 independent
 reconciliation 全部闭合后，只授权起草最小 correction / release-consumer contract。runtime、tests、workflow、
 version、maintenance branch、ruleset、tag、Release、assets 与 Parse authorization 仍未开始。
+
+## M10 Browser 主机 socket 分类修正与发行消费合同（条件状态）
+
+doc222 经 PR #245 original Public CI `36466022463` attempt 1 的 11/11、ordinary merge
+`main@fc2be4009989c3ddc0ff71fc5f0a54c02290751a`、new exact-main Public CI `36469016262`
+attempt 1 的 11/11 与 Browser Smoke `36469016158` attempt 1 的 1/1，以及 README / doc222 /
+milestones 三份 fresh installed-product PASS 与 independent reconciliation，已经成为 qualified precontract audit。
+final manifest 为：
+
+```text
+sha256_json  = 0ec68ad5805535e9a06676eb403f4a6b3298765258d1bfcde5f2b8f96c3bf1dd
+sha256_bytes = 8a5506d1f79b96fdd17486aa7919575677892a0c7a20d01ecbb9dde6d0721b05
+```
+
+[文档 223](docs/223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
+只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_CANDIDATE
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_IMPLEMENTATION_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+合同候选把后继工作串行为 current-main 窄修正、`core-0.12-maintenance` 两阶段 ruleset/bootstrap、精确
+v0.12.2 谱系上的 0.12.3 backport 与 non-Latest create-new publication、公开产品读回，以及 main required
+Starter lane 的单独消费迁移。phase-one ruleset 只服务 workflow-enablement PR；maintenance exact-tip 双门与
+phase-two strict required checks 成立以前，任何 runtime/version backport 均不得开始。public v0.13.x 是独立
+发行义务，不是重新审查 Parse authorization 的前置门。
+
+doc223 只允许 AGENTS、README、milestones 与自身四个文档文件。它自己的 final-byte local gates、original
+PR、受保护 main 合入、new exact-main 双门、fresh README / doc223 / milestones installed-product readback 与
+independent reconciliation 全部闭合后，只成为 qualified contract candidate；仍须独立 freeze publication 才能
+生效。冻结以前不得创建 maintenance branch、ruleset、runtime patch、version、tag、Release、asset 或 workflow
+migration，也不得重发 Parse implementation authorization。

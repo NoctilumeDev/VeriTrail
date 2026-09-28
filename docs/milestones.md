@@ -3266,3 +3266,37 @@ original PR、受保护合入、new exact-main 双门、fresh README / doc222 / 
 independent reconciliation 全部成立后，才可成为 qualified precontract audit；随后仍须返回 CONTROL LOOP。
 本文不授权 runtime、tests、workflow、version、maintenance branch、ruleset、tag、Release、assets 或 Parse
 implementation authorization。
+
+## M10 Browser 主机 socket 分类修正与发行消费合同（条件状态）
+
+doc222 已经 PR #245 original Public CI `36466022463` attempt 1 的 11/11、ordinary merge
+`main@fc2be4009989c3ddc0ff71fc5f0a54c02290751a`、new exact-main Public CI `36469016262`
+attempt 1 的 11/11 与 Browser Smoke `36469016158` attempt 1 的 1/1，以及 README / doc222 /
+milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified precontract audit。
+最终 manifest 为：
+
+```text
+sha256_json  = 0ec68ad5805535e9a06676eb403f4a6b3298765258d1bfcde5f2b8f96c3bf1dd
+sha256_bytes = 8a5506d1f79b96fdd17486aa7919575677892a0c7a20d01ecbb9dde6d0721b05
+```
+
+[文档 223](223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
+只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_RELEASE_CONSUMER_CONTRACT_CANDIDATE
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CORRECTION_IMPLEMENTATION_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+合同冻结精确 `net::ERR_NO_BUFFER_SPACE` 的 raw Network fact 与 collector classification 分离，要求 current-main
+correction 与 v0.12.2-line backport 分别取得资格，并把 `core-0.12-maintenance` 的 workflow-only bootstrap、
+phase-two strict ruleset、0.12.3 non-Latest create-new publication、公开双 Python/Starter 产品读回与 main
+required-lane 消费迁移串行隔离。任何一步的 PASS 都不能继承另一 source/distribution 的 authority。
+
+doc223 仍是 candidate。final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh
+README / doc223 / milestones installed-product readback 与 independent reconciliation 闭合后，它才是 qualified
+contract candidate；独立 freeze publication 闭合以前，不创建 maintenance branch、ruleset、runtime、version、tag、
+Release、asset 或 workflow migration，也不重新授权 Parse implementation。
