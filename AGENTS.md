@@ -2309,3 +2309,43 @@ Public CI / Browser Smoke、README / doc217 / doc218 / milestones fresh anonymou
 reconciliation 全部成立后才生效。在此以前 current fact 仍为 contract candidate；不得开始 parser、AST、Parse
 product carrier、Fact consumer correction、persistence、Schema、publisher 或 Coverage。最后门闭合后必须返回
 CONTROL LOOP，重新判断 implementation feasibility / authorization 是否仍是最小合法问题，不能按文档编号自动施工。
+
+## R1 Parse fulfillment private implementation 可行性审计候选
+
+[文档 219](docs/219-r1-parse-private-implementation-feasibility-audit.md)从
+`main@bb912680d55ca8c96df4d5b9ded88187bbaf42ef` 重新执行 CONTROL LOOP。该 exact main 上文档 218 的
+冻结门已全部闭合，所以 `R1_PARSE_FULFILLMENT_CONTRACT_FROZEN` 是当前事实；实现仍为 `NOT_STARTED`。
+
+审计确认现有 budget/containment、exact Language Support classification 与 source-gate identity discipline 可以承载
+private Parse closure，但 parser authority 必须来自 controller 显式选择的 exact CPython 3.10.6 reference runtime。
+ambient `sys.executable`、PATH / `py -3.10` 搜索、descriptor 自报或 3.13 `feature_version=(3,10)` 都不能拥有
+`r1-python-parse/0.1` authority；reference runtime absence、worker failure、timeout、resource stop 与 malformed terminal
+只能形成 lifecycle/reconciliation non-success，不能伪装 `PARSE_ERROR`。
+
+仓库外 audit-only worker 将 exact 3.10.6 `ast.Module` 的全部 fields、present attributes、ordered lists 与显式 scalar
+encoding 投影为 private canonical copy-owned product。feasibility matrix 与真实 Windows execution-cell probe 在
+CPython 3.10.6 / 3.13.13、normal / `-O` 四格分别逐字节一致；同一 original `BudgetContext` 可顺序完成 accepted 与
+rejected 两个 subject。该 witness 只证明 bounded private implementation shape 可行，不证明全部 grammar、恶意
+runtime authenticity、public persistence 或 post-Parse Fact product-use boundary。
+
+当前条件状态为：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文还修正 README“系统家族与未来边界”中遗留的 precontract-candidate current summary；历史章节中的候选与失败
+身份不改。本文只允许 AGENTS、README、milestones 与新增 doc219 四个文档文件；runtime、tests、Schema、Profile、
+Policy、corpus、architecture assets、Provider 与 wire 必须保持原字节。
+
+候选必须完成 final-byte local gates、original PR checks、受保护合入、new exact-main Public CI / Browser Smoke、
+README / doc219 / milestones fresh anonymous installed-product readback 与 independent reconciliation，才能成为
+qualified history。随后必须先返回 CONTROL LOOP，并通过独立 docs-only implementation authorization publication；
+该 publication 自己的门闭合前，不得创建 parser runtime branch。即使获得授权，下一 implementation 也最多覆盖
+doc219 A–H；不得修改 current Fact wire、选择 persistence、启动 Fact fulfillment 或 Coverage。
