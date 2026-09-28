@@ -2017,3 +2017,59 @@ docs/Schema/static gates、original PR checks、受保护合入、new exact-main
 在此以前 frozen marker 仍只是 publication target。生效后也必须先返回 CONTROL LOOP；不得自动开始 real parser /
 AST、Parse terminal、Fact fulfillment、persistence、public carrier/Schema、shared receipt/ledger、ReviewSliceSet /
 Coverage、Evidence、publisher 或 Bundle。
+
+文档 212 的 publication PR #233 original Public CI `36353138086` attempt 1 已 11/11 SUCCESS；ordinary merge
+`main@0c82c55a521750698c969b26221bf776530aec16` 的 tree 为
+`5ca3bb0952360ec05c9c4a3ba1ee8e46cfe6843d`，exact-main Public CI `36354589236` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36354589265` attempt 1 为 1/1 SUCCESS。README、文档 212 与 milestones
+随后以互不复用的 Plan/session/output 完成 fresh installed-product observations 与 independent reconciliation。
+
+milestones 前两次正式 observations 的 product/Core 均为 `COMPLETED / PASS`，但 runner 在 Windows 长路径
+final-summary 写入阶段退出 1，因此两个 identity 永久保持 `ERROR / NON_QUALIFYING`；byte-preserving short-root
+copy 后，第三个 fresh identity 才取得 PASS。最终 manifest 为：
+
+```text
+sha256_json  = 0354060769104d5647c322838740fc64af0c8e96d333698bdef963345fd16e82
+sha256_bytes = 669c4af61877e8c9287a742bacb20b9dfc794ee0c30c4c0cc4f287ca6da00b08
+```
+
+因此 `R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN` 已成为事实；本地 checkout
+alignment 只是 workspace hygiene，不是新增资格门。
+
+## R1 Parse fulfillment authority 问题审计
+
+[文档 213](docs/213-r1-parse-fulfillment-authority-problem-audit.md)从上述 frozen exact main 重新进入 CONTROL LOOP。
+它只条件化发布：
+
+```text
+R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN
+R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_PRECONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+审计 paired world 保持 path、size、Policy/Profile、Provider set 与 controller 不变，只把 13-byte exact source 从
+`def ok():\n 0\n` 改为 `def broken(:\n`。两者分别由独立 Python 3.10 parse oracle 得到 `SUCCESS` 与
+`SYNTAX_ERROR`，但 current exact history 对二者都给出两次 ProviderRun `COMPLETED`、无 diagnostic、一个
+`MODULE` Fact、overall `COMPLETED` 与 normal continuation。closed Fact Provider 不调用 parser；descriptor 的
+`parser_id / parser_version` 只是 identity metadata。CPython 3.10.6 / 3.13.13 normal / `-O` 四格 report 均为
+4479 bytes，SHA-256 均为：
+
+```text
+a942cf2662706b35a75140c16d5332754e9665ef2ca937068101a60ae61c4ce4
+```
+
+因此 eligibility、exact request membership、Provider `COMPLETED`、Fact membership、downstream Relation parse
+或 normal continuation 都不能证明逐项 Parse fulfillment。本文只允许 problem-boundary audit；它不是
+precontract，不授权 parser/AST、Parse terminal enum/reason、Fact fulfillment、persistence、shared carrier、public
+Artifact/Schema、ReviewSliceSet/Coverage、Evidence、publisher 或 Bundle。
+
+文档 213 的 candidate 只有在自己的 final README / AGENTS / milestones / doc bytes、local docs/Schema/static
+gates、original PR checks、受保护合入、new exact-main Public CI / Browser Smoke、fresh README / doc213 /
+milestones installed-product readback 与 independent reconciliation 全部闭合后才生效。任一失败身份必须保留；
+闭合后仍须返回 CONTROL LOOP，重新判断 Parse fulfillment precontract audit 是否仍是最小合法问题。
