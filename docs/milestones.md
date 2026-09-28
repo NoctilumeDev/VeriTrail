@@ -2848,3 +2848,49 @@ checks、受保护合入、new exact-main Public CI / Browser Smoke、fresh READ
 readback 与 independent reconciliation 生效。本文不是 Parse precontract，不授权 parser/AST、Parse terminal、
 Fact fulfillment、persistence、shared carrier、public Artifact/Schema 或 Coverage。最后门闭合后仍须返回 CONTROL
 LOOP，重新判断 Parse fulfillment precontract audit 是否仍是最小合法问题。
+
+### R1 Parse fulfillment 最小合同前置审计（条件状态）
+
+文档 213 的 fresh candidate PR #236 head `db585367769d81a3152f600522d164506ab9bf7c`，original Public CI
+`36362377502` attempt 1 为 11/11 SUCCESS。ordinary merge 后的新 exact main 为
+`5d0769b8ce9d7823b5a095de3657531085d19e83`，tree 为
+`e58017d1fe67a7954486f39b216dc4267fa93d2e`；Public CI `36363900026` attempt 1 为 11/11 SUCCESS，
+Browser Smoke `36363899988` attempt 1 为 1/1 SUCCESS。
+
+README、文档 213 与 milestones 三份 fresh anonymous installed-product observations 均为 exact-SHA HTTP 200、
+三样本稳定、唯一 marker、`COMPLETE / PASS`。正式 Plan/session 之前的 Playwright shutdown warning 与误选 runner
+分别保留为 `SETUP-PREFLIGHT-001 / SETUP-RUNNER-001`，没有 product observation identity。独立 verifier 对
+original PR、merge parents/tree、exact-main gates、Plan-before-observation、Core fields 与四份 exact Git raw bytes
+重新核账，final manifest 为：
+
+```text
+sha256_json  = 44a1fe0ddc803ea9602882c653418cb94606b24518c264cb6b45ef69cb7e00ab
+sha256_bytes = faed852d3373b67e9e8367529ad2ab22d937959171cb598019cfcfce0458bc25
+```
+
+因此文档 213 的 problem boundary 已成为 qualified history。[文档 214](214-r1-parse-fulfillment-precontract-audit.md)
+从该 exact main 重新进入 CONTROL LOOP，并只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
+R1_PARSE_FULFILLMENT_PRECONTRACT_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+precontract audit 得到以下最小边界：Parse denominator 是 exact Language Support `ELIGIBLE` subjects；一个 exact
+subject 在一个 parent attempt 中只有一个共享 obligation；application 拥有 denominator validation 与
+reconciliation，parser 只产生 observation，Fact Provider 不得自证 Parse closure。ambient host
+`ast.parse(feature_version=(3,10))` 不等价于 patch-level CPython 3.10.6 parser authority，AST field shape 也会随
+宿主变化；grammar parse success 不承诺 compilation/scoping/execution validity。
+
+semantic result、execution lifecycle 与 missing/duplicate/cross-attempt reconciliation 必须正交。没有第二个
+frozen version discriminator 时，target parser reject 不得冒充 `UNSUPPORTED_SYNTAX_VERSION`。Fact consumer 必须
+消费同一个 admitted parse product 或可验证的 exact product identity；自行 reparse 是新 observation。
+
+本文仍不是合同，不授权 parser、AST carrier/normalization、terminal enum、receipt、Schema、Fact fulfillment、
+persistence、shared carrier、public Artifact 或 Coverage。文档 214 的 candidate 必须经过自己的 final local
+gates、original PR、受保护合入、new exact-main 双门、README / doc214 / milestones fresh readback 与 independent
+reconciliation 才能成为 `PRECONTRACT_AUDITED` qualified history；随后仍须返回 CONTROL LOOP。
