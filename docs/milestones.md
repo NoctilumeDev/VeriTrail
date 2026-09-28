@@ -3120,3 +3120,59 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 milestones fresh installed-product readback 与 independent reconciliation 全部成立以前，frozen target 不生效，runtime
 继续 `NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后仍须返回 CONTROL LOOP；本文不选择 product carrier、digest、
 persistence，不启动 parser/AST、Fact consumer correction、new wire、Fact fulfillment、Coverage 或其他顶层轨。
+
+### R1 Parse fulfillment private implementation 可行性审计（条件状态）
+
+文档 218 freeze publication PR #241 head `562744ac6d01787470069c28a0d21fdc3655136f` 经 original Public CI
+`36430339164` attempt 1 11/11 SUCCESS 后 ordinary merge 到
+`main@bb912680d55ca8c96df4d5b9ded88187bbaf42ef`，tree 保持
+`a38418c758f8376aa48d1c1b71b70e5540fb03e4`。该 exact main 的 Public CI `36433373130` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36433373070` attempt 1 为 1/1 SUCCESS。
+
+final installed-product readback 对 README、doc217、doc218 与 milestones 使用四个 fresh qualifying Plan/session
+取得 PASS。milestones 第一次正式 observation 的 P1 API 完成，但 P2 render 以
+`RENDER_NAVIGATION_FAILED / NAVIGATION_NOT_OBSERVED / NAVIGATION_PROJECTION_MISSING` 结束；139 个 request、101 个
+完整 response body、零 request failure、零 active stream、零 cleanup/page/conflict error，精确根因保持
+`UNKNOWN`。该 observation 永久保持 `ERROR / NON_QUALIFYING`，fresh milestones #2 PASS 不覆盖它。independent
+verifier 还同时核对候选期 README rate-limit ERROR、四份 qualifying readback、PR/merge/tree/CI identities、五份 raw
+source bytes 与安装版 Core 复算，final manifest 为：
+
+```text
+sha256_json  = 318b2a3ab2700faf2e8dfe481e3a7969ce3c084dee9a96a05e3dd306c471d638
+sha256_bytes = 64fa5d2cf7135d6a4ee1cca8ce792f199bda4298ad60667b1607abc242b30381
+```
+
+因此文档 218 预先声明的全部门已经闭合，`R1_PARSE_FULFILLMENT_CONTRACT_FROZEN` 正式生效。managed-worktree
+`Not a git repository` 与 Playwright preflight shutdown `TargetClosedError` 保持 setup/preflight history，不计入
+product qualification。
+
+重新进入 CONTROL LOOP 后，[文档 219](219-r1-parse-private-implementation-feasibility-audit.md)只审计 private
+implementation shape。current source 可以复用 exact inputs、Language Support classification、same-attempt object
+identity、BudgetContext 与 Windows containment，但不能把 ambient host parser 当作 CPython 3.10.6 reference。
+审计选出的有界候选是：controller 显式选择 exact reference executable，每个 eligible subject 获得 one-shot child，
+reference worker 产生 candidate semantic result / private canonical product，application 独立完成 lifecycle validation、
+完整 denominator reconciliation、product-set admission 与 separate continuation。
+
+仓库外 feasibility matrix 和真实 execution-cell probe 在 CPython 3.10.6 / 3.13.13、normal / `-O` 四格分别逐字节
+一致。同一 original BudgetContext 连续承载 accepted/rejected 两项并保持 live；非 3.10.6 worker 只返回 runtime
+unavailable，没有 semantic result。missing、duplicate、dangling、foreign-attempt、cross-world 与 lifecycle non-success
+均被拒绝；equal product-set semantics 不继承 continuation；zero denominator 与 all-rejected complete 保持不同 identity。
+
+本候选状态为：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+doc219 同时修正 README current system-family summary 中遗留的 Parse precontract candidate 说法；历史 candidate 与
+失败记录不改。本文自己的 original PR、受保护合入、new exact-main双门、README / doc219 / milestones fresh
+installed-product readback 与 independent reconciliation 全部成立以前，audit 不能成为 qualified history。闭合后仍须
+先返回 CONTROL LOOP，并以独立 docs-only publication 明确发布 implementation authorization；该 publication 自身门
+闭合以前不得开始 runtime。Fact consumer correction、persistence、public carrier/Schema、shared ledger、Fact
+fulfillment 与 Coverage 继续未授权。
