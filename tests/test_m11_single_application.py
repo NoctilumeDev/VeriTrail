@@ -50,6 +50,7 @@ from tests.support import ROOT, single_bootstrap_plan, single_bootstrap_profile
 from tests.test_browser_evidence import _browser_artifact
 
 
+_POSITIVE_BROWSER_TIMEOUT_MS = 30_000
 _POSITIVE_BROWSER_LIFECYCLE_TIMEOUT_MS = 120_000
 
 
@@ -285,6 +286,9 @@ class M11SingleApplicationTests(unittest.TestCase):
         origin = f"http://127.0.0.1:{selected_port}"
         raw_plan["browser"]["start_url"] = f"{origin}/"
         raw_plan["browser"]["allowed_origins"] = [origin]
+        # Keep this positive functional path out of the dedicated browser-deadline
+        # test surface. The lifecycle timeout remains the outer containment.
+        raw_plan["browser"]["timeout_ms"] = _POSITIVE_BROWSER_TIMEOUT_MS
         if browser_failure:
             raw_plan["browser"]["timeout_ms"] = 1_000
             raw_plan["browser"]["steps"][0]["selector"] = "[data-testid='missing']"
@@ -311,6 +315,23 @@ class M11SingleApplicationTests(unittest.TestCase):
             tool_bindings_path=bindings,
         )
         return subject, plan, profile, bindings, preview, selected_port
+
+    def test_positive_fixture_uses_a_functional_browser_fail_safe(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            _, positive, positive_profile, _, _, _ = self._fixture(root / "positive")
+            _, negative, _, _, _, _ = self._fixture(
+                root / "negative", browser_failure=True
+            )
+
+            self.assertEqual(
+                _POSITIVE_BROWSER_TIMEOUT_MS, positive["browser"]["timeout_ms"]
+            )
+            self.assertEqual(
+                _POSITIVE_BROWSER_LIFECYCLE_TIMEOUT_MS,
+                positive_profile["lifecycle_timeout_ms"],
+            )
+            self.assertEqual(1_000, negative["browser"]["timeout_ms"])
 
     def _bootstrap_artifact(self, plan: dict, profile: dict, preview: dict):
         browser = _browser_artifact(plan)
