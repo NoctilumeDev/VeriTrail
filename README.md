@@ -163,6 +163,13 @@ original Starter required gate 在公开 Core v0.12.2 wheel 上观察到 `net::E
 保持成立，但 private implementation authorization 没有生效。parser runtime、release/compatibility correction、
 persistence、Fact product-use enforcement、new wire 与 Coverage 均未获得施工权。
 
+[M10 Browser 主机 socket 分类修正与发行消费最小前合同审计](docs/222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+从 doc221 已完成的 original PR、受保护合入、exact-main 双门与 fresh installed-product reconciliation 重新进入
+CONTROL LOOP。诊断证明：精确 v0.12.2 谱系上的窄 backport 可构建为 Core 0.12.3，并由 unchanged public
+Starter 0.2.0 wheel 完成真实 PASS/FAIL 链；但这些结果仍是 nonqualifying diagnostic。0.12.3 必须来自受治理的
+历史 maintenance 谱系，current 0.13 source correction 与未来 public 0.13.x claim 继续拥有独立资格。本文只
+条件化选择后继最小合同面，不创建 branch、runtime、workflow migration、version、tag、Release 或 Parse authority。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
@@ -752,8 +759,9 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 81. [Review Attention R1 Parse fulfillment 合同冻结发布](docs/218-r1-parse-fulfillment-contract-freeze-publication.md)
 82. [Review Attention R1 Parse private implementation 可行性审计](docs/219-r1-parse-private-implementation-feasibility-audit.md)
 83. [M10 Browser 主机 socket 分类与发行消费边界审计](docs/221-m10-browser-host-socket-release-consumer-boundary-audit.md)
-84. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-85. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+84. [M10 Browser 主机 socket 分类修正与发行消费最小前合同审计](docs/222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+85. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+86. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
