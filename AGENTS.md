@@ -2224,7 +2224,7 @@ R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
 R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
 R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
 R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED
-R1_PARSE_FULFILLMENT_CONTRACT_CANDIDATE
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
 R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
 R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
@@ -2272,3 +2272,40 @@ carrier、digest algorithm、persistence、Fact product-use enforcement、zero-a
 fulfillment 与 Coverage 仍是 non-decision / not authorized。本文是 docs-only contract candidate；它必须完成自己的
 original PR、受保护合入、new exact-main gates、fresh public readback 与 independent reconciliation，再由独立 freeze
 publication 取得同等级资格，才可成为 `CONTRACT_FROZEN`。在此以前 runtime 继续 `NOT_STARTED`。
+
+
+## R1 Parse fulfillment 合同冻结发布（条件状态）
+
+文档 217 候选经 PR #240 original Public CI `36422575750` attempt 1 11/11 SUCCESS、ordinary merge
+`main@446604ffc437ff710faf524c1634839dc1a0ddd7`、tree
+`aa9099f6c4667c39c7493743245a523ca9626351`、new exact-main Public CI `36425303909` attempt 1
+11/11 SUCCESS 与 Browser Smoke `36425303740` attempt 1 1/1 SUCCESS 取得 source qualification。
+
+fresh installed-product readback 的 README 正式 observation #1 使用 Plan `r1-parse-contract-readme` 与 session
+`github-paired-9f6eba497a094517b190d2ad5c9a1d18`，P1 因匿名 core rate limit remaining 0 返回
+`ERROR / HTTP 403 / COLLECTION_BUDGET_EXHAUSTED`，P2 为 COMPLETE；该身份永久保留且不计入资格。reset 后全新
+README Plan/session 与 doc217、milestones 两份独立 Plan/session 均取得 `COMPLETE / PASS`。五份 public raw bytes
+等于 exact Git blobs；independent reconciliation manifest 为：
+
+```text
+sha256_json  = f76d687ab15a06a5e20172429176774c2c65ecc82616b2628dfcf043bcb3a292
+sha256_bytes = 78bddb62cf980afb79fca85d8cd201b6fda3bca6e7ca426bb73280da51e6d76b
+```
+
+因此 doc217 现在是 qualified contract candidate。[文档 218](docs/218-r1-parse-fulfillment-contract-freeze-publication.md)
+只条件化发布以下目标：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+这些 marker 只有在 freeze publication 自己的 final bytes、original PR required checks、受保护合入、new exact-main
+Public CI / Browser Smoke、README / doc217 / doc218 / milestones fresh anonymous installed-product readback 与 independent
+reconciliation 全部成立后才生效。在此以前 current fact 仍为 contract candidate；不得开始 parser、AST、Parse
+product carrier、Fact consumer correction、persistence、Schema、publisher 或 Coverage。最后门闭合后必须返回
+CONTROL LOOP，重新判断 implementation feasibility / authorization 是否仍是最小合法问题，不能按文档编号自动施工。
