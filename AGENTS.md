@@ -2122,3 +2122,55 @@ Coverage 都没有获得施工权。
 Public CI / Browser Smoke、fresh README / doc214 / milestones installed-product readback 与 independent
 reconciliation 全部闭合后，才可发布 `PRECONTRACT_AUDITED`。闭合后必须返回 CONTROL LOOP；不得自动起草合同
 或进入 implementation。
+
+## R1 Parse → Fact consumer projection 前置资格审计
+
+文档 214 候选 PR #237 head `9e76639ed42f69e43d7783180be143dee6acc8af` 的 original Public CI
+`36367307721` attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 exact main 是
+`5593f48256acafeda6205ffde174441781c87c2e`，tree 为
+`c5d9fcc726b3c57019b0857c04c0e445f1e08386`。该 exact main 的 Public CI `36400964690` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36400964718` attempt 1 为 1/1 SUCCESS。
+
+README 与文档 214 的 formal readback 直接 `COMPLETE / PASS`。milestones formal #1 使用 Plan
+`r1-parse-precontract-milestones` 与 session `github-paired-3dcf5cbcc0cf4a1a93443ab29faa73c9`，在
+summary/handoff/Bundle 以前因 anonymous API `HTTP 403 / remaining=0` 保持 `ERROR / NON_QUALIFYING`；P2
+public render 独立完成。reset 后的 fresh Plan `r1-parse-precontract-milestones-2` 与 session
+`github-paired-2530d43a51d644479ac9ce394874a690` 取得 `COMPLETE / PASS`。独立 reconciliation 同时保存首个
+ERROR 与三个 qualifying observations：
+
+```text
+sha256_json  = 4c7482a55bbaaf67585568b6e6b84c5cf3d12ec232a5bcbe5d4b85d1d134716b
+sha256_bytes = cea42a376fc022da40d3e0b37b2e942475cf1dec25101d0e3ec72706a96b88b0
+```
+
+因此 `R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED` 已成为 qualified history。重新进入 CONTROL LOOP 后，
+[文档 215](docs/215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)发现更早 prerequisite：文档 208 与
+current runtime 都强制 `FACT_DERIVATION operation_subject_ids == eligible_subject_ids`，request/worker 又要求
+Provider-visible bodies 与 operation set 恰好相等；controller 没有 Parse result/product 输入。
+
+audit-only paired world 含一个 syntax-valid 与一个 syntax-invalid source，两者都被 Language Support 0.2 判为
+`ELIGIBLE`。独立 Parse witness 只接受 valid source；current Fact request 仍携带两份 body，closed Provider 实际对
+invalid source 报告 canonical `MODULE` Fact；把 request 收窄到 accepted-only set 会被 current wire 拒绝。
+CPython 3.10.6 / 3.13.13 normal / `-O` 四格 1041-byte reports 逐字节一致：
+
+```text
+bf42f8051226388e3823b92f572a570071f2ec513c455d7c14685f283260203f
+```
+
+本文只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
+R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 candidate 必须完成自己的 final docs/static gates、original PR checks、受保护合入、new exact-main Public CI /
+Browser Smoke、fresh README / doc215 / milestones installed-product readback 与 independent reconciliation 才能成为
+qualified history。它不推翻文档 208 在 pre-Parse claim domain 内的历史事实；它只禁止 current Fact projection
+静默继承为 post-Parse consumer authority。下一步最多审计 versioned Parse-result → Fact-consumer projection /
+request binding；不得直接修改旧合同、实现 parser/AST/new wire/Fact、选择 persistence 或恢复 Coverage。
