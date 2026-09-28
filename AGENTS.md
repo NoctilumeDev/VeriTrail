@@ -2174,3 +2174,65 @@ Browser Smoke、fresh README / doc215 / milestones installed-product readback �
 qualified history。它不推翻文档 208 在 pre-Parse claim domain 内的历史事实；它只禁止 current Fact projection
 静默继承为 post-Parse consumer authority。下一步最多审计 versioned Parse-result → Fact-consumer projection /
 request binding；不得直接修改旧合同、实现 parser/AST/new wire/Fact、选择 persistence 或恢复 Coverage。
+
+## R1 Parse product → Fact consumer binding 最小前合同审计
+
+文档 215 候选 PR #238 head `fdc3c3222615cf63eb1d98abf25706295ec25a33` 的 original Public CI
+`36406936981` attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 exact main 是
+`34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`，tree 为
+`37a75ee670d0f1bd288486d351a137c353beaa85`。该 exact main 的 Public CI `36409451476` attempt 1 为
+11/11 SUCCESS，Browser Smoke `36409451412` attempt 1 为 1/1 SUCCESS。
+
+README、文档 215 与 milestones 以三个 fresh Plan/session 取得 `COMPLETE / PASS`，四份 public raw bytes 与 exact
+Git blobs 相等。独立 verifier 重新核对 original PR、merge/tree、exact-main gates、Plan-before-observation、Core
+fields 与 source bytes，final manifest 为：
+
+```text
+sha256_json  = 4acc88bb15f35b7b362f9feacd446277547d82625e13f89a207390496f5dab79
+sha256_bytes = 12a8004834b3b083f6a25f309666c8852cde7a8d062103907e2545e96ea9e80e
+```
+
+因此 `R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED` 已成为 qualified history。重新进入
+CONTROL LOOP 后，[文档 216](docs/216-r1-parse-product-fact-consumer-binding-precontract-audit.md)把下一 seam
+拆为 consumer membership、exact product binding 与 product consumption authority。
+
+accepted IDs 不能区分同一 subject 的不同 Parse products；empty accepted set 不能区分 all-rejected complete 与
+missing/non-success；相同 product-set semantics 不继承另一 attempt 的 live claim；request/terminal 回显 product
+identity 也不能证明 Provider 实际消费 product。多个 Fact Providers 必须共享一份 application-owned reconciled
+product truth，并分别领取 provider-bound child claim，不能按 Provider 数量复制 Parse truth。
+
+仓库外 `consumer_matrix.py` 在 CPython 3.10.6 / 3.13.13 normal / `-O` 四格各产生 1456-byte report，逐字节
+相同：
+
+```text
+38c4af75a33c7f9718cd980e8e8069a46bd888d311fd35e8500b603f31358f32
+```
+
+第一次额外 byte comparison 在 reports 已生成并取得相同 size/hash 后误用 PowerShell `AsSpan()`，保留为
+`INVALID_AUDIT_COMPARISON_SETUP`；后继显式 byte-array comparison 只复核既有 outputs，没有覆盖旧 evidence。
+
+本地候选还保留 AGENTS patch anchor miss、`git diff --name-only` 漏掉 untracked doc216 与首次并行测试 wrapper
+未保存 final summaries 三个 setup/orchestration 问题；它们都未形成 product observation。最终四文件 scope、
+relative links、UTF-8/LF/final-LF、fences、marker、audit hashes 与 `git diff --check` 全部通过。docs/Schema 四格
+各 `40/40 PASS`；source-operation gate、Fact wire、controller integration 与 multi-Provider composition 四格各
+`67/67 PASS`。这些结果只支持 candidate 提交，不授予 contract/runtime authority。
+
+本文只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
+R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
+R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该候选必须完成 final docs/static gates、original PR checks、受保护合入、new exact-main Public CI / Browser Smoke、
+fresh README / doc216 / milestones installed-product readback 与 independent reconciliation，才能成为 qualified
+history。它不冻结 Parse product、consumer correction 或 zero-accepted scheduling；最后门闭合后必须返回 CONTROL
+LOOP，最多重新判断 Parse minimal contract 是否仍是最小合法问题，不得直接实现 parser/AST/product/new wire/Fact、
+选择 persistence 或恢复 Coverage。

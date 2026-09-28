@@ -64,7 +64,7 @@ VeriTrail 的核心关系很小：
 | Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
 | Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
 | Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED / R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED / R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDIT_CANDIDATE / R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED / R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED / R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED / R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDIT_CANDIDATE / R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
 | Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
 | Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
 | Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
@@ -129,6 +129,16 @@ eligible source Parse accepted、另一个 rejected 的 world 中，current Prov
 `MODULE` Fact，而 accepted-only request 会被 current wire 拒绝。该候选只选择 post-Parse Fact consumer
 projection / request binding 作为更早前提；文档 208 与 current runtime 的历史 qualification 不被倒改，Parse
 contract、new wire、parser/AST、Fact fulfillment、persistence 与 Coverage 仍未获授权。
+
+文档 215 随后经 PR #238 original 11/11、ordinary merge
+`main@34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc215 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified prerequisite
+history。[Parse product → Fact consumer binding 最小前合同审计](docs/216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+据此把 consumer membership、exact product binding 与 product-use authority 分开：accepted IDs、裸 product digest
+或 terminal echo 都不足以证明 Provider 消费了 admitted product；多 Provider 只能共享一份 application-owned
+product truth，各自重新取得 consumer claim。本文只发布 precontract-audit candidate，并把合法顺序收紧为先冻结
+Parse product/reconciliation 语义、后起草 Fact consumer correction；parser/AST/product carrier/new wire/Fact、
+persistence 与 Coverage 仍未获授权。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -523,6 +533,12 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   从 doc213 qualified history 审计 denominator、versioned parser semantics、三层 terminality、reason authority、
   same-attempt binding 与 Fact consumer boundary。本文只发布 precontract-audit candidate；合同、parser、AST
   carrier、Fact fulfillment、persistence 与 Coverage 仍未获授权。
+- [Parse → Fact consumer projection 前置资格审计](docs/215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
+  证明 current Fact source-body operation set 仍等于全部 Language Support eligible subjects，不能静默继承为
+  post-Parse consumer authority；本文只选择更早 prerequisite，不修改历史合同或 runtime。
+- [Parse product → Fact consumer binding 最小前合同审计](docs/216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+  区分 accepted membership、exact product binding 与可执行 product-use authority，拒绝 accepted-only、echo-only、
+  cross-attempt 与 per-Provider Parse truth；本文仍不冻结 Parse 或 Fact consumer correction contract。
 - [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
   保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
   既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
@@ -707,8 +723,10 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 75. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
 76. [Review Attention R1 Parse fulfillment authority 问题审计](docs/213-r1-parse-fulfillment-authority-problem-audit.md)
 77. [Review Attention R1 Parse fulfillment 最小合同前置审计](docs/214-r1-parse-fulfillment-precontract-audit.md)
-78. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-79. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+78. [Review Attention R1 Parse → Fact consumer projection 前置资格审计](docs/215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
+79. [Review Attention R1 Parse product → Fact consumer binding 最小前合同审计](docs/216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+80. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
+81. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
