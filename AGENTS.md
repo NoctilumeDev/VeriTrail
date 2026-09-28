@@ -2349,3 +2349,43 @@ README / doc219 / milestones fresh anonymous installed-product readback 与 inde
 qualified history。随后必须先返回 CONTROL LOOP，并通过独立 docs-only implementation authorization publication；
 该 publication 自己的门闭合前，不得创建 parser runtime branch。即使获得授权，下一 implementation 也最多覆盖
 doc219 A–H；不得修改 current Fact wire、选择 persistence、启动 Fact fulfillment 或 Coverage。
+
+## M10 Browser 主机 socket 分类与发行消费边界审计（条件状态）
+
+文档 219 候选 PR #242 head `ed3cfa2871df864e84068cc32f52081863de8878` 的 original Public CI
+`36440677161` attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 exact main 为
+`23f9825e61791a78056d5154e4dfd3626a1167b1`，tree 为
+`ae1496ba1978ddb40b3a74e414b4e6f58f9bddd5`。该 exact main 的 Public CI `36443544885`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `36443544713` attempt 1 为 1/1 SUCCESS。README、doc219 与
+milestones 的 fresh installed-product readback 与 independent reconciliation 也已成立，因此
+`R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED` 是 qualified history。
+
+独立实现授权 PR #243 没有取得资格。其 original Public CI `36449716998` attempt 1 的十项检查成功，
+`Starter PASS/FAIL golden path` job `109027269096` 失败。Artifact
+`starter-single-webapp-s1-failure-36449716998-1` 保存：桌面 document / title / fill / click 成功后，loopback
+`/data.json` fetch 以 `net::ERR_NO_BUFFER_SPACE` 失败；同一服务上的后继 mobile viewport 两次请求 `200` 并
+完整通过。M10 没有把这个 Windows host-local socket failure 写入 `collection_errors`，于是错误形成
+`BROWSER_HARD_FAILURE / COMPLETED / FAIL / SUBJECT`。精确底层资源原因保持 `UNKNOWN`。
+
+更关键的是，该 required lane 固定下载 SHA-256
+`3a42f28db6f4ed12351dade3fbb6f57fa1d5aa3fdd6d28210492f676bc1562de` 的公开 Core v0.12.2 wheel，
+并使用只接受 `veritrail>=0.12,<0.13` 的 Starter 0.2.0。current main 与 Latest Core 是 0.13.0；修改 current
+source 不能修复 #243 实际消费的 distribution，Starter 0.2 又会拒绝 current Core。历史 v0.12.2 / v0.13.0
+tag 与 Release assets 继续只读，当前没有新 maintenance/patch release、Starter compatibility migration 或 CI
+consumer migration 的合同 authority。
+
+[文档 221](docs/221-m10-browser-host-socket-release-consumer-boundary-audit.md)只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_RELEASE_CONSUMER_BOUNDARY_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+PR #243 保持 CLOSED / original FAILURE，head 与 run 不 rerun、不改写。doc221 只允许 AGENTS、README、
+milestones 与自身四个文档文件；runtime、tests、workflow、Starter、version、tag、Release、timeout 与 retry 都必须
+保持原字节。本文自己的 final-byte local gates、original PR checks、受保护合入、new exact-main Public CI / Browser
+Smoke、README / doc221 / milestones fresh installed-product readback 与 independent reconciliation 全部成立后，
+只获得 qualified problem boundary。后继仍须先返回 CONTROL LOOP，只能重新审计最小 correction /
+release-consumer precontract；不得直接重发 Parse implementation authorization 或提交 current-source 映射。
