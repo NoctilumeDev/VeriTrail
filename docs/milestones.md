@@ -3176,3 +3176,58 @@ installed-product readback 与 independent reconciliation 全部成立以前，a
 先返回 CONTROL LOOP，并以独立 docs-only publication 明确发布 implementation authorization；该 publication 自身门
 闭合以前不得开始 runtime。Fact consumer correction、persistence、public carrier/Schema、shared ledger、Fact
 fulfillment 与 Coverage 继续未授权。
+
+### M10 Browser 主机 socket 分类与发行消费边界审计（条件状态）
+
+文档 219 候选 PR #242 的 exact coordinates 为：
+
+```text
+base  = bb912680d55ca8c96df4d5b9ded88187bbaf42ef
+head  = ed3cfa2871df864e84068cc32f52081863de8878
+merge = 23f9825e61791a78056d5154e4dfd3626a1167b1
+tree  = ae1496ba1978ddb40b3a74e414b4e6f58f9bddd5
+```
+
+original Public CI `36440677161` attempt 1 为 11/11 SUCCESS；new exact-main Public CI `36443544885`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `36443544713` attempt 1 为 1/1 SUCCESS。README、doc219 与
+milestones 三份 fresh anonymous installed-product readback 均为 P1/P2 COMPLETE 与 Core PASS；六份 raw source
+bytes 等于 exact Git blobs，independent reconciliation manifest 为：
+
+```text
+sha256_json  = decd28d53dc3bfb7af0d9033e1e4ca1feadaa7e4daf300df29babe65bcb07ff7
+sha256_bytes = 6624609f0b1ee6c7e78f7200f785a39fb69462f161bcefaeda70a10a480fca2f
+```
+
+因此文档 219 已成为 `R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED` qualified history。
+后继 docs-only 实现授权 PR #243 head `c28860fb2b3acd21c15216e3c7a69e3b3e573f16` 的 original Public CI
+`36449716998` attempt 1 只有十项成功；`Starter PASS/FAIL golden path` job `109027269096` 失败。原 workflow
+没有 rerun，head 没有改写；PR 已关闭且未合入。
+
+失败 Artifact `10982779354` 的 archive SHA-256 为
+`b43c8c284924ca03c3a50f78ae724e309ac2b14cbef272887684269fc4c62e10`，其中 Browser Evidence SHA-256 为
+`de9f7c8c3174ae4eee6bc51c7cd61b4f8e394276726181484356e8a79d06542d`。桌面 viewport 的 document `200`、
+title/fill/click 成功，随后 loopback `/data.json` fetch 以 `net::ERR_NO_BUFFER_SPACE` 失败；同一服务上的 mobile
+viewport 两次请求 `200` 并全部通过。application readiness、subject immutability、resource sampling 与 cleanup
+完整，`collection_errors=[]`。当前 M10 因而把 Windows host-local socket failure 错误归成
+`BROWSER_HARD_FAILURE / SUBJECT`；精确底层资源根因仍为 `UNKNOWN`。
+
+workflow 身份核账又证明 required lane 固定消费公开 Core v0.12.2 wheel，而非 PR/current-main Core。该 wheel
+SHA-256 为 `3a42f28db6f4ed12351dade3fbb6f57fa1d5aa3fdd6d28210492f676bc1562de`；checkout Starter
+0.2.0 的依赖和 doctor 均限定 `veritrail>=0.12,<0.13`。因此 current 0.13 source 上可成立的窄映射候选不能修复
+#243 实际产品身份，直接以 current source 运行 Starter 又会在正式 lifecycle 前被 compatibility precondition 拒绝。
+历史 Release/tag/assets 不能移动；当前也没有新 release 或 Starter migration authority。
+
+[文档 221](221-m10-browser-host-socket-release-consumer-boundary-audit.md)只条件化发布：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_RELEASE_CONSUMER_BOUNDARY_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+doc221 只定义 problem boundary，不选择 Core/Starter/version/CI 方案。它自己的 original PR、受保护合入、new
+exact-main 双门、fresh README / doc221 / milestones installed-product readback 与 independent reconciliation 全部
+成立以前，audit 不能升级为 qualified history。闭合以后仍须返回 CONTROL LOOP，仅允许重新审计最小
+classification correction / release-consumer precontract；不得修改 runtime、tests、workflow、Starter、timeout、retry、
+tag 或 Release，也不得重发 Parse implementation authorization。
