@@ -2953,3 +2953,74 @@ readback 与 independent reconciliation 生效。本文不推翻文档 208 与 A
 也不授权 correction contract、new projection/wire、parser/AST、Fact fulfillment、persistence、public carrier 或
 Coverage。最后门闭合后仍须返回 CONTROL LOOP；下一步最多审计 Parse-result → Fact-consumer projection /
 request binding 的最小版本化 correction seam。
+
+### R1 Parse product → Fact consumer binding 最小前合同审计（条件状态）
+
+文档 215 候选 PR #238 head `fdc3c3222615cf63eb1d98abf25706295ec25a33` 的 original Public CI
+`36406936981` attempt 1 为 11/11 SUCCESS。ordinary merge 后的新 exact main 为
+`34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`，tree 为
+`37a75ee670d0f1bd288486d351a137c353beaa85`；Public CI `36409451476` attempt 1 为 11/11 SUCCESS，
+Browser Smoke `36409451412` attempt 1 为 1/1 SUCCESS。
+
+README、文档 215 与 milestones 的 fresh formal readback 均为 exact-SHA HTTP 200、三样本稳定、唯一 marker、
+`COMPLETE / PASS`，使用三个互不复用的 Plan/session：
+
+| Path | Plan | Session |
+| --- | --- | --- |
+| README | `r1-parse-fact-prereq-readme` | `github-paired-b5196e986b034460b18b3cce5976f296` |
+| doc215 | `r1-parse-fact-prereq-doc215` | `github-paired-b5ca44da50714445af65a85c17fedb0b` |
+| milestones | `r1-parse-fact-prereq-milestones` | `github-paired-b0c38e88cd444f0abc9a093b2f1ca2bf` |
+
+三份 observation、四份 exact Git raw bytes、original PR / merge / exact-main gates 经 independent verifier 重新
+核账：
+
+```text
+sha256_json  = 4acc88bb15f35b7b362f9feacd446277547d82625e13f89a207390496f5dab79
+sha256_bytes = 12a8004834b3b083f6a25f309666c8852cde7a8d062103907e2545e96ea9e80e
+```
+
+因此 `R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED` 已成为 qualified history。正式 readback 没有
+ERROR；proxy/DNS、stale progress、漏传 `gh -R` 与 Playwright shutdown warning 都发生在正式 product observation
+lifecycle 以前，继续保留为 setup/preflight history。
+
+[文档 216](216-r1-parse-product-fact-consumer-binding-precontract-audit.md)据此审计三条不同 seam：consumer
+membership、exact product binding 与 product consumption authority。accepted IDs 不能区分不同 products；empty
+accepted set 不能区分 all-rejected complete 与 missing；terminal echo 不能证明 Provider 消费 product；多 Provider
+必须共享一份 application-owned reconciled product truth，同时分别取得 provider-bound consumer claim。
+
+仓库外 paired-world audit-only script 在 CPython 3.10.6 / 3.13.13 normal / `-O` 四格产生完全相同的
+1456-byte canonical report：
+
+```text
+script = 494b36e8158e0c6270ae23bad938f52aa562d12fae233cea51d3153f706ac113
+report = 38c4af75a33c7f9718cd980e8e8069a46bd888d311fd35e8500b603f31358f32
+```
+
+第一次额外 byte comparison 在 reports 已成功生成并取得相同 size/hash 后误用 PowerShell `AsSpan()`，保留为
+`INVALID_AUDIT_COMPARISON_SETUP`；修正只复核既有 outputs，没有覆盖或重跑 report。
+
+AGENTS patch anchor miss、changed-scope checker 漏掉 untracked doc216 与首次并行测试 wrapper 未保存 final
+summaries 也都保留为 setup/orchestration history，没有形成产品 observation。最终四文件 scope、relative links、
+UTF-8/LF/final-LF、fences、marker、audit hashes 与 `git diff --check` 全部通过；docs/Schema 四格各
+`40/40 PASS`，相关 gate / Fact wire / controller / multi-Provider suite 四格各 `67/67 PASS`。这些本地结果不
+替代后继远端门与读回。
+
+本文只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED
+R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED
+R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDIT_CANDIDATE
+R1_PARSE_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该候选必须完成自己的 final docs/static gates、original PR checks、受保护合入、new exact-main Public CI / Browser
+Smoke、fresh README / doc216 / milestones installed-product readback 与 independent reconciliation 才能成为
+qualified history。它把合法顺序收紧为先冻结 application-owned admitted Parse product/reconciliation semantics，
+再由后继 correction contract 定义 Provider consumer binding；不授权 parser/AST/product carrier/new wire/Fact、
+persistence、public Artifact 或 Coverage。最后门闭合后仍须返回 CONTROL LOOP。
