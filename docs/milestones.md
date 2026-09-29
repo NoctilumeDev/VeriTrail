@@ -3329,3 +3329,31 @@ doc224 只修改 AGENTS、README、doc223、milestones 并新增自身。它自�
 new exact-main 双门、fresh README / doc223 / doc224 / milestones installed-product readback 与 independent
 reconciliation 全部成立后，frozen target 才生效。最后门闭合后仍须返回 CONTROL LOOP；不得自动开始 runtime、
 maintenance branch、ruleset、version、tag、Release、asset、workflow migration 或 Parse implementation。
+
+## M10 current-source 修正与 maintenance bootstrap 治理反例
+
+C1 已经 PR #249 original Public CI `36637526486` attempt 1 的 11/11、ordinary merge
+`main@2daf6eaefa20b0bf3f371eed50e74f3d863496b3`、new exact-main Public CI `36639973530`
+attempt 1 的 11/11 与 Browser Smoke `36639973548` attempt 1 的 1/1。current source 因而已经包含精确
+`net::ERR_NO_BUFFER_SPACE` 分类修正；public `v0.13.0` wheel、Starter compatibility 与 Parse authority 没有改变。
+
+M0 随后创建并读回 phase-one ruleset `24216773`：target 为
+`refs/heads/core-0.12-maintenance`，active、无 bypass、禁止删除与 non-fast-forward、要求 PR、required checks
+为空。第一次真实 REST exact ref 创建却返回 HTTP 404；Git/API 双读回均确认 branch 不存在。权限核账排除了
+明显 token scope 缺失，非写入的 `git push --dry-run` 只证明 refspec 可构造，不能替代真实 branch creation。
+精确原因保持 `UNKNOWN`，详情见
+[文档 225](225-m10-maintenance-bootstrap-governance-counterexample-audit.md)。
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CURRENT_SOURCE_EXACT_MAIN_VERIFIED
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_NOT_CREATED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+该反例只重开 M0 branch-creation governance seam。ruleset 保持 active，禁止实际 git push、disable/bypass、
+未保护 branch、workflow PR、phase two、runtime/version/backport/release、consumer migration 与 Parse 实现。
+本文档审计自己的 original PR、受保护合入和 new exact-main 双门闭合以前，以上状态仍是审计候选；绿灯也不自动
+授权下一份治理合同。

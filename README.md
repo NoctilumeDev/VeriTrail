@@ -181,6 +181,13 @@ main required Starter lane 的单独消费迁移。合同候选不创建 branch�
 doc223 / doc224 / milestones installed-product readback 与独立 reconciliation 闭合以前，当前事实仍是 qualified
 contract candidate，runtime、maintenance branch、ruleset、version、tag、Release 与 workflow migration 均未开始。
 
+[M10 0.12 maintenance bootstrap 治理反例审计](docs/225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
+记录 C1 经 PR #249 合入 `main@2daf6ea...` 并完成 exact-main 双门；current source 已包含精确 host-socket
+分类修正，但 public `v0.13.0` wheel 没有因此改变。M0 phase-one ruleset `24216773` 已 active、无 bypass，
+第一次真实 exact branch ref 创建却返回 HTTP 404，`core-0.12-maintenance` 仍不存在。M0 因而停止为
+`MAINTENANCE_BOOTSTRAP_BLOCKED`；实际 push、workflow PR、phase two、0.12.3 backport/release、consumer migration
+与 Parse authorization 均未开始。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。

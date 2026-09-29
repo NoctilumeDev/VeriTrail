@@ -2491,3 +2491,23 @@ doc224 只允许 AGENTS、README、doc223、milestones 与自身五个文档文�
 original PR、受保护 main 合入、new exact-main 双门、fresh README / doc223 / doc224 / milestones installed-product
 readback 与 independent reconciliation 全部闭合后，frozen target 才生效。最后门以前不得开始 runtime、
 maintenance branch、ruleset、version、tag、Release、asset、workflow migration 或 Parse implementation。
+
+后继 CONTROL LOOP 已完成 C1：PR #249 head `6fec13def5b0e8f66362fbd7b81f191be8e48110` 的 original Public CI
+`36637526486` attempt 1 为 11/11，合入 `main@2daf6eaefa20b0bf3f371eed50e74f3d863496b3` 后 exact-main
+Public CI `36639973530` attempt 1 为 11/11，Browser Smoke `36639973548` attempt 1 为 1/1。该事实只证明
+current source 已修正，不发布新 wheel。M0 随后创建 active、无 bypass 的 phase-one ruleset `24216773`，但
+第一次真实 exact branch ref 创建返回 HTTP 404，branch 保持不存在。精确事实见
+`docs/225-m10-maintenance-bootstrap-governance-counterexample-audit.md`。当前状态为：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CURRENT_SOURCE_EXACT_MAIN_VERIFIED
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_NOT_CREATED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+不得改用实际 git push、disable/evaluate/delete ruleset、增加 bypass、先建未保护 branch、创建 workflow PR 或
+开始 runtime/version/backport/release/consumer migration。后继只能先审计无 bypass、无未保护窗口的 exact branch
+creation 语义；`do_not_enforce_on_create` 目前只是待审候选，不是已授权修复。
