@@ -17,6 +17,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 from veritrail.browser import (
+    _classify_host_socket_request_failure,
     _collect_browser_evidence,
     _contain_expected_playwright_pipe_shutdown,
     _origin,
@@ -217,6 +218,32 @@ def _browser_artifact(plan: dict, *, console_error: bool = False):
 
 
 class BrowserEvidenceTests(unittest.TestCase):
+    def test_host_socket_failure_classification_is_exact_and_keeps_raw_text(self) -> None:
+        raw = "  net::ERR_NO_BUFFER_SPACE\r\n"
+        self.assertEqual(
+            ("network:desktop", "HostSocketNoBufferSpace"),
+            _classify_host_socket_request_failure("desktop", raw),
+        )
+        self.assertEqual(
+            ("network:mobile", "HostSocketNoBufferSpace"),
+            _classify_host_socket_request_failure("mobile", raw),
+        )
+        self.assertEqual("  net::ERR_NO_BUFFER_SPACE\r\n", raw)
+
+        for near_miss in (
+            "net::err_no_buffer_space",
+            "net::ERR_NO_BUFFER_SPACE_EXTRA",
+            "prefix net::ERR_NO_BUFFER_SPACE",
+            "net::ERR_CONNECTION_RESET",
+            "net::ERR_INSUFFICIENT_RESOURCES",
+            "request failed",
+            "",
+        ):
+            with self.subTest(raw_failure_text=near_miss):
+                self.assertIsNone(
+                    _classify_host_socket_request_failure("desktop", near_miss)
+                )
+
     def test_owned_driver_pipe_shutdown_does_not_leak_into_the_next_run(
         self,
     ) -> None:
