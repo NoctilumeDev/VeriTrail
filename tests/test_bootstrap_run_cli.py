@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import io
 import json
 import os
@@ -29,12 +30,14 @@ from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.catalog import build_catalog, validate_bundle
 from veritrail.cli import _bootstrap_interrupt_cancellation, main
 from veritrail.comparison import create_comparison_bundle
+from veritrail.evidence import import_evidence_document
 from veritrail.plan import seal_plan
 from veritrail.project_profile import seal_project_profile
 from veritrail.windows_readiness import probe_owned_http_readiness
 from veritrail.windows_service import OwnedServiceSession
 
 from tests.support import bootstrap_plan, bootstrap_profile
+from tests.test_browser_evidence import _browser_artifact
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -549,6 +552,104 @@ class BootstrapRunCliTests(unittest.TestCase):
             )
             validated = validate_bundle(output, root)
             self.assertEqual("FAIL", validated.verdict)
+            self.assertEqual([], list(root.glob(".veritrail-*")))
+            self.assertTrue(all(_port_is_free(port) for port in ports))
+
+    def test_host_socket_failure_is_collector_error_with_raw_network_fact(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subject, plan, profile, bindings, preview, ports = self._fixture(root)
+            output = root / "bundle-host-socket-collector-error"
+
+            def host_socket_failure(
+                active_plan: dict, **_kwargs
+            ) -> ObservedBrowserEvidence:
+                original = _browser_artifact(active_plan)
+                document = copy.deepcopy(original.document)
+                facts = document["facts"]
+                raw_failure_text = "net::ERR_NO_BUFFER_SPACE"
+                facts["network"][0].update(
+                    {
+                        "status": None,
+                        "finished": False,
+                        "failure": raw_failure_text,
+                    }
+                )
+                facts["failed_request_count"] = 1
+                facts["capture_complete"] = False
+                facts["all_steps_passed"] = False
+                facts["viewport_runs"][0]["status"] = "FAILED"
+                facts["collection_errors"] = [
+                    {
+                        "collector": "network:desktop",
+                        "error_type": "HostSocketNoBufferSpace",
+                    }
+                ]
+                return ObservedBrowserEvidence(
+                    browser=import_evidence_document(
+                        document,
+                        "browser-host-socket-failure.json",
+                        attachments=original.attachments,
+                    ),
+                    peak_rss_mb=8.0,
+                    resource_sampling_complete=True,
+                    process_cleanup_complete=True,
+                    job_memory_limit_mb=active_plan["browser"][
+                        "max_job_memory_mb"
+                    ],
+                    job_memory_limit_enforced=True,
+                )
+
+            code, payload, stderr, browser_error_types = (
+                self._run_with_browser_error_trace(
+                    subject=subject,
+                    plan=plan,
+                    profile=profile,
+                    bindings=bindings,
+                    approval=preview["preview_sha256"],
+                    output=output,
+                    run_id="m10-host-socket-collector-error",
+                    browser_collector=host_socket_failure,
+                )
+            )
+
+            self.assertEqual("", stderr)
+            self.assertEqual(0, code)
+            self.assertEqual("COLLECTOR_ERROR", payload["stop_reason"])
+            self.assertFalse(payload["browser_capture_complete"])
+            self.assertTrue(payload["cleanup_complete"])
+            self.assertEqual("ERROR", payload["execution_status"])
+            self.assertEqual("PENDING", payload["verdict"])
+            self.assertEqual((), browser_error_types)
+
+            report = json.loads((output / "report.json").read_text(encoding="utf-8"))
+            browser_assertions = [
+                item
+                for item in report["assertions"]
+                if item["evidence_type"] == "browser.session"
+            ]
+            self.assertTrue(browser_assertions)
+            self.assertEqual(
+                {"NOT_EVALUATED"}, {item["status"] for item in browser_assertions}
+            )
+            self.assertEqual([], report["contamination"])
+
+            browser = self._evidence_document(output, "browser.session")["facts"]
+            self.assertEqual(
+                "net::ERR_NO_BUFFER_SPACE", browser["network"][0]["failure"]
+            )
+            self.assertEqual(
+                [
+                    {
+                        "collector": "network:desktop",
+                        "error_type": "HostSocketNoBufferSpace",
+                    }
+                ],
+                browser["collection_errors"],
+            )
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertEqual("COLLECTOR_ERROR", bootstrap["stop"]["reason"])
+            self.assertTrue(bootstrap["cleanup_complete"])
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
