@@ -199,6 +199,13 @@ lock 中 `brace-expansion` / `undici` 的当前 high-severity advisory 失败；
 独立依赖维护已取得资格，但不能继承给 0.12 line。当前只重开 workflow-only PR 之前的 dependency qualification /
 ordering seam；dependency PR、workflow dispatch、#252 重开、phase two、backport/release 与 Parse 均未获授权。
 
+[M10 maintenance dependency prerequisite 最小前合同审计](docs/228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
+在 exact `v0.12.2^{}` 上重新构造的 one-file lock candidate 只把 `undici` 与 root / nested
+`brace-expansion` 更新到 `7.30.0 / 5.0.12 / 2.1.7`；Workbench 172/172、lint、build 与 0-vulnerability
+audit 成立。本机完整 Python 四格因真实 `4096 MB` memory soft stop 保持非资格失败；它没有被调预算或写成 PASS。
+旧 workflow 的 `workflow_dispatch` 可以形成 exact-head / exact-tip 远端 witness，但不能冒充 original PR checks。
+本文只授权起草最小合同；dependency branch / PR / dispatch、workflow bootstrap、phase two 与 Parse 仍未获授权。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
@@ -792,7 +799,11 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 85. [M10 Browser 主机 socket 分类修正与发行消费合同](docs/223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
 86. [M10 Browser 主机 socket 分类修正与发行消费合同冻结发布](docs/224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
 87. [M10 Browser 业务失败分类首败诊断覆盖修正](docs/193-m10-browser-business-failure-observation-correction.md)
-88. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+88. [M10 0.12 maintenance bootstrap 治理反例审计](docs/225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
+89. [M10 maintenance branch 创建 authority 更正审计](docs/226-m10-maintenance-branch-creation-authority-correction-audit.md)
+90. [M10 maintenance workflow bootstrap 顺序反例审计](docs/227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
+91. [M10 maintenance dependency prerequisite 最小前合同审计](docs/228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
+92. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
