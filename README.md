@@ -192,6 +192,13 @@ contract candidate，runtime、maintenance branch、ruleset、version、tag、Re
 `M0_BRANCH_CREATION_AUTHORITY_UNQUALIFIED / M0_MAINTENANCE_BOOTSTRAP_BLOCKED`；scope 扩张、ref 重试、实际 push、
 workflow PR、phase two、0.12.3 backport/release、consumer migration 与 Parse authorization 均未开始。
 
+[M10 maintenance workflow bootstrap 顺序反例审计](docs/227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
+在 Human 明确授权并补齐 `workflow` scope 后，新的 REST ref observation 返回 `201`，branch 已精确指向
+`v0.12.2^{}`，ruleset 保持 active、无 bypass。workflow-only PR #252 的原始 Public CI 随后因 maintenance
+lock 中 `brace-expansion` / `undici` 的当前 high-severity advisory 失败；它未 rerun、未合入且已关闭。main 上
+独立依赖维护已取得资格，但不能继承给 0.12 line。当前只重开 workflow-only PR 之前的 dependency qualification /
+ordering seam；dependency PR、workflow dispatch、#252 重开、phase two、backport/release 与 Parse 均未获授权。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
