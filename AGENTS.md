@@ -2517,3 +2517,42 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 开始 runtime/version/backport/release/consumer migration。不得在本审计中运行 `gh auth refresh` 或重试 ref creation。
 后继只能先资格化 workflow-bearing branch creation 所需的 credential authority；scope 扩张属于独立授权动作，
 新的写观察必须使用新身份且不得覆盖第一次 404。`do_not_enforce_on_create` 不修复 credential 缺权，也不是当前候选。
+
+## M10 0.12 maintenance workflow bootstrap 顺序反例（候选状态）
+
+Human 已明确授权补齐 GitHub OAuth `workflow` scope；新 credential 读回为
+`delete_repo / gist / read:org / repo / workflow`。随后只进行一次新的 REST create-reference 写观察，返回
+`HTTP 201`。REST 与 Git 双读回确认 `refs/heads/core-0.12-maintenance` 精确指向
+`f961930ae1e69d7d88849fa2b0d40befb3e94c89 = v0.12.2^{}`。ruleset `24216773` 保持 active、无 bypass、
+禁止删除与 non-fast-forward、要求 PR、required checks 为空。第一次 `HTTP 404 / UNKNOWN` 继续保留；后继 201
+不解释旧失败。
+
+workflow-only PR #252 只修改 `.github/workflows/ci.yml` 与 `.github/workflows/browser-smoke.yml` 的 branch
+filters。其本地 final-byte 四格和 Browser acceptance 成立，但 original Public CI `36771080921` attempt 1 在
+Workbench `npm audit` 因 `brace-expansion` 与 `undici` 两组 high-severity advisory 失败；六个 job 成功，Starter
+golden path 因依赖 job 失败而跳过。#252 未 rerun、未改 head、未合入并已关闭。
+
+current main 已通过 PR #248 把 `undici` 锁到 `7.30.0`，并通过 PR #253 把 root / nested
+`brace-expansion` 锁到 `5.0.12 / 2.1.7`。#253 original Public CI `36773193271` attempt 1 为 11/11，合入
+`main@30d459197c24dabcfd28f9d50f6ed582ee029258` 后 exact-main Public CI `36775834977` attempt 1 为
+11/11，Browser Smoke `36775834866` attempt 1 为 1/1。这些门只证明 current main；maintenance branch 仍保留
+`undici 7.29.0` 与 `brace-expansion 5.0.9 / 2.1.4 / 2.1.4`。
+
+[文档 227](docs/227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)只登记：
+
+```text
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_CREATED
+M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
+M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
+M0_MAINTENANCE_BOOTSTRAP_ORDERING_CORRECTION_REQUIRED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+它只最小重开 exact branch 创建以后、workflow-only PR 以前的 dependency qualification / ordering seam。
+在本文自己的 final-byte local gates、original PR、受保护 main 合入与 new exact-main 双门成立以前，这仍是 audit
+candidate。不得重开/rerun #252，不得把 lockfile 塞进 workflow-only PR，不得直接修改 maintenance branch、运行
+`workflow_dispatch`、创建 dependency PR、弱化 audit、升级 phase two 或开始 backport/release/consumer migration /
+Parse。后继只能先审计并冻结 dependency prerequisite 的 source、scope、验证、merge 与 exact-tip 资格链。

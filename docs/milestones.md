@@ -3397,3 +3397,49 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 create-reference 重试、实际 git push、workflow PR、phase two、runtime/backport/release、consumer migration 或 Parse。
 只有文档 226 自己的 original PR、受保护合入与 new exact-main 双门成立后，更正才成为 qualified history；之后仍须
 返回 CONTROL LOOP，独立决定是否请求 credential authority 扩张。
+
+## M10 maintenance workflow bootstrap 顺序反例
+
+文档 226 成为 qualified history 后，Human 明确授权补齐 GitHub OAuth `workflow` scope。新 credential 独立读回
+包含 `workflow`；随后只进行一次新的 REST create-reference 写观察并得到 `HTTP 201`。REST 与 Git 双读回确认：
+
+```text
+refs/heads/core-0.12-maintenance
+    = f961930ae1e69d7d88849fa2b0d40befb3e94c89
+    = v0.12.2^{}
+```
+
+phase-one ruleset `24216773` 保持 active、无 bypass、禁止删除与 non-fast-forward、要求 PR、required checks
+为空。第一次 `HTTP 404 / UNKNOWN` 继续保留；新 201 不证明其原因。
+
+随后按冻结顺序建立 workflow-only PR #252：base `f961930...`、head `fb77a548...`、1 commit、只修改两个
+workflow filter。候选本地 exact diff、YAML/static、双 Python normal/`-O` 四格与 Browser acceptance 均成立；
+但 original Public CI `36771080921` attempt 1 为 `FAILURE`：Workbench tests/lint/build 通过后，`npm audit`
+对 branch lock 中的 `brace-expansion 5.0.9 / 2.1.4 / 2.1.4` 与 `undici 7.29.0` 报告两组 high-severity
+advisory。六个 job 成功，Starter golden path 跳过。#252 未 rerun、未改 head、未合入并已关闭。
+
+current main 的相同 advisory surface 已经独立维护：PR #248 把 `undici` 锁到 `7.30.0`；PR #253 把 root /
+nested `brace-expansion` 锁到 `5.0.12 / 2.1.7`。#253 original Public CI `36773193271` attempt 1 为
+11/11；合入 `main@30d459197c24dabcfd28f9d50f6ed582ee029258` 后 exact-main Public CI
+`36775834977` attempt 1 为 11/11，Browser Smoke `36775834866` attempt 1 为 1/1。main 资格不修改或授权
+maintenance branch。
+
+[文档 227](227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)因此只重开 M0 的 dependency
+qualification / ordering seam：历史 branch 已可治理地存在，但当前 lock 使 workflow-only-first 不能通过当前
+资格门。audit candidate 状态为：
+
+```text
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_CREATED
+M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
+M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
+M0_MAINTENANCE_BOOTSTRAP_ORDERING_CORRECTION_REQUIRED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+该审计不选择 lockfile-only prerequisite、`workflow_dispatch` 或其他验证机制，也不授权重开 #252、把 dependency
+塞入 workflow-only PR、直接修改 maintenance branch、弱化 `npm audit`、升级 phase two、开始 0.12.3
+backport/release、consumer migration 或 Parse。只有 doc227 自己的 local gates、original PR、受保护 main 合入与
+new exact-main 双门闭合后，问题边界才成为 qualified history；随后仍须返回 CONTROL LOOP，起草最小顺序合同。
