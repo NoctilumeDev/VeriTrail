@@ -2556,3 +2556,41 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 candidate。不得重开/rerun #252，不得把 lockfile 塞进 workflow-only PR，不得直接修改 maintenance branch、运行
 `workflow_dispatch`、创建 dependency PR、弱化 audit、升级 phase two 或开始 backport/release/consumer migration /
 Parse。后继只能先审计并冻结 dependency prerequisite 的 source、scope、验证、merge 与 exact-tip 资格链。
+
+## M10 0.12 maintenance dependency prerequisite 最小前合同审计（候选状态）
+
+从 exact maintenance commit `f961930ae1e69d7d88849fa2b0d40befb3e94c89` detached 构造的 bounded candidate
+只修改 `web/package-lock.json`：`undici 7.29.0 -> 7.30.0`、root `brace-expansion 5.0.9 -> 5.0.12`、
+两处 nested `2.1.4 -> 2.1.7`。base / candidate lock SHA-256 分别为
+`FD50366E34F3FECE0CD661A18989A6BC41217B1AD92BFD3E4C79D15002CD20D1` /
+`6A6F5D09C97B7C01501D04705575CDA11155840CF715EE88817711062A7EA01E`。candidate 与 current main lock
+逐字节相同，但不继承 main qualification。
+
+fresh npm `11.19.1` 安装与 Workbench 14 files / 172 tests、lint、type-check/build、full audit 0 vulnerability、
+dependency tree 与 exact one-file diff 成立。错误并发运行的 Python 四格分别留下 `6 / 6 / 7 / 7` 个
+`RESOURCE_MEMORY_SOFT_LIMIT` 相关失败；随后 3.10 normal 顺序观察仍在真实 `4096 MB` soft line 下留下 10 个失败。
+这些观察保持非资格失败，不得改写成 Python / Browser PASS，也不得通过调大预算解决。
+
+GitHub 官方 `workflow_dispatch` 语义允许对 branch / tag ref 运行 workflow，run 的 `head_sha` 绑定该 ref 的最后
+提交。旧 Public CI / Browser Smoke 均已有 `workflow_dispatch`。因此[文档 228](docs/228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
+把唯一进入后继合同候选的路线收缩为：one-file topic candidate -> exact-head 两条 dispatch witness -> ruleset-protected
+PR merge -> exact maintenance-tip 两条 fresh dispatch witness -> 返回 CONTROL LOOP -> 新 workflow-only candidate。
+dispatch witness 不是 original PR check；ref、head SHA、attempt、job denominator、conclusion 与 merge tip 必须独立核账。
+
+```text
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_CREATED
+M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
+M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_PRECONTRACT_AUDIT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_NOT_STARTED
+M0_MAINTENANCE_DEPENDENCY_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+本文只授权起草最小 dependency prerequisite contract。不得创建/push dependency branch 或 PR，不得运行/rerun
+`workflow_dispatch`，不得修改 maintenance branch、ruleset、workflow、runtime、version 或 Release，不得重开 #252、
+弱化 audit、启动 phase two / backport / consumer migration / Parse。本文自己的 original PR、受保护 main 合入与
+new exact-main 双门闭合以前，precontract boundary 仍只是 candidate。

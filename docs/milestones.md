@@ -3443,3 +3443,51 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 塞入 workflow-only PR、直接修改 maintenance branch、弱化 `npm audit`、升级 phase two、开始 0.12.3
 backport/release、consumer migration 或 Parse。只有 doc227 自己的 local gates、original PR、受保护 main 合入与
 new exact-main 双门闭合后，问题边界才成为 qualified history；随后仍须返回 CONTROL LOOP，起草最小顺序合同。
+
+## M10 maintenance dependency prerequisite 最小前合同审计
+
+从 exact `f961930ae1e69d7d88849fa2b0d40befb3e94c89 = v0.12.2^{}` detached 构造的 targeted npm
+candidate 只修改 `web/package-lock.json` 四个 entry：`undici 7.30.0`、root `brace-expansion 5.0.12` 与两处
+nested `2.1.7`。候选 lock SHA-256 为
+`6A6F5D09C97B7C01501D04705575CDA11155840CF715EE88817711062A7EA01E`，与 current main lock 逐字节相同；
+该相等不继承 main 的 PR / CI / merge / exact-main authority。
+
+candidate 上 fresh npm `11.19.1` install、Workbench 14 files / 172 tests、lint、type-check/build、full audit
+0 vulnerability、dependency tree、exact one-file diff 与 `git diff --check` 成立。错误地并发运行完整 Python 四格后，
+四格分别留下 `6 / 6 / 7 / 7` 个 `RESOURCE_MEMORY_SOFT_LIMIT` 相关失败；3.10 normal 顺序重跑仍因 Chromium /
+service 启动后跌破冻结的 `4096 MB` 可用内存软线留下 10 个失败。该本机观察保持非资格失败；没有调整预算、
+删除测试或写成 PASS。#252 相同 base 的远端 Python jobs PASS 只帮助归层，不能替 candidate 取得资格。
+
+旧 Public CI / Browser Smoke 均声明 `workflow_dispatch`。GitHub 官方语义把 dispatch run 的 `GITHUB_SHA` 绑定为
+被触发 branch / tag ref 的最后提交，run API 可读回 `event / head_branch / head_sha / run_attempt / status /
+conclusion`。因此[文档 228](228-m10-maintenance-dependency-prerequisite-precontract-audit.md)证明下列路线具有合同化资格：
+
+```text
+one lockfile-only topic candidate
+    -> exact-head Public CI + Browser Smoke dispatch witnesses
+    -> ruleset-protected PR merge
+    -> exact maintenance-tip Public CI + Browser Smoke dispatch witnesses
+    -> return to CONTROL LOOP
+    -> fresh workflow-only candidate; never reuse #252
+```
+
+dispatch witness 不得命名为 original PR check；topic ref 前后 identity、run head SHA、attempt、完整 job denominator、
+merge tip 与 exact-tip run 必须分别核账。precontract audit candidate 状态为：
+
+```text
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_CREATED
+M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
+M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_PRECONTRACT_AUDIT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_NOT_STARTED
+M0_MAINTENANCE_DEPENDENCY_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+本文只授权起草最小合同。它不授权 dependency branch / PR / dispatch，不修改 maintenance branch、ruleset、workflow、
+runtime、tests、dependency bytes、version、Release 或 frozen R1 contracts，不重开 #252，也不启动 phase two、
+backport、consumer migration 或 Parse。只有 doc228 自己的 local gates、original PR、受保护 main 合入与 new
+exact-main 双门闭合后，该前合同边界才成为 qualified history。
