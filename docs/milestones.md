@@ -3491,3 +3491,37 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 runtime、tests、dependency bytes、version、Release 或 frozen R1 contracts，不重开 #252，也不启动 phase two、
 backport、consumer migration 或 Parse。只有 doc228 自己的 local gates、original PR、受保护 main 合入与 new
 exact-main 双门闭合后，该前合同边界才成为 qualified history。
+
+## M10 maintenance dependency prerequisite 最小合同（条件状态）
+
+doc228 已经 PR #255 head `3b885a7230e1af37a00dcd8db5fed6faefbc4dd4` 的 original Public CI
+`36786553995` attempt 1 11/11、ordinary merge `main@1227d41ff3c0d052f6b9e90f8be55ae89b2912fc`、
+new exact-main Public CI `36789112514` attempt 1 11/11 与 Browser Smoke `36789112562` attempt 1 1/1，
+成为 qualified precontract history。
+
+[文档 229](229-m10-maintenance-dependency-prerequisite-contract.md)只条件化发布：
+
+```text
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_CREATED
+M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
+M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_PRECONTRACT_AUDITED
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+合同候选冻结 exact v0.12.2 source、npm 11.19.1 targeted construction、四个允许 lock entries、final lock
+SHA-256、one-file scope、local Workbench gates、PR/ruleset/ordinary merge identity，以及 exact topic head 与 exact
+maintenance merge tip 各自独立的 Public CI / Browser Smoke manual-dispatch observations。dispatch witness 不得命名为
+original PR check 或 ruleset required check；candidate 与 tip 必须分别绑定 ref、head SHA、attempt 1、完整 job
+denominator 与 conclusion。
+
+doc229 自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc228 /
+doc229 / milestones installed-product readback 与 independent reconciliation 全部成立后，才可成为 qualified contract
+candidate。独立 freeze publication 全部闭合以前，合同不得标为 FROZEN，也不得创建 dependency branch / PR、运行
+dispatch、修改 maintenance branch/ruleset/workflow、重开 #252、启动 phase two/backport/release/consumer migration
+或重新授权 Parse。

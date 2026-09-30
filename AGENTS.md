@@ -2557,7 +2557,7 @@ candidate。不得重开/rerun #252，不得把 lockfile 塞进 workflow-only PR
 `workflow_dispatch`、创建 dependency PR、弱化 audit、升级 phase two 或开始 backport/release/consumer migration /
 Parse。后继只能先审计并冻结 dependency prerequisite 的 source、scope、验证、merge 与 exact-tip 资格链。
 
-## M10 0.12 maintenance dependency prerequisite 最小前合同审计（候选状态）
+## M10 0.12 maintenance dependency prerequisite 最小前合同审计
 
 从 exact maintenance commit `f961930ae1e69d7d88849fa2b0d40befb3e94c89` detached 构造的 bounded candidate
 只修改 `web/package-lock.json`：`undici 7.29.0 -> 7.30.0`、root `brace-expansion 5.0.9 -> 5.0.12`、
@@ -2582,15 +2582,43 @@ M0_PHASE_ONE_RULESET_CREATED
 M0_MAINTENANCE_BRANCH_CREATED
 M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
 M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
-M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_PRECONTRACT_AUDIT_CANDIDATE
-M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_NOT_STARTED
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_PRECONTRACT_AUDITED
 M0_MAINTENANCE_DEPENDENCY_IMPLEMENTATION_NOT_STARTED
 M0_MAINTENANCE_BOOTSTRAP_BLOCKED
 CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
 R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 ```
 
-本文只授权起草最小 dependency prerequisite contract。不得创建/push dependency branch 或 PR，不得运行/rerun
-`workflow_dispatch`，不得修改 maintenance branch、ruleset、workflow、runtime、version 或 Release，不得重开 #252、
-弱化 audit、启动 phase two / backport / consumer migration / Parse。本文自己的 original PR、受保护 main 合入与
-new exact-main 双门闭合以前，precontract boundary 仍只是 candidate。
+doc228 已经 PR #255 head `3b885a7230e1af37a00dcd8db5fed6faefbc4dd4` 的 original Public CI
+`36786553995` attempt 1 11/11、ordinary merge `main@1227d41ff3c0d052f6b9e90f8be55ae89b2912fc`、
+new exact-main Public CI `36789112514` attempt 1 11/11 与 Browser Smoke `36789112562` attempt 1 1/1，
+成为 qualified precontract history。它只授权起草最小 dependency prerequisite contract；不授权 dependency write、
+dispatch、workflow bootstrap、phase two、release 或 Parse。
+
+## M10 0.12 maintenance dependency prerequisite 最小合同（条件状态）
+
+[文档 229](docs/229-m10-maintenance-dependency-prerequisite-contract.md)只条件化发布：
+
+```text
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_CREATED
+M0_WORKFLOW_BOOTSTRAP_CANDIDATE_FAILED
+M0_MAINTENANCE_DEPENDENCY_QUALIFICATION_GAP_PROVEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_PRECONTRACT_AUDITED
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+合同冻结 exact source / package inputs、npm 11.19.1 targeted update、四个 lock entries 与 final hash、one-file scope、
+local Workbench gates、PR/ruleset/ordinary merge identity，以及 topic-head / maintenance-tip 两组不可借用的
+Public CI + Browser Smoke `workflow_dispatch` observations。dispatch witness 不是 original PR check 或 required check；
+candidate 与 tip 必须各自绑定 ref、head SHA、attempt 1、完整 job denominator 与 conclusion。
+
+本文档候选自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README /
+doc228 / doc229 / milestones installed-product readback 与 independent reconciliation 全部成立后，才可成为 qualified
+contract candidate。之后还须独立 freeze publication 自己闭合，合同才可 FROZEN。冻结以前不得创建/push dependency
+branch 或 PR，不得运行/rerun dispatch，不得修改 maintenance branch、ruleset、workflow、runtime、tests、version、
+Release 或 frozen R1 contract，不得重开 #252，也不得启动 phase two、backport、consumer migration 或 Parse。
