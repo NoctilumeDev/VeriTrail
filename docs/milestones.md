@@ -3357,3 +3357,43 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 未保护 branch、workflow PR、phase two、runtime/version/backport/release、consumer migration 与 Parse 实现。
 本文档审计自己的 original PR、受保护合入和 new exact-main 双门闭合以前，以上状态仍是审计候选；绿灯也不自动
 授权下一份治理合同。
+
+## M10 maintenance branch 创建 authority 追加更正
+
+文档 225 完成自己的 original PR、受保护合入和 exact-main 双门以后，后继 CONTROL LOOP 对第一次 REST 404 的
+credential prerequisite 做了更细只读核账。OAuth scope 读回为 `delete_repo / gist / read:org / repo`，不包含
+`workflow`。GitHub 官方文档说明 `workflow` scope 负责新增或更新 Actions workflow；只有同路径、同内容已存在于
+另一 branch 时才有例外。
+
+对 `v0.12.2^{}` 的 workflow blob 与所有当前 remote branch tip 复算得到：
+
+```text
+.github/workflows/ci.yml
+    c094d2cb84a2147e2b8bba1a7e76f140905d1a4d
+    matching branch tips = 0
+
+.github/workflows/browser-smoke.yml
+    413f35ad9f768eb323d0058b82bdd8eaca177be1
+    matching branch tips = 11
+```
+
+旧 `ci.yml` 已足以使 scope 例外不成立。因此，文档 225 中“权限核账排除了明显 token scope 缺失”以及“404 已命中
+ruleset/governance 反例”的强归因被后继证据击穿。第一次 404、active ruleset 和 absent branch 均继续保留；精确
+根因仍为 `UNKNOWN`，缺少 `workflow` scope 是 material unqualified precondition，但尚未被证明为该 404 的唯一原因。
+
+追加更正见[文档 226](226-m10-maintenance-branch-creation-authority-correction-audit.md)。当前状态为：
+
+```text
+M10_BROWSER_HOST_SOCKET_CLASSIFICATION_CURRENT_SOURCE_EXACT_MAIN_VERIFIED
+M0_PHASE_ONE_RULESET_CREATED
+M0_MAINTENANCE_BRANCH_NOT_CREATED
+M0_BRANCH_CREATION_AUTHORITY_UNQUALIFIED
+M0_MAINTENANCE_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+该更正不修改文档 223/224/225，不修改 ruleset 或 branch，也不授权 `gh auth refresh`、OAuth scope 扩张、
+create-reference 重试、实际 git push、workflow PR、phase two、runtime/backport/release、consumer migration 或 Parse。
+只有文档 226 自己的 original PR、受保护合入与 new exact-main 双门成立后，更正才成为 qualified history；之后仍须
+返回 CONTROL LOOP，独立决定是否请求 credential authority 扩张。

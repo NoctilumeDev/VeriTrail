@@ -184,9 +184,13 @@ contract candidate，runtime、maintenance branch、ruleset、version、tag、Re
 [M10 0.12 maintenance bootstrap 治理反例审计](docs/225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
 记录 C1 经 PR #249 合入 `main@2daf6ea...` 并完成 exact-main 双门；current source 已包含精确 host-socket
 分类修正，但 public `v0.13.0` wheel 没有因此改变。M0 phase-one ruleset `24216773` 已 active、无 bypass，
-第一次真实 exact branch ref 创建却返回 HTTP 404，`core-0.12-maintenance` 仍不存在。M0 因而停止为
-`MAINTENANCE_BOOTSTRAP_BLOCKED`；实际 push、workflow PR、phase two、0.12.3 backport/release、consumer migration
-与 Parse authorization 均未开始。
+第一次真实 exact branch ref 创建却返回 HTTP 404，`core-0.12-maintenance` 仍不存在。
+
+[M10 maintenance branch 创建 authority 更正审计](docs/226-m10-maintenance-branch-creation-authority-correction-audit.md)
+随后确认该次 OAuth credential 没有 `workflow` scope，且旧 `ci.yml` 不满足“另一 branch 已有同路径同内容”例外；
+因此 404 继续保留，但它没有资格证明 ruleset/governance 反例。当前为
+`M0_BRANCH_CREATION_AUTHORITY_UNQUALIFIED / M0_MAINTENANCE_BOOTSTRAP_BLOCKED`；scope 扩张、ref 重试、实际 push、
+workflow PR、phase two、0.12.3 backport/release、consumer migration 与 Parse authorization 均未开始。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
