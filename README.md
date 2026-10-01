@@ -210,9 +210,14 @@ doc228 已经 PR #255 original 11/11、受保护 main 合入与 new exact-main P
 [M10 maintenance dependency prerequisite 最小合同](docs/229-m10-maintenance-dependency-prerequisite-contract.md)
 把 exact v0.12.2 source、npm 11.19.1 targeted lock construction、四个允许 entry、one-file scope、local
 Workbench gates、topic-head / merge-tip 两轮独立 manual dispatch、ordinary merge identity、失败保留与 retained evidence
-冻结为候选语义。manual dispatch 是 exact-ref witness，不是 original PR check 或 ruleset required check；合同候选的
-资格链与独立 freeze publication 闭合以前，dependency branch / PR / dispatch、workflow bootstrap、phase two、
-0.12.3 release 与 Parse 仍未获授权。
+冻结为候选语义。PR #256 original 11/11、ordinary merge `main@be1db09637b8b499269b6281c5ab744ddf27db02`、
+new exact-main 11/11 + 1/1、
+四份 fresh installed-product readback 与 independent reconciliation 已使其成为 qualified contract candidate。
+
+[M10 maintenance dependency prerequisite 合同冻结发布](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
+只发布文档 229 的冻结目标；manual dispatch 仍是 exact-ref witness，不是 original PR check 或 ruleset required
+check。本发布自己的 PR、受保护合入、new exact-main 双门、fresh readback 与 reconciliation 全部闭合以前，
+当前事实仍是候选，dependency branch / PR / dispatch、workflow bootstrap、phase two、0.12.3 release 与 Parse 未获授权。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -812,7 +817,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 90. [M10 maintenance workflow bootstrap 顺序反例审计](docs/227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
 91. [M10 maintenance dependency prerequisite 最小前合同审计](docs/228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
 92. [M10 maintenance dependency prerequisite 最小合同](docs/229-m10-maintenance-dependency-prerequisite-contract.md)
-93. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+93. [M10 maintenance dependency prerequisite 合同冻结发布](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
+94. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

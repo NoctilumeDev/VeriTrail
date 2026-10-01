@@ -2,8 +2,10 @@
 
 日期：2026-10-01
 
-> 状态：`CONTRACT_CANDIDATE`。本文只冻结 0.12 maintenance dependency prerequisite 的 source、构造、
-> review、dispatch witness、受保护合入、exact-tip reconciliation 与失败语义。本文不是 dependency candidate，
+> 状态目标（仅[独立冻结发布](230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)最后门闭合后生效）：
+> `M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_FROZEN /
+> M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED`。本文只冻结 0.12 maintenance dependency
+> prerequisite 的 source、构造、review、dispatch witness、受保护合入、exact-tip reconciliation 与失败语义。本文不是 dependency candidate，
 > 不创建 branch / PR，不运行 workflow，不修改 maintenance line，也不授权 workflow bootstrap、phase two、
 > 0.12.3 backport / release、consumer migration 或 Parse。
 
@@ -315,7 +317,8 @@ candidate；#252 永久保持关闭/未合并/失败身份，不能 reopen、rer
 
 ## 14. 合同候选资格与冻结停止线
 
-本文当前只条件化发布：
+本节保留合同候选的资格与冻结门。[独立冻结发布](230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
+记录候选证据与发布目标；在该 publication 最后门闭合以前，当前事实仍是：
 
 ```text
 M0_PHASE_ONE_RULESET_CREATED

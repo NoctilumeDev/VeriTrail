@@ -2595,7 +2595,7 @@ new exact-main Public CI `36789112514` attempt 1 11/11 与 Browser Smoke `367891
 成为 qualified precontract history。它只授权起草最小 dependency prerequisite contract；不授权 dependency write、
 dispatch、workflow bootstrap、phase two、release 或 Parse。
 
-## M10 0.12 maintenance dependency prerequisite 最小合同（条件状态）
+## M10 0.12 maintenance dependency prerequisite 合同冻结发布（条件状态）
 
 [文档 229](docs/229-m10-maintenance-dependency-prerequisite-contract.md)只条件化发布：
 
@@ -2612,13 +2612,26 @@ CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
 R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 ```
 
-合同冻结 exact source / package inputs、npm 11.19.1 targeted update、四个 lock entries 与 final hash、one-file scope、
+合同候选冻结 exact source / package inputs、npm 11.19.1 targeted update、四个 lock entries 与 final hash、one-file scope、
 local Workbench gates、PR/ruleset/ordinary merge identity，以及 topic-head / maintenance-tip 两组不可借用的
 Public CI + Browser Smoke `workflow_dispatch` observations。dispatch witness 不是 original PR check 或 required check；
 candidate 与 tip 必须各自绑定 ref、head SHA、attempt 1、完整 job denominator 与 conclusion。
 
-本文档候选自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README /
-doc228 / doc229 / milestones installed-product readback 与 independent reconciliation 全部成立后，才可成为 qualified
-contract candidate。之后还须独立 freeze publication 自己闭合，合同才可 FROZEN。冻结以前不得创建/push dependency
-branch 或 PR，不得运行/rerun dispatch，不得修改 maintenance branch、ruleset、workflow、runtime、tests、version、
-Release 或 frozen R1 contract，不得重开 #252，也不得启动 phase two、backport、consumer migration 或 Parse。
+文档 229 已经 PR #256 head `c5e10ebd215d168293713714ef189742ff64d806` original Public CI
+`36792226029` attempt 1 11/11、ordinary merge `main@be1db09637b8b499269b6281c5ab744ddf27db02`、
+new exact-main Public CI `36794128077` attempt 1 11/11 与 Browser Smoke `36794127955` attempt 1 1/1。
+README / doc228 / doc229 / milestones 四份 fresh installed-product readback 与 independent reconciliation 均 PASS，
+因此文档 229 已是 qualified contract candidate。
+
+[文档 230](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED
+```
+
+文档 230 自己的 final bytes、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc229 /
+doc230 / milestones installed-product readback 与 independent reconciliation 全部闭合后，冻结目标才生效。
+此前当前事实仍是 qualified contract candidate。不得创建/push dependency branch 或 PR，不得运行/rerun dispatch，
+不得修改 maintenance branch、ruleset、workflow、runtime、tests、version、Release 或 frozen R1 contract，不得重开
+#252，也不得启动 phase two、backport、consumer migration 或 Parse。
