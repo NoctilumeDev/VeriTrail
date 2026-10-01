@@ -2631,7 +2631,32 @@ M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED
 ```
 
 文档 230 自己的 final bytes、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc229 /
-doc230 / milestones installed-product readback 与 independent reconciliation 全部闭合后，冻结目标才生效。
-此前当前事实仍是 qualified contract candidate。不得创建/push dependency branch 或 PR，不得运行/rerun dispatch，
-不得修改 maintenance branch、ruleset、workflow、runtime、tests、version、Release 或 frozen R1 contract，不得重开
-#252，也不得启动 phase two、backport、consumer migration 或 Parse。
+doc230 / milestones installed-product readback 与 independent reconciliation 已全部闭合。final manifest
+`sha256_json=1dcd412b0f298ad7a90d779b0d16bd5b5102f0f892838cb4c9f9484d3d4cf1a7`，因此合同已经
+`FROZEN`；冻结没有自动开始实现。
+
+## M10 maintenance dependency prerequisite 资格发布（条件状态）
+
+[文档 231](docs/231-m10-maintenance-dependency-prerequisite-qualification-publication.md)条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_QUALIFIED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+one-file candidate `823add7850867754db1fea5b484c083678be0873` 只修改 `web/package-lock.json`；fresh npm
+11.19.1 install、Workbench 14 files / 172 tests、lint、type-check/build、audit 0 vulnerabilities 与 exact lock
+projection 成立。PR #258 的 candidate-head manual dispatch 为 Public CI `36803540792` attempt 1 7/7 和 Browser
+Smoke `36803550201` attempt 1 1/1；ordinary merge `6ed18ae8b3d8b98b6e5be7af709aa868590ee914` 保持同一
+tree/lock bytes，maintenance-tip fresh dispatch 为 Public CI `36804634994` attempt 1 7/7 与 Browser Smoke
+`36804645585` attempt 1 1/1。candidate/tip run 不互相借用。independent manifest
+`sha256_json=6ca3a967ed8b39f0aabd88fcf2553f2d4d774c4769663d53c4ae53bce0b5742c`。
+
+本文自己的 original PR、受保护 main 合入、new exact-main 双门、fresh README / doc229 / doc230 / doc231 /
+milestones installed-product readback 与 independent reconciliation 全部闭合后，qualified target 才生效。最后门以前
+仍是 implementation not started / bootstrap blocked。闭合以后必须从 exact maintenance tip 返回 CONTROL LOOP，重新
+审查 workflow-only bootstrap；不得重开/rerun/改写 #252，不得自动启动 phase two、backport/release、consumer
+migration 或 Parse。
