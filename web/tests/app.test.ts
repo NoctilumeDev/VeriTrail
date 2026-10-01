@@ -18,6 +18,15 @@ async function waitFor(wrapper: ReturnType<typeof mount>, selector: string) {
   throw new Error(`Timed out waiting for ${selector}`)
 }
 
+async function waitForSearch(expected: string) {
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    await flushPromises()
+    if (window.location.search === expected) return
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  }
+  throw new Error(`Timed out waiting for location.search=${expected}`)
+}
+
 async function selectPublicView(
   wrapper: ReturnType<typeof mount>,
   view: 'runs' | 'comparison' | 'pairing' | 'batch',
@@ -463,6 +472,7 @@ describe('App', () => {
     expect(window.location.search).toBe('?fixture=comparison&panel=differences')
     expect(wrapper.get('[data-testid="comparison-differences"]').text()).toContain('没有差异')
     await wrapper.get('[data-testid="comparison-panel-return-bottom"]').trigger('click')
+    await waitForSearch('?fixture=comparison')
     expect(window.location.search).toBe('?fixture=comparison')
     expect(wrapper.get('[data-testid="comparison-status"]').text()).toContain('MATCH')
     wrapper.unmount()
@@ -496,6 +506,7 @@ describe('App', () => {
     expect(window.location.search).toBe('?fixture=pairing&panel=sources')
     expect(wrapper.get('[data-testid="paired-sources"]').text()).toContain('unit-treatment')
     await wrapper.get('[data-testid="pairing-panel-return"]').trigger('click')
+    await waitForSearch('?fixture=pairing')
     expect(window.location.search).toBe('?fixture=pairing')
     expect(wrapper.get('[data-testid="paired-analysis-status"]').text()).toContain('SUPPORTED')
     await wrapper.get('.site-footer__seal').trigger('click')
@@ -596,6 +607,7 @@ describe('App', () => {
     expect(positiveRequestCount()).toBe(requestsAfterLoad)
 
     await wrapper.get('[data-testid="run-panel-return-bottom"]').trigger('click')
+    await waitForSearch('?fixture=positive')
     expect(window.location.search).toBe('?fixture=positive')
     wrapper.unmount()
   })
@@ -605,6 +617,7 @@ describe('App', () => {
     const pairing = mount(App)
     await waitFor(pairing, '[data-testid="paired-sources"]')
     await pairing.get('[data-testid="pairing-panel-return"]').trigger('click')
+    await waitForSearch('?fixture=pairing&sample=supported')
     expect(window.location.search).toBe('?fixture=pairing&sample=supported')
     expect(pairing.find('[data-testid="paired-analysis-view"]').exists()).toBe(true)
     pairing.unmount()
@@ -613,6 +626,7 @@ describe('App', () => {
     const comparison = mount(App)
     await waitFor(comparison, '[data-testid="comparison-differences"]')
     await comparison.get('[data-testid="comparison-panel-return-bottom"]').trigger('click')
+    await waitForSearch('?fixture=comparison&sample=drift')
     expect(window.location.search).toBe('?fixture=comparison&sample=drift')
     expect(comparison.find('[data-testid="comparison-view"]').exists()).toBe(true)
     comparison.unmount()

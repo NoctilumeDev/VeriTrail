@@ -333,6 +333,11 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
 | M13 | 系统与分层代码质量终审 | `FROZEN` |
 | M14 | 整改后终局复验与发布收束 | `FROZEN / RELEASED` |
 
+移动端历史连续性反例已在
+[M12 Workbench 历史连续性维护合同](docs/232-m12-workbench-history-continuity-maintenance-contract.md)
+中显式重开最小 `L0_PRESENTATION + BOUNDED_L1_COMPONENT` 边界。它当前只是独立维护候选；历史
+`m12-v0.13.0`、Core、Evidence、Catalog 与 Verdict 冻结事实均未改变。
+
 </details>
 
 平台插件与后继研究轨保持独立：
