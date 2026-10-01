@@ -216,8 +216,15 @@ new exact-main 11/11 + 1/1、
 
 [M10 maintenance dependency prerequisite 合同冻结发布](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
 只发布文档 229 的冻结目标；manual dispatch 仍是 exact-ref witness，不是 original PR check 或 ruleset required
-check。本发布自己的 PR、受保护合入、new exact-main 双门、fresh readback 与 reconciliation 全部闭合以前，
-当前事实仍是候选，dependency branch / PR / dispatch、workflow bootstrap、phase two、0.12.3 release 与 Parse 未获授权。
+check。PR #257、受保护合入 `main@8099d162db78862beccdd84e88c22bec21b0e8b1`、new exact-main
+11/11 + 1/1、四份 fresh readback 与 independent reconciliation 已闭合，因此合同已经 `FROZEN`；实现没有
+由此自动开始。
+
+[M10 maintenance dependency prerequisite 资格发布](docs/231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
+记录 one-file candidate `823add785...`、PR #258、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
+`core-0.12-maintenance@6ed18ae8...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
+本文自己的门闭合以前，公开状态仍是 implementation not started；闭合以后也只允许回到 CONTROL LOOP 重审新的
+workflow-only bootstrap，不授权重开 #252、phase two、0.12.3 release 或 Parse。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见

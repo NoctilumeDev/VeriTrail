@@ -3538,3 +3538,49 @@ M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED
 最后门以前，当前事实仍是 qualified contract candidate。不得创建 dependency branch / PR、运行 dispatch、修改
 maintenance branch/ruleset/workflow、重开 #252、启动 phase two/backport/release/consumer migration 或重新授权
 Parse。冻结后也必须返回 CONTROL LOOP，不能把 FROZEN 自动解释为 implementation authority。
+
+## M10 maintenance dependency prerequisite 资格发布（条件状态）
+
+文档 230 已经 PR #257 head `fc8d259570789c7c56f6e0a5c45bfbdecd2ed2a5` original Public CI
+`36797434149` attempt 1 11/11、ordinary merge `main@8099d162db78862beccdd84e88c22bec21b0e8b1`、
+new exact-main Public CI `36799448250` attempt 1 11/11 与 Browser Smoke `36799448440` attempt 1 1/1。
+README / doc229 / doc230 / milestones 四份 fresh installed-product readback 与 independent reconciliation 均 PASS；
+final manifest：
+
+```text
+sha256_json  = 1dcd412b0f298ad7a90d779b0d16bd5b5102f0f892838cb4c9f9484d3d4cf1a7
+sha256_bytes = ff10d51d8aef37e10fb88b70759bf99c02f43d5e649b5b3ae8ddaf0017e35652
+```
+
+因此 `M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_FROZEN` 已经生效。第一次 README formal observation 的
+错误 literal Plan 保留为非资格 ERROR；fresh Plan/session 取得 PASS，后来的成功没有抹除首败。
+
+[文档 231](231-m10-maintenance-dependency-prerequisite-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_QUALIFIED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+exact maintenance base `f961930ae1e69d7d88849fa2b0d40befb3e94c89` 上的 one-file candidate 为
+`823add7850867754db1fea5b484c083678be0873`，lock SHA-256 为
+`6a6f5d09c97b7c01501d04705575cda11155840cf715ee88817711062a7ea01e`。PR #258 的 candidate-head
+Public CI `36803540792` attempt 1 7/7 与 Browser Smoke `36803550201` attempt 1 1/1 成功；ordinary merge
+`6ed18ae8b3d8b98b6e5be7af709aa868590ee914` 的 parents/tree/lock bytes 精确闭合，maintenance-tip fresh
+Public CI `36804634994` attempt 1 7/7 与 Browser Smoke `36804645585` attempt 1 1/1 成功。
+
+独立 reconciliation 在 normal / `-O` 下生成相同 manifest：
+
+```text
+sha256_json  = 6ca3a967ed8b39f0aabd88fcf2553f2d4d774c4769663d53c4ae53bce0b5742c
+sha256_bytes = 43f47d29a15275fa2bd6110973e5eb14379247e1929b2f34f8b9e755b1d91d4c
+```
+
+本文自己的 final bytes、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc229 / doc230 /
+doc231 / milestones installed-product readback 与 independent reconciliation 全部闭合后，qualified target 才生效。
+最后门以前仍是 implementation not started / bootstrap blocked；闭合以后只允许返回 CONTROL LOOP 重审新的
+workflow-only bootstrap。#252 永久保持关闭、未合入、失败身份，不能 reopen/rerun/改 head；phase two、backport、
+0.12.3 release、consumer migration 与 Parse 继续未获授权。
