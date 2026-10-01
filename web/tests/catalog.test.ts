@@ -53,6 +53,15 @@ async function waitFor(wrapper: ReturnType<typeof mount>, selector: string) {
   throw new Error(`Timed out waiting for ${selector}`)
 }
 
+async function waitForSearch(expected: string) {
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    await flushPromises()
+    if (window.location.search === expected) return
+    await new Promise((resolve) => setTimeout(resolve, 0))
+  }
+  throw new Error(`Timed out waiting for location.search=${expected}`)
+}
+
 describe('Catalog API 0.1', () => {
   let bundle: Map<string, Blob>
 
@@ -286,7 +295,7 @@ describe('Catalog API 0.1', () => {
     expect(wrapper.get('[data-testid="run-panel-return-bottom"]').text()).toContain('返回 Run 详情')
 
     await wrapper.get('[data-testid="run-panel-return-bottom"]').trigger('click')
-    await flushPromises()
+    await waitForSearch(`?run=${catalogRunId}`)
     expect(window.location.search).toBe(`?run=${catalogRunId}`)
     expect(wrapper.get('[data-testid="run-summary"]').text()).toContain('unit-run')
     wrapper.unmount()

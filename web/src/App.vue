@@ -106,8 +106,12 @@ function currentRoute() {
   return workbenchHistory.current()
 }
 
-function pushRoute(target: WorkbenchRouteTarget) {
-  workbenchHistory.push(target)
+function pushRoute(target: WorkbenchRouteTarget, returnScrollY = window.scrollY) {
+  workbenchHistory.push(target, returnScrollY)
+}
+
+function returnRoute(target: WorkbenchRouteTarget) {
+  return workbenchHistory.returnTo(target)
 }
 
 function runDetailPanelLabel(panel: RunDetailPanel): string {
@@ -136,9 +140,10 @@ function pairingPanelLabel(panel: PairingPanel): string {
 }
 
 function openComparisonPanel(panel: ComparisonPanel) {
+  const returnScrollY = window.scrollY
   comparisonPanel.value = panel
   const sample = currentRoute().comparisonSample
-  pushRoute({ kind: 'comparison', panel, sample })
+  pushRoute({ kind: 'comparison', panel, sample }, returnScrollY)
   liveMessage.value = '已进入完整语义差异账册。'
   void nextTick(() => {
     document.getElementById('view-comparison-title')?.focus()
@@ -151,17 +156,21 @@ function closeComparisonPanel() {
   const panel = comparisonPanel.value
   comparisonPanel.value = null
   const sample = currentRoute().comparisonSample
-  pushRoute({ kind: 'comparison', sample })
+  returnRoute({ kind: 'comparison', sample })
   liveMessage.value = '已返回复跑比较总览。'
   void nextTick(() => {
-    if (panel) document.querySelector<HTMLElement>(`[data-open-comparison-panel="${panel}"]`)?.focus()
+    if (panel) {
+      document.querySelector<HTMLElement>(`[data-open-comparison-panel="${panel}"]`)
+        ?.focus({ preventScroll: true })
+    }
   })
 }
 
 function openPairingPanel(panel: PairingPanel) {
+  const returnScrollY = window.scrollY
   pairingPanel.value = panel
   const sample = currentRoute().pairingSample
-  pushRoute({ kind: 'pairing', panel, sample })
+  pushRoute({ kind: 'pairing', panel, sample }, returnScrollY)
   liveMessage.value = `已进入${pairingPanelLabel(panel)}。`
   void nextTick(() => {
     document.getElementById('paired-title')?.focus()
@@ -174,18 +183,22 @@ function closePairingPanel() {
   const panel = pairingPanel.value
   pairingPanel.value = null
   const sample = currentRoute().pairingSample
-  pushRoute({ kind: 'pairing', sample })
+  returnRoute({ kind: 'pairing', sample })
   liveMessage.value = '已返回配对实验总览。'
   void nextTick(() => {
-    if (panel) document.querySelector<HTMLElement>(`[data-open-pairing-panel="${panel}"]`)?.focus()
+    if (panel) {
+      document.querySelector<HTMLElement>(`[data-open-pairing-panel="${panel}"]`)
+        ?.focus({ preventScroll: true })
+    }
   })
 }
 
 function openRunDetailPanel(panel: RunDetailPanel) {
+  const returnScrollY = window.scrollY
   const target = runDetailRouteTarget(panel)
   if (!target) return
   runDetailPanel.value = panel
-  pushRoute(target)
+  pushRoute(target, returnScrollY)
   liveMessage.value = `已进入${runDetailPanelLabel(panel)}完整视图。`
   void nextTick(() => {
     document.getElementById('run-detail-panel-title')?.focus()
@@ -199,10 +212,13 @@ function closeRunDetailPanel() {
   const target = runDetailRouteTarget(null)
   if (!target) return
   runDetailPanel.value = null
-  pushRoute(target)
+  returnRoute(target)
   liveMessage.value = '已返回 Run 详情总览。'
   void nextTick(() => {
-    if (panel) document.querySelector<HTMLElement>(`[data-open-run-panel="${panel}"]`)?.focus()
+    if (panel) {
+      document.querySelector<HTMLElement>(`[data-open-run-panel="${panel}"]`)
+        ?.focus({ preventScroll: true })
+    }
   })
 }
 
@@ -627,11 +643,13 @@ function returnToCatalog() {
   const runId = selectedCatalogRunId.value ?? lastCatalogTriggerId
   selectedCatalogRunId.value = null
   runDetailPanel.value = null
-  pushRoute({ kind: 'catalog' })
+  const returnMode = returnRoute({ kind: 'catalog' })
   liveMessage.value = '已返回本地 Run 目录。'
   void nextTick(() => {
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
+    if (returnMode === 'fallback') {
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
     if (!runId) return
     document.querySelector<HTMLElement>(`[data-catalog-run-id="${runId}"]`)?.focus({ preventScroll: true })
   })
@@ -731,11 +749,12 @@ function applyRunPanelFromHistory(requestedPanel: RunDetailPanel | null, focusTa
   if (!focusTarget) return
   void nextTick(() => {
     if (requestedPanel) {
-      document.getElementById('run-detail-panel-title')?.focus()
+      document.getElementById('run-detail-panel-title')?.focus({ preventScroll: true })
     } else if (previousPanel) {
-      document.querySelector<HTMLElement>(`[data-open-run-panel="${previousPanel}"]`)?.focus()
+      document.querySelector<HTMLElement>(`[data-open-run-panel="${previousPanel}"]`)
+        ?.focus({ preventScroll: true })
     } else {
-      document.getElementById('run-detail-title')?.focus()
+      document.getElementById('run-detail-title')?.focus({ preventScroll: true })
     }
   })
 }
@@ -759,8 +778,8 @@ function applyCatalogFromHistory(focusTarget: boolean) {
     const row = previousRunId
       ? document.querySelector<HTMLElement>(`[data-catalog-run-id="${previousRunId}"]`)
       : null
-    if (row) row.focus()
-    else document.getElementById('view-runs-title')?.focus()
+    if (row) row.focus({ preventScroll: true })
+    else document.getElementById('view-runs-title')?.focus({ preventScroll: true })
   })
 }
 
@@ -796,8 +815,11 @@ function onHistoryChange(focusTarget = false) {
         runDetailPanel.value = requestedPanel
         if (focusTarget) {
           void nextTick(() => {
-            if (requestedPanel) document.getElementById('run-detail-panel-title')?.focus()
-            else document.getElementById('run-detail-title')?.focus()
+            if (requestedPanel) {
+              document.getElementById('run-detail-panel-title')?.focus({ preventScroll: true })
+            } else {
+              document.getElementById('run-detail-title')?.focus({ preventScroll: true })
+            }
           })
         }
       })
@@ -844,9 +866,14 @@ function onHistoryChange(focusTarget = false) {
       comparisonPanel.value = requestedPanel
       if (focusTarget) {
         void nextTick(() => {
-          if (requestedPanel) document.getElementById('view-comparison-title')?.focus()
-          else if (previousPanel) document.querySelector<HTMLElement>(`[data-open-comparison-panel="${previousPanel}"]`)?.focus()
-          else document.getElementById('view-comparison-title')?.focus()
+          if (requestedPanel) {
+            document.getElementById('view-comparison-title')?.focus({ preventScroll: true })
+          } else if (previousPanel) {
+            document.querySelector<HTMLElement>(`[data-open-comparison-panel="${previousPanel}"]`)
+              ?.focus({ preventScroll: true })
+          } else {
+            document.getElementById('view-comparison-title')?.focus({ preventScroll: true })
+          }
         })
       }
       return
@@ -888,9 +915,14 @@ function onHistoryChange(focusTarget = false) {
       pairingPanel.value = requestedPanel
       if (focusTarget) {
         void nextTick(() => {
-          if (requestedPanel) document.getElementById('paired-title')?.focus()
-          else if (previousPanel) document.querySelector<HTMLElement>(`[data-open-pairing-panel="${previousPanel}"]`)?.focus()
-          else document.getElementById('paired-title')?.focus()
+          if (requestedPanel) {
+            document.getElementById('paired-title')?.focus({ preventScroll: true })
+          } else if (previousPanel) {
+            document.querySelector<HTMLElement>(`[data-open-pairing-panel="${previousPanel}"]`)
+              ?.focus({ preventScroll: true })
+          } else {
+            document.getElementById('paired-title')?.focus({ preventScroll: true })
+          }
         })
       }
       return
@@ -1009,7 +1041,15 @@ function onHistoryChange(focusTarget = false) {
 }
 
 function onPopState() {
+  const savedScrollY = workbenchHistory.savedScrollY()
   onHistoryChange(true)
+  if (savedScrollY === null) return
+  void nextTick(() => {
+    window.setTimeout(() => {
+      document.documentElement.scrollTop = savedScrollY
+      document.body.scrollTop = savedScrollY
+    }, 0)
+  })
 }
 
 function shortHash(value: string): string {
