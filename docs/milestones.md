@@ -3492,7 +3492,7 @@ runtime、tests、dependency bytes、version、Release 或 frozen R1 contracts�
 backport、consumer migration 或 Parse。只有 doc228 自己的 local gates、original PR、受保护 main 合入与 new
 exact-main 双门闭合后，该前合同边界才成为 qualified history。
 
-## M10 maintenance dependency prerequisite 最小合同（条件状态）
+## M10 maintenance dependency prerequisite 合同冻结发布（条件状态）
 
 doc228 已经 PR #255 head `3b885a7230e1af37a00dcd8db5fed6faefbc4dd4` 的 original Public CI
 `36786553995` attempt 1 11/11、ordinary merge `main@1227d41ff3c0d052f6b9e90f8be55ae89b2912fc`、
@@ -3520,8 +3520,21 @@ maintenance merge tip 各自独立的 Public CI / Browser Smoke manual-dispatch 
 original PR check 或 ruleset required check；candidate 与 tip 必须分别绑定 ref、head SHA、attempt 1、完整 job
 denominator 与 conclusion。
 
-doc229 自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc228 /
-doc229 / milestones installed-product readback 与 independent reconciliation 全部成立后，才可成为 qualified contract
-candidate。独立 freeze publication 全部闭合以前，合同不得标为 FROZEN，也不得创建 dependency branch / PR、运行
-dispatch、修改 maintenance branch/ruleset/workflow、重开 #252、启动 phase two/backport/release/consumer migration
-或重新授权 Parse。
+doc229 已经 PR #256 head `c5e10ebd215d168293713714ef189742ff64d806` original Public CI
+`36792226029` attempt 1 11/11、ordinary merge `main@be1db09637b8b499269b6281c5ab744ddf27db02`、
+new exact-main Public CI `36794128077` attempt 1 11/11 与 Browser Smoke `36794127955` attempt 1 1/1。
+README / doc228 / doc229 / milestones 四份 fresh installed-product readback 与 independent reconciliation 均 PASS；
+canonical manifest `sha256_json=dfd697f9544b5629adc86c83d3cb3e511942e0350a7c064a026564e9618c3942`。
+因此 doc229 已是 qualified contract candidate。
+
+[文档 230](230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)只发布文档 229，不修改合同语义。
+其自身 original PR、受保护合入、new exact-main 双门与 fresh readback 全部闭合后，以下目标才生效：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_PREREQUISITE_IMPLEMENTATION_NOT_STARTED
+```
+
+最后门以前，当前事实仍是 qualified contract candidate。不得创建 dependency branch / PR、运行 dispatch、修改
+maintenance branch/ruleset/workflow、重开 #252、启动 phase two/backport/release/consumer migration 或重新授权
+Parse。冻结后也必须返回 CONTROL LOOP，不能把 FROZEN 自动解释为 implementation authority。
