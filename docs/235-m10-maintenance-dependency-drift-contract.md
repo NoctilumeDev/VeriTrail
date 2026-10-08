@@ -322,7 +322,30 @@ exact new core-0.12-maintenance tip
 
 ## 12. 合同候选资格与冻结停止线
 
-在本文 final-byte qualification 闭合以前，当前事实仅为：
+本文 final-byte qualification 已经闭合：
+
+| gate | identity | result |
+| --- | --- | --- |
+| candidate PR | `#267`，head `8ed2f6f0e02e0a7a1e9f0d8006944e02eae1bb75` | 1 commit / 4 files |
+| original Public CI | `37815845110`，attempt 1 | `11/11 SUCCESS` |
+| protected-main merge | `933df49e61b8a5d3e3856afa648d27c1c21f5529` | ordinary merge |
+| exact-main Public CI | `37818894300`，attempt 1 | `11/11 SUCCESS` |
+| exact-main Browser Smoke | `37818894374`，attempt 1 | `1/1 SUCCESS` |
+| installed-product readback | README / doc234 / 本文 / milestones | four independent `PASS` |
+| public source bytes | AGENTS / README / doc234 / 本文 / milestones | `5/5 MATCH` |
+
+independent reconciliation manifest：
+
+```text
+sha256_json  = 1bea6a3b59b452d7debda2b4778826a031e0ae2737e6523a19d55b02cac92960
+sha256_bytes = ddbe3925167ae99b1babcc7ff47dcfbca2560bd3802378b31847f799f63ddda3
+```
+
+因此本文已经是 qualified contract candidate。候选写作阶段的 `@vue/reactivity` dependency 转录错误、正式 lifecycle
+前 non-Git CWD repository-inference setup error 与 Playwright teardown warning 继续按原身份保留；它们不被后继
+PASS 覆盖，也不冒充产品或合同失败。
+
+当前事实仍是：
 
 ```text
 M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
@@ -334,24 +357,13 @@ CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
 R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 ```
 
-合同候选必须先完成：
-
-```text
-final-byte local documentation gates
-    -> original PR Public CI
-    -> protected main merge
-    -> new exact-main Public CI + Browser Smoke
-    -> fresh installed-product readback:
-         README / doc234 / 本文 / milestones
-    -> independent source-byte reconciliation
-```
-
-这些门全部闭合后，本文才成为 qualified contract candidate。随后仍须创建一份独立 docs-only freeze publication；该
-publication 自己的 final bytes、original PR gates、protected merge、new exact-main dual gates、fresh installed-product
-readback 与 independent reconciliation 全部闭合后，目标 `CONTRACT_FROZEN` 才生效。
+[文档 236](236-m10-maintenance-dependency-drift-contract-freeze-publication.md)是独立 docs-only freeze publication。只有该
+publication 自己的 final bytes、original PR Public CI、受保护 main 合入、new exact-main Public CI + Browser Smoke、
+fresh README / 本文 / doc236 / milestones installed-product readback 与 independent reconciliation 全部闭合后，
+目标 `M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_FROZEN` 才生效。
 
 合同冻结也不自动开始 dependency implementation。必须返回 CONTROL LOOP，从新的 exact main 重新确认 one-file
-dependency drift correction 仍是当前最小合法问题。
+dependency drift correction 是否仍是当前最小合法问题。
 
 停止原则为：**相同 package 名、相同 advisory 修复范围或相同最终版本都不继承 authority；只有 exact maintenance
 source 上可复算的 14-entry closure、one-file identity、两轮 manual-dispatch witness、受保护合入与失败保留共同闭合，

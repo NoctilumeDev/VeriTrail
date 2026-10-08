@@ -3703,3 +3703,37 @@ Browser Smoke、fresh README / doc234 / doc235 / milestones installed-product re
 reconciliation 全部闭合后，才是 qualified contract candidate。随后仍须独立 docs-only freeze publication 完成自己的
 同层资格链，合同 target 才生效。任何门闭合以前不得创建 dependency topic / PR、运行 dispatch、修改 maintenance /
 workflow / ruleset、重开 #252/#264，或启动 workflow bootstrap、release、Parse / Fact / Coverage / claim fidelity。
+
+doc235 已以 PR #267 head `8ed2f6f0e02e0a7a1e9f0d8006944e02eae1bb75` 的 original Public CI
+`37815845110` attempt 1 11/11、ordinary merge `main@933df49e61b8a5d3e3856afa648d27c1c21f5529`、new exact-main
+Public CI `37818894300` attempt 1 11/11 与 Browser Smoke `37818894374` attempt 1 1/1 完成 source qualification。
+四份 fresh installed-product readback 使用独立 Plan/session 均 PASS；AGENTS、README、doc234、doc235、milestones
+五份 public raw bytes 与 Git blob 逐字节一致，independent reconciliation PASS。manifest：
+
+```text
+sha256_json  = 1bea6a3b59b452d7debda2b4778826a031e0ae2737e6523a19d55b02cac92960
+sha256_bytes = ddbe3925167ae99b1babcc7ff47dcfbca2560bd3802378b31847f799f63ddda3
+```
+
+候选写作时 `@vue/reactivity` dependency 转录错误，以及 readback 前 non-Git CWD repository-inference setup error 和
+Playwright teardown warning 均保留；它们不被后续 PASS 改写。doc235 当前是 qualified contract candidate，不是 frozen。
+
+## M10 maintenance dependency drift 合同冻结发布（条件状态）
+
+[文档 236](236-m10-maintenance-dependency-drift-contract-freeze-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+文档 235 第 1–11 节原字节不得改变。本发布自己的 final-byte local documentation gates、original PR Public CI、
+受保护 main 合入、new exact-main Public CI + Browser Smoke、fresh README / doc235 / doc236 / milestones
+installed-product readback 与 independent reconciliation 全部闭合后，target frozen state 才生效。
+
+冻结不授予 dependency implementation。发布闭合后必须返回 CONTROL LOOP，重新核对 maintenance tip、ruleset、
+并行 PR、advisory surface 与文档 223/224 停止线；workflow bootstrap、phase two、0.12.3 release、consumer
+migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未获授权。

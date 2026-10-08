@@ -858,7 +858,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 95. [M10 maintenance dependency drift 反例审计](docs/233-m10-maintenance-dependency-drift-counterexample-audit.md)
 96. [M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
 97. [M10 maintenance dependency drift 最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)
-98. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+98. [M10 maintenance dependency drift 合同冻结发布](docs/236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
+99. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
