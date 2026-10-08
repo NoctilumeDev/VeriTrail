@@ -2665,3 +2665,30 @@ milestones installed-product readback 与 independent reconciliation 全部闭�
 仍是 implementation not started / bootstrap blocked。闭合以后必须从 exact maintenance tip 返回 CONTROL LOOP，重新
 审查 workflow-only bootstrap；不得重开/rerun/改写 #252，不得自动启动 phase two、backport/release、consumer
 migration 或 Parse。
+
+## M10 maintenance dependency drift 反例审计（条件状态）
+
+从 exact maintenance tip `6ed18ae8b3d8b98b6e5be7af709aa868590ee914` 建立的 workflow-only PR #264 保持
+两文件 scope；原始 Public CI `37795167502` attempt 1 的 Python、E3、wheel-only 与 Workbench tests/lint/build
+成功，随后 official-registry `npm audit` 对 Vue/server-renderer、postcss-selector-parser 与 source-map-js 报告
+`1 moderate / 3 high`，因此 Workbench 与整条 run 为 `FAILURE`，Starter golden path 跳过。#264 已关闭、未合入、
+未 rerun、未改 head，maintenance ref 未移动。
+
+[文档 233](docs/233-m10-maintenance-dependency-drift-counterexample-audit.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+文档 231 的 timed PASS 继续属于旧 observation；新 advisory 不改写旧历史，但阻断当前 bootstrap。文档 229
+冻结的是旧 base、旧四 entry、旧命令和 final hash，不能静默扩张到新 dependency set。main PR #262 只提供候选
+版本证据，不转移 maintenance authority。doc233 的 final-byte local gates、original PR、受保护 main 合入与 new
+exact-main 双门闭合以前，公开状态仍停在 doc231；闭合后也只授权新的 dependency-drift precontract audit。
+
+不得直接复制 #262、创建 dependency PR、运行 dispatch、修改 maintenance branch/ruleset/workflow、重开 #264、
+弱化 audit、启动 phase two/backport/release/consumer migration、Parse / Fact / Coverage 或
+`DECLARED_CLAIM_FIDELITY`。

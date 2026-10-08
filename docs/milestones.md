@@ -3584,3 +3584,37 @@ doc231 / milestones installed-product readback 与 independent reconciliation �
 最后门以前仍是 implementation not started / bootstrap blocked；闭合以后只允许返回 CONTROL LOOP 重审新的
 workflow-only bootstrap。#252 永久保持关闭、未合入、失败身份，不能 reopen/rerun/改 head；phase two、backport、
 0.12.3 release、consumer migration 与 Parse 继续未获授权。
+
+## M10 maintenance dependency drift 反例审计（条件状态）
+
+文档 231 的 dependency qualification 已在它自己的 exact source、lock bytes、registry observation time 与四条
+dispatch identity 上闭合。重新进入 CONTROL LOOP 后，workflow-only PR #264 使用 base
+`core-0.12-maintenance@6ed18ae8b3d8b98b6e5be7af709aa868590ee914`、head
+`585f98252d3c18727a0f19cb0eb1a28b362c9dc9` 与精确两文件 diff。原始 Public CI
+`37795167502` attempt 1 的 Python 3.10 / 3.13、E3 与两条 wheel-only jobs 成功；Workbench tests、lint 与 build
+成功以后，official-registry `npm audit` 对 Vue/server-renderer、postcss-selector-parser 与 source-map-js 报告
+`1 moderate / 3 high`。Workbench job 与整条 run 为 `FAILURE`，Starter golden path 跳过。#264 未 rerun、未改
+head、未合入并已关闭；maintenance ref 未移动。
+
+第一次本地 probe 受 ambient `npmmirror.com` 配置影响，audit endpoint 返回 `404 / NOT_IMPLEMENTED`，只保留为
+setup observation。显式绑定 `https://registry.npmjs.org` 的 fresh probe 复现 CI 的四项 vulnerability 与 exact
+advisory ranges。phase-one ruleset `24216773` 仍 active、无 bypass，maintenance 当前没有 open PR。
+
+[文档 233](233-m10-maintenance-dependency-drift-counterexample-audit.md)说明：旧 timed PASS 与新 timed FAIL 可以同时
+成立；文档 229 的旧 base / command / allowed entries / final hash 无权覆盖新 advisory。current main PR #262 已有
+修复范围内的候选 versions，但它的 source、manifest/lock scope、PR、CI、merge 与 exact-main qualification 不能转移给
+maintenance。
+
+本文只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+doc233 自己的 final-byte local gates、original PR、受保护 main 合入与 new exact-main 双门闭合后，问题边界才成为
+qualified history，并且只授权新的 dependency-drift precontract audit。不授权 dependency write、workflow bootstrap、
+phase two、backport/release、consumer migration、Parse / Fact / Coverage 或 `DECLARED_CLAIM_FIDELITY`。
