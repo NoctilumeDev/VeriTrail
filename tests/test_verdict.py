@@ -6,13 +6,61 @@ import unittest
 from pathlib import Path
 
 from veritrail.catalog import validate_bundle
+from veritrail.evidence import import_evidence_document
 from veritrail.reporting import create_bundle
-from veritrail.verdict import evaluate
+from veritrail.verdict import _is_exact_host_socket_collection_failure, evaluate
 
-from tests.support import artifact, sealed_example_plan
+from tests.support import artifact, bootstrap_plan, sealed_example_plan
+from tests.test_browser_evidence import _browser_artifact
 
 
 class VerdictTests(unittest.TestCase):
+    def test_host_socket_collection_failure_requires_matching_raw_network_fact(self) -> None:
+        original = _browser_artifact(bootstrap_plan())
+        document = copy.deepcopy(original.document)
+        facts = document["facts"]
+        facts["network"][0].update(
+            {
+                "status": None,
+                "finished": False,
+                "failure": "  net::ERR_NO_BUFFER_SPACE\r\n",
+            }
+        )
+        facts["failed_request_count"] = 1
+        facts["capture_complete"] = False
+        facts["all_steps_passed"] = False
+        facts["viewport_runs"][0]["status"] = "FAILED"
+        facts["collection_errors"] = [
+            {
+                "collector": "network:desktop",
+                "error_type": "HostSocketNoBufferSpace",
+            }
+        ]
+        exact = import_evidence_document(document, "browser-host-socket-exact.json")
+        self.assertTrue(_is_exact_host_socket_collection_failure(exact))
+
+        raw_mismatch = copy.deepcopy(document)
+        raw_mismatch["facts"]["network"][0]["failure"] = "net::ERR_CONNECTION_RESET"
+        self.assertFalse(
+            _is_exact_host_socket_collection_failure(
+                import_evidence_document(
+                    raw_mismatch, "browser-host-socket-raw-mismatch.json"
+                )
+            )
+        )
+
+        mixed_errors = copy.deepcopy(document)
+        mixed_errors["facts"]["collection_errors"].append(
+            {"collector": "page:desktop", "error_type": "SyntheticOtherError"}
+        )
+        self.assertFalse(
+            _is_exact_host_socket_collection_failure(
+                import_evidence_document(
+                    mixed_errors, "browser-host-socket-mixed-errors.json"
+                )
+            )
+        )
+
     def test_complete_clean_run_passes(self) -> None:
         result = evaluate(sealed_example_plan(), [artifact()], "COMPLETED")
         self.assertEqual("PASS", result["verdict"])

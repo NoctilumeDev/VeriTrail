@@ -27,6 +27,16 @@ MAX_PAGE_ERRORS = 100
 MAX_EVENT_TEXT = 4096
 
 
+def _classify_host_socket_request_failure(
+    viewport: str, raw_failure_text: str
+) -> tuple[str, str] | None:
+    """Classify only the frozen Windows host-socket exhaustion signal."""
+
+    if raw_failure_text.strip() == "net::ERR_NO_BUFFER_SPACE":
+        return (f"network:{viewport}", "HostSocketNoBufferSpace")
+    return None
+
+
 class _BrowserLifecycleObserver(Protocol):
     def playwright_started(self, playwright: Any) -> None: ...
 
@@ -464,7 +474,13 @@ def _collect_browser_evidence(
                 def on_request_failed(request: Any) -> None:
                     record = request_records.get(id(request))
                     if record is not None:
-                        record["failure"] = str(request.failure or "request failed")
+                        raw_failure_text = str(request.failure or "request failed")
+                        record["failure"] = raw_failure_text
+                        classification = _classify_host_socket_request_failure(
+                            viewport_name, raw_failure_text
+                        )
+                        if classification is not None:
+                            record_collection_error(*classification)
 
                 page.on("console", on_console)
                 page.on("pageerror", on_page_error)

@@ -22,6 +22,8 @@ BOOTSTRAP_SERVICES_READY_INTERRUPTION_REASONS = {
     "COLLECTOR_ERROR",
     "EVIDENCE_ERROR",
 }
+HOST_SOCKET_COLLECTION_ERROR_TYPE = "HostSocketNoBufferSpace"
+HOST_SOCKET_RAW_FAILURE = "net::ERR_NO_BUFFER_SPACE"
 
 
 def _json_pointer(document: Any, pointer: str) -> Any:
@@ -67,12 +69,57 @@ def _apply_operator(actual: Any, operator: str, expected: Any) -> bool:
     raise ValueError(f"unsupported operator: {operator}")
 
 
+def _is_exact_host_socket_collection_failure(artifact: ImportedEvidence) -> bool:
+    if artifact.document.get("evidence_type") != "browser.session":
+        return False
+    facts = artifact.document.get("facts")
+    if not isinstance(facts, dict):
+        return False
+    collection_errors = facts.get("collection_errors")
+    network = facts.get("network")
+    if not isinstance(collection_errors, list) or not isinstance(network, list):
+        return False
+
+    matching_viewports: set[str] = set()
+    for item in collection_errors:
+        if (
+            not isinstance(item, dict)
+            or item.get("error_type") != HOST_SOCKET_COLLECTION_ERROR_TYPE
+        ):
+            return False
+        collector = item.get("collector")
+        if not isinstance(collector, str) or not collector.startswith("network:"):
+            return False
+        viewport = collector.removeprefix("network:")
+        if not viewport or viewport in matching_viewports:
+            return False
+        matching_viewports.add(viewport)
+    if not matching_viewports:
+        return False
+
+    raw_viewports = {
+        item.get("viewport")
+        for item in network
+        if isinstance(item, dict)
+        and isinstance(item.get("failure"), str)
+        and item["failure"].strip() == HOST_SOCKET_RAW_FAILURE
+    }
+    return matching_viewports == raw_viewports
+
+
 def _assertion_fact_is_applicable(
     plan: dict[str, Any],
     artifact: ImportedEvidence,
     assertion: dict[str, Any],
     actual: Any,
 ) -> bool:
+    if (
+        plan.get("schema_version") in {"0.6", "0.7"}
+        and assertion["evidence_type"] == "browser.session"
+        and assertion["path"] != "/facts/cleanup_complete"
+        and _is_exact_host_socket_collection_failure(artifact)
+    ):
+        return False
     if (
         plan.get("schema_version") not in {"0.6", "0.7"}
         or assertion["evidence_type"] != "runtime.bootstrap"
