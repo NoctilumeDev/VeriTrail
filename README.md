@@ -839,6 +839,7 @@ VeriTrail 的方法来自受限单机上的真实工程实践：单变量验证�
 不把任何电商服务、中间件或业务状态机硬编码为产品前提。
 
 - 提交可复现缺陷、边界明确的能力提案或 Pull Request 前，请阅读[贡献指南](CONTRIBUTING.md)；
+- 重要 milestone 或 release 退出前，按[仓库遗留物收口门禁](docs/hygiene.md)清理无 owner 的可重建残留；
 - 参与公开讨论与评审时，请遵守[社区行为准则](CODE_OF_CONDUCT.md)；
 - 安全问题不要公开披露，请按[安全策略](SECURITY.md)使用私下报告路径。
 
