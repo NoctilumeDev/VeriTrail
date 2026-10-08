@@ -2727,3 +2727,33 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 doc234 自己的 final-byte local gates、original PR、受保护 main 合入与 new exact-main 双门闭合后，只授权起草
 dependency drift 最小合同。不得修改 dependency/maintenance/workflow/ruleset，创建 topic / PR，运行 dispatch，重开
 #264，或启动 workflow bootstrap、release、consumer migration、Parse / Fact / Coverage / claim fidelity。
+
+doc234 已经 PR #266 head `0bb60c0b51c1abcaa0877ffda6a62c9216fecc48` original Public CI
+`37808837143` attempt 1 11/11、ordinary merge `main@7cf409940339d4068c3effd9e6d4deaca0c7861b`、new exact-main
+Public CI `37811755532` attempt 1 11/11 与 Browser Smoke `37811755526` attempt 1 1/1。因此
+`M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDITED` 已成为 qualified history。
+
+## M10 maintenance dependency drift 最小合同（条件状态）
+
+[文档 235](docs/235-m10-maintenance-dependency-drift-contract.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDITED
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_DRIFT_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+合同冻结 exact maintenance tip `6ed18ae8...`、manifest/lock/workflow/ruleset coordinates、npm `11.19.1` + official
+registry 的 package-name-only construction、完整 14-entry version/resolved/integrity/dependency-reference projection、
+final lock blob/SHA、one-file scope、两次 deterministic reconstruction、local Workbench gates、ordinary PR/merge 与
+candidate-head / exact-tip 两轮 `7/7 + 1/1` manual-dispatch witnesses。
+
+本文自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc234 /
+doc235 / milestones installed-product readback 与 independent source-byte reconciliation 全部闭合后，才是 qualified
+contract candidate；随后仍须独立 docs-only freeze publication 完成同层资格链，合同才可标为 `FROZEN`。冻结后也必须
+返回 CONTROL LOOP。不得在本文分支修改 dependency、maintenance、workflow、ruleset，创建 topic / PR，运行 dispatch，
+重开 #252/#264，或启动 bootstrap、release、consumer migration、Parse / Fact / Coverage / claim fidelity。

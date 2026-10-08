@@ -241,9 +241,14 @@ source-map-js 报告 `1 moderate / 3 high`，所以 original Public CI attempt 1
 type-check/build 与 timed moderate audit 均通过。exact-version `npm update ...@version` 的 `EUPDATEARGS` 首败与一次
 projection helper setup error 原样保留。
 
-本文只条件化发布 precontract audit candidate；它自己的 final-byte gates、original PR、受保护 main 合入与 new
-exact-main 双门闭合后，也只授权起草最小 dependency-drift 合同。dependency source write、maintenance topic / PR、
-manual dispatch、workflow bootstrap、0.12.3 release、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未开始。
+doc234 已经 PR #266 head `0bb60c0...` original Public CI 11/11、ordinary merge
+`main@7cf409940339d4068c3effd9e6d4deaca0c7861b` 与 new exact-main Public CI 11/11 + Browser Smoke 1/1，成为
+qualified precontract history。[最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)只冻结 exact
+maintenance source、package-name-only construction、完整 14-entry closure、one-file identity、candidate/tip 两轮
+manual-dispatch witness、受保护合入与失败保留；当前仍是 contract candidate / implementation not started。
+
+dependency source write、maintenance topic / PR、manual dispatch、workflow bootstrap、0.12.3 release、Parse / Fact /
+Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未开始。合同候选自己的资格链与后继独立冻结发布闭合以前，不得执行合同。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -852,7 +857,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 94. [M10 maintenance dependency prerequisite 资格发布](docs/231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
 95. [M10 maintenance dependency drift 反例审计](docs/233-m10-maintenance-dependency-drift-counterexample-audit.md)
 96. [M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
-97. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+97. [M10 maintenance dependency drift 最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)
+98. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
