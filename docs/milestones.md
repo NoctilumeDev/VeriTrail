@@ -3618,3 +3618,45 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 doc233 自己的 final-byte local gates、original PR、受保护 main 合入与 new exact-main 双门闭合后，问题边界才成为
 qualified history，并且只授权新的 dependency-drift precontract audit。不授权 dependency write、workflow bootstrap、
 phase two、backport/release、consumer migration、Parse / Fact / Coverage 或 `DECLARED_CLAIM_FIDELITY`。
+
+## M10 maintenance dependency drift 最小前合同审计（条件状态）
+
+[文档 234](234-m10-maintenance-dependency-drift-precontract-audit.md)从 qualified doc233 source state 重新读回
+`main@0f2fef265582f9bf80c32e3c08ff1580250d67ef`、maintenance
+`6ed18ae8b3d8b98b6e5be7af709aa868590ee914`、ruleset `24216773`、无 maintenance open PR 与 PR #264
+首败。package manifest 不变；npm `11.19.1`、official registry 与 package-name-only targeted update 两次从 base
+逐字节重建同一 lock：
+
+```text
+base lock SHA256       6A6F5D09C97B7C01501D04705575CDA11155840CF715EE88817711062A7EA01E
+candidate lock SHA256  D9FBF89CA905EC2602B9956E986E24F74C38AAF4DE3EA960D1DBA3905EBD00A4
+candidate lock blob    297be5c0bcc30729c0f4c3f4322be74641b2a916
+tracked scope          web/package-lock.json only
+allowed projection     14 entries
+```
+
+完整投影包含 Vue `3.5.43` family、postcss-selector-parser `7.1.6`、source-map-js `1.2.2`，以及实际闭包中的
+PostCSS `8.5.29` 与 Nano ID `3.3.20`。fresh npm install、Workbench 14 files / 172 tests、lint、type-check/build、
+timed moderate audit 0 vulnerabilities 与 installed dependency tree 成立。
+
+exact-version `npm update ...@version` 在写入前被 npm 以 `EUPDATEARGS` 拒绝；一次 package-projection helper 因漏传
+临时 base-lock path 以 `KeyError` 终止。两者均未改变候选字节，分别保留为 construction-command 与 audit-harness
+setup failure。doc228 的本地 Python resource-stop 历史继续保留，本轮 Workbench PASS 不冒充完整 Python / Browser
+qualification。
+
+本文只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDIT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_NOT_STARTED
+M0_MAINTENANCE_DEPENDENCY_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+doc234 的 final-byte local gates、original PR、受保护 main 合入与 new exact-main 双门闭合后，
+`M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDITED` 才成为 qualified history，并且只授权起草最小合同。
+dependency source write、topic / PR / dispatch / merge、workflow bootstrap、phase two/backport/release、consumer migration、
+Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
