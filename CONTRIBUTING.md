@@ -83,6 +83,19 @@ npm audit --audit-level=moderate --registry=https://registry.npmjs.org
 Changes to browser behavior, process ownership, packaging, or public release assets also require the
 corresponding real acceptance path documented in the repository and used by `.github/workflows/`.
 
+### Residual hygiene at stage closeout
+
+Before an important milestone or release closeout, read [the repository residual hygiene gate](docs/hygiene.md) and run:
+
+```powershell
+python -B scripts/check_hygiene.py
+python -B scripts/check_hygiene.py --local
+```
+
+The checker is read-only. Its PASS does not certify `LOCAL_DORMANT` and does not authorize deleting evidence,
+fixtures, visual references, release assets, or worktrees. Those decisions require an identified consumer,
+proof/provenance owner, and confirmation that no unique local state would be lost.
+
 ## Generated evidence
 
 Runtime artifacts are ignored by default. Only minimal, deterministic, redacted fixtures may be committed,

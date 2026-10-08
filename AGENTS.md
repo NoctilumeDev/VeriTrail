@@ -20,6 +20,11 @@
 - frozen scope 禁止静默修改；真实反例可以显式 reopen/version bump 被击穿的最小边界并重新资格化；
 - publication 形成新事实后必须返回外层回路；不得按文档编号自动进入下一阶段。
 
+重大阶段退出或 release closeout 前，**MUST READ**
+[仓库遗留物收口门禁](docs/hygiene.md)。该门禁只处理已失去职责的施工残留，不授予产品语义、冻结状态或
+下一阶段施工权。R1 合同、审计、首败、fixtures、Schema、readback identity，以及仍承担视觉或运行职责的
+资产均有明确 owner；不得因为“旧”“大”或当前入口未直接引用就删除。
+
 ## 当前阶段
 
 - 当前阶段是 `v0 Implementation`。M0 已在提交 `64497779add1351014d802b38d46f73a4ce394ac`

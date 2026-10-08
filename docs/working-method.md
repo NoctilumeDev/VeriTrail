@@ -174,6 +174,16 @@ Schema、carrier、Evidence、Manifest、publisher 或 Bundle。既有 public sh
 代理按命令临时注入，不改全局 Git 或系统代理。匿名 installed-product readback 必须清理 token、`PYTHONPATH`
 及其他可能改变观察面的环境。诊断路径不得替代正式产品路径。
 
+### 4.8 阶段退出时收口遗留物
+
+重要 milestone 或 release 准备退出时，按[仓库遗留物收口门禁](hygiene.md)复核这一阶段产生的文件、
+构建物、运行环境与 worktree。只有没有 active consumer、proof obligation、provenance responsibility 或
+唯一 local state 的可重建残留，才进入删除候选。
+
+Residual Hygiene 默认属于 repository closeout hygiene，不是新的产品语义门，也不重开已经冻结的结论。
+合同若把它列为资格门，则只按该合同声明的范围执行。自动检查只提供 witness；图片语义、证据责任、
+worktree 历史身份和 `LOCAL_DORMANT` 必须人工裁决。
+
 ## 5. 五个必须分开的状态
 
 任何汇报、文档与实现都必须区分：
