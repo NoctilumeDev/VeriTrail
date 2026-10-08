@@ -234,6 +234,17 @@ source-map-js 报告 `1 moderate / 3 high`，所以 original Public CI attempt 1
 条件化发布 dependency drift 问题边界；新 precontract、dependency write、workflow bootstrap、release 与 Parse
 均未开始。
 
+[M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
+从 qualified doc233 source state 证明一条新的 lockfile-only 路线具有合同化资格：maintenance manifest 不变，npm
+`11.19.1` 对 `vue / postcss-selector-parser / source-map-js` 的 package-name-only targeted update 两次逐字节得到
+同一 `D9FBF89C...00A4` lock，完整允许投影为 14 个 entry；fresh install、172 项 Workbench regression、lint、
+type-check/build 与 timed moderate audit 均通过。exact-version `npm update ...@version` 的 `EUPDATEARGS` 首败与一次
+projection helper setup error 原样保留。
+
+本文只条件化发布 precontract audit candidate；它自己的 final-byte gates、original PR、受保护 main 合入与 new
+exact-main 双门闭合后，也只授权起草最小 dependency-drift 合同。dependency source write、maintenance topic / PR、
+manual dispatch、workflow bootstrap、0.12.3 release、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未开始。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
@@ -840,7 +851,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 93. [M10 maintenance dependency prerequisite 合同冻结发布](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
 94. [M10 maintenance dependency prerequisite 资格发布](docs/231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
 95. [M10 maintenance dependency drift 反例审计](docs/233-m10-maintenance-dependency-drift-counterexample-audit.md)
-96. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+96. [M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
+97. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

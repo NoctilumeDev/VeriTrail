@@ -2692,3 +2692,38 @@ exact-main 双门闭合以前，公开状态仍停在 doc231；闭合后也只�
 不得直接复制 #262、创建 dependency PR、运行 dispatch、修改 maintenance branch/ruleset/workflow、重开 #264、
 弱化 audit、启动 phase two/backport/release/consumer migration、Parse / Fact / Coverage 或
 `DECLARED_CLAIM_FIDELITY`。
+
+## M10 maintenance dependency drift 最小前合同审计（条件状态）
+
+[文档 234](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)从 qualified doc233 source state 重新绑定
+`main@0f2fef265582f9bf80c32e3c08ff1580250d67ef`、maintenance
+`6ed18ae8b3d8b98b6e5be7af709aa868590ee914`、ruleset `24216773` 与 PR #264 首败。maintenance manifest
+保持 `b38efdf...`；npm `11.19.1`、official registry 与 package-name-only
+`vue / postcss-selector-parser / source-map-js` targeted update 两次逐字节重建同一 lock：
+
+```text
+candidate lock blob    297be5c0bcc30729c0f4c3f4322be74641b2a916
+candidate lock SHA256  D9FBF89CA905EC2602B9956E986E24F74C38AAF4DE3EA960D1DBA3905EBD00A4
+tracked scope          web/package-lock.json only
+allowed projection     14 package entries
+```
+
+fresh install、14 files / 172 tests、lint、type-check/build、moderate audit 0 vulnerabilities 与 installed-tree
+projection 成立。exact-version `npm update ...@version` 在写入前以 `EUPDATEARGS` 失败；一次 audit helper 漏传 base path
+以 `KeyError` 失败。两者分别保留为 construction syntax 与 audit-harness setup failure，不被后续 PASS 覆盖。
+
+本文只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDIT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_NOT_STARTED
+M0_MAINTENANCE_DEPENDENCY_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+doc234 自己的 final-byte local gates、original PR、受保护 main 合入与 new exact-main 双门闭合后，只授权起草
+dependency drift 最小合同。不得修改 dependency/maintenance/workflow/ruleset，创建 topic / PR，运行 dispatch，重开
+#264，或启动 workflow bootstrap、release、consumer migration、Parse / Fact / Coverage / claim fidelity。
