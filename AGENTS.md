@@ -2820,3 +2820,30 @@ sha256_bytes=899b0571ea644ad99441af5ea6c9ebebf4510c187a6f6547b885241f2a8d1523`�
 milestones installed-product readback 与 independent reconciliation 全部闭合后，qualified target 才生效。最后门以前
 workflow bootstrap 仍未开始。闭合以后必须从 exact maintenance tip 返回 CONTROL LOOP，重新审查 advisory surface、
 并行 PR 与文档 223/224/225–227；不得自动启动 phase two、backport/release、consumer migration、Parse 或 claim fidelity。
+
+## M10 maintenance workflow bootstrap 资格发布（条件状态）
+
+[文档 238](docs/238-m10-maintenance-workflow-bootstrap-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_QUALIFIED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+fresh workflow-only candidate `4b262eb24e101d8bfc7605b8a7a14ce0b15386fe` 只修改两个 workflow 的
+branch filters；本地 static 四格逐字节一致、Python 四格各 347/347、Workbench 172/172 + lint/build/audit 0 与
+Browser witness 均 PASS。PR #271 original Public CI `37844968094` attempt 1 为 7/7 SUCCESS；ordinary merge
+`ebc5d7f5084b1a4dae3c3a211a4e82e78c6bbc78` 的 parents/tree 精确闭合，maintenance-tip Public CI
+`37846426640` attempt 1 为 7/7 SUCCESS，Browser Smoke `37846426876` attempt 1 为 1/1 SUCCESS。
+
+ruleset `24216773` 已独立读回为 active、无 bypass、禁止 deletion / non-fast-forward、要求 PR，并严格要求文档 223
+列出的七个 status contexts；`strict=true`、`do_not_enforce_on_create=false`，branch-effective-rules 读回一致。
+
+本文自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc223 /
+doc237 / doc238 / milestones installed-product readback 与 independent reconciliation 全部闭合后，target 才生效。
+闭合以后必须返回 CONTROL LOOP 重审 M1；0.12.3 产品改动、release、consumer migration、Parse 与 claim fidelity
+都没有被本文自动启动。
