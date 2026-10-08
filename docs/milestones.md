@@ -3737,3 +3737,56 @@ installed-product readback 与 independent reconciliation 全部闭合后，targ
 冻结不授予 dependency implementation。发布闭合后必须返回 CONTROL LOOP，重新核对 maintenance tip、ruleset、
 并行 PR、advisory surface 与文档 223/224 停止线；workflow bootstrap、phase two、0.12.3 release、consumer
 migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未获授权。
+
+doc236 已经 PR #268 head `a55c9bf5c66d8808cb728392b413249e0b158eea` original Public CI
+`37823219183` attempt 1 11/11、ordinary merge `main@295afd0637385068e92b581c837249166bcf9919`、new exact-main
+Public CI `37826445149` attempt 1 11/11 与 Browser Smoke `37826445084` attempt 1 1/1。README、doc235、doc236、
+milestones 四份 fresh installed-product readback 使用独立 Plan/session 均 PASS；五份 public raw bytes 与 Git blob
+逐字节一致，independent reconciliation PASS。manifest：
+
+```text
+sha256_json  = 162cabd962e192568c8405f65cb0486e1748038c9047a49858eda72dc97de847
+sha256_bytes = e20d4e9aa9aacc07fe9b48603c722940ef0b35b37d6bc43388e2ba7fae806eed
+```
+
+no-argument public-byte checker 的错误 `--help` 调用与 reconciliation target-label drift 保持原 setup/evidence-tooling
+failure 身份；后继 PASS 不覆盖它们。因此 dependency-drift contract 已经 `FROZEN`，implementation 没有由冻结自动开始。
+
+## M10 maintenance dependency drift 资格发布（条件状态）
+
+[文档 237](237-m10-maintenance-dependency-drift-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_QUALIFIED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+exact maintenance base `6ed18ae8...` 上的 two-worktree reconstruction 逐字节形成同一 lock blob
+`297be5c0...` / SHA-256 `D9FBF89C...00A4`；final candidate 只修改 `web/package-lock.json`，完整 14-entry
+projection、fresh install、172 项 Workbench regression、lint、type-check/build、audit 0 vulnerabilities 与 installed
+tree 均成立。candidate commit `6efccfb...` 经 PR #269 以 ordinary merge 形成 exact maintenance tip
+`685b077203c4c9b74a1ef14649a4ee5f8d16d82c`。
+
+candidate exact-head Public CI `37831705180` attempt 1 7/7 与 Browser Smoke `37831710041` attempt 1 1/1；
+maintenance-tip fresh Public CI `37832912010` attempt 1 7/7 与 Browser Smoke `37832916430` attempt 1 1/1。四条
+run identity 互不复用；maintenance ref 在 observation 前后未移动。independent reconciliation manifest：
+
+```text
+sha256_json  = 105a44f4342f0496e76d4c056fbe7e91cc322a62cdf546e06894f08c5c8ab547
+sha256_bytes = 899b0571ea644ad99441af5ea6c9ebebf4510c187a6f6547b885241f2a8d1523
+```
+
+PR #264 / run `37795167502` 的 `FAILURE`、host registry mirror 404、projection-helper path error、PowerShell parser
+error、candidate dispatch list-filter empty warning 与 PR Artifact attachment failure 均按原身份保留；后继成功不解释或
+覆盖它们。
+
+本文自己的 final-byte local documentation gates、original PR Public CI、受保护 main 合入、new exact-main Public CI +
+Browser Smoke、fresh README / doc235 / doc236 / doc237 / milestones installed-product readback 与 independent
+reconciliation 全部闭合后，target qualified state 才生效。
+
+资格发布不授权 workflow bootstrap。闭合后必须返回 CONTROL LOOP，重新核对 exact maintenance tip、ruleset、并行 PR、
+advisory surface 与文档 223/224/225–227；phase two、0.12.3 release、consumer migration、Parse / Fact / Coverage 与
+`DECLARED_CLAIM_FIDELITY` 均未获授权。
