@@ -3660,3 +3660,46 @@ doc234 的 final-byte local gates、original PR、受保护 main 合入与 new e
 `M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDITED` 才成为 qualified history，并且只授权起草最小合同。
 dependency source write、topic / PR / dispatch / merge、workflow bootstrap、phase two/backport/release、consumer migration、
 Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
+
+doc234 已经完成自己的 final-byte gates，并通过 PR #266 head
+`0bb60c0b51c1abcaa0877ffda6a62c9216fecc48` original Public CI `37808837143` attempt 1 11/11、ordinary merge
+`main@7cf409940339d4068c3effd9e6d4deaca0c7861b`、new exact-main Public CI `37811755532` attempt 1 11/11 与
+Browser Smoke `37811755526` attempt 1 1/1。因此：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDITED
+```
+
+已成为 qualified history；它只授权起草最小 dependency-drift 合同。
+
+## M10 maintenance dependency drift 最小合同（条件状态）
+
+[文档 235](235-m10-maintenance-dependency-drift-contract.md)冻结以下候选合同面：
+
+- exact maintenance tip、tree、manifest/lock/workflow blobs、ruleset 与无并行 maintenance PR；
+- Node/npm/official-registry 与 package-name-only targeted construction；
+- 精确 14-entry version/resolved/integrity/dependency-reference closure 与 unchanged root projection；
+- final lock blob/SHA、one-file scope 与两次 fresh deterministic reconstruction；
+- local Workbench gates、timed registry observation 与 setup/resource/product failure 分层；
+- fresh topic / PR / ordinary merge identity；
+- candidate-head 与 exact maintenance-tip 各自独立的 Public CI `7/7` + Browser Smoke `1/1` manual dispatch；
+- PR #264 关闭、未合入、原始失败不变，以及所有后来成功不得覆盖首败；
+- retained evidence、independent reconciliation、发布 authority 与闭合后强制返回 CONTROL LOOP。
+
+本文只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PROVEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_PRECONTRACT_AUDITED
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_CANDIDATE
+M0_MAINTENANCE_DEPENDENCY_DRIFT_IMPLEMENTATION_NOT_STARTED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_BLOCKED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+doc235 的 final-byte local documentation gates、original PR Public CI、受保护 main 合入、new exact-main Public CI +
+Browser Smoke、fresh README / doc234 / doc235 / milestones installed-product readback 与 independent source-byte
+reconciliation 全部闭合后，才是 qualified contract candidate。随后仍须独立 docs-only freeze publication 完成自己的
+同层资格链，合同 target 才生效。任何门闭合以前不得创建 dependency topic / PR、运行 dispatch、修改 maintenance /
+workflow / ruleset、重开 #252/#264，或启动 workflow bootstrap、release、Parse / Fact / Coverage / claim fidelity。
