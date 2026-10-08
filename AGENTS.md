@@ -2785,3 +2785,38 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 Public CI + Browser Smoke、fresh README / doc235 / doc236 / milestones installed-product readback 与 independent
 reconciliation 全部闭合后生效。冻结以后必须返回 CONTROL LOOP；dependency implementation、workflow bootstrap、
 release、Parse / Fact / Coverage 与 claim fidelity 均未获授权。
+
+doc236 已经 PR #268 head `a55c9bf5c66d8808cb728392b413249e0b158eea` original Public CI
+`37823219183` attempt 1 11/11、ordinary merge `main@295afd0637385068e92b581c837249166bcf9919`、new exact-main
+Public CI `37826445149` attempt 1 11/11 与 Browser Smoke `37826445084` attempt 1 1/1。四份 fresh installed-product
+readback、五份 public raw bytes 与 independent reconciliation 全部 PASS；manifest
+`sha256_json=162cabd962e192568c8405f65cb0486e1748038c9047a49858eda72dc97de847 /
+sha256_bytes=e20d4e9aa9aacc07fe9b48603c722940ef0b35b37d6bc43388e2ba7fae806eed`。因此 dependency-drift contract 已经
+`FROZEN`；implementation 没有由冻结自动开始。
+
+## M10 maintenance dependency drift 资格发布（条件状态）
+
+[文档 237](docs/237-m10-maintenance-dependency-drift-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_QUALIFIED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_NOT_STARTED
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+one-file candidate `6efccfb89d362819d6deaaef1616fe221eae52b2` 只修改 `web/package-lock.json`；两个独立
+exact-base worktree 逐字节重建同一 `D9FBF89C...00A4` lock，fresh npm 11.19.1 install、Workbench 14 files /
+172 tests、lint、type-check/build、audit 0 vulnerabilities 与 exact 14-entry projection 成立。PR #269 的
+candidate-head manual dispatch 为 Public CI `37831705180` attempt 1 7/7 和 Browser Smoke `37831710041`
+attempt 1 1/1；ordinary merge `685b077203c4c9b74a1ef14649a4ee5f8d16d82c` 保持同一 tree/lock bytes，
+maintenance-tip fresh dispatch 为 Public CI `37832912010` attempt 1 7/7 与 Browser Smoke `37832916430`
+attempt 1 1/1。candidate/tip run 不互相借用。independent manifest
+`sha256_json=105a44f4342f0496e76d4c056fbe7e91cc322a62cdf546e06894f08c5c8ab547 /
+sha256_bytes=899b0571ea644ad99441af5ea6c9ebebf4510c187a6f6547b885241f2a8d1523`。
+
+本文自己的 original PR、受保护 main 合入、new exact-main 双门、fresh README / doc235 / doc236 / doc237 /
+milestones installed-product readback 与 independent reconciliation 全部闭合后，qualified target 才生效。最后门以前
+workflow bootstrap 仍未开始。闭合以后必须从 exact maintenance tip 返回 CONTROL LOOP，重新审查 advisory surface、
+并行 PR 与文档 223/224/225–227；不得自动启动 phase two、backport/release、consumer migration、Parse 或 claim fidelity。

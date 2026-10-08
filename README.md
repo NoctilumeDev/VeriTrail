@@ -245,10 +245,18 @@ doc234 已经 PR #266 head `0bb60c0...` original Public CI 11/11、ordinary merg
 `main@7cf409940339d4068c3effd9e6d4deaca0c7861b` 与 new exact-main Public CI 11/11 + Browser Smoke 1/1，成为
 qualified precontract history。[最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)只冻结 exact
 maintenance source、package-name-only construction、完整 14-entry closure、one-file identity、candidate/tip 两轮
-manual-dispatch witness、受保护合入与失败保留；当前仍是 contract candidate / implementation not started。
+manual-dispatch witness、受保护合入与失败保留；其独立[冻结发布](docs/236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
+已经 PR #268、受保护 `main@295afd0...`、new exact-main 11/11 + 1/1、四份 fresh product readback 与 independent
+reconciliation 闭合，因此 contract 已 `FROZEN`，implementation 没有由此自动开始。
 
-dependency source write、maintenance topic / PR、manual dispatch、workflow bootstrap、0.12.3 release、Parse / Fact /
-Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未开始。合同候选自己的资格链与后继独立冻结发布闭合以前，不得执行合同。
+[M10 maintenance dependency drift 资格发布](docs/237-m10-maintenance-dependency-drift-qualification-publication.md)
+记录 one-file candidate `6efccfb...`、PR #269、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
+`core-0.12-maintenance@685b077...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
+本文自己的门闭合以前，公开状态仍停在 contract frozen / bootstrap not started；闭合以后也只允许返回 CONTROL LOOP
+重新审查 fresh workflow-only bootstrap，不授权重开 #252/#264、phase two、0.12.3 release 或 Parse。
+
+workflow bootstrap、0.12.3 release、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未开始。文档 237
+自己的资格链闭合以前，dependency correction 仍只属于已闭合的 private evidence history，不得提前发布 qualified state。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -859,7 +867,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 96. [M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
 97. [M10 maintenance dependency drift 最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)
 98. [M10 maintenance dependency drift 合同冻结发布](docs/236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
-99. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+99. [M10 maintenance dependency drift 资格发布](docs/237-m10-maintenance-dependency-drift-qualification-publication.md)
+100. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 
