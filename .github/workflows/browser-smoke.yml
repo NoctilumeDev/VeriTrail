@@ -2,7 +2,7 @@ name: Browser Smoke
 
 on:
   push:
-    branches: [main]
+    branches: [main, core-0.12-maintenance]
   schedule:
     - cron: '23 3 * * 1'
   workflow_dispatch:

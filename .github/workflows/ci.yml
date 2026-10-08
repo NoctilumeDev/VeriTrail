@@ -2,9 +2,9 @@ name: Public CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, core-0.12-maintenance]
   pull_request:
-    branches: [main]
+    branches: [main, core-0.12-maintenance]
     types: [opened, synchronize, reopened, edited]
   merge_group:
     types: [checks_requested]
