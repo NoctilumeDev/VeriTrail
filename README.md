@@ -255,8 +255,20 @@ reconciliation 闭合，因此 contract 已 `FROZEN`，implementation 没有由�
 本文自己的门闭合以前，公开状态仍停在 contract frozen / bootstrap not started；闭合以后也只允许返回 CONTROL LOOP
 重新审查 fresh workflow-only bootstrap，不授权重开 #252/#264、phase two、0.12.3 release 或 Parse。
 
-workflow bootstrap、0.12.3 release、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 均未开始。文档 237
-自己的资格链闭合以前，dependency correction 仍只属于已闭合的 private evidence history，不得提前发布 qualified state。
+[M10 maintenance workflow bootstrap 资格发布](docs/238-m10-maintenance-workflow-bootstrap-qualification-publication.md)
+记录 fresh 双文件 candidate `4b262eb...`、PR #271 original Public CI 7/7、ordinary merge
+`core-0.12-maintenance@ebc5d7f...`、exact-tip Public CI 7/7 + Browser Smoke 1/1，以及 ruleset
+`24216773` 的 phase-two strict required-checks 双路径读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+该发布只修正 publication lag，不启动 0.12.3 产品 backport/release。闭合以后仍须返回 CONTROL LOOP，重新审查
+M1 是否是当前最小合法 seam；consumer migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
 
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
@@ -868,7 +880,8 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 97. [M10 maintenance dependency drift 最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)
 98. [M10 maintenance dependency drift 合同冻结发布](docs/236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
 99. [M10 maintenance dependency drift 资格发布](docs/237-m10-maintenance-dependency-drift-qualification-publication.md)
-100. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
+100. [M10 maintenance workflow bootstrap 资格发布](docs/238-m10-maintenance-workflow-bootstrap-qualification-publication.md)
+101. [Q0 最终冻结闭环](docs/119-q0-verification-scheduling-final-freeze-closure.md)
 
 ## 项目来源与协作
 

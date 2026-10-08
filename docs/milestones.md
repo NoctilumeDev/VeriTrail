@@ -3790,3 +3790,38 @@ reconciliation 全部闭合后，target qualified state 才生效。
 资格发布不授权 workflow bootstrap。闭合后必须返回 CONTROL LOOP，重新核对 exact maintenance tip、ruleset、并行 PR、
 advisory surface 与文档 223/224/225–227；phase two、0.12.3 release、consumer migration、Parse / Fact / Coverage 与
 `DECLARED_CLAIM_FIDELITY` 均未获授权。
+
+## M10 maintenance workflow bootstrap 资格发布（条件状态）
+
+[文档 238](238-m10-maintenance-workflow-bootstrap-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_DEPENDENCY_DRIFT_CONTRACT_FROZEN
+M0_MAINTENANCE_DEPENDENCY_DRIFT_QUALIFIED
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+CONTROL LOOP 在 `main@f20ce800...` 重新核对 exact maintenance tip `685b077...`、phase-one ruleset、无并行
+maintenance PR 与 official-registry audit 0 后，授权 fresh workflow-only seam。候选
+`4b262eb24e101d8bfc7605b8a7a14ce0b15386fe` 只增加两个 workflow 的 maintenance branch filters；本地 static
+四格、Python 四格各 347/347、Workbench 172/172 + lint/build/audit 0 与 Browser witness 均 PASS。
+
+PR #271 original Public CI `37844968094` attempt 1 为 7/7 SUCCESS。ordinary merge
+`ebc5d7f5084b1a4dae3c3a211a4e82e78c6bbc78` 精确保留 candidate tree；maintenance-tip Public CI
+`37846426640` attempt 1 为 7/7 SUCCESS，Browser Smoke `37846426876` attempt 1 为 1/1 SUCCESS。
+
+同一 ruleset `24216773` 随后升级为 phase two，并从 ruleset API 与 branch-effective-rules API 独立读回：active、
+无 bypass、禁止 deletion / non-fast-forward、要求 PR、七个 strict required checks，且
+`do_not_enforce_on_create=false`。四格 reconciliation manifest bytes SHA-256 为
+`325848797652FA8C68E02C9C80BA2819391F355F25D8363BF4730CBBA9392401`。
+
+PR #252/#264 与旧本地失败保持原身份；本轮四项 setup/tool observation 与首次 premerge byte-definition error 同样保留，
+后继 PASS 不覆盖它们。
+
+本文自己的 final-byte local gates、original PR、受保护 main 合入、new exact-main 双门、fresh README / doc223 /
+doc237 / doc238 / milestones installed-product readback 与 independent reconciliation 全部闭合后，target 才生效。
+闭合以后返回 CONTROL LOOP 重审 M1；这不自动开始 0.12.3 backport/release，不授权 consumer migration、Parse、
+Fact、Coverage 或 `DECLARED_CLAIM_FIDELITY`。
