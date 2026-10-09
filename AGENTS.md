@@ -2970,3 +2970,50 @@ PR、受保护合入、new exact-main Public CI / Browser Smoke、fresh README /
 installed-product readback 与 independent reconciliation 全部成立以前，target marker 只是条件目标，runtime 继续
 `NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后仍须重新绑定新 exact main 并返回 CONTROL LOOP；不能按文档编号
 自动开始实现。
+
+## R1 Parse fulfillment private implementation 实现冻结候选（条件状态）
+
+文档 241 后继 authorization publication 已在 PR #277 exact-main Public CI 的正式硬退出后停止；该 failure 只定位到
+Python 3.10 `-O` combined service fixture，根因保持 `UNKNOWN`。文档 242 与 PR #278 独立拆分 test worlds、增加
+phase observation 并修正 unittest cleanup 顺序，没有声称解释旧失败。#278 original Public CI、受保护合入、新
+exact-main Public CI / Browser Smoke 与 doc241 剩余四份 fresh installed-product readback / reconciliation 闭合后，
+`R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED` 才成为事实。
+
+CONTROL LOOP 随后从 `main@026fabd74d7cc3fb9be1300e66f22fb8fd38fe7b` 重审 doc219 A–H。PR #279
+head `2965fcfa1908d2e73e1600118493b69d5e37646a` 只新增 private Parse runtime/tests；ordinary merge
+`26f21b5049dc87c889862fbcef2a12e76aed697e` 的 tree 为
+`3d6cd1b783f7919ef3657e391d7d8c4de9f85fa5`，与 candidate tree 相同。PR original Public CI
+`37966413820` attempt 1 为 11/11 SUCCESS；new exact-main Public CI `37969385811` attempt 1 为 11/11
+SUCCESS，Browser Smoke `37969385827` attempt 1 为 1/1 SUCCESS。
+
+实现只物化 exact input/classification/blob history revalidation、exact ELIGIBLE denominator、explicit
+CPython 3.10.6 runtime capability、per-subject one-shot claim、contained worker/private canonical AST product、
+semantic/lifecycle 分离、complete reconciliation、application-owned product set 与 same-attempt one-shot continuation。
+五份匿名 exact-SHA source readback 均等于 Git blobs；manifest SHA-256 为
+`d7fbe6441f095595ebf471319d85f0609321d5d70311f520625625c0cb0dcf2f`。
+
+最终实现字节的四格 full Review Attention 为 CPython 3.10.6 normal / `-O` 各 `439 OK / skipped=1`，
+CPython 3.13.13 normal / `-O` 各 `439/439 PASS`。第一次 3.10.6 `-O` full-suite observation 在未修改的
+Relation `RD-016` 得到 `INTERRUPTED` 而非预期 `COMPLETED`，保持 `FAIL / ROOT_CAUSE_UNKNOWN`；后继 isolated
+和 instrumented PASS 只作 diagnostics。attempt 2 被后继 hardening bytes supersede；attempt 3 才绑定最终实现。
+
+[文档 243](docs/243-r1-parse-private-implementation-freeze-candidate.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FREEZE_CANDIDATE
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+current Fact projection/request/wire、Provider scheduling/product-use enforcement、persistence、public Schema/carrier、
+Fact fulfillment、shared ledger、Coverage、Evidence/publisher/Bundle、CLI、其他顶层轨与
+`DECLARED_CLAIM_FIDELITY` 均未获授权。doc243 的 final bytes、original PR、受保护合入、新 exact-main 双门、
+fresh README / doc243 / milestones installed-product readback、independent reconciliation 与后继独立最终冻结发布
+全部闭合前，只能写成 `IMPLEMENTED / EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`，不能写成 `FROZEN`。
