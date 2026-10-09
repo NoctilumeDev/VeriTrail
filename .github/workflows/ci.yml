@@ -739,22 +739,22 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
 
-      - name: Install frozen Core 0.12.2 and compatible Starter 0.2.0
+      - name: Install frozen Core 0.12.3 and compatible Starter 0.2.0
         shell: pwsh
         run: |
           python -m pip install "playwright==1.62.0" "pywin32==312"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.2-py3-none-any.whl'
+          $coreWheel = Join-Path '${{ runner.temp }}' 'veritrail-0.12.3-py3-none-any.whl'
           python -I scripts/download_release_asset.py `
-            --url 'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.2/veritrail-0.12.2-py3-none-any.whl' `
+            --url 'https://github.com/NoctilumeDev/VeriTrail/releases/download/v0.12.3/veritrail-0.12.3-py3-none-any.whl' `
             --output $coreWheel `
-            --sha256 '3a42f28db6f4ed12351dade3fbb6f57fa1d5aa3fdd6d28210492f676bc1562de'
+            --sha256 '360add853dbaf3bbd18b51d21b494b20891010c6f1bc4b122b9e87d77ce53308'
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m pip install --no-deps $coreWheel
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m pip install --no-deps --editable ./starter
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -I -c "from importlib.metadata import version; from pathlib import Path; import os, veritrail; workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.12.2' and version('veritrail') == '0.12.2' and version('veritrail-starter') == '0.2.0' and not module.is_relative_to(workspace) else 1)"
+          python -I -c "from importlib.metadata import version; from pathlib import Path; import os, veritrail; workspace = Path(os.environ['GITHUB_WORKSPACE']).resolve(); module = Path(veritrail.__file__).resolve(); raise SystemExit(0 if veritrail.__version__ == '0.12.3' and version('veritrail') == '0.12.3' and version('veritrail-starter') == '0.2.0' and not module.is_relative_to(workspace) else 1)"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m playwright install chromium
 
