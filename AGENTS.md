@@ -2847,3 +2847,32 @@ ruleset `24216773` 已独立读回为 active、无 bypass、禁止 deletion / no
 doc237 / doc238 / milestones installed-product readback 与 independent reconciliation 全部闭合后，target 才生效。
 闭合以后必须返回 CONTROL LOOP 重审 M1；0.12.3 产品改动、release、consumer migration、Parse 与 claim fidelity
 都没有被本文自动启动。
+
+## Core 0.12.3 发布与公开读回事实（条件状态）
+
+[文档 239](docs/239-core-v0.12.3-release-readback-facts.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+M1 candidate `4bae52e4127a964985f56a2219fc0c0a002a82b4` 经 PR #273 original Public CI 7/7、ordinary
+merge `core-0.12-maintenance@a18da8ce40f7f9113bebef82f7fa5b3fcf334212`、exact-tip Public CI 7/7 与
+Browser Smoke 1/1。M2 从该 exact tip 的 clean detached checkout 重建最终字节，创建受保护注释标签
+`v0.12.3`，发布四项 create-new 资产，并保持非 Latest；匿名读回完成两套 Python wheel／sdist 四格与
+public Starter 0.2.0 双 Python PASS／故意 FAIL、Catalog、Workbench 和 cleanup 链。
+
+第一次敏感路径扫描 `FAILURE`、后继限定 evidence scope 的独立 `PASS`，以及此前所有 harness/setup
+observation 均保留。本文自己的 final-byte local gates、original PR Public CI、受保护 main 合入、new
+exact-main Public CI + Browser Smoke、fresh README／doc239／milestones／AGENTS installed-product readback 与
+independent reconciliation 全部闭合后，target 才生效。
+
+该发布不修改 runtime、workflow、timeout、retry、required-check、Release assets 或 frozen R1 contracts。闭合以后
+必须返回 CONTROL LOOP 重审 W1；W1 没有由本文自动开始，Parse / Fact / Coverage、claim fidelity、Schema 与
+persistence 继续未获授权。
