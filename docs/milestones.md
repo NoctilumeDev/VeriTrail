@@ -3825,3 +3825,42 @@ PR #252/#264 与旧本地失败保持原身份；本轮四项 setup/tool observa
 doc237 / doc238 / milestones installed-product readback 与 independent reconciliation 全部闭合后，target 才生效。
 闭合以后返回 CONTROL LOOP 重审 M1；这不自动开始 0.12.3 backport/release，不授权 consumer migration、Parse、
 Fact、Coverage 或 `DECLARED_CLAIM_FIDELITY`。
+
+## Core 0.12.3 发布与公开读回事实（条件状态）
+
+[文档 239](239-core-v0.12.3-release-readback-facts.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+M1 candidate `4bae52e4127a964985f56a2219fc0c0a002a82b4` 经 PR #273 original Public CI
+`37857066281` attempt 1 的 7/7、ordinary merge
+`core-0.12-maintenance@a18da8ce40f7f9113bebef82f7fa5b3fcf334212`、exact-tip Public CI
+`37857936597` attempt 1 的 7/7 与 Browser Smoke `37857936668` attempt 1 的 1/1。
+
+M2 从 exact maintenance tip 的 clean detached checkout 重建最终字节；受保护注释标签 `v0.12.3` 的 tag object
+为 `244cc76b1c19cefd8a70b0da367b5bf0cfd97146`，解引用到同一 commit。Release `407348784` 为非
+draft、非 prerelease、非 Latest，四项 create-new asset 的 GitHub digest、final staging 与匿名下载字节逐项一致；
+Latest 仍为 `v0.13.0`。
+
+匿名公开读回完成 Python 3.10／3.13 × wheel／sdist 四格、public Starter 0.2.0 双 Python 真实 PASS／故意 FAIL、
+Catalog 两 Run／零 issue、Workbench desktop/mobile 与清理链。首次敏感路径扫描 12 项命中保持 `FAILURE`；后继只对
+publication evidence、独立脱敏日志和明确排除的 machine-local setup carriers 建立新的 0 命中 `PASS`。九项
+construction/readback observation 均在外部 history 保持身份。independent reconciliation manifest：
+
+```text
+sha256_json  = fa4c471ddc038008b084bc097203d8b9cdd31901121b6cdf2994088658ac0405
+sha256_bytes = fbceac57f4c19a95c92b2b3718a2db7cab9736f01962a6d6bc74574ed9ae3d6c
+```
+
+本文自己的 final-byte local gates、original PR Public CI、受保护 main 合入、new exact-main Public CI + Browser
+Smoke、fresh README／doc239／milestones／AGENTS installed-product readback 与 independent reconciliation 全部闭合后，
+target 才生效。闭合以后必须返回 CONTROL LOOP 重审 W1；本发布不修改 required Starter lane，不启动 Parse／Fact／
+Coverage、`DECLARED_CLAIM_FIDELITY`、Schema 或 persistence。

@@ -270,6 +270,21 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 该发布只修正 publication lag，不启动 0.12.3 产品 backport/release。闭合以后仍须返回 CONTROL LOOP，重新审查
 M1 是否是当前最小合法 seam；consumer migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
 
+[Core 0.12.3 发布与公开读回事实](docs/239-core-v0.12.3-release-readback-facts.md)记录 maintenance
+backport PR #273、exact-tip 双门、受保护注释标签、四项非 Latest Release 资产，以及匿名 public Core 四格与
+Starter 0.2.0 双 Python 产品读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+首次敏感路径扫描的 12 项命中、其他 setup/harness failure 和后继独立 PASS 均保留原身份。该发布只同步已经
+形成的 release/readback 事实；闭合以后仍须返回 CONTROL LOOP 重审 W1，不能直接修改 workflow 或启动 Parse。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
