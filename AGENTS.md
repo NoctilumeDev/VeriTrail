@@ -2918,3 +2918,55 @@ reconciliation 全部闭合后，target qualified state 才生效。
 闭合以后必须返回 CONTROL LOOP，重新核对 exact main、并行 PR、文档 223 §9、文档 219–221、frozen Parse
 contract 与现存反例，才可以判断 Parse private implementation 是否应获得新的 authorization。本文不自动授权
 parser，不重开或复用 PR #243，不选择 persistence，不启动 Fact / Coverage、Schema、publisher 或 Bundle。
+
+## R1 Parse fulfillment private implementation 实现授权发布（条件状态）
+
+W1 资格发布 PR #276 head `4c4d4ceaef6c7e837f4cfd75fa4b7fb007efcd1e` 的 original Public CI
+`37872621305` attempt 1 为 11/11 SUCCESS；ordinary merge 后的新 exact main 为
+`35502aa2f605e5654327f9df81d9da7fe81f23cf`，tree 为
+`98a951f93cf5b084fabc8d5c63b77d63aac3a2f8`。该 exact main 的 Public CI `37874646050`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `37874646030` attempt 1 为 1/1 SUCCESS。
+
+README、doc223、doc239、doc240、milestones 与 AGENTS 使用六个 fresh Plan/session 取得 Core PASS；六份匿名 raw
+source bytes 等于 exact Git blobs。两个正式 `ERROR` observation 原身份保留：doc223 首次 API
+`COLLECTION_BUDGET_EXHAUSTED` / render network error，以及 AGENTS 首次 render network error / root cause
+`UNKNOWN`。后继 fresh PASS 没有删除或解释它们。independent reconciliation 为：
+
+```text
+sha256_json  = 4cbb0d6454ba266e46635884f1d714980a4e21286006f8ab48f43c164f9694bd
+sha256_bytes = 2e4b63e2ac0ba811303cb95ea2a5d50ed27a9766473fa23d9ab198efbb3017b1
+```
+
+第一次 Parse authorization 候选 PR #243 仍保持 original Public CI `36449716998` attempt 1 的 required Starter
+`FAILURE`、`CLOSED / UNMERGED`，没有 rerun 或 authority 继承。文档 221–240 只闭合外部 consumer prerequisite；
+`W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED` 使 CONTROL LOOP 可以从新 source state 重审授权，不自动授权 parser。
+
+fresh audit-only probe 又发现旧 doc219 matrix Artifact 把 source literal `文本` 编码损坏为 `�ı�`。第一次
+re-audit attempt 因 stdout UTF-8 decode error 保留为 `EVIDENCE_TOOLING_ERROR`；全新 attempt 固定 UTF-8 后，
+CPython 3.10.6 / 3.13.13、normal / `-O` 四格 decision projection 相同，execution-cell canonical report 与旧摘要
+逐字节相同。该差异属于 audit Artifact 输出编码，不是 product runtime 或 feasibility claim 反例；旧 digest 不改写。
+
+[文档 241](docs/241-r1-parse-private-implementation-authorization-publication.md)因此只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+`PRIVATE_IMPLEMENTATION_ALLOWED` 只覆盖 doc219 A–H：exact input/classification/history 重验、ELIGIBLE denominator、
+显式 exact CPython 3.10.6 runtime、per-subject one-shot child、contained worker/private canonical product、
+semantic/lifecycle 分离、完整 reconciliation、application-owned product set 与 same-attempt one-shot continuation。
+它不授权 current Fact projection/request/wire、Provider scheduling、persistence、public Schema/carrier、Fact
+fulfillment、shared ledger、Coverage、Evidence/publisher/Bundle、CLI、其他顶层轨或 `DECLARED_CLAIM_FIDELITY`。
+
+doc241 只允许 AGENTS、README、milestones 与新增 publication 四个文档文件。其 final-byte local gates、original
+PR、受保护合入、new exact-main Public CI / Browser Smoke、fresh README / doc219 / doc241 / milestones
+installed-product readback 与 independent reconciliation 全部成立以前，target marker 只是条件目标，runtime 继续
+`NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后仍须重新绑定新 exact main 并返回 CONTROL LOOP；不能按文档编号
+自动开始实现。
