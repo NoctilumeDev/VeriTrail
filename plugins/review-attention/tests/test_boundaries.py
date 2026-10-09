@@ -309,6 +309,50 @@ class SourceSnapshotBoundaryTests(unittest.TestCase):
                         violations.append(f"{path.name}:{node.lineno}:{name}")
         self.assertEqual(violations, [])
 
+    def test_parse_fulfillment_is_private_and_stops_before_fact_or_publication(self) -> None:
+        parse_modules = sorted(
+            (SOURCE_ROOT / "veritrail_review").glob("_parse_fulfillment*.py")
+        )
+        self.assertEqual(len(parse_modules), 3)
+        forbidden_imports = {
+            "veritrail_review.publisher",
+            "veritrail_review._artifact_budget",
+            "veritrail_review._multi_provider_fact_composition",
+            "veritrail_review._source_operation_fact_application",
+            "veritrail_review._source_operation_projection",
+        }
+        ast_imports: dict[str, int] = {}
+        violations: list[str] = []
+        for path in parse_modules:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+            imports: list[str] = []
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Import):
+                    imports.extend(alias.name for alias in node.names)
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    imports.append(node.module)
+            ast_imports[path.name] = imports.count("ast")
+            for name in imports:
+                if name in forbidden_imports:
+                    violations.append(f"{path.name}:{name}")
+        self.assertEqual(violations, [])
+        self.assertEqual(
+            ast_imports,
+            {
+                "_parse_fulfillment.py": 0,
+                "_parse_fulfillment_values.py": 0,
+                "_parse_fulfillment_worker.py": 1,
+            },
+        )
+        for name in (
+            "OwnedParseFulfillmentAttempt",
+            "OwnedParseProductSet",
+            "create_parse_fulfillment_attempt",
+            "execute_parse_claim",
+        ):
+            self.assertFalse(hasattr(veritrail_review, name))
+            self.assertNotIn(name, veritrail_review.__all__)
+
 
 if __name__ == "__main__":
     unittest.main()
