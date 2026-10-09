@@ -3904,3 +3904,64 @@ fresh README / doc223 / doc239 / doc240 / milestones / AGENTS installed-product 
 
 W1 qualified 只恢复回到 CONTROL LOOP 重新审查 Parse authorization 的资格。它不自动授权 parser，不重开
 PR #243，不选择 persistence，不启动 Fact / Coverage、Schema、publisher、Bundle 或 `DECLARED_CLAIM_FIDELITY`。
+
+### R1 Parse fulfillment private implementation 实现授权发布（条件状态）
+
+CONTROL LOOP 从 `main@35502aa2f605e5654327f9df81d9da7fe81f23cf` 重新核对 frozen Parse contract、
+文档 219–223、W1、current runtime bytes、open PR 与 retained failures。第一次授权候选 PR #243 的身份不变：
+
+```text
+base = 23f9825e61791a78056d5154e4dfd3626a1167b1
+head = c28860fb2b3acd21c15216e3c7a69e3b3e573f16
+Public CI 36449716998 attempt 1 = 10/11 SUCCESS + Starter FAILURE
+state = CLOSED / UNMERGED
+```
+
+文档 221–240 的独立修正链已经把 required Starter consumer 迁移到匿名读回的 Core 0.12.3。最终 W1 PR #276
+head `4c4d4ceaef6c7e837f4cfd75fa4b7fb007efcd1e` original Public CI `37872621305` attempt 1 为
+11/11 SUCCESS；ordinary merge `35502aa2f605e5654327f9df81d9da7fe81f23cf` 的 tree 为
+`98a951f93cf5b084fabc8d5c63b77d63aac3a2f8`。new exact-main Public CI `37874646050` attempt 1 为
+11/11 SUCCESS，Browser Smoke `37874646030` attempt 1 为 1/1 SUCCESS。
+
+README、doc223、doc239、doc240、milestones 与 AGENTS 六份 fresh anonymous installed-product readback 均为
+Core PASS；public raw bytes 与 exact Git blobs 一致。doc223 第一次 API collection budget exhaustion / render network
+error，以及 AGENTS 第一次 render network error / exact cause UNKNOWN 均保留为 nonqualifying formal `ERROR`；fresh
+PASS 没有覆盖它们。normal / `-O` independent reconciliation 为：
+
+```text
+sha256_json  = 4cbb0d6454ba266e46635884f1d714980a4e21286006f8ab48f43c164f9694bd
+sha256_bytes = 2e4b63e2ac0ba811303cb95ea2a5d50ed27a9766473fa23d9ab198efbb3017b1
+```
+
+current source re-audit 确认 doc217/218/219 与六个相关 Review Attention runtime 文件仍为文档 219 的 exact
+bytes。fresh audit probe 第一次 attempt 因 stdout UTF-8 decode error 停止，保留为 `EVIDENCE_TOOLING_ERROR`。
+全新 attempt 显式固定 UTF-8；CPython 3.10.6 / 3.13.13、normal / `-O` 四格各自产生相同 canonical report。
+旧 doc219 matrix Artifact 中 source literal `文本` 被损坏为 `�ı�`；fresh matrix 恢复 exact literal，除此以外
+decision-claim projection 相同，execution-cell canonical report 与旧摘要逐字节相同。旧 Artifact/digest 保持历史身份，
+该缺口不计入 product runtime 或 feasibility claim failure。
+
+[文档 241](241-r1-parse-private-implementation-authorization-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+授权范围严格等于 doc219 A–H：exact input/classification/blob history revalidation、exact ELIGIBLE denominator、
+explicit CPython 3.10.6 runtime capability、per-subject one-shot claims、contained worker/private canonical product、
+semantic/lifecycle separation、complete reconciliation、application-owned product/product-set identity 与 attempt-bound
+one-shot continuation。current Fact request/projection/wire、Provider scheduling/product-use enforcement、persistence
+Route B、public Schema/carrier、runtime distribution/attestation、Fact fulfillment、shared ledger、ReviewSliceSet/Coverage、
+Evidence/publisher/Bundle、CLI/Workbench/Core、其他顶层轨与 `DECLARED_CLAIM_FIDELITY` 继续未授权。
+
+本文只允许 AGENTS、README、milestones 与新增 doc241 四个文档文件。final-byte local gates、original PR、受保护
+合入、new exact-main Public CI / Browser Smoke、README / doc219 / doc241 / milestones fresh anonymous
+installed-product readback 与 independent reconciliation 全部成立以前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是
+publication target，runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后必须重新回到 CONTROL LOOP，
+再次确认 A–H 仍是最小合法 implementation；绿色 publication 不自动创建代码施工事实。
