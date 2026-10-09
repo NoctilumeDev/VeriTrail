@@ -69,6 +69,10 @@ combined method
 successful start
   -> immediately addCleanup(session.terminate)
 
+test-owned temporary directory
+  -> register cleanup before start
+  -> unittest LIFO cleanup terminates the session before removing the directory
+
 unexpected readiness
   -> exact readiness observation
   -> bounded stdout/stderr
@@ -86,6 +90,9 @@ both worlds
 phase marker 只进入测试日志，用来在 Python 没来得及产生 failure object 时保存最后完成的 test phase。它不是产品
 Evidence，也不进入任何 public Schema、Bundle、Core verdict 或 runtime API。
 
+上述 cleanup 顺序只约束 unittest 能够执行 Python cleanup 的正常结束与异常路径；解释器硬退出时不保证 cleanup
+callback 会运行，此时仍以最后一个 flushed phase marker 作为主要诊断面。
+
 ## 4. 非资格诊断
 
 同一旧 exact tree 上，本机 CPython 3.10.6 取得：
@@ -101,7 +108,8 @@ then full optimized suite in a fresh interpreter
   469/469 PASS
 ```
 
-修正后的最终测试字节又在 CPython 3.10.6 / 3.13 的 normal / `-O` 四格中各取得 `8/8 PASS`。这些都是
+修正后的最终测试字节又在 CPython 3.10.6 / 3.13 的 normal / `-O` 四格中各取得定向两用例 `2/2 PASS`，
+并在四格完整 Core 中分别取得 `Ran 470 tests / OK`。这些都是
 non-qualifying local diagnostics：它们证明修正没有稳定破坏被测语义，也反驳“normal 先运行必然污染 optimized”
 这一强假设；它们不否定 exact-main formal first failure，也不证明其根因。
 
