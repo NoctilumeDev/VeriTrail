@@ -3965,3 +3965,56 @@ Evidence/publisher/Bundle、CLI/Workbench/Core、其他顶层轨与 `DECLARED_CL
 installed-product readback 与 independent reconciliation 全部成立以前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是
 publication target，runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`。最后门闭合后必须重新回到 CONTROL LOOP，
 再次确认 A–H 仍是最小合法 implementation；绿色 publication 不自动创建代码施工事实。
+
+### R1 Parse fulfillment private implementation 实现冻结候选（条件状态）
+
+doc241 后继 authorization publication PR #277 的 original Public CI 11/11 与 exact-main Browser Smoke 1/1 成立，
+但 exact-main Public CI `37926907456` 在 Python 3.10 `-O` combined service fixture 期间硬退出；没有 traceback、
+assertion 或 unittest summary，正式身份保持 `FAILURE / ROOT_CAUSE_UNKNOWN`。文档 242 与 PR #278 只拆分
+test worlds、增加 phase observation，并保证 unittest session 在 temporary directory 前清理；不声称解释或修复唯一根因。
+
+PR #278 original Public CI `37934979105` attempt 1 为 11/11 SUCCESS。ordinary merge 后的
+`main@026fabd74d7cc3fb9be1300e66f22fb8fd38fe7b` 又取得 Public CI `37944059399` attempt 1 的
+11/11 SUCCESS 与 Browser Smoke `37944059409` attempt 1 的 1/1 SUCCESS。doc241 预声明的 README / doc219 /
+doc241 / milestones 四份 fresh installed-product readback、Core PASS 与 independent reconciliation 随后闭合，
+`R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED` 才成为事实；旧 #277 failure 未被覆盖。
+
+CONTROL LOOP 从该 exact main 重新确认 doc219 A–H 仍是最小合法 implementation。PR #279 head
+`2965fcfa1908d2e73e1600118493b69d5e37646a` 只修改 5 个 private runtime/test files，`2162 insertions / 0
+deletions`。ordinary merge `26f21b5049dc87c889862fbcef2a12e76aed697e` 的 tree 为
+`3d6cd1b783f7919ef3657e391d7d8c4de9f85fa5`，与 candidate tree 相同。
+
+PR #279 original Public CI `37966413820` attempt 1 为 11/11 SUCCESS；new exact-main Public CI
+`37969385811` attempt 1 为 11/11 SUCCESS，Browser Smoke `37969385827` attempt 1 为 1/1 SUCCESS。
+五份匿名 exact-SHA implementation source readback 均等于 Git blobs，canonical manifest SHA-256 为
+`d7fbe6441f095595ebf471319d85f0609321d5d70311f520625625c0cb0dcf2f`。
+
+最终实现字节的 Parse direct suite 为每格 21 项；full Review Attention 四格中，CPython 3.10.6 normal / `-O`
+各为 `439 OK / skipped=1`，CPython 3.13.13 normal / `-O` 各为 `439/439 PASS`。fresh wheel
+`veritrail_review_attention-0.1.0.dev0-py3-none-any.whl` 为 206883 bytes，SHA-256
+`bd9c69d737a8a75f6dbc1a8f980faa5e11c4a7fa9f9e93104267034307c3c6b3`；fresh installed-package readback
+manifest SHA-256 为 `a939cdc74d732d05406fc682aa476af06d73393c5a27d99bfc81bf6aff0b1f3b`。
+
+第一次 local final-byte qualification 的 CPython 3.10.6 `-O` full suite 在 unchanged Relation `RD-016` 得到
+`INTERRUPTED` 而非 `COMPLETED`，保持 `FAIL / ROOT_CAUSE_UNKNOWN`。后继 isolated same-world PASS 与 instrumented
+full-suite PASS 只作 diagnostics；attempt 2 虽四格成功，但被后继 hardening bytes supersede，attempt 3 才绑定最终实现。
+
+[文档 243](243-r1-parse-private-implementation-freeze-candidate.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FREEZE_CANDIDATE
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该候选没有修改 current Fact wire、选择 persistence、建立公共 Parse Artifact 或启动 Fact / Coverage。doc243 自己的
+final-byte local gates、original PR、受保护合入、新 exact-main Public CI / Browser Smoke、fresh README / doc243 /
+milestones installed-product readback、independent reconciliation 与后继独立最终冻结发布全部闭合前，private
+implementation 只能是 `IMPLEMENTED / A–H_EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`，不能写成 `FROZEN`。
