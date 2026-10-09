@@ -4061,3 +4061,35 @@ Browser Smoke、fresh README / doc244 / milestones installed-product readback �
 最后门以前仍是 qualified freeze candidate；闭合以后仍须返回 CONTROL LOOP，重新判断 Parse -> Fact consumer
 correction contract 是否仍是最小合法问题。Fact wire、persistence、public carrier、Fact fulfillment 与 Coverage
 没有由本 publication 获得 authority。
+
+### R1 Parse → Fact consumer correction 最小合同候选（条件状态）
+
+Parse private implementation 在 `main@b166dee05fe995b17b2f3bb557d75c2feb4f5493` 完成最终冻结后，CONTROL LOOP
+重新审查文档 215 / 216 留下的 consumer seam。audit-only partial-accepted world 确认：upstream 已有 application-owned
+Parse product set、complete reconciliation 与 same-attempt product access；current Fact projection `/0.1`、wire `/0.2`
+仍把全部 Language Support eligible raw source 交给 Provider，且没有 Parse product set / continuation binding。
+
+第一次审计 fixture 使用的 syntax-invalid literal 没有触发 frozen helper 的 rejected mapping，因此在自身 guard 停止，
+保留为 `INVALID_AUDIT_FIXTURE_SETUP / product_observation=false`。fresh attempt 2 的 3.10.6 / 3.13.13、normal /
+`-O` 四格 2528-byte report 相同；五个相关 existing test modules 四格各 86 项成立。canonical audit summary
+SHA-256 为 `9cdbec6bddd3dee187ade8e551ebc083a8d2d4568d55468f67dd19c9f5f366e4`。
+
+[文档 245](245-r1-parse-to-fact-consumer-correction-contract.md)因此只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_CANDIDATE
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+合同候选选择 product-only derivation authority：normal Fact Provider 只取得 per-Provider one-shot claim 分配的 admitted
+Parse products；raw body、path reread、reparse 或 digest echo 不能替代 product consumption。多个 Providers 共享一份
+upstream Parse truth，但各自拥有 child claim。zero denominator 与 all-rejected complete 保留不同 identity，首版均显式
+阻断 normal Fact launch；该阻断不创建 empty FactSet、Fact fulfillment 或 Coverage closure。
+
+本文不修改 runtime，也不选择 persistence 或定义 Fact obligation universe。doc245 的 candidate gates 与后继独立 freeze
+publication 全部闭合以前，合同没有 frozen 或 implementation authority。
