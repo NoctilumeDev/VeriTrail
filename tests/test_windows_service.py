@@ -47,6 +47,14 @@ def _readiness(*, timeout_ms: int = 3_000) -> dict[str, object]:
     }
 
 
+def _record_phase(world: str, phase: str) -> None:
+    print(
+        f"[veritrail-test-phase] windows_service world={world} phase={phase}",
+        file=sys.stderr,
+        flush=True,
+    )
+
+
 @unittest.skipUnless(os.name == "nt", "M10 service lifecycle is Windows-only")
 class WindowsServiceTests(unittest.TestCase):
     def _start(
@@ -95,25 +103,51 @@ class WindowsServiceTests(unittest.TestCase):
             self.assertEqual(0, teardown.final_active_processes)
             self.assertTrue(teardown.port_free)
 
-    def test_early_exit_and_never_ready_are_distinct(self) -> None:
+    def test_early_exit_is_reported_with_owned_teardown(self) -> None:
         with tempfile.TemporaryDirectory() as raw_directory:
             directory = Path(raw_directory)
-            early_port = _free_port()
-            early = self._start(directory, early_port, "early-exit", "23")
-            early_readiness = probe_owned_http_readiness(early, _readiness())
-            self.assertFalse(early_readiness.ready)
-            self.assertEqual("NODE_EARLY_EXIT", early_readiness.error_type)
-            self.assertTrue(early.terminate().cleanup_complete)
+            port = _free_port()
+            _record_phase("early-exit", "before-start")
+            session = self._start(directory, port, "early-exit", "23")
+            self.addCleanup(session.terminate)
+            _record_phase("early-exit", "after-start")
+            readiness = probe_owned_http_readiness(session, _readiness())
+            _record_phase("early-exit", "after-readiness")
+            if readiness.ready or readiness.error_type != "NODE_EARLY_EXIT":
+                stdout, stderr = session.snapshot_streams()
+                self.fail(
+                    "early-exit service produced the wrong readiness outcome: "
+                    f"observation={readiness!r}; stdout={stdout!r}; stderr={stderr!r}"
+                )
+            _record_phase("early-exit", "before-teardown")
+            teardown = session.terminate()
+            _record_phase("early-exit", "after-teardown")
+            self.assertTrue(teardown.cleanup_complete, teardown)
+            self.assertEqual(23, teardown.root_exit_code, teardown)
 
-            timeout_port = _free_port()
-            sleeping = self._start(directory, timeout_port, "sleep", "30")
+    def test_never_ready_is_reported_with_owned_teardown(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_directory:
+            directory = Path(raw_directory)
+            port = _free_port()
+            _record_phase("never-ready", "before-start")
+            session = self._start(directory, port, "sleep", "30")
+            self.addCleanup(session.terminate)
+            _record_phase("never-ready", "after-start")
             timeout = probe_owned_http_readiness(
-                sleeping,
+                session,
                 _readiness(timeout_ms=500),
             )
-            self.assertFalse(timeout.ready)
-            self.assertEqual("READINESS_TIMEOUT", timeout.error_type)
-            self.assertTrue(sleeping.terminate().cleanup_complete)
+            _record_phase("never-ready", "after-readiness")
+            if timeout.ready or timeout.error_type != "READINESS_TIMEOUT":
+                stdout, stderr = session.snapshot_streams()
+                self.fail(
+                    "never-ready service produced the wrong readiness outcome: "
+                    f"observation={timeout!r}; stdout={stdout!r}; stderr={stderr!r}"
+                )
+            _record_phase("never-ready", "before-teardown")
+            teardown = session.terminate()
+            _record_phase("never-ready", "after-teardown")
+            self.assertTrue(teardown.cleanup_complete, teardown)
 
     def test_wildcard_listener_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as raw_directory:
