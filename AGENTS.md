@@ -2876,3 +2876,45 @@ independent reconciliation 全部闭合后，target 才生效。
 该发布不修改 runtime、workflow、timeout、retry、required-check、Release assets 或 frozen R1 contracts。闭合以后
 必须返回 CONTROL LOOP 重审 W1；W1 没有由本文自动开始，Parse / Fact / Coverage、claim fidelity、Schema 与
 persistence 继续未获授权。
+
+## M10 required Starter lane 迁移资格发布（条件状态）
+
+[文档 240](docs/240-m10-required-starter-lane-migration-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+W1 candidate `ecc09bcb1d278a399cdc2685dcdb1f9110122283` 只修改 `.github/workflows/ci.yml` 的独立
+`Starter PASS/FAIL golden path`：fixed public Core URL、SHA-256 与 installed version 从 0.12.2 更新到已读回的
+0.12.3。Python matrix 中 Starter / Authoring 的 declared Core 0.12.2 compatibility lane 保持原字节；job 名、timeout、
+retry、required-check、runtime 与 tests 没有变化。
+
+PR #275 original Public CI `37868238477` attempt 1 为 11/11 SUCCESS。ordinary merge
+`594f1b10c2e441b7e73bd607d4d3d2623afd3704` 的 tree 为
+`59aa0c140d923160f92104316ef6200e8db4ee9e`；new exact-main Public CI `37870151887` attempt 1 为
+11/11 SUCCESS，Browser Smoke `37870151759` attempt 1 为 1/1 SUCCESS。
+
+fresh anonymous status readback 清除了 GitHub token 环境；public workflow raw bytes 与 exact Git blob 的 SHA-256
+均为 `ad85f4755d6b5c5605806960a6a12788a403de99a17e13bab1b3a0ce2c6967e7`。PR、两条 run、11/11 job、
+Release v0.12.3 与 wheel digest 被独立交叉核账；Python 3.10 / 3.13 normal / `-O` 四格 reconciliation
+逐字节一致 PASS，SHA-256 为 `86dc70f0d5a7b31bb5c30a7f13baf163ca3a7f4e44e10ece4cdc7d8b29e8c32a`。
+
+不受支持的 `gh release view --json isLatest` 读取、PR Artifact attachment identity 上限、两次 status
+reconciliation setup/tooling error、托管 worktree 的非仓库调用与 unmanaged checkout attachment error 均保持自己的
+非产品身份；后继 PASS 不覆盖它们。
+
+本文自己的 final-byte local gates、original PR Public CI、受保护 main 合入、new exact-main Public CI + Browser
+Smoke、fresh README / doc223 / doc239 / doc240 / milestones / AGENTS installed-product readback 与 independent
+reconciliation 全部闭合后，target qualified state 才生效。
+
+闭合以后必须返回 CONTROL LOOP，重新核对 exact main、并行 PR、文档 223 §9、文档 219–221、frozen Parse
+contract 与现存反例，才可以判断 Parse private implementation 是否应获得新的 authorization。本文不自动授权
+parser，不重开或复用 PR #243，不选择 persistence，不启动 Fact / Coverage、Schema、publisher 或 Bundle。

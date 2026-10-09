@@ -285,6 +285,26 @@ R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
 首次敏感路径扫描的 12 项命中、其他 setup/harness failure 和后继独立 PASS 均保留原身份。该发布只同步已经
 形成的 release/readback 事实；闭合以后仍须返回 CONTROL LOOP 重审 W1，不能直接修改 workflow 或启动 Parse。
 
+[required Starter lane 迁移资格发布](docs/240-m10-required-starter-lane-migration-qualification-publication.md)
+记录 workflow-only candidate `ecc09bc...`、PR #275、ordinary merge `main@594f1b1...`、new exact-main
+Public CI 11/11 + Browser Smoke 1/1，以及 exact workflow、PR、run 与 public Core 0.12.3 asset 的 fresh anonymous
+status readback / reconciliation。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+W1 只把 required `Starter PASS/FAIL golden path` 的 public Core coordinate 从 0.12.2 迁移到已读回的 0.12.3；
+Python matrix 中 Starter / Authoring 的声明兼容性底线仍为 0.12.2。该发布闭合后必须返回 CONTROL LOOP 重新审查
+Parse private implementation authorization；它不自动授权 parser、重开 PR #243、选择 persistence 或启动 Fact / Coverage。
+
 完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。

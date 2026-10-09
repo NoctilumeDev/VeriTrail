@@ -3864,3 +3864,43 @@ sha256_bytes = fbceac57f4c19a95c92b2b3718a2db7cab9736f01962a6d6bc74574ed9ae3d6c
 Smoke、fresh README／doc239／milestones／AGENTS installed-product readback 与 independent reconciliation 全部闭合后，
 target 才生效。闭合以后必须返回 CONTROL LOOP 重审 W1；本发布不修改 required Starter lane，不启动 Parse／Fact／
 Coverage、`DECLARED_CLAIM_FIDELITY`、Schema 或 persistence。
+
+## M10 required Starter lane 迁移资格发布（条件状态）
+
+[文档 240](240-m10-required-starter-lane-migration-qualification-publication.md)只条件化发布：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+CONTROL LOOP 在 `main@c1e0318827162c7302e2a4bf4f8a83742f51cfbc` 重新核对 public Core 0.12.3、
+open PR 与文档 223 §8–9 后，只授权独立 workflow consumer migration。candidate
+`ecc09bcb1d278a399cdc2685dcdb1f9110122283` 只修改 `.github/workflows/ci.yml`，把 required
+`Starter PASS/FAIL golden path` 的 fixed public URL、SHA-256 与 installed version 更新到 0.12.3；Python matrix 中
+Starter / Authoring 的 Core 0.12.2 compatibility floor 保持不变。
+
+PR #275 original Public CI `37868238477` attempt 1 为 11/11 SUCCESS；ordinary merge
+`main@594f1b10c2e441b7e73bd607d4d3d2623afd3704` 的 tree 为
+`59aa0c140d923160f92104316ef6200e8db4ee9e`。new exact-main Public CI `37870151887` attempt 1 为
+11/11 SUCCESS，Browser Smoke `37870151759` attempt 1 为 1/1 SUCCESS。
+
+fresh anonymous status readback 中，exact workflow public raw bytes 与 Git blob 的 SHA-256 均为
+`ad85f4755d6b5c5605806960a6a12788a403de99a17e13bab1b3a0ce2c6967e7`；PR、run、job 与 public
+Core 0.12.3 wheel digest 交叉成立。Python 3.10 / 3.13 normal / `-O` reconciliation 四格逐字节一致 PASS，
+manifest SHA-256 为 `86dc70f0d5a7b31bb5c30a7f13baf163ca3a7f4e44e10ece4cdc7d8b29e8c32a`。
+
+不受支持的 `gh release view --json isLatest` 读取、PR Artifact attachment identity 上限、两次 reconciliation
+setup/tooling error、托管 worktree 创建与 attachment setup error 均保留；后继 PASS 不覆盖它们。本文自己的
+final bytes、original PR、受保护合入、新 exact-main 双门、
+fresh README / doc223 / doc239 / doc240 / milestones / AGENTS installed-product readback 与 independent reconciliation
+全部闭合后，target 才生效。
+
+W1 qualified 只恢复回到 CONTROL LOOP 重新审查 Parse authorization 的资格。它不自动授权 parser，不重开
+PR #243，不选择 persistence，不启动 Fact / Coverage、Schema、publisher、Bundle 或 `DECLARED_CLAIM_FIDELITY`。
