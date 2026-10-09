@@ -3017,3 +3017,43 @@ Fact fulfillment、shared ledger、Coverage、Evidence/publisher/Bundle、CLI、
 `DECLARED_CLAIM_FIDELITY` 均未获授权。doc243 的 final bytes、original PR、受保护合入、新 exact-main 双门、
 fresh README / doc243 / milestones installed-product readback、independent reconciliation 与后继独立最终冻结发布
 全部闭合前，只能写成 `IMPLEMENTED / EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`，不能写成 `FROZEN`。
+
+## R1 Parse fulfillment private implementation 最终冻结发布（条件状态）
+
+文档 243 的 freeze candidate 经 PR #280 head `a230c61493c09e4d258adbf95f1056940ebda24c`、ordinary merge
+`cd4aabb38e0352a7df9e5222606dbb96f65135e5` 与相同 tree
+`35a92b37dae5571a77178d4945c626d66ff17f95` 进入受保护主线。PR original Public CI
+`37977436359` attempt 1 为 11/11 SUCCESS；new exact-main Public CI `37980410283` attempt 1 为
+11/11 SUCCESS，Browser Smoke `37980410250` attempt 1 为 1/1 SUCCESS。
+
+README、doc243 与 milestones 三份 fresh anonymous installed-product readback 使用独立 Plan/session/output，均为
+P1/P2 `COMPLETE`、三样本稳定、零 conflict/coverage reason/cleanup error/active stream，Core `PASS`。三份
+anonymous raw source bytes 等于 exact Git blobs；independent reconciliation SHA-256 为：
+
+```text
+877ca46b98703994402bd0ab7e6f9a1789aa079b51e30ab12fad0f50eee87721
+```
+
+installed-environment preflight 在正式 Plan 创建前出现 Playwright shutdown pending-task warning；该 setup
+observation 保留为 `NON_QUALIFYING_SETUP_WARNING`，没有 formal Evidence 或 Verdict 身份，也没有被后继 PASS
+改写成未发生。
+
+[文档 244](docs/244-r1-parse-private-implementation-freeze-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文自己的 final-byte local gates、original PR、受保护合入、new exact-main Public CI / Browser Smoke、fresh
+README / doc244 / milestones installed-product readback 与 independent reconciliation 全部闭合前，frozen marker
+只是 publication target。闭合以后也必须返回 CONTROL LOOP；Fact consumer correction、Provider scheduling /
+product-use enforcement、persistence、public carrier、Fact fulfillment、Coverage 与其他顶层施工不会自动获得授权。
