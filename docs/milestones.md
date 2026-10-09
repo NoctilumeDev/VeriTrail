@@ -4018,3 +4018,46 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 final-byte local gates、original PR、受保护合入、新 exact-main Public CI / Browser Smoke、fresh README / doc243 /
 milestones installed-product readback、independent reconciliation 与后继独立最终冻结发布全部闭合前，private
 implementation 只能是 `IMPLEMENTED / A–H_EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`，不能写成 `FROZEN`。
+
+### R1 Parse fulfillment private implementation 最终冻结发布（条件状态）
+
+doc243 freeze candidate 的 final local matrix、scope/links/encoding/frozen continuity 与 original PR required checks
+均已闭合。PR #280 head `a230c61493c09e4d258adbf95f1056940ebda24c` 只有四个 docs/status files；original
+Public CI `37977436359` attempt 1 为 11/11 SUCCESS。ordinary merge
+`cd4aabb38e0352a7df9e5222606dbb96f65135e5` 的 parents 为
+`26f21b5049dc87c889862fbcef2a12e76aed697e` 与 `a230c61493c09e4d258adbf95f1056940ebda24c`，
+tree `35a92b37dae5571a77178d4945c626d66ff17f95` 与 candidate tree 相同。
+
+该 exact main 的 Public CI `37980410283` attempt 1 为 11/11 SUCCESS，Browser Smoke `37980410250`
+attempt 1 为 1/1 SUCCESS。README、doc243、milestones 三份 fresh anonymous installed-product readback 使用
+三个独立 Plan/session/output identity，P1/P2 均 `COMPLETE`、三样本稳定、marker 恰好一次、零 observation defect，
+Core 均 `PASS`；三份 public raw bytes 等于 exact Git blobs。independent reconciliation 为：
+
+```text
+sha256_json = 877ca46b98703994402bd0ab7e6f9a1789aa079b51e30ab12fad0f50eee87721
+```
+
+正式 readback 前的 installed-environment preflight 成功写出，解释器 shutdown 时出现 Playwright pending-task /
+`TargetClosedError` warning。它没有 Plan/session/Evidence/output 身份，保留为
+`NON_QUALIFYING_SETUP_WARNING`；后继正式 PASS 不把它改写成未发生。
+
+[文档 244](244-r1-parse-private-implementation-freeze-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 frozen target 必须由 doc244 自己的 final bytes、original PR、受保护 main 合入、new exact-main Public CI /
+Browser Smoke、fresh README / doc244 / milestones installed-product readback 与 independent reconciliation 生效。
+最后门以前仍是 qualified freeze candidate；闭合以后仍须返回 CONTROL LOOP，重新判断 Parse -> Fact consumer
+correction contract 是否仍是最小合法问题。Fact wire、persistence、public carrier、Fact fulfillment 与 Coverage
+没有由本 publication 获得 authority。
