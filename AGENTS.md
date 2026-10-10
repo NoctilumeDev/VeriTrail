@@ -3057,3 +3057,34 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 README / doc244 / milestones installed-product readback 与 independent reconciliation 全部闭合前，frozen marker
 只是 publication target。闭合以后也必须返回 CONTROL LOOP；Fact consumer correction、Provider scheduling /
 product-use enforcement、persistence、public carrier、Fact fulfillment、Coverage 与其他顶层施工不会自动获得授权。
+
+## R1 Parse → Fact consumer correction 最小合同候选（条件状态）
+
+doc244 最后门闭合后，CONTROL LOOP 从 exact `main@b166dee05fe995b17b2f3bb557d75c2feb4f5493` 重建
+Parse / Fact seam。fresh audit-only matrix 证明 application-owned Parse product set、complete reconciliation 与
+same-attempt product access 已成为 qualified upstream truth；current Fact request 仍携带 Language Support eligible raw
+source，并没有 Parse product-set / continuation binding。第一次 fixture 没有构造出声明的 rejected world，保持
+`INVALID_AUDIT_FIXTURE_SETUP / product_observation=false`；fresh attempt 2 的四格 report byte-identical，现有五个
+相关 test modules 四格各 86 项成立。
+
+[文档 245](docs/245-r1-parse-to-fact-consumer-correction-contract.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_CANDIDATE
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+候选只冻结 post-Parse successor identity、从完整 reconciliation 导出的 ACCEPTED product membership、per-Provider
+one-shot claim、product-only derivation authority、raw-source side-channel exclusion、multi-Provider 共享一份 Parse truth、
+Fact output/continuation binding，以及 zero-accepted 的显式 normal-launch 阻断。该阻断不生成 empty FactSet、Fact
+fulfillment 或 Coverage closure。
+
+doc245 自己的 final bytes、original PR、受保护合入、new exact-main gates、fresh README / doc245 / milestones
+installed-product readback、independent reconciliation 与后继独立 freeze publication 全部闭合以前，candidate marker
+只是目标。runtime、Fact obligation/fulfillment、persistence、public carrier、Coverage 与 `DECLARED_CLAIM_FIDELITY`
+均未获授权。
