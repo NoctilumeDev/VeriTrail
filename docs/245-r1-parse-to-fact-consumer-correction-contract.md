@@ -2,7 +2,8 @@
 
 日期：2026-10-10
 
-> 状态目标：`R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_CANDIDATE`
+> 状态目标（仅[独立冻结发布](246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)最后门闭合后生效）：
+> `R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN`
 >
 > 上游冻结事实：[Parse fulfillment 最小合同](217-r1-parse-fulfillment-contract.md)、
 > [Parse private implementation 最终冻结发布](244-r1-parse-private-implementation-freeze-publication.md)
@@ -329,7 +330,7 @@ inherited falsifiers。至少必须机械拒绝：
 
 ## 13. 后继 private implementation 最大边界
 
-本候选冻结以前不授权代码。若独立 freeze publication 最终成立，后继仍须返回 CONTROL LOOP，并最多审计以下 private
+本合同冻结以前不授权代码。若独立 freeze publication 最终成立，后继仍须返回 CONTROL LOOP，并最多审计以下 private
 implementation：
 
 ```text
@@ -469,7 +470,9 @@ readback、independent reconciliation 或独立 freeze publication，也不授�
 
 ## 16. candidate qualification gates
 
-本候选只有在以下链条完整成立后，才可成为 qualified contract candidate：
+本节保留 candidate qualification 与 contract freeze 的完整门。[独立冻结发布](246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)
+记录 candidate evidence 与 frozen target；只有以下链条完整成立后，合同状态才可生效为
+`R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN`：
 
 1. 文档 215、216、217、244 的既有 claims 保持 qualified/frozen，且没有被扩大或倒改；
 2. exact current source 继续证明 Parse product authority 已存在、Fact runtime 仍是 historical raw-source authority；

@@ -4093,3 +4093,44 @@ upstream Parse truth，但各自拥有 child claim。zero denominator 与 all-re
 
 本文不修改 runtime，也不选择 persistence 或定义 Fact obligation universe。doc245 的 candidate gates 与后继独立 freeze
 publication 全部闭合以前，合同没有 frozen 或 implementation authority。
+
+### R1 Parse → Fact consumer correction 最小合同冻结发布（条件状态）
+
+PR #282 最终 head `56d6438459d4bbb1fad734eb875c85211895f3f5` 包含两个 commits；最终 diff 只有
+AGENTS、README、doc245 与 milestones，文档 216 的 qualified historical bytes 已恢复且不在 diff。PR head 上的
+edited-triggered Public CI `38007576277` attempt 1 被 concurrency 取消并保留；fresh independent Public CI
+`38007576374` attempt 1 为 11/11 SUCCESS，不是前者的 rerun。
+
+ordinary merge `3214586645c67156d5c498cbcd2ea5ed1a7d6b43` 的 parents 为
+`b166dee05fe995b17b2f3bb557d75c2feb4f5493` 与 `56d6438459d4bbb1fad734eb875c85211895f3f5`；tree
+`9b25d6bd996a616ca9a9193db1b204ed0d29762e` 与 candidate tree 相同。new exact-main Public CI
+`38010089320` attempt 1 为 11/11 SUCCESS，Browser Smoke `38010089337` attempt 1 为 1/1 SUCCESS。
+
+README、doc245 与 milestones 三份 fresh anonymous installed-product readback 使用互不复用的 Plan/session/output，
+均为 P1/P2 `COMPLETE`、三样本稳定、marker 恰好一次、零 conflict/coverage reason/cleanup error/active stream，Core
+均 `PASS`；三份 public raw bytes 与 exact Git blobs 一致。independent reconciliation 为：
+
+```text
+sha256_json = db518b6da6d51e00097abb95baaae01081ff0e8694234852f3d6ca00df1e6fcf
+```
+
+正式 observation 前的 PowerShell wildcard、fresh venv dependency probe 与 Playwright shutdown warning 分别保留为
+两项 non-qualifying setup error 与一项 setup warning。reconciliation 已完成后，旧输出文件名与未加引号 Git revision
+又形成两项 non-qualifying operator inspection error；它们没有改写或重跑 reconciliation。
+
+[文档 246](246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+该 frozen target 必须由 doc246 自己的 final bytes、original PR required checks、受保护 main 合入、new exact-main
+Public CI / Browser Smoke、fresh README / doc246 / milestones installed-product readback 与 independent reconciliation
+生效。最后门以前合同仍只是 qualified candidate；闭合以后仍须返回 CONTROL LOOP。Fact runtime、persistence、
+Fact fulfillment、Coverage、public carrier 与 `DECLARED_CLAIM_FIDELITY` 没有由本 publication 获得 authority。
