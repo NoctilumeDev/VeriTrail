@@ -3194,3 +3194,40 @@ installed-product readback 与 independent reconciliation 全部闭合以前，f
 后继最多审计/授权 doc247 A–J private stages。Fact obligation universe / fulfillment、zero-member FactSet、persistence、
 public carrier、Evidence/Bundle、ReviewSliceSet/Coverage、CLI/Workbench/Core 与 `DECLARED_CLAIM_FIDELITY` 均未获
 授权。最后门闭合后也必须返回 CONTROL LOOP，不得按文档编号自动开始 runtime。
+
+## R1 Parse → Fact consumer correction private implementation 授权发布（条件状态）
+
+文档 247 已闭合自己的资格链：PR #284 original Public CI `38079982368` attempt 1 为 11/11 SUCCESS；ordinary
+merge 后的 exact main 为 `fca688e399af2b24776e23bf490cb6e4b589880f`，tree
+`285d2a46776be1f1d380c570b3f83f401819889c`；exact-main Public CI `38081660490` attempt 1 为 11/11
+SUCCESS，Browser Smoke `38081660497` attempt 1 为 1/1 SUCCESS。README、doc247 与 milestones 以三个独立
+Plan/session/handoff 完成匿名 exact-SHA installed-product readback，P1/P2 均 `COMPLETE`、Core 均 `PASS`；三个
+public raw 文件逐字节等于 Git blobs。independent reconciliation SHA-256 为
+`4a34719d1a1116760b5fe4fb659b93151848ce7f4a3d5a686d9b011003bfcd19`。
+
+因此 `R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED` 已是 qualified
+history，但不是 runtime authority。setup 阶段的 Windows `rg` wildcard、harness replacement、匿名 API 额度耗尽、
+direct DNS 与两次 Playwright shutdown warning 共六项 observation 继续保留为 `NON_QUALIFYING`；它们发生在正式
+Plan 前，没有被后继 PASS 覆盖或解释成产品失败。
+
+[文档 248](docs/248-r1-parse-to-fact-consumer-private-implementation-authorization-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文自己的 final bytes、original PR、受保护合入、new exact-main gates、README / doc247 / doc248 / milestones
+fresh installed-product readback 与 independent reconciliation 全部闭合以前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是
+target marker，runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`。
+
+最后门成立后也只能从新 exact main 返回 CONTROL LOOP，重新确认 doc247 A–J 仍是最小合法问题，才可创建单用途
+implementation branch。Fact obligation universe / fulfillment、zero-member FactSet、persistence、public carrier、
+Evidence/Bundle、ReviewSliceSet/Coverage、CLI/Workbench/Core 与 `DECLARED_CLAIM_FIDELITY` 继续未授权。

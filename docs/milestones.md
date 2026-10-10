@@ -4205,3 +4205,39 @@ doc247 final bytes、original PR、受保护合入、new exact-main gates、fres
 independent reconciliation 全部闭合以前，feasibility 只是 candidate。闭合后最多成为 `FEASIBILITY_AUDITED`
 qualified history；runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`，并须返回 CONTROL LOOP，另行决定是否创建独立
 authorization publication，不能自动进入实现。
+
+### R1 Parse → Fact consumer correction private implementation 授权发布（条件状态）
+
+doc247 已通过 PR #284 original Public CI `38079982368` attempt 1 的 11/11 SUCCESS，并以 ordinary merge 进入
+`main@fca688e399af2b24776e23bf490cb6e4b589880f`，tree
+`285d2a46776be1f1d380c570b3f83f401819889c`。该 exact main 的 Public CI `38081660490` attempt 1 为
+11/11 SUCCESS，Browser Smoke `38081660497` attempt 1 为 1/1 SUCCESS。
+
+README、doc247 与 milestones 三份 fresh anonymous installed-product readback 使用独立 Plan/session/handoff，P1/P2
+均 `COMPLETE`、Core 均 `PASS`；public raw bytes 逐字节等于 exact Git blobs。independent reconciliation 为：
+
+```text
+sha256_json = 4a34719d1a1116760b5fe4fb659b93151848ce7f4a3d5a686d9b011003bfcd19
+```
+
+因此 feasibility audit 已成为 qualified history；准备阶段六项 setup error/warning 继续保留为 nonqualifying，不影响
+也不被正式 PASS 覆盖。新的
+[文档 248](248-r1-parse-to-fact-consumer-private-implementation-authorization-publication.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+本文只允许在 doc247 A–J private successor 内开始后继实现；不授权 Fact fulfillment、zero-member FactSet、
+persistence、public carrier、Evidence/Bundle、ReviewSliceSet/Coverage 或 `DECLARED_CLAIM_FIDELITY`。doc248 自己的
+原始 PR、受保护合入、exact-main 双门、README / doc247 / doc248 / milestones readback 与 independent
+reconciliation 未闭合以前，runtime 仍为 `NOT_STARTED / NOT_AUTHORIZED`。闭合后也必须返回 CONTROL LOOP，不能
+按文档编号自动实现。
