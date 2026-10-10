@@ -432,10 +432,10 @@ SHA-256 = 9cdbec6bddd3dee187ade8e551ebc083a8d2d4568d55468f67dd19c9f5f366e4
    阶段停止。该次保留为 `TEST_HARNESS_IMPORT_SETUP_ERROR / product_observation=false`；fresh attempt 2 显式绑定
    exact repository source。
 
-最终五文件候选通过：
+最终四文件候选通过：
 
 ```text
-changed scope 5/5                         PASS
+changed scope 4/4                         PASS
 relative Markdown links                  PASS
 UTF-8 without BOM / LF / final LF        PASS
 balanced fences                          PASS
@@ -475,7 +475,8 @@ readback、independent reconciliation 或独立 freeze publication，也不授�
 2. exact current source 继续证明 Parse product authority 已存在、Fact runtime 仍是 historical raw-source authority；
 3. section 3–11 的 identity、membership、product-use、multi-Provider、zero-accepted 与 output binding 可以独立复核；
 4. `PFC-*`、`PFCB-*`、`PFCT-011..016` 与 `PFC-C-000..014` 的拒绝边界保持成立；
-5. diff 只包含本文、文档 216 的后继坐标与 README / AGENTS / milestones 条件状态同步；
+5. diff 只包含本文与 README / AGENTS / milestones 条件状态同步；文档 216 的 qualified historical bytes
+   保持不变，当前 CONTROL LOOP 重入事实由本文拥有；
 6. Markdown links、UTF-8、LF/final-LF、fence/heading、敏感路径、marker 与 `git diff --check` 成立；
 7. 与 source claims 直接相关的 Parse / source-operation / Fact wire / controller / multi-Provider tests 在本层声明的 Python
    normal / `-O` 矩阵中不被击穿；

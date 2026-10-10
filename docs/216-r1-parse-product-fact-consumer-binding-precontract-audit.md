@@ -505,36 +505,3 @@ setup/preflight history；它们没有创建或改写正式 Plan/session/Evidenc
 因此本文现在是 `PRECONTRACT_AUDITED` qualified history，只授权
 [Parse fulfillment 最小合同 0.1](217-r1-parse-fulfillment-contract.md)的 docs-only candidate。它不授权 parser、AST
 carrier、Fact correction、persistence、public Artifact 或 Coverage。
-
-## 20. Parse freeze 后的 CONTROL LOOP 重入
-
-[Parse private implementation 最终冻结发布](244-r1-parse-private-implementation-freeze-publication.md)的全部门闭合后，
-CONTROL LOOP 从 exact `main@b166dee05fe995b17b2f3bb557d75c2feb4f5493` 重新审查本文当年缺失的三个前提。
-current private Parse runtime 现在已经机械提供：
-
-```text
-application-owned admitted Parse product / product-set identity
-complete denominator reconciliation
-same-attempt one-shot immutable/copy-owned product access
-```
-
-同一 exact main 上，historical Fact runtime 仍使用 `private-source-operation-projection/0.1` 与
-`veritrail-review-derivation-cell/0.2`，request 继续携带全部 Language Support eligible raw bodies；request、builder、
-worker 与 multi-Provider state 没有 Parse product set 或 continuation。一个 partial-accepted audit world 中，Parse-rejected
-source body 仍到达 Fact Provider，并产生 canonical Fact candidate。
-
-第一次 audit fixture 因未构造出它声称的 rejected world 而停止，保留为
-`INVALID_AUDIT_FIXTURE_SETUP / product_observation=false`；fresh attempt 2 的 CPython 3.10.6 / 3.13.13、normal /
-`-O` 四格 report 逐字节一致。五个相关 existing test modules 四格各 86 项成立，只证明 frozen Parse truth 与 historical
-raw-source Fact chain 同时稳定存在，不证明二者已经接通。
-
-canonical audit summary SHA-256 为：
-
-```text
-9cdbec6bddd3dee187ade8e551ebc083a8d2d4568d55468f67dd19c9f5f366e4
-```
-
-因此本文原来的 upstream prerequisite 已经成为 frozen truth，而 consumer seam 仍然存在；没有发现更早的 authority
-断口。[Parse product → Fact consumer correction 最小合同 0.1](245-r1-parse-to-fact-consumer-correction-contract.md)
-现在可以作为 docs-only candidate 起草。该新资格不倒改本文的历史停止线，也不授权 runtime、Fact fulfillment、
-persistence、public carrier 或 Coverage。
