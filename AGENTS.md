@@ -3129,3 +3129,68 @@ doc246 自己的 final bytes、original PR required checks、受保护主线合�
 fresh README / doc246 / milestones installed-product readback 与 independent reconciliation 全部闭合以前，frozen marker
 只是 publication target。最后门闭合后必须返回 CONTROL LOOP；不得自动修改 Fact wire、启动 Provider child、选择
 persistence、定义 Fact fulfillment / Coverage，或进入 `DECLARED_CLAIM_FIDELITY`。
+
+## R1 Parse → Fact consumer correction private implementation 可行性审计（条件状态）
+
+文档 246 的最后门已经闭合：PR #283 original Public CI `38012722163` attempt 1 为 11/11 SUCCESS；ordinary
+merge 后的 exact main 为 `54eda4577e64cc3cf80eee464bd0ad116b710548`，tree
+`546ef4db989d715572b935c8c631c9db697be969`；new exact-main Public CI `38014271058` attempt 1 为
+11/11 SUCCESS，Browser Smoke `38014271039` attempt 1 为 1/1 SUCCESS。README 第一次正式 readback 因匿名
+GitHub API `403 / remaining=0` 保持 `ERROR / NON_QUALIFYING`；fresh README #2、doc246 与 milestones 才取得
+PASS。independent reconciliation SHA-256 为
+`0454c821633ca742dfb9d93f11c62872b490a4b75748c01cf4989c48129d3182`。因此：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+```
+
+均为当前事实。CONTROL LOOP 从该 exact main 重建 current runtime：`OwnedParseProductSet` 与 one-shot
+`ClaimedParseContinuation` 已提供 qualified upstream Parse truth；historical Fact projection `/0.1` 与 wire `/0.2`
+仍携带 raw `source_blobs`，没有 Parse product-set / continuation / product-use binding。旧 identity 不得增加字段后静默
+改义。
+
+[文档 247](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+审计确认 bounded private successor 可复用 original live `BudgetContext` / eligibility、Provider applicability、contained
+execution、Fact canonicalization 与 multi-Provider join，但必须新增 versioned private consumer identity、application-owned
+parent、完整 per-Provider membership、独立 one-shot claim、product-only worker request、candidate/product provenance admission、
+required-child reconciliation 与 zero-accepted blocking。历史 `/0.1` projection / `/0.2` wire 保持原义。
+
+raw bytes 只允许由 application 在 Provider boundary 以前，把 admitted Parse product source location 转换为 frozen Fact
+所需的 exact byte anchor；worker 不得收到 raw body、source text、path loader、lazy handle 或 reparse authority。UTF-8-SIG、
+CRLF、多字节 audit world 中，`ClassDef` exact raw byte range 为 `[23, 75)`。
+
+仓库外 probe 四格 report 均为 2639 bytes、逐字节相同：file SHA-256
+`c10d3da0e5874e6fdad1803405830aa9acfdfe3e1ba98829bc056a6021a30510`，report SHA-256
+`dc0fdc26ddf0b80f0c4247ab9edc4c4eb3f0fb549c86b3bfe0359b34dfe4720b`。probe 证明两个 Providers
+可共享一份 product-set semantics 而持有不同 child identity；one-shot concurrency 恰好一胜一拒；foreign candidate 被拒；
+两 child 后原 context 仍 `RUNNING`、parent 仍 `ADMITTED`；all-rejected complete 形成
+`BLOCKED_NO_ACCEPTED_PRODUCTS`，不产生 Fact terminal / FactSet。
+
+第一次 targeted 3.10 normal command 指向不存在的 `tests.test_multi_provider_applicability`，保持
+`TEST_HARNESS_IMPORT_SETUP_ERROR / product_observation=false / NON_QUALIFYING`。fresh attempt 2 的 Parse /
+source-operation / Fact wire / controller / multi-Provider suite 四格各 122 项：3.10.6 normal / `-O` 各
+`OK, skipped=1`，3.13.13 normal / `-O` 各 `122/122 PASS`。
+
+本文只允许 AGENTS、README、milestones 与新增 doc247 四个文档文件。它自己的 final-byte local gates、original PR、
+受保护主线合入、new exact-main Public CI / Browser Smoke、README / doc247 / milestones fresh anonymous
+installed-product readback 与 independent reconciliation 全部闭合以前，feasibility 只能是 candidate。闭合后最多成为
+`FEASIBILITY_AUDITED` qualified history；runtime 仍继续 `NOT_STARTED / NOT_AUTHORIZED`，并须返回 CONTROL LOOP，
+另行决定是否创建独立 docs-only implementation authorization publication。
+
+后继最多审计/授权 doc247 A–J private stages。Fact obligation universe / fulfillment、zero-member FactSet、persistence、
+public carrier、Evidence/Bundle、ReviewSliceSet/Coverage、CLI/Workbench/Core 与 `DECLARED_CLAIM_FIDELITY` 均未获
+授权。最后门闭合后也必须返回 CONTROL LOOP，不得按文档编号自动开始 runtime。

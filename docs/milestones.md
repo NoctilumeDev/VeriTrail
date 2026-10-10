@@ -4134,3 +4134,74 @@ R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
 Public CI / Browser Smoke、fresh README / doc246 / milestones installed-product readback 与 independent reconciliation
 生效。最后门以前合同仍只是 qualified candidate；闭合以后仍须返回 CONTROL LOOP。Fact runtime、persistence、
 Fact fulfillment、Coverage、public carrier 与 `DECLARED_CLAIM_FIDELITY` 没有由本 publication 获得 authority。
+
+### R1 Parse → Fact consumer correction private implementation 可行性审计（条件状态）
+
+文档 246 的独立 freeze publication PR #283 已合入。其 original Public CI `38012722163` attempt 1 为
+11/11 SUCCESS；ordinary merge 后的 exact main 为 `54eda4577e64cc3cf80eee464bd0ad116b710548`，tree
+`546ef4db989d715572b935c8c631c9db697be969`；new exact-main Public CI `38014271058` attempt 1 为
+11/11 SUCCESS，Browser Smoke `38014271039` attempt 1 为 1/1 SUCCESS。
+
+README 第一次正式 readback 因匿名 GitHub API `403 / remaining=0` 保持 `ERROR / NON_QUALIFYING`；fresh
+README #2、doc246 与 milestones 才取得 PASS，后继成功没有覆盖首败。independent reconciliation 为：
+
+```text
+sha256_json = 0454c821633ca742dfb9d93f11c62872b490a4b75748c01cf4989c48129d3182
+```
+
+因此 Parse → Fact consumer correction contract 已成为 `FROZEN` 当前事实，但 implementation 仍未开始。CONTROL LOOP
+从该 exact main 重建 source：upstream 已有 application-owned `OwnedParseProductSet`、complete Parse reconciliation 与
+one-shot `ClaimedParseContinuation`；historical Fact projection `/0.1` / wire `/0.2` 仍携带 raw `source_blobs`，没有
+Parse product set、continuation、per-Provider product claim 或 product-use binding。
+
+[文档 247](247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)因此只条件化发布：
+
+```text
+R1_PARSE_FULFILLMENT_CONTRACT_FROZEN
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+审计选择的 bounded private topology 为：一个 application-owned consumer parent 领取 original Parse continuation，
+重验 exact product set，为每个 existing-applicability admitted Provider 派生完整 product membership 和独立 one-shot
+claim；worker 只取得 copy-owned products 与 application 已机械生成的 anchor metadata；application 对每个 candidate 的
+assigned subject/product/run provenance 核账，最后才按 existing requiredness / lifecycle 做 same-attempt reconciliation。
+
+现有 `BudgetContext` / eligibility、Provider applicability、Windows execution cell、Fact canonicalization 与 multi-Provider
+join 可以复用；历史 source-operation identity 不可改义。application 可以从 admitted product source locations、exact raw
+bytes 与 frozen encoding 生成 exact byte anchor，同时禁止 worker 取得 raw body、source text、path loader、lazy handle 或
+reparse authority。UTF-8-SIG、CRLF 与多字节 probe 的 `ClassDef` raw byte range 为 `[23, 75)`。
+
+仓库外 `feasibility_matrix.py` SHA-256 为
+`303e67195d1f8ff4f4630cf8609260c141d92994d30b41d0df1a7bff9f0d80c7`；
+`product_consumer_worker.py` SHA-256 为
+`62bbc73207d6b9b6e5f652d5c903bff366bbc228f2f75eeae9dad17498ef1de4`。3.10.6 / 3.13.13、
+normal / `-O` 四格 report 各 2639 bytes，file SHA-256 均为
+`c10d3da0e5874e6fdad1803405830aa9acfdfe3e1ba98829bc056a6021a30510`；canonical report SHA-256 为
+`dc0fdc26ddf0b80f0c4247ab9edc4c4eb3f0fb549c86b3bfe0359b34dfe4720b`。
+
+probe 证明：两个 attempts 可产生相同 product-set semantics 但保持不同 objects；两个 Providers 共享 product-set digest
+但拥有不同 projection digest / run identity；同一 child claim 并发领取恰好一胜一拒；rejected path 不可见、worker
+request 无 raw-source key、foreign candidate 被拒；两 child 后 original context 仍 `RUNNING`、parent 仍 `ADMITTED`。
+all-rejected complete 只产生 `BLOCKED_NO_ACCEPTED_PRODUCTS`，不产生 Fact terminal、FactSet 或 Coverage claim。
+
+第一次 targeted CPython 3.10 normal command 指向不存在的 `tests.test_multi_provider_applicability`，因此保持
+`TEST_HARNESS_IMPORT_SETUP_ERROR / product_observation=false / NON_QUALIFYING`。fresh attempt 2 改用实际七个
+modules 后，四格各运行 122 项：3.10.6 normal / `-O` 各 `OK, skipped=1`，3.13.13 normal / `-O` 各
+`122/122 PASS`。这些 tests 只作 exact-source witness，不授予 contract 或 runtime authority。
+
+doc247 最大实现面为 A–J：upstream continuation revalidation、successor identity / complete membership、provider-bound
+one-shot claims、product-only worker、application-owned exact anchor translation、candidate/product admission、multi-Provider
+reconciliation、zero-accepted blocking、private continuation 与 falsifier hardening。Fact obligation universe / fulfillment、
+zero-member FactSet、persistence、public carrier、Evidence/Bundle、ReviewSliceSet/Coverage 与
+`DECLARED_CLAIM_FIDELITY` 继续未授权。
+
+doc247 final bytes、original PR、受保护合入、new exact-main gates、fresh README / doc247 / milestones readback 与
+independent reconciliation 全部闭合以前，feasibility 只是 candidate。闭合后最多成为 `FEASIBILITY_AUDITED`
+qualified history；runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`，并须返回 CONTROL LOOP，另行决定是否创建独立
+authorization publication，不能自动进入实现。
