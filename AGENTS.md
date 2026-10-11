@@ -3259,3 +3259,30 @@ product observations 与 independent reconciliation 全部闭合以前，FROZEN 
 第三方 filesystem sandbox；observation 保存 terminal/frame 原字节，closure document 以摘要绑定。historical Fact
 controller 仍保持 raw-source wire 原义；Fact fulfillment、persistence、public carrier 与 Coverage 未获施工权。
 最后门闭合后必须重新返回 CONTROL LOOP，不能自动开始下一 seam。
+
+### R1 Fact projection fulfillment 当前状态再审计（候选）
+
+doc250 最后门已在 `main@f35d69b337b1961c9e9b54243097250cb962a582` 闭合：exact-main Public CI `38153642974`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `38153642954` attempt 1 为 1/1 SUCCESS；三个 fresh installed-product
+readback/Core PASS 与 independent reconciliation
+`e92e0bf7afd9d5acb184016f751d5288a56e901e67e292c1629f99d8e6b9bfe4` PASS。
+README #1 正式 ERROR 保留；后继 fresh Plan 的可见 marker 不覆盖旧观察。private consumer A–J freeze 已生效。
+
+[文档 251](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)仅认领 docs-only current-state audit。doc195 的
+“无 AST carrier”继续是旧 world 历史，不能作为当前前提。当前 Profile 五种 Fact 的结构可从 admitted canonical
+product 检查，但完整 semantic input 还需要 sealed Policy module mapping 与 exact path/anchor history。
+current worker/admission 仅闭合 MODULE/CLASS conformance；合法空报告不证明完整 fulfillment。
+
+```text
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_CURRENT_STATE_AUDIT_CANDIDATE
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_NOT_STARTED
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+文档 251 自己的 local/original PR/protected merge/exact-main dual gates/fresh product readback/independent reconciliation
+闭合前不得升级审计状态。其长期依赖计划不授予后继施工权；CUMULATIVE 不决定 per-kind/node fulfillment，Provider
+不得从 outputs 倒定义 denominator。后继若改变 frozen projection/admission，须显式限定 successor/version 边界；不在
+本轮改 runtime、Schema、persistence、Fact consumer、Coverage、Evidence/Bundle、CLI/Workbench/Core 或 CLAIM_FIDELITY。
