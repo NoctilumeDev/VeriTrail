@@ -132,7 +132,8 @@ python -m venv .venv
 ### 研究与候选方向
 
 - **Review / R — 源码审查辅助**：确定性源码事实、语义切片与未来注意力提案。部分 private 机制已冻结，完整产品未发布。
-  Parse private A–H 与 Parse → Fact consumer correction 合同已冻结；后者的实现可行性审计仍为 candidate，implementation 未开始；持久化、Fact fulfillment 与 Coverage 未获授权。
+  Parse private A–H 与 Parse → Fact consumer correction 合同已冻结；后者的 private A–J 已实现并完成 exact-main 与候选读回资格。
+  [独立冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)以自己的最后门为生效条件；完整 Review 产品仍未发布，持久化、Fact fulfillment 与 Coverage 未获授权。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[当前可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
