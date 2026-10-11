@@ -1,20 +1,42 @@
 # VeriTrail / 验迹
 
+> **做事留痕，立论有据，结论可验。**
+
+它说任务完成了。**可你凭什么相信？**
+
+验迹是一个本地运行的开源工程证据核验工作台。先约定要检查什么，再收集实际留下的证据，
+最后按原来的规则判断：哪些结论成立，哪些还缺依据。
+
+**工程验收 · 证据核验 · 本地优先 · 结果可复查**
+
+[十分钟亲手试一次](START_HERE.md) · [选择使用入口](#选择入口) · [理解工作原理](#十秒认识-veritrail) · [查看当前状态](#当前状态) · [阅读技术文档](#阅读路径)
+
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
 
-> **让每一项结论，都沿证据中轴归位。**
->
-> A local-first workbench for evidence-bound, reproducible verification.
+## 看一个例子
 
-VeriTrail（验迹）把事先封存的验收条件、来自真实执行或外部平台的证据，以及确定性裁决分开保存。
-它帮助独立开发者和小型团队回答：**这次到底证明了什么，依据是什么，边界在哪里，失败应回到哪一层排查。**
+你让人工智能开发一个网站。它写好代码、跑过测试，然后告诉你：“可以交付了。”
 
-[开始使用](#开始使用) · [理解系统](#十秒认识-veritrail) · [查看状态](#当前状态) ·
-[阅读文档](#阅读路径) · [完整里程碑](docs/milestones.md)
+你还需要知道：测的是约定的功能吗？真的操作过页面吗？失败记录有没有留下？证据够不够支持“完成”这个结论？
+
+使用验迹时，可以先约定“首页能够打开，点击指定入口后显示预期页面”，再保存实际浏览器观察与运行记录，
+按这些条件核验。检查通过、检查失败、证据冲突和证据不足分别保留，不让一句“测试全绿”把它们盖过去。
+
+**它判断的是：这份证据是否满足你事先确认的条件。** 条件是否完整、证据来源是否可靠，仍要结合具体项目复查。
 
 ## 十秒认识 VeriTrail
 
-VeriTrail 的核心关系很小：
+[![验迹的核验路径：先约定检查条件，收集实际证据，按原条件核验，保存结论与依据供人复查](docs/assets/veritrail-at-a-glance.svg)](docs/assets/veritrail-at-a-glance.svg)
+
+[打开大图](docs/assets/veritrail-at-a-glance.svg)
+
+这是一条核验路径：任务由相应系统执行，采集器记录观察，验迹核心核对条件，工作台帮助人查看和复查。
+
+<details>
+<summary><strong>展开：完整架构图与责任边界</strong></summary>
+
+VeriTrail（验迹）把事先封存的验收条件、来自真实执行或外部平台的证据，以及确定性裁决分开保存。
+它帮助独立开发者和小型团队回答：**这次到底证明了什么，依据是什么，边界在哪里，失败应回到哪一层排查。**
 
 ![VeriTrail 架构关系：现实经 Evidence Producer 形成标准 Evidence；人封存 Plan；Plan 与 Evidence 只在 Core 中相遇并导出 Verdict 与不可变 Bundle；Workbench 支持最终人工处置；R 分配审查注意力，Q 调度证明工作，但二者均无 Verdict 权。](docs/assets/veritrail-architecture.svg)
 
@@ -38,9 +60,14 @@ VeriTrail 的核心关系很小：
 
 > **现实拥有真相，VeriTrail 只拥有裁决纪律。**
 
+</details>
+
 ## 系统分层
 
 各层通过版本化合同和不可变 Artifact 组合；依赖不等于 ownership，消费也不等于继承状态机。
+
+<details>
+<summary><strong>展开：各层产物、当前边界与工作台预览</strong></summary>
 
 | 层 | 回答的问题 | 主要产物 | 当前边界 |
 | --- | --- | --- | --- |
@@ -55,9 +82,14 @@ VeriTrail 的核心关系很小：
 
 <p align="center"><sub>Workbench 是证据的只读阅读面；宫阙视觉语言不改变任何裁决语义。</sub></p>
 
+</details>
+
 ## 当前状态
 
 下表刻意把“已经公开交付”“合同已冻结”和“只在设计空间”分开，避免把路线图当成实现证据。
+
+<details>
+<summary><strong>展开：精确状态、施工记录与来源坐标</strong></summary>
 
 | 轨道 / 产品 | 职责 | 当前事实 |
 | --- | --- | --- |
@@ -338,6 +370,8 @@ obligation universe 的前提下可行；该结论当前仍是 docs-only audit c
 以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
 [能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
 
+</details>
+
 ## 选择入口
 
 | 我现在要做什么 | 从这里进入 | 你会得到什么 |
@@ -447,6 +481,9 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
 `m12-v0.13.0`、Core、Evidence、Catalog 与 Verdict 冻结事实均未改变。
 
 </details>
+
+<details>
+<summary><strong>展开：平台插件与后继研究轨的完整能力记录</strong></summary>
 
 平台插件与后继研究轨保持独立：
 
@@ -744,6 +781,8 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
   声称修复或解释旧 collector 首败。
 - Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
   Verification semantics 不得变化。
+
+</details>
 
 ## 公开证据与安全边界
 
