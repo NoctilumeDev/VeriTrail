@@ -3231,3 +3231,31 @@ target marker，runtime 继续 `NOT_STARTED / NOT_AUTHORIZED`。
 最后门成立后也只能从新 exact main 返回 CONTROL LOOP，重新确认 doc247 A–J 仍是最小合法问题，才可创建单用途
 implementation branch。Fact obligation universe / fulfillment、zero-member FactSet、persistence、public carrier、
 Evidence/Bundle、ReviewSliceSet/Coverage、CLI/Workbench/Core 与 `DECLARED_CLAIM_FIDELITY` 继续未授权。
+
+### R1 Parse → Fact consumer correction private implementation 冻结发布（条件状态）
+
+实现 [PR #287](https://github.com/NoctilumeDev/VeriTrail/pull/287) head `ab718cc6b4003a60de2a2707b50f71d0ff942690` 经 ordinary merge 进入
+`main@d9e6ce3021c1981c52ddafa5009568ef900dcac6`，tree `db5fe21ab4536ed67df6ed96a739e50610beafaf`。原始 PR Public CI `38116549854` 与 exact-main
+Public CI `38149116073` 均 attempt 1 / 11 of 11 SUCCESS；Browser Smoke `38149116151` attempt 1 /
+1 of 1 SUCCESS。README/doc249/milestones 三个独立 anonymous installed-product readback 均 PASS，独立 Core/source-byte
+reconciliation `b787eba23c6322a910663540fd12f5e102d24f4b53102334f7bde11f8fd5cbf8` PASS。首轮测试定位失败、readback setup 网络错误、全部旧正式 ERROR 保持历史身份。
+
+[文档 250](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)仅条件化发布：
+
+```text
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_IMPLEMENTED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_I_J_EXACT_MAIN_VERIFIED
+R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED
+```
+
+doc250 的 final-byte local gates、original PR、protected merge、新 exact-main 双门、fresh README/doc250/milestones
+product observations 与 independent reconciliation 全部闭合以前，FROZEN 只是 target。固定 closed worker 不等于
+第三方 filesystem sandbox；observation 保存 terminal/frame 原字节，closure document 以摘要绑定。historical Fact
+controller 仍保持 raw-source wire 原义；Fact fulfillment、persistence、public carrier 与 Coverage 未获施工权。
+最后门闭合后必须重新返回 CONTROL LOOP，不能自动开始下一 seam。
