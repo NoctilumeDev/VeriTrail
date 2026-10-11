@@ -133,8 +133,9 @@ python -m venv .venv
 
 - **Review / R — 源码审查辅助**：确定性源码事实、语义切片与未来注意力提案。部分 private 机制已冻结，完整产品未发布。
   Parse private A–H 与 Parse → Fact consumer private A–J 已冻结，完整 Review 产品仍未发布。
-  [当前 Fact projection / fulfillment 再审计](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)只是 docs-only candidate：
-  admitted Parse product 已存在，但完整 Fact 全集、履责与 successor admission 仍待合同审查；持久化与 Coverage 未获授权。
+  [Fact 当前状态再审计](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)已完成自己的资格链；
+  [完整 Fact 全集与履责最小合同](docs/252-r1-fact-projection-universe-and-fulfillment-contract.md)现在只是语义候选。
+  全集复算、逐来源完整输出对账与实际 child execution 分开；runtime 未获授权，持久化仍 OPEN，Coverage 未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[当前可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
@@ -321,6 +322,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [首页工程记录保留页](docs/readme-engineering-records.md)：保留从本次候选首页迁出的长篇记录，以及原来的 106 项工程事实入口；
 - [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)与[GitHub Evidence Plugin 发布读回](docs/108-p4-github-evidence-release-readback-facts.md)：复核已交付产品；
 - [Parse → Fact consumer A–J 冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)与[Fact 当前状态再审计及条件化后继计划](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)：区分已有 product-use proof 与尚未建立的完整 Fact 履责；
+- [Fact projection universe / fulfillment 合同候选](docs/252-r1-fact-projection-universe-and-fulfillment-contract.md)：复核全集 owner、五类投影、逐 Provider 责任与 successor admission 的最小语义边界；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

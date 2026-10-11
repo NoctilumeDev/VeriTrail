@@ -3286,3 +3286,32 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 闭合前不得升级审计状态。其长期依赖计划不授予后继施工权；CUMULATIVE 不决定 per-kind/node fulfillment，Provider
 不得从 outputs 倒定义 denominator。后继若改变 frozen projection/admission，须显式限定 successor/version 边界；不在
 本轮改 runtime、Schema、persistence、Fact consumer、Coverage、Evidence/Bundle、CLI/Workbench/Core 或 CLAIM_FIDELITY。
+
+### R1 Fact projection universe / fulfillment 最小合同（候选）
+
+doc251 已经通过 [PR #289](https://github.com/NoctilumeDev/VeriTrail/pull/289) 进入
+`main@07e3e90e6b7976c660ae7643b0cde79cb9b97a8a`。original Public CI `38166052364` 与 exact-main Public CI
+`38167806238` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38167806265` attempt 1 / 1/1 SUCCESS。
+三个 fresh README/doc251/milestones product observations 均 PASS，independent reconciliation
+`d788554a27dbeb6f5c0d02fb19938e3c8e228c5b1d2e5084b792d35451677ad2` PASS。旧 CANCELLED/ERROR、preflight warning
+与 live diagnostic-log snapshot correction 保留；旧候选 marker 不倒改这份 qualified history。
+
+[文档 252](docs/252-r1-fact-projection-universe-and-fulfillment-contract.md)只认领 docs-only 最小语义合同：完整
+admitted products、sealed mapping/Profile 与 exact identity/anchor history 形成 application-owned U/E；每个 applicable
+closed Provider 负责完整全集，required/optional lifecycle 分开。fulfillment 是真实 child history 与独立 expected/output
+对账共同成立，不认证内部逐项执行，不要求逐项 receipt。normalized keyword name 可以 grammar ACCEPTED 但 Fact
+属性不可表示；保留 obligation 与 typed projection 阻断，不改 Parse truth 或缩小 denominator。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CURRENT_STATE_AUDITED
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_CANDIDATE
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+未来 consumer `/0.2` 与独立 private protocol 必须显式受审；不修改 frozen `/0.1`，不扩大旧证据。zero accepted 继续
+阻断 normal Fact child/FactSet/continuation；已知空 U 不等于 Fact-stage closure 或 Coverage。所有旧 runtime/tests/
+Schema/fixtures/contracts 与架构资产不变。doc252 的 local/original PR/merge/new-main 双门/fresh product readback/
+independent reconciliation 只取得 contract candidate history；还需独立 freeze publication，再回 CONTROL LOOP 审
+feasibility/implementation authorization。不得启动 runtime、public carrier、persistence、Coverage 或 CLAIM_FIDELITY。

@@ -4294,3 +4294,35 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 本审计以自己的 final-byte/original PR/protected merge/new exact-main dual gates/fresh README/doc251/milestones
 readback/independent reconciliation 为成为 qualified history 的条件。本文依赖计划只表示待重新审查的长期目标；
 Fact contract、consumer successor/version、persistence、Coverage 与 public projection 都未获得施工授权。
+
+### R1 Fact projection universe / fulfillment 最小合同 0.1（候选）
+
+doc251 的独立资格链在 `main@07e3e90e6b7976c660ae7643b0cde79cb9b97a8a` 闭合：
+[PR #289](https://github.com/NoctilumeDev/VeriTrail/pull/289) final head `d3cb2aadc4885fd21446f4752843351fef754fad`，
+两个 commits，merge/受审 tree 均为 `ea70122eb45f240c0eb03ca956096385c269f8d6`。original Public CI `38166052364`
+与 exact-main Public CI `38167806238` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38167806265` attempt 1 /
+1/1 SUCCESS。三个 fresh README/doc251/milestones observations 均 Core PASS，independent reconciliation
+`d788554a27dbeb6f5c0d02fb19938e3c8e228c5b1d2e5084b792d35451677ad2` PASS；旧 CANCELLED/ERROR、setup warning
+与 live diagnostic-log snapshot correction 都保留原 identity。
+
+[文档 252](252-r1-fact-projection-universe-and-fulfillment-contract.md)只形成 semantics-only candidate：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CURRENT_STATE_AUDITED
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_CANDIDATE
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+候选将 application-owned complete universe、expected semantic values、真实 child execution 与逐 Provider output
+reconciliation 分开；选择每个 applicable closed Provider 承担完整 U/E，optional failure 不冒充所有来源完整。
+grammar ACCEPTED 的 normalized keyword declaration 构成新的 representability 反例：四格共 12 个真实 reference
+Parse children，无实际 Fact children；CLASS terminal admission 是 modeled witness。四份 reduced report 同为
+1,456 bytes，SHA-256 `0d219416ae955fd8e29613646861a93247b8ed300d9eca079cd7ec80b57b1e3b`。
+
+该反例不推翻 frozen Parse/consumer；正常 expected projection 若不可表示必须明确阻断，不能改名、漏项或改归 Parse
+rejection。future consumer/protocol `/0.2` 只作为受审 successor boundary，不改旧 `/0.1` 或 Profile/Fact identity。
+zero accepted 保持 normal launch/FactSet 阻断；不选择 zero-member Fact-stage closure、receipt、persistence 或 Coverage。
+候选须独立完成 final local gates、original PR、protected merge、新 exact-main 双门、fresh product readback 与对账；
+随后仍需独立 freeze publication。合同冻结也不自动授权实现，必须重新回到 CONTROL LOOP。
