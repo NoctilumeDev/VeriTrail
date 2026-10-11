@@ -500,6 +500,10 @@ class OwnedParseFulfillmentClosure:
     def _product_set_ref(self) -> OwnedParseProductSet:
         return self.__product_set
 
+    def _attempt_ref(self) -> OwnedParseFulfillmentAttempt:
+        self._authorize_claimed()
+        return self.__attempt
+
 
 class ClaimedParseContinuation:
     __slots__ = ("__closure",)
@@ -522,6 +526,11 @@ class ClaimedParseContinuation:
 
     def _products_copy(self) -> dict[str, object]:
         return self._product_set().products_copy()
+
+    def _attempt_ref(self) -> OwnedParseFulfillmentAttempt:
+        """Expose the original live owner to a private successor application."""
+        self.__closure._authorize_claimed()
+        return self.__closure._attempt_ref()
 
 
 def qualify_parse_runtime(
