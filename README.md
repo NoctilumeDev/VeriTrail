@@ -7,9 +7,13 @@ AI说任务完成了。**但是，凭什么相信？**
 验迹是一个本地运行的开源工程证据核验工作台。先约定要检查什么，再收集实际留下的证据，
 最后按照事先约定的规则进行判断：哪些结论可以成立，哪些还缺少依据。
 
-**工程验收 · 证据核验 · 本地优先 · 结果可复查**
+它已经能够在受支持的本地环境中进行工程验收、采集真实浏览器证据、保存和复查结果、比较多次运行，
+并通过 GitHub 证据插件观察公开平台事实。
 
-[十分钟亲手试一次](START_HERE.md) · [选择使用入口](#选择入口) · [理解工作原理](#十秒认识-veritrail) · [查看当前状态](#当前状态) · [阅读技术文档](#阅读路径)
+扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
+源码审查已有部分内部机制完成验证，完整产品尚未发布；验证调度仍处于蓝图阶段。
+
+**工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
 
@@ -20,7 +24,7 @@ AI说任务完成了。**但是，凭什么相信？**
 可我们不知道的是：测的是约定的功能吗？真的操作过页面吗？失败记录有没有留下？证据够不够支持“完成”这个结论？
 
 使用验迹时，可以先约定“首页能够打开，点击指定入口后显示预期页面”，再保存实际浏览器观察与运行记录，
-按这些条件核验。检查通过、检查失败、证据冲突和证据不足，分别保留，不让一句“测试全绿”就把它们都覆盖过去。
+按这些条件核验。通过、失败、存疑与缺证分别保留。
 
 **它判断的是：这份证据是否满足事先确认的条件。** 条件是否完整、证据来源是否可靠，仍要结合具体项目复查。
 
@@ -30,347 +34,12 @@ AI说任务完成了。**但是，凭什么相信？**
 
 [打开大图](docs/assets/veritrail-at-a-glance.svg)
 
-这是一条核验路径：任务由相应系统执行，采集器记录观察，验迹核心核对条件，工作台帮助人查看和复查。
+**接下来：** [亲手试一次](START_HERE.md) · [查看目前支持什么](#已交付能力与边界) · [了解扩展方向](#系统家族与未来边界) · [阅读技术文档](#阅读路径)
+
+## 已交付能力与边界
 
 <details>
-<summary><strong>展开：完整架构图与责任边界</strong></summary>
-
-VeriTrail（验迹）把事先封存的验收条件、来自真实执行或外部平台的证据，以及确定性裁决分开保存。
-它帮助独立开发者和小型团队回答：**这次到底证明了什么，依据是什么，边界在哪里，失败应回到哪一层排查。**
-
-![VeriTrail 架构关系：现实经 Evidence Producer 形成标准 Evidence；人封存 Plan；Plan 与 Evidence 只在 Core 中相遇并导出 Verdict 与不可变 Bundle；Workbench 支持最终人工处置；R 分配审查注意力，Q 调度证明工作，但二者均无 Verdict 权。](docs/assets/veritrail-architecture.svg)
-
-<p align="center"><sub>中轴实线是证据与裁决链，两翼虚线是可替换的辅助能力；图中两端的 Human authority 属于同一权威域。</sub></p>
-
-这不是一条把所有能力串成单体流水线的图。Core 只消费 sealed Plan 与标准 Evidence；R 面向人的审查
-注意力，Q 面向证明义务的执行效率，两者都不能获得 Core Verdict 权。Workbench 负责展示和验真，
-不在浏览器里重新裁决。
-
-图中的 Evidence producer 是一个权威角色，不等于某个固定插件。当前已交付的是 GitHub Evidence P 轨；
-[O0 Operations Evidence](docs/180-o0-operations-evidence-problem-framing.md) 与
-[T0 Test Evidence](docs/181-t0-test-evidence-problem-framing.md) 只保存新的候选观察问题，没有运行时、
-公共 Schema 或产品坐标。架构图因此只画通用只读 Evidence 边界，不把 O/T 预演成已实现模块。
-
-| 责任 | 谁拥有 | 明确不拥有 |
-| --- | --- | --- |
-| 前提、目标与 Seal 决定 | Human authority | 世界终极真相 |
-| 事实采集与来源说明 | Evidence producer / plugin | 验收标准与 Verdict |
-| 证据充分性与确定性裁决 | VeriTrail Core | 外部事实、执行资源与人工处置 |
-| 最终处置 | Human authority | 改写历史 Evidence 或伪造确定性 |
-
-> **现实拥有真相，VeriTrail 只拥有裁决纪律。**
-
-</details>
-
-## 系统分层
-
-各层通过版本化合同和不可变 Artifact 组合；依赖不等于 ownership，消费也不等于继承状态机。
-
-<details>
-<summary><strong>展开：各层产物、当前边界与工作台预览</strong></summary>
-
-| 层 | 回答的问题 | 主要产物 | 当前边界 |
-| --- | --- | --- | --- |
-| Entry / Authoring | 怎样更容易起草一个可检查的计划？ | `DRAFT / NOT_SEALED` Plan | Starter 与 Authoring Skill 不 Seal、不运行、不裁决 |
-| Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论；P 已发布，O0/T0 仍是候选问题记录 |
-| Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
-| Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
-| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation、private Relation observation / composition qualification，以及 private RelationSet admission / explicit witness / Evidence 0.2 binding 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support semantic contract 0.1、codec-conformance 修正合同 0.2 与 private classifier 已冻结；eligible-only operation projection / same-attempt gate 已冻结；Parse fulfillment private A–H 与 Parse → Fact consumer correction 合同已冻结；consumer correction private implementation 可行性审计处于 candidate，implementation 仍未开始；public carrier、持久化路线与 Coverage 未获授权 |
-| Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
-
-![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
-
-<p align="center"><sub>Workbench 是证据的只读阅读面；宫阙视觉语言不改变任何裁决语义。</sub></p>
-
-</details>
-
-## 当前状态
-
-下表刻意把“已经公开交付”“合同已冻结”和“只在设计空间”分开，避免把路线图当成实现证据。
-
-<details>
-<summary><strong>展开：精确状态、施工记录与来源坐标</strong></summary>
-
-| 轨道 / 产品 | 职责 | 当前事实 |
-| --- | --- | --- |
-| Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
-| Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
-| Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
-| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED / R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED / R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED / R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED / R1_PARSE_FULFILLMENT_CONTRACT_FROZEN / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_ALLOWED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
-| Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
-| Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
-| Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
-
-Language Support 合同 0.1 与 codec-conformance 修正合同 0.2 均已冻结。0.2 冻结发布经 PR #215 合入
-`main@fa74ae22872691eebf2fe8bdb2209da34b64b56e`，其 original PR Public CI、new exact-main Public CI / Browser
-Smoke、README / 文档 202 / 文档 203 / milestones 四份 fresh installed-product readback 与独立 reconciliation
-全部成立。[private classifier 实现授权审计](docs/204-r1-language-support-private-classifier-implementation-authorization-audit.md)
-的最后门已经闭合。private classifier 随后经 PR #217 完成 exact-history revalidation、0.2 deterministic
-classification、完整 reason composition 与 exactly-one denominator closure；
-[实现冻结候选](docs/205-r1-language-support-private-classifier-implementation-freeze-candidate.md)经 PR #218 original
-11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 205 / milestones 三份 fresh
-installed-product readback 与独立 reconciliation 取得资格。[最终冻结发布](docs/206-r1-language-support-private-classifier-implementation-freeze-publication.md)
-完成自己的最后门后，private classifier 才成为 `FROZEN` 当前事实。后继
-[eligible-only operation projection / same-attempt gate 前合同审计](docs/207-r1-language-support-eligible-operation-projection-precontract-audit.md)
-证明当前 Fact、Relation derivation 与 Relation observation request 都会把全量 source bodies 交给 Provider；旧
-terminal/FactSet 对账不能补做 input authority。该审计只条件化授权后继起草最小合同，protocol/runtime、Parse
-fulfillment 与 persistence 仍未获授权。后继[最小合同 0.1](docs/208-r1-language-support-eligible-operation-projection-contract.md)
-已经过 PR #221、受保护合入、new exact-main 双门、三份 fresh installed-product readback 与 independent
-reconciliation 取得候选资格；[独立冻结发布](docs/209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
-完成自己的同等级最后门后，合同的 `CONTRACT_FROZEN / IMPLEMENTATION_ALLOWED` 已生效。A–G 随后经
-PR #223–#229 严格串行实现；每个 stage 的 original PR 与 exact-main Public CI / Browser Smoke 都独立成功，最终
-`main@b69527ec3a4c3037be730144c29b0ce2468940fc` 的 G hardening 四格为 `20/20`、A–G focused
-`100/100`、related matrix `182/182`、full Review Attention `417/417`。
-[实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)经
-PR #230 original 11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 210 /
-milestones 三份 fresh installed-product readback 与 independent reconciliation 取得资格。
-[首次最终冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
-的 original PR 11/11 与 exact-main Browser 1/1 成立，但 exact-main Public CI `36343474761` 在 Python 3.10 `-O`
-保留正式 FAILURE，因此 frozen target 没有生效。独立 PR #232 只修复 test-support wall-clock coupling，并在
-`main@df7f3d5a190d317a47c0fc1fb9405419e6b76828` 完成 original 11/11 与 exact-main 11/11 + Browser 1/1。
-[重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
-经 PR #233 original 11/11、ordinary merge `main@0c82c55a521750698c969b26221bf776530aec16`、new exact-main
-11/11 + Browser Smoke 1/1，以及 README / 文档 212 / milestones 三份 fresh installed-product PASS 与独立
-reconciliation，private implementation `FROZEN` 已成为当前事实。milestones 前两次正式 observation 虽然
-product/Core 为 `COMPLETED / PASS`，runner 都在长路径 final-summary 写入阶段退出 1，因此继续保留为两个
-`ERROR / NON_QUALIFYING` identity；第三次 fresh identity 才取得 PASS。final manifest 为：
-
-```text
-sha256_json  = 0354060769104d5647c322838740fc64af0c8e96d333698bdef963345fd16e82
-sha256_bytes = 669c4af61877e8c9287a742bacb20b9dfc794ee0c30c4c0cc4f287ca6da00b08
-```
-
-[Parse fulfillment authority 问题审计](docs/213-r1-parse-fulfillment-authority-problem-audit.md)据此只条件化发布
-Parse fulfillment authority problem-audit candidate。它证明 current exact history 仍不能区分 parser
-success、syntax failure 与 parser never executed；它不是 precontract，不授权 parser/AST、Parse terminal、Fact、
-persistence、共享 carrier、public Artifact 或 Coverage。
-
-文档 213 随后经 PR #236 original 11/11、ordinary merge
-`main@5d0769b8ce9d7823b5a095de3657531085d19e83`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
-doc213 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified problem history。
-[Parse fulfillment 最小合同前置审计](docs/214-r1-parse-fulfillment-precontract-audit.md)随后经 PR #237 original
-11/11、ordinary merge `main@5593f48256acafeda6205ffde174441781c87c2e`、new exact-main 11/11 + Browser
-Smoke 1/1 与 fresh installed-product reconciliation 成为 `PRECONTRACT_AUDITED` qualified history。milestones
-第一次正式 readback 因匿名 API 额度耗尽保持 `ERROR / NON_QUALIFYING`，fresh identity 才取得 PASS；两次历史同时
-保留。审计确认 Parse denominator、共享 obligation、patch-level parser identity、semantic result / lifecycle /
-reconciliation 分离及 admitted parse-product consumer binding，但仍未授权合同或实现。
-
-[Parse → Fact consumer projection 前置资格审计](docs/215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
-进一步证明：current frozen Fact operation/request 强制把全部 Language Support eligible bodies 交给 Provider；在一个
-eligible source Parse accepted、另一个 rejected 的 world 中，current Provider 仍对 rejected source 报告 canonical
-`MODULE` Fact，而 accepted-only request 会被 current wire 拒绝。该候选只选择 post-Parse Fact consumer
-projection / request binding 作为更早前提；文档 208 与 current runtime 的历史 qualification 不被倒改，Parse
-contract、new wire、parser/AST、Fact fulfillment、persistence 与 Coverage 仍未获授权。
-
-文档 215 随后经 PR #238 original 11/11、ordinary merge
-`main@34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
-doc215 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified prerequisite
-history。[Parse product → Fact consumer binding 最小前合同审计](docs/216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
-据此把 consumer membership、exact product binding 与 product-use authority 分开：accepted IDs、裸 product digest
-或 terminal echo 都不足以证明 Provider 消费了 admitted product；多 Provider 只能共享一份 application-owned
-product truth，各自重新取得 consumer claim。该候选经 PR #239 original 11/11、ordinary merge
-`main@63daada4157e0068bb2a1333953f821f56f61894`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
-doc216 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified history。
-
-[Parse fulfillment 最小合同 0.1](docs/217-r1-parse-fulfillment-contract.md)随后经 PR #240 original 11/11、ordinary
-merge `main@446604ffc437ff710faf524c1634839dc1a0ddd7`、new exact-main 11/11 + Browser Smoke 1/1，以及
-README / doc217 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 取得候选资格。README
-第一次正式 observation 因匿名 GitHub API 额度耗尽保持 `ERROR / NON_QUALIFYING`；fresh Plan/session 才取得 PASS，
-两次历史同时保留。[独立冻结发布](docs/218-r1-parse-fulfillment-contract-freeze-publication.md)经 PR #241 original
-11/11、ordinary merge `main@bb912680d55ca8c96df4d5b9ded88187bbaf42ef`、new exact-main 11/11 + Browser
-Smoke 1/1，以及 README / doc217 / doc218 / milestones 四份 fresh installed-product PASS 与 independent
-reconciliation 后，`CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED` 已生效。milestones 第一次正式 final readback 的
-render projection 保持 `ERROR / UNKNOWN / NON_QUALIFYING`，fresh session 才取得 PASS；两次身份同时保留。
-
-[Parse private implementation 可行性审计](docs/219-r1-parse-private-implementation-feasibility-audit.md)随后从该 exact main
-重新进入 CONTROL LOOP，并经 PR #242 original 11/11、ordinary merge
-`main@23f9825e61791a78056d5154e4dfd3626a1167b1`、new exact-main 11/11 + Browser Smoke 1/1、三份
-fresh installed-product PASS 与 independent reconciliation 成为 qualified history。后继实现授权 PR #243 的
-original Starter required gate 在公开 Core v0.12.2 wheel 上观察到 `net::ERR_NO_BUFFER_SPACE`，却被归为
-`BROWSER_HARD_FAILURE / SUBJECT`；该 PR 保持失败、关闭且未合入。
-
-[M10 Browser 主机 socket 分类与发行消费边界审计](docs/221-m10-browser-host-socket-release-consumer-boundary-audit.md)
-据此区分 current source、公开 Core v0.12.2 distribution 与 Starter 0.2 consumer identity。current source 的窄映射
-候选不能修复 required gate 实际消费的冻结 wheel，历史 tag / asset 也不能移动；因此 Parse feasibility history
-保持成立，但 private implementation authorization 没有生效。parser runtime、release/compatibility correction、
-persistence、Fact product-use enforcement、new wire 与 Coverage 均未获得施工权。
-
-[M10 Browser 主机 socket 分类修正与发行消费最小前合同审计](docs/222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
-从 doc221 已完成的 original PR、受保护合入、exact-main 双门与 fresh installed-product reconciliation 重新进入
-CONTROL LOOP。诊断证明：精确 v0.12.2 谱系上的窄 backport 可构建为 Core 0.12.3，并由 unchanged public
-Starter 0.2.0 wheel 完成真实 PASS/FAIL 链；但这些结果仍是 nonqualifying diagnostic。0.12.3 必须来自受治理的
-历史 maintenance 谱系，current 0.13 source correction 与未来 public 0.13.x claim 继续拥有独立资格。本文只
-条件化选择后继最小合同面，不创建 branch、runtime、workflow migration、version、tag、Release 或 Parse authority。
-
-[M10 Browser 主机 socket 分类修正与发行消费合同](docs/223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
-把后继工作冻结为五段串行资格链：current-main 窄修正、`core-0.12-maintenance` 两阶段治理 bootstrap、
-精确 v0.12.2 谱系上的 Core 0.12.3 backport 与 non-Latest create-new publication、公开产品读回，以及
-main required Starter lane 的单独消费迁移。合同候选不创建 branch、ruleset、runtime、version、tag、Release
-或 workflow 变更；public v0.13.x 仍是独立发行义务，Parse implementation 继续未获授权。
-
-[M10 Browser 主机 socket 分类修正与发行消费合同冻结发布](docs/224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
-条件化发布文档 223 的冻结目标；其自己的 original PR、受保护合入、new exact-main 双门、fresh README /
-doc223 / doc224 / milestones installed-product readback 与独立 reconciliation 闭合以前，当前事实仍是 qualified
-contract candidate，runtime、maintenance branch、ruleset、version、tag、Release 与 workflow migration 均未开始。
-
-[M10 0.12 maintenance bootstrap 治理反例审计](docs/225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
-记录 C1 经 PR #249 合入 `main@2daf6ea...` 并完成 exact-main 双门；current source 已包含精确 host-socket
-分类修正，但 public `v0.13.0` wheel 没有因此改变。M0 phase-one ruleset `24216773` 已 active、无 bypass，
-第一次真实 exact branch ref 创建却返回 HTTP 404，`core-0.12-maintenance` 仍不存在。
-
-[M10 maintenance branch 创建 authority 更正审计](docs/226-m10-maintenance-branch-creation-authority-correction-audit.md)
-随后确认该次 OAuth credential 没有 `workflow` scope，且旧 `ci.yml` 不满足“另一 branch 已有同路径同内容”例外；
-因此 404 继续保留，但它没有资格证明 ruleset/governance 反例。当前为
-`M0_BRANCH_CREATION_AUTHORITY_UNQUALIFIED / M0_MAINTENANCE_BOOTSTRAP_BLOCKED`；scope 扩张、ref 重试、实际 push、
-workflow PR、phase two、0.12.3 backport/release、consumer migration 与 Parse authorization 均未开始。
-
-[M10 maintenance workflow bootstrap 顺序反例审计](docs/227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
-在 Human 明确授权并补齐 `workflow` scope 后，新的 REST ref observation 返回 `201`，branch 已精确指向
-`v0.12.2^{}`，ruleset 保持 active、无 bypass。workflow-only PR #252 的原始 Public CI 随后因 maintenance
-lock 中 `brace-expansion` / `undici` 的当前 high-severity advisory 失败；它未 rerun、未合入且已关闭。main 上
-独立依赖维护已取得资格，但不能继承给 0.12 line。当前只重开 workflow-only PR 之前的 dependency qualification /
-ordering seam；dependency PR、workflow dispatch、#252 重开、phase two、backport/release 与 Parse 均未获授权。
-
-[M10 maintenance dependency prerequisite 最小前合同审计](docs/228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
-在 exact `v0.12.2^{}` 上重新构造的 one-file lock candidate 只把 `undici` 与 root / nested
-`brace-expansion` 更新到 `7.30.0 / 5.0.12 / 2.1.7`；Workbench 172/172、lint、build 与 0-vulnerability
-audit 成立。本机完整 Python 四格因真实 `4096 MB` memory soft stop 保持非资格失败；它没有被调预算或写成 PASS。
-旧 workflow 的 `workflow_dispatch` 可以形成 exact-head / exact-tip 远端 witness，但不能冒充 original PR checks。
-doc228 已经 PR #255 original 11/11、受保护 main 合入与 new exact-main Public CI 11/11 + Browser Smoke 1/1
-成为 qualified precontract history；它只授权起草最小合同。
-
-[M10 maintenance dependency prerequisite 最小合同](docs/229-m10-maintenance-dependency-prerequisite-contract.md)
-把 exact v0.12.2 source、npm 11.19.1 targeted lock construction、四个允许 entry、one-file scope、local
-Workbench gates、topic-head / merge-tip 两轮独立 manual dispatch、ordinary merge identity、失败保留与 retained evidence
-冻结为候选语义。PR #256 original 11/11、ordinary merge `main@be1db09637b8b499269b6281c5ab744ddf27db02`、
-new exact-main 11/11 + 1/1、
-四份 fresh installed-product readback 与 independent reconciliation 已使其成为 qualified contract candidate。
-
-[M10 maintenance dependency prerequisite 合同冻结发布](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
-只发布文档 229 的冻结目标；manual dispatch 仍是 exact-ref witness，不是 original PR check 或 ruleset required
-check。PR #257、受保护合入 `main@8099d162db78862beccdd84e88c22bec21b0e8b1`、new exact-main
-11/11 + 1/1、四份 fresh readback 与 independent reconciliation 已闭合，因此合同已经 `FROZEN`；实现没有
-由此自动开始。
-
-[M10 maintenance dependency prerequisite 资格发布](docs/231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
-记录 one-file candidate `823add785...`、PR #258、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
-`core-0.12-maintenance@6ed18ae8...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
-本文自己的门闭合以前，公开状态仍是 implementation not started；闭合以后也只允许回到 CONTROL LOOP 重审新的
-workflow-only bootstrap，不授权重开 #252、phase two、0.12.3 release 或 Parse。
-
-[M10 maintenance dependency drift 反例审计](docs/233-m10-maintenance-dependency-drift-counterexample-audit.md)
-记录 fresh workflow-only PR #264 在同一 maintenance tip 上取得新的 registry observation：Python、E3、wheel-only
-以及 Workbench tests/lint/build 成功，但 `npm audit` 对 Vue/server-renderer、postcss-selector-parser 与
-source-map-js 报告 `1 moderate / 3 high`，所以 original Public CI attempt 1 为 `FAILURE`。#264 已关闭、未合入、
-未 rerun、未改 head；文档 231 的旧 timed PASS 仍是历史事实，但不再足以资格化当前 workflow bootstrap。本文只
-条件化发布 dependency drift 问题边界；新 precontract、dependency write、workflow bootstrap、release 与 Parse
-均未开始。
-
-[M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
-从 qualified doc233 source state 证明一条新的 lockfile-only 路线具有合同化资格：maintenance manifest 不变，npm
-`11.19.1` 对 `vue / postcss-selector-parser / source-map-js` 的 package-name-only targeted update 两次逐字节得到
-同一 `D9FBF89C...00A4` lock，完整允许投影为 14 个 entry；fresh install、172 项 Workbench regression、lint、
-type-check/build 与 timed moderate audit 均通过。exact-version `npm update ...@version` 的 `EUPDATEARGS` 首败与一次
-projection helper setup error 原样保留。
-
-doc234 已经 PR #266 head `0bb60c0...` original Public CI 11/11、ordinary merge
-`main@7cf409940339d4068c3effd9e6d4deaca0c7861b` 与 new exact-main Public CI 11/11 + Browser Smoke 1/1，成为
-qualified precontract history。[最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)只冻结 exact
-maintenance source、package-name-only construction、完整 14-entry closure、one-file identity、candidate/tip 两轮
-manual-dispatch witness、受保护合入与失败保留；其独立[冻结发布](docs/236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
-已经 PR #268、受保护 `main@295afd0...`、new exact-main 11/11 + 1/1、四份 fresh product readback 与 independent
-reconciliation 闭合，因此 contract 已 `FROZEN`，implementation 没有由此自动开始。
-
-[M10 maintenance dependency drift 资格发布](docs/237-m10-maintenance-dependency-drift-qualification-publication.md)
-记录 one-file candidate `6efccfb...`、PR #269、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
-`core-0.12-maintenance@685b077...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
-本文自己的门闭合以前，公开状态仍停在 contract frozen / bootstrap not started；闭合以后也只允许返回 CONTROL LOOP
-重新审查 fresh workflow-only bootstrap，不授权重开 #252/#264、phase two、0.12.3 release 或 Parse。
-
-[M10 maintenance workflow bootstrap 资格发布](docs/238-m10-maintenance-workflow-bootstrap-qualification-publication.md)
-记录 fresh 双文件 candidate `4b262eb...`、PR #271 original Public CI 7/7、ordinary merge
-`core-0.12-maintenance@ebc5d7f...`、exact-tip Public CI 7/7 + Browser Smoke 1/1，以及 ruleset
-`24216773` 的 phase-two strict required-checks 双路径读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
-
-```text
-M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
-M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
-CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
-R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
-```
-
-该发布只修正 publication lag，不启动 0.12.3 产品 backport/release。闭合以后仍须返回 CONTROL LOOP，重新审查
-M1 是否是当前最小合法 seam；consumer migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
-
-[Core 0.12.3 发布与公开读回事实](docs/239-core-v0.12.3-release-readback-facts.md)记录 maintenance
-backport PR #273、exact-tip 双门、受保护注释标签、四项非 Latest Release 资产，以及匿名 public Core 四格与
-Starter 0.2.0 双 Python 产品读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
-
-```text
-CORE_0_12_3_RELEASED
-CORE_0_12_3_PUBLIC_READBACK_COMPLETE
-CORE_0_12_3_MAINTENANCE_FROZEN
-W1_REQUIRED_STARTER_LANE_MIGRATION_NOT_STARTED
-R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
-```
-
-首次敏感路径扫描的 12 项命中、其他 setup/harness failure 和后继独立 PASS 均保留原身份。该发布只同步已经
-形成的 release/readback 事实；闭合以后仍须返回 CONTROL LOOP 重审 W1，不能直接修改 workflow 或启动 Parse。
-
-[required Starter lane 迁移资格发布](docs/240-m10-required-starter-lane-migration-qualification-publication.md)
-记录 workflow-only candidate `ecc09bc...`、PR #275、ordinary merge `main@594f1b1...`、new exact-main
-Public CI 11/11 + Browser Smoke 1/1，以及 exact workflow、PR、run 与 public Core 0.12.3 asset 的 fresh anonymous
-status readback / reconciliation。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
-
-```text
-M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
-M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
-CORE_0_12_3_RELEASED
-CORE_0_12_3_PUBLIC_READBACK_COMPLETE
-CORE_0_12_3_MAINTENANCE_FROZEN
-W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED
-R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
-R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
-```
-
-W1 只把 required `Starter PASS/FAIL golden path` 的 public Core coordinate 从 0.12.2 迁移到已读回的 0.12.3；
-Python matrix 中 Starter / Authoring 的声明兼容性底线仍为 0.12.2。该发布闭合后必须返回 CONTROL LOOP 重新审查
-Parse private implementation authorization；它不自动授权 parser、重开 PR #243、选择 persistence 或启动 Fact / Coverage。
-
-[Parse private implementation 实现授权发布](docs/241-r1-parse-private-implementation-authorization-publication.md)
-从 `main@35502aa2f605e5654327f9df81d9da7fe81f23cf` 重新核对 frozen contract、文档 219–223、current
-runtime bytes、W1 与 retained failures。旧 doc219 matrix Artifact 的 source literal 输出编码损坏被保留为
-`EVIDENCE_TOOLING_ERROR`；fresh UTF-8 probe 的四格 decision projection 相同，execution-cell canonical report 与
-旧摘要逐字节相同，没有形成 product/feasibility 反例。本文只条件化发布 doc219 A–H 的 private implementation
-authority；它自己的 final bytes、original PR、受保护合入、新 exact-main 双门、四份 fresh installed-product
-readback 与 independent reconciliation 全部闭合前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是 target marker，runtime
-仍为 `NOT_STARTED / NOT_AUTHORIZED`。
-
-该授权 publication 合入后的第一次 exact-main Public CI 在 Python 3.10 `-O` combined service fixture 中硬退出；
-[文档 242](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)永久保留 `FAILURE / UNKNOWN`，并只用
-独立 PR #278 改善 test-only world / phase / cleanup observation。#278 与新 exact-main 双门、doc241 四份 fresh
-installed-product readback及 independent reconciliation 闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED` 才成为事实。
-
-private A–H 随后由 PR #279 一次性物化；original 11/11、ordinary merge
-`main@26f21b5049dc87c889862fbcef2a12e76aed697e`、new exact-main 11/11 + Browser Smoke 1/1 与五份匿名
-exact-SHA source readback均成立。[实现冻结候选](docs/243-r1-parse-private-implementation-freeze-candidate.md)经 PR #280、
-受保护合入、`main@cd4aabb38e0352a7df9e5222606dbb96f65135e5` 双门、三份 fresh installed-product readback 与
-independent reconciliation 取得资格。[最终冻结发布](docs/244-r1-parse-private-implementation-freeze-publication.md)
-完成自己的同等级最后门后，private implementation 已成为 `FROZEN` 当前事实。后继
-[Parse → Fact consumer correction 合同](docs/245-r1-parse-to-fact-consumer-correction-contract.md)经 PR #282、
-`main@3214586645c67156d5c498cbcd2ea5ed1a7d6b43` 双门、三份 fresh installed-product readback 与 independent
-reconciliation 取得 candidate 资格；[独立冻结发布](docs/246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)
-完成自己的最后门后，合同成为 `FROZEN` 当前事实。后继
-[private implementation 可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)
-从 exact main 重新确认：bounded private successor 在不向 Provider 暴露 raw source、不选择 persistence、不定义 Fact
-obligation universe 的前提下可行；该结论当前仍是 docs-only audit candidate，implementation、persistence 与 Coverage
-继续未获授权。
-
-完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
-以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
-[能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
-
-</details>
+<summary><strong>查看：已交付能力、使用入口与研究边界</strong></summary>
 
 ## 选择入口
 
@@ -382,73 +51,6 @@ obligation universe 的前提下可行；该结论当前仍是 docs-only audit c
 | 直接使用稳定内核 | [Core 0.13.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) | Plan、Evidence、四 Verdict、Acceptance Bundle、合成首跑与本地只读 Workbench |
 | 采集公开 GitHub 事实 | [GitHub Evidence Plugin 0.1.0](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) | 只读 API / Public Render Evidence 与 Core handoff |
 
-## 它解决什么
-
-工程项目很容易把局部绿灯误当成整体完成：单元测试通过，但真实浏览器存在失败请求；单实例正常，
-多实例出现重复副作用；一次压测写着“并发 1000”，却没有说明总请求、同时在途、RPS 或热点竞争数。
-
-VeriTrail 不替代测试框架、CI、浏览器或监控。它在这些工具之上建立一条可复算的验收链：
-
-```text
-sealed Plan / Profile
-  -> resource and environment preflight
-  -> bounded target lifecycle
-  -> structured Evidence collection
-  -> deterministic Core evaluation
-  -> immutable Bundle and Catalog
-  -> comparison / paired / batch analysis where applicable
-  -> owned cleanup and residual verification
-```
-
-核心方法只有五条：冻结基线；一次只改变一个主要变量；用显式组合矩阵验证交互；用固定种子寻找并
-复现偶发问题；最后用真实链路验证系统结论。资源限制可以停止升压，但不能降低一致性与安全不变量。
-
-## 结论语言
-
-运行是否结束和证据能否支持结论是两件事，因此必须分开保存：
-
-| Dimension | Values | Meaning |
-| --- | --- | --- |
-| ExecutionStatus | `PLANNED / RUNNING / COMPLETED / ABORTED / ERROR` | 实验是否完整执行 |
-| Verdict | `PASS / FAIL / INCONCLUSIVE / PENDING` | 当前证据能否支持判断 |
-
-- `PASS`：适用证据齐全，硬性不变量成立；
-- `FAIL`：至少一个硬性不变量被可复现证据否定；
-- `INCONCLUSIVE`：变量污染、环境漂移或证据冲突导致无法归因；
-- `PENDING`：尚未取得计划要求的真实证据；
-- `ABORTED` 是运行状态。资源停止线触发时保存现场，不伪造 `PASS / FAIL`。
-
-## 开始使用
-
-第一次接触请优先走 [START_HERE](START_HERE.md) 的十分钟 PASS / 故意 FAIL 黄金路径。下面是源码
-工作区的最小 Core 入口；浏览器采集和 Windows 受控进程能力保持可选安装。
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install --editable ".[browser,command-windows]"
-.\.venv\Scripts\python.exe -m playwright install chromium
-```
-
-封存一个最小计划并计算 Run：
-
-```powershell
-.\.venv\Scripts\veritrail.exe seal `
-  --plan examples\minimal\plan.json `
-  --output artifacts\m0-sealed-plan.json
-
-.\.venv\Scripts\veritrail.exe evaluate `
-  --plan artifacts\m0-sealed-plan.json `
-  --evidence examples\minimal\evidence-pass.json `
-  --run-id my-first-run `
-  --output artifacts\my-first-run
-```
-
-开发者需要复现 Public CI、Starter、Authoring Skill、Workbench 或发布资产时，请按
-[贡献指南](CONTRIBUTING.md)和[里程碑索引](docs/milestones.md)中的对应合同运行完整矩阵；首页不复制整套
-发布门禁命令。
-
-## 已交付能力与边界
 
 Core 的 M0–M14 已形成单机可验证闭环，覆盖 sealed Plan、资源预检、真实 Chromium Evidence、只读
 Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵、可信有界命令、完整项目自举、真实
@@ -784,74 +386,13 @@ Workbench、不可变 Catalog、同计划比较、四角色配对、批次矩阵
 
 </details>
 
-## 公开证据与安全边界
-
-`Public CI` 和 `Browser Smoke` 提供平台对齐、双 Python、构建、真实 Chromium 与公开资产读回的快速
-基线。它们不能替代物理键盘、完整真实项目、受控宿主机资源停止线或清理读回；GitHub 绿灯不自动等于
-整个里程碑 `PASS`。
-
-VeriTrail 的安全边界同样是有界的：
-
-- 默认只接受显式回环目标，不读取浏览器 Profile，不持久化 Cookie、Authorization 或响应正文；
-- Plan、Evidence、报告与附件通过规范化 JSON、清单和 SHA-256 建立可复核关系；
-- M9/M10 只运行结构化、经预览摘要批准的可信本地命令，不接受 Shell 字符串；新版 Preview 还绑定
-  精确受保护源码状态，并在启动前复核，边界见[获批源码状态连续性维护合同](docs/168-approved-source-state-continuity-maintenance-contract.md)；
-- Windows Job Object、listener owner 与资源上限限制误杀和残留，但不构成恶意代码沙箱；
-- AI 可以提出关注候选、解释异常或建议补证，不能确认缺陷真值，也不能决定 `PASS / FAIL`。
-
-## 信任与认识论上限
-
-VeriTrail 擅长发现封存坐标之后的漂移、错绑、漏证据与规则不一致；它不能仅凭一条内部自洽的证据链
-证明最初事实真实，也不能裁定提出者的观点在终极意义上正确。
-
-```text
-Consistency != Authenticity != Truth
-Verification Correctness != Specification Correctness
-Not responsible for Truth != Not responsible for Uncertainty
-```
-
-现实若模糊、不完整、冲突或不可判，系统必须保留这种不确定性。精确边界见
-[产品定义](docs/00-product-brief.md)与[GitHub Evidence Plugin 合同](docs/78-github-evidence-plugin-contract.md)。
-简单说：**它防的是漂移，不是阴谋；它负责的是裁决秩序，不是真理本身。**
-
-## 系统家族与未来边界
-
-VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统关系应通过稳定合同、不可变 Artifact 和
-可替换 adapter 建立：
-
-| 系统 / 轨道 | 负责 | 关系状态 |
-| --- | --- | --- |
-| [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
-| [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
-| Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
-| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support 0.2、private classifier 与 eligible operation projection / same-attempt gate A–G private implementation 已冻结；Parse fulfillment private A–H 与 Parse → Fact consumer correction 合同已冻结；consumer correction private implementation 可行性审计处于 candidate，implementation 仍未开始；持久化路线、公共 Artifact、Fact fulfillment 与 Coverage 未获授权 |
-| Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
-| Operations Evidence / O | 候选运行事实观察面 | O0 只记录问题与权威边界；没有插件、Provider、Schema 或动作权 |
-| Test Evidence / T | 候选测试事实观察面 | T0 只记录问题；测试选择、执行、重试与 fixture authority 仍为 `UNKNOWN` |
-
-这些关系是认知地图，不是当前集成声明。一个独立系统最多通过不可变 Artifact / Evidence adapter 接入
-VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verdict 权不能跨界。
-
-拆分也不由模块数量、业务名词或数据库数量机械决定。这里采用的原则是：**最小闭环内部允许与同一
-不变量一致的强耦合；闭环之间必须通过稳定合同强解耦。**边界未知时先建立可验证的最小闭环，等待真实
-反例暴露 state ownership、事务、失败恢复和独立生命周期压力。完整判据见
-[能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
-
-## 发布坐标
-
-- 当前 Latest Core：[`v0.13.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)，详见
-  [0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)与
-  [发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)；
-- 历史维护坐标：`v0.12.0 / v0.12.1 / v0.12.2` 均不可移动；
-- GitHub Evidence Plugin：[`github-evidence-v0.1.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0)，
-  为 non-Latest 独立 Release；
-- Starter 与 Authoring Skill：独立 `0.2.0` 坐标，并继续保持其 Core 0.12.x 兼容边界；
-- [Core 0.12.2 发布与公开读回事实](docs/76-core-v0.12.2-release-readback-facts.md)继续保存旧维护线的精确证据。
-
-已发布标签、资产和历史失败不得移动、重制或用后续绿灯覆盖。完整坐标与摘要见
-[里程碑与文档索引](docs/milestones.md)。
+</details>
 
 ## 阅读路径
+
+<details>
+<summary><strong>查看：使用说明、技术文档与工程事实索引</strong></summary>
+
 
 ### 第一次来
 
@@ -991,6 +532,491 @@ VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verd
 105. [Review Attention R1 Parse → Fact consumer correction 合同冻结发布](docs/246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)
 106. [Review Attention R1 Parse → Fact consumer correction private implementation 可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)
 
+</details>
+
+## 深入阅读
+
+<details>
+<summary><strong>深入阅读：架构、合同、施工记录与精确状态</strong></summary>
+
+## 开始使用
+
+第一次接触请优先走 [START_HERE](START_HERE.md) 的十分钟 PASS / 故意 FAIL 黄金路径。下面是源码
+工作区的最小 Core 入口；浏览器采集和 Windows 受控进程能力保持可选安装。
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install --editable ".[browser,command-windows]"
+.\.venv\Scripts\python.exe -m playwright install chromium
+```
+
+封存一个最小计划并计算 Run：
+
+```powershell
+.\.venv\Scripts\veritrail.exe seal `
+  --plan examples\minimal\plan.json `
+  --output artifacts\m0-sealed-plan.json
+
+.\.venv\Scripts\veritrail.exe evaluate `
+  --plan artifacts\m0-sealed-plan.json `
+  --evidence examples\minimal\evidence-pass.json `
+  --run-id my-first-run `
+  --output artifacts\my-first-run
+```
+
+开发者需要复现 Public CI、Starter、Authoring Skill、Workbench 或发布资产时，请按
+[贡献指南](CONTRIBUTING.md)和[里程碑索引](docs/milestones.md)中的对应合同运行完整矩阵；首页不复制整套
+发布门禁命令。
+
+<details>
+<summary><strong>展开：完整架构图与责任边界</strong></summary>
+
+VeriTrail（验迹）把事先封存的验收条件、来自真实执行或外部平台的证据，以及确定性裁决分开保存。
+它帮助独立开发者和小型团队回答：**这次到底证明了什么，依据是什么，边界在哪里，失败应回到哪一层排查。**
+
+![VeriTrail 架构关系：现实经 Evidence Producer 形成标准 Evidence；人封存 Plan；Plan 与 Evidence 只在 Core 中相遇并导出 Verdict 与不可变 Bundle；Workbench 支持最终人工处置；R 分配审查注意力，Q 调度证明工作，但二者均无 Verdict 权。](docs/assets/veritrail-architecture.svg)
+
+<p align="center"><sub>中轴实线是证据与裁决链，两翼虚线是可替换的辅助能力；图中两端的 Human authority 属于同一权威域。</sub></p>
+
+这不是一条把所有能力串成单体流水线的图。Core 只消费 sealed Plan 与标准 Evidence；R 面向人的审查
+注意力，Q 面向证明义务的执行效率，两者都不能获得 Core Verdict 权。Workbench 负责展示和验真，
+不在浏览器里重新裁决。
+
+图中的 Evidence producer 是一个权威角色，不等于某个固定插件。当前已交付的是 GitHub Evidence P 轨；
+[O0 Operations Evidence](docs/180-o0-operations-evidence-problem-framing.md) 与
+[T0 Test Evidence](docs/181-t0-test-evidence-problem-framing.md) 只保存新的候选观察问题，没有运行时、
+公共 Schema 或产品坐标。架构图因此只画通用只读 Evidence 边界，不把 O/T 预演成已实现模块。
+
+| 责任 | 谁拥有 | 明确不拥有 |
+| --- | --- | --- |
+| 前提、目标与 Seal 决定 | Human authority | 世界终极真相 |
+| 事实采集与来源说明 | Evidence producer / plugin | 验收标准与 Verdict |
+| 证据充分性与确定性裁决 | VeriTrail Core | 外部事实、执行资源与人工处置 |
+| 最终处置 | Human authority | 改写历史 Evidence 或伪造确定性 |
+
+> **现实拥有真相，VeriTrail 只拥有裁决纪律。**
+
+</details>
+
+## 系统分层
+
+各层通过版本化合同和不可变 Artifact 组合；依赖不等于 ownership，消费也不等于继承状态机。
+
+<details>
+<summary><strong>展开：各层产物、当前边界与工作台预览</strong></summary>
+
+| 层 | 回答的问题 | 主要产物 | 当前边界 |
+| --- | --- | --- | --- |
+| Entry / Authoring | 怎样更容易起草一个可检查的计划？ | `DRAFT / NOT_SEALED` Plan | Starter 与 Authoring Skill 不 Seal、不运行、不裁决 |
+| Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论；P 已发布，O0/T0 仍是候选问题记录 |
+| Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
+| Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation、private Relation observation / composition qualification，以及 private RelationSet admission / explicit witness / Evidence 0.2 binding 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support semantic contract 0.1、codec-conformance 修正合同 0.2 与 private classifier 已冻结；eligible-only operation projection / same-attempt gate 已冻结；Parse fulfillment private A–H 与 Parse → Fact consumer correction 合同已冻结；consumer correction private implementation 可行性审计处于 candidate，implementation 仍未开始；public carrier、持久化路线与 Coverage 未获授权 |
+| Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
+
+![VeriTrail 宫阙验迹工作台：本地 Run 目录](docs/assets/veritrail-workbench-catalog.png)
+
+<p align="center"><sub>Workbench 是证据的只读阅读面；宫阙视觉语言不改变任何裁决语义。</sub></p>
+
+</details>
+
+<details>
+<summary><strong>展开：验收方法的技术说明</strong></summary>
+
+## 它解决什么
+
+工程项目很容易把局部绿灯误当成整体完成：单元测试通过，但真实浏览器存在失败请求；单实例正常，
+多实例出现重复副作用；一次压测写着“并发 1000”，却没有说明总请求、同时在途、RPS 或热点竞争数。
+
+VeriTrail 不替代测试框架、CI、浏览器或监控。它在这些工具之上建立一条可复算的验收链：
+
+```text
+sealed Plan / Profile
+  -> resource and environment preflight
+  -> bounded target lifecycle
+  -> structured Evidence collection
+  -> deterministic Core evaluation
+  -> immutable Bundle and Catalog
+  -> comparison / paired / batch analysis where applicable
+  -> owned cleanup and residual verification
+```
+
+核心方法只有五条：冻结基线；一次只改变一个主要变量；用显式组合矩阵验证交互；用固定种子寻找并
+复现偶发问题；最后用真实链路验证系统结论。资源限制可以停止升压，但不能降低一致性与安全不变量。
+
+</details>
+
+## 结论语言
+
+运行是否结束和证据能否支持结论是两件事，因此必须分开保存：
+
+| Dimension | Values | Meaning |
+| --- | --- | --- |
+| ExecutionStatus | `PLANNED / RUNNING / COMPLETED / ABORTED / ERROR` | 实验是否完整执行 |
+| Verdict | `PASS / FAIL / INCONCLUSIVE / PENDING` | 当前证据能否支持判断 |
+
+- `PASS`：适用证据齐全，硬性不变量成立；
+- `FAIL`：至少一个硬性不变量被可复现证据否定；
+- `INCONCLUSIVE`：变量污染、环境漂移或证据冲突导致无法归因；
+- `PENDING`：尚未取得计划要求的真实证据；
+- `ABORTED` 是运行状态。资源停止线触发时保存现场，不伪造 `PASS / FAIL`。
+
+## 当前状态
+
+下表刻意把“已经公开交付”“合同已冻结”和“只在设计空间”分开，避免把路线图当成实现证据。
+
+<details>
+<summary><strong>展开：精确状态、施工记录与来源坐标</strong></summary>
+
+| 轨道 / 产品 | 职责 | 当前事实 |
+| --- | --- | --- |
+| Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
+| Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
+| Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED / R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED / R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED / R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED / R1_PARSE_FULFILLMENT_CONTRACT_FROZEN / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_ALLOWED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
+| Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
+| Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
+
+Language Support 合同 0.1 与 codec-conformance 修正合同 0.2 均已冻结。0.2 冻结发布经 PR #215 合入
+`main@fa74ae22872691eebf2fe8bdb2209da34b64b56e`，其 original PR Public CI、new exact-main Public CI / Browser
+Smoke、README / 文档 202 / 文档 203 / milestones 四份 fresh installed-product readback 与独立 reconciliation
+全部成立。[private classifier 实现授权审计](docs/204-r1-language-support-private-classifier-implementation-authorization-audit.md)
+的最后门已经闭合。private classifier 随后经 PR #217 完成 exact-history revalidation、0.2 deterministic
+classification、完整 reason composition 与 exactly-one denominator closure；
+[实现冻结候选](docs/205-r1-language-support-private-classifier-implementation-freeze-candidate.md)经 PR #218 original
+11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 205 / milestones 三份 fresh
+installed-product readback 与独立 reconciliation 取得资格。[最终冻结发布](docs/206-r1-language-support-private-classifier-implementation-freeze-publication.md)
+完成自己的最后门后，private classifier 才成为 `FROZEN` 当前事实。后继
+[eligible-only operation projection / same-attempt gate 前合同审计](docs/207-r1-language-support-eligible-operation-projection-precontract-audit.md)
+证明当前 Fact、Relation derivation 与 Relation observation request 都会把全量 source bodies 交给 Provider；旧
+terminal/FactSet 对账不能补做 input authority。该审计只条件化授权后继起草最小合同，protocol/runtime、Parse
+fulfillment 与 persistence 仍未获授权。后继[最小合同 0.1](docs/208-r1-language-support-eligible-operation-projection-contract.md)
+已经过 PR #221、受保护合入、new exact-main 双门、三份 fresh installed-product readback 与 independent
+reconciliation 取得候选资格；[独立冻结发布](docs/209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
+完成自己的同等级最后门后，合同的 `CONTRACT_FROZEN / IMPLEMENTATION_ALLOWED` 已生效。A–G 随后经
+PR #223–#229 严格串行实现；每个 stage 的 original PR 与 exact-main Public CI / Browser Smoke 都独立成功，最终
+`main@b69527ec3a4c3037be730144c29b0ce2468940fc` 的 G hardening 四格为 `20/20`、A–G focused
+`100/100`、related matrix `182/182`、full Review Attention `417/417`。
+[实现冻结候选](docs/210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)经
+PR #230 original 11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 210 /
+milestones 三份 fresh installed-product readback 与 independent reconciliation 取得资格。
+[首次最终冻结发布](docs/211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+的 original PR 11/11 与 exact-main Browser 1/1 成立，但 exact-main Public CI `36343474761` 在 Python 3.10 `-O`
+保留正式 FAILURE，因此 frozen target 没有生效。独立 PR #232 只修复 test-support wall-clock coupling，并在
+`main@df7f3d5a190d317a47c0fc1fb9405419e6b76828` 完成 original 11/11 与 exact-main 11/11 + Browser 1/1。
+[重新资格化发布](docs/212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+经 PR #233 original 11/11、ordinary merge `main@0c82c55a521750698c969b26221bf776530aec16`、new exact-main
+11/11 + Browser Smoke 1/1，以及 README / 文档 212 / milestones 三份 fresh installed-product PASS 与独立
+reconciliation，private implementation `FROZEN` 已成为当前事实。milestones 前两次正式 observation 虽然
+product/Core 为 `COMPLETED / PASS`，runner 都在长路径 final-summary 写入阶段退出 1，因此继续保留为两个
+`ERROR / NON_QUALIFYING` identity；第三次 fresh identity 才取得 PASS。final manifest 为：
+
+```text
+sha256_json  = 0354060769104d5647c322838740fc64af0c8e96d333698bdef963345fd16e82
+sha256_bytes = 669c4af61877e8c9287a742bacb20b9dfc794ee0c30c4c0cc4f287ca6da00b08
+```
+
+[Parse fulfillment authority 问题审计](docs/213-r1-parse-fulfillment-authority-problem-audit.md)据此只条件化发布
+Parse fulfillment authority problem-audit candidate。它证明 current exact history 仍不能区分 parser
+success、syntax failure 与 parser never executed；它不是 precontract，不授权 parser/AST、Parse terminal、Fact、
+persistence、共享 carrier、public Artifact 或 Coverage。
+
+文档 213 随后经 PR #236 original 11/11、ordinary merge
+`main@5d0769b8ce9d7823b5a095de3657531085d19e83`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc213 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified problem history。
+[Parse fulfillment 最小合同前置审计](docs/214-r1-parse-fulfillment-precontract-audit.md)随后经 PR #237 original
+11/11、ordinary merge `main@5593f48256acafeda6205ffde174441781c87c2e`、new exact-main 11/11 + Browser
+Smoke 1/1 与 fresh installed-product reconciliation 成为 `PRECONTRACT_AUDITED` qualified history。milestones
+第一次正式 readback 因匿名 API 额度耗尽保持 `ERROR / NON_QUALIFYING`，fresh identity 才取得 PASS；两次历史同时
+保留。审计确认 Parse denominator、共享 obligation、patch-level parser identity、semantic result / lifecycle /
+reconciliation 分离及 admitted parse-product consumer binding，但仍未授权合同或实现。
+
+[Parse → Fact consumer projection 前置资格审计](docs/215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
+进一步证明：current frozen Fact operation/request 强制把全部 Language Support eligible bodies 交给 Provider；在一个
+eligible source Parse accepted、另一个 rejected 的 world 中，current Provider 仍对 rejected source 报告 canonical
+`MODULE` Fact，而 accepted-only request 会被 current wire 拒绝。该候选只选择 post-Parse Fact consumer
+projection / request binding 作为更早前提；文档 208 与 current runtime 的历史 qualification 不被倒改，Parse
+contract、new wire、parser/AST、Fact fulfillment、persistence 与 Coverage 仍未获授权。
+
+文档 215 随后经 PR #238 original 11/11、ordinary merge
+`main@34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc215 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified prerequisite
+history。[Parse product → Fact consumer binding 最小前合同审计](docs/216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+据此把 consumer membership、exact product binding 与 product-use authority 分开：accepted IDs、裸 product digest
+或 terminal echo 都不足以证明 Provider 消费了 admitted product；多 Provider 只能共享一份 application-owned
+product truth，各自重新取得 consumer claim。该候选经 PR #239 original 11/11、ordinary merge
+`main@63daada4157e0068bb2a1333953f821f56f61894`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc216 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified history。
+
+[Parse fulfillment 最小合同 0.1](docs/217-r1-parse-fulfillment-contract.md)随后经 PR #240 original 11/11、ordinary
+merge `main@446604ffc437ff710faf524c1634839dc1a0ddd7`、new exact-main 11/11 + Browser Smoke 1/1，以及
+README / doc217 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 取得候选资格。README
+第一次正式 observation 因匿名 GitHub API 额度耗尽保持 `ERROR / NON_QUALIFYING`；fresh Plan/session 才取得 PASS，
+两次历史同时保留。[独立冻结发布](docs/218-r1-parse-fulfillment-contract-freeze-publication.md)经 PR #241 original
+11/11、ordinary merge `main@bb912680d55ca8c96df4d5b9ded88187bbaf42ef`、new exact-main 11/11 + Browser
+Smoke 1/1，以及 README / doc217 / doc218 / milestones 四份 fresh installed-product PASS 与 independent
+reconciliation 后，`CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED` 已生效。milestones 第一次正式 final readback 的
+render projection 保持 `ERROR / UNKNOWN / NON_QUALIFYING`，fresh session 才取得 PASS；两次身份同时保留。
+
+[Parse private implementation 可行性审计](docs/219-r1-parse-private-implementation-feasibility-audit.md)随后从该 exact main
+重新进入 CONTROL LOOP，并经 PR #242 original 11/11、ordinary merge
+`main@23f9825e61791a78056d5154e4dfd3626a1167b1`、new exact-main 11/11 + Browser Smoke 1/1、三份
+fresh installed-product PASS 与 independent reconciliation 成为 qualified history。后继实现授权 PR #243 的
+original Starter required gate 在公开 Core v0.12.2 wheel 上观察到 `net::ERR_NO_BUFFER_SPACE`，却被归为
+`BROWSER_HARD_FAILURE / SUBJECT`；该 PR 保持失败、关闭且未合入。
+
+[M10 Browser 主机 socket 分类与发行消费边界审计](docs/221-m10-browser-host-socket-release-consumer-boundary-audit.md)
+据此区分 current source、公开 Core v0.12.2 distribution 与 Starter 0.2 consumer identity。current source 的窄映射
+候选不能修复 required gate 实际消费的冻结 wheel，历史 tag / asset 也不能移动；因此 Parse feasibility history
+保持成立，但 private implementation authorization 没有生效。parser runtime、release/compatibility correction、
+persistence、Fact product-use enforcement、new wire 与 Coverage 均未获得施工权。
+
+[M10 Browser 主机 socket 分类修正与发行消费最小前合同审计](docs/222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+从 doc221 已完成的 original PR、受保护合入、exact-main 双门与 fresh installed-product reconciliation 重新进入
+CONTROL LOOP。诊断证明：精确 v0.12.2 谱系上的窄 backport 可构建为 Core 0.12.3，并由 unchanged public
+Starter 0.2.0 wheel 完成真实 PASS/FAIL 链；但这些结果仍是 nonqualifying diagnostic。0.12.3 必须来自受治理的
+历史 maintenance 谱系，current 0.13 source correction 与未来 public 0.13.x claim 继续拥有独立资格。本文只
+条件化选择后继最小合同面，不创建 branch、runtime、workflow migration、version、tag、Release 或 Parse authority。
+
+[M10 Browser 主机 socket 分类修正与发行消费合同](docs/223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
+把后继工作冻结为五段串行资格链：current-main 窄修正、`core-0.12-maintenance` 两阶段治理 bootstrap、
+精确 v0.12.2 谱系上的 Core 0.12.3 backport 与 non-Latest create-new publication、公开产品读回，以及
+main required Starter lane 的单独消费迁移。合同候选不创建 branch、ruleset、runtime、version、tag、Release
+或 workflow 变更；public v0.13.x 仍是独立发行义务，Parse implementation 继续未获授权。
+
+[M10 Browser 主机 socket 分类修正与发行消费合同冻结发布](docs/224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
+条件化发布文档 223 的冻结目标；其自己的 original PR、受保护合入、new exact-main 双门、fresh README /
+doc223 / doc224 / milestones installed-product readback 与独立 reconciliation 闭合以前，当前事实仍是 qualified
+contract candidate，runtime、maintenance branch、ruleset、version、tag、Release 与 workflow migration 均未开始。
+
+[M10 0.12 maintenance bootstrap 治理反例审计](docs/225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
+记录 C1 经 PR #249 合入 `main@2daf6ea...` 并完成 exact-main 双门；current source 已包含精确 host-socket
+分类修正，但 public `v0.13.0` wheel 没有因此改变。M0 phase-one ruleset `24216773` 已 active、无 bypass，
+第一次真实 exact branch ref 创建却返回 HTTP 404，`core-0.12-maintenance` 仍不存在。
+
+[M10 maintenance branch 创建 authority 更正审计](docs/226-m10-maintenance-branch-creation-authority-correction-audit.md)
+随后确认该次 OAuth credential 没有 `workflow` scope，且旧 `ci.yml` 不满足“另一 branch 已有同路径同内容”例外；
+因此 404 继续保留，但它没有资格证明 ruleset/governance 反例。当前为
+`M0_BRANCH_CREATION_AUTHORITY_UNQUALIFIED / M0_MAINTENANCE_BOOTSTRAP_BLOCKED`；scope 扩张、ref 重试、实际 push、
+workflow PR、phase two、0.12.3 backport/release、consumer migration 与 Parse authorization 均未开始。
+
+[M10 maintenance workflow bootstrap 顺序反例审计](docs/227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
+在 Human 明确授权并补齐 `workflow` scope 后，新的 REST ref observation 返回 `201`，branch 已精确指向
+`v0.12.2^{}`，ruleset 保持 active、无 bypass。workflow-only PR #252 的原始 Public CI 随后因 maintenance
+lock 中 `brace-expansion` / `undici` 的当前 high-severity advisory 失败；它未 rerun、未合入且已关闭。main 上
+独立依赖维护已取得资格，但不能继承给 0.12 line。当前只重开 workflow-only PR 之前的 dependency qualification /
+ordering seam；dependency PR、workflow dispatch、#252 重开、phase two、backport/release 与 Parse 均未获授权。
+
+[M10 maintenance dependency prerequisite 最小前合同审计](docs/228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
+在 exact `v0.12.2^{}` 上重新构造的 one-file lock candidate 只把 `undici` 与 root / nested
+`brace-expansion` 更新到 `7.30.0 / 5.0.12 / 2.1.7`；Workbench 172/172、lint、build 与 0-vulnerability
+audit 成立。本机完整 Python 四格因真实 `4096 MB` memory soft stop 保持非资格失败；它没有被调预算或写成 PASS。
+旧 workflow 的 `workflow_dispatch` 可以形成 exact-head / exact-tip 远端 witness，但不能冒充 original PR checks。
+doc228 已经 PR #255 original 11/11、受保护 main 合入与 new exact-main Public CI 11/11 + Browser Smoke 1/1
+成为 qualified precontract history；它只授权起草最小合同。
+
+[M10 maintenance dependency prerequisite 最小合同](docs/229-m10-maintenance-dependency-prerequisite-contract.md)
+把 exact v0.12.2 source、npm 11.19.1 targeted lock construction、四个允许 entry、one-file scope、local
+Workbench gates、topic-head / merge-tip 两轮独立 manual dispatch、ordinary merge identity、失败保留与 retained evidence
+冻结为候选语义。PR #256 original 11/11、ordinary merge `main@be1db09637b8b499269b6281c5ab744ddf27db02`、
+new exact-main 11/11 + 1/1、
+四份 fresh installed-product readback 与 independent reconciliation 已使其成为 qualified contract candidate。
+
+[M10 maintenance dependency prerequisite 合同冻结发布](docs/230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
+只发布文档 229 的冻结目标；manual dispatch 仍是 exact-ref witness，不是 original PR check 或 ruleset required
+check。PR #257、受保护合入 `main@8099d162db78862beccdd84e88c22bec21b0e8b1`、new exact-main
+11/11 + 1/1、四份 fresh readback 与 independent reconciliation 已闭合，因此合同已经 `FROZEN`；实现没有
+由此自动开始。
+
+[M10 maintenance dependency prerequisite 资格发布](docs/231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
+记录 one-file candidate `823add785...`、PR #258、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
+`core-0.12-maintenance@6ed18ae8...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
+本文自己的门闭合以前，公开状态仍是 implementation not started；闭合以后也只允许回到 CONTROL LOOP 重审新的
+workflow-only bootstrap，不授权重开 #252、phase two、0.12.3 release 或 Parse。
+
+[M10 maintenance dependency drift 反例审计](docs/233-m10-maintenance-dependency-drift-counterexample-audit.md)
+记录 fresh workflow-only PR #264 在同一 maintenance tip 上取得新的 registry observation：Python、E3、wheel-only
+以及 Workbench tests/lint/build 成功，但 `npm audit` 对 Vue/server-renderer、postcss-selector-parser 与
+source-map-js 报告 `1 moderate / 3 high`，所以 original Public CI attempt 1 为 `FAILURE`。#264 已关闭、未合入、
+未 rerun、未改 head；文档 231 的旧 timed PASS 仍是历史事实，但不再足以资格化当前 workflow bootstrap。本文只
+条件化发布 dependency drift 问题边界；新 precontract、dependency write、workflow bootstrap、release 与 Parse
+均未开始。
+
+[M10 maintenance dependency drift 最小前合同审计](docs/234-m10-maintenance-dependency-drift-precontract-audit.md)
+从 qualified doc233 source state 证明一条新的 lockfile-only 路线具有合同化资格：maintenance manifest 不变，npm
+`11.19.1` 对 `vue / postcss-selector-parser / source-map-js` 的 package-name-only targeted update 两次逐字节得到
+同一 `D9FBF89C...00A4` lock，完整允许投影为 14 个 entry；fresh install、172 项 Workbench regression、lint、
+type-check/build 与 timed moderate audit 均通过。exact-version `npm update ...@version` 的 `EUPDATEARGS` 首败与一次
+projection helper setup error 原样保留。
+
+doc234 已经 PR #266 head `0bb60c0...` original Public CI 11/11、ordinary merge
+`main@7cf409940339d4068c3effd9e6d4deaca0c7861b` 与 new exact-main Public CI 11/11 + Browser Smoke 1/1，成为
+qualified precontract history。[最小合同](docs/235-m10-maintenance-dependency-drift-contract.md)只冻结 exact
+maintenance source、package-name-only construction、完整 14-entry closure、one-file identity、candidate/tip 两轮
+manual-dispatch witness、受保护合入与失败保留；其独立[冻结发布](docs/236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
+已经 PR #268、受保护 `main@295afd0...`、new exact-main 11/11 + 1/1、四份 fresh product readback 与 independent
+reconciliation 闭合，因此 contract 已 `FROZEN`，implementation 没有由此自动开始。
+
+[M10 maintenance dependency drift 资格发布](docs/237-m10-maintenance-dependency-drift-qualification-publication.md)
+记录 one-file candidate `6efccfb...`、PR #269、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
+`core-0.12-maintenance@685b077...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
+本文自己的门闭合以前，公开状态仍停在 contract frozen / bootstrap not started；闭合以后也只允许返回 CONTROL LOOP
+重新审查 fresh workflow-only bootstrap，不授权重开 #252/#264、phase two、0.12.3 release 或 Parse。
+
+[M10 maintenance workflow bootstrap 资格发布](docs/238-m10-maintenance-workflow-bootstrap-qualification-publication.md)
+记录 fresh 双文件 candidate `4b262eb...`、PR #271 original Public CI 7/7、ordinary merge
+`core-0.12-maintenance@ebc5d7f...`、exact-tip Public CI 7/7 + Browser Smoke 1/1，以及 ruleset
+`24216773` 的 phase-two strict required-checks 双路径读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+该发布只修正 publication lag，不启动 0.12.3 产品 backport/release。闭合以后仍须返回 CONTROL LOOP，重新审查
+M1 是否是当前最小合法 seam；consumer migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
+
+[Core 0.12.3 发布与公开读回事实](docs/239-core-v0.12.3-release-readback-facts.md)记录 maintenance
+backport PR #273、exact-tip 双门、受保护注释标签、四项非 Latest Release 资产，以及匿名 public Core 四格与
+Starter 0.2.0 双 Python 产品读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+首次敏感路径扫描的 12 项命中、其他 setup/harness failure 和后继独立 PASS 均保留原身份。该发布只同步已经
+形成的 release/readback 事实；闭合以后仍须返回 CONTROL LOOP 重审 W1，不能直接修改 workflow 或启动 Parse。
+
+[required Starter lane 迁移资格发布](docs/240-m10-required-starter-lane-migration-qualification-publication.md)
+记录 workflow-only candidate `ecc09bc...`、PR #275、ordinary merge `main@594f1b1...`、new exact-main
+Public CI 11/11 + Browser Smoke 1/1，以及 exact workflow、PR、run 与 public Core 0.12.3 asset 的 fresh anonymous
+status readback / reconciliation。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+W1 只把 required `Starter PASS/FAIL golden path` 的 public Core coordinate 从 0.12.2 迁移到已读回的 0.12.3；
+Python matrix 中 Starter / Authoring 的声明兼容性底线仍为 0.12.2。该发布闭合后必须返回 CONTROL LOOP 重新审查
+Parse private implementation authorization；它不自动授权 parser、重开 PR #243、选择 persistence 或启动 Fact / Coverage。
+
+[Parse private implementation 实现授权发布](docs/241-r1-parse-private-implementation-authorization-publication.md)
+从 `main@35502aa2f605e5654327f9df81d9da7fe81f23cf` 重新核对 frozen contract、文档 219–223、current
+runtime bytes、W1 与 retained failures。旧 doc219 matrix Artifact 的 source literal 输出编码损坏被保留为
+`EVIDENCE_TOOLING_ERROR`；fresh UTF-8 probe 的四格 decision projection 相同，execution-cell canonical report 与
+旧摘要逐字节相同，没有形成 product/feasibility 反例。本文只条件化发布 doc219 A–H 的 private implementation
+authority；它自己的 final bytes、original PR、受保护合入、新 exact-main 双门、四份 fresh installed-product
+readback 与 independent reconciliation 全部闭合前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是 target marker，runtime
+仍为 `NOT_STARTED / NOT_AUTHORIZED`。
+
+该授权 publication 合入后的第一次 exact-main Public CI 在 Python 3.10 `-O` combined service fixture 中硬退出；
+[文档 242](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)永久保留 `FAILURE / UNKNOWN`，并只用
+独立 PR #278 改善 test-only world / phase / cleanup observation。#278 与新 exact-main 双门、doc241 四份 fresh
+installed-product readback及 independent reconciliation 闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED` 才成为事实。
+
+private A–H 随后由 PR #279 一次性物化；original 11/11、ordinary merge
+`main@26f21b5049dc87c889862fbcef2a12e76aed697e`、new exact-main 11/11 + Browser Smoke 1/1 与五份匿名
+exact-SHA source readback均成立。[实现冻结候选](docs/243-r1-parse-private-implementation-freeze-candidate.md)经 PR #280、
+受保护合入、`main@cd4aabb38e0352a7df9e5222606dbb96f65135e5` 双门、三份 fresh installed-product readback 与
+independent reconciliation 取得资格。[最终冻结发布](docs/244-r1-parse-private-implementation-freeze-publication.md)
+完成自己的同等级最后门后，private implementation 已成为 `FROZEN` 当前事实。后继
+[Parse → Fact consumer correction 合同](docs/245-r1-parse-to-fact-consumer-correction-contract.md)经 PR #282、
+`main@3214586645c67156d5c498cbcd2ea5ed1a7d6b43` 双门、三份 fresh installed-product readback 与 independent
+reconciliation 取得 candidate 资格；[独立冻结发布](docs/246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)
+完成自己的最后门后，合同成为 `FROZEN` 当前事实。后继
+[private implementation 可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)
+从 exact main 重新确认：bounded private successor 在不向 Provider 暴露 raw source、不选择 persistence、不定义 Fact
+obligation universe 的前提下可行；该结论当前仍是 docs-only audit candidate，implementation、persistence 与 Coverage
+继续未获授权。
+
+完整状态、不可移动坐标和保留失败由[里程碑与文档索引](docs/milestones.md)保存。能力边界、候选触发条件
+以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
+[能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
+
+</details>
+
+## 公开证据与安全边界
+
+`Public CI` 和 `Browser Smoke` 提供平台对齐、双 Python、构建、真实 Chromium 与公开资产读回的快速
+基线。它们不能替代物理键盘、完整真实项目、受控宿主机资源停止线或清理读回；GitHub 绿灯不自动等于
+整个里程碑 `PASS`。
+
+VeriTrail 的安全边界同样是有界的：
+
+- 默认只接受显式回环目标，不读取浏览器 Profile，不持久化 Cookie、Authorization 或响应正文；
+- Plan、Evidence、报告与附件通过规范化 JSON、清单和 SHA-256 建立可复核关系；
+- M9/M10 只运行结构化、经预览摘要批准的可信本地命令，不接受 Shell 字符串；新版 Preview 还绑定
+  精确受保护源码状态，并在启动前复核，边界见[获批源码状态连续性维护合同](docs/168-approved-source-state-continuity-maintenance-contract.md)；
+- Windows Job Object、listener owner 与资源上限限制误杀和残留，但不构成恶意代码沙箱；
+- AI 可以提出关注候选、解释异常或建议补证，不能确认缺陷真值，也不能决定 `PASS / FAIL`。
+
+## 信任与认识论上限
+
+VeriTrail 擅长发现封存坐标之后的漂移、错绑、漏证据与规则不一致；它不能仅凭一条内部自洽的证据链
+证明最初事实真实，也不能裁定提出者的观点在终极意义上正确。
+
+```text
+Consistency != Authenticity != Truth
+Verification Correctness != Specification Correctness
+Not responsible for Truth != Not responsible for Uncertainty
+```
+
+现实若模糊、不完整、冲突或不可判，系统必须保留这种不确定性。精确边界见
+[产品定义](docs/00-product-brief.md)与[GitHub Evidence Plugin 合同](docs/78-github-evidence-plugin-contract.md)。
+简单说：**它防的是漂移，不是阴谋；它负责的是裁决秩序，不是真理本身。**
+
+## 系统家族与未来边界
+
+VeriTrail 不是把所有能力都吸进 Core 的“超级平台”。跨系统关系应通过稳定合同、不可变 Artifact 和
+可替换 adapter 建立：
+
+| 系统 / 轨道 | 负责 | 关系状态 |
+| --- | --- | --- |
+| [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
+| [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
+| Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
+| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support 0.2、private classifier 与 eligible operation projection / same-attempt gate A–G private implementation 已冻结；Parse fulfillment private A–H 与 Parse → Fact consumer correction 合同已冻结；consumer correction private implementation 可行性审计处于 candidate，implementation 仍未开始；持久化路线、公共 Artifact、Fact fulfillment 与 Coverage 未获授权 |
+| Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
+| Operations Evidence / O | 候选运行事实观察面 | O0 只记录问题与权威边界；没有插件、Provider、Schema 或动作权 |
+| Test Evidence / T | 候选测试事实观察面 | T0 只记录问题；测试选择、执行、重试与 fixture authority 仍为 `UNKNOWN` |
+
+这些关系是认知地图，不是当前集成声明。一个独立系统最多通过不可变 Artifact / Evidence adapter 接入
+VeriTrail；事件可以跨界，状态所有权、执行入口、凭据与 Verdict 权不能跨界。
+
+拆分也不由模块数量、业务名词或数据库数量机械决定。这里采用的原则是：**最小闭环内部允许与同一
+不变量一致的强耦合；闭环之间必须通过稳定合同强解耦。**边界未知时先建立可验证的最小闭环，等待真实
+反例暴露 state ownership、事务、失败恢复和独立生命周期压力。完整判据见
+[能力边界与系统认知地图](docs/114-capability-boundary-and-system-map.md)。
+
+## 发布坐标
+
+- 当前 Latest Core：[`v0.13.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0)，详见
+  [0.13.0 Release Notes](docs/103-v0.13.0-release-notes.md)与
+  [发布与公开读回事实](docs/106-core-v0.13.0-release-readback-facts.md)；
+- 历史维护坐标：`v0.12.0 / v0.12.1 / v0.12.2` 均不可移动；
+- GitHub Evidence Plugin：[`github-evidence-v0.1.0`](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0)，
+  为 non-Latest 独立 Release；
+- Starter 与 Authoring Skill：独立 `0.2.0` 坐标，并继续保持其 Core 0.12.x 兼容边界；
+- [Core 0.12.2 发布与公开读回事实](docs/76-core-v0.12.2-release-readback-facts.md)继续保存旧维护线的精确证据。
+
+已发布标签、资产和历史失败不得移动、重制或用后续绿灯覆盖。完整坐标与摘要见
+[里程碑与文档索引](docs/milestones.md)。
+
 ## 项目来源与协作
 
 VeriTrail 的方法来自受限单机上的真实工程实践：单变量验证因果、组合 Profile 覆盖交互、固定种子复现
@@ -1001,6 +1027,8 @@ VeriTrail 的方法来自受限单机上的真实工程实践：单变量验证�
 - 重要 milestone 或 release 退出前，按[仓库遗留物收口门禁](docs/hygiene.md)清理无 owner 的可重建残留；
 - 参与公开讨论与评审时，请遵守[社区行为准则](CODE_OF_CONDUCT.md)；
 - 安全问题不要公开披露，请按[安全策略](SECURITY.md)使用私下报告路径。
+
+</details>
 
 ## License
 
