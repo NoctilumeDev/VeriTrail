@@ -4326,3 +4326,36 @@ rejection。future consumer/protocol `/0.2` 只作为受审 successor boundary�
 zero accepted 保持 normal launch/FactSet 阻断；不选择 zero-member Fact-stage closure、receipt、persistence 或 Coverage。
 候选须独立完成 final local gates、original PR、protected merge、新 exact-main 双门、fresh product readback 与对账；
 随后仍需独立 freeze publication。合同冻结也不自动授权实现，必须重新回到 CONTROL LOOP。
+
+### R1 Fact projection universe / fulfillment 最小合同 0.1 独立冻结发布（条件目标）
+
+[PR #290](https://github.com/NoctilumeDev/VeriTrail/pull/290) final head
+`63f0f31028416587f7db91358485fae71e6a0af2` 已合入 `main@da11ca26eef6739c3fd7560fe29b67e2618f4d1a`。
+一个 commit、四文件、`+383/-2`；candidate / merge tree 同为 `05a0ae561ccec269368c1c5b230d03b946816f36`。
+original Public CI `38172220489`、exact-main Public CI `38174088676` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38174088675` attempt 1 / 1/1 SUCCESS。两条 CI 的 Review Attention 四格均 `473 reported / 471 passed / 2 skipped`，
+不把 skip 算作实际执行通过。
+
+fresh README/doc252/milestones 三份观察均 P1/P2 COMPLETE、Core PASS，independent reconciliation
+`ce57ba2d36b88795fb556669a69d438e94b09c910fef262a760e609bc8e0fec3` PASS，候选 closeout
+`144ca7521ec30fe9d3ad6e0ac808352f5ea31cd50a226deabb2a35329427bde5` 封存 95 份 terminal artifacts。
+首次 README marker 位于关闭的 details，P2 COMPLETE 而 occurrence=0；保留为 NON-QUALIFYING marker-selection setup
+finding，未启动正式观察。新 setup attempt 2 的三个 formal PASS 不覆盖该 finding，也不声称 README P2 读取隐藏状态。
+旧 ERROR/CANCELLED/UNKNOWN、setup warning 与 live-log snapshot correction 继续保留。
+
+[文档 253](253-r1-fact-projection-fulfillment-contract-freeze-publication.md)只条件化发布冻结目标：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CURRENT_STATE_AUDITED
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+自己的最终字节、本地门、原始 PR 门、受保护合入、新 exact-main 双门、fresh README/doc253/milestones observations 与
+independent reconciliation 全部闭合前，当前仍是 qualified contract candidate。doc252 full-file SHA-256 保持
+`074852c5579443fe14af3497cc19ea1c649097cf211258ab3ee0104ecb011d81`，不倒改其历史 candidate marker。
+本发布不改 runtime/tests/Schema/Profile/Policy/旧合同；完整 Fact projection/fulfillment 实现仍未开始、未授权。
+冻结形成新事实后返回 CONTROL LOOP，再审最小 private feasibility / authorization；persistence、Coverage、public
+carrier、Evidence/Bundle、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release 均未获得后继施工权。

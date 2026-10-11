@@ -3315,3 +3315,31 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 Schema/fixtures/contracts 与架构资产不变。doc252 的 local/original PR/merge/new-main 双门/fresh product readback/
 independent reconciliation 只取得 contract candidate history；还需独立 freeze publication，再回 CONTROL LOOP 审
 feasibility/implementation authorization。不得启动 runtime、public carrier、persistence、Coverage 或 CLAIM_FIDELITY。
+
+### R1 Fact projection universe / fulfillment 最小合同独立冻结发布（条件目标）
+
+doc252 候选已由 [PR #290](https://github.com/NoctilumeDev/VeriTrail/pull/290) final head
+`63f0f31028416587f7db91358485fae71e6a0af2` 合入 `main@da11ca26eef6739c3fd7560fe29b67e2618f4d1a`；
+受审与 merge tree 同为 `05a0ae561ccec269368c1c5b230d03b946816f36`。original Public CI `38172220489` 与
+exact-main Public CI `38174088676` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38174088675` attempt 1 /
+1/1 SUCCESS。fresh README/doc252/milestones observations 均 Core PASS，independent reconciliation
+`ce57ba2d36b88795fb556669a69d438e94b09c910fef262a760e609bc8e0fec3` PASS；候选资格只形成 qualified history。
+
+[文档 253](docs/253-r1-fact-projection-fulfillment-contract-freeze-publication.md)只认领独立 status publication：
+保留 doc252 全部字节与候选 marker，不改 frozen projection / Profile / Policy / public identity 或旧 consumer `/0.1`。
+自己的 local/original PR/protected merge/new exact-main dual gates/fresh README/doc253/milestones observations /
+independent reconciliation 全部闭合后，以下目标才生效：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CURRENT_STATE_AUDITED
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+此前仍为 qualified candidate，之后也不自动获得 feasibility 结论或 implementation authority。重新回 CONTROL LOOP
+读取 doc252 §13 与 current runtime，只审仍成立的最小后继问题。runtime、Schema、public carrier、persistence、Coverage、
+Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release 均不启动。
+候选 README marker-selection setup finding、旧 ERROR/CANCELLED/UNKNOWN 与其他失败历史保留；diagnostics 不取得
+formal qualification，最终核账机械枚举全部 retained observations，不写死错误数量，不跨 SHA 拼接资格。
