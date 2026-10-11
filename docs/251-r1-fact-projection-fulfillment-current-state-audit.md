@@ -134,6 +134,10 @@ policy digest，未交付 mapping payload。doc245 没承诺完整 MODULE 属性
 
 ## 6. 收窄后的后继问题
 
+current closure/request 保留完整 product；本轮不是信息丢失反例，也没有证明必须新增逐项 execution receipt。
+AST → Fact 可以属于 deterministic derivation；独立 total function 复算、完整输出核账与证明 Provider 实际逐项执行
+是不同要求。后继必须先裁决哪种事实足以成立 fulfillment，再判断是否需要额外 history carrier，不能先造 receipt。
+
 Fact seam 已经具备 qualified 上游，不再缺 AST carrier。最小候选应先明确：
 
 ```text
