@@ -1,0 +1,728 @@
+# 首页工程记录保留页
+
+> 来源：[README@c9a509a](https://github.com/NoctilumeDev/VeriTrail/blob/c9a509adfb06ebc2f398a11dc1bd4c64a59b84b0/README.md)。
+> 本页保留该候选首页迁出的工程记录、精确状态与文档入口。正文只调整相对链接，不改写历史事实。
+> 这是可追溯的历史投影，不是新的状态发布或施工授权；当前工程事实仍以冻结合同、发布记录与[里程碑索引](milestones.md)为准。
+
+[返回仓库首页](../README.md)
+
+- [平台插件与后继研究轨记录](#平台插件与后继研究轨记录)
+- [精确状态与施工记录](#精确状态与施工记录)
+- [原首页工程事实索引](#原首页工程事实索引)
+- [原首页表格状态投影](#原首页表格状态投影)
+
+## 平台插件与后继研究轨记录
+
+平台插件与后继研究轨保持独立：
+
+- GitHub Evidence Plugin `0.1.0` 已完成 P0–P4 的合同、Structured API、匿名 Public Render、同一
+  Evidence snapshot handoff、公开资产与下载读回；插件只观察 GitHub，不成为新的事实中心。
+- Review Attention 已冻结 R0、首个 Pattern Corpus 与 R1 合同。R1 首版只针对 Python 3.10 结构语义，
+  不外推成整个多语言仓库已经被理解；[payload 前置审计](123-r1-schema-payload-preflight-correction.md)
+  在零改动施工前发现并补齐 item key、frontier、Coverage 与 provenance identity 缺口，
+  [重新冻结发布](124-r1-schema-payload-preflight-refreeze-publication.md)完成后只允许从新 exact main
+  起草版本化 Schema、纯数据兼容 corpus 与规范摘要向量。[payload 候选](125-r1-schema-payload-freeze-candidate.md)
+  已经物化这些资产；其远端门、主线合入、exact-main 门与匿名读回由
+  [冻结发布](126-r1-schema-payload-freeze-publication.md)外部绑定。最后门成立后只解除独立运行实现合同
+  或首个最小切片的入口。[SourceSnapshot 运行合同](127-r1-source-snapshot-runtime-contract.md)已在
+  写代码前拆开单 Artifact 与 Derivation Manifest、acquisition safety budget 与后继 Policy budget；其
+  [冻结发布](128-r1-source-snapshot-runtime-contract-freeze-publication.md)完成最后门后，只解除该最小
+  实现入口。[SourceSnapshot 实现候选](129-r1-source-snapshot-implementation-freeze-candidate.md)
+  已从 exact Git object 建立 raw-path inventory、规范摘要与单文件 create-new publication；其
+  [冻结发布](130-r1-source-snapshot-freeze-publication.md)完成独立门禁与公开读回。当前只冻结这一
+  最小运行切片。[后继最小闭环审计](131-r1-post-snapshot-derivation-input-audit.md)进一步确认 FactSet
+  不能脱离 DerivationEvidence 与完整 Manifest 单独发布，因此选择不产生新 Artifact 的
+  [Derivation Input Binding 合同](132-r1-derivation-input-binding-contract.md)。其
+  [冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)完成候选门禁、受保护主线、
+  exact-main 门与匿名读回后，只解除这一窄边界的实现停止线。[实现与冻结候选事实](134-r1-derivation-input-implementation-freeze-candidate.md)
+  已把三份 canonical Artifact、exact Git bytes 与 copy-owned runtime value 连续绑定，并以二十二格矩阵、
+  双 Python/`-O`、受保护主线和 exact-main 门禁复验；[最终冻结发布](135-r1-derivation-input-freeze-publication.md)
+  外部绑定候选门禁、合入、exact-main 门与匿名读回。最后门成立后只冻结 Input Binding。后继
+  [前置审计](136-r1-derivation-attempt-and-fact-provenance-audit.md)没有直接启动 parser，而是先暴露
+  request provenance、Provider applicability、三类 budget 与双向 Fact provenance 接缝；
+  [最小运行合同候选](137-r1-derivation-attempt-and-fact-provenance-contract.md)只冻结显式单 Provider、
+  shared budget context、application-owned Fact identity 与 non-published phase result。后继
+  [Schema 修正审计](139-r1-derivation-evidence-schema-correction-audit.md)确认旧 `0.1` 公共 Schema 不能
+  原位改写；[最小修正合同](140-r1-derivation-evidence-schema-correction-contract.md)只为
+  DerivationEvidence 建立自描述的 `0.1.1` 补丁身份、两类 budget diagnostic 与非成功 reported-ID 空集规则；
+  [合同冻结发布](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)完成自己的最后门后，
+  只授权该 Schema/corpus correction；其 bytes/corpus 已由[最终冻结发布](143-r1-derivation-evidence-schema-correction-freeze-publication.md)
+  独立闭合。随后 [Budget Primitive 前置审计](144-r1-derivation-budget-primitive-precontract-audit.md)
+  用真实 Windows Job 与 staging 探针拆开 hard containment、正向原因归属、absolute acceptance deadline 与
+  cleanup release envelope；[最小合同候选](145-r1-derivation-budget-primitive-contract.md)只修正这条
+  authority 接缝；[合同冻结发布](146-r1-derivation-budget-primitive-contract-freeze-publication.md)外部绑定
+  候选门禁、exact-main 门、匿名 raw/product 读回与第二轮系统俯瞰。它自己的最后门全部成立后，只允许
+  实现 budget primitive 与 `BP-001..016`。[实现冻结候选](147-r1-derivation-budget-primitive-implementation-freeze-candidate.md)
+  已记录独立 Review Attention 包、absolute deadline、single stop latch、inclusive artifact reservation、
+  Windows Job containment/positive attribution、首次远端测试模型红灯及新 head 11/11；其候选门、受保护主线、
+  exact-main 门与匿名已安装产品读回由[最终冻结发布](148-r1-derivation-budget-primitive-freeze-publication.md)
+  外部绑定。后继[系统审计](149-r1-derivation-execution-cell-system-audit.md)确认 Budget Primitive 不能被
+  直接拼成 Provider/Fact runtime：execution-cell 覆盖、terminal envelope、context invalidation 与未归因
+  worker termination 仍需一个更窄的合同闭环。[Execution Cell / Terminal Envelope 合同候选](150-r1-derivation-execution-cell-terminal-envelope-contract.md)
+  现已把 controller/application worker/Provider authority、具体 cell preparation 与 attempt admission、bounded
+  single-terminal framing、closed test binding、未知终止的 epistemic fallback 及不可恢复 context revocation
+  收窄为 docs-only 候选；[合同冻结发布](151-r1-derivation-execution-cell-contract-freeze-publication.md)
+  外部绑定候选的 PR、exact-main 门、匿名产品读回与冻结前第二轮系统俯瞰。它自己的最后门全部成立后，只允许
+  实现 closed test Provider / non-published Fact phase；真实 parser、Relations、Slices、Coverage 与完整 Manifest
+  继续未启动。[实现冻结候选](152-r1-derivation-execution-cell-implementation-freeze-candidate.md)已记录
+  private execution-cell、29 项协议/运行义务、PR #132、exact-main 双门、匿名逐字节读回，以及被作废后
+  重建的 clean-wheel provenance 证据。[实现冻结发布](153-r1-derivation-execution-cell-freeze-publication.md)
+  已外部绑定候选的 PR、exact-main 双门与三次匿名 installed-product readback；它自己的最后门全部成立后，
+  Execution Cell 才成为 frozen。后继[Fact Admission 与 DerivationEvidence Closure 系统审计](154-r1-fact-evidence-closure-system-audit.md)
+  已从新 exact main 拆开 application-canonical Fact、FactSet admission、Evidence reported IDs 与公共发布资格，
+  并确认 non-budget diagnostic placement 和 terminal DIAGNOSTIC publication budget 仍是合同缺口。后继
+  [Fact Admission / DerivationEvidence Closure 最小合同候选](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)
+  已把四层 Fact membership、phase/final reported-ID、canonical diagnostic placement 以及 normal/diagnostic/
+  cleanup 三种能力拆开。只有拥有合法 phase result、且没有预算 stop 的 execution-cell non-success，才可能取得
+  future DIAGNOSTIC eligibility。候选经 PR #136、exact-main 双门与三次 fresh anonymous installed-product readback
+  闭合；[独立冻结发布](156-r1-fact-evidence-closure-contract-freeze-publication.md)又完成第二轮系统审计，
+  没有发现新 blocker。该发布自己的最后门全部成立后，只允许实现 private integrated controller、non-published
+  Fact admission/Evidence projection 与 FA-001..024；output path、publisher、真实 parser、Relation、Slice、
+  Coverage 与完整 Manifest 继续未启动。[实现冻结候选](157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
+  已记录该 private closure、FA-001..024、PR #140、独立 Public CI 外层 timeout capacity 修正、exact-main
+  双门、匿名源码字节读回与 clean-wheel installed-product 证据。候选又经 PR #142、候选 exact-main 双门及
+  三次 R1 专属 anonymous installed-product readback 闭合；最初误用 P4 acceptance label 的三份结果已作废，
+  没有进入冻结证据。[实现冻结发布](158-r1-fact-evidence-closure-freeze-publication.md)只外部绑定这些
+  已成立事实；该发布自己的门、合入、exact-main 双门与匿名产品读回全部成立后，Fact/Evidence closure 才成为
+  frozen。后继[下一闭环系统审计](159-r1-post-fact-evidence-next-closure-system-audit.md)比较
+  DIAGNOSTIC publisher、真实 parser、multi-Provider Fact composition、Relation、Slice、Coverage 与 COMPLETE
+  publisher；其最后门成立后，只选择 multi-Provider applicability / Fact composition 作为下一份 docs-only
+  合同。[合同候选](160-r1-multi-provider-applicability-and-fact-composition-contract.md)进一步把
+  requirement/applicability/descriptor/binding/run、capability-level requiredness、shared BudgetContext、terminal
+  join、same-ID provenance merge 与 same-subject conflict 钉死为 private closed-test 边界。它没有实现授权，
+  也不允许直接开始 public Provider authorization、publisher、真实 parser、Relation、Slice、Coverage 或完整
+  Manifest。[合同冻结发布](161-r1-multi-provider-fact-composition-contract-freeze-publication.md)外部绑定
+  PR #145、candidate exact-main 双门与三次 R1 专属 anonymous installed-product readback；它自己的最后门全部
+  成立后，只允许 private applicability/composition 与 `MP-001..028`，其他后继对象继续未授权。
+  [实现冻结候选](162-r1-multi-provider-fact-composition-implementation-freeze-candidate.md)记录该 private
+  implementation、固定 compatibility vector、PR #147、implementation exact-main 双门与七项匿名源码字节读回；
+  本候选自己的门、合入、exact-main 门、匿名产品读回及后继独立最终状态发布成立前，不得写成 frozen。
+  [实现冻结发布](163-r1-multi-provider-fact-composition-freeze-publication.md)外部绑定 PR #148、候选
+  exact-main 双门与三次专属 anonymous installed-product readback；该发布自己的最后门全部成立后，当前闭环
+  才成为 frozen。后继[系统级审计](164-r1-post-composition-next-closure-system-audit.md)确认当前 runtime
+  只允许 Provider 报告 Facts，而完整 fixture 的 Relation provenance、`reported_relation_ids` 与 composite
+  FactSet-dependent import resolution 尚无 producer authority 闭环；因此下一份合同只选择 Relation derivation
+  authority、exact FactSet operand continuity 与 minimum upstream eligibility gate，不预先包办完整 Relation
+  算法、conflict/UNKNOWN 账册或 admission。审计不授权 Schema 或 runtime；facts-only real parser 可作为独立
+  后继，但不得借机固定 Relation authority，publisher、Slice、Coverage 与完整 Manifest 也仍未授权。
+  [Relation authority / operand continuity 合同候选](165-r1-relation-derivation-authority-and-operand-continuity-contract.md)
+  从文档 164 最后门成立后的 exact main 独立起草：首个 closed proof 候选选择 composed FactSet 后的 distinct
+  Relation capability/ProviderRun，Fact child 不回填 Relation 报告，application 不自造来源；relation-only
+  operands 必须版本化绑定 `fact_set_digest`。新 closed profile 须区分 Fact-stage private join 与 Relation 后的
+  final overall，避免 required Relation run 与 FactSet 相互等待；全程保留同一个共享 BudgetContext。首版 conflict-bearing FactSet、
+  optional-source gap 与 absent normal FactSet 不启动 Relation run，保留 typed upstream truth；完整 Relation
+  算法、import resolution、RelationSet admission、Schema/runtime correction 与后继 publisher 仍未授权。
+  [合同冻结发布](170-r1-relation-derivation-contract-freeze-publication.md)绑定候选 PR #151、候选 exact-main
+  双门与三次专属 anonymous installed-product readback，并从当前维护基线重新复核 source-state 与 GitHub
+  workflow/attempt authority。它自己的最后门全部成立后，只允许 relation-only `/0.2` identity、phase join、
+  distinct Relation cell、保守 upstream gate、同一个 live BudgetContext 与 `RD-001..017` 的 private closed
+  implementation；完整 Relation 算法、RelationSet、publisher、Slice 与 Coverage 继续未授权。
+  [实现冻结候选](171-r1-relation-derivation-implementation-freeze-candidate.md)记录该 private implementation、
+  fixed identity vector、PR #156、implementation exact-main 双门与十一项匿名源码字节读回。它只证明一条
+  Relation candidate 可以在 exact FactSet、真实 Provider identity 与共享预算下诚实存在；本候选自己的门、
+  合入、exact-main 门、匿名产品读回及后继独立最终状态发布成立前，不得写成 frozen，也不得进入 RelationSet、
+  Slice 或 Coverage。[实现冻结发布](172-r1-relation-derivation-freeze-publication.md)外部绑定 PR #157、
+  candidate exact-main 双门、三次正式 anonymous installed-product readback 与保留的首次 README
+  `PublicRenderNetworkError`。该发布自己的门、合入、exact-main 双门与匿名产品读回全部成立后，Relation
+  第一刀才成为 frozen；后继仍须先做系统级俯瞰，再选择一个最小合同闭环。
+- [Declared Relation Observation Domain / Composition Qualification 系统审计](173-r1-declared-relation-observation-domain-and-composition-qualification-system-audit.md)
+  在冻结 runtime 上复现：Relation ProviderRun 可以 `COMPLETED` 且只报告 `LEXICAL_CONTAINS`，同时 Profile
+  仍列有 `IMPORT_TARGET_LITERAL`。因此 Provider terminal、required source-set terminal 与 bounded observation
+  domain qualification 必须分开；下一问题面先关闭 source responsibility、successful-empty 边界与 multi-source
+  composition qualification，不直接开始 RelationSet admission、完整 import resolution、Slice 或 Coverage。
+- [Declared Relation Observation Domain / Composition Qualification 最小合同候选](175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md)
+  从 exact FactSet 机械建立 Fact-backed observation items，在 Provider 执行前固定 A/B exact responsibility，
+  并用受冻结 profile semantics 约束的 digest 绑定 denominator 与责任规则。Provider 必须为每个 assigned item
+  经 private relation-cell terminal 另报显式 outcome；application 对 outcome 与 candidate 做双向对账，不能从
+  candidate 缺席推导负结论。
+  因此 responsibility definition、Provider terminal、逐 item 履责、required source-set terminal、item closure 与
+  candidate agreement 分开。首个 proof 使用两个 required closed sources：A 观察 lexical items，B 观察 lexical
+  与 import-literal items；same-ID 只合并 provenance，same-subject 分歧保留 private conflict。`QUALIFIED` 仍没有
+  RelationSet admission 或 publication
+  authority，现有公共 Schema 也不能凭 shape 证明 qualification。
+  [合同冻结发布](176-r1-relation-observation-composition-qualification-contract-freeze-publication.md)绑定
+  PR #160 的正式首败、独立 PR #161 fixture maintenance、重新资格化 head、候选 exact-main 双门与三次专属
+  anonymous installed-product readback。它自己的最后门全部成立后，只允许文档 175 A–H 的 private closed
+  implementation；RelationSet、公共 Schema、publisher、Slice 与 Coverage 继续未授权。
+- [Relation Observation / Composition Qualification 实现冻结候选](178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)
+  记录文档 175 A–H 的 private closed proof、PR #165 两条保留首败、独立 PR #166 CI 夹具维护、重新资格化
+  implementation head、合入后的 exact-main 11/11 与 Browser Smoke 1/1，以及十一份变更文件的匿名 exact-SHA
+  字节读回。当前只能是 `IMPLEMENTED / FREEZE_CANDIDATE`；本文自己的门、合入、fresh anonymous
+  installed-product readback 与后继独立最终状态发布全部成立前，不得写成 frozen，也不得开始 RelationSet、
+  公共 Schema、Slice 或 Coverage。
+- [Relation Observation / Composition Qualification 实现冻结发布](179-r1-relation-observation-composition-qualification-freeze-publication.md)
+  外部绑定 PR #167、candidate exact-main 双门、三次互不复用的 anonymous installed-product readback 与
+  canonical manifest。README wrapper 的后处理错误和文档 178 首次 anonymous API quota 首败均独立保留；
+  后继成功不改写它们。该发布自己的门、合入、新 exact-main 双门与三次匿名读回全部成立后，private
+  qualification closure 才成为 frozen；下一步仍须先做 system audit，不直接开始 RelationSet。
+- [RelationSet Admission / Qualification Evidence Binding 系统审计](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
+  从 exact main 构造双 Python H1/H2/H3 identity matrix：两个独立合格 attempt 保留相同
+  `relation_set_digest`、不同 provenance file bytes；合格历史与缺一个 outcome 的未合格历史又可保留相同 raw
+  candidate projection。现有 private application 正确拒绝后者，但当前 RelationSet、Evidence 0.1.1 与
+  Manifest 不能让完整 Bundle 对外复核 explicit admission witness。审计只选择 RelationSet admission /
+  admission witness / public qualification binding 这一问题面，不冻结 witness 的 public encoding、字段或代码；
+  RelationSet、corrected Evidence、Slice 与 Coverage 仍未获实现授权。
+- [RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
+  从审计闭合后的 exact main 分离 RelationSet semantics、provenance bytes、qualification 与 admission authority。
+  候选保持 RelationSet 0.1 与八文件 Manifest 0.1 不变，选择 versioned DerivationEvidence 0.2 作为 witness
+  carrier；deterministic application 仍拥有 admission rule 与 witness construction，Evidence 只承载，Manifest
+  只绑定。合同只冻结 private admission、可复算 witness 与 public binding shape；实现授权严格限于文档 183
+  的 A–F private closed proof，publisher、Slice、Coverage 与公共 Bundle 写入仍未授权。
+- [RelationSet Admission / Public Qualification Binding 合同冻结发布](185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)
+  保留 PR #171 的 `UNKNOWN` 首败、独立 PR #172 测试观察维护、新 source state 的两次同-head 11/11、
+  candidate exact-main 双门、首次 README 匿名配额首败、三份 fresh paired readback 与能力地图 render-only
+  readback。该发布自己的门、合入和 fresh exact-main readback 全部成立后，合同才成为 frozen 并只授权 A–F；
+  `RelationSet 0.1`、八文件 Manifest、架构 DOT/SVG 与所有历史失败均不被改写。
+- [RelationSet Admission / Public Qualification Binding 实现冻结候选](186-r1-relation-set-admission-and-public-qualification-binding-implementation-freeze-candidate.md)
+  记录文档 183 A–F 的 private admission、explicit witness、Evidence 0.2 Schema/corpus/projection、PR #174、
+  implementation exact-main 11/11 与 Browser Smoke 1/1，以及十五份变更文件的匿名 exact-SHA 字节读回。
+  Evidence projection 只接受已经 admission 的 private state，不能从 raw candidates 或 caller witness 补资格；
+  conflict 保留全部候选且没有 winner。候选随后经 PR #175 原始 11/11、受保护主线合入、exact-main 双门与
+  README/本文/milestones 三份互不复用的 fresh anonymous installed-product readback 闭合；候选历史状态仍不被
+  后继冻结发布改写。
+- [RelationSet Admission / Public Qualification Binding 实现冻结发布](187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)
+  发布 PR #174 implementation、PR #175 docs-only candidate、exact-main 门、十五文件 source identity 与三份
+  installed-product readback 的完整因果链。冻结只覆盖 private admission、explicit witness 与 Evidence 0.2
+  binding；publisher、公共 Bundle、Manifest role 扩张、Slice、Coverage 与 Attention 仍未获授权。本文自己的
+  门、合入、新 exact-main 双门与三份 fresh readback 全部成立后，下一步只能做 post-admission system audit。
+- [Post-Admission ReviewSlice Input / Obligation Closure 系统审计](188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)
+  从 exact admission-freeze main 证明两个独立缺口：Coverage 可以为不存在的 Slice 自报 completed，也可以与
+  SliceSet 一起把 Policy+FactSet 明确存在的 anchor/spec denominator 缩为空后继续自洽地声称 `COMPLETE`。
+  审计同时确认 Slice semantic identity 可以跨合法 attempt 复用，但 execution eligibility 必须从 exact owned
+  admission history 继续，不能靠 raw RelationSet 或 digest 继承。下一问题面只到 admitted-graph input 与
+  anchor/spec obligation closure；BFS、SliceSet、Coverage、publisher 与 Schema 修改均未开始。
+- [ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 合同](189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
+  合同只定义 exact DerivationInputSet、qualification history、admitted RelationSet 与 same-attempt live
+  continuation 的输入闭包，以及不可缩小的 anchor/spec domain、逐项 outcome 和 private reconciliation。
+  semantic domain/Slice identity 可以跨合法 attempt 复用，execution closure receipt 不能复用；实现授权只覆盖
+  文档 189 A–H 的 private closed proof，Schema、ReviewSliceSet、CoverageLedger、publisher 与公共 Bundle 仍未授权。
+- [ReviewSlice Input / Obligation Closure 合同冻结发布](190-r1-review-slice-input-obligation-closure-contract-freeze-publication.md)
+  保存 PR #179 original 11/11、candidate exact-main 双门、README/文档 189/milestones 三份独立 anonymous
+  installed-product readback 与 canonical manifest。该发布自己的门、合入、新 exact-main 双门及 fresh readback
+  全部成立后，合同才成为 frozen 并只授权 A–H；BFS 产品化、公共 Schema、SliceSet、Coverage 与 publisher
+  不因合同冻结自动获得资格。
+- [Post-Slice-Input Closure / Slice-Coverage Qualification 系统审计](192-r1-post-slice-input-closure-slice-coverage-qualification-system-audit.md)
+  从 A–H exact-main verified 状态证明两个新边界：相同 Slice semantics 可以来自不同 attempt closure，公共
+  content identity 不能继承履责权威；Schema-valid 且逐阶段自洽的 Coverage 仍可与 exact Snapshot 及相邻
+  stage 矛盾。下一问题面因此收窄为 ReviewSliceSet semantic projection eligibility、七阶段 Coverage
+  composition qualification 与 public closure binding。首次合入后的 exact-main Public CI 保留 Python 3.13
+  Browser 业务失败分类漂移；该正式首败与 `UNKNOWN` 根因继续保存。独立 test-only observation correction
+  随后在新的 source state 完成原始 PR 门、受保护合入与 exact-main 双门，因此审计现可发布为
+  `PRECONTRACT_AUDITED`；后继合同、Schema、runtime、publisher 与公共 Bundle 仍未开始。
+- [Fact / Parse Observation Fulfillment / Coverage Prerequisite 系统审计](194-r1-fact-parse-observation-fulfillment-coverage-prerequisite-system-audit.md)
+  从 current exact main 实际证明：四个进入 `supported_paths` 的 candidate parse-unit paths、两个 required
+  `COMPLETED` ProviderRuns 仍可只形成一个 path 的 Fact，并正常取得 FactSet continuation。该 private 字段
+  不证明 encoding/syntax/parse 已完成；该世界符合既有 private test-provider 合同，却不能
+  支持 `PARSE / FACT_DERIVATION` 的 authoritative Coverage。public SliceSet/Coverage seam 继续存在，但完整
+  七阶段合同必须先等待 Fact/Parse observation domain 与 fulfillment qualification；本文仍是 docs-only audit
+  candidate，不授权 parser、Schema、runtime 或 publisher。
+- [Language Support / Parse / Fact Fulfillment 问题边界审计](195-r1-language-support-parse-fact-fulfillment-problem-boundary-audit.md)
+  以三个单变量世界进一步证明：进入 current request 不等于语言支持分类，语言支持不等于 parse outcome，
+  成功 AST 也不等于 Fact projection 已履责。三层 denominator 分别来自 exact in-scope inventory、合法 support
+  outcomes 与成功 AST；它们可以共享生命周期词汇，却不能先假定共享 domain construction、authority owner
+  或一个通用 receipt。本文仍是 docs-only candidate，不选择合同、parser、AST carrier、Schema 或 runtime。
+- [Language Support Qualification Authority 问题审计](196-r1-language-support-qualification-authority-problem-audit.md)
+  单独复核 `LANGUAGE_SUPPORT` 后确认：denominator 来自 Snapshot inventory 与 sealed Policy 的 exact `IN_SCOPE`
+  join；Profile 定义支持规则，Provider 不拥有该 authority。六个 exact-input world 证明 frozen inputs 已保留机械
+  分类所需 live 数据，而 current `supported_paths` 只是 positive structural projection。total function 尚未冻结；
+  same-attempt 可重算与 public/offline 可复核并不相同，其派生 result 是否持久化仍待 precontract，不能预设为
+  execution receipt。
+- [Language Support Qualification 最小合同前置审计](197-r1-language-support-qualification-precontract-audit.md)
+  从 exact inputs 与 Python 3.10 encoding semantics 收敛下一合同边界：path-only 不能独立承担 classification
+  identity；encoding detection 与 whole-source decode 必须分开；多个适用失败须形成完整 canonical reason set；
+  `UNSUPPORTED_SYNTAX_VERSION` 只属于 Parse。每个 exact denominator member 必须恰好闭合一次，而 semantic
+  reuse 不继承 live attempt authority。derived projection 是否需要持久化继续保持 OPEN；本文不发布合同、
+  carrier、Schema 或 runtime。PR #206 的正式失败、PR #207 的独立 test-support maintenance 与 PR #208 的
+  重新资格化保持独立；新 exact main 双门闭合后，该审计现为 `PRECONTRACT_AUDITED` 历史。
+- [Language Support Qualification 最小合同 0.1](198-r1-language-support-qualification-contract.md)
+  从 `main@de4eee7e953a0b95d52b973bee35a033e3901254` 冻结 deterministic semantic function：exact
+  inventory/Policy/Profile/function payload、Python 3.10 encoding detection + whole-source decode、predicate
+  applicability、完整 reason set、stage ownership、exactly-one closure 与 same-attempt continuation 分离。
+  persistence 仍是 non-decision；该合同不创建 carrier、Schema、classifier、Parse、Fact 或 Coverage runtime。
+- [Language Support Qualification 合同冻结发布](199-r1-language-support-qualification-contract-freeze-publication.md)
+  保存 #209 source qualification、README 首轮匿名限流 ERROR 与三个后继正式 PASS；冻结目标仅在本发布
+  自己的 PR、受保护合入、exact-main 双门与 fresh readback 全部成立后生效。合同冻结不授予实现授权。
+- [Language Support Qualification private implementation 可行性审计](200-r1-language-support-private-implementation-feasibility-audit.md)
+  证明 ambient codec registry 没有 0.1 rule authority，且完整 frozen-known decoder surface 超出当前最小
+  implementation boundary；100,000-world terminal equality 只作 projection witness，不授权静默重排合同。
+- [Language Support codec-conformance 修正前置审计](201-r1-language-support-codec-conformance-correction-precontract-audit.md)
+  以四类世界的全称 case partition 选择显式 function version bump，并保留 invalid harness 与 `utf.8` resolver
+  counterexample；只授权后继起草 0.2 修正合同，不修改 0.1 或开始 runtime。
+- [Language Support codec-conformance 修正合同 0.2](202-r1-language-support-codec-conformance-correction-contract.md)
+  保持 0.1 为 frozen historical identity，以新 function identity 冻结 exact Profile compatibility、accepted UTF-8
+  closed resolver、non-accepted early rejection 与 strict accepted-source decode；不授权实现或选择 persistence。
+- [Language Support codec-conformance 修正合同 0.2 冻结发布](203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)
+  保存 #214 source qualification、三份 fresh installed-product PASS 与独立 Core/source-byte reconciliation；0.2 frozen
+  target 仅在本发布自己的 PR、合入、exact-main 双门与 final readback 全部成立后生效。
+- [Language Support private classifier 实现授权审计](204-r1-language-support-private-classifier-implementation-authorization-audit.md)
+  从已冻结的 0.2 exact world 只条件化授权 private deterministic classifier；Parse request / execution-cell 接线、
+  live continuation、persistence、public carrier、Fact 与 Coverage 均须另行申请 authority。
+- [Language Support private classifier 实现冻结候选](205-r1-language-support-private-classifier-implementation-freeze-candidate.md)
+  记录 PR #217 的 private implementation、local/remote gates 与匿名 exact-SHA source readback；其自身门和后继独立
+  最终状态发布闭合前，只能写成 `IMPLEMENTED / FREEZE_CANDIDATE`。
+- [Language Support private classifier 实现冻结发布](206-r1-language-support-private-classifier-implementation-freeze-publication.md)
+  保存 implementation/candidate 两条独立资格链、fresh installed-product readback 与最终 reconciliation；其自身
+  original PR、合入、exact-main 双门和 final readback 全部闭合后，private classifier 才成为 `FROZEN`。
+- [Language Support eligible-only operation projection / same-attempt gate 前合同审计](207-r1-language-support-eligible-operation-projection-precontract-audit.md)
+  以六个 world 和四格逐字节一致证明 current Fact/Relation source-body requests 仍可向 Provider 暴露 unsupported 或
+  out-of-scope bytes。审计确认 original `BudgetContext / AttemptEligibility` 可作为 same-attempt substrate，但三个
+  frozen request protocol 都不能静默承载 eligible-only cardinality；本文只授权后继起草 docs-only 最小合同。
+- [Language Support eligible operation projection / same-attempt gate 最小合同 0.1](208-r1-language-support-eligible-operation-projection-contract.md)
+  把 exact classifier eligibility 收敛成 provider-bound operation projection，并为 Fact、Relation derivation 与 Relation
+  observation 分别 version wire/operands identity；每个 Provider-visible body set 必须与 stage operation denominator
+  恰好相等。semantic classification/projection 不继承 live authority，多个合法 child 各自 one-shot claim。empty
+  projection 继续按既有 applicability 真实运行 empty-body child，却不生成 Parse/Coverage closure。候选资格已经闭合；
+  runtime 仍须等待独立冻结发布最后门。
+- [Language Support eligible operation projection / same-attempt gate 合同冻结发布](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
+  保存 #221 source qualification、三份 fresh installed-product PASS、四份 exact-SHA raw bytes 与 independent Core
+  reconciliation；frozen / implementation-allowed target 只有在本发布自己的 PR、合入、new exact-main 双门和 final
+  readback 全部闭合后生效，persistence、Parse/Fact fulfillment 与 public carrier 继续未获授权。
+- [Language Support eligible operation projection / same-attempt gate 实现冻结候选](210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
+  记录 #223–#229 的 A–G private implementation、各自 original PR / exact-main 双门与最终四格 hardening；其自身
+  资格链和后继独立最终状态发布闭合前，只能写成 `IMPLEMENTED / EXACT_MAIN_VERIFIED / FREEZE_CANDIDATE`。
+- [Language Support eligible operation projection / same-attempt gate 实现冻结发布](211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+  保存 #230 候选资格、三份 fresh installed-product PASS、四份 exact-SHA raw bytes 与 independent Core
+  reconciliation；private implementation frozen target 只有在本发布自己的 PR、合入、new exact-main 双门和
+  final readback 全部闭合后生效。其 exact-main Public CI `36343474761` 正式失败，因此 target 没有生效。
+- [Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+  保留文档 211 的 exact-main FAILURE，记录 #232 test-support maintenance 的 original PR、受保护合入与新
+  exact-main 双门，并以新 source identity 重新发布同一 frozen target；本发布自己的 original PR、合入、new
+  exact-main 双门、三份 fresh readback 与 independent reconciliation 已闭合，因此 private implementation
+  `FROZEN` 已生效。两次 milestones path-boundary 正式 `ERROR` 仍永久保留。
+- [Parse fulfillment authority 问题审计](213-r1-parse-fulfillment-authority-problem-audit.md)
+  从 frozen exact operation projection 重新审查下一 seam，以 valid / syntax-error paired world 证明 Provider
+  `COMPLETED`、MODULE Fact 与 normal continuation 都不能证明逐项 parser 执行。本文只发布 problem-audit
+  candidate；Parse precontract、runtime、AST carrier、Fact fulfillment、persistence 与 Coverage 尚未获授权。
+- [Parse fulfillment 最小合同前置审计](214-r1-parse-fulfillment-precontract-audit.md)
+  从 doc213 qualified history 审计 denominator、versioned parser semantics、三层 terminality、reason authority、
+  same-attempt binding 与 Fact consumer boundary。本文只发布 precontract-audit candidate；合同、parser、AST
+  carrier、Fact fulfillment、persistence 与 Coverage 仍未获授权。
+- [Parse → Fact consumer projection 前置资格审计](215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
+  证明 current Fact source-body operation set 仍等于全部 Language Support eligible subjects，不能静默继承为
+  post-Parse consumer authority；本文只选择更早 prerequisite，不修改历史合同或 runtime。
+- [Parse product → Fact consumer binding 最小前合同审计](216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+  区分 accepted membership、exact product binding 与可执行 product-use authority，拒绝 accepted-only、echo-only、
+  cross-attempt 与 per-Provider Parse truth；本文仍不冻结 Parse 或 Fact consumer correction contract。
+- [M10 Browser 业务失败分类首败诊断覆盖修正](193-m10-browser-business-failure-observation-correction.md)
+  保留 PR #200 exact-main 的 `BROWSER_HARD_FAILURE -> COLLECTOR_ERROR` 正式首败与 `UNKNOWN` 根因，只把
+  既有 transparent private error-type tracing 接到该失败 world。修正已独立资格化；它不修改产品行为，也不
+  声称修复或解释旧 collector 首败。
+- Q0 只冻结 Verification Scheduling 的身份与权威边界。Q 缺失或卸载时必须退回完整串行验证，
+  Verification semantics 不得变化。
+
+## 精确状态与施工记录
+
+| 轨道 / 产品 | 职责 | 当前事实 |
+| --- | --- | --- |
+| Core / M | 计划、证据、运行、裁决与不可变 Bundle | `v0.13.0 RELEASED / MAINTENANCE_FROZEN`；M0–M14 已冻结 |
+| Entry / E | Starter 与 Authoring Skill | `0.2.0 RELEASED`；只生成并校验草案 |
+| Platform / P | GitHub API 与 Public Render Evidence | `P4_GITHUB_EVIDENCE_0.1.0_RELEASED / P4_FROZEN` |
+| Review / R | 确定性源码事实、语义切片与未来注意力提案 | `R1_RELATION_DERIVATION_FROZEN / R1_RELATION_OBSERVATION_COMPOSITION_QUALIFICATION_FROZEN / R1_RELATION_SET_ADMISSION_EVIDENCE_BINDING_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_CONTRACT_FROZEN / R1_REVIEW_SLICE_INPUT_OBLIGATION_CLOSURE_PRIVATE_IMPLEMENTATION_EXACT_MAIN_VERIFIED / R1_REVIEW_SLICE_INPUT_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_POST_SLICE_INPUT_OBLIGATION_CLOSURE_SLICE_COVERAGE_QUALIFICATION_PRECONTRACT_AUDITED / R1_FACT_PARSE_OBSERVATION_FULFILLMENT_COVERAGE_PREREQUISITE_AUDIT_CANDIDATE / R1_LANGUAGE_PARSE_FACT_FULFILLMENT_PROBLEM_BOUNDARY_AUDIT_CANDIDATE / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CODEC_CONFORMANCE_CORRECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_QUALIFICATION_CONTRACT_0_2_FROZEN / R1_LANGUAGE_SUPPORT_QUALIFICATION_PRIVATE_CLASSIFIER_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRECONTRACT_AUDITED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_CONTRACT_FROZEN / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_IMPLEMENTED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_STAGES_A_B_C_D_E_F_G_EXACT_MAIN_VERIFIED / R1_LANGUAGE_SUPPORT_PARSE_GATE_PROJECTION_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_FULFILLMENT_AUTHORITY_PROBLEM_AUDITED / R1_PARSE_FULFILLMENT_PRECONTRACT_AUDITED / R1_PARSE_TO_FACT_CONSUMER_PROJECTION_PREREQUISITE_AUDITED / R1_PARSE_PRODUCT_FACT_CONSUMER_BINDING_PRECONTRACT_AUDITED / R1_PARSE_FULFILLMENT_CONTRACT_FROZEN / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_IMPLEMENTED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_STAGES_A_B_C_D_E_F_G_H_EXACT_MAIN_VERIFIED / R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_CONTRACT_FROZEN / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_PRIVATE_IMPLEMENTATION_ALLOWED / R1_PARSE_TO_FACT_CONSUMER_CORRECTION_IMPLEMENTATION_NOT_STARTED / R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN / R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED / R1_RELATION_SET_SLICE_COVERAGE_IMPLEMENTATION_NOT_STARTED` |
+| Quick / Q | 验证调度与 Evidence 安全复用的候选边界 | `Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY` |
+| Operations Evidence / O | 运行与系统状态的候选只读观察面 | `O0_OPERATIONS_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
+| Test Evidence / T | 测试发现、执行与报告身份的候选只读观察面 | `T0_TEST_EVIDENCE_CANDIDATE_DIRECTION / NO_IMPLEMENTATION_AUTHORITY / NO_RUNTIME` |
+
+Language Support 合同 0.1 与 codec-conformance 修正合同 0.2 均已冻结。0.2 冻结发布经 PR #215 合入
+`main@fa74ae22872691eebf2fe8bdb2209da34b64b56e`，其 original PR Public CI、new exact-main Public CI / Browser
+Smoke、README / 文档 202 / 文档 203 / milestones 四份 fresh installed-product readback 与独立 reconciliation
+全部成立。[private classifier 实现授权审计](204-r1-language-support-private-classifier-implementation-authorization-audit.md)
+的最后门已经闭合。private classifier 随后经 PR #217 完成 exact-history revalidation、0.2 deterministic
+classification、完整 reason composition 与 exactly-one denominator closure；
+[实现冻结候选](205-r1-language-support-private-classifier-implementation-freeze-candidate.md)经 PR #218 original
+11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 205 / milestones 三份 fresh
+installed-product readback 与独立 reconciliation 取得资格。[最终冻结发布](206-r1-language-support-private-classifier-implementation-freeze-publication.md)
+完成自己的最后门后，private classifier 才成为 `FROZEN` 当前事实。后继
+[eligible-only operation projection / same-attempt gate 前合同审计](207-r1-language-support-eligible-operation-projection-precontract-audit.md)
+证明当前 Fact、Relation derivation 与 Relation observation request 都会把全量 source bodies 交给 Provider；旧
+terminal/FactSet 对账不能补做 input authority。该审计只条件化授权后继起草最小合同，protocol/runtime、Parse
+fulfillment 与 persistence 仍未获授权。后继[最小合同 0.1](208-r1-language-support-eligible-operation-projection-contract.md)
+已经过 PR #221、受保护合入、new exact-main 双门、三份 fresh installed-product readback 与 independent
+reconciliation 取得候选资格；[独立冻结发布](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
+完成自己的同等级最后门后，合同的 `CONTRACT_FROZEN / IMPLEMENTATION_ALLOWED` 已生效。A–G 随后经
+PR #223–#229 严格串行实现；每个 stage 的 original PR 与 exact-main Public CI / Browser Smoke 都独立成功，最终
+`main@b69527ec3a4c3037be730144c29b0ce2468940fc` 的 G hardening 四格为 `20/20`、A–G focused
+`100/100`、related matrix `182/182`、full Review Attention `417/417`。
+[实现冻结候选](210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)经
+PR #230 original 11/11、受保护合入、new exact-main 11/11 + Browser Smoke 1/1、README / 文档 210 /
+milestones 三份 fresh installed-product readback 与 independent reconciliation 取得资格。
+[首次最终冻结发布](211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+的 original PR 11/11 与 exact-main Browser 1/1 成立，但 exact-main Public CI `36343474761` 在 Python 3.10 `-O`
+保留正式 FAILURE，因此 frozen target 没有生效。独立 PR #232 只修复 test-support wall-clock coupling，并在
+`main@df7f3d5a190d317a47c0fc1fb9405419e6b76828` 完成 original 11/11 与 exact-main 11/11 + Browser 1/1。
+[重新资格化发布](212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+经 PR #233 original 11/11、ordinary merge `main@0c82c55a521750698c969b26221bf776530aec16`、new exact-main
+11/11 + Browser Smoke 1/1，以及 README / 文档 212 / milestones 三份 fresh installed-product PASS 与独立
+reconciliation，private implementation `FROZEN` 已成为当前事实。milestones 前两次正式 observation 虽然
+product/Core 为 `COMPLETED / PASS`，runner 都在长路径 final-summary 写入阶段退出 1，因此继续保留为两个
+`ERROR / NON_QUALIFYING` identity；第三次 fresh identity 才取得 PASS。final manifest 为：
+
+```text
+sha256_json  = 0354060769104d5647c322838740fc64af0c8e96d333698bdef963345fd16e82
+sha256_bytes = 669c4af61877e8c9287a742bacb20b9dfc794ee0c30c4c0cc4f287ca6da00b08
+```
+
+[Parse fulfillment authority 问题审计](213-r1-parse-fulfillment-authority-problem-audit.md)据此只条件化发布
+Parse fulfillment authority problem-audit candidate。它证明 current exact history 仍不能区分 parser
+success、syntax failure 与 parser never executed；它不是 precontract，不授权 parser/AST、Parse terminal、Fact、
+persistence、共享 carrier、public Artifact 或 Coverage。
+
+文档 213 随后经 PR #236 original 11/11、ordinary merge
+`main@5d0769b8ce9d7823b5a095de3657531085d19e83`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc213 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified problem history。
+[Parse fulfillment 最小合同前置审计](214-r1-parse-fulfillment-precontract-audit.md)随后经 PR #237 original
+11/11、ordinary merge `main@5593f48256acafeda6205ffde174441781c87c2e`、new exact-main 11/11 + Browser
+Smoke 1/1 与 fresh installed-product reconciliation 成为 `PRECONTRACT_AUDITED` qualified history。milestones
+第一次正式 readback 因匿名 API 额度耗尽保持 `ERROR / NON_QUALIFYING`，fresh identity 才取得 PASS；两次历史同时
+保留。审计确认 Parse denominator、共享 obligation、patch-level parser identity、semantic result / lifecycle /
+reconciliation 分离及 admitted parse-product consumer binding，但仍未授权合同或实现。
+
+[Parse → Fact consumer projection 前置资格审计](215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
+进一步证明：current frozen Fact operation/request 强制把全部 Language Support eligible bodies 交给 Provider；在一个
+eligible source Parse accepted、另一个 rejected 的 world 中，current Provider 仍对 rejected source 报告 canonical
+`MODULE` Fact，而 accepted-only request 会被 current wire 拒绝。该候选只选择 post-Parse Fact consumer
+projection / request binding 作为更早前提；文档 208 与 current runtime 的历史 qualification 不被倒改，Parse
+contract、new wire、parser/AST、Fact fulfillment、persistence 与 Coverage 仍未获授权。
+
+文档 215 随后经 PR #238 original 11/11、ordinary merge
+`main@34b58014b1eadd0b30bc4deb73ab2cc97e2ed675`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc215 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified prerequisite
+history。[Parse product → Fact consumer binding 最小前合同审计](216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+据此把 consumer membership、exact product binding 与 product-use authority 分开：accepted IDs、裸 product digest
+或 terminal echo 都不足以证明 Provider 消费了 admitted product；多 Provider 只能共享一份 application-owned
+product truth，各自重新取得 consumer claim。该候选经 PR #239 original 11/11、ordinary merge
+`main@63daada4157e0068bb2a1333953f821f56f61894`、new exact-main 11/11 + Browser Smoke 1/1，以及 README /
+doc216 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 成为 qualified history。
+
+[Parse fulfillment 最小合同 0.1](217-r1-parse-fulfillment-contract.md)随后经 PR #240 original 11/11、ordinary
+merge `main@446604ffc437ff710faf524c1634839dc1a0ddd7`、new exact-main 11/11 + Browser Smoke 1/1，以及
+README / doc217 / milestones 三份 fresh installed-product PASS 与 independent reconciliation 取得候选资格。README
+第一次正式 observation 因匿名 GitHub API 额度耗尽保持 `ERROR / NON_QUALIFYING`；fresh Plan/session 才取得 PASS，
+两次历史同时保留。[独立冻结发布](218-r1-parse-fulfillment-contract-freeze-publication.md)经 PR #241 original
+11/11、ordinary merge `main@bb912680d55ca8c96df4d5b9ded88187bbaf42ef`、new exact-main 11/11 + Browser
+Smoke 1/1，以及 README / doc217 / doc218 / milestones 四份 fresh installed-product PASS 与 independent
+reconciliation 后，`CONTRACT_FROZEN / IMPLEMENTATION_NOT_STARTED` 已生效。milestones 第一次正式 final readback 的
+render projection 保持 `ERROR / UNKNOWN / NON_QUALIFYING`，fresh session 才取得 PASS；两次身份同时保留。
+
+[Parse private implementation 可行性审计](219-r1-parse-private-implementation-feasibility-audit.md)随后从该 exact main
+重新进入 CONTROL LOOP，并经 PR #242 original 11/11、ordinary merge
+`main@23f9825e61791a78056d5154e4dfd3626a1167b1`、new exact-main 11/11 + Browser Smoke 1/1、三份
+fresh installed-product PASS 与 independent reconciliation 成为 qualified history。后继实现授权 PR #243 的
+original Starter required gate 在公开 Core v0.12.2 wheel 上观察到 `net::ERR_NO_BUFFER_SPACE`，却被归为
+`BROWSER_HARD_FAILURE / SUBJECT`；该 PR 保持失败、关闭且未合入。
+
+[M10 Browser 主机 socket 分类与发行消费边界审计](221-m10-browser-host-socket-release-consumer-boundary-audit.md)
+据此区分 current source、公开 Core v0.12.2 distribution 与 Starter 0.2 consumer identity。current source 的窄映射
+候选不能修复 required gate 实际消费的冻结 wheel，历史 tag / asset 也不能移动；因此 Parse feasibility history
+保持成立，但 private implementation authorization 没有生效。parser runtime、release/compatibility correction、
+persistence、Fact product-use enforcement、new wire 与 Coverage 均未获得施工权。
+
+[M10 Browser 主机 socket 分类修正与发行消费最小前合同审计](222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+从 doc221 已完成的 original PR、受保护合入、exact-main 双门与 fresh installed-product reconciliation 重新进入
+CONTROL LOOP。诊断证明：精确 v0.12.2 谱系上的窄 backport 可构建为 Core 0.12.3，并由 unchanged public
+Starter 0.2.0 wheel 完成真实 PASS/FAIL 链；但这些结果仍是 nonqualifying diagnostic。0.12.3 必须来自受治理的
+历史 maintenance 谱系，current 0.13 source correction 与未来 public 0.13.x claim 继续拥有独立资格。本文只
+条件化选择后继最小合同面，不创建 branch、runtime、workflow migration、version、tag、Release 或 Parse authority。
+
+[M10 Browser 主机 socket 分类修正与发行消费合同](223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
+把后继工作冻结为五段串行资格链：current-main 窄修正、`core-0.12-maintenance` 两阶段治理 bootstrap、
+精确 v0.12.2 谱系上的 Core 0.12.3 backport 与 non-Latest create-new publication、公开产品读回，以及
+main required Starter lane 的单独消费迁移。合同候选不创建 branch、ruleset、runtime、version、tag、Release
+或 workflow 变更；public v0.13.x 仍是独立发行义务，Parse implementation 继续未获授权。
+
+[M10 Browser 主机 socket 分类修正与发行消费合同冻结发布](224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
+条件化发布文档 223 的冻结目标；其自己的 original PR、受保护合入、new exact-main 双门、fresh README /
+doc223 / doc224 / milestones installed-product readback 与独立 reconciliation 闭合以前，当前事实仍是 qualified
+contract candidate，runtime、maintenance branch、ruleset、version、tag、Release 与 workflow migration 均未开始。
+
+[M10 0.12 maintenance bootstrap 治理反例审计](225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
+记录 C1 经 PR #249 合入 `main@2daf6ea...` 并完成 exact-main 双门；current source 已包含精确 host-socket
+分类修正，但 public `v0.13.0` wheel 没有因此改变。M0 phase-one ruleset `24216773` 已 active、无 bypass，
+第一次真实 exact branch ref 创建却返回 HTTP 404，`core-0.12-maintenance` 仍不存在。
+
+[M10 maintenance branch 创建 authority 更正审计](226-m10-maintenance-branch-creation-authority-correction-audit.md)
+随后确认该次 OAuth credential 没有 `workflow` scope，且旧 `ci.yml` 不满足“另一 branch 已有同路径同内容”例外；
+因此 404 继续保留，但它没有资格证明 ruleset/governance 反例。当前为
+`M0_BRANCH_CREATION_AUTHORITY_UNQUALIFIED / M0_MAINTENANCE_BOOTSTRAP_BLOCKED`；scope 扩张、ref 重试、实际 push、
+workflow PR、phase two、0.12.3 backport/release、consumer migration 与 Parse authorization 均未开始。
+
+[M10 maintenance workflow bootstrap 顺序反例审计](227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
+在 Human 明确授权并补齐 `workflow` scope 后，新的 REST ref observation 返回 `201`，branch 已精确指向
+`v0.12.2^{}`，ruleset 保持 active、无 bypass。workflow-only PR #252 的原始 Public CI 随后因 maintenance
+lock 中 `brace-expansion` / `undici` 的当前 high-severity advisory 失败；它未 rerun、未合入且已关闭。main 上
+独立依赖维护已取得资格，但不能继承给 0.12 line。当前只重开 workflow-only PR 之前的 dependency qualification /
+ordering seam；dependency PR、workflow dispatch、#252 重开、phase two、backport/release 与 Parse 均未获授权。
+
+[M10 maintenance dependency prerequisite 最小前合同审计](228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
+在 exact `v0.12.2^{}` 上重新构造的 one-file lock candidate 只把 `undici` 与 root / nested
+`brace-expansion` 更新到 `7.30.0 / 5.0.12 / 2.1.7`；Workbench 172/172、lint、build 与 0-vulnerability
+audit 成立。本机完整 Python 四格因真实 `4096 MB` memory soft stop 保持非资格失败；它没有被调预算或写成 PASS。
+旧 workflow 的 `workflow_dispatch` 可以形成 exact-head / exact-tip 远端 witness，但不能冒充 original PR checks。
+doc228 已经 PR #255 original 11/11、受保护 main 合入与 new exact-main Public CI 11/11 + Browser Smoke 1/1
+成为 qualified precontract history；它只授权起草最小合同。
+
+[M10 maintenance dependency prerequisite 最小合同](229-m10-maintenance-dependency-prerequisite-contract.md)
+把 exact v0.12.2 source、npm 11.19.1 targeted lock construction、四个允许 entry、one-file scope、local
+Workbench gates、topic-head / merge-tip 两轮独立 manual dispatch、ordinary merge identity、失败保留与 retained evidence
+冻结为候选语义。PR #256 original 11/11、ordinary merge `main@be1db09637b8b499269b6281c5ab744ddf27db02`、
+new exact-main 11/11 + 1/1、
+四份 fresh installed-product readback 与 independent reconciliation 已使其成为 qualified contract candidate。
+
+[M10 maintenance dependency prerequisite 合同冻结发布](230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
+只发布文档 229 的冻结目标；manual dispatch 仍是 exact-ref witness，不是 original PR check 或 ruleset required
+check。PR #257、受保护合入 `main@8099d162db78862beccdd84e88c22bec21b0e8b1`、new exact-main
+11/11 + 1/1、四份 fresh readback 与 independent reconciliation 已闭合，因此合同已经 `FROZEN`；实现没有
+由此自动开始。
+
+[M10 maintenance dependency prerequisite 资格发布](231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
+记录 one-file candidate `823add785...`、PR #258、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
+`core-0.12-maintenance@6ed18ae8...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
+本文自己的门闭合以前，公开状态仍是 implementation not started；闭合以后也只允许回到 CONTROL LOOP 重审新的
+workflow-only bootstrap，不授权重开 #252、phase two、0.12.3 release 或 Parse。
+
+[M10 maintenance dependency drift 反例审计](233-m10-maintenance-dependency-drift-counterexample-audit.md)
+记录 fresh workflow-only PR #264 在同一 maintenance tip 上取得新的 registry observation：Python、E3、wheel-only
+以及 Workbench tests/lint/build 成功，但 `npm audit` 对 Vue/server-renderer、postcss-selector-parser 与
+source-map-js 报告 `1 moderate / 3 high`，所以 original Public CI attempt 1 为 `FAILURE`。#264 已关闭、未合入、
+未 rerun、未改 head；文档 231 的旧 timed PASS 仍是历史事实，但不再足以资格化当前 workflow bootstrap。本文只
+条件化发布 dependency drift 问题边界；新 precontract、dependency write、workflow bootstrap、release 与 Parse
+均未开始。
+
+[M10 maintenance dependency drift 最小前合同审计](234-m10-maintenance-dependency-drift-precontract-audit.md)
+从 qualified doc233 source state 证明一条新的 lockfile-only 路线具有合同化资格：maintenance manifest 不变，npm
+`11.19.1` 对 `vue / postcss-selector-parser / source-map-js` 的 package-name-only targeted update 两次逐字节得到
+同一 `D9FBF89C...00A4` lock，完整允许投影为 14 个 entry；fresh install、172 项 Workbench regression、lint、
+type-check/build 与 timed moderate audit 均通过。exact-version `npm update ...@version` 的 `EUPDATEARGS` 首败与一次
+projection helper setup error 原样保留。
+
+doc234 已经 PR #266 head `0bb60c0...` original Public CI 11/11、ordinary merge
+`main@7cf409940339d4068c3effd9e6d4deaca0c7861b` 与 new exact-main Public CI 11/11 + Browser Smoke 1/1，成为
+qualified precontract history。[最小合同](235-m10-maintenance-dependency-drift-contract.md)只冻结 exact
+maintenance source、package-name-only construction、完整 14-entry closure、one-file identity、candidate/tip 两轮
+manual-dispatch witness、受保护合入与失败保留；其独立[冻结发布](236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
+已经 PR #268、受保护 `main@295afd0...`、new exact-main 11/11 + 1/1、四份 fresh product readback 与 independent
+reconciliation 闭合，因此 contract 已 `FROZEN`，implementation 没有由此自动开始。
+
+[M10 maintenance dependency drift 资格发布](237-m10-maintenance-dependency-drift-qualification-publication.md)
+记录 one-file candidate `6efccfb...`、PR #269、candidate exact-head dispatch `7/7 + 1/1`、ordinary merge
+`core-0.12-maintenance@685b077...`、exact-tip fresh dispatch `7/7 + 1/1` 与 independent reconciliation。
+本文自己的门闭合以前，公开状态仍停在 contract frozen / bootstrap not started；闭合以后也只允许返回 CONTROL LOOP
+重新审查 fresh workflow-only bootstrap，不授权重开 #252/#264、phase two、0.12.3 release 或 Parse。
+
+[M10 maintenance workflow bootstrap 资格发布](238-m10-maintenance-workflow-bootstrap-qualification-publication.md)
+记录 fresh 双文件 candidate `4b262eb...`、PR #271 original Public CI 7/7、ordinary merge
+`core-0.12-maintenance@ebc5d7f...`、exact-tip Public CI 7/7 + Browser Smoke 1/1，以及 ruleset
+`24216773` 的 phase-two strict required-checks 双路径读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_MAINTENANCE_RELEASE_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+该发布只修正 publication lag，不启动 0.12.3 产品 backport/release。闭合以后仍须返回 CONTROL LOOP，重新审查
+M1 是否是当前最小合法 seam；consumer migration、Parse / Fact / Coverage 与 `DECLARED_CLAIM_FIDELITY` 继续未获授权。
+
+[Core 0.12.3 发布与公开读回事实](239-core-v0.12.3-release-readback-facts.md)记录 maintenance
+backport PR #273、exact-tip 双门、受保护注释标签、四项非 Latest Release 资产，以及匿名 public Core 四格与
+Starter 0.2.0 双 Python 产品读回。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_NOT_STARTED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+```
+
+首次敏感路径扫描的 12 项命中、其他 setup/harness failure 和后继独立 PASS 均保留原身份。该发布只同步已经
+形成的 release/readback 事实；闭合以后仍须返回 CONTROL LOOP 重审 W1，不能直接修改 workflow 或启动 Parse。
+
+[required Starter lane 迁移资格发布](240-m10-required-starter-lane-migration-qualification-publication.md)
+记录 workflow-only candidate `ecc09bc...`、PR #275、ordinary merge `main@594f1b1...`、new exact-main
+Public CI 11/11 + Browser Smoke 1/1，以及 exact workflow、PR、run 与 public Core 0.12.3 asset 的 fresh anonymous
+status readback / reconciliation。本文自己的最后门闭合后，以下 target 才作为公开状态生效：
+
+```text
+M0_MAINTENANCE_WORKFLOW_BOOTSTRAP_QUALIFIED
+M0_MAINTENANCE_PHASE_TWO_RULESET_ACTIVE
+CORE_0_12_3_RELEASED
+CORE_0_12_3_PUBLIC_READBACK_COMPLETE
+CORE_0_12_3_MAINTENANCE_FROZEN
+W1_REQUIRED_STARTER_LANE_MIGRATION_QUALIFIED
+R1_PARSE_FULFILLMENT_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_PARSE_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+```
+
+W1 只把 required `Starter PASS/FAIL golden path` 的 public Core coordinate 从 0.12.2 迁移到已读回的 0.12.3；
+Python matrix 中 Starter / Authoring 的声明兼容性底线仍为 0.12.2。该发布闭合后必须返回 CONTROL LOOP 重新审查
+Parse private implementation authorization；它不自动授权 parser、重开 PR #243、选择 persistence 或启动 Fact / Coverage。
+
+[Parse private implementation 实现授权发布](241-r1-parse-private-implementation-authorization-publication.md)
+从 `main@35502aa2f605e5654327f9df81d9da7fe81f23cf` 重新核对 frozen contract、文档 219–223、current
+runtime bytes、W1 与 retained failures。旧 doc219 matrix Artifact 的 source literal 输出编码损坏被保留为
+`EVIDENCE_TOOLING_ERROR`；fresh UTF-8 probe 的四格 decision projection 相同，execution-cell canonical report 与
+旧摘要逐字节相同，没有形成 product/feasibility 反例。本文只条件化发布 doc219 A–H 的 private implementation
+authority；它自己的 final bytes、original PR、受保护合入、新 exact-main 双门、四份 fresh installed-product
+readback 与 independent reconciliation 全部闭合前，`PRIVATE_IMPLEMENTATION_ALLOWED` 只是 target marker，runtime
+仍为 `NOT_STARTED / NOT_AUTHORIZED`。
+
+该授权 publication 合入后的第一次 exact-main Public CI 在 Python 3.10 `-O` combined service fixture 中硬退出；
+[文档 242](242-r1-parse-authorization-ci-fixture-observation-correction.md)永久保留 `FAILURE / UNKNOWN`，并只用
+独立 PR #278 改善 test-only world / phase / cleanup observation。#278 与新 exact-main 双门、doc241 四份 fresh
+installed-product readback及 independent reconciliation 闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED` 才成为事实。
+
+private A–H 随后由 PR #279 一次性物化；original 11/11、ordinary merge
+`main@26f21b5049dc87c889862fbcef2a12e76aed697e`、new exact-main 11/11 + Browser Smoke 1/1 与五份匿名
+exact-SHA source readback均成立。[实现冻结候选](243-r1-parse-private-implementation-freeze-candidate.md)经 PR #280、
+受保护合入、`main@cd4aabb38e0352a7df9e5222606dbb96f65135e5` 双门、三份 fresh installed-product readback 与
+independent reconciliation 取得资格。[最终冻结发布](244-r1-parse-private-implementation-freeze-publication.md)
+完成自己的同等级最后门后，private implementation 已成为 `FROZEN` 当前事实。后继
+[Parse → Fact consumer correction 合同](245-r1-parse-to-fact-consumer-correction-contract.md)经 PR #282、
+`main@3214586645c67156d5c498cbcd2ea5ed1a7d6b43` 双门、三份 fresh installed-product readback 与 independent
+reconciliation 取得 candidate 资格；[独立冻结发布](246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)
+完成自己的最后门后，合同成为 `FROZEN` 当前事实。后继
+[private implementation 可行性审计](247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)
+从 exact main 重新确认：bounded private successor 在不向 Provider 暴露 raw source、不选择 persistence、不定义 Fact
+obligation universe 的前提下可行；该结论当前仍是 docs-only audit candidate，implementation、persistence 与 Coverage
+继续未获授权。
+
+完整状态、不可移动坐标和保留失败由[里程碑与文档索引](milestones.md)保存。能力边界、候选触发条件
+以及 VeriTrail、JPyxis、FlowKernel 与 Human authority 的关系另见
+[能力边界与系统认知地图](114-capability-boundary-and-system-map.md)。
+
+## 原首页工程事实索引
+
+1. [里程碑冻结历史与完整文档索引](milestones.md)
+2. [M14 最终验证与发布事实](56-m14-final-validation-and-release-facts.md)
+3. [GitHub Evidence Plugin 发布读回](108-p4-github-evidence-release-readback-facts.md)
+4. [Review Attention Pattern Corpus 冻结闭环](112-review-attention-pattern-corpus-freeze-closure.md)
+5. [Review Attention R1 合同](113-r1-deterministic-semantic-slice-contract.md)
+6. [Review Attention R1 Schema payload 冻结发布](126-r1-schema-payload-freeze-publication.md)
+7. [Review Attention R1 Derivation Input Binding 合同冻结发布](133-r1-derivation-input-binding-contract-freeze-publication.md)
+8. [Review Attention R1 Derivation Input Binding 实现冻结候选](134-r1-derivation-input-implementation-freeze-candidate.md)
+9. [Review Attention R1 Derivation Input Binding 最小运行切片冻结发布](135-r1-derivation-input-freeze-publication.md)
+10. [Review Attention R1 Derivation Attempt 与 Fact Provenance 前置审计](136-r1-derivation-attempt-and-fact-provenance-audit.md)
+11. [Review Attention R1 Derivation Attempt 与 Fact Provenance 合同候选](137-r1-derivation-attempt-and-fact-provenance-contract.md)
+12. [Review Attention R1 Derivation Attempt 与 Fact Provenance 合同冻结发布](138-r1-derivation-provenance-contract-freeze-publication.md)
+13. [Review Attention R1 DerivationEvidence Schema 修正前置审计](139-r1-derivation-evidence-schema-correction-audit.md)
+14. [Review Attention R1 DerivationEvidence Schema 0.1.1 修正合同](140-r1-derivation-evidence-schema-correction-contract.md)
+15. [Review Attention R1 DerivationEvidence Schema 0.1.1 修正合同冻结发布](141-r1-derivation-evidence-schema-correction-contract-freeze-publication.md)
+16. [Review Attention R1 DerivationEvidence Schema 0.1.1 实现冻结候选](142-r1-derivation-evidence-schema-correction-implementation-freeze-candidate.md)
+17. [Review Attention R1 DerivationEvidence Schema 0.1.1 实现冻结发布](143-r1-derivation-evidence-schema-correction-freeze-publication.md)
+18. [Review Attention R1 Derivation Budget Primitive 前置审计](144-r1-derivation-budget-primitive-precontract-audit.md)
+19. [Review Attention R1 Derivation Budget Primitive 最小合同候选](145-r1-derivation-budget-primitive-contract.md)
+20. [Review Attention R1 Derivation Budget Primitive 合同冻结发布](146-r1-derivation-budget-primitive-contract-freeze-publication.md)
+21. [Review Attention R1 Derivation Budget Primitive 实现冻结候选](147-r1-derivation-budget-primitive-implementation-freeze-candidate.md)
+22. [Review Attention R1 Derivation Budget Primitive 实现冻结发布](148-r1-derivation-budget-primitive-freeze-publication.md)
+23. [Review Attention R1 Derivation Execution Cell 与 Terminal Continuity 系统审计](149-r1-derivation-execution-cell-system-audit.md)
+24. [Review Attention R1 Derivation Execution Cell / Terminal Envelope 合同候选](150-r1-derivation-execution-cell-terminal-envelope-contract.md)
+25. [Review Attention R1 Derivation Execution Cell / Terminal Envelope 合同冻结发布](151-r1-derivation-execution-cell-contract-freeze-publication.md)
+26. [Review Attention R1 Derivation Execution Cell 实现冻结候选](152-r1-derivation-execution-cell-implementation-freeze-candidate.md)
+27. [Review Attention R1 Derivation Execution Cell 实现冻结发布](153-r1-derivation-execution-cell-freeze-publication.md)
+28. [Review Attention R1 Fact Admission 与 DerivationEvidence Closure 系统审计](154-r1-fact-evidence-closure-system-audit.md)
+29. [Review Attention R1 Fact Admission / DerivationEvidence Closure 最小合同候选](155-r1-fact-admission-and-derivation-evidence-closure-contract.md)
+30. [Review Attention R1 Fact Admission / DerivationEvidence Closure 合同冻结发布](156-r1-fact-evidence-closure-contract-freeze-publication.md)
+31. [Review Attention R1 Fact Admission / DerivationEvidence Closure 实现冻结候选](157-r1-fact-evidence-closure-implementation-freeze-candidate.md)
+32. [Review Attention R1 Fact Admission / DerivationEvidence Closure 实现冻结发布](158-r1-fact-evidence-closure-freeze-publication.md)
+33. [Review Attention R1 Fact/Evidence 冻结后下一闭环系统审计](159-r1-post-fact-evidence-next-closure-system-audit.md)
+34. [Review Attention R1 Multi-Provider Applicability / Fact Composition 最小合同候选](160-r1-multi-provider-applicability-and-fact-composition-contract.md)
+35. [Review Attention R1 Multi-Provider Applicability / Fact Composition 合同冻结发布](161-r1-multi-provider-fact-composition-contract-freeze-publication.md)
+36. [Review Attention R1 Multi-Provider Applicability / Fact Composition 实现冻结候选](162-r1-multi-provider-fact-composition-implementation-freeze-candidate.md)
+37. [Review Attention R1 Multi-Provider Applicability / Fact Composition 实现冻结发布](163-r1-multi-provider-fact-composition-freeze-publication.md)
+38. [Review Attention R1 Multi-Provider Fact Composition 冻结后下一闭环系统审计](164-r1-post-composition-next-closure-system-audit.md)
+39. [Review Attention R1 Relation Derivation Authority / Operand Continuity 最小合同候选](165-r1-relation-derivation-authority-and-operand-continuity-contract.md)
+40. [Review Attention R1 Relation Derivation Authority / Operand Continuity 合同冻结发布](170-r1-relation-derivation-contract-freeze-publication.md)
+41. [Review Attention R1 Relation Derivation 实现冻结候选](171-r1-relation-derivation-implementation-freeze-candidate.md)
+42. [Review Attention R1 Relation Derivation 实现冻结发布](172-r1-relation-derivation-freeze-publication.md)
+43. [Review Attention R1 Declared Relation Observation Domain / Composition Qualification 系统审计](173-r1-declared-relation-observation-domain-and-composition-qualification-system-audit.md)
+44. [Review Attention R1 Declared Relation Observation Domain / Composition Qualification 最小合同候选](175-r1-declared-relation-observation-domain-and-composition-qualification-contract.md)
+45. [Review Attention R1 Declared Relation Observation Domain / Composition Qualification 合同冻结发布](176-r1-relation-observation-composition-qualification-contract-freeze-publication.md)
+46. [Review Attention R1 Relation Observation / Composition Qualification 实现冻结候选](178-r1-relation-observation-composition-qualification-implementation-freeze-candidate.md)
+47. [Review Attention R1 Relation Observation / Composition Qualification 实现冻结发布](179-r1-relation-observation-composition-qualification-freeze-publication.md)
+48. [Review Attention R1 RelationSet Admission / Qualification Evidence Binding 系统审计](182-r1-post-qualification-relation-set-admission-and-evidence-binding-system-audit.md)
+49. [Review Attention R1 RelationSet Admission / Explicit Admission Witness / Public Qualification Binding 最小合同](183-r1-relation-set-admission-and-public-qualification-binding-contract.md)
+50. [Review Attention R1 RelationSet Admission / Public Qualification Binding 合同冻结发布](185-r1-relation-set-admission-and-public-qualification-binding-contract-freeze-publication.md)
+51. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结候选](186-r1-relation-set-admission-and-public-qualification-binding-implementation-freeze-candidate.md)
+52. [Review Attention R1 RelationSet Admission / Public Qualification Binding 实现冻结发布](187-r1-relation-set-admission-and-public-qualification-binding-freeze-publication.md)
+53. [Review Attention R1 Post-Admission ReviewSlice Input / Obligation Closure 系统审计](188-r1-post-admission-review-slice-input-obligation-closure-system-audit.md)
+54. [Review Attention R1 ReviewSlice Admitted-Graph Input / Anchor-Spec Obligation Closure 最小合同](189-r1-review-slice-admitted-graph-input-and-obligation-closure-contract.md)
+55. [Review Attention R1 ReviewSlice Input / Obligation Closure 合同冻结发布](190-r1-review-slice-input-obligation-closure-contract-freeze-publication.md)
+56. [Review Attention R1 Post-Slice-Input Closure / Slice-Coverage Qualification 系统审计](192-r1-post-slice-input-closure-slice-coverage-qualification-system-audit.md)
+57. [Review Attention R1 Fact / Parse Observation Fulfillment / Coverage Prerequisite 系统审计](194-r1-fact-parse-observation-fulfillment-coverage-prerequisite-system-audit.md)
+58. [Review Attention R1 Language Support / Parse / Fact Fulfillment 问题边界审计](195-r1-language-support-parse-fact-fulfillment-problem-boundary-audit.md)
+59. [Review Attention R1 Language Support Qualification Authority 问题审计](196-r1-language-support-qualification-authority-problem-audit.md)
+60. [Review Attention R1 Language Support Qualification 最小合同前置审计](197-r1-language-support-qualification-precontract-audit.md)
+61. [Review Attention R1 Language Support Qualification 最小合同 0.1](198-r1-language-support-qualification-contract.md)
+62. [Review Attention R1 Language Support Qualification 合同冻结发布](199-r1-language-support-qualification-contract-freeze-publication.md)
+63. [Review Attention R1 Language Support Qualification private implementation 可行性审计](200-r1-language-support-private-implementation-feasibility-audit.md)
+64. [Review Attention R1 Language Support codec-conformance 修正前置审计](201-r1-language-support-codec-conformance-correction-precontract-audit.md)
+65. [Review Attention R1 Language Support codec-conformance 修正合同 0.2](202-r1-language-support-codec-conformance-correction-contract.md)
+66. [Review Attention R1 Language Support codec-conformance 修正合同 0.2 冻结发布](203-r1-language-support-codec-conformance-contract-0-2-freeze-publication.md)
+67. [Review Attention R1 Language Support private classifier 实现授权审计](204-r1-language-support-private-classifier-implementation-authorization-audit.md)
+68. [Review Attention R1 Language Support private classifier 实现冻结候选](205-r1-language-support-private-classifier-implementation-freeze-candidate.md)
+69. [Review Attention R1 Language Support private classifier 实现冻结发布](206-r1-language-support-private-classifier-implementation-freeze-publication.md)
+70. [Review Attention R1 Language Support eligible-only operation projection / same-attempt gate 前合同审计](207-r1-language-support-eligible-operation-projection-precontract-audit.md)
+71. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 最小合同 0.1](208-r1-language-support-eligible-operation-projection-contract.md)
+72. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 合同冻结发布](209-r1-language-support-eligible-operation-projection-contract-freeze-publication.md)
+73. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结候选](210-r1-language-support-eligible-operation-projection-implementation-freeze-candidate.md)
+74. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结发布](211-r1-language-support-eligible-operation-projection-implementation-freeze-publication.md)
+75. [Review Attention R1 Language Support eligible operation projection / same-attempt gate 实现冻结重新资格化发布](212-r1-language-support-eligible-operation-projection-implementation-freeze-requalification.md)
+76. [Review Attention R1 Parse fulfillment authority 问题审计](213-r1-parse-fulfillment-authority-problem-audit.md)
+77. [Review Attention R1 Parse fulfillment 最小合同前置审计](214-r1-parse-fulfillment-precontract-audit.md)
+78. [Review Attention R1 Parse → Fact consumer projection 前置资格审计](215-r1-parse-to-fact-consumer-projection-prerequisite-audit.md)
+79. [Review Attention R1 Parse product → Fact consumer binding 最小前合同审计](216-r1-parse-product-fact-consumer-binding-precontract-audit.md)
+80. [Review Attention R1 Parse fulfillment 最小合同 0.1](217-r1-parse-fulfillment-contract.md)
+81. [Review Attention R1 Parse fulfillment 合同冻结发布](218-r1-parse-fulfillment-contract-freeze-publication.md)
+82. [Review Attention R1 Parse private implementation 可行性审计](219-r1-parse-private-implementation-feasibility-audit.md)
+83. [Review Attention R1 Parse private implementation 实现授权发布](241-r1-parse-private-implementation-authorization-publication.md)
+84. [Review Attention R1 Parse authorization exact-main CI 夹具观察修正](242-r1-parse-authorization-ci-fixture-observation-correction.md)
+85. [Review Attention R1 Parse private implementation 实现冻结候选](243-r1-parse-private-implementation-freeze-candidate.md)
+86. [M10 Browser 主机 socket 分类与发行消费边界审计](221-m10-browser-host-socket-release-consumer-boundary-audit.md)
+87. [M10 Browser 主机 socket 分类修正与发行消费最小前合同审计](222-m10-browser-host-socket-classification-correction-release-consumer-precontract-audit.md)
+88. [M10 Browser 主机 socket 分类修正与发行消费合同](223-m10-browser-host-socket-classification-correction-release-consumer-contract.md)
+89. [M10 Browser 主机 socket 分类修正与发行消费合同冻结发布](224-m10-browser-host-socket-classification-correction-release-consumer-contract-freeze-publication.md)
+90. [M10 Browser 业务失败分类首败诊断覆盖修正](193-m10-browser-business-failure-observation-correction.md)
+91. [M10 0.12 maintenance bootstrap 治理反例审计](225-m10-maintenance-bootstrap-governance-counterexample-audit.md)
+92. [M10 maintenance branch 创建 authority 更正审计](226-m10-maintenance-branch-creation-authority-correction-audit.md)
+93. [M10 maintenance workflow bootstrap 顺序反例审计](227-m10-maintenance-workflow-bootstrap-ordering-counterexample-audit.md)
+94. [M10 maintenance dependency prerequisite 最小前合同审计](228-m10-maintenance-dependency-prerequisite-precontract-audit.md)
+95. [M10 maintenance dependency prerequisite 最小合同](229-m10-maintenance-dependency-prerequisite-contract.md)
+96. [M10 maintenance dependency prerequisite 合同冻结发布](230-m10-maintenance-dependency-prerequisite-contract-freeze-publication.md)
+97. [M10 maintenance dependency prerequisite 资格发布](231-m10-maintenance-dependency-prerequisite-qualification-publication.md)
+98. [M10 maintenance dependency drift 反例审计](233-m10-maintenance-dependency-drift-counterexample-audit.md)
+99. [M10 maintenance dependency drift 最小前合同审计](234-m10-maintenance-dependency-drift-precontract-audit.md)
+100. [M10 maintenance dependency drift 最小合同](235-m10-maintenance-dependency-drift-contract.md)
+101. [M10 maintenance dependency drift 合同冻结发布](236-m10-maintenance-dependency-drift-contract-freeze-publication.md)
+102. [M10 maintenance dependency drift 资格发布](237-m10-maintenance-dependency-drift-qualification-publication.md)
+103. [M10 maintenance workflow bootstrap 资格发布](238-m10-maintenance-workflow-bootstrap-qualification-publication.md)
+104. [Q0 最终冻结闭环](119-q0-verification-scheduling-final-freeze-closure.md)
+105. [Review Attention R1 Parse → Fact consumer correction 合同冻结发布](246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)
+106. [Review Attention R1 Parse → Fact consumer correction private implementation 可行性审计](247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)
+
+## 原首页表格状态投影
+
+以下保留迁移前两个总览表的文字，供核对旧首页使用；它们不承担当前状态同步。
+
+### 系统分层表
+
+| 层 | 回答的问题 | 主要产物 | 当前边界 |
+| --- | --- | --- | --- |
+| Entry / Authoring | 怎样更容易起草一个可检查的计划？ | `DRAFT / NOT_SEALED` Plan | Starter 与 Authoring Skill 不 Seal、不运行、不裁决 |
+| Evidence | 真实执行或外部平台观察到了什么？ | 标准 Evidence + provenance | Producer 只报告事实，不能输出 Verdict-like 结论；P 已发布，O0/T0 仍是候选问题记录 |
+| Core | 给定 Plan 与 Evidence，条件是否满足？ | `PASS / FAIL / INCONCLUSIVE / PENDING` + Bundle | 只使用版本化规则，不拥有世界真相 |
+| Workbench | 人怎样读懂并复核这些 Artifact？ | 本地只读视图 | 不写回、不重新裁决 |
+| Review Attention / R | 人应该优先看哪些源码关系与切片？ | Review Artifact / Attention Proposal | SourceSnapshot、Derivation Input runtime、Evidence Schema 0.1.1、Budget Primitive、Execution Cell、private Fact/Evidence closure、multi-Provider applicability / Fact composition、Relation derivation、private Relation observation / composition qualification，以及 private RelationSet admission / explicit witness / Evidence 0.2 binding 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support semantic contract 0.1、codec-conformance 修正合同 0.2 与 private classifier 已冻结；eligible-only operation projection / same-attempt gate 已冻结；Parse fulfillment private A–H 与 Parse → Fact consumer correction 合同已冻结；consumer correction private implementation 可行性审计处于 candidate，implementation 仍未开始；public carrier、持久化路线与 Coverage 未获授权 |
+| Verification Scheduling / Q | 既定证明义务怎样减少无效重算？ | 候选 Schedule / Evidence reuse binding | Q0 仅冻结蓝图，尚无实现，也无 Gate 跳过权 |
+
+### 系统家族表
+
+| 系统 / 轨道 | 负责 | 关系状态 |
+| --- | --- | --- |
+| [JPyxis](https://github.com/NoctilumeDev/JPyxis) | 异构计算中的控制、定义与运行时分权 | 独立系统；未来可通过 execution receipt / Evidence adapter 对接 |
+| [FlowKernel](https://github.com/NoctilumeDev/FlowKernel) | 不可靠策略与确定性权限、资源、隔离边界 | 独立 Planned 仓库；不是当前可运行依赖 |
+| Platform / P | 观察外部平台事实 | 已有 GitHub 0.1.0；其他平台仍是候选 |
+| Review / R | 压缩人的代码审查注意力 | private closed Relation derivation、Relation observation / composition qualification 与 RelationSet admission / witness / Evidence 0.2 已冻结；private ReviewSlice input / obligation closure A–H 已 exact-main verified；Language Support 0.2、private classifier 与 eligible operation projection / same-attempt gate A–G private implementation 已冻结；Parse fulfillment private A–H 与 Parse → Fact consumer correction 合同已冻结；consumer correction private implementation 可行性审计处于 candidate，implementation 仍未开始；持久化路线、公共 Artifact、Fact fulfillment 与 Coverage 未获授权 |
+| Quick / Q | 优化证明义务的 wall-clock 与重算 | Q0 蓝图冻结；实现未开始 |
+| Operations Evidence / O | 候选运行事实观察面 | O0 只记录问题与权威边界；没有插件、Provider、Schema 或动作权 |
+| Test Evidence / T | 候选测试事实观察面 | T0 只记录问题；测试选择、执行、重试与 fixture authority 仍为 `UNKNOWN` |

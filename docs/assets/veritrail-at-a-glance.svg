@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" role="img" aria-labelledby="title description">
+  <title id="title">验迹：从约定到可复查的结论</title>
+  <desc id="description">人先确认并封存检查条件，采集器保留实际观察，验迹核心按原条件核验证据，工作台展示结论和依据供人复查。执行任务、采集事实、核验和人的最终处置有各自责任。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10Z" fill="#a48558"/>
+    </marker>
+    <style>
+      text { font-family: "Microsoft YaHei", "Segoe UI", sans-serif; }
+      .title { fill:#092b30; font-size:30px; font-weight:700; }
+      .subtitle { fill:#6f6252; font-size:17px; }
+      .step { fill:#f3d895; font-size:15px; font-weight:700; }
+      .label { fill:#f6f1e9; font-size:23px; font-weight:700; }
+      .copy { fill:#d8d9cf; font-size:17px; }
+      .foot { fill:#6f6252; font-size:17px; }
+    </style>
+  </defs>
+  <rect width="1200" height="330" rx="22" fill="#f2e9de"/>
+  <text x="44" y="52" class="title">先说清楚，再拿证据判断</text>
+  <text x="44" y="84" class="subtitle">当初要验什么？实际观察到了什么？哪些结论有据可查？</text>
+  <g fill="none" stroke="#a48558" stroke-width="2" marker-end="url(#arrow)">
+    <path d="M304 179H323"/><path d="M588 179H607"/><path d="M872 179H891"/>
+  </g>
+  <g>
+    <rect x="44" y="112" width="260" height="130" rx="16" fill="#092b30" stroke="#d3b775"/>
+    <text x="64" y="140" class="step">01 · 人确认条件</text>
+    <text x="64" y="176" class="label">先约定要验什么</text>
+    <text x="64" y="210" class="copy">条件先封存，修改另开一版</text>
+    <rect x="328" y="112" width="260" height="130" rx="16" fill="#12383c" stroke="#d3b775"/>
+    <text x="348" y="140" class="step">02 · 采集器记录观察</text>
+    <text x="348" y="176" class="label">收集实际证据</text>
+    <text x="348" y="210" class="copy">保留来源、过程和失败记录</text>
+    <rect x="612" y="112" width="260" height="130" rx="16" fill="#092b30" stroke="#d3b775"/>
+    <text x="632" y="140" class="step">03 · 核心核对条件</text>
+    <text x="632" y="176" class="label">按原条件核验</text>
+    <text x="632" y="210" class="copy">成立、失败、存疑分别呈现</text>
+    <rect x="896" y="112" width="260" height="130" rx="16" fill="#12383c" stroke="#d3b775"/>
+    <text x="916" y="140" class="step">04 · 工作台帮助复查</text>
+    <text x="916" y="176" class="label">保存结论和依据</text>
+    <text x="916" y="210" class="copy">人查看证据，决定下一步</text>
+  </g>
+  <text x="44" y="280" class="foot">结论只覆盖事先约定与本次证据。运行结束、检查通过和最终采纳，是三件不同的事。</text>
+  <text x="44" y="307" class="foot">验迹按规则核验证据；它不替现实宣布真相。</text>
+</svg>
