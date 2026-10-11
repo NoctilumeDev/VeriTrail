@@ -132,8 +132,9 @@ python -m venv .venv
 ### 研究与候选方向
 
 - **Review / R — 源码审查辅助**：确定性源码事实、语义切片与未来注意力提案。部分 private 机制已冻结，完整产品未发布。
-  Parse private A–H 与 Parse → Fact consumer correction 合同已冻结；后者的 private A–J 已实现并完成 exact-main 与候选读回资格。
-  [独立冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)以自己的最后门为生效条件；完整 Review 产品仍未发布，持久化、Fact fulfillment 与 Coverage 未获授权。
+  Parse private A–H 与 Parse → Fact consumer private A–J 已冻结，完整 Review 产品仍未发布。
+  [当前 Fact projection / fulfillment 再审计](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)只是 docs-only candidate：
+  admitted Parse product 已存在，但完整 Fact 全集、履责与 successor admission 仍待合同审查；持久化与 Coverage 未获授权。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[当前可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
@@ -319,7 +320,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [里程碑冻结历史与完整文档索引](docs/milestones.md)：集中查询冻结边界、来源坐标和保留失败；
 - [首页工程记录保留页](docs/readme-engineering-records.md)：保留从本次候选首页迁出的长篇记录，以及原来的 106 项工程事实入口；
 - [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)与[GitHub Evidence Plugin 发布读回](docs/108-p4-github-evidence-release-readback-facts.md)：复核已交付产品；
-- [R1 Parse → Fact consumer correction 合同冻结发布](docs/246-r1-parse-to-fact-consumer-correction-contract-freeze-publication.md)与[当前可行性审计](docs/247-r1-parse-to-fact-consumer-private-implementation-feasibility-audit.md)：复核当前最小施工面，不据此提前授权实现；
+- [Parse → Fact consumer A–J 冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)与[Fact 当前状态再审计及条件化后继计划](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)：区分已有 product-use proof 与尚未建立的完整 Fact 履责；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
