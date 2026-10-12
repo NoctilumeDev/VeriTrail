@@ -3343,3 +3343,35 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release 均不启动。
 候选 README marker-selection setup finding、旧 ERROR/CANCELLED/UNKNOWN 与其他失败历史保留；diagnostics 不取得
 formal qualification，最终核账机械枚举全部 retained observations，不写死错误数量，不跨 SHA 拼接资格。
+
+### R1 Fact projection / fulfillment 私有实现可行性审计（候选）
+
+doc253 自己的资格链已闭合在 `main@c65a9f7d915ea96b22c3ca4d641c12a09664b7ac`：PR #291 original Public CI
+`38177038668`、exact-main Public CI `38191557863` 均 attempt 1 / 11/11 SUCCESS，Browser Smoke `38191557889`
+attempt 1 / 1/1 SUCCESS；fresh README/doc253/milestones 均 P1/P2 COMPLETE / Core PASS。independent reconciliation
+`ff035c7129dd22d796b321124ad3082bd31ee1304502fe6b9b564eb06dbac22f` PASS，132-artifact closeout
+`d416156f4185977ee60d2f788efa48a019a7bb22897a4d35c3d68b111c8e4e29` 保留全部旧诊断与历史身份。
+
+[文档 254](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)另经人工阶段授权，只审
+六条 private feasibility seam。现有 `/0.1` MODULE/CLASS 能力不是完整五类 fulfillment，也不因本审计升级。
+final four-cell product corpus 为 9 worlds/cell、44 actual reference Parse children、0 actual Fact children；identifier
+corpus 是全部 `0x110000` codepoints 的四类谓词与 11 个 component gold，不是所有字符串/未来宿主的通用证明。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+首个 product block 的 UNCLASSIFIED-disposition fixture 错误、11 个旧 Parse children 和 52 份 artifacts 保留；新 v2
+使用 source_class=UNCLASSIFIED，不改产品。synthetic verifier v1 把 optional unsafe release 错当 ordinary gap；该模型
+counterexample 保留，v2 增加 shared safety/any-source unsafe release gate。不能把模型或 stateless validator 变成 live
+authority，也不能以旧 `/0.1` 原始证据替新 `/0.2` 实现背书。
+
+本文自己的 local/original PR/protected merge/exact-main dual gates/fresh README/doc254/milestones observations /
+independent reconciliation 全部闭合前，feasibility 仍为 candidate。闭合后仍须返回 CONTROL LOOP，单独取得 explicit
+implementation authorization；本轮不发布 ALLOWED，不改 runtime/tests/Schema/Profile/Policy/旧合同/架构资产，不选择
+persistence，不启动 Fact→Coverage、ReviewSliceSet/Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbench/
+Core、CLAIM_FIDELITY、tag 或 Release。

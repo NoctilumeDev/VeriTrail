@@ -4359,3 +4359,51 @@ independent reconciliation 全部闭合前，当前仍是 qualified contract can
 本发布不改 runtime/tests/Schema/Profile/Policy/旧合同；完整 Fact projection/fulfillment 实现仍未开始、未授权。
 冻结形成新事实后返回 CONTROL LOOP，再审最小 private feasibility / authorization；persistence、Coverage、public
 carrier、Evidence/Bundle、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release 均未获得后继施工权。
+
+### R1 Fact projection / fulfillment 合同冻结资格闭合
+
+[PR #291](https://github.com/NoctilumeDev/VeriTrail/pull/291) final head
+`5a4c640fe64235979e08dac40af125236c5086d4` 已受保护合入
+`main@c65a9f7d915ea96b22c3ca4d641c12a09664b7ac`。original CI `38177038668`、exact-main Public CI
+`38191557863` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38191557889` attempt 1 / 1/1 SUCCESS。
+
+fresh README/doc253/milestones 均 P1/P2 COMPLETE / Core PASS；三份 distinct formal identities 分别为
+`r1-fact-freeze-formal-readme-1-c65a9f7`、`r1-fact-freeze-formal-doc253-1-c65a9f7` 与
+`r1-fact-freeze-formal-milestones-1-c65a9f7`。independent reconciliation
+`ff035c7129dd22d796b321124ad3082bd31ee1304502fe6b9b564eb06dbac22f` PASS，132-artifact closeout
+`d416156f4185977ee60d2f788efa48a019a7bb22897a4d35c3d68b111c8e4e29`。
+
+本 world formal history 为 3 PASS / 0 non-success；6 个 render diagnostics 与 7 个 setup entries 保持非资格化。
+API 403/remaining=0、DNS、HTML Accept header 与 operator path finding 不倒写成 formal ERROR；reset 后的新预检只证明
+readiness，新 Plan/session 的正式观察才参与冻结资格。doc252 全文件字节保持不变，合同 FROZEN 已生效，完整 Fact 实现
+仍 NOT_STARTED / NOT_AUTHORIZED。主仓 fast-forward 与只读 hygiene 属于后续 housekeeping，不追加冻结门。
+
+### R1 Fact projection / fulfillment 私有实现可行性审计候选
+
+[文档 254](254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)从本新 exact main 回 CONTROL LOOP，
+经独立人工授权审六条 seam。当前 frozen `/0.1` 只投影 MODULE/CLASS，完整五类 U/E 与逐来源完整核账仍未实现。
+
+有限 identifier corpus 在全部 `0x110000` codepoints 上检查四类谓词并与 reference built-ins 核对，另有 11 个 component
+gold；四格 canonical result 同为 `caa0629e50ec8507fe554bfb807c94b526e6b1d2a694baaf39f851d7b065c34e`。
+九个 product worlds 在四格产生 44 个实际 reference Parse children、0 Fact children；五类、raw byte anchors、nullable/
+collision/ASCII-init、不可表示与零成员边界 reduced result 同为
+`b5235912fe2cc4b3130337f7d830b3bf7ee79504bc05150ce3c8fee3163011ea`。
+
+首个 3.10 normal product attempt 因 audit fixture 将 UNCLASSIFIED 写成 disposition 而失败；11 个旧 Parse children 与
+52 份 immutable artifacts 保留。新 v2 只改 source_class，全部 world 在 fresh attempt 2 重做。synthetic authority model
+的 verifier falsifier又击穿 optional unsafe-release branch；v1 21-case PASS 保留原 corpus，v2 23-case 对四份 semantic
+inputs 的核账 SHA-256 为 `51359b7f5c10301714c24dfcb9d2fe66aedfa90712cd75675e839fa268ba7163`。
+这不是四格真实 Provider execution，也不是 successor admission 或 implementation authority。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+本候选只改四份入口/审计文档，保留全部旧合同、runtime、tests、Schema 与 frozen bytes。自己的 final local/original PR/
+protected merge/new exact-main/fresh product observations/independent reconciliation 闭合后才取得 FEASIBILITY_AUDITED；
+其后仍须独立 explicit implementation authorization。本轮不发布 ALLOWED，不选择 persistence，不启动 successor runtime、
+Coverage、public carrier、Evidence/Bundle、CLI/Workbench/Core、CLAIM_FIDELITY 或 tag/Release。
