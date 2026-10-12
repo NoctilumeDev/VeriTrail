@@ -3375,3 +3375,36 @@ independent reconciliation 全部闭合前，feasibility 仍为 candidate。闭�
 implementation authorization；本轮不发布 ALLOWED，不改 runtime/tests/Schema/Profile/Policy/旧合同/架构资产，不选择
 persistence，不启动 Fact→Coverage、ReviewSliceSet/Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbench/
 Core、CLAIM_FIDELITY、tag 或 Release。
+
+### R1 Fact projection / fulfillment 私有实现授权发布（条件目标）
+
+doc254 的资格链已在 `main@c9de08409ac0fda9bb1da9638d54077a4914cad0` 闭合：PR #292 head
+`816eda40ccef21db510b535d4a2a277addc46271` 与 merge tree 均为 `97ed9b306166f54f88e9f5b3f6096cfad1909a02`。
+original Public CI `38200446340`、exact-main Public CI `38201901095` 均 attempt 1 / 11/11 SUCCESS；Browser
+Smoke `38201901082` attempt 1 / 1/1 SUCCESS。fresh README/doc254/milestones 各自 P1/P2 COMPLETE、Core PASS，
+independent reconciliation `d8ae2060f3a44c9f775a482a8bdca152423b47bf83163faee2961533fd516b5c` PASS；125-artifact
+closeout `b6653116656bb0f8e1c2fcce6084ec4f3a13fcc59de318dd92974b028d600ea3` 保留正式/非资格历史。
+
+`FEASIBILITY_AUDITED` 已生效；doc254 的历史 candidate header 不改。本轮另获人工 docs-only 授权，仅由
+[文档 255](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)发布条件目标：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+doc255 final local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc254/
+doc255/milestones observations/independent reconciliation 全部闭合以前，ALLOWED 仅作 target，实际 authority 仍
+NOT_AUTHORIZED。四份观察必须属于本 publication 同一 merge SHA；历史 N 从 retained observations 机械导出。
+
+最后门闭合后仍回 CONTROL LOOP，再判断完整 U/E、独立 `/0.2`、product-only worker、per-Provider claim/lifecycle/
+内容与双向 provenance、required/optional/shared safety join、negative blocking 与 same-attempt continuation 是否仍为
+最小合法施工面。FPFCT-001–024 必须直接攻击实现；finite model 或旧 `/0.1` PASS 不替代真实 child/fulfillment。
+禁止 raw reparse、expected-answer 补写、Provider 自定 denominator、fresh BudgetContext、静默改 frozen identities。
+本发布只改四份文档，doc252/doc254 和全部其他 tracked bytes 保留；persistence、zero-member Fact-stage closure、
+Fact→Coverage、ReviewSliceSet/Coverage、public carrier/Schema、Evidence/Bundle/publisher、CLI/Workbench/Core、
+CLAIM_FIDELITY、tag/Release 均未授权。fixed closed worker 不等于通用 filesystem sandbox，首败与 UNKNOWN 不改写。
