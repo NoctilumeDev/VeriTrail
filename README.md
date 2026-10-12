@@ -136,9 +136,11 @@ python -m venv .venv
   [Fact 当前状态再审计](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)已完成自己的资格链；
   [完整 Fact 全集与履责最小合同](docs/252-r1-fact-projection-universe-and-fulfillment-contract.md)已由
   [独立冻结发布](docs/253-r1-fact-projection-fulfillment-contract-freeze-publication.md)闭合为 frozen 事实；
-  [私有实现可行性审计](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)仍是 candidate。
-  全集复算、逐来源完整输出对账与实际 child execution 分开；runtime 未获授权，持久化仍 OPEN，Coverage 未启动。
-  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[当前可行性审计](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)。
+  [私有实现可行性审计](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)已闭合为 qualified history。
+  [私有实现授权发布](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)仍是条件候选，
+  自己的最后门闭合前不授予 runtime authority。全集复算、逐来源输出对账与实际 child execution 分开；
+  完整 successor 实现未开始，持久化仍 OPEN，Coverage 未启动。
+  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -326,7 +328,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Parse → Fact consumer A–J 冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)与[Fact 当前状态再审计及条件化后继计划](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)：区分已有 product-use proof 与尚未建立的完整 Fact 履责；
 - [Fact projection universe / fulfillment 合同候选](docs/252-r1-fact-projection-universe-and-fulfillment-contract.md)：复核全集 owner、五类投影、逐 Provider 责任与 successor admission 的最小语义边界；
 - [Fact projection universe / fulfillment 独立冻结发布](docs/253-r1-fact-projection-fulfillment-contract-freeze-publication.md)：保留已资格化合同字节，区分 frozen target、生效门与尚未授权的实现；
-- [Fact 私有实现可行性审计候选](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)：区分真实 Parse products、有限五类模型、verifier falsifier 与尚未开始的 successor runtime；
+- [Fact 私有实现可行性审计历史](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)：区分真实 Parse products、有限五类模型、verifier falsifier 与尚未开始的 successor runtime；
+- [Fact 私有实现条件授权](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)：保存审计资格，限定有限私有施工面；自己的最后门未闭合前 ALLOWED 不生效；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

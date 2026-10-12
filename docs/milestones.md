@@ -4407,3 +4407,46 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 protected merge/new exact-main/fresh product observations/independent reconciliation 闭合后才取得 FEASIBILITY_AUDITED；
 其后仍须独立 explicit implementation authorization。本轮不发布 ALLOWED，不选择 persistence，不启动 successor runtime、
 Coverage、public carrier、Evidence/Bundle、CLI/Workbench/Core、CLAIM_FIDELITY 或 tag/Release。
+
+### R1 Fact projection / fulfillment feasibility 资格闭合与条件授权发布
+
+[PR #292](https://github.com/NoctilumeDev/VeriTrail/pull/292) head
+`816eda40ccef21db510b535d4a2a277addc46271` 已合入 `main@c9de08409ac0fda9bb1da9638d54077a4914cad0`；
+base `c65a9f7d915ea96b22c3ca4d641c12a09664b7ac`，一个 commit、四文件、`+293/-3`。head/merge tree 相同，为
+`97ed9b306166f54f88e9f5b3f6096cfad1909a02`。original Public CI `38200446340`、exact-main Public CI
+`38201901095` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38201901082` attempt 1 / 1/1 SUCCESS。
+Review Attention 四格各 `473 reported / 471 passed / 2 skipped`。
+
+fresh README/doc254/milestones 的 Plan 分别为 `r1-fact-feasibility-formal-readme-1-c9de084`、
+`r1-fact-feasibility-formal-doc254-1-c9de084` 与 `r1-fact-feasibility-formal-milestones-1-c9de084`，独立
+Plan/session/handoff 均 P1/P2 COMPLETE、Core PASS。independent reconciliation
+`d8ae2060f3a44c9f775a482a8bdca152423b47bf83163faee2961533fd516b5c` PASS，125-artifact closeout 为
+`b6653116656bb0f8e1c2fcce6084ec4f3a13fcc59de318dd92974b028d600ea3`。formal history 3 PASS / 0 non-success；
+6 个 render diagnostics、3 个 setup entries 非资格化。主仓 fast-forward/read-only hygiene 是后续 housekeeping。
+
+doc254 已成为 `FEASIBILITY_AUDITED` history；保留原 candidate header 和全部字节。fixture 首败的 11 个 Parse
+children/52 artifacts、v1 verifier falsifier 及上游 ERROR/CANCELLED/UNKNOWN 各保留原 identity。44 个最终 Parse
+children、0 Fact children 与 synthetic 核账仍不证明真实 successor execution 或 fulfillment。
+
+[文档 255](255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)经独立人工阶段授权，
+只发布有限 private implementation 条件目标：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_PROJECTION_FULFILLMENT_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+doc255 自己的 final local/original PR/separately approved precise-head merge/new exact-main Public CI+Browser/
+fresh README/doc254/doc255/milestones readback/independent reconciliation 全部闭合以前，实际 implementation
+authority 仍 NOT_AUTHORIZED。四目标各一个 qualifying PASS，同一 publication SHA；retained observation N 机械导出。
+生效后仍返回 CONTROL LOOP，不能按文档编号开工。
+
+后继施工最大面为 doc252/doc254 的完整 application-owned U/E、独立 `/0.2`、product-only worker、逐 Provider
+one-shot/lifecycle/内容与双向 provenance 核账、required/optional/shared safety join、negative blocking、same-attempt
+FactSet/continuation 和 FPFCT-001–024 反证。本发布不修改 runtime/tests/Schema/旧合同，不选择 persistence，不授权
+zero-member Fact-stage closure、Fact→Coverage、ReviewSliceSet/Coverage、public carrier、Evidence/Bundle/publisher、
+CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release。
