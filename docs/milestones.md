@@ -4474,3 +4474,39 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 
 本记录不发布 exact-main verified/frozen；不授予 persistence、zero-member Fact closure、Fact→Coverage、public
 ReviewSliceSet/Coverage、Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release。
+
+## R1 Fact projection / fulfillment 私有实现独立冻结发布（条件目标）
+
+[PR #295](https://github.com/NoctilumeDev/VeriTrail/pull/295) final head
+`daf11eb76a33b4522da2b2f0fc14f0ec280e5f1f` 已普通合入
+`main@b11eb0bd857f87ed7c4da4b9b74b14fcaac884d4`；candidate/merge tree 均为
+`6a807fea6ab9eed98320cc92ef73db3dfa4f3271`。original Public CI `38274256272`、exact-main Public CI
+`38278181528` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38278181407` attempt 1 / 1/1 SUCCESS。
+
+fresh README/doc256/milestones installed-product observations 均 P1/P2 COMPLETE、Core PASS，independent
+reconciliation `47a3069eb291c3cf69f59ce54454310c78d21df0ee20d807b0f0e8408cb4edcd` PASS；finite closeout
+`ffb3ad21d42d7b45c84533d40efbe7a26a611243c996a00ab2cd5f5db4c9c137`。setup1 的 47 份 nonqualifying
+artifacts、setup2 的 8 个 render diagnostics/4 个 setup diagnostics、实现首败、600 秒 containment、retention gap、
+readback identity setup error、三次 README 503 与所有更早 ERROR/FAIL/CANCELLED/UNKNOWN 均保留原身份。
+
+[文档 257](257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)是独立 docs-only status
+publication，只允许修改 README、AGENTS、milestones 并新增本文；doc252–256、六个 private modules、
+`test_fact_fulfillment.py`、runtime/tests/workflows/Schema/Profile/Policy/旧合同保持原字节。条件目标为：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+本 publication 自己的 final-byte local gates、original PR、另行批准的 exact-head protected merge、新 exact-main Public
+CI/Browser Smoke、fresh README/doc257/milestones observations 与 independent reconciliation 全部闭合前，`FROZEN`
+只是 target，不是生效事实。candidate readback 不替代本层 fresh identities；diagnostic 不取得资格，formal non-success
+保留原 identity，N 从 history 机械导出。
+
+本发布不授权 persistence Route A/B、zero-member Fact-stage closure、Fact→Coverage handoff、Relation/Slice public
+assembler、ReviewSliceSet/seven-stage Coverage、public Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、
+CLAIM_FIDELITY、tag 或 Release。最后门闭合后返回 CONTROL LOOP，从新 exact main 重新审计最小合法后继；不得按
+文档编号或绿色 CI 自动开工。

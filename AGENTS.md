@@ -3426,3 +3426,33 @@ bounded child 是本实现 witness，不能扩权。初始化首败、mapping fi
 读回与独立对账分别取证。FROZEN 仍需独立发布。persistence、zero-member Fact closure、Fact→Coverage、public
 ReviewSliceSet/Coverage、Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release
 继续禁止；若反例击穿前提，保现场归层，仅重开最小 seam，不修改 oracle 来获得 PASS。
+
+### R1 Fact projection / fulfillment 私有实现独立冻结发布（条件目标）
+
+doc256 候选已由 [PR #295](https://github.com/NoctilumeDev/VeriTrail/pull/295) final head
+`daf11eb76a33b4522da2b2f0fc14f0ec280e5f1f` 合入
+`main@b11eb0bd857f87ed7c4da4b9b74b14fcaac884d4`；受审与 merge tree 同为
+`6a807fea6ab9eed98320cc92ef73db3dfa4f3271`。original Public CI `38274256272` 与 exact-main Public CI
+`38278181528` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38278181407` attempt 1 / 1/1 SUCCESS。candidate
+fresh README/doc256/milestones observations 均 P1/P2 COMPLETE / Core PASS，independent reconciliation
+`47a3069eb291c3cf69f59ce54454310c78d21df0ee20d807b0f0e8408cb4edcd` PASS，finite closeout
+`ffb3ad21d42d7b45c84533d40efbe7a26a611243c996a00ab2cd5f5db4c9c137` 保留全部历史身份。
+
+[文档 257](docs/257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)只认领独立 docs-only
+status publication：保留 doc252–256、六个 private modules、`test_fact_fulfillment.py` 与全部其他 tracked bytes；只在
+自己的 final local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc257/
+milestones observations/independent reconciliation 全部闭合后发布：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+在最后门闭合前，branch 中的 `FROZEN` 只是条件 target。candidate readback 不能替代本 publication 的 fresh
+Plan/session/Evidence，diagnostic 不计入资格，formal non-success 必须保留原 identity，历史 N 从 observations 机械导出。
+冻结生效后仍必须返回 CONTROL LOOP；不得自动启动 persistence、zero-member Fact-stage closure、Fact→Coverage handoff、
+Relation/Slice public assembler、ReviewSliceSet/seven-stage Coverage、public Schema/carrier、Evidence/Bundle/publisher、
+CLI/Workbench/Core、CLAIM_FIDELITY、tag、Release 或任何后继合同/runtime。
