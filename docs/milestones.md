@@ -4450,3 +4450,27 @@ one-shot/lifecycle/内容与双向 provenance 核账、required/optional/shared 
 FactSet/continuation 和 FPFCT-001–024 反证。本发布不修改 runtime/tests/Schema/旧合同，不选择 persistence，不授权
 zero-member Fact-stage closure、Fact→Coverage、ReviewSliceSet/Coverage、public carrier、Evidence/Bundle/publisher、
 CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release。
+
+## R1 Fact projection / fulfillment 私有实现候选（doc255 A–J）
+
+doc255 的授权发布在 exact `main@46eb3ab55bdeea17cd5e6bd2bf614a05b109c0f6` 已闭合：四份 fresh README/doc254/
+doc255/milestones qualifying PASS、1 formal ERROR 保留，independent reconciliation
+`ebffc0fcdda1d1072ef7539a9f7413592c5732644ff00924f534057d68413644` PASS，177-artifact closeout
+`5d681ade0bbfd1dbf426b8ceebed90dffb209d405b67b0dfc48ad4f3127495c3`。ALLOWED 已生效；旧 doc255 条件 header 不改。
+
+fresh CONTROL LOOP 后，用户明确切换到 A–J，独立实现分支从该 exact main 认领
+[doc256](256-r1-fact-projection-fulfillment-private-implementation-candidate.md)候选。新增私有 `/0.2` 完整 U/E、
+closed worker、逐 Provider 履责和同 attempt 对账；保留旧 `/0.1`、frozen contracts 与 public surface 字节。
+固定四格 11-world corpus 共 52 actual Parse / 56 actual Fact children，语义字节一致；初始化实现首败和 mapping
+fixture 首败各保留。finite witness 不替代本候选的 final local/original PR/protected merge/exact-main/readback 门。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+本记录不发布 exact-main verified/frozen；不授予 persistence、zero-member Fact closure、Fact→Coverage、public
+ReviewSliceSet/Coverage、Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release。

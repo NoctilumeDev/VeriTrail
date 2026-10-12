@@ -137,9 +137,10 @@ python -m venv .venv
   [完整 Fact 全集与履责最小合同](docs/252-r1-fact-projection-universe-and-fulfillment-contract.md)已由
   [独立冻结发布](docs/253-r1-fact-projection-fulfillment-contract-freeze-publication.md)闭合为 frozen 事实；
   [私有实现可行性审计](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)已闭合为 qualified history。
-  [私有实现授权发布](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)仍是条件候选，
-  自己的最后门闭合前不授予 runtime authority。全集复算、逐来源输出对账与实际 child execution 分开；
-  完整 successor 实现未开始，持久化仍 OPEN，Coverage 未启动。
+  [私有实现授权发布](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)的最后门已闭合，
+  fresh CONTROL LOOP 与独立阶段确认后进入[完整 Fact 私有实现候选](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)。
+  全集复算、逐来源输出对账与实际 child execution 分开；候选须通过自己的资格链，尚非 exact-main verified/frozen；
+  持久化仍 OPEN，Coverage 未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。

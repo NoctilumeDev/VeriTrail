@@ -3408,3 +3408,21 @@ NOT_AUTHORIZED。四份观察必须属于本 publication 同一 merge SHA；历�
 本发布只改四份文档，doc252/doc254 和全部其他 tracked bytes 保留；persistence、zero-member Fact-stage closure、
 Fact→Coverage、ReviewSliceSet/Coverage、public carrier/Schema、Evidence/Bundle/publisher、CLI/Workbench/Core、
 CLAIM_FIDELITY、tag/Release 均未授权。fixed closed worker 不等于通用 filesystem sandbox，首败与 UNKNOWN 不改写。
+
+### R1 Fact projection / fulfillment 私有实现候选
+
+doc255 在 `main@46eb3ab55bdeea17cd5e6bd2bf614a05b109c0f6` 的最后门已闭合；4 qualifying PASS + 1 formal ERROR
+原身份保留，independent reconciliation `ebffc0fcdda1d1072ef7539a9f7413592c5732644ff00924f534057d68413644` PASS，
+177-artifact closeout `5d681ade0bbfd1dbf426b8ceebed90dffb209d405b67b0dfc48ad4f3127495c3`。
+新的 CONTROL LOOP 与明确阶段确认允许 doc255 A–J 私有实现；当前是
+[doc256](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)候选，尚未 exact-main verified/frozen。
+
+独立 `/0.2` 只在私有层构造完整 application-owned U/E、product-only closed worker、每 Provider one-shot/lifecycle/
+完整内容与双向 provenance、required/optional/shared-safety reconciliation 和 same-attempt continuation。旧 `/0.1`、
+frozen contracts、public exports、Schema/Profile/Policy/workflows 字节不变。FPFCT-001–024 的 gold/mutation 与真实
+bounded child 是本实现 witness，不能扩权。初始化首败、mapping fixture 首败及上游 non-success/UNKNOWN 保留。
+
+最终字节须经过 doc256 §6 的完整门；original PR、精确 head 合并、新 exact-main、fresh README/doc256/milestones
+读回与独立对账分别取证。FROZEN 仍需独立发布。persistence、zero-member Fact closure、Fact→Coverage、public
+ReviewSliceSet/Coverage、Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag/Release
+继续禁止；若反例击穿前提，保现场归层，仅重开最小 seam，不修改 oracle 来获得 PASS。
