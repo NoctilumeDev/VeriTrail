@@ -11,7 +11,8 @@ AI说任务完成了。**但是，凭什么相信？**
 并通过 GitHub 证据插件观察公开平台事实。
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
-源码审查已有部分内部机制完成验证，完整产品尚未发布；验证调度仍处于蓝图阶段。
+源码审查的 private Fact projection / fulfillment 闭环已完成候选资格，正由独立冻结发布确认；完整产品尚未发布；
+验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -138,9 +139,9 @@ python -m venv .venv
   [独立冻结发布](docs/253-r1-fact-projection-fulfillment-contract-freeze-publication.md)闭合为 frozen 事实；
   [私有实现可行性审计](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)已闭合为 qualified history。
   [私有实现授权发布](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)的最后门已闭合，
-  fresh CONTROL LOOP 与独立阶段确认后进入[完整 Fact 私有实现候选](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)。
-  全集复算、逐来源输出对账与实际 child execution 分开；候选须通过自己的资格链，尚非 exact-main verified/frozen；
-  持久化仍 OPEN，Coverage 未启动。
+  fresh CONTROL LOOP 与独立阶段确认后进入的[完整 Fact 私有实现候选](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)
+  已闭合自己的 exact-main 与读回资格；[独立冻结发布](docs/257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)
+  仍以自身最后门为生效条件。全集复算、逐来源输出对账与实际 child execution 分开；持久化仍 OPEN，Coverage 未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
@@ -331,6 +332,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Fact projection universe / fulfillment 独立冻结发布](docs/253-r1-fact-projection-fulfillment-contract-freeze-publication.md)：保留已资格化合同字节，区分 frozen target、生效门与尚未授权的实现；
 - [Fact 私有实现可行性审计历史](docs/254-r1-fact-projection-fulfillment-private-implementation-feasibility-audit.md)：区分真实 Parse products、有限五类模型、verifier falsifier 与尚未开始的 successor runtime；
 - [Fact 私有实现条件授权](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)：保存审计资格，限定有限私有施工面；自己的最后门未闭合前 ALLOWED 不生效；
+- [Fact 私有实现候选](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)：保存 private A–J 的实现、反证、完整资格矩阵与候选读回；
+- [Fact 私有实现独立冻结发布](docs/257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)：以自己的最后门条件化发布 private implementation frozen 状态，不授权后继 Coverage；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
