@@ -4510,3 +4510,45 @@ CI/Browser Smoke、fresh README/doc257/milestones observations 与 independent r
 assembler、ReviewSliceSet/seven-stage Coverage、public Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、
 CLAIM_FIDELITY、tag 或 Release。最后门闭合后返回 CONTROL LOOP，从新 exact main 重新审计最小合法后继；不得按
 文档编号或绿色 CI 自动开工。
+
+## R1 Fact projection / fulfillment 私有实现冻结资格闭合
+
+[PR #296](https://github.com/NoctilumeDev/VeriTrail/pull/296) final head
+`cd3001a3f9acaf0c70941aee04e90363e99099aa` 已由 ordinary merge 合入
+`main@50ab803671674b8a88245480aae06b5ba8fec526`；candidate/merge tree 均为
+`9369f3b43c9f08bf6ea43557794ea8dc14c51ea0`。original Public CI `38285546808` 与 exact-main
+Public CI `38316924237` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke `38316924154` attempt 1 / 1/1 SUCCESS。
+
+fresh README/doc257/milestones observations 均 P1/P2 COMPLETE、Core PASS；independent reconciliation
+`ee148157be125b140dc0f6a8918977f93227dd14e4afbd875a2f8a415e62dbed` PASS，120-artifact closeout
+`6d80880795b216d1cefce5dcead550ebe98b3f24bf0d8a2da864e28b9e7ecf1d`。setup1 adapter identity 与
+post-reconciliation PowerShell 调用错误保留原身份，qualification effect 为 NONE。doc257 的 FROZEN target 已成为
+生效事实；doc257 历史条件 header 不修改。
+
+## R1 Fact → Coverage same-attempt handoff 当前状态审计（候选）
+
+CONTROL LOOP 从上述 exact main 重新读取 doc194、doc252、doc257 与 current runtime。
+[文档 258](258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)发现：frozen Fact closure/object graph 已保留
+U/E、Parse partition、完整 Provider responsibility/lifecycle、terminal history、FactSet/absence 与 negative blockers，
+足以作为后继合同的 upstream；current normal continuation 却只提供 FactSet 与 BudgetContext，negative worlds 没有
+normal continuation，因此尚无被授权的 Fact→Coverage same-attempt handoff。
+
+六个 world 覆盖 all complete、optional failure、zero denominator、all rejected、unrepresentable U 与 required failure。
+四格 semantic report 各 20,353 bytes、SHA-256 均为
+`14110c2180d6067ed9f0d8d74aba1c8f82f944d140db15233c7bc6c1c82c212a`。current Fact fulfillment tests 四格各
+28 reported / 27 passed / 1 skipped；explicit reference runtime/Windows actual-child witness 未运行，不能写成实际通过。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+candidate 只发布问题边界。它不决定 handoff object/receipt、unrepresentable U 到 Coverage 0.1 vocabulary 的映射、
+persistence、Schema 或 public closure；也不启动 handoff runtime、ReviewSliceSet/Coverage、Evidence/Bundle/publisher、
+CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。自己的 original PR、protected merge、exact-main dual gates、
+fresh README/doc258/milestones readback 与 independent reconciliation 闭合后才成为 qualified audit history；其后仍返回
+CONTROL LOOP，不能自动起草合同。

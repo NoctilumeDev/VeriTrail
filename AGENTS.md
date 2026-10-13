@@ -3456,3 +3456,36 @@ Plan/session/Evidence，diagnostic 不计入资格，formal non-success 必须�
 冻结生效后仍必须返回 CONTROL LOOP；不得自动启动 persistence、zero-member Fact-stage closure、Fact→Coverage handoff、
 Relation/Slice public assembler、ReviewSliceSet/seven-stage Coverage、public Schema/carrier、Evidence/Bundle/publisher、
 CLI/Workbench/Core、CLAIM_FIDELITY、tag、Release 或任何后继合同/runtime。
+
+### R1 Fact → Coverage same-attempt handoff 当前状态审计（候选）
+
+doc257 的最后门已经在 `main@50ab803671674b8a88245480aae06b5ba8fec526` 闭合。PR #296 original Public CI
+`38285546808` 与 exact-main Public CI `38316924237` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38316924154` attempt 1 / 1/1 SUCCESS。fresh README/doc257/milestones 均 P1/P2 COMPLETE、Core PASS，
+independent reconciliation `ee148157be125b140dc0f6a8918977f93227dd14e4afbd875a2f8a415e62dbed` PASS；
+120-artifact closeout 为 `6d80880795b216d1cefce5dcead550ebe98b3f24bf0d8a2da864e28b9e7ecf1d`。
+因此 Fact private implementation FROZEN 已生效；历史条件 header 不修改。
+
+[文档 258](docs/258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)只认领新的 docs-only current-state
+audit。六个 finite worlds 证明 closure 已保留 U/E、Parse partition、完整 Provider responsibility/lifecycle、
+FactSet/absence 与 negative blockers；但 current normal continuation 只暴露 FactSet 与原 BudgetContext，negative worlds
+没有 normal continuation。FactSet/output 不能反推完整责任历史，unrepresentable U 也不能总映成 total Fact IDs。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+四格 audit semantic report 各 20,353 bytes 且 SHA-256 同为
+`14110c2180d6067ed9f0d8d74aba1c8f82f944d140db15233c7bc6c1c82c212a`；current Fact fulfillment tests
+四格各 28 reported / 27 passed / 1 skipped，skip 的 actual-child witness 不能写成实际通过。fixture shape 首败、
+identity-normalization finding、outer wait/setup errors 均保留原身份，不归为产品失败。
+
+本文自己的 local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc258/
+milestones readback/independent reconciliation 闭合以前只保持 candidate。它不授权 handoff 合同/runtime、
+ReviewSliceSet/Coverage、zero-member FactSet、Schema/carrier、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、
+CLAIM_FIDELITY、tag 或 Release。闭合以后返回 CONTROL LOOP；只有 seam 仍成立时，才可另行审查最小 handoff 合同。
