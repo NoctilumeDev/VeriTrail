@@ -3489,3 +3489,39 @@ identity-normalization finding、outer wait/setup errors 均保留原身份，�
 milestones readback/independent reconciliation 闭合以前只保持 candidate。它不授权 handoff 合同/runtime、
 ReviewSliceSet/Coverage、zero-member FactSet、Schema/carrier、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、
 CLAIM_FIDELITY、tag 或 Release。闭合以后返回 CONTROL LOOP；只有 seam 仍成立时，才可另行审查最小 handoff 合同。
+
+### R1 Fact → Coverage same-attempt handoff 最小合同候选
+
+doc258 的资格链已在 `main@ec0f7e08f45be57754e0cfe86f000de7ac045e4b` 闭合。PR #297 original Public CI
+`38322762959` 与 exact-main Public CI `38325172987` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38325172966` attempt 1 / 1/1 SUCCESS。fresh README/doc258/milestones 均 P1/P2 COMPLETE、Core PASS；
+independent reconciliation attempt 1 的 proof-facility `KeyError: publication_world` 保留，最小 key correction 后 attempt 2
+`97056811f6e0146cb36aeec710a9c1a0a0b4d2e3d07c3b5497b56d7d3b5b47ad` PASS，136-artifact closeout 为
+`353f00e0818e4d9fa72863fc19a5e2a48e17f959d7f5afb5482bc6e692bb1e87`。因此 current-state audit 已成为
+qualified history；历史 candidate header 不改。
+
+[文档 259](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)只认领 docs-only minimal semantic
+contract：handoff function 为 `r1-fact-to-coverage-handoff/0.1`，authority owner 是 exact upstream owned history 上的
+application。合同要求 total negative branches、完整 U/E/Provider/lifecycle history、unrepresentable U slot 无损保留、
+same-attempt one-shot claim 与严格 authority ceiling。FactSet、digest、normal continuation、fresh equal-limits Context 或
+serialized bytes 均不能自领 handoff authority。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+本合同不把 handoff 解释成 Coverage stage/status。Coverage 0.1 无法直接表达没有合法 Fact ID 的 U slot 时，必须停下来
+审查最小 successor/Schema，不得用 arbitrary digest、`DERIVATION_ERROR` 或 `UPSTREAM_DENOMINATOR_UNKNOWN` 掩盖。
+interrupted/unsafe world 若不能从 frozen parent/observation/stop history形成可验证 terminal source，同样 fail closed，不得
+制造 normal closure。
+
+本文自己的 final local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc259/
+milestones readback/independent reconciliation 全部闭合前只保持 contract candidate；之后还需独立 freeze publication。
+即使合同冻结，也不自动授权 handoff runtime、persistence、ReviewSliceSet/Coverage、public Schema/carrier、Evidence/
+Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。

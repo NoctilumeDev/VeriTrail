@@ -4552,3 +4552,44 @@ persistence、Schema 或 public closure；也不启动 handoff runtime、ReviewS
 CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。自己的 original PR、protected merge、exact-main dual gates、
 fresh README/doc258/milestones readback 与 independent reconciliation 闭合后才成为 qualified audit history；其后仍返回
 CONTROL LOOP，不能自动起草合同。
+
+## R1 Fact → Coverage same-attempt handoff 最小合同候选
+
+doc258 已在 `main@ec0f7e08f45be57754e0cfe86f000de7ac045e4b` 完成自己的资格链。PR #297 original Public CI
+`38322762959` 与 exact-main Public CI `38325172987` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38325172966` attempt 1 / 1/1 SUCCESS。fresh README/doc258/milestones 均 P1/P2 COMPLETE、Core PASS。
+independent reconciliation attempt 1 的 `KeyError: publication_world` 保留为 proof-facility failure；最小 key correction
+后的 attempt 2 `97056811f6e0146cb36aeec710a9c1a0a0b4d2e3d07c3b5497b56d7d3b5b47ad` PASS，136-artifact
+closeout 为 `353f00e0818e4d9fa72863fc19a5e2a48e17f959d7f5afb5482bc6e692bb1e87`。因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDITED
+```
+
+重新绑定该 exact main、冻结上游与 current object graph 后，没有出现需要重开 Fact、先选 persistence 或直接启动
+Coverage 的新反例。[文档 259](259-r1-fact-to-coverage-same-attempt-handoff-contract.md)因此只起草
+`r1-fact-to-coverage-handoff/0.1` 的 docs-only minimal contract：application 从 exact upstream owned history 发出
+same-attempt one-shot claim，完整交付 Parse partition、U/E/blockers、Provider responsibility/lifecycle、terminal history、
+FactSet/absence 与 whole-attempt safety state。
+
+合同明确保留 normal fulfilled、optional gap、zero denominator、all rejected、projection blocked、required Provider
+non-success 与 interrupted/unsafe worlds。FACT_DERIVATION denominator authority 来自 U；unrepresentable U slot 没有
+合法 Fact ID 时不得从 denominator 消失，也不得被任意 digest 或现有 Coverage reason 偷换。handoff 只交 Fact-stage
+history，不拥有 Coverage item/disposition mapping、seven-stage join、status、ReviewSliceSet、Verdict 或 publication。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+candidate 的 tracked scope 仅 README、AGENTS、本文与 milestones；doc252–258、runtime/tests/workflows/Schema/Profile/
+Policy/fixtures/identity vectors 保持基线字节。自己的 local/original PR/separately approved exact-head merge/new
+exact-main dual gates/fresh README/doc259/milestones observations/independent reconciliation 闭合后只成为 qualified
+contract candidate；还需独立 docs-only freeze publication 才可能 FROZEN。本文不授权 handoff implementation、
+persistence、ReviewSliceSet/Coverage、public carrier/Schema、Evidence/Bundle/publisher、CLI/Workbench/Core、
+CLAIM_FIDELITY、tag 或 Release。
