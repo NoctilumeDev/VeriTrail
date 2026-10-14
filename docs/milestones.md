@@ -4672,3 +4672,48 @@ observations/independent reconciliation 全部闭合后，最多成为 `FEASIBIL
 CONTROL LOOP，单独决定 implementation authorization。本轮不修改 runtime/tests/Schema，不选择 persistence，不启动
 Coverage item mapping、ReviewSliceSet/seven-stage Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、
 CLAIM_FIDELITY、tag 或 Release。
+
+## R1 Fact → Coverage same-attempt handoff private implementation 授权发布（条件目标）
+
+doc261 候选已完成自己的完整资格链：PR #301 final head
+`03c8df45d74ffbf3990dbb851d80f6b0a25784cd` 的 original Public CI `38647492297` attempt 1 为 11/11
+SUCCESS；merge `main@b6268103dc838706a8d2e8c9a2d4711a7d37a4d6` 的 Public CI `38650640469`
+attempt 1 为 11/11 SUCCESS，Browser Smoke `38650640457` attempt 1 为 1/1 SUCCESS。三个 fresh
+installed-product targets 均 P1/P2 COMPLETE、Core PASS，public bytes 等于 exact Git blobs。
+
+independent reconciliation
+`98860543daa467c235ce25acd69e414a0e350ca6354282fe32ead71b7e576188` PASS；135-artifact closeout 为
+`da2ee0a7f2f12a0dc388cb207a2d89abfb604a72aee2f8f496b57f188da99640`。formal history 为 3 PASS / 0
+non-success，三个 diagnostics 与三个 setup observations 保持非资格化。因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+```
+
+已经成为 qualified history；doc261 的历史 candidate marker 不修改。
+
+[文档 262](262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)只条件化发布 bounded
+A–J authority：exact Fact parent/closure/input/Context revalidation、`r1-fact-to-coverage-handoff/0.1` total projection、
+canonical Parse/U/E/blocker/Provider/observation ordering、normal/safe-negative source qualification、closure-level
+mutually-exclusive one-shot claim、fixed application-owned consumer、copy-owned value、unsafe/interrupted no-claim、
+same-attempt hardening 与 FCHC-000..011 direct falsifiers。
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+这些是条件目标。doc262 自己的 final local gates、original PR、单独批准 exact-head merge、new exact-main双门、fresh
+README/doc261/doc262/milestones observations 与 independent reconciliation 全部闭合以前，implementation authority
+仍 `NOT_AUTHORIZED`。即使最后门闭合，也只成为 `ALLOWED / NOT_STARTED`；必须返回 CONTROL LOOP 才能判断 A–J
+是否仍可开工。
+
+本 publication 不修改 runtime/tests/Schema、doc259–261、Profile/Policy/fixtures，不选择 persistence，不把 private
+U/blocker 映射为 Coverage item/disposition，也不启动 ReviewSliceSet/seven-stage Coverage、public carrier、Evidence/
+Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
