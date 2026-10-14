@@ -4593,3 +4593,35 @@ exact-main dual gates/fresh README/doc259/milestones observations/independent re
 contract candidate；还需独立 docs-only freeze publication 才可能 FROZEN。本文不授权 handoff implementation、
 persistence、ReviewSliceSet/Coverage、public carrier/Schema、Evidence/Bundle/publisher、CLI/Workbench/Core、
 CLAIM_FIDELITY、tag 或 Release。
+
+## R1 Fact → Coverage same-attempt handoff 最小合同独立冻结发布（条件目标）
+
+doc259 candidate 已经完成自己的资格链：PR #298 final head
+`fae10532d7781adb556956724ef6c532b2f74b66` original Public CI `38344285489` attempt 1 为 11/11 SUCCESS；
+ordinary merge `main@2a97b5cd6cdf0598db07a26d3640e4408f84713b` 的 Public CI `38626280347` attempt 1 为
+11/11 SUCCESS，Browser Smoke `38626280577` attempt 1 为 1/1 SUCCESS。三个 fresh installed-product targets 均
+P1/P2 COMPLETE、Core PASS，public bytes 等于 exact Git blobs。
+
+independent reconciliation attempt 1 的 `KeyError: changedFiles` 保留为 proof-facility failure；最小 metadata-shape
+修正后 attempt 2 `9f346117c05bdffd031092ddc689ecabfa8a7446701fa8122fbcf18f29949395` PASS。
+150-artifact closeout 的 candidate qualification SHA-256 为
+`3109b2a6a446ed6323db67df40b2579205bc7763bfc55d7cd4e1ec1eb6af297b`；doc259 full-file SHA-256 保持
+`afc40f1226325ac97297863bc99df4f837a37b1617d1c51e5c038cc0f9f39524`。因此 doc259 是 qualified candidate
+history，但它自己的历史 candidate marker 不改。
+
+[文档 260](260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)保留 doc259 的全部语义边界，只条件化发布：
+
+```text
+R1_FACT_PROJECTION_FULFILLMENT_CONTRACT_FROZEN
+R1_FACT_PROJECTION_FULFILLMENT_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_CURRENT_STATE_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+这些是 publication target。doc260 自己的 final local gates、original PR、单独批准 exact-head merge、new exact-main
+Public CI / Browser Smoke、fresh README/doc260/milestones readback 与 independent reconciliation 全部闭合前，冻结不生效。
+本发布不修改 doc259、runtime/tests/Schema/Profile/Policy，也不启动 handoff 实现、persistence、Coverage vocabulary、
+ReviewSliceSet/Coverage、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。

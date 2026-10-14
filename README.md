@@ -142,8 +142,9 @@ python -m venv .venv
   fresh CONTROL LOOP 与独立阶段确认后进入的[完整 Fact 私有实现候选](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)
   已由[独立冻结发布](docs/257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)闭合为 frozen
   upstream。[Fact → Coverage handoff 当前状态审计](docs/258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)
-  已闭合为 qualified history；新的[最小 handoff 合同候选](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)
-  只定义 private same-attempt 交接语义，runtime、持久化与 Coverage 均未启动。
+  已闭合为 qualified history；[最小 handoff 合同候选](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)
+  也已完成候选资格链，[独立冻结发布](docs/260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)以自己的最后门为
+  生效条件；runtime、持久化与 Coverage 均未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
@@ -338,6 +339,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Fact 私有实现独立冻结发布](docs/257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)：以自己的最后门条件化发布 private implementation frozen 状态，不授权后继 Coverage；
 - [Fact → Coverage same-attempt handoff 当前状态审计](docs/258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)：复核 frozen Fact history、现有 continuation surface、negative worlds 与后继 Coverage vocabulary seam；不创建 handoff 合同或 runtime；
 - [Fact → Coverage same-attempt handoff 最小合同候选](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)：冻结 claim owner、完整 history、negative branches、U slot 与 one-shot authority；不启动 runtime 或 Coverage；
+- [Fact → Coverage same-attempt handoff 合同独立冻结发布](docs/260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)：保留 doc259 已资格化字节，条件化发布 frozen target；不授权 handoff 实现、persistence 或 Coverage；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
