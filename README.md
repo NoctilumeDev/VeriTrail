@@ -142,9 +142,10 @@ python -m venv .venv
   fresh CONTROL LOOP 与独立阶段确认后进入的[完整 Fact 私有实现候选](docs/256-r1-fact-projection-fulfillment-private-implementation-candidate.md)
   已由[独立冻结发布](docs/257-r1-fact-projection-fulfillment-private-implementation-freeze-publication.md)闭合为 frozen
   upstream。[Fact → Coverage handoff 当前状态审计](docs/258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)
-  已闭合为 qualified history；[最小 handoff 合同候选](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)
-  也已完成候选资格链，[独立冻结发布](docs/260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)以自己的最后门为
-  生效条件；runtime、持久化与 Coverage 均未启动。
+  已闭合为 qualified history；[最小 handoff 合同](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)
+  已由[独立冻结发布](docs/260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)闭合为 frozen 事实。
+  当前只进入[私有实现可行性审计候选](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)；
+  implementation authority、持久化与 Coverage 均未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。

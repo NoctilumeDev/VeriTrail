@@ -4625,3 +4625,50 @@ R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
 Public CI / Browser Smoke、fresh README/doc260/milestones readback 与 independent reconciliation 全部闭合前，冻结不生效。
 本发布不修改 doc259、runtime/tests/Schema/Profile/Policy，也不启动 handoff 实现、persistence、Coverage vocabulary、
 ReviewSliceSet/Coverage、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
+
+## R1 Fact → Coverage same-attempt handoff private implementation 可行性审计（候选）
+
+doc260 已在 `main@bf6bedb002c1a9a4ade7e64b385be742dcf012fd` 完成自己的冻结资格链。PR #300 original
+Public CI `38639738028` 与 exact-main Public CI `38643028967` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38643028948` attempt 1 / 1/1 SUCCESS。fresh README/doc260/milestones 均 P1/P2 COMPLETE、Core PASS；
+independent reconciliation `ddf865aac99f1af7cf27dc69f73c04bdc251b88e02e5eb05b0d3fdfbca5358e2` PASS，
+149-artifact closeout `604f69a6784b36861507aa2020247dd5f5967b0756553884a662fc44de6be6a9`。因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+```
+
+成为当前事实；implementation 没有自动开始。
+
+[文档 261](261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)从本 exact main重读 doc259 §10–12、
+current Fact runtime、Coverage 0.1 vocabulary 与 retained counterexamples。current closure/parent graph 已保留完整
+Parse partition、U/E/blockers/mapping、Provider requiredness与child lifecycle、exact terminal/frame/execution observations、
+FactSet/absence、original Context与attempt identity。
+
+七个 finite worlds 分开 normal、optional gap、zero denominator、all rejected、U=3/E=2 projection blocked、required
+Provider failure与unsafe release。safe branches可以形成独立 handoff-specific source qualification；unsafe/interrupted
+必须 no-claim fail closed。legacy FactSet-only continuation不能扩权，handoff与legacy continuation必须共享一个互斥
+one-shot source state。unrepresentable U slot只留在 private handoff，不映射为 arbitrary `FACT` digest。
+
+最终 v4 matrix 四格归一化 SHA-256 为：
+
+```text
+22cc3c8ac29d31a891711fc7b8c49cd5b5c51e8b17805197751243cc7880462e
+```
+
+首个 matrix attempt 的 `KeyError: provider_descriptor` 保留为 `AUDIT_PROJECTION_ASSUMPTION_ERROR`；后继 refinement
+分别澄清 tuple container/member identity与pre/post legacy claim observer effect，不修改产品或合同。unchanged
+regression 四格各 `89 reported / 87 passed / 2 skipped`，两个 actual-child witness skip 不算通过。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+candidate自己的 local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc261/milestones
+observations/independent reconciliation 全部闭合后，最多成为 `FEASIBILITY_AUDITED` qualified history。其后仍返回
+CONTROL LOOP，单独决定 implementation authorization。本轮不修改 runtime/tests/Schema，不选择 persistence，不启动
+Coverage item mapping、ReviewSliceSet/seven-stage Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、
+CLAIM_FIDELITY、tag 或 Release。
