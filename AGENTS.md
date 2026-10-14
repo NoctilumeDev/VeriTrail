@@ -3559,3 +3559,37 @@ new exact-main dual gates、fresh README/doc260/milestones installed-product obs
 最后门闭合后必须返回 CONTROL LOOP，重新审查 handoff private feasibility；不得自动启动 runtime、persistence、
 Coverage item/disposition mapping、ReviewSliceSet/Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、
 CLAIM_FIDELITY、tag 或 Release。
+
+### R1 Fact → Coverage same-attempt handoff private implementation 可行性审计（条件状态）
+
+doc260 的最后门已经在 `main@bf6bedb002c1a9a4ade7e64b385be742dcf012fd` 闭合。PR #300 original Public CI
+`38639738028` 与 exact-main Public CI `38643028967` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38643028948` attempt 1 / 1/1 SUCCESS。fresh README/doc260/milestones 均 P1/P2 COMPLETE、Core PASS；
+independent reconciliation `ddf865aac99f1af7cf27dc69f73c04bdc251b88e02e5eb05b0d3fdfbca5358e2` PASS，
+149-artifact closeout 为 `604f69a6784b36861507aa2020247dd5f5967b0756553884a662fc44de6be6a9`。因此
+handoff contract FROZEN 已生效；proof-facility count/seal 首败保留原身份。
+
+[文档 261](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)只认领 docs-only private
+feasibility audit。current owned graph 已保留完整 Parse partition、U/E/blockers、Provider requiredness/lifecycle、exact
+observations、FactSet/absence、original Context 与 attempt identity；七个 finite worlds 和 reversed/equal-semantics worlds
+支持一个独立、copy-owned、same-attempt one-shot handoff successor。legacy FactSet-only continuation 不能扩权；safe negative
+terminal eligibility 必须独立受审，unsafe/interrupted只能 no-claim fail closed。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+最终 v4 matrix 的 CPython 3.10.6 / 3.13.13、normal / `-O` 归一化 bytes 相同，SHA-256 为
+`22cc3c8ac29d31a891711fc7b8c49cd5b5c51e8b17805197751243cc7880462e`。首个 matrix 的
+`KeyError: provider_descriptor` 保留为 audit read-path setup failure；后续 tuple/member identity 和 pre/post claim
+refinement 不改产品或 oracle。unchanged regression 四格各 `89 reported / 87 passed / 2 skipped`，skip 不算实际通过。
+
+本文自己的 final local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc261/
+milestones readback/independent reconciliation 全部闭合以前只保持 candidate；闭合后最多成为 `FEASIBILITY_AUDITED`。
+随后仍须返回 CONTROL LOOP 并另行取得 explicit implementation authorization。不得在本轮修改 runtime/tests/Schema、
+选择 persistence、映射 unrepresentable U 到 Coverage、启动 ReviewSliceSet/seven-stage Coverage、public carrier、
+Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
