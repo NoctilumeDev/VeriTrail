@@ -27,7 +27,7 @@ README/doc264/milestones 三个 formal observations 均 P1/P2 COMPLETE、Core PA
 830fa170391e1ae5689538337d4d62ebf47d550b44de5633a175830445b70108
 ```
 
-156-artifact closeout 为：
+128-artifact closeout 为：
 
 ```text
 a5898cce497e89dbb95e86fd5286a8e39719705273ed9cdc02fe55a499050516
