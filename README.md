@@ -147,7 +147,7 @@ python -m venv .venv
   [私有实现可行性审计](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)已完成自己的资格链。
   当前只进入[私有实现授权发布](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)；
   其最后门闭合前 implementation authority 仍未生效，持久化与 Coverage 均未启动。
-  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/255-r1-fact-projection-fulfillment-private-implementation-authorization-publication.md)。
+  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
