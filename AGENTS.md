@@ -3736,3 +3736,42 @@ PASS 但报告混入 interpreter version，attempt 4 将 runtime identity 移到
 readback/independent reconciliation闭合以前只保持candidate。它不授权composition contract、Fact/Relation/Slice successor
 runtime、ReviewSliceSet/CoverageLedger、Schema successor、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、
 R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage composition precontract audit（候选）
+
+doc265 已在 `main@ceaec8fce6b695a35f5eb5ea35847b6f60063b63` 完成自己的资格链。PR #306 first original
+Public CI `38751708053` 的 outer-timeout CANCELLED 保留；fresh independent original run `38755858920`、exact-main
+Public CI `38759957319` 与 Browser Smoke `38759957354` 均 SUCCESS。fresh README/doc265/milestones qualifying
+PASS 与 milestones formal attempt 1 ERROR 同时保留；independent reconciliation 为
+`e3961fc50a2317cdca2b36e41eae8bcd42419ef9b8ff48d59f12a912c9d164c8`，修正后的 149-artifact closeout 为
+`0c4a89aa1401e215a5d1e1c35e82bd4feef9393ff189178802695be815cebe1f`。
+
+[文档 266](docs/266-r1-review-slice-set-coverage-composition-precontract-audit.md)只审 future composition contract 的最小面。
+Fact handoff 保留 original Context/history，但 serialized surface 不含 Relation 所需完整 exact inputs；因此后继必须 join
+attempt-neutral immutable `DerivationInputSet` 与 one-shot live handoff，不能按 digest 拼接 histories、复制 claim 或在 fresh
+Context 重跑 Fact 后继承旧 authority。
+
+当前唯一未被反例击穿的最小 topology 是一个 application-owned single composition attempt：重验 exact inputs、一次 claim
+handoff、顺序形成 successor Relation qualification/admission、Slice closure、ReviewSliceSet admission，再对同一 owned history
+做 Coverage qualification。七阶段 denominator 必须分别回到 Snapshot、Policy、Language、Parse、Fact U、Relation domain 与
+Slice obligation owners；Coverage 不拥有考试范围。
+
+U=3/E=2 blocker slot 仍可用现有 FACT item identity，但 `UNREPRESENTABLE_EXPECTED_FACT` 不在 Coverage 0.1 vocabulary，
+因此 future contract 必须保留最小 version-stop rule，不能改名消除 blocker。四格 audit canonical report 均为 2726 bytes：
+
+```text
+report SHA-256 = eafcb77cdf5454f033f0bdbb6e592bedb853507a0af49e3111e1ff3c8b3e36ae
+```
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRECONTRACT_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本文自己的 local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc266/milestones
+readback/independent reconciliation闭合以前只保持candidate。它不授权composition contract、successor runtime、
+ReviewSliceSet/CoverageLedger、Schema successor、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
+CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
