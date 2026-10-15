@@ -12,7 +12,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 闭环与 Fact → Coverage same-attempt handoff 最小合同已经冻结；
-handoff 私有实现可行性已完成资格链，当前只进入条件化实现授权发布，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
+handoff 私有实现授权已生效，当前进入 bounded private implementation candidate，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -144,9 +144,10 @@ python -m venv .venv
   upstream。[Fact → Coverage handoff 当前状态审计](docs/258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)
   已闭合为 qualified history；[最小 handoff 合同](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)
   已由[独立冻结发布](docs/260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)闭合为 frozen 事实；
-  [私有实现可行性审计](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)已完成自己的资格链。
-  当前只进入[私有实现授权发布](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)；
-  其最后门闭合前 implementation authority 仍未生效，持久化与 Coverage 均未启动。
+  [私有实现可行性审计](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)已完成自己的资格链；
+  [私有实现授权发布](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)的最后门已闭合，
+  fresh CONTROL LOOP 后进入的[私有实现候选](docs/263-r1-fact-to-coverage-handoff-private-implementation-candidate.md)
+  仍须完成自己的资格链，持久化与 Coverage 均未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。

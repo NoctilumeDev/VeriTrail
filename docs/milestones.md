@@ -4717,3 +4717,58 @@ README/doc261/doc262/milestones observations 与 independent reconciliation 全�
 本 publication 不修改 runtime/tests/Schema、doc259–261、Profile/Policy/fixtures，不选择 persistence，不把 private
 U/blocker 映射为 Coverage item/disposition，也不启动 ReviewSliceSet/seven-stage Coverage、public carrier、Evidence/
 Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
+
+## R1 Fact → Coverage same-attempt handoff private implementation 候选
+
+doc262 后继资格链已经闭合：PR #302 final head `8582a5e2d0d2261f18ce746f470211159120a13e` 的 final original
+Public CI `38657864511` attempt 1 为 11/11 SUCCESS，较早 concurrency-cancelled run `38657826171` 保留；merge
+`main@a174ee739a39a8dda956ff9a8ea899c569a78cf3` 的 Public CI `38660718150` attempt 1 为 11/11 SUCCESS，
+Browser Smoke `38660717996` attempt 1 为 1/1 SUCCESS。四个 fresh installed-product targets 均取得 qualifying PASS，
+两个 formal ERROR 保留原 identity；independent reconciliation
+`e5f41ff354a491d7927703d16d021e0add5ddcb3f7bb1519dbf58e15668fd269` PASS，216-artifact closeout 为
+`a69cf12295b3018042e100321a9c6f1305ef5fec7a14973907d89272c96d3009`。因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+```
+
+成为当前事实；实现仍未由授权本身自动发生。
+
+[文档 263](263-r1-fact-to-coverage-handoff-private-implementation-candidate.md)在 fresh CONTROL LOOP 后认领 doc262 A–J。
+private `r1-fact-to-coverage-handoff/0.1` 从 exact owned Fact closure重验完整 Parse/U/E/blocker/Provider/observation/
+FactSet-or-absence/whole-attempt history；normal与safe-negative形成total projection，unsafe/interrupted no-claim fail closed。
+handoff与legacy FactSet-only continuation共享closure-level one-shot source；固定application consumer取得copy-owned value，
+不能重跑上游、修改history或发布Coverage。
+
+FCHC-000..011与附加replay/source-mutation hardening直接覆盖optional gap、zero denominator、all rejected、projection blocked、
+required failure、unsafe prefix、serialized knowledge、foreign equal Context、并发竞争与unrepresentable U。两组首败分别保留
+测试断言setup、canonical-order实现缺口、竞争撤销实现缺口与immutable-bytes mutation setup身份；后继PASS不覆盖。
+
+final-byte完整Review Attention的首个3.10 normal attempt在两个既有Slice H falsifier上得到
+`CONTINUATION_UNAVAILABLE`；fresh两用例与完整Slice join模块均PASS，未改oracle/timeout/order的fresh full attempt 2亦PASS。
+该首败保持`FULL_DISCOVERY_CROSS_MODULE_CONTINUATION_UNAVAILABLE / ROOT_CAUSE_UNKNOWN`，不被后继PASS覆盖，也不据此
+宣称handoff产品、合同或既有Slice实现失败。
+
+六个固定semantic worlds在CPython 3.10.6/3.13.13 normal/`-O`四格一致：
+
+```text
+182a1b233f5bdc4df3638b1e38c5ab38724931768f3c0999398cb15d25fa3a49
+```
+
+完整Review Attention四格各513 reported；3.10两格各512 passed/1 skipped，3.13两格各513 passed/0 skipped。
+Coverage Schema/Markdown/hygiene 31项四格PASS。exact Provider request/execution/terminal/frame bytes另行验证存在，semantic
+normalization不冒充跨attempt authority。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+candidate自己的final local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc263/
+milestones observations/independent reconciliation闭合以前，不得写成exact-main verified或frozen。FROZEN仍需独立事实发布。
+本轮不选择persistence，不定义Coverage item/disposition、FACT_DERIVATION status或seven-stage join，不修改public Schema/
+carrier，也不启动ReviewSliceSet/CoverageLedger、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag或Release。
