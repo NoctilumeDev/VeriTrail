@@ -3700,3 +3700,39 @@ exact-main Public CI / Browser Smoke、fresh README/doc264/milestones installed-
 reconciliation 全部闭合以前，`FROZEN` 不生效。即使最后门闭合，也必须返回 CONTROL LOOP；不得自动选择 persistence、
 定义 Coverage item/disposition、FACT_DERIVATION status 或 seven-stage join，不得启动 ReviewSliceSet/CoverageLedger、public
 Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
+
+### R1 ReviewSliceSet / Coverage composition 当前状态审计（候选）
+
+doc264 的最后门已经在 `main@20dd549d3f07f7b9185215eb3c8377dcd0f13a2c` 闭合。PR #304 original
+Public CI `38715944983`、exact-main Public CI `38736844425` 与 Browser Smoke `38736844350` 均 attempt 1
+SUCCESS，分别 11/11、11/11 与 1/1。fresh README/doc264/milestones 均 P1/P2 COMPLETE、Core PASS；independent
+reconciliation `830fa170391e1ae5689538337d4d62ebf47d550b44de5633a175830445b70108` PASS，156-artifact
+closeout 为 `a5898cce497e89dbb95e86fd5286a8e39719705273ed9cdc02fe55a499050516`。因此 handoff private
+implementation 已是 frozen upstream。
+
+[文档 265](docs/265-r1-review-slice-set-coverage-composition-current-state-audit.md)从该 exact main 复核 public 0.1
+identity/vocabulary、current private object graph 与 seven-stage join。current Relation/Slice path 不消费新 handoff，而是在独立
+BudgetContext/attempt 中重跑 historical Fact source operations；production source 尚无 handoff downstream consumer。相同
+Snapshot/Profile/Policy、Fact semantics 或 digest 不能把两套 histories 拼成一条 authority history。
+
+projection-blocked world 的 U=3/E=2 slot subject digest 可按 doc120 精确复算并通过现有 `FACT CoverageItemRef` shape，
+所以 identity 不要求先造新 item kind；但 `UNREPRESENTABLE_EXPECTED_FACT` 不在 Coverage 0.1 reason 闭集，shape-valid ref
+不授予 mapping/disposition authority。重跑 `SCQ-001` 仍得到 Snapshot 1项、首 stage 0项、下一 stage 1项、Schema与局部
+方程全绿且 overall COMPLETE 的 false ledger。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+仓库外 audit harness attempts 1/2 分别保留 missing repository `src` 与同名 `support.py` 解析错误；attempt 3 语义断言
+PASS 但报告混入 interpreter version，attempt 4 将 runtime identity 移到 manifest 后四格 canonical report 逐字节相同，SHA-256
+为 `89498f07c7d5b8cabaecf91e85b02c2484e56e94d871197f9a33c76ffeef5d78`，run manifest 为
+`042a95716be695a98dffebd43c2e8e44bdd3cc63e2947c4e661072435a4c49e3`。
+
+本文自己的 local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc265/milestones
+readback/independent reconciliation闭合以前只保持candidate。它不授权composition contract、Fact/Relation/Slice successor
+runtime、ReviewSliceSet/CoverageLedger、Schema successor、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、
+R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。

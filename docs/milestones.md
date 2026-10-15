@@ -4822,3 +4822,46 @@ Public CI / Browser Smoke、fresh README/doc264/milestones observations 与 inde
 不定义 Coverage item/disposition、FACT_DERIVATION status或seven-stage join，也不启动ReviewSliceSet/CoverageLedger、public
 carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag或Release。最后门闭合后返回
 CONTROL LOOP，不按文档编号自动进入 Coverage。
+
+## R1 ReviewSliceSet / Coverage composition 当前状态审计（候选）
+
+doc264 的最后门已经在 `main@20dd549d3f07f7b9185215eb3c8377dcd0f13a2c` 闭合。PR #304 original
+Public CI `38715944983`、exact-main Public CI `38736844425` 与 Browser Smoke `38736844350` 均 attempt 1
+SUCCESS，分别 11/11、11/11 与 1/1。fresh README/doc264/milestones 均 P1/P2 COMPLETE、Core PASS；independent
+reconciliation `830fa170391e1ae5689538337d4d62ebf47d550b44de5633a175830445b70108` PASS，156-artifact
+closeout 为 `a5898cce497e89dbb95e86fd5286a8e39719705273ed9cdc02fe55a499050516`。因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+```
+
+成为当前事实；Coverage contract/runtime 没有自动开始。
+
+[文档 265](265-r1-review-slice-set-coverage-composition-current-state-audit.md)只审 current composition topology。new frozen
+Fact handoff 没有 production consumer；historical Relation/Slice path 仍在独立 attempt 中重跑 Fact source operations 并构造自己的
+FactSet。两套 history 即使 semantic input/digest 相同，也没有 application-owned join authority。
+
+U=3/E=2 projection-blocked world 进一步澄清：blocker slot 的 `subject_key_digest` 可按 frozen Fact subject domain 精确复算，
+并符合现有 `FACT CoverageItemRef` shape；缺口是 mapping authority 与 `UNREPRESENTABLE_EXPECTED_FACT` 的无损
+disposition，而不是必然缺少 item identity。`SCQ-001` 重跑仍证明 Schema、digest 与逐 stage 局部方程可接受 cross-stage
+矛盾的 false COMPLETE ledger。
+
+仓库外 audit attempts 1/2 分别保留 import path 与同名 `support.py` 解析 setup ERROR；attempt 3 全部语义断言 PASS，只有报告
+错误混入 interpreter identity；attempt 4 把 runtime identity 移到 run manifest 后，CPython 3.10.6/3.13.13 normal/`-O`
+四格 canonical report 逐字节相同：
+
+```text
+report SHA-256 = 89498f07c7d5b8cabaecf91e85b02c2484e56e94d871197f9a33c76ffeef5d78
+run manifest   = 042a95716be695a98dffebd43c2e8e44bdd3cc63e2947c4e661072435a4c49e3
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+candidate 自己的 local/original PR/separately approved exact-head merge/new exact-main 双门/fresh README/doc265/milestones
+observations/independent reconciliation 全部闭合后，最多成为 qualified current-state audit。后继仍须返回 CONTROL LOOP，不能
+自动创建 composition contract、Fact/Relation/Slice successor runtime、ReviewSliceSet/CoverageLedger、Schema successor、
+persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
