@@ -11,8 +11,8 @@ AI说任务完成了。**但是，凭什么相信？**
 并通过 GitHub 证据插件观察公开平台事实。
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
-源码审查的 private Fact projection / fulfillment 闭环与 Fact → Coverage same-attempt handoff 最小合同已经冻结；
-handoff 私有实现候选已完成 exact-main 与产品读回资格，当前只进入独立冻结发布，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
+源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
+当前只进入 ReviewSliceSet / Coverage composition current-state audit，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -147,7 +147,9 @@ python -m venv .venv
   [私有实现可行性审计](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)已完成自己的资格链；
   [私有实现授权发布](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)的最后门已闭合，
   fresh CONTROL LOOP 后进入的[私有实现候选](docs/263-r1-fact-to-coverage-handoff-private-implementation-candidate.md)
-  仍须完成自己的资格链，持久化与 Coverage 均未启动。
+  已由[独立冻结发布](docs/264-r1-fact-to-coverage-handoff-private-implementation-freeze-publication.md)闭合为 frozen upstream；
+  当前[ReviewSliceSet / Coverage composition 状态审计](docs/265-r1-review-slice-set-coverage-composition-current-state-audit.md)
+  只审计完整七阶段 history 的 join authority，持久化与 Coverage 合同/runtime 均未启动。
   见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[授权生效条件](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
@@ -347,6 +349,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Fact → Coverage handoff 私有实现授权发布](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)：限定 bounded A–J 施工面；自己的最后门闭合以前 `ALLOWED` 不生效；
 - [Fact → Coverage handoff 私有实现候选](docs/263-r1-fact-to-coverage-handoff-private-implementation-candidate.md)：保存 A–J 实现、FCHC falsifier、六世界矩阵、完整资格门与 retained failures；
 - [Fact → Coverage handoff 私有实现独立冻结发布](docs/264-r1-fact-to-coverage-handoff-private-implementation-freeze-publication.md)：保留 doc263 已资格化字节，条件化发布 private implementation frozen 状态；不启动 Coverage；
+- [ReviewSliceSet / Coverage composition 当前状态审计](docs/265-r1-review-slice-set-coverage-composition-current-state-audit.md)：复核 frozen Fact handoff、独立 Relation/Slice history、U-slot identity/disposition 与 seven-stage cross-stage join；不创建合同、runtime 或 Schema；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
