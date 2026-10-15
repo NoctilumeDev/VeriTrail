@@ -3593,3 +3593,37 @@ milestones readback/independent reconciliation 全部闭合以前只保持 candi
 随后仍须返回 CONTROL LOOP 并另行取得 explicit implementation authorization。不得在本轮修改 runtime/tests/Schema、
 选择 persistence、映射 unrepresentable U 到 Coverage、启动 ReviewSliceSet/seven-stage Coverage、public carrier、
 Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
+
+### R1 Fact → Coverage same-attempt handoff private implementation 授权发布（条件目标）
+
+doc261 已在 `main@b6268103dc838706a8d2e8c9a2d4711a7d37a4d6` 完成自己的资格链。PR #301 original
+Public CI `38647492297` 与 exact-main Public CI `38650640469` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38650640457` attempt 1 / 1/1 SUCCESS。fresh README/doc261/milestones 均 P1/P2 COMPLETE、Core PASS；
+independent reconciliation
+`98860543daa467c235ce25acd69e414a0e350ca6354282fe32ead71b7e576188` PASS，135-artifact closeout 为
+`da2ee0a7f2f12a0dc388cb207a2d89abfb604a72aee2f8f496b57f188da99640`。因此 doc261 已成为
+`FEASIBILITY_AUDITED` qualified history；它的历史 candidate header 不改。
+
+[文档 262](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)只条件化发布
+doc261 §10 的 A–J private implementation authority：exact owned Fact history revalidation、total semantic
+projection、canonical ordering、normal/safe-negative source qualification、与 legacy continuation 互斥的 closure-level
+one-shot claim、固定 application-owned consumer、copy-owned value、unsafe/interrupted no-claim、same-attempt hardening
+与 FCHC-000..011 direct falsifiers。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+这些是 publication target。doc262 自己的 final local gates、original PR、单独批准 exact-head merge、new exact-main
+Public CI / Browser Smoke、fresh README/doc261/doc262/milestones readback 与 independent reconciliation 全部闭合以前，
+`ALLOWED` 不生效，runtime 仍 `NOT_STARTED / NOT_AUTHORIZED`。本发布不修改 runtime/tests/Schema、doc259–261、
+Profile/Policy/fixtures，也不选择 persistence、映射 unrepresentable U、启动 Coverage item/disposition、ReviewSliceSet/
+seven-stage Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。
+
+授权生效后仍须返回 CONTROL LOOP，重新绑定新 exact main；只有 A–J 仍是最小合法 seam 时才可另建 implementation
+branch。`PRIVATE_IMPLEMENTATION_ALLOWED` 不证明实现已经发生、完成、合入、冻结或拥有 Coverage authority。
