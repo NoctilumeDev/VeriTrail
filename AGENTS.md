@@ -3665,3 +3665,38 @@ final-byte完整Review Attention的首个3.10 normal attempt在两个既有Slice
 milestones readback/independent reconciliation闭合以前只保持 implementation candidate；FROZEN仍须独立发布。不得选择
 persistence、定义Coverage item/disposition或FACT_DERIVATION status、启动ReviewSliceSet/seven-stage Coverage、修改public
 Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag或Release。
+
+### R1 Fact → Coverage same-attempt handoff private implementation 冻结发布（条件目标）
+
+doc263 候选已在 `main@83ad8f10b68f1d085b83310613c6f5cc06292d28` 完成自己的资格链。PR #303 original
+Public CI `38702235329` 与 exact-main Public CI `38705035837` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38705035878` attempt 1 / 1/1 SUCCESS。fresh README/doc263/milestones 均 P1/P2 COMPLETE、Core PASS，public bytes
+等于同一 exact main 的 Git blobs。independent reconciliation attempt 1 的祖先 closeout 文件名假设错误保留为
+`RECONCILIATION_ANCESTOR_CLOSEOUT_FILENAME_SETUP_ERROR`；只修 proof-facility path 的版本化 attempt 2 PASS，SHA-256 为
+`fa37b88dfc1007bb6eee8494ef5a372c3ab50564f78734ca7234e13f32d5da96`。144-artifact closeout 为
+`d69d906750712846a82246ff09050e4a869ed95adc4db6c9760f95727816c767`。正式 observation history 为 3 PASS / 0
+non-success；diagnostic 与 setup observations 保持非资格化。因此 doc263 已成为
+`CANDIDATE_MERGED_EXACT_MAIN_READBACK_QUALIFIED` history，历史 candidate header 不改。
+
+本 publication 的首个本地四格窄测试调用未绑定 repository `src`，各格均在 Markdown 模块导入时留下
+`LOCAL_TEST_INVOCATION_IMPORT_PATH_SETUP_ERROR`；已执行的22项Schema与5项hygiene均PASS。fresh attempt 2只修调用方
+`PYTHONPATH`，四格各31/31 PASS；测试、产品、文档语义与oracle未修改，首败不被后继PASS覆盖，publication最终字节仍由
+自己的local qualification单独受审。
+
+[文档 264](docs/264-r1-fact-to-coverage-handoff-private-implementation-freeze-publication.md)只条件化发布已资格化的 bounded
+private implementation，不修改 doc259–263、runtime、tests、Schema、Profile、Policy、fixtures 或 corpus：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+这些是 publication target。doc264 自己的 final-byte local gates、original PR、单独批准 exact-head protected merge、new
+exact-main Public CI / Browser Smoke、fresh README/doc264/milestones installed-product observations 与 independent
+reconciliation 全部闭合以前，`FROZEN` 不生效。即使最后门闭合，也必须返回 CONTROL LOOP；不得自动选择 persistence、
+定义 Coverage item/disposition、FACT_DERIVATION status 或 seven-stage join，不得启动 ReviewSliceSet/CoverageLedger、public
+Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag 或 Release。

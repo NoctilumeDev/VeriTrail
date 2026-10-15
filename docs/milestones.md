@@ -4772,3 +4772,53 @@ candidate自己的final local/original PR/separately approved exact-head merge/n
 milestones observations/independent reconciliation闭合以前，不得写成exact-main verified或frozen。FROZEN仍需独立事实发布。
 本轮不选择persistence，不定义Coverage item/disposition、FACT_DERIVATION status或seven-stage join，不修改public Schema/
 carrier，也不启动ReviewSliceSet/CoverageLedger、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag或Release。
+
+## R1 Fact → Coverage same-attempt handoff private implementation 独立冻结发布（条件目标）
+
+doc263 候选已在 `main@83ad8f10b68f1d085b83310613c6f5cc06292d28` 完成自己的完整资格链：PR #303 final
+head `f585cffe54f7949859d3adf76833500f2aa9c76a` 的 original Public CI `38702235329` attempt 1 为 11/11
+SUCCESS；ordinary merge tree与受审 candidate tree同为 `9ab55471f81711fdb80ab6de638c2f504f5ce9b1`。exact-main
+Public CI `38705035837` attempt 1 为 11/11 SUCCESS，Browser Smoke `38705035878` attempt 1 为 1/1 SUCCESS。
+
+三个 fresh installed-product targets 均取得 qualifying PASS：README、doc263、milestones 的 P1/P2 均 COMPLETE、Core
+PASS，公开字节逐字节等于同一 exact main 的 Git blobs。independent reconciliation attempt 1 因 proof facility 假定错误的
+祖先 closeout 文件名而失败，保持 `RECONCILIATION_ANCESTOR_CLOSEOUT_FILENAME_SETUP_ERROR`；版本化 attempt 2 只修正该
+path owner，未修改产品观察、sealed Plan、Evidence、oracle 或 doc263 字节，并取得 PASS：
+
+```text
+independent reconciliation = fa37b88dfc1007bb6eee8494ef5a372c3ab50564f78734ca7234e13f32d5da96
+144-artifact closeout       = d69d906750712846a82246ff09050e4a869ed95adc4db6c9760f95727816c767
+```
+
+正式 history 为 3 PASS / 0 non-success；三个 render diagnostics、anonymous rate/preflight diagnostics、adapter derivation
+setup error与两次 reconciliation facility observations均完整保留且不参与资格。因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_CANDIDATE_MERGED_EXACT_MAIN_READBACK_QUALIFIED
+```
+
+已经成为 qualified history；doc263 的历史 candidate marker与全部首败不修改。
+
+本 publication 首个本地四格窄测试调用遗漏 exact repository `src` import binding，22项Schema与5项hygiene已执行PASS，
+Markdown模块则在断言前以`ModuleNotFoundError: veritrail`停止，保留为`LOCAL_TEST_INVOCATION_IMPORT_PATH_SETUP_ERROR`。
+fresh attempt 2只设置调用方`PYTHONPATH`，不改测试、产品、文档语义或oracle，四格各31/31 PASS；publication最终字节仍由
+自己的local qualification单独受审。
+
+[文档 264](264-r1-fact-to-coverage-handoff-private-implementation-freeze-publication.md)只做 L0 docs/status publication，
+条件化发布：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+doc264 自己的 final-byte local gates、original publication PR、单独批准 exact-head protected merge、new exact-main
+Public CI / Browser Smoke、fresh README/doc264/milestones observations 与 independent reconciliation 全部闭合以前，
+`FROZEN` 只是 target。该发布不修改 runtime/tests/Schema、doc259–263、Profile/Policy/fixtures/corpus，不选择 persistence，
+不定义 Coverage item/disposition、FACT_DERIVATION status或seven-stage join，也不启动ReviewSliceSet/CoverageLedger、public
+carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag或Release。最后门闭合后返回
+CONTROL LOOP，不按文档编号自动进入 Coverage。
