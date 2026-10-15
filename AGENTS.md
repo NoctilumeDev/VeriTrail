@@ -3706,7 +3706,7 @@ Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY
 doc264 的最后门已经在 `main@20dd549d3f07f7b9185215eb3c8377dcd0f13a2c` 闭合。PR #304 original
 Public CI `38715944983`、exact-main Public CI `38736844425` 与 Browser Smoke `38736844350` 均 attempt 1
 SUCCESS，分别 11/11、11/11 与 1/1。fresh README/doc264/milestones 均 P1/P2 COMPLETE、Core PASS；independent
-reconciliation `830fa170391e1ae5689538337d4d62ebf47d550b44de5633a175830445b70108` PASS，156-artifact
+reconciliation `830fa170391e1ae5689538337d4d62ebf47d550b44de5633a175830445b70108` PASS，128-artifact
 closeout 为 `a5898cce497e89dbb95e86fd5286a8e39719705273ed9cdc02fe55a499050516`。因此 handoff private
 implementation 已是 frozen upstream。
 
