@@ -12,7 +12,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 闭环与 Fact → Coverage same-attempt handoff 最小合同已经冻结；
-handoff 私有实现授权已生效，当前进入 bounded private implementation candidate，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
+handoff 私有实现候选已完成 exact-main 与产品读回资格，当前只进入独立冻结发布，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -343,6 +343,10 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Fact → Coverage same-attempt handoff 当前状态审计](docs/258-r1-fact-to-coverage-same-attempt-handoff-current-state-audit.md)：复核 frozen Fact history、现有 continuation surface、negative worlds 与后继 Coverage vocabulary seam；不创建 handoff 合同或 runtime；
 - [Fact → Coverage same-attempt handoff 最小合同候选](docs/259-r1-fact-to-coverage-same-attempt-handoff-contract.md)：冻结 claim owner、完整 history、negative branches、U slot 与 one-shot authority；不启动 runtime 或 Coverage；
 - [Fact → Coverage same-attempt handoff 合同独立冻结发布](docs/260-r1-fact-to-coverage-handoff-contract-freeze-publication.md)：保留 doc259 已资格化字节，条件化发布 frozen target；不授权 handoff 实现、persistence 或 Coverage；
+- [Fact → Coverage handoff 私有实现可行性审计](docs/261-r1-fact-to-coverage-handoff-private-implementation-feasibility-audit.md)：复核完整 Fact history、safe-negative worlds、one-shot source 与现有 runtime primitives；不修改 runtime；
+- [Fact → Coverage handoff 私有实现授权发布](docs/262-r1-fact-to-coverage-handoff-private-implementation-authorization-publication.md)：限定 bounded A–J 施工面；自己的最后门闭合以前 `ALLOWED` 不生效；
+- [Fact → Coverage handoff 私有实现候选](docs/263-r1-fact-to-coverage-handoff-private-implementation-candidate.md)：保存 A–J 实现、FCHC falsifier、六世界矩阵、完整资格门与 retained failures；
+- [Fact → Coverage handoff 私有实现独立冻结发布](docs/264-r1-fact-to-coverage-handoff-private-implementation-freeze-publication.md)：保留 doc263 已资格化字节，条件化发布 private implementation frozen 状态；不启动 Coverage；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
