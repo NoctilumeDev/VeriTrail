@@ -3627,3 +3627,41 @@ seven-stage Coverage、public carrier、Evidence/Bundle/publisher、CLI/Workbenc
 
 授权生效后仍须返回 CONTROL LOOP，重新绑定新 exact main；只有 A–J 仍是最小合法 seam 时才可另建 implementation
 branch。`PRIVATE_IMPLEMENTATION_ALLOWED` 不证明实现已经发生、完成、合入、冻结或拥有 Coverage authority。
+
+### R1 Fact → Coverage same-attempt handoff private implementation 候选
+
+doc262 已在 `main@a174ee739a39a8dda956ff9a8ea899c569a78cf3` 完成自己的最后门。PR #302 final original
+Public CI `38657864511` 与 exact-main Public CI `38660718150` 均 attempt 1 / 11/11 SUCCESS；Browser Smoke
+`38660717996` attempt 1 / 1/1 SUCCESS。较早 concurrency-cancelled run `38657826171` 与两个 formal ERROR 保持原身份；
+四份 fresh README/doc261/doc262/milestones 均取得 qualifying PASS。independent reconciliation
+`e5f41ff354a491d7927703d16d021e0add5ddcb3f7bb1519dbf58e15668fd269` PASS，216-artifact closeout 为
+`a69cf12295b3018042e100321a9c6f1305ef5fec7a14973907d89272c96d3009`。因此 private implementation authority 已生效。
+
+[文档 263](docs/263-r1-fact-to-coverage-handoff-private-implementation-candidate.md)只认领 doc262 A–J 的 bounded
+private implementation：exact owned Fact history重验、`r1-fact-to-coverage-handoff/0.1` total projection、canonical
+responsibility ordering、normal/safe-negative source qualification、与 legacy continuation互斥的 one-shot source、固定
+application consumer、copy-owned value、unsafe/interrupted no-claim与 same-attempt hardening。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+```
+
+FCHC-000..011与replay/source-mutation falsifier保留normal、optional gap、zero denominator、all rejected、projection
+blocked、required failure、unsafe/interrupted、foreign equal context与并发竞争。四格六世界去provenance semantic bytes
+一致，SHA-256为 `182a1b233f5bdc4df3638b1e38c5ab38724931768f3c0999398cb15d25fa3a49`；exact request/
+execution/terminal/frame bytes另行验证存在，不由semantic equality替代。
+
+final-byte完整Review Attention的首个3.10 normal attempt在两个既有Slice H falsifier上得到
+`CONTINUATION_UNAVAILABLE`；fresh两用例与完整Slice join模块均PASS，未改oracle/timeout/order的fresh full attempt 2亦PASS。
+该首败保持`FULL_DISCOVERY_CROSS_MODULE_CONTINUATION_UNAVAILABLE / ROOT_CAUSE_UNKNOWN`，不被后继PASS覆盖，也不据此
+宣称handoff产品、合同或既有Slice实现失败。
+
+本文自己的 final local/original PR/separately approved exact-head merge/new exact-main dual gates/fresh README/doc263/
+milestones readback/independent reconciliation闭合以前只保持 implementation candidate；FROZEN仍须独立发布。不得选择
+persistence、定义Coverage item/disposition或FACT_DERIVATION status、启动ReviewSliceSet/seven-stage Coverage、修改public
+Schema/carrier、Evidence/Bundle/publisher、CLI/Workbench/Core、CLAIM_FIDELITY、tag或Release。

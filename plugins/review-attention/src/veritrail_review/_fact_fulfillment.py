@@ -197,7 +197,9 @@ class OwnedProductFactConsumer:
         self.__continuation = continuation
         self.__bound_continuation = continuation
         self.__attempt = continuation._attempt_ref()
+        self.__bound_attempt = self.__attempt
         self.__inputs = self.__attempt._inputs_ref()
+        self.__bound_inputs = self.__inputs
         self.__input_seal = _input_state_seal(self.__inputs)
         self.__context = self.__attempt._context_ref()
         self.__bound_context = self.__context
@@ -211,10 +213,13 @@ class OwnedProductFactConsumer:
         self.__product_set = continuation._product_set()
         self.__bound_product_set = self.__product_set
         self.__classification = self.__attempt._classification_ref()
+        self.__bound_classification = self.__classification
         self.__derivation_id = derivation_id
         self.__attempt_id = semantic_digest(
             "veritrail.review.private-product-fact-attempt/0.2", {"nonce": uuid4().hex}
         )
+        self.__bindings = bindings
+        self.__bound_bindings = bindings
         self.__required = dict(required)
         self.__transport_limits = transport_limits
         self.__cancellation_requested = cancellation_requested
@@ -226,6 +231,13 @@ class OwnedProductFactConsumer:
             {
                 "derivation_id": derivation_id,
                 "consumer_attempt_id": self.__attempt_id,
+                "bindings": [
+                    {
+                        "descriptor": binding.descriptor.document(),
+                        "launch_key": binding.launch_key,
+                    }
+                    for binding in bindings
+                ],
                 "required": self.__required,
                 "transport_limits": {
                     "request_payload_bytes": transport_limits.request_payload_bytes,
@@ -364,6 +376,9 @@ class OwnedProductFactConsumer:
                 )
                 != self.__budget_identity
                 or self.__eligibility is not self.__bound_eligibility
+                or self.__attempt is not self.__bound_attempt
+                or self.__inputs is not self.__bound_inputs
+                or self.__classification is not self.__bound_classification
                 or self.__continuation is not self.__bound_continuation
                 or self.__product_set is not self.__bound_product_set
                 or self.__continuation._attempt_ref() is not self.__attempt
@@ -374,6 +389,7 @@ class OwnedProductFactConsumer:
                 or self.__attempt._parent_eligibility_ref() is not self.__eligibility
                 or self.__qualification is not self.__bound_qualification
                 or self.__claims is not self.__bound_claims
+                or self.__bindings is not self.__bound_bindings
                 or self.__cancellation_requested
                 is not self.__bound_cancellation_requested
                 or _input_state_seal(self.__inputs) != self.__input_seal
@@ -387,6 +403,13 @@ class OwnedProductFactConsumer:
                 {
                     "derivation_id": self.__derivation_id,
                     "consumer_attempt_id": self.__attempt_id,
+                    "bindings": [
+                        {
+                            "descriptor": binding.descriptor.document(),
+                            "launch_key": binding.launch_key,
+                        }
+                        for binding in self.__bindings
+                    ],
                     "required": self.__required,
                     "transport_limits": {
                         "request_payload_bytes": self.__transport_limits.request_payload_bytes,
@@ -457,6 +480,251 @@ class OwnedProductFactConsumer:
     def _revoke(self) -> None:
         for eligibility in (self.__bound_eligibility, self.__eligibility):
             eligibility.revoke()
+
+    def _handoff_source_document(
+        self, closure: "OwnedProductFactClosure"
+    ) -> tuple[dict[str, object], BudgetContext]:
+        """Revalidate and copy the complete owned Fact-stage history."""
+
+        try:
+            if (
+                closure is not self.__closure
+                or self.__attempt is not self.__bound_attempt
+                or self.__inputs is not self.__bound_inputs
+                or self.__context is not self.__bound_context
+                or self.__eligibility is not self.__bound_eligibility
+                or self.__continuation is not self.__bound_continuation
+                or self.__product_set is not self.__bound_product_set
+                or self.__classification is not self.__bound_classification
+                or self.__bindings is not self.__bound_bindings
+                or self.__qualification is not self.__bound_qualification
+                or self.__claims is not self.__bound_claims
+                or self.__cancellation_requested
+                is not self.__bound_cancellation_requested
+                or _input_state_seal(self.__inputs) != self.__input_seal
+                or (
+                    self.__context.limits,
+                    self.__context.started_at_monotonic,
+                    self.__context.execution_deadline_monotonic,
+                )
+                != self.__budget_identity
+                or self.__context.state is not BudgetState.RUNNING
+                or self.__context.stop_trigger is not None
+                or not self.__context.checkpoint()
+                or not self.__reconciled
+            ):
+                raise ValueError
+
+            static = canonical_json_bytes(
+                {
+                    "derivation_id": self.__derivation_id,
+                    "consumer_attempt_id": self.__attempt_id,
+                    "bindings": [
+                        {
+                            "descriptor": binding.descriptor.document(),
+                            "launch_key": binding.launch_key,
+                        }
+                        for binding in self.__bindings
+                    ],
+                    "required": self.__required,
+                    "transport_limits": {
+                        "request_payload_bytes": self.__transport_limits.request_payload_bytes,
+                        "terminal_payload_bytes": self.__transport_limits.terminal_payload_bytes,
+                    },
+                }
+            )
+            if static != self.__bound_static:
+                raise ValueError
+
+            _revalidate_exact_inputs(self.__inputs)
+            recomputed_classification = classify_language_support(self.__inputs)
+            if (
+                recomputed_classification.classification_document_copy()
+                != self.__classification.classification_document_copy()
+            ):
+                raise ValueError
+
+            recomputed_qualification = (
+                qualify(self._projection(self.__bindings[0]))
+                if self.__product_set.accepted_count
+                else {
+                    "function": "r1-fact-projection-fulfillment/0.1",
+                    "status": "BLOCKED_NO_ACCEPTED_PRODUCTS",
+                    "universe": [],
+                    "expected": [],
+                    "parse_partition": self.__product_set.product_set_document_copy(),
+                }
+            )
+            if canonical_json_bytes(recomputed_qualification) != self.__qualification:
+                raise ValueError
+
+            document = closure.document_copy()
+            observations = closure._observations_ref()
+            if len(observations) != len(self.__reconciliation_history) or any(
+                not any(left is right for right in self.__reconciliation_history)
+                for left in observations
+            ):
+                raise ValueError
+            if len(observations) != len(self.__execution_history) or any(
+                left is not right
+                for left, right in zip(observations, self.__execution_history)
+            ):
+                raise ValueError
+
+            qualification = self.qualification_copy()
+            status = document["consumer_status"]
+            if any(
+                observation.lifecycle in {"RELEASE_FAILED", "INTERRUPTED"}
+                for observation in observations
+            ):
+                raise ProductFactConsumerError(
+                    "unsafe or interrupted history has no handoff claim"
+                )
+            if qualification["status"] != "QUALIFIED":
+                if observations or document["fact_set"] is not None:
+                    raise ValueError
+                expected_parent_state = AttemptEligibilityState.ADMITTED
+            elif status == "COMPLETED":
+                if document["fact_set"] is None:
+                    raise ValueError
+                expected_parent_state = AttemptEligibilityState.ADMITTED
+            elif status in {"FAILED", "UNAVAILABLE"}:
+                if document["fact_set"] is not None:
+                    raise ValueError
+                expected_parent_state = AttemptEligibilityState.REVOKED
+            else:
+                raise ValueError
+            if self.__eligibility.state is not expected_parent_state:
+                raise ValueError
+            if expected_parent_state is AttemptEligibilityState.ADMITTED and (
+                self.__continuation._attempt_ref() is not self.__attempt
+                or self.__continuation._product_set() is not self.__product_set
+                or self.__attempt._inputs_ref() is not self.__inputs
+                or self.__attempt._classification_ref() is not self.__classification
+                or self.__attempt._context_ref() is not self.__context
+                or self.__attempt._parent_eligibility_ref() is not self.__eligibility
+            ):
+                raise ValueError
+
+            for observation in observations:
+                observation._validate()
+                claim = observation._claim
+                claim._validate_bound_state()
+                if (
+                    observation._parent is not self
+                    or not any(candidate is claim for candidate in self.__claims)
+                    or not claim._was_consumed()
+                    or observation.binding != claim.binding
+                ):
+                    raise ValueError
+                expected_child_state = (
+                    AttemptEligibilityState.ADMITTED
+                    if observation.lifecycle == "COMPLETED"
+                    else AttemptEligibilityState.REVOKED
+                )
+                if claim._eligibility_ref().state is not expected_child_state:
+                    raise ValueError
+
+            by_claim = {observation._claim: observation for observation in observations}
+            provider_history = []
+            for binding in self.__bindings:
+                claim = next(
+                    (
+                        candidate
+                        for candidate in self.__claims
+                        if candidate.binding is binding
+                    ),
+                    None,
+                )
+                observation = None if claim is None else by_claim.get(claim)
+                provider_history.append(
+                    {
+                        "descriptor": binding.descriptor.document(),
+                        "launch_key": binding.launch_key,
+                        "required": self.__required[
+                            binding.descriptor.capability_id
+                        ],
+                        "request": (
+                            None if claim is None else claim._request_document_copy()
+                        ),
+                        "lifecycle": (
+                            "NOT_STARTED" if observation is None else observation.lifecycle
+                        ),
+                        "execution_bytes_hex": (
+                            None
+                            if observation is None or observation.execution_bytes is None
+                            else observation.execution_bytes.hex()
+                        ),
+                        "terminal_bytes_hex": (
+                            None
+                            if observation is None or observation.terminal_bytes is None
+                            else observation.terminal_bytes.hex()
+                        ),
+                        "terminal_frame_bytes_hex": (
+                            None
+                            if observation is None
+                            or observation.terminal_frame_bytes is None
+                            else observation.terminal_frame_bytes.hex()
+                        ),
+                        "canonical_fact_bytes_hex": (
+                            []
+                            if observation is None
+                            else [value.hex() for value in observation.canonical_fact_bytes]
+                        ),
+                    }
+                )
+
+            parse_partition = self.__product_set.product_set_document_copy()
+            if qualification["status"] == "BLOCKED_NO_ACCEPTED_PRODUCTS":
+                branch = (
+                    "ZERO_PARSE_DENOMINATOR"
+                    if not parse_partition["denominator"]
+                    else "ALL_PARSE_REJECTED"
+                )
+            elif qualification["status"] == "BLOCKED_UNREPRESENTABLE":
+                branch = "PROJECTION_BLOCKED"
+            elif status == "COMPLETED":
+                branch = "NORMAL_FULFILLED"
+            else:
+                branch = "REQUIRED_PROVIDER_NON_SUCCESS"
+
+            source = {
+                "branch": branch,
+                "input_identity": {
+                    "source_snapshot_digest": self.__inputs.source_snapshot_digest,
+                    "policy_digest": self.__inputs.policy_digest,
+                    "analysis_scope_digest": self.__inputs.analysis_scope_digest,
+                    "slice_policy_digest": self.__inputs.slice_policy_digest,
+                    "derivation_profile_digest": self.__inputs.derivation_profile_digest,
+                    "language_support_function": self.__classification.language_support_function,
+                    "classification_digest": self.__classification.classification_digest,
+                    "parse_function": self.__product_set.parse_function,
+                    "product_set_digest": self.__product_set.product_set_digest,
+                    "fact_consumer_function": CONSUMER_FUNCTION,
+                    "fact_consumer_attempt_id": self.__attempt_id,
+                    "derivation_id": self.__derivation_id,
+                },
+                "parse_partition": parse_partition,
+                "fact_projection": qualification,
+                "provider_history": provider_history,
+                "fact_set": document["fact_set"],
+                "whole_attempt": {
+                    "budget_limits": asdict(self.__context.limits),
+                    "started_at_monotonic": self.__context.started_at_monotonic,
+                    "execution_deadline_monotonic": self.__context.execution_deadline_monotonic,
+                    "budget_state": self.__context.state.value,
+                    "stop_trigger": None,
+                    "parent_eligibility": self.__eligibility.state.value,
+                },
+            }
+            return source, self.__context
+        except Exception as exc:
+            self._revoke()
+            if isinstance(exc, ProductFactConsumerError):
+                raise
+            raise ProductFactConsumerError(
+                "Fact handoff source validation failed closed"
+            ) from exc
 
     def reconcile(
         self, observations: Sequence[OwnedProductFactObservation]
@@ -785,6 +1053,7 @@ class OwnedProductFactClosure:
         )
         self.__bound_bytes = self.__bytes
         self.__claimed = False
+        self.__claim_purpose = None
         self.__lock = Lock()
 
     def document_copy(self) -> dict[str, object]:
@@ -805,10 +1074,36 @@ class OwnedProductFactClosure:
             if self.__claimed:
                 raise ProductFactConsumerError("consumer continuation already consumed")
             self.__claimed = True
-        self.__parent._authorize_continuation(self)
-        return ClaimedProductFactContinuation(
-            self, self.__parent, _token=_CONTINUATION_TOKEN
-        )
+            self.__claim_purpose = "LEGACY_CONTINUATION"
+        try:
+            self.__parent._authorize_continuation(self)
+            return ClaimedProductFactContinuation(
+                self, self.__parent, _token=_CONTINUATION_TOKEN
+            )
+        except Exception:
+            self.__parent._revoke()
+            raise
+
+    def _claim_handoff_source(
+        self,
+    ) -> tuple[dict[str, object], BudgetContext]:
+        with self.__lock:
+            if self.__claimed:
+                raise ProductFactConsumerError("consumer source already consumed")
+            self.__claimed = True
+            self.__claim_purpose = "COVERAGE_HANDOFF"
+        try:
+            return self.__parent._handoff_source_document(self)
+        except Exception:
+            self.__parent._revoke()
+            raise
+
+    def _observations_ref(self) -> tuple[OwnedProductFactObservation, ...]:
+        self.document_copy()
+        return self.__observations
+
+    def _revoke_handoff_source(self) -> None:
+        self.__parent._revoke()
 
     def _validate_child_authority(self) -> None:
         self.document_copy()
@@ -828,7 +1123,7 @@ class OwnedProductFactClosure:
     def _authorize_claimed(self) -> None:
         self.__parent._authorize_continuation(self)
         with self.__lock:
-            if not self.__claimed:
+            if not self.__claimed or self.__claim_purpose != "LEGACY_CONTINUATION":
                 raise ProductFactConsumerError("consumer continuation is not claimed")
 
 
