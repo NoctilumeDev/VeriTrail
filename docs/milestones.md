@@ -5051,3 +5051,43 @@ readback/independent reconciliation全部闭合后，最多成为qualified contr
 自动发布freeze、修改Schema/runtime/tests、启动composition feasibility/implementation、public
 ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
 CLAIM_FIDELITY、tag或Release。
+
+## R1 ReviewSliceSet / Coverage vocabulary correction 最小合同独立冻结发布（条件目标）
+
+doc270 已在 `main@b6eee45b87efd4ed850cb4e67f34df728dd47c4d` 完成自己的资格链。PR #312 final head
+`e7231d4cd6ac81ae87053a14d3d344c9c342dda1` 的 original Public CI `38884545397`、exact-main Public CI
+`38887472152` 与 Browser Smoke `38887472143` 均为 attempt 1 SUCCESS，分别 11/11、11/11 与 1/1。exact-main
+Review Attention 四格各为 `513 reported / 510 passed / 3 skipped`。doc270 full-file SHA-256 保持：
+
+```text
+f205c6dca120d5951565b43c317d8906c9d113bb03fb520b9d9480f0f0e4f7a4
+```
+
+fresh README/doc270/milestones 各有一份独立 qualifying PASS，正式 history 为 `3 PASS / 0 ERROR`。wheel copy、CI
+watch network、hash expectation、premature adapter freeze 与 README marker selection 的 setup/proof-facility errors
+继续保留。独立对账 attempts 1–4 的 key path、cell shape、stale public-byte marker 与 historical diagnostic marker
+errors 也保持原 identity；attempt 5 与 166-artifact closeout 分别为：
+
+```text
+ea125d787f1c1b093ddbef3ef81cdb0f2857e289980efeecd0470b831d1008bb
+f0b6097a573ccddee1fb0e04f7877fc467fe0cb08159a6e380c67ae94389f6f7
+```
+
+因此 doc270 是 qualified contract candidate。[文档 271](271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)
+保持 doc270 字节与 historical candidate marker 不变，只条件化发布以下 target：
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+doc271 自己的 final-byte local gates、original PR qualification、单独批准 exact-head protected merge、new exact-main
+Public CI 11/11 + Browser Smoke 1/1、fresh anonymous installed-product README/doc271/milestones observations 与
+independent reconciliation 全部闭合以前，`FROZEN` 不生效。冻结后也只返回 CONTROL LOOP，重新审查显式 successor
+identity / Schema correction 是否仍为最小合法 seam；不得自动修改 Schema/runtime，选择 persistence，启动 composition
+feasibility/implementation、public `ReviewSliceSet` / `CoverageLedger`、Evidence/Bundle/publisher、CLI/Workbench/Core、
+R2/R3、CLAIM_FIDELITY、tag 或 Release。
