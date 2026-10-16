@@ -3971,3 +3971,37 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 manifest、fixtures、Profile、Policy、vectors或corpus；不得选择successor版本/文件名/字段名、启动Schema contract或实现、
 composition feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、
 CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage Schema correction 最小合同候选
+
+doc272 已在 `main@406aa8ee9440db8738ee2bd3a35aae558dc105c6` 完成自己的资格链。PR #314 final head
+`a2577e1f05f1ebd685a35120181fc2b85bfffa7a` 的 original Public CI `38964769464`、exact-main Public CI
+`38967921677` 与 Browser Smoke `38967921685` 均为 attempt 1 SUCCESS，分别11/11、11/11与1/1；Review Attention
+四格各为`513 reported / 510 passed / 3 skipped`。setup 1 的证明设施错误与 README formal marker-selection ERROR均按原
+identity保留；setup 2的fresh README/doc272/milestones为3/3 qualifying PASS。independent reconciliation与119-artifact
+closeout分别为：
+
+```text
+d32b662933368546e14fb01d8477b6be5452fa9c5ecafaa695a35aba789d3672
+741ed5551b423597bcebda0ee94f6102ffa872160e4cbe6a3649d34eab08a2f8
+```
+
+因此Schema correction feasibility audit已经成为qualified history。[文档 273](docs/273-r1-review-slice-set-coverage-schema-correction-contract.md)
+只冻结CoverageLedger 0.2 child identity、`blocked`最小carrier、versioned conformance、manifest/consumer dispatch与0.1
+immutability。manifest 0.1仍只绑定bytes/digest；unknown child version fail closed；Schema-valid不替代same-attempt provenance
+与cross-field conformance。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_FEASIBILITY_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许README、AGENTS、milestones与新增doc273。不得修改doc267–272、runtime、tests、workflows、Schema、manifest、
+fixtures、Profile、Policy、identity vectors、corpus或架构资产；不得启动独立freeze publication、Schema implementation、
+composition feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、
+CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。候选完成自己的完整资格链后只返回CONTROL LOOP。
