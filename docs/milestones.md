@@ -5132,3 +5132,36 @@ candidate自己的local/original PR/separately approved exact-head merge/new exa
 readback/independent reconciliation全部闭合后，最多成为qualified feasibility audit。后继仍须返回CONTROL LOOP，不能自动
 创建Schema contract/implementation、composition feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、
 Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+
+## R1 ReviewSliceSet / Coverage Schema correction 最小合同候选
+
+doc272 已在 `main@406aa8ee9440db8738ee2bd3a35aae558dc105c6` 完成自己的资格链。PR #314 original Public CI
+`38964769464`、exact-main Public CI `38967921677` 与 Browser Smoke `38967921685` 均attempt 1 SUCCESS，分别
+11/11、11/11与1/1；fresh README/doc272/milestones各有一份qualifying PASS。setup 1的wheel copy、adapter preparation、
+upstream live-stdout self-reference与README marker-selection错误保持原identity；setup 2的independent reconciliation与
+119-artifact closeout为：
+
+```text
+d32b662933368546e14fb01d8477b6be5452fa9c5ecafaa695a35aba789d3672
+741ed5551b423597bcebda0ee94f6102ffa872160e4cbe6a3649d34eab08a2f8
+```
+
+因此doc272已经成为qualified history。[文档 273](273-r1-review-slice-set-coverage-schema-correction-contract.md)只冻结
+CoverageLedger 0.2 child identity、最小`blocked` carrier、versioned conformance、manifest/consumer dispatch、canonical
+digest order与Coverage 0.1 immutability。manifest 0.1可继续绑定`coverage-ledger.json` bytes/digest，但不拥有child
+dispatch或semantic admission；Schema-valid也不替代same-attempt provenance与cross-field conformance。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_FEASIBILITY_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本候选自己的final bytes、local gates、original PR、单独批准exact-head protected merge、new exact-main双门、fresh
+README/doc273/milestones readback与independent reconciliation全部闭合前，只保持contract candidate。它不授权独立freeze
+publication、Schema implementation、composition feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、
+Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release；闭合后只返回CONTROL LOOP。
