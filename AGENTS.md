@@ -3775,3 +3775,40 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 readback/independent reconciliation闭合以前只保持candidate。它不授权composition contract、successor runtime、
 ReviewSliceSet/CoverageLedger、Schema successor、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
 CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage composition qualification 最小合同候选
+
+doc266 已在 `main@becf49db117be20ecdb4d860c1763ad7bc0eaae7` 完成完整资格链。原 candidate outer-timeout
+`CANCELLED`、独立 CI headroom maintenance、final original 11/11、exact-main 11/11 + Browser 1/1、fresh
+README/doc266/milestones readback、proof-facility setup failures与后继 reconciliation PASS全部保留。independent
+reconciliation为 `09d11235e5a50bb158049c6976e657431d94bf396faaa43befa746985b1895b3`，127-artifact closeout为
+`c9b37740eb8665df2cbcafaabbdfaf79608510ce9fd6ffc7fa58abf90c9edf33`。因此 composition precontract audit成为
+qualified history；Coverage contract/runtime没有自动开始。
+
+[文档 267](docs/267-r1-review-slice-set-coverage-composition-qualification-contract.md)只冻结最小语义合同：一个
+application-owned single composition attempt重验 immutable exact inputs、一次领取 original Fact handoff，再顺序取得
+Relation admission、Slice closure、ReviewSliceSet admission与seven-stage Coverage qualification。各stage先区分authoritative
+subject universe、applicability与qualification denominator；Coverage只拥有qualification，不能按actual output、
+representability、Schema shape或R3 priority缩小考试范围。
+
+相邻stage必须保存predecessor/successor transition proof，拒绝silent disappearance、foreign reappearance与local-equation
+false COMPLETE。`slice_set_digest`只拥有semantic content identity；相同members/empty bytes不继承admission authority。
+Coverage只有在同一composition history、admitted ReviewSliceSet、完整transition/terminal reconciliation上才能保守汇合。
+
+U=3/E=2 blocker identity仍使用精确`FACT` subject digest；现有Coverage 0.1缺少
+`UNREPRESENTABLE_EXPECTED_FACT`无损reason，因此本合同设置mandatory version stop，不选择版本号、Schema文件或迁移策略。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+candidate自己的final local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc267/
+milestones observations/independent reconciliation闭合以前，只保持contract candidate；随后仍需独立freeze publication。
+本轮不修改runtime/tests/Schema、doc113/120/175/183/189/192/194/258–266、Profile/Policy/fixtures/corpus，不选择
+persistence，不启动composition runtime、ReviewSliceSet/CoverageLedger assembler、Evidence/Bundle/publisher、CLI/
+Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
