@@ -4904,3 +4904,66 @@ candidate 自己的 local/original PR/separately approved exact-head merge/new e
 observations/independent reconciliation 全部闭合后，最多成为 qualified precontract audit。后继仍须返回 CONTROL LOOP，不能
 自动创建 composition contract、successor runtime、ReviewSliceSet/CoverageLedger、Schema successor、persistence、
 Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+
+## R1 ReviewSliceSet / Coverage composition qualification 最小合同候选
+
+doc266 已在 `main@becf49db117be20ecdb4d860c1763ad7bc0eaae7` 完成完整资格链。原 candidate Public CI
+`38784791544` 的 outer-timeout `CANCELLED` 永久保留；独立 maintenance PR #308 只恢复 Python gate 的外层 timeout
+headroom，经 original `38788780236`、exact-main Public CI `38792831098` 与 Browser Smoke `38792830916`
+资格化为 `main@59708a6f6809d8f5ade794cfcaa7b7e73fb8633a`。doc266 semantic bytes在该主线上保持不变；PR #307
+final head `ab24666f69b7fd92b506b974d203332d3c8129ad` 的 original Public CI `38797013986` attempt 1为
+11/11 SUCCESS，ordinary merge形成本基线。
+
+本 exact main 的 Public CI `38830203256` 与 Browser Smoke `38830203238` 均 attempt 1 SUCCESS，分别11/11与
+1/1。fresh README/doc266/milestones均P1/P2 COMPLETE、Core PASS。independent reconciliation attempt 1的stale key
+和首次adapter construction的过宽diff assertion作为proof-facility/setup failures保留；versioned attempt 3只修proof
+facility，未改产品、Plan、Evidence、oracle或doc266字节，并取得PASS：
+
+```text
+independent reconciliation = 09d11235e5a50bb158049c6976e657431d94bf396faaa43befa746985b1895b3
+127-artifact closeout       = c9b37740eb8665df2cbcafaabbdfaf79608510ce9fd6ffc7fa58abf90c9edf33
+```
+
+因此：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRECONTRACT_AUDITED
+```
+
+成为本合同的qualified upstream；Coverage contract/runtime没有自动开始。
+
+[文档 267](267-r1-review-slice-set-coverage-composition-qualification-contract.md)冻结一个application-owned single
+composition attempt：重验attempt-neutral exact inputs、一次claim original Fact handoff，在original Context中顺序取得
+successor Relation admission、private Slice closure、ReviewSliceSet admission、seven-stage Coverage qualification与完整
+cross-stage reconciliation。semantic summary可复算或缓存，live authority不可继承。
+
+七阶段各自先形成authoritative subject universe与applicability partition，只有applicable members进入qualification
+denominator；not-applicable history仍须保留。Coverage不拥有universe，actual output、representability、Schema shape、UI或R3
+priority均不得缩小考试范围。每个next-stage member必须有predecessor witness，每个应流转的predecessor必须有successor或
+typed blocker；silent disappearance、foreign reappearance与local-equation false COMPLETE全部拒绝。
+
+ReviewSliceSet必须先投影并独立admit；`slice_set_digest`只拥有content identity，相同members或empty bytes不继承closure
+branch/admission authority。Coverage随后绑定同一admitted set、admission identity、composition attempt与完整history，按
+COMPLETE/PARTIAL/UNKNOWN保守汇合，不能反向改变Slice admission。
+
+U=3/E=2 world的blocker slot继续使用exact `FACT` subject identity；Coverage 0.1缺少
+`UNREPRESENTABLE_EXPECTED_FACT`无损reason，因此合同冻结mandatory version stop：后继assembler/runtime前必须独立
+资格化最小versioned vocabulary correction，不得改名或借Schema-valid shape取得semantic admission。本文不选择版本号、
+Schema文件、迁移策略或persistence。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRECONTRACT_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+candidate自己的final local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc267/
+milestones readback/independent reconciliation全部闭合后，最多成为qualified contract candidate；随后仍需独立docs-only
+freeze publication。本轮不修改runtime/tests/Schema、frozen contracts、Profile/Policy/fixtures/corpus，不启动version
+correction、composition runtime、ReviewSliceSet/CoverageLedger assembler、persistence、Evidence/Bundle/publisher、CLI/
+Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
