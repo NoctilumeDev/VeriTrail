@@ -3928,3 +3928,46 @@ runtime、tests、Schema、Profile、Policy、fixtures、vectors 或 corpus；�
 composition feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、
 CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag 或 Release。最后门闭合以后只返回 CONTROL LOOP，重新审查显式
 successor identity / Schema correction 是否仍为最小合法 seam；不得按文档编号自动施工。
+
+### R1 ReviewSliceSet / Coverage Schema correction 可行性审计（候选）
+
+文档 271 已在 `main@142bc264bbcddb155e5169fa0fa58659dedfa665` 完成自己的资格链。PR #313 final head
+`592ae6dd40b91ea91e4c829d7f6f47cb65c7520a` 的 original Public CI `38894454185`、exact-main Public CI
+`38897295769` 与 Browser Smoke `38897295757` 均为 attempt 1 SUCCESS，分别11/11、11/11与1/1；Review
+Attention四格各为`513 reported / 510 passed / 3 skipped`。fresh README/doc271/milestones各有一份qualifying
+PASS；milestones formal #1 的匿名额度耗尽ERROR与#2 PASS同时保留。independent reconciliation与126-artifact
+closeout分别为：
+
+```text
+7330df0c1832d5e8601c98a15c91e01a4e6cccd7780fdf6d1242f2da8430d645
+97de5369a6bda0a2776859dabd3a92dfa0097210b3f5493c91d50be53f4502a9
+```
+
+因此`R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN`已经生效；Schema successor与
+composition没有自动开始。[文档 272](docs/272-r1-review-slice-set-coverage-schema-correction-feasibility-audit.md)只审显式
+successor identity / Schema correction的有限可行性。仓库内DerivationEvidence precedent与七个mechanical worlds证明：
+child successor可继续复用common 0.1基础类型，manifest 0.1可绑定child bytes/digest，但不拥有child version dispatch；
+旧Coverage 0.1 validator拒绝successor bytes；JSON Schema单独不能拒绝同一member同时covered/blocked，因此后继必须同时
+冻结self-describing child Schema、distinct identity domain、manifest/consumer dispatch与versioned conformance rule。
+
+首次harness因audit-only `$id`改变相对`$ref`基址而以`UNRESOLVABLE_REFERENCE_SETUP_ERROR`停止；fresh attempt只修
+proof-facility URI base并把`assert`改为普通/`-O`均执行的显式检查。CPython 3.10.6/3.13.13 normal/`-O`
+四格canonical report逐字节一致：
+
+```text
+e54642dc26f7a4a9f2e7317c462217eff5375b3c8aaf9e380912ea22661deacc
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_FEASIBILITY_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许README、AGENTS、milestones与新增doc272。不得修改doc267–271、runtime、tests、workflows、Schema、
+manifest、fixtures、Profile、Policy、vectors或corpus；不得选择successor版本/文件名/字段名、启动Schema contract或实现、
+composition feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、
+CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。
