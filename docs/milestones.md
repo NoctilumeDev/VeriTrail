@@ -5091,3 +5091,44 @@ independent reconciliation 全部闭合以前，`FROZEN` 不生效。冻结后�
 identity / Schema correction 是否仍为最小合法 seam；不得自动修改 Schema/runtime，选择 persistence，启动 composition
 feasibility/implementation、public `ReviewSliceSet` / `CoverageLedger`、Evidence/Bundle/publisher、CLI/Workbench/Core、
 R2/R3、CLAIM_FIDELITY、tag 或 Release。
+
+## R1 ReviewSliceSet / Coverage vocabulary correction 合同冻结与 Schema correction 可行性审计（候选）
+
+[文档 271](271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)已在
+`main@142bc264bbcddb155e5169fa0fa58659dedfa665`闭合资格链。PR #313 original Public CI `38894454185`、
+exact-main Public CI `38897295769`与Browser Smoke `38897295757`均attempt 1 SUCCESS；fresh README/doc271/
+milestones各有一份qualifying PASS。milestones formal #1匿名API额度耗尽ERROR继续保留，#2以全新identity PASS。
+independent reconciliation与126-artifact closeout为：
+
+```text
+7330df0c1832d5e8601c98a15c91e01a4e6cccd7780fdf6d1242f2da8430d645
+97de5369a6bda0a2776859dabd3a92dfa0097210b3f5493c91d50be53f4502a9
+```
+
+因此vocabulary correction contract正式frozen，Schema与composition没有自动开始。
+
+[文档 272](272-r1-review-slice-set-coverage-schema-correction-feasibility-audit.md)复核explicit successor identity / Schema
+correction。仓库内既有child successor precedent与七个mechanical worlds证明：有限独立child Schema可表达完整
+`BLOCKED / SEMANTIC_PROJECTION_BLOCKER / UNREPRESENTABLE_EXPECTED_FACT` tuple；旧Coverage 0.1 validator
+fail closed；common 0.1基础类型可复用，manifest 0.1可绑定successor bytes/digest，但不拥有child dispatch。JSON Schema
+单独仍会接受同一member同时covered/blocked，因此后继必须同时冻结versioned conformance rule。
+
+首次harness的相对`$ref`基址setup error原样保留；fresh attempt四格canonical report逐字节一致：
+
+```text
+e54642dc26f7a4a9f2e7317c462217eff5375b3c8aaf9e380912ea22661deacc
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_FEASIBILITY_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+candidate自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc272/milestones
+readback/independent reconciliation全部闭合后，最多成为qualified feasibility audit。后继仍须返回CONTROL LOOP，不能自动
+创建Schema contract/implementation、composition feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、
+Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
