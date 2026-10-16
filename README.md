@@ -12,8 +12,8 @@ AI说任务完成了。**但是，凭什么相信？**
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
-ReviewSliceSet / Coverage composition current-state 与 precontract audit 已成为 qualified history；composition
-qualification 最小合同已成为 qualified candidate，当前只进入独立冻结发布，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
+ReviewSliceSet / Coverage composition qualification 最小合同已经冻结；vocabulary correction 状态审计已成为 qualified
+history，最小合同已成为 qualified candidate，当前只进入独立冻结发布，完整 Review 产品尚未发布；验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -154,11 +154,11 @@ python -m venv .venv
   [composition qualification 最小合同](docs/267-r1-review-slice-set-coverage-composition-qualification-contract.md)
   已由[独立冻结发布](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md)闭合为 frozen 事实。
   [vocabulary correction 状态审计](docs/269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md)
-  已成为 qualified history；当前只进入[vocabulary correction 最小合同候选](docs/270-r1-review-slice-set-coverage-vocabulary-correction-contract.md)。
-  合同以 carrier-neutral tuple 区分 `BLOCKED / SEMANTIC_PROJECTION_BLOCKER / UNREPRESENTABLE_EXPECTED_FACT` 与
-  execution failure，保持 Coverage 0.1 immutable；public successor 版本、Schema shape、composition runtime、
-  `ReviewSliceSet` / `CoverageLedger` assembler 与 persistence 均未启动。
-  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[本合同资格门](docs/270-r1-review-slice-set-coverage-vocabulary-correction-contract.md#13-本候选自己的资格门)。
+  已成为 qualified history；[vocabulary correction 最小合同](docs/270-r1-review-slice-set-coverage-vocabulary-correction-contract.md)
+  已完成自己的资格链，成为 qualified contract candidate；当前[独立冻结发布](docs/271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)
+  只条件化发布 frozen target。其最后门闭合以前仍不得宣称合同已冻结，也不授权 public successor、Schema correction、
+  composition runtime 或 `ReviewSliceSet` / `CoverageLedger` assembler；persistence 继续保持 open。
+  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[本发布资格门](docs/271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md#5-本发布自己的资格门)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -363,6 +363,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage composition qualification 合同独立冻结发布](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md)：保留 doc267 已资格化字节，条件化发布 frozen target；不授权 vocabulary correction、runtime 或 persistence；
 - [ReviewSliceSet / Coverage vocabulary correction 当前状态审计](docs/269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md)：复核 0.1 reason/disposition 缺口与 immutable version stop；不修改 Schema 或 runtime；
 - [ReviewSliceSet / Coverage vocabulary correction 最小合同候选](docs/270-r1-review-slice-set-coverage-vocabulary-correction-contract.md)：冻结 carrier-neutral terminal/family/reason 语义、0.1 immutability 与 successor stop；不选择 public Schema 或 runtime；
+- [ReviewSliceSet / Coverage vocabulary correction 合同独立冻结发布](docs/271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)：保留 doc270 已资格化字节，条件化发布 frozen target；不授权 successor Schema、composition runtime 或 persistence；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

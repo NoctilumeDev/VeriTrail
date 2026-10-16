@@ -3893,3 +3893,38 @@ doc270候选自己的local/original PR/separately approved exact-head merge/new 
 readback/independent reconciliation闭合以前只保持contract candidate。它不授权独立freeze publication、Schema successor或
 feasibility、runtime/tests、composition feasibility/implementation、public ReviewSliceSet/CoverageLedger、persistence、
 Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage vocabulary correction 最小合同独立冻结发布（条件目标）
+
+doc270 已在 `main@b6eee45b87efd4ed850cb4e67f34df728dd47c4d` 完成自己的资格链。PR #312 final head
+`e7231d4cd6ac81ae87053a14d3d344c9c342dda1` 的 original Public CI `38884545397`、exact-main Public CI
+`38887472152` 与 Browser Smoke `38887472143` 均为 attempt 1 SUCCESS，分别 11/11、11/11 与 1/1；Review
+Attention 四格各为 `513 reported / 510 passed / 3 skipped`。fresh README/doc270/milestones 各有一份 qualifying
+PASS，正式 history 为 `3 PASS / 0 ERROR`。独立对账 attempt 1–4 的 key path、cell shape、stale public-byte marker 与
+historical diagnostic marker errors 全部保留；attempt 5 与 166-artifact closeout 分别为：
+
+```text
+ea125d787f1c1b093ddbef3ef81cdb0f2857e289980efeecd0470b831d1008bb
+f0b6097a573ccddee1fb0e04f7877fc467fe0cb08159a6e380c67ae94389f6f7
+```
+
+[文档 271](docs/271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)保留 doc270
+已资格化字节与 candidate marker，只条件化发布
+`R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FROZEN` target。本发布自己的 final-byte local
+gates、original PR、单独批准的 exact-head protected merge、new exact-main Public CI / Browser Smoke、fresh
+README/doc271/milestones installed-product observations 与 independent reconciliation 全部闭合以前，事实仍是 qualified
+contract candidate，`FROZEN` 不生效。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许 README、AGENTS、milestones 与 doc271 的 docs-only publication surface。不得修改 doc270、Coverage 0.1、
+runtime、tests、Schema、Profile、Policy、fixtures、vectors 或 corpus；不得启动 successor Schema correction/feasibility、
+composition feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、
+CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag 或 Release。最后门闭合以后只返回 CONTROL LOOP，重新审查显式
+successor identity / Schema correction 是否仍为最小合法 seam；不得按文档编号自动施工。
