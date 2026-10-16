@@ -4865,3 +4865,42 @@ candidate 自己的 local/original PR/separately approved exact-head merge/new e
 observations/independent reconciliation 全部闭合后，最多成为 qualified current-state audit。后继仍须返回 CONTROL LOOP，不能
 自动创建 composition contract、Fact/Relation/Slice successor runtime、ReviewSliceSet/CoverageLedger、Schema successor、
 persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+
+## R1 ReviewSliceSet / Coverage composition precontract audit（候选）
+
+doc265 已在 `main@ceaec8fce6b695a35f5eb5ea35847b6f60063b63` 完成资格链。first original CI outer-timeout
+CANCELLED、fresh independent original 11/11 SUCCESS、exact-main 11/11 + Browser 1/1、fresh product readback、正式
+milestones ERROR 与后继 PASS、proof-facility setup failures 均保留。independent reconciliation 为
+`e3961fc50a2317cdca2b36e41eae8bcd42419ef9b8ff48d59f12a912c9d164c8`；149-artifact closeout 为
+`0c4a89aa1401e215a5d1e1c35e82bd4feef9393ff189178802695be815cebe1f`。因此 current-state audit 成为
+qualified history，但 Coverage contract/runtime 没有自动开始。
+
+[文档 266](266-r1-review-slice-set-coverage-composition-precontract-audit.md)将 blocking seam 收敛为 exact-input 与 live-authority
+join。Fact handoff 不包含 Relation 所需完整 exact input bodies；`DerivationInputSet` 又不拥有 Fact fulfillment authority。
+后继只能在同一个 application-owned composition attempt 中重验 immutable exact inputs、一次 claim original handoff，再顺序
+取得 Relation admission、Slice closure、ReviewSliceSet admission 与 Coverage qualification。
+
+七阶段 denominator owner 分别属于 exact Snapshot inventory、Policy scope closure、Language total qualification、Parse
+eligible-unit terminal history、完整 Fact U、declared Relation observation domain 与 Policy-enumerated Slice obligations。
+Coverage 只能定义 qualification，不能按实际 output、representability 或 UI convenience 修改 universe。ReviewSliceSet 必须先
+admit，Coverage 后核账；AttentionProposal 不得反向筛选 R1。
+
+U=3/E=2 的 exact blocker identity 可用现有 FACT item ref 表达，但 exact reason 不在 Coverage 0.1 vocabulary；因此 future
+contract 必须设置 version-stop rule。当前不选择 Schema/version/persistence。四格 audit report 2726 bytes、逐字节一致：
+
+```text
+eafcb77cdf5454f033f0bdbb6e592bedb853507a0af49e3111e1ff3c8b3e36ae
+```
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRECONTRACT_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+candidate 自己的 local/original PR/separately approved exact-head merge/new exact-main 双门/fresh README/doc266/milestones
+observations/independent reconciliation 全部闭合后，最多成为 qualified precontract audit。后继仍须返回 CONTROL LOOP，不能
+自动创建 composition contract、successor runtime、ReviewSliceSet/CoverageLedger、Schema successor、persistence、
+Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
