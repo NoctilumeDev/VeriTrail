@@ -3846,7 +3846,7 @@ Schema、Profile、Policy、fixtures 或 corpus；不得启动 Coverage vocabula
 CLAIM_FIDELITY、tag 或 Release。最后门闭合以后只返回 CONTROL LOOP，分别重新审查 mandatory version correction 与
 private composition feasibility；不得按文档编号自动施工。
 
-### R1 ReviewSliceSet / Coverage vocabulary correction 当前状态审计（候选）
+### R1 ReviewSliceSet / Coverage vocabulary correction 当前状态审计与最小合同候选
 
 doc268 已在 `main@13e08177e9353d45ebc2fde1244ac37b2bfea2d6` 完成自己的资格链。PR #310 original
 Public CI `38858809608`、exact-main Public CI `38866243713` 与 Browser Smoke `38866243720` 均 attempt 1
@@ -3865,15 +3865,31 @@ independent reconciliation 与 120-artifact closeout 分别为：
 但会把 representation blocker 重解释为 execution failure。现有 `FACT` item identity 足以命名 exact U slot，因此 item-kind
 shape 不是当前 blocker。
 
+doc269 随后由 PR #311 final head `984ae8241b8f3513bc74762f23cf5260edbc131a` 的 original Public CI
+`38870827554`、exact-main Public CI `38878798937`、Browser Smoke `38878798945`、fresh
+README/doc269/milestones readback 与 independent reconciliation闭合为 qualified history。setup 1 的 preparation、parser、
+premature freeze与折叠marker错误原样保留；setup 2 的 reconciliation 与117-artifact closeout为：
+
+```text
+041aa549bfe396bcdfd1b1ec8b774463eccba2c6585e326b88b525f8d5799a6d
+afc10e8932ac94cb2ea5fc1464e152bf07ad6ebcea032c307cc2ab971d1569cd
+```
+
+[文档 270](docs/270-r1-review-slice-set-coverage-vocabulary-correction-contract.md)只冻结carrier-neutral
+`terminal class / disposition family / exact reason`语义。projection-blocked tuple必须保持
+`BLOCKED / SEMANTIC_PROJECTION_BLOCKER / UNREPRESENTABLE_EXPECTED_FACT`；execution failure继续属于独立provenance
+family。Coverage 0.1 bytes/semantics immutable；public successor版本、Schema shape、migration、runtime与persistence均未选择。
+
 ```text
 R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FROZEN
-R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_CANDIDATE
-R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_NOT_STARTED
 R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 ```
 
-本文候选自己的 local/original PR/separately approved exact-head merge/new exact-main 双门/fresh README/doc269/milestones
-readback/independent reconciliation闭合以前只保持candidate。它不授权correction contract、Schema successor、runtime/tests、
-composition feasibility/implementation、public ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、
-CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
+doc270候选自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc270/milestones
+readback/independent reconciliation闭合以前只保持contract candidate。它不授权独立freeze publication、Schema successor或
+feasibility、runtime/tests、composition feasibility/implementation、public ReviewSliceSet/CoverageLedger、persistence、
+Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。

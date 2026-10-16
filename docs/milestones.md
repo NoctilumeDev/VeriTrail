@@ -5008,7 +5008,7 @@ vocabulary version correction 与 private composition feasibility；不得自动
 `ReviewSliceSet` / `CoverageLedger` assembler、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
 CLAIM_FIDELITY、tag 或 Release。
 
-## R1 ReviewSliceSet / Coverage vocabulary correction 当前状态审计（候选）
+## R1 ReviewSliceSet / Coverage vocabulary correction 当前状态审计与最小合同候选
 
 doc268 已在 `main@13e08177e9353d45ebc2fde1244ac37b2bfea2d6` 完成自己的资格链。PR #310 original Public CI
 `38858809608`、exact-main Public CI `38866243713` 与 Browser Smoke `38866243720` 均 attempt 1 SUCCESS；fresh
@@ -5022,16 +5022,32 @@ disposition；reason-only correction 不足。把 blocker 改名为 `DERIVATION_
 Schema，却会改变上游 representation blocker 语义。exact U slot 已可用 frozen `FACT` subject digest 命名，identity shape
 不是当前 blocker。0.1必须保持 immutable；successor版本、Schema shape、migration与persistence均未选择。
 
+doc269 随后由 PR #311 final head `984ae8241b8f3513bc74762f23cf5260edbc131a` 的 original Public CI
+`38870827554`、exact-main Public CI `38878798937` 与 Browser Smoke `38878798945`完成远端门；fresh
+README/doc269/milestones均取得qualifying PASS。setup 1的proof-facility errors原样保留，setup 2的independent
+reconciliation与117-artifact closeout分别为：
+
+```text
+041aa549bfe396bcdfd1b1ec8b774463eccba2c6585e326b88b525f8d5799a6d
+afc10e8932ac94cb2ea5fc1464e152bf07ad6ebcea032c307cc2ab971d1569cd
+```
+
+因此doc269已成为qualified history。[文档 270](270-r1-review-slice-set-coverage-vocabulary-correction-contract.md)当前只冻结
+carrier-neutral `terminal class / disposition family / exact reason`语义。projection-blocked world必须保持
+`BLOCKED / SEMANTIC_PROJECTION_BLOCKER / UNREPRESENTABLE_EXPECTED_FACT`，不能与execution failure合并。Coverage 0.1
+继续immutable；public successor版本、Schema shape、migration、runtime与persistence保持non-decision。
+
 ```text
 R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FROZEN
-R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_CANDIDATE
-R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_NOT_STARTED
 R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 ```
 
-candidate自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc269/milestones
-readback/independent reconciliation全部闭合后，最多成为qualified current-state audit。后继仍须返回CONTROL LOOP，不能
-自动起草correction contract、修改Schema/runtime/tests、启动composition feasibility/implementation、public
+doc270候选自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc270/milestones
+readback/independent reconciliation全部闭合后，最多成为qualified contract candidate。后继仍须返回CONTROL LOOP，不能
+自动发布freeze、修改Schema/runtime/tests、启动composition feasibility/implementation、public
 ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
 CLAIM_FIDELITY、tag或Release。
