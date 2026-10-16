@@ -3812,3 +3812,36 @@ milestones observations/independent reconciliation闭合以前，只保持contra
 本轮不修改runtime/tests/Schema、doc113/120/175/183/189/192/194/258–266、Profile/Policy/fixtures/corpus，不选择
 persistence，不启动composition runtime、ReviewSliceSet/CoverageLedger assembler、Evidence/Bundle/publisher、CLI/
 Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+
+### R1 ReviewSliceSet / Coverage composition qualification 最小合同独立冻结发布（条件目标）
+
+doc267 已在 `main@4280355c6ec4d1ade9cceedf8a47853d1a93ea16` 完成自己的资格链。PR #309 final head
+`b86db5ee3bfae6c341a9a5d4634836b2c2dbb77a` 的 original Public CI `38836722757`、exact-main Public CI
+`38852540587` 与 Browser Smoke `38852540955` 均为 attempt 1 SUCCESS，分别 11/11、11/11 与 1/1；Review
+Attention 四格各为 `513 reported / 510 passed / 3 skipped`。fresh README/doc267/milestones 各有一份 qualifying
+PASS；doc267 formal observation #1 的 P1 匿名 API 额度耗尽 ERROR 与后继 #2 PASS 同时保留。independent
+reconciliation 与 135-artifact closeout 分别为：
+
+```text
+6fb87a704792b7f94c415f44765b059eb51057bafe1bc88f2383225c8b85f4a6
+76fa18bc8e868e7fe4d5cf4a197fe6b4ec9f7a5aa6c09efe7ba5d3592e8fe818
+```
+
+[文档 268](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md)保留 doc267 已资格化
+字节与 candidate marker，只条件化发布 `R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FROZEN` target。
+本发布自己的 final-byte local gates、original PR、单独批准的 exact-head protected merge、new exact-main Public CI /
+Browser Smoke、fresh README/doc268/milestones installed-product observations 与 independent reconciliation 全部闭合
+以前，事实仍是 qualified contract candidate，`FROZEN` 不生效。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_QUALIFIED_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许 README、AGENTS、milestones 与 doc268 的 docs-only publication surface。不得修改 doc267、runtime、tests、
+Schema、Profile、Policy、fixtures 或 corpus；不得启动 Coverage vocabulary correction、composition feasibility/runtime、
+`ReviewSliceSet` / `CoverageLedger` assembler、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
+CLAIM_FIDELITY、tag 或 Release。最后门闭合以后只返回 CONTROL LOOP，分别重新审查 mandatory version correction 与
+private composition feasibility；不得按文档编号自动施工。
