@@ -152,11 +152,13 @@ python -m venv .venv
   [ReviewSliceSet / Coverage composition 状态审计](docs/265-r1-review-slice-set-coverage-composition-current-state-audit.md)
   与[composition precontract audit](docs/266-r1-review-slice-set-coverage-composition-precontract-audit.md)均已完成自己的资格链；
   [composition qualification 最小合同](docs/267-r1-review-slice-set-coverage-composition-qualification-contract.md)
-  已完成自己的资格链，成为 qualified contract candidate；当前[独立冻结发布](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md)
-  只条件化发布 frozen target。其最后门闭合以前仍不得宣称合同已冻结，也不授权 Coverage vocabulary correction、
-  composition runtime 或 `ReviewSliceSet` / `CoverageLedger` assembler。Coverage 0.1 无法无损表达
-  `UNREPRESENTABLE_EXPECTED_FACT` 时仍必须停在独立 version correction；持久化、Schema correction 与 runtime 均未启动。
-  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[本发布资格门](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md#5-本发布自己的资格门)。
+  已由[独立冻结发布](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md)闭合为 frozen 事实。
+  当前[vocabulary correction 状态审计](docs/269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md)
+  只复核 mandatory version stop：Coverage 0.1 既缺少 `UNREPRESENTABLE_EXPECTED_FACT` reason，也没有独立 semantic
+  `BLOCKED` disposition；把 blocker 改名塞进 `DERIVATION_ERROR / execution_failed` 虽可 Schema-valid，却改变上游事实。
+  本轮仍只是 audit candidate；correction contract、Schema successor、composition runtime、`ReviewSliceSet` /
+  `CoverageLedger` assembler 与 persistence 均未启动。
+  见[R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[本审计停止线](docs/269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md#11-候选资格链与停止线)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -359,6 +361,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage composition precontract audit](docs/266-r1-review-slice-set-coverage-composition-precontract-audit.md)：收敛 exact-input/live-authority join、denominator owner、admission 顺序与 version stop；不创建合同或 runtime；
 - [ReviewSliceSet / Coverage composition qualification 最小合同候选](docs/267-r1-review-slice-set-coverage-composition-qualification-contract.md)：冻结 single-attempt composition、applicability、transition proof、ReviewSliceSet admission 与 Coverage qualification；不授权 Schema correction、runtime 或 publication；
 - [ReviewSliceSet / Coverage composition qualification 合同独立冻结发布](docs/268-r1-review-slice-set-coverage-qualification-contract-freeze-publication.md)：保留 doc267 已资格化字节，条件化发布 frozen target；不授权 vocabulary correction、runtime 或 persistence；
+- [ReviewSliceSet / Coverage vocabulary correction 当前状态审计](docs/269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md)：复核 0.1 reason/disposition 缺口与 immutable version stop；不修改 Schema 或 runtime；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
