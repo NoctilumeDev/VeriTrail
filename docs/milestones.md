@@ -5007,3 +5007,31 @@ independent reconciliation 全部闭合以前，`FROZEN` 不生效。冻结后�
 vocabulary version correction 与 private composition feasibility；不得自动修改 Schema/runtime，选择 persistence，启动
 `ReviewSliceSet` / `CoverageLedger` assembler、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
 CLAIM_FIDELITY、tag 或 Release。
+
+## R1 ReviewSliceSet / Coverage vocabulary correction 当前状态审计（候选）
+
+doc268 已在 `main@13e08177e9353d45ebc2fde1244ac37b2bfea2d6` 完成自己的资格链。PR #310 original Public CI
+`38858809608`、exact-main Public CI `38866243713` 与 Browser Smoke `38866243720` 均 attempt 1 SUCCESS；fresh
+README/doc268/milestones readback与 independent reconciliation `4a3a57357fd6523c872c5f0f326f859c35a960f9ce8021f101ffe442686903a8`
+PASS，120-artifact closeout 为 `5ddce0cd29ec8b5ef6b3150a5b5e752a5e7bd67bb9b12a744ad7f56810341a1b`。全部
+setup/reconciliation首败保持原identity。因此 composition qualification 合同正式 frozen，Schema correction 与runtime没有自动开始。
+
+[文档 269](269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md)从该 exact main复核 mandatory
+version stop。Coverage 0.1 缺少 `UNREPRESENTABLE_EXPECTED_FACT` reason，也没有独立 semantic `BLOCKED`
+disposition；reason-only correction 不足。把 blocker 改名为 `DERIVATION_ERROR` 并放入 `execution_failed` 可以通过现有
+Schema，却会改变上游 representation blocker 语义。exact U slot 已可用 frozen `FACT` subject digest 命名，identity shape
+不是当前 blocker。0.1必须保持 immutable；successor版本、Schema shape、migration与persistence均未选择。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+candidate自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc269/milestones
+readback/independent reconciliation全部闭合后，最多成为qualified current-state audit。后继仍须返回CONTROL LOOP，不能
+自动起草correction contract、修改Schema/runtime/tests、启动composition feasibility/implementation、public
+ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
+CLAIM_FIDELITY、tag或Release。

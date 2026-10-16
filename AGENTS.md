@@ -3845,3 +3845,35 @@ Schema、Profile、Policy、fixtures 或 corpus；不得启动 Coverage vocabula
 `ReviewSliceSet` / `CoverageLedger` assembler、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
 CLAIM_FIDELITY、tag 或 Release。最后门闭合以后只返回 CONTROL LOOP，分别重新审查 mandatory version correction 与
 private composition feasibility；不得按文档编号自动施工。
+
+### R1 ReviewSliceSet / Coverage vocabulary correction 当前状态审计（候选）
+
+doc268 已在 `main@13e08177e9353d45ebc2fde1244ac37b2bfea2d6` 完成自己的资格链。PR #310 original
+Public CI `38858809608`、exact-main Public CI `38866243713` 与 Browser Smoke `38866243720` 均 attempt 1
+SUCCESS，分别 11/11、11/11 与 1/1；fresh README/doc268/milestones 均取得 qualifying PASS。setup 1 的 wildcard、
+Playwright、marker 与 derived-summary path errors，以及 setup 2 的 adapter ownership setup error 均保留；setup 2 的
+independent reconciliation 与 120-artifact closeout 分别为：
+
+```text
+4a3a57357fd6523c872c5f0f326f859c35a960f9ce8021f101ffe442686903a8
+5ddce0cd29ec8b5ef6b3150a5b5e752a5e7bd67bb9b12a744ad7f56810341a1b
+```
+
+因此 composition qualification 合同已经 frozen；version correction 没有自动开始。[文档 269](docs/269-r1-review-slice-set-coverage-vocabulary-correction-current-state-audit.md)
+只审 mandatory vocabulary seam。机械反例证明 Coverage 0.1 不仅缺少 `UNREPRESENTABLE_EXPECTED_FACT` reason，也没有
+独立 semantic `BLOCKED` carrier；把 blocker 改名为 `DERIVATION_ERROR` 并放入 `execution_failed` 可以 Schema-valid，
+但会把 representation blocker 重解释为 execution failure。现有 `FACT` item identity 足以命名 exact U slot，因此 item-kind
+shape 不是当前 blocker。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_QUALIFICATION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_VOCABULARY_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本文候选自己的 local/original PR/separately approved exact-head merge/new exact-main 双门/fresh README/doc269/milestones
+readback/independent reconciliation闭合以前只保持candidate。它不授权correction contract、Schema successor、runtime/tests、
+composition feasibility/implementation、public ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、
+CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
