@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import http.client
 import io
+import json
 import os
 import shutil
 import socket
@@ -51,7 +52,11 @@ def _free_port(excluded: set[int] | None = None) -> int:
 
 
 def _authorities(
-    subject: Path, *, application_mode: str = "application"
+    subject: Path,
+    *,
+    application_mode: str = "application",
+    available_memory_soft_min_mb: int = 1,
+    available_memory_hard_min_mb: int = 1,
 ) -> tuple[dict, dict, ResolvedBootstrap]:
     dependency_port = _free_port()
     application_port = _free_port({dependency_port})
@@ -80,6 +85,16 @@ def _authorities(
     application["readiness"]["total_timeout_ms"] = 3_000
     profile = seal_project_profile(raw_profile)
     raw_plan = bootstrap_plan(profile)
+    # Tests that exercise Browser/lifecycle semantics must not silently inherit
+    # the workstation profile's 4 GiB host-availability gate.  The dedicated
+    # resource-limit worlds below opt back into their explicit thresholds and
+    # provide a deterministic host-memory reader.
+    raw_plan["preflight"]["available_memory_soft_min_mb"] = (
+        available_memory_soft_min_mb
+    )
+    raw_plan["preflight"]["available_memory_hard_min_mb"] = (
+        available_memory_hard_min_mb
+    )
     raw_plan["preflight"]["ports"] = [
         {"port": dependency_port, "expected": "FREE"},
         {"port": application_port, "expected": "FREE"},
@@ -139,6 +154,19 @@ def _authorities(
         ),
     )
     return plan, profile, resolved
+
+
+def _observed_run_diagnostic(result: object) -> str:
+    lifecycle = getattr(result, "lifecycle", None)
+    return json.dumps(
+        {
+            "error_type": getattr(result, "error_type", None),
+            "stop_reason": getattr(lifecycle, "stop_reason", None),
+            "trigger_reason": getattr(lifecycle, "trigger_reason", None),
+            "resource_observation": getattr(result, "resource_observation", None),
+        },
+        sort_keys=True,
+    )
 
 
 def _exercise(plan: dict, port: int) -> ObservedBrowserEvidence:
@@ -480,7 +508,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
             )
 
             self.assertIsNone(result.error_type)
-            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(
+                result.browser, msg=_observed_run_diagnostic(result)
+            )
             self.assertIsNotNone(result.evidence)
             self.assertEqual("COLLECTOR_ERROR", result.lifecycle.stop_reason)
             self.assertEqual("ERROR", result.evidence.execution_status)
@@ -514,7 +544,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
             )
 
             self.assertIsNone(result.error_type)
-            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(
+                result.browser, msg=_observed_run_diagnostic(result)
+            )
             self.assertIsNotNone(result.evidence)
             browser = result.browser.document["facts"]
             bootstrap = result.evidence.bootstrap.document["facts"]
@@ -576,7 +608,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
             )
 
             self.assertIsNone(result.error_type)
-            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(
+                result.browser, msg=_observed_run_diagnostic(result)
+            )
             browser = result.browser.document["facts"]
             self.assertFalse(browser["capture_complete"])
             self.assertEqual(
@@ -620,7 +654,9 @@ class BootstrapObservedRunTests(unittest.TestCase):
             )
 
             self.assertIsNone(result.error_type)
-            self.assertIsNotNone(result.browser)
+            self.assertIsNotNone(
+                result.browser, msg=_observed_run_diagnostic(result)
+            )
             self.assertIsNotNone(result.evidence)
             self.assertFalse(result.browser.document["facts"]["capture_complete"])
             self.assertEqual("BROWSER_HARD_FAILURE", result.lifecycle.stop_reason)
@@ -746,7 +782,11 @@ class BootstrapObservedRunTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subject = self._subject(root)
-            plan, profile, resolved = _authorities(subject)
+            plan, profile, resolved = _authorities(
+                subject,
+                available_memory_soft_min_mb=4_096,
+                available_memory_hard_min_mb=2_048,
+            )
             low_available = 100 * 1024 * 1024
             result = run_observed_bootstrap(
                 plan,
@@ -781,7 +821,11 @@ class BootstrapObservedRunTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subject = self._subject(root)
-            plan, profile, resolved = _authorities(subject)
+            plan, profile, resolved = _authorities(
+                subject,
+                available_memory_soft_min_mb=4_096,
+                available_memory_hard_min_mb=2_048,
+            )
             soft_only_available = 3_000 * 1024 * 1024
 
             result = run_observed_bootstrap(

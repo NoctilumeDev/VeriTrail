@@ -5232,3 +5232,31 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 reconciliation全部闭合后，只建立更强的diagnostic source state。后继必须返回CONTROL LOOP，并从新exact main重新创建
 Browser fixture resource-isolation maintenance；不能在本轮修改资源阈值、Schema、Coverage、persistence或root-binding
 语义。
+
+## M10 Browser hard-failure fixture resource isolation maintenance（重新创建候选）
+
+PR #319 已在 `main@a5137525c2348334bf0b79a2e873895a8533e745` 完成完整资格链，只增强既有CLI child
+的native hard-exit诊断；#317/#318原始失败与`UNKNOWN` root cause继续保留。CONTROL LOOP 从这个新exact main复核后，
+确认普通Browser/lifecycle tests仍错误继承`4096 / 2048 MiB` production-style host-memory门，因此重新创建独立
+[文档278](278-m10-browser-hard-failure-fixture-resource-isolation-maintenance.md)候选。
+
+本候选只修改test-support topology：普通world使用test-owned `1 / 1 MiB`；hard/soft resource worlds显式opt in
+原阈值并注入`100 / 3000 MiB`观测；四处Browser Artifact assertions补充canonical diagnostic projection。候选代码
+定向CPython 3.10.6/3.13.13 normal/`-O`四格各14/14，完整Core四格各470/470；包含状态文档的最终字节仍须重新经过
+本层完整local gates。
+
+```text
+M10_BROWSER_HARD_FAILURE_FIXTURE_RESOURCE_ISOLATION_MAINTENANCE_CANDIDATE
+M10_PUBLIC_CLI_NATIVE_HARD_EXIT_DIAGNOSTIC_MAINTENANCE_QUALIFIED
+PR_317_ORIGINAL_FAILURE_RETAINED
+PR_317_ROOT_CAUSE_UNKNOWN
+PR_318_ORIGINAL_FAILURE_RETAINED
+PR_318_ROOT_CAUSE_UNKNOWN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_AUDIT_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本维护不改runtime、产品resource合同、doc267--274、Schema、Coverage或persistence。自身完整资格链闭合以后，
+只允许从新exact main重新生成root-binding audit candidate；不得让#317/#318继承后继PASS，也不得自动启动合同或runtime。

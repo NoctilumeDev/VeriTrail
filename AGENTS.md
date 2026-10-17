@@ -4069,3 +4069,30 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 本候选完成自己的完整资格链后只返回CONTROL LOOP，从新的exact main重建Browser fixture resource-isolation maintenance；
 后者独立资格化以前，不得重建root-binding audit。不得借诊断增强解释#317/#318首败或启动Schema实现、composition
 feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、R2/R3或CLAIM_FIDELITY。
+
+### M10 Browser hard-failure fixture resource isolation maintenance（重新创建候选）
+
+PR #319 的诊断维护已在 `main@a5137525c2348334bf0b79a2e873895a8533e745` 完成 original PR、protected
+merge、exact-main双门、fresh README/doc277/milestones读回与independent reconciliation；它只建立更强的native
+hard-exit diagnostic source state，#318 root cause仍为`UNKNOWN`。
+
+[文档278](docs/278-m10-browser-hard-failure-fixture-resource-isolation-maintenance.md)从该exact main重新创建独立
+fixture maintenance：普通Browser/lifecycle worlds使用test-owned `1 / 1 MiB` host-memory门；两个resource-limit
+worlds显式保留`4096 / 2048 MiB`并注入确定性`100 / 3000 MiB`观测；Browser Artifact assertions保留
+stop/trigger/resource diagnostics。产品runtime、resource合同、timeout、Schema、Coverage与persistence均不修改。
+
+```text
+M10_BROWSER_HARD_FAILURE_FIXTURE_RESOURCE_ISOLATION_MAINTENANCE_CANDIDATE
+M10_PUBLIC_CLI_NATIVE_HARD_EXIT_DIAGNOSTIC_MAINTENANCE_QUALIFIED
+PR_317_ORIGINAL_FAILURE_RETAINED
+PR_317_ROOT_CAUSE_UNKNOWN
+PR_318_ORIGINAL_FAILURE_RETAINED
+PR_318_ROOT_CAUSE_UNKNOWN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_AUDIT_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本候选的完整资格链闭合以后只返回CONTROL LOOP，从新exact main重新生成root-binding audit candidate；不得继承
+#318资格，不得修改Schema/runtime或启动composition、persistence及public Review产品。
