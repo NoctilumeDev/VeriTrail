@@ -5326,14 +5326,52 @@ attempt 2在CPython 3.10.6/3.13.13、normal/`-O`四格全部PASS且canonical rep
 ```text
 R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
 R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
-R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_CANDIDATE
-R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_CANDIDATE
 R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
 R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
 R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 ```
 
-本轮不选择字段、对象、Schema文件、successor版本、digest domain或manifest successor，不修改doc259–279、runtime、
-tests、Schema、manifest、fixtures、Profile、Policy、vectors或corpus。candidate完整资格链闭合后只返回CONTROL LOOP；
-correction合同、Schema implementation、composition feasibility/runtime、public Review产品与persistence均不自动启动。
+PR #322 final head `9628b9334cad5cfb22327c7e28e833c3999608e5` 已合入
+`main@b2725e5069cfca0dde1e120192eb03d47fba8ff9`。original Public CI `39027041983`、exact-main Public CI
+`39029206479`与Browser Smoke `39029206492`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc280/milestones为3/3 qualifying PASS。independent reconciliation与182-artifact closeout分别为：
+
+```text
+ae9eba013266c43e430920754433455444171ac1747202de3ac9ce32b6c98144
+4dc81ff765da8dde180dce25e79ec01111e4a6adbdad12f7dfabbc5572acab90
+```
+
+首个readback setup的超长Plan ID、fresh setup缺失pip log及宿主策略命令拒绝均保留，没有formal qualification effect。
+因此doc280已经成为qualified history。本轮仍不修改doc259–279、runtime、tests、Schema、manifest、fixtures、Profile、Policy、
+vectors或corpus；它只授权重新进入CONTROL LOOP。
+
+## R1 ReviewSliceSet / Coverage root binding correction 最小合同候选
+
+fresh CONTROL LOOP从`main@b2725e5069cfca0dde1e120192eb03d47fba8ff9`重新核对open PR、冻结合同、Schema、manifest、
+fixtures与doc280 closeout，没有发现更早seam或需要重开Fact/Relation/Slice的反例。因此当前最小合法问题是
+[文档281](281-r1-review-slice-set-coverage-root-binding-correction-contract.md)。
+
+合同选择CoverageLedger 0.3 successor、versioned terminal-history projection与ordered root chain：Fact、Relation、ReviewSlice三个binding分别只能是
+`ARTIFACT_PRESENT`、`QUALIFIED_ABSENT`或`QUALIFIED_UNKNOWN`。admitted branch-empty继续属于present artifact，不能借
+0 members退化成absence；projection-blocked world允许downstream root为qualified absence，但依赖stage status仍保持UNKNOWN，
+root state不取得Coverage qualification authority。0.1/0.2 bytes与identity保持immutable。
+
+manifest 0.1只在三个sets均present时继续使用COMPLETE topology；negative-world Ledger仍不能塞进COMPLETE或DIAGNOSTIC。
+manifest successor是独立compatibility seam，本合同不选择其版本、role、path或files cardinality。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+tracked scope只允许README、AGENTS、milestones与新增doc281。candidate自己的local/original PR/separately approved exact-head
+merge/new exact-main双门/fresh README/doc281/milestones读回/independent reconciliation全部闭合后，最多成为qualified contract
+candidate；随后仍需独立docs-only freeze publication。Schema implementation、composition feasibility/runtime、manifest successor、
+public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release均未授权。
