@@ -4042,3 +4042,30 @@ runtime、tests、Schema、manifest、Profile、Policy、fixtures、vectors或co
 feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/
 Core、R2/R3、CLAIM_FIDELITY、tag或Release。最后门闭合以后只返回CONTROL LOOP，重新审查有限CoverageLedger 0.2
 Schema implementation是否仍为最小合法seam；不得按文档编号自动施工。
+
+### M10 public CLI native hard-exit diagnostic maintenance（候选）
+
+R1 root-binding audit PR #317 的 Browser-before-exercise failure 促成独立 fixture maintenance PR #318；#318 final head
+`ae59c118971614d99ec26413bc64aa07a5e1ab5a` 的原始 Public CI `39005021790` attempt 1 又在 Python 3.13 normal
+暴露 `test_dependency_early_exit_creates_completed_fail_bundle_without_browser` child return code `3221225477 /
+0xC0000005`，stdout/stderr 为空。Python 3.10、Workbench、E3 成功；#318 未 rerun、未改 head并已关闭，root cause
+保持`UNKNOWN`。
+
+[文档277](docs/277-m10-public-cli-native-hard-exit-diagnostic-maintenance.md)只让既有独立 CLI child 使用`-X faulthandler`，
+继续保留normal/`-O`模式、同一公共命令、Bundle与断言；若native fault重现，outer unittest仍保留return code，并可同时
+捕获Python fatal stack。exact-main Windows handle ownership源码审查没有证明runtime defect，本轮不修改runtime、资源阈值、
+Browser fixture、Schema、Coverage或persistence。
+
+```text
+M10_PUBLIC_CLI_NATIVE_HARD_EXIT_DIAGNOSTIC_MAINTENANCE_CANDIDATE
+PR_318_ORIGINAL_FAILURE_RETAINED
+PR_318_ROOT_CAUSE_UNKNOWN
+M10_BROWSER_HARD_FAILURE_FIXTURE_RESOURCE_ISOLATION_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_AUDIT_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本候选完成自己的完整资格链后只返回CONTROL LOOP，从新的exact main重建Browser fixture resource-isolation maintenance；
+后者独立资格化以前，不得重建root-binding audit。不得借诊断增强解释#317/#318首败或启动Schema实现、composition
+feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/publisher、R2/R3或CLAIM_FIDELITY。

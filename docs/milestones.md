@@ -5201,3 +5201,34 @@ independent reconciliation全部闭合以前，`FROZEN`不生效。冻结以后�
 CoverageLedger 0.2 Schema implementation是否仍是最早合法seam；不得自动修改Schema/runtime、启动composition
 feasibility/implementation或public ReviewSliceSet/CoverageLedger，也不得选择persistence、启动Evidence/Bundle/publisher、
 CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+
+## M10 public CLI native hard-exit diagnostic maintenance（候选）
+
+R1 root-binding audit PR #317 触发的 Browser fixture maintenance PR #318 在原始 Public CI `39005021790` attempt 1
+的 Python 3.13 normal Core regression 中观察到：
+
+```text
+test_dependency_early_exit_creates_completed_fail_bundle_without_browser
+child returncode = 3221225477 / 0xC0000005
+stdout = ""
+stderr = ""
+```
+
+外层 unittest 继续完成 suite 并报告失败，证明 doc191 的 child-process observation boundary 仍然有效；但 child 没有启用
+Python faulthandler，native stack未被保存。[文档277](277-m10-public-cli-native-hard-exit-diagnostic-maintenance.md)只在该
+child argv中增加`-X faulthandler`，不改变产品命令、normal/`-O`模式、Bundle或semantic assertions，也不修改runtime。
+
+```text
+M10_PUBLIC_CLI_NATIVE_HARD_EXIT_DIAGNOSTIC_MAINTENANCE_CANDIDATE
+PR_318_ORIGINAL_FAILURE_RETAINED
+PR_318_ROOT_CAUSE_UNKNOWN
+M10_BROWSER_HARD_FAILURE_FIXTURE_RESOURCE_ISOLATION_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_AUDIT_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+候选自己的local/original PR/protected merge/new exact-main gates/fresh README/doc277/milestones readback与independent
+reconciliation全部闭合后，只建立更强的diagnostic source state。后继必须返回CONTROL LOOP，并从新exact main重新创建
+Browser fixture resource-isolation maintenance；不能在本轮修改资源阈值、Schema、Coverage、persistence或root-binding
+语义。
