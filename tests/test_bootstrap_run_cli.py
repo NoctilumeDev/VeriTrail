@@ -1000,6 +1000,8 @@ class BootstrapRunCliTests(unittest.TestCase):
                 [
                     sys.executable,
                     *optimization_flag,
+                    "-X",
+                    "faulthandler",
                     "-m",
                     "veritrail",
                     "run",
