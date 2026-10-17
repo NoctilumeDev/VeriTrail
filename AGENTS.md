@@ -4154,15 +4154,31 @@ attempt 2四格逐字节一致：
 ```text
 R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
 R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
-R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_CANDIDATE
-R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_CANDIDATE
 R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
 R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
 R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 ```
 
-本候选只允许README、AGENTS、milestones与新增doc280。不得修改doc259–279、runtime、tests、workflows、Schema、
-manifest、fixtures、Profile、Policy、vectors或corpus；不得起草correction合同、选择字段/版本/manifest successor、启动
-Schema implementation、composition feasibility/runtime、public Review产品、persistence、Evidence/Bundle/publisher、
-CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。
+doc280 已由 PR #322 final head `9628b9334cad5cfb22327c7e28e833c3999608e5` 合入
+`main@b2725e5069cfca0dde1e120192eb03d47fba8ff9`。original Public CI `39027041983`、exact-main Public CI
+`39029206479` 与 Browser Smoke `39029206492` 均 attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc280/milestones为3/3 qualifying PASS。independent reconciliation与182-artifact closeout分别为：
+
+```text
+ae9eba013266c43e430920754433455444171ac1747202de3ac9ce32b6c98144
+4dc81ff765da8dde180dce25e79ec01111e4a6adbdad12f7dfabbc5572acab90
+```
+
+首个readback setup的超长Plan ID、fresh setup缺失pip log及宿主策略命令拒绝均按setup/operator事实保留，没有formal
+qualification effect。因此doc280已经成为qualified history。fresh CONTROL LOOP创建
+[文档281](docs/281-r1-review-slice-set-coverage-root-binding-correction-contract.md)，只冻结CoverageLedger 0.3 ordered root
+chain、versioned terminal-history projection、`ARTIFACT_PRESENT / QUALIFIED_ABSENT / QUALIFIED_UNKNOWN`、branch-empty仍属present、0.1/0.2 immutability、
+0.3 conformance与manifest compatibility stop。manifest negative-world successor继续是独立问题。
+
+本候选只允许README、AGENTS、milestones与新增doc281。不得修改doc259–280、runtime、tests、workflows、Schema、manifest、
+fixtures、Profile、Policy、vectors或corpus；不得启动Schema implementation、composition feasibility/runtime、manifest successor、
+public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+完成自身完整资格链后最多成为qualified contract candidate；随后仍需独立docs-only freeze publication。
