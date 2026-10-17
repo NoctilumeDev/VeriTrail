@@ -4127,3 +4127,42 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 fixtures、Profile、Policy、vectors或corpus；不得起草root-binding correction合同、启动Schema implementation、composition
 feasibility/runtime、public`ReviewSliceSet`/`CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、
 R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage root binding correction 前合同审计候选
+
+PR #321 final head `406923bdfa7e89ff3caaea9d66e402a9075bae03` 已合入
+`main@acf248daee9bca362a84df27fb9f7d8c2385b0b9`。original Public CI `39022612920`、exact-main Public CI
+`39024355114`与Browser Smoke `39024355171`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc279/milestones为3/3 qualifying PASS。independent reconciliation与173-artifact closeout分别为：
+
+```text
+9c78cbe29b76a6780d670f1ea51df825603eedec754f93b6870aeb476a202e3c
+c0e886b08e4dcf990ade8f7890e9e6c07a61683e2c09e9e51288f9bac4aec6d4
+```
+
+因此doc279已经成为qualified history。fresh CONTROL LOOP创建
+[文档280](docs/280-r1-review-slice-set-coverage-root-binding-correction-precontract-audit.md)，只审 root correction的最小问题面。
+read-only mechanical audit证明：现有root同时要求Fact/Relation/ReviewSlice三个set digest；五个Fact worlds中只有normal有
+FactSet，四个safe-negative worlds保留不同qualified absence；manifest 0.1的COMPLETE/DIAGNOSTIC topology均不能携带
+缺少三个normal sets的CoverageLedger。attempt 1的`KeyError('blockers')`按`AUDIT_HARNESS_SETUP_ERROR`保留；fresh
+attempt 2四格逐字节一致：
+
+```text
+6bfbc73f8ff4cf33fb54570b585789df0dab74c75a012c113ffc66dd010d4f48
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本候选只允许README、AGENTS、milestones与新增doc280。不得修改doc259–279、runtime、tests、workflows、Schema、
+manifest、fixtures、Profile、Policy、vectors或corpus；不得起草correction合同、选择字段/版本/manifest successor、启动
+Schema implementation、composition feasibility/runtime、public Review产品、persistence、Evidence/Bundle/publisher、
+CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。

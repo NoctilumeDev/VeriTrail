@@ -5296,3 +5296,44 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 readback/independent reconciliation闭合以前只保持candidate。它不修改frozen合同，也不授权root-binding correction合同、
 Schema implementation、composition feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/
 publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
+
+## R1 ReviewSliceSet / Coverage root binding correction 前合同审计候选
+
+PR #321 final head `406923bdfa7e89ff3caaea9d66e402a9075bae03` 已合入
+`main@acf248daee9bca362a84df27fb9f7d8c2385b0b9`。original Public CI `39022612920`、exact-main Public CI
+`39024355114`与Browser Smoke `39024355171`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc279/milestones为3/3 qualifying PASS。independent reconciliation与173-artifact closeout分别为：
+
+```text
+9c78cbe29b76a6780d670f1ea51df825603eedec754f93b6870aeb476a202e3c
+c0e886b08e4dcf990ade8f7890e9e6c07a61683e2c09e9e51288f9bac4aec6d4
+```
+
+因此doc279已经成为qualified history。fresh CONTROL LOOP创建
+[文档280](280-r1-review-slice-set-coverage-root-binding-correction-precontract-audit.md)。新的read-only audit证明：问题
+不是单个nullable `fact_set_digest`，而是FactSet、RelationSet、ReviewSliceSet三段present/qualified-absence root chain；
+zero denominator、all rejected、projection blocked与required Provider non-success均无FactSet，却保留不同authority history。
+manifest 0.1的COMPLETE精确要求全部四个derived artifacts，DIAGNOSTIC又不允许CoverageLedger，形成独立但耦合的
+negative-world topology gap。
+
+首个harness attempt误把`blockers`当成所有qualification branch的必填字段，以`AUDIT_HARNESS_SETUP_ERROR`保留；fresh
+attempt 2在CPython 3.10.6/3.13.13、normal/`-O`四格全部PASS且canonical report逐字节一致：
+
+```text
+6bfbc73f8ff4cf33fb54570b585789df0dab74c75a012c113ffc66dd010d4f48
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_QUALIFIED_HISTORY
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_PRECONTRACT_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮不选择字段、对象、Schema文件、successor版本、digest domain或manifest successor，不修改doc259–279、runtime、
+tests、Schema、manifest、fixtures、Profile、Policy、vectors或corpus。candidate完整资格链闭合后只返回CONTROL LOOP；
+correction合同、Schema implementation、composition feasibility/runtime、public Review产品与persistence均不自动启动。
