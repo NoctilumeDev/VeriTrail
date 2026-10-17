@@ -4096,3 +4096,34 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 
 本候选的完整资格链闭合以后只返回CONTROL LOOP，从新exact main重新生成root-binding audit candidate；不得继承
 #318资格，不得修改Schema/runtime或启动composition、persistence及public Review产品。
+
+### R1 ReviewSliceSet / Coverage Schema root binding 当前状态审计（重新生成候选）
+
+PR #320 final head `1cba21711bad9b858ac9a89cecb4930a3794dac7` 已合入
+`main@5b0ba6d3ebe06c7da3320c18afd47a658aff465e`。original Public CI `39017859822`、exact-main Public CI
+`39020304436` 与 Browser Smoke `39020304437` 均为 attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc278/milestones为3/3 qualifying PASS。independent reconciliation与181-artifact closeout分别为：
+
+```text
+ce6bb7497d4bce9a204e520894601bfcf751c7e5d2a1020806d6d2a0b90d0746
+1d1f731c4d75f1ae191f5d50536caf39716bdc8b2bb478f18302f1f77e5426be
+```
+
+因此Browser fixture resource-isolation maintenance已经qualified；#317/#318首败与`UNKNOWN` root cause继续保留。
+[文档279](docs/279-r1-review-slice-set-coverage-schema-root-binding-current-state-audit.md)从该新exact main重新执行CONTROL LOOP。
+新的read-only四格falsifier仍证明：projection-blocked handoff的U/E/blocker为`3/2/1`且`fact_set=null`，但frozen
+CoverageLedger root要求`fact_set_digest`；省略root会被Schema拒绝，未获authority的占位digest只能取得shape。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许README、AGENTS、milestones与新增doc279。不得修改doc267–278、runtime、tests、workflows、Schema、manifest、
+fixtures、Profile、Policy、vectors或corpus；不得起草root-binding correction合同、启动Schema implementation、composition
+feasibility/runtime、public`ReviewSliceSet`/`CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、
+R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。
