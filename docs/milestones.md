@@ -5260,3 +5260,39 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 
 本维护不改runtime、产品resource合同、doc267--274、Schema、Coverage或persistence。自身完整资格链闭合以后，
 只允许从新exact main重新生成root-binding audit candidate；不得让#317/#318继承后继PASS，也不得自动启动合同或runtime。
+
+## R1 ReviewSliceSet / Coverage Schema root binding 当前状态审计（重新生成候选）
+
+PR #320 已在 `main@5b0ba6d3ebe06c7da3320c18afd47a658aff465e` 完成 original PR、protected merge、
+exact-main双门、fresh README/doc278/milestones读回与independent reconciliation；181-artifact closeout为：
+
+```text
+1d1f731c4d75f1ae191f5d50536caf39716bdc8b2bb478f18302f1f77e5426be
+```
+
+该维护只建立新的qualified source state，#317/#318原始失败及`UNKNOWN` root cause继续保留。CONTROL LOOP从这个
+exact main创建[文档279](279-r1-review-slice-set-coverage-schema-root-binding-current-state-audit.md)，没有继承旧#317候选资格。
+
+read-only mechanical re-audit在CPython 3.10.6/3.13.13、normal/`-O`四格全部PASS并逐字节一致：
+
+```text
+b0997118ca311d4fac62b1f4e62016e2f2af83d88c554a3395103a2ce5b1bd0a
+```
+
+新的exact world仍为`PROJECTION_BLOCKED`、U/E/blocker=`3/2/1`、`fact_set=null`；CoverageLedger successor继承必填
+`fact_set_digest`，manifest COMPLETE topology同时要求FactSet与CoverageLedger。省略digest被Schema拒绝；填入未获
+authority的占位digest只取得shape，不取得semantic root binding。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本文自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc279/milestones
+readback/independent reconciliation闭合以前只保持candidate。它不修改frozen合同，也不授权root-binding correction合同、
+Schema implementation、composition feasibility/runtime、public ReviewSliceSet/CoverageLedger、persistence、Evidence/Bundle/
+publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。闭合以后必须返回CONTROL LOOP。
