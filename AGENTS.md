@@ -4042,3 +4042,37 @@ runtime、tests、Schema、manifest、Profile、Policy、fixtures、vectors或co
 feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/
 Core、R2/R3、CLAIM_FIDELITY、tag或Release。最后门闭合以后只返回CONTROL LOOP，重新审查有限CoverageLedger 0.2
 Schema implementation是否仍为最小合法seam；不得按文档编号自动施工。
+
+### R1 ReviewSliceSet / Coverage Schema root binding 当前状态审计（候选）
+
+doc274 已在 `main@9aa94dcac8c1bc5bb4d4852a5136d3d7bf3fe583` 完成自己的资格链。PR #316 final head
+`a5ce50238aac1ce411938ceed3bd69e93fc3648c` 的 original Public CI `38984368378`、exact-main Public CI
+`38999769024` 与 Browser Smoke `38999769037` 均为 attempt 1 SUCCESS，分别11/11、11/11与1/1；Review
+Attention四格各为`513 reported / 510 passed / 3 skipped`。fresh README/doc274/milestones为3/3 qualifying PASS；
+首次worktree setup因exact object未fetch而保留`WORKTREE_OBJECT_NOT_FETCHED_SETUP_ERROR`。independent reconciliation与
+122-artifact closeout分别为：
+
+```text
+853031c9650a5df1999710eaa0064ffdfcfb3df68539410b8b04a27826f81272
+ebb99cd2e8c8b824162f2e0c21fd4fb99da8603444607ea315406e35242b6a4a
+```
+
+因此`R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN`已经生效；Schema implementation没有自动
+开始。[文档275](docs/275-r1-review-slice-set-coverage-schema-root-binding-current-state-audit.md)重新执行CONTROL LOOP，发现
+projection-blocked handoff的U/E/blocker为`3/2/1`且`fact_set=null`，但frozen CoverageLedger root仍要求
+`fact_set_digest`，manifest COMPLETE topology也同时要求FactSet与CoverageLedger。省略root digest会被Schema拒绝；填入
+未获authority的占位digest虽可通过local shape，却不能取得semantic conformance。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许README、AGENTS、milestones与新增doc275。不得修改doc267–274、runtime、tests、workflows、Schema、manifest、
+fixtures、Profile、Policy、vectors或corpus；不得起草root-binding correction合同、启动Schema implementation、composition
+feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/
+Core、R2/R3、CLAIM_FIDELITY、tag或Release。完成自身完整资格链后只返回CONTROL LOOP。

@@ -12,9 +12,10 @@ AI说任务完成了。**但是，凭什么相信？**
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
-ReviewSliceSet / Coverage composition qualification 与 vocabulary correction 最小合同已经冻结，Schema correction 可行性审计
-已成为 qualified history；Schema correction 最小合同候选已完成资格链，当前只进入独立 docs-only 冻结发布；该发布自己的
-最后门闭合以前合同仍未冻结，Schema 实现、composition runtime 及完整 Review 产品均未开始；验证调度仍处于蓝图阶段。
+ReviewSliceSet / Coverage composition qualification、vocabulary correction 与 Schema correction 最小合同已经冻结；fresh
+CONTROL LOOP 在进入 Schema implementation 前发现 projection-blocked branch 没有 FactSet、但 frozen ledger root 仍要求
+`fact_set_digest`，当前只进入 root-binding docs-only 状态审计；Schema 实现、composition runtime 及完整 Review 产品均未
+开始；验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -158,12 +159,11 @@ python -m venv .venv
   已成为 qualified history；[vocabulary correction 最小合同](docs/270-r1-review-slice-set-coverage-vocabulary-correction-contract.md)
   已由[独立冻结发布](docs/271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)闭合为 frozen
   事实。[Schema correction 可行性审计](docs/272-r1-review-slice-set-coverage-schema-correction-feasibility-audit.md)
-  已成为 qualified history；[Schema correction 最小合同候选](docs/273-r1-review-slice-set-coverage-schema-correction-contract.md)
-  已完成自己的资格链，当前由[独立冻结发布](docs/274-r1-review-slice-set-coverage-schema-correction-contract-freeze-publication.md)
-  条件化发布 `CONTRACT_FROZEN` target。它只冻结 CoverageLedger 0.2 child identity、最小 blocker carrier、versioned
-  conformance、consumer dispatch 与 0.1 immutability；本发布最后门闭合前合同仍只是 qualified candidate，且始终不授权
-  Schema 实现、composition runtime 或 `ReviewSliceSet` / `CoverageLedger` assembler；persistence 继续保持 open。见
-  [R1 合同](docs/113-r1-deterministic-semantic-slice-contract.md)与[发布停止线](docs/274-r1-review-slice-set-coverage-schema-correction-contract-freeze-publication.md#6-生效后的停止线)。
+  已成为 qualified history；[Schema correction 最小合同](docs/273-r1-review-slice-set-coverage-schema-correction-contract.md)
+  已由[独立冻结发布](docs/274-r1-review-slice-set-coverage-schema-correction-contract-freeze-publication.md)闭合为 frozen 事实。
+  fresh CONTROL LOOP 的[root-binding 状态审计](docs/275-r1-review-slice-set-coverage-schema-root-binding-current-state-audit.md)
+  当前指出：projection-blocked handoff保留 `fact_set = null`，而 frozen CoverageLedger root仍要求 `fact_set_digest`；在该
+  seam资格化并显式闭合以前，不授权 Schema implementation、composition runtime或 public assembler；persistence继续 open。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -371,6 +371,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage vocabulary correction 合同独立冻结发布](docs/271-r1-review-slice-set-coverage-vocabulary-correction-contract-freeze-publication.md)：保留 doc270 已资格化字节，条件化发布 frozen target；不授权 successor Schema、composition runtime 或 persistence；
 - [ReviewSliceSet / Coverage Schema correction 可行性审计](docs/272-r1-review-slice-set-coverage-schema-correction-feasibility-audit.md)：复核有限 child successor、manifest/consumer dispatch、versioned conformance 与 0.1 immutability；不创建 Schema、runtime 或 persistence；
 - [ReviewSliceSet / Coverage Schema correction 最小合同候选](docs/273-r1-review-slice-set-coverage-schema-correction-contract.md)：冻结 CoverageLedger 0.2 child identity、最小 blocker carrier、versioned conformance、dispatch 与 0.1 immutability；不授权 Schema 实现、composition runtime 或 persistence；
+- [ReviewSliceSet / Coverage Schema correction 合同独立冻结发布](docs/274-r1-review-slice-set-coverage-schema-correction-contract-freeze-publication.md)：保留 doc273 已资格化字节并闭合 frozen 状态；不自动授权 Schema implementation；
+- [ReviewSliceSet / Coverage Schema root binding 当前状态审计](docs/275-r1-review-slice-set-coverage-schema-root-binding-current-state-audit.md)：复核 projection-blocked FactSet absence 与 frozen ledger root 的必填 digest 接缝；不修改合同、Schema 或 runtime；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
