@@ -5375,3 +5375,43 @@ tracked scope只允许README、AGENTS、milestones与新增doc281。candidate自
 merge/new exact-main双门/fresh README/doc281/milestones读回/independent reconciliation全部闭合后，最多成为qualified contract
 candidate；随后仍需独立docs-only freeze publication。Schema implementation、composition feasibility/runtime、manifest successor、
 public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release均未授权。
+
+## R1 ReviewSliceSet / Coverage root binding correction 最小合同独立冻结发布（条件目标）
+
+doc281已在`main@e0de7556f4075068dcaaa74fba85dcd756540fa6`完成自己的资格链。PR #323 final head
+`32de8a67a547f521d9272755c5c447e70830ec10`的original Public CI `39036786001`、exact-main Public CI
+`39039139791`与Browser Smoke `39039139694`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。
+
+fresh setup 2的README/doc281/milestones各有且仅有一份qualifying PASS；公开bytes逐字节等于同一exact main的Git blobs，
+Core均为PASS。setup 1的README formal observation因marker落在public-render window外，以
+`FORMAL_READBACK_ERROR / READBACK_MARKER_SELECTION_SETUP_ERROR`保留；fresh setup 2没有覆盖它。independent
+reconciliation attempt 1又发现上游precontract closeout wrapper stdout在artifact枚举后被写入，以
+`UPSTREAM_PROOF_FACILITY_POSTSEAL_OUTPUT_MUTATION`保留；fresh v2只修证明设施并取得PASS：
+
+```text
+doc281 SHA-256            = 241dc7b5922c981aabb61a1a6a765ed224bdf7ac47a588274a20a9bb3e311eaf
+independent reconciliation = 04045abb14705435747630c0e3095aea2318be8cbf8b6f07d59f4229e155ed4a
+188-artifact closeout       = 08f337f9544b732a7221047f313961c2bc254e2763553ca50a3e8c7cfa9a843d
+```
+
+因此doc281已经成为qualified contract candidate。[文档282](282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)
+保留该候选字节与全部首败，并条件化发布：
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+这些状态现在只是publication target。doc282自己的final bytes、local gates、original PR qualification、单独批准的
+exact-head protected merge、new exact-main Public CI 11/11 + Browser Smoke 1/1、fresh anonymous installed-product
+README/doc281/doc282/milestones observations与independent reconciliation全部闭合以前，`FROZEN`不生效。
+
+本发布不创建或修改Schema、runtime、tests、manifest、fixtures、vectors、Profile、Policy或corpus；不选择persistence，
+不启动public Review产品、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。冻结后
+只返回CONTROL LOOP，分别审查child Schema/conformance feasibility、manifest negative-world topology与composition runtime，
+不得按文档编号自动进入任何一项。
