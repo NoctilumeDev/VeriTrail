@@ -4005,3 +4005,40 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 fixtures、Profile、Policy、identity vectors、corpus或架构资产；不得启动独立freeze publication、Schema implementation、
 composition feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、
 CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。候选完成自己的完整资格链后只返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage Schema correction 最小合同独立冻结发布（条件目标）
+
+doc273 已在 `main@356b930a039783417f8dcd698e7ae49c25fb4615` 完成自己的资格链。PR #315 final head
+`37af11f8a4efeef1b34ff7a403e55fb924f70303` 的 original Public CI `38973694059`、exact-main Public CI
+`38976364225` 与 Browser Smoke `38976364071` 均为 attempt 1 SUCCESS，分别11/11、11/11与1/1；Review
+Attention四格各为`513 reported / 510 passed / 3 skipped`。semantic witness attempt 1因没有显式覆盖全部合同corpus
+identity，以`SEMANTIC_WITNESS_COVERAGE_INCOMPLETE`保留；fresh attempt 2只补proof-facility witness。fresh
+README/doc273/milestones为3/3 qualifying PASS；readback的两个operator setup error保持NON_QUALIFYING原identity。
+independent reconciliation、120-artifact closeout与post-closeout terminal seal分别为：
+
+```text
+a4e3ca83e6b298646f789ac1113930f6cc87a1eed5dbbd46fe0e3755b4addb89
+692a6fda883c37021a90e09da82b93dd356fef58d87489018ee15e11bdde9552
+7185e12331f38247bac4c196fd15773326a9d63d803d7bec24cf0877c4db8d4c
+```
+
+[文档274](docs/274-r1-review-slice-set-coverage-schema-correction-contract-freeze-publication.md)保留doc273已资格化字节与
+candidate marker，只条件化发布`R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN` target。本发布
+自己的final-byte local gates、original PR、单独批准的exact-head protected merge、new exact-main Public CI / Browser
+Smoke、fresh README/doc274/milestones installed-product observations与independent reconciliation全部闭合以前，事实仍是
+qualified contract candidate，`FROZEN`不生效。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本轮只允许README、AGENTS、milestones与doc274的docs-only publication surface。不得修改doc273、Coverage 0.1、
+runtime、tests、Schema、manifest、Profile、Policy、fixtures、vectors或corpus；不得启动Schema implementation、composition
+feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/
+Core、R2/R3、CLAIM_FIDELITY、tag或Release。最后门闭合以后只返回CONTROL LOOP，重新审查有限CoverageLedger 0.2
+Schema implementation是否仍为最小合法seam；不得按文档编号自动施工。
