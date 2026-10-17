@@ -5201,3 +5201,32 @@ independent reconciliation全部闭合以前，`FROZEN`不生效。冻结以后�
 CoverageLedger 0.2 Schema implementation是否仍是最早合法seam；不得自动修改Schema/runtime、启动composition
 feasibility/implementation或public ReviewSliceSet/CoverageLedger，也不得选择persistence、启动Evidence/Bundle/publisher、
 CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
+
+## M10 Browser hard-failure fixture resource isolation maintenance（候选）
+
+doc274独立冻结发布已经在`main@9aa94dcac8c1bc5bb4d4852a5136d3d7bf3fe583`完成最后资格链；
+`R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_CORRECTION_CONTRACT_FROZEN`生效，Schema implementation与composition
+feasibility仍未开始。后继root-binding current-state audit候选PR #317 head
+`e1b59f3936e1a61416dfe1e1cb7e89cb9fa24b92`的original Public CI `39002394071` attempt 1在Python 3.10
+Core regression中失败：Browser business-failure用例先确认`error_type is None`，随后观察到`result.browser is None`。
+该车道为`470 reported / 468 passed / 1 failed / 1 skipped`；同一workflow中的Python 3.13、Workbench与E3成功，
+依赖Python 3.10 artifact的后继jobs被跳过。#317保持关闭且不rerun、不改head。
+
+旧assertion没有输出lifecycle stop/trigger或resource observation，因此远端首败精确原因保持`UNKNOWN`。源码同时证明
+test-support helper让所有Browser/lifecycle worlds隐式继承`4096 / 2048 MiB` production-style host-memory门，使
+Browser语义测试可能在exercise前被宿主资源波动终止。[文档276](276-m10-browser-hard-failure-fixture-resource-isolation-maintenance.md)
+只修这个fixture边界：普通world使用test-owned `1 / 1 MiB`门；hard/soft resource worlds显式opt in原阈值并注入
+`100 / 3000 MiB`观测；Browser assertions补充诊断投影。定向CPython 3.10.6/3.13.13 normal/`-O`四格各14/14 PASS。
+
+```text
+M10_BROWSER_HARD_FAILURE_FIXTURE_RESOURCE_ISOLATION_MAINTENANCE_CANDIDATE
+PR_317_ORIGINAL_FAILURE_RETAINED
+PR_317_ROOT_CAUSE_UNKNOWN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_AUDIT_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本维护不修改runtime、产品resource合同、doc267--274、Schema、Coverage或persistence。它自己的完整资格链闭合以后，
+只允许从新exact main重新生成root-binding audit candidate；不得让#317继承后继PASS，也不得自动启动contract/runtime。

@@ -4042,3 +4042,31 @@ runtime、tests、Schema、manifest、Profile、Policy、fixtures、vectors或co
 feasibility/runtime、public `ReviewSliceSet` / `CoverageLedger`、persistence、Evidence/Bundle/publisher、CLI/Workbench/
 Core、R2/R3、CLAIM_FIDELITY、tag或Release。最后门闭合以后只返回CONTROL LOOP，重新审查有限CoverageLedger 0.2
 Schema implementation是否仍为最小合法seam；不得按文档编号自动施工。
+
+### M10 Browser hard-failure fixture resource isolation maintenance（候选）
+
+doc274 已在 `main@9aa94dcac8c1bc5bb4d4852a5136d3d7bf3fe583` 完成独立冻结发布资格链；Schema correction contract
+已经 frozen，但 Schema implementation 没有自动获得施工权。后继 CONTROL LOOP 形成的 root-binding audit 候选 PR #317
+original Public CI `39002394071` attempt 1 在 Python 3.10 Core regression 中失败：
+`test_real_browser_hard_failure_keeps_evidence_and_cleans_resources` 的 `result.browser` 意外为 `None`。Python 3.13、
+Workbench 与 E3 成功，依赖 Python 3.10 artifact 的后继 jobs 被跳过。#317 不 rerun、不改 head并保持关闭；精确底层原因
+因旧 assertion 未保存 lifecycle/resource projection而保持 `UNKNOWN`。
+
+[文档276](docs/276-m10-browser-hard-failure-fixture-resource-isolation-maintenance.md)只修 test-support topology：普通
+Browser/lifecycle worlds使用test-owned `1 / 1 MiB` host-memory门；两个资源门用例显式保留 `4096 / 2048 MiB`
+threshold并注入确定性host observation；Browser Artifact assertions增加stop/trigger/resource diagnostics。产品resource
+contract、runtime、timeout、retry、doc267--274、Schema、Coverage与persistence均不修改。定向四格各为14/14 PASS。
+
+```text
+M10_BROWSER_HARD_FAILURE_FIXTURE_RESOURCE_ISOLATION_MAINTENANCE_CANDIDATE
+PR_317_ORIGINAL_FAILURE_RETAINED
+PR_317_ROOT_CAUSE_UNKNOWN
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_ROOT_BINDING_AUDIT_NOT_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本维护完成自身完整资格链后只能建立新的 exact source state，并返回 CONTROL LOOP 重新生成 root-binding audit candidate；
+不得更新或洗绿 #317，也不得在维护 PR 中启动 root-binding correction contract、Schema implementation、composition
+feasibility/runtime、public ReviewSliceSet/CoverageLedger 或 persistence。
