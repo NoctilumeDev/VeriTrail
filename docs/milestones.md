@@ -5772,3 +5772,25 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 单独批准的exact-head protected merge、new exact-main双门、fresh README/doc290/doc291/milestones readback及independent
 reconciliation全部闭合以前，`CONTRACT_FROZEN`不生效。即使最终冻结，也不自动实现successor、恢复composition A–J、
 选择manifest/persistence或启动public Review产品；下一步只允许返回CONTROL LOOP。
+
+## R1 Fact handoff → Relation interoperability correction 合同冻结闭合与 Post-R1 计划
+
+文档291由PR #334 final head `29f7a9348780a1fd819f6ed7db57c2f78a233259`合入
+`main@0e32501644d93e33bc0610e1b149c2c33f4be69d`。original Public CI `39144553268`、exact-main Public CI
+`39146613986`与Browser Smoke `39146613991`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc290/doc291/milestones最终为4/4 qualifying PASS；milestones formal #1的匿名API额度耗尽ERROR继续保留，fresh #2
+使用新的Plan/session/output取得PASS。independent reconciliation与171-artifact closeout分别为：
+
+```text
+523ebf741b4bfef44bbbe0b7f91f2b693b2ec42ea76dacff5c466594664f56e9
+7825232b20f7116a8b0e3aa6cba16fc12af1ab35c03e6176d9f561b35afa7ea1
+```
+
+因此`R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_FROZEN`现已生效。corrected
+successor feasibility与implementation仍未启动，旧composition implementation继续保持`STOP_CONDITION_TRIGGERED`；manifest
+successor未选择，persistence保持OPEN，public Review产品未启动。
+
+[文档292](292-post-r1-external-counterexample-benchmark-and-oracle-qualification-plan.md)另行保存R1完整闭合后的外部错题本
+Benchmark与Oracle资格方法。该计划当前为`PLANNED / NOT_STARTED`，不改变上述R1停止线，也不启动R2、R3或public
+Benchmark product。R1终态闭合后按当时exact main重新执行CONTROL LOOP；若没有更早反例，直接进入case inventory与
+case qualification，不再重新讨论该方向是否值得开始。

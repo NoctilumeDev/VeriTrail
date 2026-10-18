@@ -4568,3 +4568,56 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 Public CI与Browser Smoke、fresh anonymous installed-product README/doc290/doc291/milestones observations及independent
 reconciliation全部闭合以前，`CONTRACT_FROZEN`不生效。最后门闭合以后只允许返回CONTROL LOOP；corrected successor
 feasibility、implementation authority、旧composition A–J恢复、manifest successor、persistence与public Review产品均未启动。
+
+### R1 Fact handoff → Relation interoperability correction 合同冻结闭合
+
+文档291后来由PR #334 final head `29f7a9348780a1fd819f6ed7db57c2f78a233259`合入
+`main@0e32501644d93e33bc0610e1b149c2c33f4be69d`。original Public CI `39144553268`、exact-main Public CI
+`39146613986`与Browser Smoke `39146613991`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc290/doc291/milestones最终为4/4 qualifying PASS；milestones formal #1因匿名API额度耗尽成为
+`FORMAL_READBACK_ERROR`，fresh #2使用新的Plan/session/output取得PASS，首个ERROR继续保留。independent reconciliation与
+171-artifact closeout分别为：
+
+```text
+523ebf741b4bfef44bbbe0b7f91f2b693b2ec42ea76dacff5c466594664f56e9
+7825232b20f7116a8b0e3aa6cba16fc12af1ab35c03e6176d9f561b35afa7ea1
+```
+
+```text
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_FROZEN
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_FEASIBILITY_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+该冻结只形成private interoperability correction semantic authority。下一步仍须从新exact main返回CONTROL LOOP，判断
+corrected successor feasibility是否为最小合法问题；不得从合同冻结直接恢复旧composition A–J或启动implementation。
+
+### Post-R1 外部错题本 Benchmark 与 Oracle 资格计划（延期）
+
+[文档292](docs/292-post-r1-external-counterexample-benchmark-and-oracle-qualification-plan.md)保存 R1 完整闭合后的外部反例
+攻击计划。它要求先资格化case与claim，再独立审查Oracle construction，最后才允许把qualified expected universe与DUT
+reconciliation；外部程序、冻结摘要或`expected == actual`都不自动证明Oracle正确。DUT与Oracle共享关键projector、denominator、
+normalization或identity路径时，必须公开common-mode failure surface并以独立falsifier攻击。
+
+该计划同时保存后续Attention的非线性边界：cause relation、action relation、intervention observation与human-work evaluation
+彼此不继承authority；common cause不推出shared resolution，shared resolution也不推出common cause，动作有效更不推出人工省工。
+
+```text
+POST_R1_EXTERNAL_COUNTEREXAMPLE_BENCHMARK_PLAN_0_1
+    PLANNED / NOT_STARTED
+
+CURRENT R1
+    UNCHANGED
+
+R2 / R3 / PUBLIC BENCHMARK PRODUCT
+    NOT_STARTED BY DOC292
+```
+
+用户已授权在R1终态资格链闭合后执行该方向；届时不重做“是否开始”的概念讨论，但必须从当时exact main重新运行
+CONTROL LOOP，确认没有更早反例并为具体case/Oracle/DUT工作取得本阶段资格。文档292是未来方法与启动条件，不是当前事实，
+不得按编号自动越过R1、当前correction successor、manifest、persistence或public Review停止线。
