@@ -4533,3 +4533,38 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 Schema、manifest、fixtures、Profile、Policy、vectors或corpus。自己的完整candidate qualification与后继独立freeze publication
 全部闭合以前，合同不生效；即使最终FROZEN，也不自动实现successor、恢复composition A–J、选择persistence/manifest或启动
 public Review产品。
+
+### R1 Fact handoff → Relation exact-input interoperability correction 合同独立冻结发布候选
+
+文档290后来由PR #333 final head `2763e06bcbcdefeb3f5711f678dd4c22c826793e`合入
+`main@33b4aa37d4ce22ebbac93e898e716da4e7053792`。original Public CI `39137995491`、exact-main Public CI
+`39139725019`与Browser Smoke `39139725021`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc290/milestones均取得qualifying PASS；doc290 public-render diagnostic #1的`ERROR / UNKNOWN`及多项proof-facility
+setup问题继续保留。independent reconciliation与167-artifact closeout分别为：
+
+```text
+4d93b5cb4960aac9551e126f13a511f2b27544fd40339ac20db65fb173a2c9c8
+30f7cf5eb104b443839bec94f17c442224f374fb058015db9cde353d7c6d4b16
+```
+
+因此doc290已成为qualified contract candidate。[文档291](docs/291-r1-fact-handoff-relation-exact-input-interoperability-correction-contract-freeze-publication.md)
+只条件化发布该合同，不修改doc290语义、runtime、tests、Schema、manifest、Profile、Policy、fixtures、vectors或corpus。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_FEASIBILITY_CORRECTION_AUDITED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本publication自己的final bytes、local gates、original PR qualification、单独批准的exact-head protected merge、new exact-main
+Public CI与Browser Smoke、fresh anonymous installed-product README/doc290/doc291/milestones observations及independent
+reconciliation全部闭合以前，`CONTRACT_FROZEN`不生效。最后门闭合以后只允许返回CONTROL LOOP；corrected successor
+feasibility、implementation authority、旧composition A–J恢复、manifest successor、persistence与public Review产品均未启动。
