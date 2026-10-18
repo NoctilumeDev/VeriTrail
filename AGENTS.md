@@ -4486,3 +4486,50 @@ Schema、manifest、fixtures、Profile、Policy、vectors或corpus；不得起�
 施工、选择persistence或启动public Review产品。完成自己的local/original PR/separately approved exact-head merge/new
 exact-main双门/fresh README/doc289/milestones readback/independent reconciliation后，最多成为qualified correction
 feasibility history并返回CONTROL LOOP。
+
+### R1 Fact handoff → Relation exact-input interoperability correction 最小合同候选
+
+文档289后来由PR #332 final head `79027d49c515a249a049e49fd81d273f4f3b1cc5`合入
+`main@2f57c71e6e3a9ecb3e2d2da050d331fff7bb004a`。original Public CI `39129451257`、exact-main Public CI
+`39131588569`与Browser Smoke `39131588645`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc289/milestones均取得qualifying PASS。首次milestones formal observation的503/PARTIAL保持
+`FORMAL_READBACK_ERROR`；independent reconciliation attempt 1的derived marker metadata mismatch保持proof-facility
+failure。attempt 2与176-artifact closeout分别为：
+
+```text
+7df17cfa65f5ee800c7df52c4c7de80016666198ba7b2726a6c781e43b14a015
+56bc8017443700422926336a59993f70b8aa6297df6b2dedcbf9e199cf79f8b8
+```
+
+因此doc289已成为qualified feasibility history。[文档290](docs/290-r1-fact-handoff-relation-exact-input-interoperability-correction-contract.md)
+只冻结四个semantic functions：same-policy stage applicability、完整FactSet total partition、per accepted product/path MODULE
+closure与Relation-profile obligation projection。完整Policy与FactSet始终保留；projection只决定当前stage责任，不能删除或替代
+authoritative world。`O_R(F)`还必须与从完整F/P/Profile/closure机械重算的expected universe做双向、基数与唯一性核账；只证明
+emitted rows可追溯不足以证明完整。已测试候选全部失败只能停在UNKNOWN，除非对完整限定候选空间给出不可满足性证明。
+audit-only attempt 1误删排序后的Relation requirement，保留为`AUDIT_FIXTURE_SETUP_ERROR`；attempt 2
+证明核心projection，但合同复读发现其把完整`policy_digest`过度绑定进stage semantic digest。attempt 3只修
+semantic/exact binding；其后summary命令的PowerShell scalar/`System.Char`错误保留为`OPERATOR_REPORTING_ERROR`，完整reports
+不受影响。“两个适用Import只emitted一个obligation”的新反例随后要求双向、基数与唯一性核账。fresh attempt 4增加该
+falsifier、不改产品oracle，并在CPython 3.10.6/3.13.13 normal/`-O`四格逐字节一致：
+
+```text
+02f33ff455057ad1010ac392fdc1132b1e33fc9cf6b8e5bc65bc89f273cd7c07
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_FEASIBILITY_CORRECTION_AUDITED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc290。不得修改doc175/doc287/doc288/doc289、runtime、tests、workflows、
+Schema、manifest、fixtures、Profile、Policy、vectors或corpus。自己的完整candidate qualification与后继独立freeze publication
+全部闭合以前，合同不生效；即使最终FROZEN，也不自动实现successor、恢复composition A–J、选择persistence/manifest或启动
+public Review产品。
