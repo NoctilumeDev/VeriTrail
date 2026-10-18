@@ -4182,3 +4182,40 @@ chain、versioned terminal-history projection、`ARTIFACT_PRESENT / QUALIFIED_AB
 fixtures、Profile、Policy、vectors或corpus；不得启动Schema implementation、composition feasibility/runtime、manifest successor、
 public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
 完成自身完整资格链后最多成为qualified contract candidate；随后仍需独立docs-only freeze publication。
+
+### R1 ReviewSliceSet / Coverage root binding correction 最小合同独立冻结发布候选
+
+文档281已由PR #323 final head `32de8a67a547f521d9272755c5c447e70830ec10`合入
+`main@e0de7556f4075068dcaaa74fba85dcd756540fa6`。original Public CI `39036786001`、exact-main Public CI
+`39039139791`与Browser Smoke `39039139694`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh setup 2的
+README/doc281/milestones为3/3 qualifying PASS。independent reconciliation与188-artifact closeout分别为：
+
+```text
+04045abb14705435747630c0e3095aea2318be8cbf8b6f07d59f4229e155ed4a
+08f337f9544b732a7221047f313961c2bc254e2763553ca50a3e8c7cfa9a843d
+```
+
+setup 1的README formal marker-selection ERROR与reconciliation attempt 1的wrapper stdout post-seal mutation继续保留；
+后继PASS没有覆盖二者。doc281 full-file SHA-256继续为
+`241dc7b5922c981aabb61a1a6a765ed224bdf7ac47a588274a20a9bb3e311eaf`。
+
+[文档282](docs/282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)只发布doc281定义的
+0.3 ordered root chain合同。本文档进入仓库不等于冻结生效；自己的final-byte local gates、original PR checks、单独批准
+exact-head protected merge、new exact-main Public CI + Browser Smoke、fresh anonymous installed-product
+README/doc281/doc282/milestones observations与independent reconciliation全部闭合后，`CONTRACT_FROZEN` target才成为事实。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本发布只允许README、AGENTS、milestones与新增doc282。不得修改doc259–281、runtime、tests、workflows、Schema、
+manifest、fixtures、Profile、Policy、vectors或corpus；不得启动Schema implementation、composition feasibility/runtime、
+manifest successor、public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
+CLAIM_FIDELITY、tag或Release。冻结后也只返回CONTROL LOOP，分别重新审查child Schema/conformance、manifest topology与
+composition runtime；三者不得自动合并授权。
