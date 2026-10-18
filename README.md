@@ -182,10 +182,13 @@ python -m venv .venv
   [独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)
   的最后门已经闭合，private child implementation现已 frozen；fresh CONTROL LOOP 进入的
   [ReviewSliceSet / Coverage composition 私有实现可行性审计](docs/287-r1-review-slice-set-coverage-composition-private-implementation-feasibility-audit.md)
-  已完成自己的资格链，只证明bounded versioned successor可行；fresh CONTROL LOOP 当前进入
+  已完成自己的资格链；
   [独立实现授权发布](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)，
-  其最后门闭合以前composition implementation仍为`NOT_STARTED / NOT_AUTHORIZED`，manifest successor、persistence与
-  public Review产品继续保持独立停止线。
+  的最后门已经闭合，历史`ALLOWED`已生效。施工前反例随后证明current Fact applicability、Relation domain与exact
+  handoff FactSet不存在共同可接受世界，触发doc287停止线；当前只进入
+  [Fact handoff → Relation exact-input interoperability可行性修正审计](docs/289-r1-fact-handoff-relation-exact-input-interoperability-feasibility-correction-audit.md)。
+  composition implementation没有产生产品diff；旧授权历史保留，但在修正独立资格化以前不得继续消费。manifest successor、
+  persistence与public Review产品继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
