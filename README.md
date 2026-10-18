@@ -189,11 +189,12 @@ python -m venv .venv
   [Fact handoff → Relation exact-input interoperability可行性修正审计](docs/289-r1-fact-handoff-relation-exact-input-interoperability-feasibility-correction-audit.md)
   已完成自己的资格链。
   [same-policy / full-FactSet / per-product correction最小合同候选](docs/290-r1-fact-handoff-relation-exact-input-interoperability-correction-contract.md)
-  已在`main@33b4aa37…`完成original/exact-main门、fresh README/doc290/milestones读回与独立对账；当前只进入
-  [独立冻结发布候选](docs/291-r1-fact-handoff-relation-exact-input-interoperability-correction-contract-freeze-publication.md)。
-  applicability projection只决定stage责任，不替换完整Policy或Fact truth。冻结发布自己的最后门闭合以前合同仍只是
-  qualified candidate；composition implementation没有产生产品diff，旧授权历史保留但停止条件继续有效。successor implementation、
-  manifest、persistence与public Review产品继续保持独立停止线。
+  已在`main@33b4aa37…`完成候选资格；
+  [独立冻结发布](docs/291-r1-fact-handoff-relation-exact-input-interoperability-correction-contract-freeze-publication.md)
+  随后在`main@0e325016…`闭合自己的original/exact-main门、fresh README/doc290/doc291/milestones读回与独立对账，
+  correction contract现已frozen。applicability projection只决定stage责任，不替换完整Policy或Fact truth；composition
+  implementation没有产生产品diff，旧授权历史保留但停止条件继续有效。corrected successor feasibility、implementation、
+  manifest、persistence与public Review产品仍保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -370,6 +371,9 @@ Not responsible for Truth != Not responsible for Uncertainty
   从 Core 通用性复核中保留下来的候选方向。两者都不改 Core，也未冻结“两个插件”的最终部署形状。
 - [Q0 Quick Verification Scheduling 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)
   已经存在；新的优先顺序不改写 Q0，也不启动 Q 实现。
+- [Post-R1 外部错题本 Benchmark 与 Oracle 资格计划](docs/292-post-r1-external-counterexample-benchmark-and-oracle-qualification-plan.md)
+  保存 R1 完整闭合后的外部反例攻击方法、claim-specific Oracle independence、common-mode falsifiers 与 Attention
+  效益边界。它当前为 `PLANNED / NOT_STARTED`，不改变 R1 主线，也不启动 R2、R3 或公共 Benchmark 产品。
 
 ### 想看外部方法参照
 
