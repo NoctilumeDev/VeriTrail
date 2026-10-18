@@ -185,10 +185,12 @@ python -m venv .venv
   已完成自己的资格链；
   [独立实现授权发布](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)，
   的最后门已经闭合，历史`ALLOWED`已生效。施工前反例随后证明current Fact applicability、Relation domain与exact
-  handoff FactSet不存在共同可接受世界，触发doc287停止线；当前只进入
-  [Fact handoff → Relation exact-input interoperability可行性修正审计](docs/289-r1-fact-handoff-relation-exact-input-interoperability-feasibility-correction-audit.md)。
-  composition implementation没有产生产品diff；旧授权历史保留，但在修正独立资格化以前不得继续消费。manifest successor、
-  persistence与public Review产品继续保持独立停止线。
+  handoff FactSet不存在共同可接受世界，触发doc287停止线；
+  [Fact handoff → Relation exact-input interoperability可行性修正审计](docs/289-r1-fact-handoff-relation-exact-input-interoperability-feasibility-correction-audit.md)
+  已完成自己的资格链。当前只进入
+  [same-policy / full-FactSet / per-product correction最小合同候选](docs/290-r1-fact-handoff-relation-exact-input-interoperability-correction-contract.md)：
+  applicability projection只决定stage责任，不替换完整Policy或Fact truth。composition implementation没有产生产品diff；旧授权历史
+  保留，但在修正合同独立冻结并重新取得实施授权以前不得继续消费。manifest successor、persistence与public Review产品继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
