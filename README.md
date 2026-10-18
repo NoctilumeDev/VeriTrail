@@ -13,9 +13,10 @@ AI说任务完成了。**但是，凭什么相信？**
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
 ReviewSliceSet / Coverage composition qualification、vocabulary correction、Schema correction 与 root-binding correction
-最小合同已经冻结；CoverageLedger 0.3 child Schema / conformance 可行性审计、实现授权与 bounded A–J 私有实现候选
-已经完成各自资格链；fresh CONTROL LOOP 当前只进入独立 docs-only 冻结发布，`FROZEN` 在该发布自己的最后门闭合前仍只是
-条件 target，composition runtime、manifest successor 及完整 Review 产品均未开始；
+最小合同已经冻结；CoverageLedger 0.3 child Schema / conformance 已完成可行性审计、实现授权、bounded A–J 私有实现与
+独立冻结发布；fresh CONTROL LOOP 当前只进入 ReviewSliceSet / Coverage composition 私有实现可行性审计候选，现有高层
+Relation / Slice authority path不能原样复用，但bounded versioned successor具有有限实现路径；composition runtime、
+manifest successor、persistence及完整 Review 产品均未开始；
 验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
@@ -178,7 +179,10 @@ python -m venv .venv
   [Schema / conformance 私有实现候选](docs/285-r1-review-coverage-ledger-0-3-schema-conformance-implementation-candidate.md)
   只实现 bounded A–J，现已合入并完成 exact-main、fresh 产品读回与独立对账；
   [独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)
-  以自己的最后门为生效条件，manifest successor、composition 与 persistence 继续保持独立停止线。
+  的最后门已经闭合，private child implementation现已 frozen；fresh CONTROL LOOP 进入的
+  [ReviewSliceSet / Coverage composition 私有实现可行性审计](docs/287-r1-review-slice-set-coverage-composition-private-implementation-feasibility-audit.md)
+  只证明bounded versioned successor可行，manifest successor、composition implementation、persistence与public Review产品
+  继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -395,7 +399,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [CoverageLedger 0.3 child Schema / conformance 可行性审计](docs/283-r1-review-coverage-ledger-0-3-schema-conformance-feasibility-audit.md)：复核有限 root fragment、current private history、versioned conformance 与 manifest 独立停止线；不创建 Schema、runtime 或 successor；
 - [CoverageLedger 0.3 child Schema / conformance 实现授权发布](docs/284-r1-review-coverage-ledger-0-3-schema-conformance-implementation-authorization-publication.md)：限定 bounded A–J 施工面；自己的最后门闭合以前 `ALLOWED` 不生效，不授权 composition、manifest successor 或 persistence；
 - [CoverageLedger 0.3 child Schema / conformance 私有实现候选](docs/285-r1-review-coverage-ledger-0-3-schema-conformance-implementation-candidate.md)：实现 exact 0.3 child、closed terminal-history vectors、validation-only conformance、八个规范世界与直接 falsifier；候选资格后来闭合，但不因此取得 frozen 或 composition authority；
-- [CoverageLedger 0.3 child Schema / conformance 私有实现独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)：保留doc285已资格化实现字节，条件化发布frozen target；不授权composition、manifest successor或persistence；
+- [CoverageLedger 0.3 child Schema / conformance 私有实现独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)：保留doc285已资格化实现字节；其完整资格门已闭合，private implementation现已frozen，但不授权composition、manifest successor或persistence；
+- [ReviewSliceSet / Coverage composition 私有实现可行性审计](docs/287-r1-review-slice-set-coverage-composition-private-implementation-feasibility-audit.md)：核对one-shot Fact handoff、legacy Relation/Slice authority path、低层可复用primitive、0.3 conformance与manifest topology；只形成bounded successor可行性候选，不授权实现；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
