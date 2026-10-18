@@ -4,20 +4,16 @@
 
 AI说任务完成了。**但是，凭什么相信？**
 
-验迹是一个本地运行的开源工程证据核验工作台。先约定要检查什么，再收集实际留下的证据，
-最后按照事先约定的规则进行判断：哪些结论可以成立，哪些还缺少依据。
+验迹是一个本地运行的开源工程证据核验工作台。它根据事先封存的验收条件与实际证据，独立计算验收结论，
+而不是直接把测试通过、CI绿灯或AI的完成声明当成验收通过。
+
+如果AI让代码生产越来越快，验收却始终依赖同比例增加审查劳动，验证就可能成为新的瓶颈。
+验迹希望把能够事先约定的验证义务交给可复用的规则，让人集中处理仍需判断的问题。这是长期产品方向，不是已经验证的规模收益。
 
 它已经能够在受支持的本地环境中进行工程验收、采集真实浏览器证据、保存和复查结果、比较多次运行，
 并通过 GitHub 证据插件观察公开平台事实。
 
-扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
-源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
-ReviewSliceSet / Coverage composition qualification、vocabulary correction、Schema correction 与 root-binding correction
-最小合同已经冻结；CoverageLedger 0.3 child Schema / conformance 已完成可行性审计、实现授权、bounded A–J 私有实现与
-独立冻结发布；fresh CONTROL LOOP 当前只进入 ReviewSliceSet / Coverage composition 私有实现可行性审计候选，现有高层
-Relation / Slice authority path不能原样复用，但bounded versioned successor具有有限实现路径；composition runtime、
-manifest successor、persistence及完整 Review 产品均未开始；
-验证调度仍处于蓝图阶段。
+源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -25,14 +21,19 @@ manifest successor、persistence及完整 Review 产品均未开始；
 
 ## 看一个例子
 
-让AI Agent开发一个网站。它写好了代码、跑过了测试，然后说：“可以交付了。”
+**CI全绿，为什么仍然不能宣布交付？**
 
-可我们不知道的是：测的是约定的功能吗？真的操作过页面吗？失败记录有没有留下？证据够不够支持“完成”这个结论？
+事先封存的验收条件要求：在真实浏览器中打开首页，点击指定入口后显示预期页面，并保留对应证据。
 
-使用验迹时，可以先约定“首页能够打开，点击指定入口后显示预期页面”，再保存实际浏览器观察与运行记录，
-按这些条件核验。通过、失败、存疑与缺证分别保留。
+这次只运行了单元测试。测试全部通过，CI显示绿色，但约定的浏览器检查没有执行。
 
-**它判断的是：这份证据是否满足事先确认的条件。** 条件是否完整、证据来源是否可靠，仍要结合具体项目复查。
+验迹不会拿已有测试的成功，代替缺失的浏览器证据。在这个只有缺证的示意案例中，结果应是 `PENDING`（尚待补证），而不是 `PASS`。
+
+**已运行的检查通过，不等于约定的验收义务全部得到证明。**
+
+测试和CI可以产生证据，也可以承载这套流程；验迹负责按照封存规则计算验收结论，最终是否交付仍由人决定。
+
+条件是否完整、证据来源是否可靠，仍要结合具体项目复查。
 
 ## 十秒认识 VeriTrail
 
@@ -295,6 +296,10 @@ sealed Plan / Profile
 - `INCONCLUSIVE`：变量污染、环境漂移或证据冲突导致无法归因；
 - `PENDING`：尚未取得计划要求的真实证据；
 - `ABORTED` 是运行状态。资源停止线触发时保存现场，不伪造 `PASS / FAIL`。
+
+上表说明 `ExperimentPlan` 的实验裁决语义；`AcceptancePlan` 另有独立的证据绑定、充分性与完整性判定路径。
+两者都不从执行完成直接推导 `PASS`，但不能混用裁决规则。实现分别见
+[ExperimentPlan 裁决](src/veritrail/verdict.py)与[AcceptancePlan 裁决](src/veritrail/acceptance_evaluation.py)。
 
 ## 公开证据与安全边界
 
