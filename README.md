@@ -12,9 +12,9 @@ AI说任务完成了。**但是，凭什么相信？**
 
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
-ReviewSliceSet / Coverage composition qualification、vocabulary correction 与 Schema correction 最小合同已经冻结；fresh
-CONTROL LOOP 已把三段 set root 与 safe-negative absence 接缝闭合为 qualified audit history，当前只进入 root-binding
-correction docs-only 最小合同候选；Schema 实现、composition runtime 及完整 Review 产品均未开始；
+ReviewSliceSet / Coverage composition qualification、vocabulary correction、Schema correction 与 root-binding correction
+最小合同已经冻结；fresh CONTROL LOOP 当前只进入 CoverageLedger 0.3 child Schema / conformance 可行性审计；Schema 实现、
+composition runtime、manifest successor 及完整 Review 产品均未开始；
 验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
@@ -167,11 +167,12 @@ python -m venv .venv
   `fact_set_digest`。[root-binding correction 前合同审计](docs/280-r1-review-slice-set-coverage-root-binding-correction-precontract-audit.md)
   已成为 qualified history，进一步证明 Fact / Relation / ReviewSlice 三段 qualified absence 与 manifest negative-world topology
   是不同 seam。[root-binding correction 最小合同候选](docs/281-r1-review-slice-set-coverage-root-binding-correction-contract.md)
-  已在 `main@e0de755…` 完成自己的资格链，成为 qualified history；当前进入
-  [独立冻结发布](docs/282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)。它条件化发布
-  CoverageLedger 0.3 ordered root chain、versioned terminal-history projection、total classification、conformance、0.1/0.2
-  immutability 与 manifest compatibility stop；本发布自己的最后门闭合以前仍不是 frozen 事实，也不授权 Schema
-  implementation、composition runtime、manifest successor或 public assembler；persistence继续 open。
+  已在 `main@e0de755…` 完成自己的资格链，并由
+  [独立冻结发布](docs/282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)闭合为 frozen
+  事实。fresh CONTROL LOOP 当前进入
+  [CoverageLedger 0.3 child Schema / conformance 可行性审计](docs/283-r1-review-coverage-ledger-0-3-schema-conformance-feasibility-audit.md)：
+  只审有限 child shape、versioned conformance 与 private history inputs；不创建 Schema/runtime，不合并 manifest successor
+  或 composition，不选择 persistence。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -385,6 +386,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage root binding correction 前合同审计](docs/280-r1-review-slice-set-coverage-root-binding-correction-precontract-audit.md)：把单字段缺口扩展为 Fact / Relation / ReviewSlice 三段 present/absence root chain 与独立 manifest topology seam；不选择 carrier 或版本；
 - [ReviewSliceSet / Coverage root binding correction 最小合同候选](docs/281-r1-review-slice-set-coverage-root-binding-correction-contract.md)：冻结 CoverageLedger 0.3 ordered root chain、versioned terminal-history projection、present/qualified-absence/qualified-unknown 语义、conformance 与 version/manifest stop；不授权 Schema 或 runtime；
 - [ReviewSliceSet / Coverage root binding correction 合同独立冻结发布](docs/282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)：保留 doc281 已资格化字节，条件化发布 frozen target；不授权 Schema、composition runtime、manifest successor 或 persistence；
+- [CoverageLedger 0.3 child Schema / conformance 可行性审计](docs/283-r1-review-coverage-ledger-0-3-schema-conformance-feasibility-audit.md)：复核有限 root fragment、current private history、versioned conformance 与 manifest 独立停止线；不创建 Schema、runtime 或 successor；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
