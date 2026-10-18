@@ -13,8 +13,9 @@ AI说任务完成了。**但是，凭什么相信？**
 扩展方向包括运行状态与测试结果的证据采集、源码审查辅助，以及验证任务调度。运行与测试证据目前仍是候选方向；
 源码审查的 private Fact projection / fulfillment 与 Fact → Coverage same-attempt handoff 合同及私有实现已经冻结；
 ReviewSliceSet / Coverage composition qualification、vocabulary correction、Schema correction 与 root-binding correction
-最小合同已经冻结；fresh CONTROL LOOP 当前只进入 CoverageLedger 0.3 child Schema / conformance 可行性审计；Schema 实现、
-composition runtime、manifest successor 及完整 Review 产品均未开始；
+最小合同已经冻结；CoverageLedger 0.3 child Schema / conformance 可行性审计已经成为 qualified history，fresh CONTROL LOOP
+当前只进入独立实现授权发布；该发布最后门闭合以前 Schema 实现仍未授权，composition runtime、manifest successor 及完整
+Review 产品均未开始；
 验证调度仍处于蓝图阶段。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
@@ -169,10 +170,12 @@ python -m venv .venv
   是不同 seam。[root-binding correction 最小合同候选](docs/281-r1-review-slice-set-coverage-root-binding-correction-contract.md)
   已在 `main@e0de755…` 完成自己的资格链，并由
   [独立冻结发布](docs/282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)闭合为 frozen
-  事实。fresh CONTROL LOOP 当前进入
+  事实。fresh CONTROL LOOP 进入的
   [CoverageLedger 0.3 child Schema / conformance 可行性审计](docs/283-r1-review-coverage-ledger-0-3-schema-conformance-feasibility-audit.md)：
-  只审有限 child shape、versioned conformance 与 private history inputs；不创建 Schema/runtime，不合并 manifest successor
-  或 composition，不选择 persistence。
+  已完成自己的资格链，只证明有限 child shape、versioned conformance 与 private history inputs 可行。
+  [独立实现授权发布](docs/284-r1-review-coverage-ledger-0-3-schema-conformance-implementation-authorization-publication.md)
+  当前只条件化发布 bounded A–J 施工面；自己的最后门闭合以前 `ALLOWED` 不生效，Schema/conformance implementation
+  仍未开始，manifest successor、composition 与 persistence 继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -387,6 +390,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage root binding correction 最小合同候选](docs/281-r1-review-slice-set-coverage-root-binding-correction-contract.md)：冻结 CoverageLedger 0.3 ordered root chain、versioned terminal-history projection、present/qualified-absence/qualified-unknown 语义、conformance 与 version/manifest stop；不授权 Schema 或 runtime；
 - [ReviewSliceSet / Coverage root binding correction 合同独立冻结发布](docs/282-r1-review-slice-set-coverage-root-binding-correction-contract-freeze-publication.md)：保留 doc281 已资格化字节，条件化发布 frozen target；不授权 Schema、composition runtime、manifest successor 或 persistence；
 - [CoverageLedger 0.3 child Schema / conformance 可行性审计](docs/283-r1-review-coverage-ledger-0-3-schema-conformance-feasibility-audit.md)：复核有限 root fragment、current private history、versioned conformance 与 manifest 独立停止线；不创建 Schema、runtime 或 successor；
+- [CoverageLedger 0.3 child Schema / conformance 实现授权发布](docs/284-r1-review-coverage-ledger-0-3-schema-conformance-implementation-authorization-publication.md)：限定 bounded A–J 施工面；自己的最后门闭合以前 `ALLOWED` 不生效，不授权 composition、manifest successor 或 persistence；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
