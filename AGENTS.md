@@ -4299,3 +4299,36 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 fixtures、Profile、Policy、vectors或corpus；不得启动Schema/conformance implementation candidate本身、composition、manifest
 successor、public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或
 Release。最后门闭合以后也只得到`ALLOWED / NOT_STARTED`，必须返回CONTROL LOOP重新确认A–J仍是最小合法seam。
+
+### R1 CoverageLedger 0.3 child Schema / conformance 私有实现候选
+
+文档284由PR #326合入`main@b4e741bc3b4029257f95cb1bfabbbd0e71c40bd3`。其original PR与exact-main双门均为
+attempt 1 SUCCESS；fresh README/doc283/doc284/milestones为4/4 qualifying PASS。independent reconciliation与
+149-artifact closeout分别为：
+
+```text
+0c9358d34d234c29f4869de1a0b34b04cfb3b9282e10009074b11aacf5f5d19d
+eb66acd79603423953c16cf12f25f6f54abf67b637d30e8c9979c0dacb61d027
+```
+
+因此`SCHEMA_IMPLEMENTATION_ALLOWED`已生效。fresh CONTROL LOOP确认A–J仍是最小合法seam；当前进入
+[文档285](docs/285-r1-review-coverage-ledger-0-3-schema-conformance-implementation-candidate.md)的单用途implementation
+candidate。它新增exact 0.3 child Schema、validation-only conformance、closed terminal-history vectors、八个规范world、
+`RSCSC-000..016` / `RBCC-000..011` direct falsifiers与0.1/common/manifest/history全字节守卫。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_FEASIBILITY_AUDITED
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+当前实现不是merged、exact-main verified或frozen。不得创建assembler、决定denominator/status/join、修改manifest、选择manifest
+successor或persistence，也不得启动composition、public Review产品、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、
+CLAIM_FIDELITY、tag或Release。候选自己的original PR、单独批准exact-head merge、exact-main双门、fresh installed-product
+README/doc285/milestones读回与independent reconciliation闭合后最多成为qualified implementation candidate；冻结仍需独立
+docs-only publication。
