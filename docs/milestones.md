@@ -5605,3 +5605,37 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 本候选只允许README、AGENTS、milestones与新增doc287。自己的local/original PR/separately approved exact-head merge/
 new exact-main双门/fresh README/doc287/milestones readback/independent reconciliation闭合后，最多成为qualified feasibility
 history。composition implementation/authorization、manifest successor、persistence与public Review产品均未启动。
+
+## R1 ReviewSliceSet / Coverage composition 私有实现授权发布候选
+
+文档287由PR #329 final head `fd02f92ea1047ac6b246585bb167d4681625bca3`合入
+`main@0dc7f832b7f77a1926c6ab7807805f9939e56246`。original Public CI `39113130924`、exact-main Public CI
+`39114897070`与Browser Smoke `39114897054`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc287/milestones为3/3 qualifying PASS。independent reconciliation与141-artifact closeout分别为：
+
+```text
+07cf069ccc901f30ce8ac28d01623a6b711256e665fa14211a92038a80f657d4
+efccb6067ff3e974361e043cfd22bbd27489b5833d638492223740b19a9e51b9
+```
+
+doc287因此成为qualified feasibility history。它证明bounded versioned successor可行，但不自动授予implementation。
+PR #330随后只修改README读者说明并合入`main@de21b3a2fadf436b22d91b7d90c218a6c868f77c`，不拥有R1 authority；
+fresh CONTROL LOOP已放弃旧基线上的候选资格并重新绑定该exact main，未发现更早blocker。
+[文档288](288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)只条件化授权
+doc287 A–J，不修改runtime、tests、Schema、manifest、fixtures、vectors或任何frozen contract。
+
+```text
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本publication自己的final-byte local gates、original PR qualification、单独批准的exact-head protected merge、new exact-main
+Public CI + Browser Smoke、fresh anonymous installed-product README/doc287/doc288/milestones observations与independent
+reconciliation全部闭合以前，`ALLOWED`不生效。最后门闭合以后也只得到`ALLOWED / NOT_STARTED`并返回CONTROL LOOP；
+implementation candidate、manifest successor、persistence与public Review产品均未启动。
