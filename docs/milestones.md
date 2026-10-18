@@ -5639,3 +5639,49 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 Public CI + Browser Smoke、fresh anonymous installed-product README/doc287/doc288/milestones observations与independent
 reconciliation全部闭合以前，`ALLOWED`不生效。最后门闭合以后也只得到`ALLOWED / NOT_STARTED`并返回CONTROL LOOP；
 implementation candidate、manifest successor、persistence与public Review产品均未启动。
+
+## R1 Fact handoff → Relation exact-input interoperability 可行性修正审计候选
+
+文档288的publication最后门已在`main@3e491558d511f2578a5364d25822d235e91e8a14`闭合。fresh
+README/doc287/doc288/milestones为4/4 qualifying PASS；independent reconciliation与156-artifact closeout分别为：
+
+```text
+ea069bfc0995a90c40e26cbb282f2420aaa3c8df72d91d094003e1e1931e96c1
+892ea5494a0b9ab6785f42e16341b411d26cbc4c6aaed2878a8a303813c6d508
+```
+
+因此composition private implementation authority曾经生效为`ALLOWED / NOT_STARTED`。施工前read-only counterexample
+随后触发doc287 §9 / doc288 §5，没有产生产品diff：完整五类Fact handoff被current Relation domain拒绝；Fact-only
+MODULE+IMPORT handoff缺少Relation requirement；同一Policy同时声明Fact+Relation requirements又被current Product Fact
+consumer拒绝。首轮CPython 3.10.6/3.13.13 normal/`-O` semantic report一致：
+
+```text
+c01f2c7b46fda251272abea8fad86d76a52ff731b593d4cb55f9bb1cb617bd50
+```
+
+[文档289](289-r1-fact-handoff-relation-exact-input-interoperability-feasibility-correction-audit.md)只审被击穿的最小边界。
+第二轮四格证明：过滤完整FactSet会产生不同digest；current Relation domain同样拒绝双MODULE FactSet；但在保留完整
+FactSet、原digest与全部facts的audit-only validated view后，existing Provider可完成单path五类world及双pathworld中由
+Relation profile机械投影出的IMPORT obligations。semantic report一致为：
+
+```text
+51c17d6fce90fde5cee9152250ff59eb025eb4f236604db14699ab2e730c726f
+```
+
+因此候选修正路径限于same-policy stage applicability、full-FactSet obligation projection与versioned per-product domain/request
+successor；不需要改写frozen Fact truth或Relation candidate semantics。旧authorization history保留，但当前不能继续消费。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_FEASIBILITY_CORRECTION_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc289。自己的local/original PR/separately approved exact-head merge/
+new exact-main双门/fresh README/doc289/milestones readback/independent reconciliation闭合后，最多成为qualified
+correction feasibility history并返回CONTROL LOOP。correction contract、successor runtime、composition、manifest successor、
+persistence与public Review产品均未启动。

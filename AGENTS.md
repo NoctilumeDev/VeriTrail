@@ -4442,3 +4442,47 @@ Public CI 11/11 + Browser Smoke 1/1、fresh anonymous installed-product README/d
 independent reconciliation全部闭合以前，`COMPOSITION_IMPLEMENTATION_ALLOWED`不生效。它不创建或修改runtime、tests、
 Schema、manifest、fixtures、vectors，不选择persistence，也不启动public Review产品；最后门闭合以后也只得到
 `ALLOWED / NOT_STARTED`并返回CONTROL LOOP。
+
+### R1 Fact handoff → Relation exact-input interoperability 可行性修正审计候选
+
+文档288的publication最后门后来在`main@3e491558d511f2578a5364d25822d235e91e8a14`闭合。fresh
+README/doc287/doc288/milestones为4/4 qualifying PASS；independent reconciliation与156-artifact closeout分别为：
+
+```text
+ea069bfc0995a90c40e26cbb282f2420aaa3c8df72d91d094003e1e1931e96c1
+892ea5494a0b9ab6785f42e16341b411d26cbc4c6aaed2878a8a303813c6d508
+```
+
+因此`COMPOSITION_IMPLEMENTATION_ALLOWED`已成为历史事实，但implementation仍未开始。施工前read-only反例随后触发
+doc287 §9 / doc288 §5：current Fact applicability只接受Fact requirements，current Relation domain要求Relation
+requirement并只接受single-module MODULE+IMPORT closed shape；完整五类Fact handoff、Fact-only MODULE+IMPORT handoff与
+Fact+Relation combined Policy三者分别在Relation domain或Fact consumer边界被拒绝。首轮四格semantic report为：
+
+```text
+c01f2c7b46fda251272abea8fad86d76a52ff731b593d4cb55f9bb1cb617bd50
+```
+
+[文档289](docs/289-r1-fact-handoff-relation-exact-input-interoperability-feasibility-correction-audit.md)只审同一sealed Policy的
+stage-scoped applicability、完整FactSet到Relation-applicable obligation的投影、single-module closed-shape边界与bounded
+versioned successor。第二轮四格证明过滤FactSet会改变digest，而current Provider在audit-only validated view后能保留完整
+五类或多模块FactSet并完成profile-applicable import obligations；semantic report为：
+
+```text
+51c17d6fce90fde5cee9152250ff59eb025eb4f236604db14699ab2e730c726f
+```
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_FEASIBILITY_CORRECTION_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc289。不得修改doc175/doc287/doc288、runtime、tests、workflows、
+Schema、manifest、fixtures、Profile、Policy、vectors或corpus；不得起草correction contract、实现successor、恢复composition
+施工、选择persistence或启动public Review产品。完成自己的local/original PR/separately approved exact-head merge/new
+exact-main双门/fresh README/doc289/milestones readback/independent reconciliation后，最多成为qualified correction
+feasibility history并返回CONTROL LOOP。
