@@ -5453,3 +5453,40 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 本候选只允许README、AGENTS、milestones与新增doc283。自己的local/original PR/separately approved exact-head merge/
 new exact-main双门/fresh README/doc283/milestones readback/independent reconciliation闭合后，最多成为qualified feasibility
 history。Schema implementation/authorization、composition、manifest successor、persistence与public Review产品均未启动。
+
+## R1 CoverageLedger 0.3 child Schema / conformance 实现授权发布候选
+
+文档283已由PR #325 final head `734f35a328e706fe843ec6f2f9590c6e2ac90f83`合入
+`main@dd4cd19d23623516416c8d0a6803c22d15960e36`。original Public CI `39094291800`、exact-main Public CI
+`39095889099`与Browser Smoke `39095889019`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc283/milestones为3/3 qualifying PASS。independent reconciliation与145-artifact closeout分别为：
+
+```text
+afb2bf3dfc5054ee0fb8b00504e4a485125d4e8c3552d7eac318c48fcc9b405d
+0e26367f1d3614d56e3ddc130f45d41003205818154a433d30ed16cf543c57d2
+```
+
+因此doc283已经成为qualified feasibility history。fresh CONTROL LOOP未发现更早prerequisite；CoverageLedger 0.3 child
+不需要先物化0.2，也不需要先修改common/manifest、选择persistence或实现composition assembler。
+
+[文档284](284-r1-review-coverage-ledger-0-3-schema-conformance-implementation-authorization-publication.md)只条件化发布doc283
+已审计的bounded A–J施工面：exact 0.3 child Schema、versioned conformance、terminal-history/binding/chain/digest复算、
+positive/negative fixtures与identity vectors、`RSCSC-000..016` / `RBCC-000..011` direct falsifiers、known-version
+fail-closed与0.1/common/manifest全字节守卫。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_FEASIBILITY_AUDITED
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_SCHEMA_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本publication自己的final bytes、local gates、original PR qualification、单独批准的exact-head protected merge、new exact-main
+Public CI 11/11 + Browser Smoke 1/1、fresh anonymous installed-product README/doc283/doc284/milestones observations与
+independent reconciliation全部闭合以前，`ALLOWED`不生效。它不创建Schema/runtime/tests/fixtures/vectors，不启动composition、
+manifest successor、persistence或public Review产品；最后门闭合以后也只得到`ALLOWED / NOT_STARTED`并返回CONTROL LOOP。
