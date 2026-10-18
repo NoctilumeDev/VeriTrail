@@ -5490,3 +5490,44 @@ R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
 Public CI 11/11 + Browser Smoke 1/1、fresh anonymous installed-product README/doc283/doc284/milestones observations与
 independent reconciliation全部闭合以前，`ALLOWED`不生效。它不创建Schema/runtime/tests/fixtures/vectors，不启动composition、
 manifest successor、persistence或public Review产品；最后门闭合以后也只得到`ALLOWED / NOT_STARTED`并返回CONTROL LOOP。
+
+## R1 CoverageLedger 0.3 child Schema / conformance 私有实现候选
+
+文档284由PR #326合入`main@b4e741bc3b4029257f95cb1bfabbbd0e71c40bd3`；original PR与exact-main双门均以
+attempt 1 SUCCESS闭合，fresh README/doc283/doc284/milestones为4/4 qualifying PASS。independent reconciliation与
+149-artifact closeout分别为：
+
+```text
+0c9358d34d234c29f4869de1a0b34b04cfb3b9282e10009074b11aacf5f5d19d
+eb66acd79603423953c16cf12f25f6f54abf67b637d30e8c9979c0dacb61d027
+```
+
+因此implementation authority已经`ALLOWED`。fresh CONTROL LOOP未发现更早blocker；
+[文档285](285-r1-review-coverage-ledger-0-3-schema-conformance-implementation-candidate.md)只实现doc284 A–J：exact 0.3
+child、closed terminal-history vectors、versioned validation-only conformance、八个规范world、direct falsifiers与旧字节守卫。
+24项direct tests加44项既有Schema regressions在CPython 3.10.6/3.13.13、normal/`-O`四格各68/68 PASS，canonical report
+逐字节一致：
+
+```text
+3690636fede8c31bb99cc2fac50cecaa3b5443c14b97a94b05f99a3f7c9d43d8
+```
+
+首轮fixture/local shape failures、negative-vector harness order failure、successor integration failures、local import-path setup
+error与四格runner import-path setup errors继续保留；后继PASS没有覆盖它们。
+final-bytes四格wrapper convenience summary的scalar-index setup error也保留；四份原始report与fresh只读comparison独立证明
+完整摘要一致，没有重跑或覆盖产品观察。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_ROOT_BINDING_CORRECTION_CONTRACT_FROZEN
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_FEASIBILITY_AUDITED
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_FEASIBILITY_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+```
+
+本候选不是merged、exact-main verified或frozen；不拥有composition、manifest successor、persistence、transport或publication
+authority。自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc285/milestones
+readback/independent reconciliation闭合后最多成为qualified implementation candidate；冻结仍需独立docs-only publication。
