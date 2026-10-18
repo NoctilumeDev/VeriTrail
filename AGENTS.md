@@ -4406,3 +4406,39 @@ fixtures、Profile、Policy、vectors或corpus；不得启动composition impleme
 public Review产品、persistence、Evidence/Bundle/publisher、CLI/Workbench/Core、R2/R3、CLAIM_FIDELITY、tag或Release。
 完成自己的local/original PR/separately approved exact-head merge/new exact-main双门/fresh README/doc287/milestones
 readback/independent reconciliation后，最多成为qualified feasibility history并返回CONTROL LOOP。
+
+### R1 ReviewSliceSet / Coverage composition 私有实现授权发布候选
+
+文档287由PR #329 final head `fd02f92ea1047ac6b246585bb167d4681625bca3`合入
+`main@0dc7f832b7f77a1926c6ab7807805f9939e56246`。original Public CI `39113130924`、exact-main Public CI
+`39114897070`与Browser Smoke `39114897054`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc287/milestones为3/3 qualifying PASS。independent reconciliation与141-artifact closeout分别为：
+
+```text
+07cf069ccc901f30ce8ac28d01623a6b711256e665fa14211a92038a80f657d4
+efccb6067ff3e974361e043cfd22bbd27489b5833d638492223740b19a9e51b9
+```
+
+因此doc287已成为qualified feasibility history。PR #330随后只修改README读者说明并合入
+`main@de21b3a2fadf436b22d91b7d90c218a6c868f77c`；它不拥有R1 authority。fresh CONTROL LOOP已放弃旧基线上的
+候选资格并重新绑定该exact main，未发现更早prerequisite或击穿frozen contracts的反例。当前最小合法候选是
+[文档288](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)，它只条件化
+发布doc287 A–J：single composition attempt、handoff重验、post-handoff Relation/RelationSet successor、same-attempt Slice、
+ReviewSliceSet projection/admission、seven-stage history、total Coverage qualification、one-shot closure与direct falsifiers。
+
+```text
+R1_REVIEW_COVERAGE_LEDGER_0_3_SCHEMA_CONFORMANCE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本publication自己的final bytes、local gates、original PR qualification、单独批准的exact-head protected merge、new exact-main
+Public CI 11/11 + Browser Smoke 1/1、fresh anonymous installed-product README/doc287/doc288/milestones observations与
+independent reconciliation全部闭合以前，`COMPOSITION_IMPLEMENTATION_ALLOWED`不生效。它不创建或修改runtime、tests、
+Schema、manifest、fixtures、vectors，不选择persistence，也不启动public Review产品；最后门闭合以后也只得到
+`ALLOWED / NOT_STARTED`并返回CONTROL LOOP。

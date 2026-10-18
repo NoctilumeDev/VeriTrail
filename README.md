@@ -182,8 +182,10 @@ python -m venv .venv
   [独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)
   的最后门已经闭合，private child implementation现已 frozen；fresh CONTROL LOOP 进入的
   [ReviewSliceSet / Coverage composition 私有实现可行性审计](docs/287-r1-review-slice-set-coverage-composition-private-implementation-feasibility-audit.md)
-  只证明bounded versioned successor可行，manifest successor、composition implementation、persistence与public Review产品
-  继续保持独立停止线。
+  已完成自己的资格链，只证明bounded versioned successor可行；fresh CONTROL LOOP 当前进入
+  [独立实现授权发布](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)，
+  其最后门闭合以前composition implementation仍为`NOT_STARTED / NOT_AUTHORIZED`，manifest successor、persistence与
+  public Review产品继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -406,6 +408,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [CoverageLedger 0.3 child Schema / conformance 私有实现候选](docs/285-r1-review-coverage-ledger-0-3-schema-conformance-implementation-candidate.md)：实现 exact 0.3 child、closed terminal-history vectors、validation-only conformance、八个规范世界与直接 falsifier；候选资格后来闭合，但不因此取得 frozen 或 composition authority；
 - [CoverageLedger 0.3 child Schema / conformance 私有实现独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)：保留doc285已资格化实现字节；其完整资格门已闭合，private implementation现已frozen，但不授权composition、manifest successor或persistence；
 - [ReviewSliceSet / Coverage composition 私有实现可行性审计](docs/287-r1-review-slice-set-coverage-composition-private-implementation-feasibility-audit.md)：核对one-shot Fact handoff、legacy Relation/Slice authority path、低层可复用primitive、0.3 conformance与manifest topology；只形成bounded successor可行性候选，不授权实现；
+- [ReviewSliceSet / Coverage composition 私有实现授权发布](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)：保存doc287已资格化可行性，条件化授权bounded A–J private successor；自己的最后门闭合以前`ALLOWED`不生效；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
