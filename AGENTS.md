@@ -4759,3 +4759,39 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 manifest、persistence、Coverage或post-R1计划。自己的final-byte门、original PR、单独批准的exact-head merge、new exact-main双门、
 fresh README/doc296/milestones读回与独立对账闭合后，最多形成qualified feasibility history并返回CONTROL LOOP；不得自动启动
 implementation、恢复旧composition A–J或选择manifest/persistence。
+
+### R1 Fact handoff → Relation corrected successor 私有实现授权发布候选
+
+文档296由PR #341 final head `34fba6ca71122d8a71a55ddf98567486744fa189`合入
+`main@e8171b93b526f16ca2dee0c90537780cec91a212`。original Public CI `39241157801`、exact-main Public CI
+`39247733436`与Browser Smoke `39247733582`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc296/milestones各有一份qualifying PASS；README formal #1的P2 render timeout保留为ERROR，fresh #2才PASS。
+independent reconciliation与142-artifact closeout分别为：
+
+```text
+bad8c6125ef0e0432d2d81568c0f41edfed7be1e2732857fd5d356d39ac5340f
+5b0861c6b1ee31cf09ff5f907ae52e0f0d4627b31d69544bd052db4ecce8041a
+```
+
+因此doc296已成为qualified feasibility history。fresh CONTROL LOOP确认#341只改四份文档，当前main没有并行semantic施工或
+更早反例；下一最小合法问题是
+[文档297](docs/297-r1-fact-relation-corrected-successor-private-implementation-authorization-publication.md)限定的docs-only授权发布。
+它只条件化授权doc296 §7 A–J：exact-input/handoff/context join、`/0.2` stage ownership、完整per-product closure、完整obligation
+projection、可区分successor carrier、现有Provider assignment、独立qualification/admission与same-attempt continuation。
+
+```text
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_FROZEN
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc297。其final bytes、original PR、单独批准的exact-head merge、new
+exact-main双门、fresh README/doc296/doc297/milestones读回与独立对账全部闭合以前，`ALLOWED`不生效。闭合以后也必须返回
+CONTROL LOOP；不得自动施工successor、恢复旧composition、选择manifest/persistence或启动Coverage、public Review、R2/R3。

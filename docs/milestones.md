@@ -5942,3 +5942,42 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 fresh README/doc296/milestones readback及independent reconciliation后，最多成为`FEASIBILITY_AUDITED` qualified history并返回
 CONTROL LOOP。它不授权runtime/tests/Schema、successor implementation、旧composition A–J、manifest、persistence、Coverage、
 public Review、R2/R3或post-R1 Benchmark。
+
+## R1 Fact handoff → Relation corrected successor 私有实现授权发布候选
+
+文档296由PR #341 final head `34fba6ca71122d8a71a55ddf98567486744fa189`合入
+`main@e8171b93b526f16ca2dee0c90537780cec91a212`，tree为
+`482b63e78c663fddbbe6c4fb79fcfce9cb997f5e`。original Public CI `39241157801`、exact-main Public CI
+`39247733436`与Browser Smoke `39247733582`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。
+
+fresh README/doc296/milestones各有一份qualifying PASS。README formal #1中P1 API COMPLETE、P2 render navigation timeout，
+保留为`FORMAL_READBACK_ERROR`；fresh formal #2才PASS。第一次pre-formal validation的上游closeout self-capture假设错误保留为
+proof-facility setup error。independent reconciliation与142-artifact closeout分别为：
+
+```text
+bad8c6125ef0e0432d2d81568c0f41edfed7be1e2732857fd5d356d39ac5340f
+5b0861c6b1ee31cf09ff5f907ae52e0f0d4627b31d69544bd052db4ecce8041a
+```
+
+因此`FEASIBILITY_AUDITED`已成为qualified history。fresh CONTROL LOOP确认current main没有semantic drift或更早反例；
+[文档297](297-r1-fact-relation-corrected-successor-private-implementation-authorization-publication.md)只条件化发布doc296 §7 A–J的
+bounded private implementation authority：完整Fact truth和Policy保持不变，application拥有stage applicability、per-product closure、
+完整obligation projection、assignment、qualification与admission；Provider只观察明确分配的obligations。
+
+```text
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_FROZEN
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc297。其final-byte local gates、original PR、单独批准的exact-head
+merge、new exact-main Public CI与Browser Smoke、fresh README/doc296/doc297/milestones readback及independent reconciliation
+闭合以前，`CORRECTION_IMPLEMENTATION_ALLOWED`只作target marker。闭合以后仍须返回CONTROL LOOP；runtime、tests、Schema、
+旧composition、manifest、persistence、Coverage、public Review、R2/R3与post-R1 Benchmark均未启动。
