@@ -5981,3 +5981,53 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 merge、new exact-main Public CI与Browser Smoke、fresh README/doc296/doc297/milestones readback及independent reconciliation
 闭合以前，`CORRECTION_IMPLEMENTATION_ALLOWED`只作target marker。闭合以后仍须返回CONTROL LOOP；runtime、tests、Schema、
 旧composition、manifest、persistence、Coverage、public Review、R2/R3与post-R1 Benchmark均未启动。
+
+## R1 Relation Provider import-form conformance 修正可行性审计候选
+
+文档297由PR #342 final head `dcc5d2c4bccf6ceb69fb52673075446d983d71d2`合入
+`main@cd74cfd8d212d200465a86391d2fdb08c123376c`。其完整publication qualification已闭合；200-artifact closeout与independent
+reconciliation分别为：
+
+```text
+9cdd52106ac942b96a16cf4b5df8d11e14bbf95eaba1d4353846b7d0001fe824
+9d59a160a3bdacb166b620f169568de2dbd51e843e56dd18eb7eea28759a4799
+```
+
+fresh implementation preflight没有产生runtime diff，却构造出真实反例：current Fact stage递归产生完整`Import` / `ImportFrom`、
+multiple aliases、relative/star、nested与multi-path `IMPORT_DECLARATION` universe；current closed Relation Provider只遍历
+`tree.body`、只接受`ast.Import`并要求单alias。因此完整14-Fact world中Provider A的5个与Provider B的10个assigned obligations
+均被拒绝；plain-import controls继续完成。此前“完整five-kind shape中的单一Import可运行”不能外推为“完整import semantic universe
+可运行”，doc296/doc297 stop condition已经触发。
+
+[文档298](298-r1-relation-provider-import-form-conformance-correction-feasibility-audit.md)当前只形成docs-only feasibility candidate。
+audit-only bounded successor保持完整FactSet，递归枚举alias occurrences，与authoritative Facts双向exact matching，拒绝missing、
+duplicate与semantic drift；legacy plain worlds保持逐字节相同，expanded domain使用新private Provider algorithm/descriptor identity。
+七组world在Python 3.10/3.13 × normal/`-O`四格均完成，semantic digest为：
+
+```text
+14f5eb624116f5712005e05322e08b734379fcb4891b02289553b4b44177e241
+```
+
+10-artifact feasibility closeout SHA-256为：
+
+```text
+2330d91d16d58f67fd852b4921910a4a91025900ef36f0cda28c94b121c100a3
+```
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_FEASIBILITY_AUDIT_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R3_NOT_STARTED
+```
+
+本候选自己的final-byte local gates、original PR、单独批准的exact-head merge、new exact-main双门、fresh
+README/doc298/milestones readback与independent reconciliation闭合后，最多成为qualified feasibility history并返回CONTROL
+LOOP。它不授权修正合同、Provider/runtime/tests/Schema、composition、manifest、persistence、Coverage、public Review、R2/R3或
+post-R1 Benchmark。
