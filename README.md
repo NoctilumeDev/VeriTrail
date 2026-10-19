@@ -211,10 +211,13 @@ python -m venv .venv
   authority曾生效。施工前完整import-form world随后命中doc296/doc297停止线：current Provider只支持top-level、single-alias
   `ast.Import`，不能履行frozen profile对全部`IMPORT_DECLARATION`的责任；
   [Provider import-form conformance修正可行性审计](docs/298-r1-relation-provider-import-form-conformance-correction-feasibility-audit.md)
-  已在`main@85bb228…`完成exact-main双门、fresh README/doc298/milestones读回与独立对账，成为qualified history。当前
+  已在`main@85bb228…`完成exact-main双门、fresh README/doc298/milestones读回与独立对账，成为qualified history。
   [最小修正合同候选](docs/299-r1-relation-provider-import-form-conformance-correction-contract.md)
   冻结完整import-form universe、versioned CPython 3.10.6 occurrence语义、AST occurrence与authoritative Fact双向核账、
-  complete assignment execution、legacy ordinal/bytes兼容与fail-closed边界。旧授权历史保留但不可消费；合同尚未frozen，
+  complete assignment execution、legacy ordinal/bytes兼容与fail-closed边界；它已在`main@79be6a2…`完成exact-main双门、
+  fresh README/doc299/milestones读回与独立对账，成为qualified contract candidate。当前
+  [独立冻结发布候选](docs/300-r1-relation-provider-import-form-conformance-correction-contract-freeze-publication.md)
+  只发布已资格化的doc299字节；其自己的完整资格链闭合以前，`CONTRACT_FROZEN`仍只是条件目标。旧授权历史保留但不可消费；
   corrected successor runtime、manifest、persistence与public Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
