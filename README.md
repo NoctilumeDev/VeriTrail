@@ -221,8 +221,11 @@ python -m venv .venv
   contract现已frozen。fresh CONTROL LOOP进入的
   [corrected Provider successor私有实现可行性审计](docs/301-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-audit.md)
   证明一个versioned private binding、3.10 occurrence projection、双向Fact核账与legacy-compatible ordinal可以复用现有
-  request/canonicalizer/qualification primitives；当前只形成docs-only audit candidate。旧授权历史仍不可消费；runtime、manifest、
-  persistence与public Review产品均未启动。
+  request/canonicalizer/qualification primitives。该candidate由PR #346合入`main@bd0cb983…`，但new exact-main Public CI
+  `39321768248` attempt 1的required Starter job命中`net::ERR_NO_BUFFER_SPACE`并以10/11 FAILED终结；original failure与
+  Artifact保持，fresh产品读回没有启动，feasibility未取得资格。[exact-main资格失败边界审计](docs/302-r1-relation-provider-import-form-successor-feasibility-exact-main-qualification-failure-boundary-audit.md)
+  当前只把这一failure identity与新candidate恢复纪律形成待资格化的docs-only candidate，不重开正确工作的Browser分类、required
+  lane或oracle。旧授权历史仍不可消费；runtime、manifest、persistence与public Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
