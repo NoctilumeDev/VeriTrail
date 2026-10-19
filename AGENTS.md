@@ -4621,3 +4621,34 @@ R2 / R3 / PUBLIC BENCHMARK PRODUCT
 用户已授权在R1终态资格链闭合后执行该方向；届时不重做“是否开始”的概念讨论，但必须从当时exact main重新运行
 CONTROL LOOP，确认没有更早反例并为具体case/Oracle/DUT工作取得本阶段资格。文档292是未来方法与启动条件，不是当前事实，
 不得按编号自动越过R1、当前correction successor、manifest、persistence或public Review停止线。
+
+### R1 Fact / Relation stage applicability capability identity 修正审计候选
+
+从`main@0a94b32f464f896b86de1cef18dc88dc126225be`重新运行CONTROL LOOP时，[文档293](docs/293-r1-fact-relation-stage-applicability-capability-identity-correction-audit.md)
+发现frozen doc290 §5把Fact stage owner requirement identity写成仓库中不存在的`review-fact-derivation`。当前runtime、fixtures与
+Provider descriptors实际只承认required `python-ast`与optional `python-ast-advisory`；Relation stage继续拥有
+`review-relation-derivation`。因为doc290同时要求stage applicability绑定exact requirement identity，这不是可忽略的别名差异。
+
+独立audit在Python 3.10/3.13 × normal/`-O`四格中得到相同semantic digest
+`f2319f6300b878cf2d8dec8c4291bf514c8cc2dd83afa816bc228e7f012412e7`：actual combined Policy可由generic Policy接纳，
+current Fact applicability拒绝额外Relation capability，current Relation applicability接纳；literal doc290 identity则被Fact与
+Relation双方拒绝。首次3.10 normal audit因手写64 MiB transport limit触发`AUDIT_HARNESS_SETUP_ERROR`，原身份保留；改用仓库
+`DEFAULT_TRANSPORT_LIMITS`后以fresh attempt 2重跑。现有Fact/Relation窄基线四格各`Ran 77 tests / OK (skipped=1)`。
+
+```text
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_FROZEN_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_COUNTEREXAMPLE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_FEASIBILITY_STOP_CONDITION_TRIGGERED
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_AUDIT_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc293，保存doc290/doc291已资格化历史字节，不修改runtime、tests、Schema、
+Profile、Policy、Provider、manifest或post-R1计划。自己的final-byte门、original PR、单独批准的exact-head merge、new exact-main
+双门、fresh README/doc293/milestones读回与独立对账闭合后，最多形成qualified correction audit history并返回CONTROL LOOP；
+不得直接改doc290、实现successor、恢复composition A–J、选择manifest/persistence或启动Coverage、public Review、R2/R3。

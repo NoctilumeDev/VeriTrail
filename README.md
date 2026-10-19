@@ -192,9 +192,11 @@ python -m venv .venv
   已在`main@33b4aa37…`完成候选资格；
   [独立冻结发布](docs/291-r1-fact-handoff-relation-exact-input-interoperability-correction-contract-freeze-publication.md)
   随后在`main@0e325016…`闭合自己的original/exact-main门、fresh README/doc290/doc291/milestones读回与独立对账，
-  correction contract现已frozen。applicability projection只决定stage责任，不替换完整Policy或Fact truth；composition
-  implementation没有产生产品diff，旧授权历史保留但停止条件继续有效。corrected successor feasibility、implementation、
-  manifest、persistence与public Review产品仍保持独立停止线。
+  correction contract现已frozen。fresh CONTROL LOOP随后发现其§5把Fact stage owner写成仓库中不存在的
+  `review-fact-derivation`，而当前Fact runtime实际只承认required `python-ast`与optional `python-ast-advisory`；
+  [stage applicability capability identity修正审计](docs/293-r1-fact-relation-stage-applicability-capability-identity-correction-audit.md)
+  只记录这一合同反例并触发successor feasibility停止线。完整Policy与Fact truth不变，runtime没有施工；旧composition授权历史
+  保留但仍不可消费，successor、manifest、persistence与public Review产品继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
