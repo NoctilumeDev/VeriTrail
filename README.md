@@ -205,8 +205,10 @@ python -m venv .venv
   [corrected successor私有实现可行性审计](docs/296-r1-fact-relation-corrected-successor-private-implementation-feasibility-audit.md)
   证明exact input与claimed Fact handoff可在原BudgetContext内机械join，现有Relation Provider algorithms可在完整FactSet与
   application-owned obligation assignment下复用；但current Relation domain/request carrier不足，必须增加有限、可区分的private
-  successor boundary。本审计仍是candidate；runtime未授权，旧composition授权历史保留但不可消费，manifest、persistence与
-  public Review产品继续保持独立停止线。
+  successor boundary。本审计已在`main@e8171b93…`完成exact-main双门、fresh产品读回与独立对账，成为qualified history；
+  [独立实现授权发布](docs/297-r1-fact-relation-corrected-successor-private-implementation-authorization-publication.md)
+  当前只条件化发布doc296 A–J的bounded private authority。其自己的最后门闭合以前runtime仍未授权；旧composition授权历史保留
+  但不可消费，manifest、persistence与public Review产品继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
