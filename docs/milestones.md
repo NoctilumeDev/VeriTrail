@@ -5898,3 +5898,47 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 gates、original PR、单独批准的exact-head protected merge、new exact-main Public CI与Browser Smoke、fresh
 README/doc294/doc295/milestones读回及独立对账全部闭合以前不生效。冻结生效后也只能返回CONTROL LOOP，不能自动启动
 successor feasibility/runtime、恢复旧composition A–J、选择manifest/persistence或启动Coverage、public Review、R2/R3。
+
+## R1 Fact handoff → Relation corrected successor 私有实现可行性审计候选
+
+文档295由PR #340 final head `80c299b383d66f442d1710b4502cd9baf23489d2`合入
+`main@b293b263c85fec36164830869c76f560cad8cb2d`。original Public CI `39227323668`、exact-main Public CI
+`39234418094`与Browser Smoke `39234418220`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc294/doc295/milestones为4/4 qualifying PASS。independent reconciliation与147-artifact closeout分别为：
+
+```text
+c7f941274b1824948f07c0a55cf22b6508b60a54218df9d03d12c3e01dde72db
+a0918ed18de68b5a2352d16a17f5eb9a369f51f26313a51720826bcfd5c0056c
+```
+
+因此`R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_FROZEN`已经生效。
+fresh CONTROL LOOP从该exact main重新读取one-shot Fact handoff、Relation domain/request、Provider algorithms与冻结contracts；
+没有并行semantic PR或更早反例。
+
+[文档296](296-r1-fact-relation-corrected-successor-private-implementation-feasibility-audit.md)当前为docs-only feasibility
+candidate。它确认exact `DerivationInputSet`可以与claimed Fact handoff及original `BudgetContext`做same-world join，且现有Relation
+Provider algorithms在application-owned assignment后可处理保持完整identity的five-kind single-path与five-kind two-path FactSets。
+它同时证明current Relation domain `/0.1`与request protocol `/0.2`不能表达stage ownership、per-product closure、完整obligation
+projection和expected/assigned identities，因此需要一个有限、可区分的private successor carrier/qualification/admission boundary。
+
+机械audit fresh attempt 2在Python 3.10/3.13 × normal/`-O`四格得到相同semantic digest
+`27de95e632aaee5b6ef26ac332846184ac79b5011f319ce4d34152c53e003eaa`；现有Fact/Relation窄基线四格各
+`Ran 77 tests / OK (skipped=1)`。nonce-bound semantic report导致的attempt 1 canonicalization setup error与第一次相对PYTHONPATH
+invocation error均保留，不改写为产品failure或后续PASS。
+
+```text
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_FROZEN
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选完成自己的final-byte local gates、original PR、单独批准的exact-head merge、new exact-main Public CI与Browser Smoke、
+fresh README/doc296/milestones readback及independent reconciliation后，最多成为`FEASIBILITY_AUDITED` qualified history并返回
+CONTROL LOOP。它不授权runtime/tests/Schema、successor implementation、旧composition A–J、manifest、persistence、Coverage、
+public Review、R2/R3或post-R1 Benchmark。
