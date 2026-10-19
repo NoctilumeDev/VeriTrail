@@ -4712,3 +4712,50 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 文档295中的`CONTRACT_FROZEN`只是条件目标。它自己的final-byte local gates、original PR、单独批准的exact-head merge、new
 exact-main双门、fresh README/doc294/doc295/milestones读回与独立对账全部闭合以后才可生效；随后必须返回CONTROL LOOP，
 不能自动启动corrected successor feasibility、恢复旧composition A–J或进入Coverage、public Review、R2/R3。
+
+### R1 Fact handoff → Relation corrected successor 私有实现可行性审计候选
+
+文档295由PR #340 final head `80c299b383d66f442d1710b4502cd9baf23489d2`合入
+`main@b293b263c85fec36164830869c76f560cad8cb2d`。original Public CI `39227323668`、exact-main Public CI
+`39234418094`与Browser Smoke `39234418220`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc294/doc295/milestones为4/4 qualifying PASS。independent reconciliation与147-artifact closeout分别为：
+
+```text
+c7f941274b1824948f07c0a55cf22b6508b60a54218df9d03d12c3e01dde72db
+a0918ed18de68b5a2352d16a17f5eb9a369f51f26313a51720826bcfd5c0056c
+```
+
+因此stage applicability capability identity修正合同现已frozen。fresh CONTROL LOOP没有发现并行semantic施工或更早seam；
+当前最小合法问题是
+[文档296](docs/296-r1-fact-relation-corrected-successor-private-implementation-feasibility-audit.md)限定的docs-only corrected
+successor私有实现可行性审计候选。
+
+read-only audit确认current one-shot Fact handoff可以拥有整个private composition attempt并保留original `BudgetContext`，但
+handoff不含Relation需要的source blob bytes，因此application必须显式join exact immutable `DerivationInputSet`与claimed handoff，
+并逐项复核同一source/policy/scope/profile/classification/Fact attempt/product world。current Relation domain `/0.1`正确拒绝完整
+five-kind与multi-path FactSet，request protocol `/0.2`也没有携带修正后的stage ownership、per-product closure与完整obligation
+projection，所以current carrier不能冒充successor。
+
+同一audit在不删除Fact、不改变FactSet identity的audit-only validated view中，复用现有closed Relation Provider algorithms处理
+five-kind single-path与five-kind two-path worlds；两个Providers分别完成1/1、2/2与2/2、4/4责任。Python 3.10/3.13 ×
+normal/`-O`四格fresh attempt 2 semantic digest均为
+`27de95e632aaee5b6ef26ac332846184ac79b5011f319ce4d34152c53e003eaa`；现有Fact/Relation窄基线四格各
+`Ran 77 tests / OK (skipped=1)`。attempt 1 nonce canonicalization failure与第一次相对PYTHONPATH invocation error均保留为setup
+history，不被后续PASS覆盖。
+
+```text
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_FROZEN
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc296；不修改doc290–295、runtime、tests、Schema、Profile、Policy、Provider、
+manifest、persistence、Coverage或post-R1计划。自己的final-byte门、original PR、单独批准的exact-head merge、new exact-main双门、
+fresh README/doc296/milestones读回与独立对账闭合后，最多形成qualified feasibility history并返回CONTROL LOOP；不得自动启动
+implementation、恢复旧composition A–J或选择manifest/persistence。
