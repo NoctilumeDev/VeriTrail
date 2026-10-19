@@ -6186,3 +6186,46 @@ original PR Public CI、连续授权的protected exact-head merge、new exact-ma
 README/doc301/milestones installed-product readback及independent reconciliation。闭合后最多成为qualified feasibility history；
 实现授权仍需fresh CONTROL LOOP独立发布，runtime、旧composition、manifest、persistence、Coverage、public Review、R2–R6与
 post-R1 Benchmark均未启动。
+
+## R1 corrected Provider successor feasibility exact-main 资格失败边界审计候选
+
+文档301由PR #346 final head `df6955d59a485027fbc2429090d35d43b52ca3ed`合入
+`main@bd0cb9838545de0dd3a2e26486c6fa90df765962`，tree仍为
+`a651589a7879c213a0e54f035e442e1780263074`。original Public CI `39317208755` attempt 1为11/11 SUCCESS；
+new exact-main Browser Smoke `39321768185` attempt 1为1/1 SUCCESS，但Public CI `39321768248` attempt 1为10/11，
+required Starter job `118308355830` FAIL。该run没有rerun。
+
+failed-evidence Artifact `12221668728`（archive SHA256
+`9a4975a882784ca91266c21a2a27ded4cc6232b3f5b4cdfabb57596db8c1fa1c`）证明desktop完整PASS、mobile首个
+loopback document请求报告`net::ERR_NO_BUFFER_SPACE`。产品按冻结合同正确映射为
+`network:mobile / HostSocketNoBufferSpace`；Browser capture incomplete而cleanup complete，bootstrap以
+`COLLECTOR_ERROR / ERROR`终结并完成cleanup。更具体host resource cause保持`UNKNOWN`，Subject failure与candidate
+regression没有建立。
+
+因此fresh README/doc301/milestones readback与independent reconciliation没有启动；文档301仍是merged but
+not-qualified candidate，`FEASIBILITY_AUDITED`没有生效。[文档302](302-r1-relation-provider-import-form-successor-feasibility-exact-main-qualification-failure-boundary-audit.md)
+只冻结失败identity、资格影响与最小恢复纪律：禁止rerun、retry until PASS、空提交、弱化required lane/oracle/timeout、借用PR绿灯
+或把后继PASS回填旧world。任何恢复都必须是具有新事实和新责任的新candidate，并从头取得完整独立资格链。
+
+当前状态为：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FROZEN
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_CANDIDATE_MERGED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_EXACT_MAIN_PUBLIC_CI_FAILED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_NOT_AUDITED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+文档302自己的scope只允许README、AGENTS、milestones与新增doc302。它的local gates、original PR、protected exact-head merge、
+new exact-main Public CI与Browser Smoke、fresh README/doc302/milestones installed-product readback及independent reconciliation
+闭合后，最多使failure boundary成为qualified history。随后返回CONTROL LOOP；不能自动重试doc301、授权corrected Provider
+runtime、恢复composition或进入manifest/persistence/Coverage/public Review/R2–R6。

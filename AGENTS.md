@@ -4975,3 +4975,23 @@ Provider、manifest、persistence、Coverage与post-R1计划必须保持`68e6fa0
 exact-head protected merge、new exact-main双门、fresh README/doc301/milestones读回与independent reconciliation闭合后，最多成为
 qualified feasibility history。随后必须返回CONTROL LOOP；不能自动授权或施工corrected Provider successor、恢复旧composition、
 选择manifest/persistence或启动Coverage、public Review、R2–R6。
+
+### R1 corrected Provider successor feasibility exact-main 资格失败边界审计候选
+
+文档301由PR #346 final head `df6955d59a485027fbc2429090d35d43b52ca3ed`合入
+`main@bd0cb9838545de0dd3a2e26486c6fa90df765962`，merge tree与candidate tree均为
+`a651589a7879c213a0e54f035e442e1780263074`。original Public CI `39317208755` attempt 1为11/11 SUCCESS，
+Browser Smoke `39321768185` attempt 1为1/1 SUCCESS；但exact-main Public CI `39321768248` attempt 1只有10/11，
+required `Starter PASS/FAIL golden path` job `118308355830` FAIL。
+
+失败Artifact保留desktop complete与mobile首个loopback document请求`net::ERR_NO_BUFFER_SPACE`；产品正确分类为
+`network:mobile / HostSocketNoBufferSpace`，Browser capture incomplete、cleanup complete，bootstrap以
+`COLLECTOR_ERROR / ERROR`终结且cleanup complete。更具体host resource cause保持`UNKNOWN`；Subject failure、doc-only
+candidate regression与分类缺陷均未建立。禁止rerun、retry until PASS、弱化required lane/oracle/timeout、启动readback或用original
+PR绿灯替代exact-main失败。
+
+[文档302](docs/302-r1-relation-provider-import-form-successor-feasibility-exact-main-qualification-failure-boundary-audit.md)
+只把失败identity、资格影响与新candidate恢复纪律形成docs-only audit candidate。文档301保持未资格化，`FEASIBILITY_AUDITED`
+未生效，implementation仍NOT_STARTED/NOT_AUTHORIZED。本文自己的local/original PR/protected merge/new exact-main双门、fresh
+README/doc302/milestones读回与independent reconciliation闭合以前，failure boundary也尚未成为qualified history；闭合后只能返回
+CONTROL LOOP，不能以空提交重试旧candidate，也不能启动runtime、恢复composition或进入后续阶段。
