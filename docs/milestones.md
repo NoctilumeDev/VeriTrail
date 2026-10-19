@@ -5794,3 +5794,34 @@ successor未选择，persistence保持OPEN，public Review产品未启动。
 Benchmark与Oracle资格方法。该计划当前为`PLANNED / NOT_STARTED`，不改变上述R1停止线，也不启动R2、R3或public
 Benchmark product。R1终态闭合后按当时exact main重新执行CONTROL LOOP；若没有更早反例，直接进入case inventory与
 case qualification，不再重新讨论该方向是否值得开始。
+
+## R1 Fact / Relation stage applicability capability identity 修正审计候选
+
+从`main@0a94b32f464f896b86de1cef18dc88dc126225be`重新绑定frozen doc290、当前runtime、fixtures与Provider descriptors后，
+[文档293](293-r1-fact-relation-stage-applicability-capability-identity-correction-audit.md)发现doc290 §5把Fact stage owner requirement
+identity写成仓库中不存在的`review-fact-derivation`；实际Fact applicability只承认required `python-ast`与optional
+`python-ast-advisory`，Relation stage才拥有`review-relation-derivation`。doc290又要求applicability绑定exact requirement identity，
+因此corrected successor feasibility不能在该frozen文字上成立。
+
+四格audit在Python 3.10/3.13 × normal/`-O`均得到semantic digest
+`f2319f6300b878cf2d8dec8c4291bf514c8cc2dd83afa816bc228e7f012412e7`。actual combined Policy由generic Policy接纳、current
+Fact拒绝额外Relation capability、current Relation接纳；literal doc290 Policy则被Fact与Relation双方拒绝。第一次3.10 normal
+因audit-only transport limit错误成为保留的`AUDIT_HARNESS_SETUP_ERROR`，fresh attempt 2才进入产品applicability路径。现有
+Fact/Relation窄基线四格各`Ran 77 tests / OK (skipped=1)`。
+
+```text
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_FROZEN_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_COUNTEREXAMPLE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_FEASIBILITY_STOP_CONDITION_TRIGGERED
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_AUDIT_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只发布审计反例与最小reopen边界，不修改doc290/doc291、runtime、tests、Schema、Profile、Policy、Provider、manifest或
+post-R1计划。完整资格链闭合后只形成qualified correction audit history并返回CONTROL LOOP；后继最多另行起草docs-only
+stage-owner identity最小合同修正候选，不能直接施工successor或恢复旧composition授权。
