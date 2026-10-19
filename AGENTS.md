@@ -4929,3 +4929,49 @@ original PR、连续授权的exact-head protected merge、new exact-main Public 
 README/doc299/doc300/milestones installed-product readback及independent reconciliation全部闭合以前不生效。冻结生效后也只能
 返回CONTROL LOOP；不能自动授权corrected Provider successor runtime、恢复旧composition、选择manifest/persistence或启动
 Coverage、public Review、R2–R6。
+
+### R1 Relation Provider import-form conformance corrected successor 私有实现可行性审计候选
+
+文档300由PR #345 final head `9bca8018cea834507bd2c5ae0bed51ba312260f9`合入
+`main@68e6fa0245161dd75b9d7750d3320158bebfa315`；original Public CI `39305312371`、exact-main Public CI
+`39309834623`与Browser Smoke `39309834678`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc299/doc300/milestones为4/4 qualifying PASS；independent reconciliation与150-artifact closeout分别为：
+
+```text
+4e4a50b33d5ab07acaa4c54f643023f359603b5460605a162d4e9039663d7866
+44c856882e33510288570883e49ca0b351e145d07e616c416a8c7d75e3950e43
+```
+
+因此`R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FROZEN`已经生效。readback bootstrap中的wheel
+wildcard与PowerShell reserved variable setup errors按原identity保留，均先于formal observation；它们不被后继PASS覆盖，也不被
+提升为产品failure。
+
+fresh CONTROL LOOP确认上游Fact truth、stage applicability、per-product closure、complete obligation projection、doc299与current
+Relation request/canonicalizer/qualification/admission连续；open PR只有依赖更新。现有legacy Provider仍保持immutable。下一最小合法问题是
+[文档301](docs/301-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-audit.md)
+限定的docs-only private implementation feasibility audit。
+
+read-only audit使用新的audit-only Provider identity在完整FactSet与application-owned assignment上实现CPython 3.10 import
+occurrence projection、AST occurrence与authoritative Fact双向核账、legacy-compatible extension ordinal与完整terminal outcome。
+七组positive/control worlds、negative matcher worlds与upstream corrected-successor continuity在Python 3.10 / 3.13 × normal / `-O`
+四格产生稳定semantic report；focused regression每格76 passed、1 skipped。当前只允许：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FROZEN
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc301；doc290–300、runtime、tests、fixtures、Schema、Profile、Policy、
+Provider、manifest、persistence、Coverage与post-R1计划必须保持`68e6fa0…` base bytes。自己的local gates、original PR、连续授权的
+exact-head protected merge、new exact-main双门、fresh README/doc301/milestones读回与independent reconciliation闭合后，最多成为
+qualified feasibility history。随后必须返回CONTROL LOOP；不能自动授权或施工corrected Provider successor、恢复旧composition、
+选择manifest/persistence或启动Coverage、public Review、R2–R6。
