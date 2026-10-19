@@ -5825,3 +5825,37 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 本候选只发布审计反例与最小reopen边界，不修改doc290/doc291、runtime、tests、Schema、Profile、Policy、Provider、manifest或
 post-R1计划。完整资格链闭合后只形成qualified correction audit history并返回CONTROL LOOP；后继最多另行起草docs-only
 stage-owner identity最小合同修正候选，不能直接施工successor或恢复旧composition授权。
+
+## R1 Fact / Relation stage applicability capability identity 修正合同候选
+
+文档293由PR #338 final head `7725c637f0a2681a0781f7a2b2ad1f42d4de60a8`合入
+`main@0dd06e0e236a56472925bd6f29fc053b49727958`。original Public CI `39193502156`、exact-main Public CI
+`39201809502`与Browser Smoke `39201809536`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc293/milestones为3/3 qualifying PASS。independent reconciliation与132-artifact closeout分别为：
+
+```text
+f5412f7e32842687ecb5df0162c70e18ae1850f1329ff52292fa5f4f87208529
+54231fcfb88109112115ac5c5b08e1ad088d8269c266b9221885442b37b70cdf
+```
+
+因此该反例现为qualified history。fresh CONTROL LOOP没有发现并行semantic施工或更早seam；下一最小问题是
+[文档294](294-r1-fact-relation-stage-applicability-capability-identity-correction-contract.md)限定的docs-only修正合同候选。
+它将parent contract与stage applicability升级到`/0.2`，把Fact owner冻结为required `python-ast`与存在时optional
+`python-ast-advisory`，Relation owner冻结为required `review-relation-derivation`，并要求两个stage对完整Policy形成total、
+disjoint、exactly-once ownership。per-product closure与obligation projection仍为原`/0.1`语义，doc290/291历史字节不改。
+
+```text
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_AUDIT_QUALIFIED_HISTORY
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_CANDIDATE
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_NOT_FROZEN
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_FEASIBILITY_STOP_CONDITION_TRIGGERED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc294。自己的完整candidate qualification与独立freeze publication闭合前，
+不得启动runtime、恢复composition A–J、选择manifest/persistence或启动Coverage、public Review、R2/R3。
