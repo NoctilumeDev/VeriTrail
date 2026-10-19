@@ -6127,3 +6127,62 @@ R2_R6_NOT_STARTED
 exact-head merge、new exact-main双门、fresh README/doc299/doc300/milestones readback与independent reconciliation闭合以前，
 合同仍未frozen。闭合后必须返回CONTROL LOOP；corrected Provider runtime、旧composition恢复、manifest、persistence、Coverage、
 public Review、R2–R6与post-R1 Benchmark均不自动启动。
+
+## R1 Relation Provider import-form conformance corrected successor 私有实现可行性审计候选
+
+文档300由PR #345 final head `9bca8018cea834507bd2c5ae0bed51ba312260f9`合入
+`main@68e6fa0245161dd75b9d7750d3320158bebfa315`。original Public CI `39305312371`、exact-main Public CI
+`39309834623`与Browser Smoke `39309834678`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh anonymous
+installed-product README、doc299、doc300与milestones为4/4 qualifying PASS；independent reconciliation与150-artifact
+closeout分别为：
+
+```text
+4e4a50b33d5ab07acaa4c54f643023f359603b5460605a162d4e9039663d7866
+44c856882e33510288570883e49ca0b351e145d07e616c416a8c7d75e3950e43
+```
+
+因此Provider import-form conformance correction contract现已frozen。readback bootstrap中的wheel wildcard与PowerShell reserved
+variable setup errors按原identity保留；它们先于formal observation，不被后继PASS覆盖，也不被归类为产品failure。
+
+fresh CONTROL LOOP重新核对remote main、open PR、doc290 / 294 / 299、Fact handoff与current Relation
+request/Provider/canonicalizer/qualification/admission；open PR只有依赖更新，没有并行semantic施工。上游frozen truth连续，需要处理的
+最小下一seam是
+[文档301](301-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-audit.md)
+限定的docs-only private implementation feasibility audit。
+
+audit-only successor在完整FactSet与application-owned assignment上递归枚举CPython 3.10 Import / ImportFrom alias
+occurrence，机械执行AST occurrence与authoritative Fact双向核账、legacy-compatible extension ordinal及exact terminal outcome。
+七组positive/control worlds与negative matcher worlds证明一个finite versioned Provider successor可复用现有private
+request/canonicalizer/qualification primitives；upstream corrected-successor continuity也在本 exact main重新成立。两组audit在
+Python 3.10 / 3.13 × normal / `-O`四格的semantic digest分别稳定为：
+
+```text
+provider successor
+915d0243222b18600911a63732c07ac06085e7be585f2f64a54e55ef30188c15
+
+upstream continuity
+187680159640a6c1df6c2a3b20cee4635f7be05ccc34f9bf989a6867b36eb5c3
+```
+
+focused regression每格`Ran 77 tests / OK (skipped=1)`，即76 passed、1个explicit reference runtime/Windows skip。
+这些只作witness，不授权runtime或恢复旧composition。当前状态为：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FROZEN
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc301。final bytes必须通过local Markdown/link/hygiene/focused regression、
+original PR Public CI、连续授权的protected exact-head merge、new exact-main Public CI与Browser Smoke、fresh
+README/doc301/milestones installed-product readback及independent reconciliation。闭合后最多成为qualified feasibility history；
+实现授权仍需fresh CONTROL LOOP独立发布，runtime、旧composition、manifest、persistence、Coverage、public Review、R2–R6与
+post-R1 Benchmark均未启动。

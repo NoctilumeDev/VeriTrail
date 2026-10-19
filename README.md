@@ -216,9 +216,13 @@ python -m venv .venv
   冻结完整import-form universe、versioned CPython 3.10.6 occurrence语义、AST occurrence与authoritative Fact双向核账、
   complete assignment execution、legacy ordinal/bytes兼容与fail-closed边界；它已在`main@79be6a2…`完成exact-main双门、
   fresh README/doc299/milestones读回与独立对账，成为qualified contract candidate。当前
-  [独立冻结发布候选](docs/300-r1-relation-provider-import-form-conformance-correction-contract-freeze-publication.md)
-  只发布已资格化的doc299字节；其自己的完整资格链闭合以前，`CONTRACT_FROZEN`仍只是条件目标。旧授权历史保留但不可消费；
-  corrected successor runtime、manifest、persistence与public Review产品均未启动。
+  [独立冻结发布](docs/300-r1-relation-provider-import-form-conformance-correction-contract-freeze-publication.md)
+  已在`main@68e6fa0…`闭合original/exact-main门、fresh README/doc299/doc300/milestones读回与独立对账，correction
+  contract现已frozen。fresh CONTROL LOOP进入的
+  [corrected Provider successor私有实现可行性审计](docs/301-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-audit.md)
+  证明一个versioned private binding、3.10 occurrence projection、双向Fact核账与legacy-compatible ordinal可以复用现有
+  request/canonicalizer/qualification primitives；当前只形成docs-only audit candidate。旧授权历史仍不可消费；runtime、manifest、
+  persistence与public Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
