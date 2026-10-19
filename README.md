@@ -198,8 +198,11 @@ python -m venv .venv
   已在`main@0dd06e0e…`完成exact-main双门、fresh README/doc293/milestones读回与独立对账，形成qualified history；
   [stage-owner identity修正合同候选](docs/294-r1-fact-relation-stage-applicability-capability-identity-correction-contract.md)
   只把parent与stage-applicability function提升为`/0.2`，以actual capability identities建立跨stage无遗漏、无重叠的ownership
-  partition。完整Policy与Fact truth不变，runtime没有施工；合同尚未frozen，旧composition授权历史保留但仍不可消费，
-  successor、manifest、persistence与public Review产品继续保持独立停止线。
+  partition。该候选已在`main@289b4962…`完成exact-main双门、fresh README/doc294/milestones读回与独立对账；
+  [独立冻结发布](docs/295-r1-fact-relation-stage-applicability-capability-identity-correction-contract-freeze-publication.md)
+  现为条件化publication target。它自己的original PR、merge、new exact-main双门、fresh README/doc294/doc295/milestones
+  读回与独立对账闭合以前，合同仍未frozen，runtime没有施工；旧composition授权历史保留但仍不可消费，successor、
+  manifest、persistence与public Review产品继续保持独立停止线。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

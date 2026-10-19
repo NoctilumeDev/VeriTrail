@@ -5859,3 +5859,42 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 
 本候选只允许README、AGENTS、milestones与新增doc294。自己的完整candidate qualification与独立freeze publication闭合前，
 不得启动runtime、恢复composition A–J、选择manifest/persistence或启动Coverage、public Review、R2/R3。
+
+## R1 Fact / Relation stage applicability capability identity 修正合同冻结发布候选
+
+文档294由PR #339 final head `e5ba262b602c86a9390d763c048a6eb31954af45`合入
+`main@289b496282adaa20a582ef5ffb93a6a3476d4d6a`。original Public CI `39206452352`、exact-main Public CI
+`39213475131`与Browser Smoke `39213475022`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc294/milestones为3/3 qualifying PASS。independent reconciliation与130-path closeout index分别为：
+
+```text
+19fd667cb7fd5ff13e31932a49429dcffa218760d06ee13366a2a3a1dbd23bc2
+20a28872176ed644163ab485c9aef36ac9473f0c97e6b32a5c5150ab4d6e7dc3
+```
+
+本publication本地复算发现closeout index写入时纳入了仍会被wrapper追加的`create-closeout-attempt-1.stdout.txt`：索引中的
+empty digest与终态stdout不一致，其余129项逐项一致。该proof-facility self-capture finding被独立保留；它不改变先于closeout
+完成的independent reconciliation与3/3 formal资格，也不能继续把该索引叙述成130项全部终态封存。
+
+因此文档294现为qualified contract candidate。fresh CONTROL LOOP确认remote main、exact worktree、上游字节与停止线连续，且没有
+并行semantic PR或更早反例；下一最小合法问题是
+[文档295](295-r1-fact-relation-stage-applicability-capability-identity-correction-contract-freeze-publication.md)
+限定的独立docs-only冻结发布。
+
+```text
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_AUDIT_QUALIFIED_HISTORY
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_FACT_HANDOFF_RELATION_STAGE_APPLICABILITY_CAPABILITY_IDENTITY_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_FEASIBILITY_STOP_CONDITION_TRIGGERED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+```
+
+文档295只发布文档294已经资格化的`/0.2`合同语义；其`CONTRACT_FROZEN` marker在本publication自己的final-byte local
+gates、original PR、单独批准的exact-head protected merge、new exact-main Public CI与Browser Smoke、fresh
+README/doc294/doc295/milestones读回及独立对账全部闭合以前不生效。冻结生效后也只能返回CONTROL LOOP，不能自动启动
+successor feasibility/runtime、恢复旧composition A–J、选择manifest/persistence或启动Coverage、public Review、R2/R3。
