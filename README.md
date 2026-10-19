@@ -228,7 +228,11 @@ python -m venv .venv
   它不重开正确工作的Browser分类、required lane或oracle，也不把后继PASS回填#346。fresh CONTROL LOOP现在进入
   [独立feasibility恢复候选](docs/303-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-recovery.md)：
   它以#346失败与doc302 closeout为新增资格输入，在current exact main重新执行semantic audit并承担完整独立资格链。旧授权历史仍不可消费；
-  runtime、manifest、persistence与public Review产品均未启动。
+  该候选已由PR #348合入`main@0f0c93a…`，并完成original/exact-main门、fresh README/doc303/milestones读回与独立对账，现为
+  qualified feasibility history。fresh CONTROL LOOP进入
+  [独立实现授权发布候选](docs/304-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-authorization-publication.md)：
+  它只条件化授权bounded private Provider successor A–J；自己的最后门闭合以前`ALLOWED`不生效，runtime、旧composition、manifest、
+  persistence、Coverage与public Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
