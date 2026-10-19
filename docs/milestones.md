@@ -6031,3 +6031,49 @@ R2_R3_NOT_STARTED
 README/doc298/milestones readback与independent reconciliation闭合后，最多成为qualified feasibility history并返回CONTROL
 LOOP。它不授权修正合同、Provider/runtime/tests/Schema、composition、manifest、persistence、Coverage、public Review、R2/R3或
 post-R1 Benchmark。
+
+## R1 Relation Provider import-form conformance 修正最小合同候选
+
+文档298由PR #343 final head `51ca59a5ad1bacc63c9f10aaa4bbad8f16fe1962`合入
+`main@85bb22896b978b6f9480b58681c69c5b5ac10c55`。original Public CI `39279104121`、exact-main Public CI
+`39286685392`与Browser Smoke `39286685584`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc298/milestones各有qualifying PASS；setup1 README marker selection首败与setup2 doc298匿名API rate-exhaustion
+formal ERROR均保留。independent reconciliation与142-artifact closeout为：
+
+```text
+58552b25d98294099608e177b7f7e750c1862874393ee9533652ebe6df5e7bb3
+f0ff0d0166127aca487a782fc589b00447eb7490cee95f647f6438e1d3bed736
+```
+
+因此Provider import-form conformance correction feasibility现为`AUDITED / QUALIFIED_HISTORY`。重新执行CONTROL LOOP后，
+Fact truth、doc290 application-owned obligation projection、doc294 stage ownership、Relation candidate semantics与现有
+Policy/Profile仍保持frozen；需要重开的最小边界只有Provider import-form conformance与其versioned algorithm identity。
+
+[文档299](299-r1-relation-provider-import-form-conformance-correction-contract.md)当前形成docs-only semantic contract candidate。
+它冻结完整`Import` / `ImportFrom`、multiple alias、relative/star、nested与multi-path form universe；规范单位是alias
+occurrence。corrected successor必须使用versioned CPython 3.10.6 conformance语义，双向、一一核对source occurrence与
+authoritative Fact，完整执行application分配的obligations，并在legacy narrow worlds保持child ordinal和candidate/outcome
+canonical bytes。expanded domain使用新private Provider identity，不能在旧identity下静默扩张。
+
+```text
+R1_FACT_HANDOFF_RELATION_EXACT_INPUT_INTEROPERABILITY_CORRECTION_CONTRACT_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_FEASIBILITY_AUDITED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_NOT_FROZEN
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_NOT_STARTED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R3_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc299。final bytes必须通过local Markdown/link/hygiene/focused regression、
+original PR Public CI、受保护exact-head merge、new exact-main Public CI与Browser Smoke、fresh
+README/doc299/milestones installed-product readback及independent reconciliation。闭合后最多成为qualified candidate；
+`FROZEN`必须由保留doc299字节的独立docs-only publication取得。corrected successor runtime、旧composition恢复、manifest、
+persistence、Coverage、public Review、R2/R3与post-R1 Benchmark均未启动。
