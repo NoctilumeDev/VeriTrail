@@ -4995,3 +4995,36 @@ PR绿灯替代exact-main失败。
 未生效，implementation仍NOT_STARTED/NOT_AUTHORIZED。本文自己的local/original PR/protected merge/new exact-main双门、fresh
 README/doc302/milestones读回与independent reconciliation闭合以前，failure boundary也尚未成为qualified history；闭合后只能返回
 CONTROL LOOP，不能以空提交重试旧candidate，也不能启动runtime、恢复composition或进入后续阶段。
+### R1 corrected Provider successor 私有实现可行性恢复候选
+
+文档302由PR #347 final head `1586d096f6d51e9b54350e4b14324daaf2c3732c`合入
+`main@869e8190d4fcc6f3c046bb1661d6d27f1da36283`。original Public CI `39327705063`、exact-main Public CI
+`39330968073`与Browser Smoke `39330968165`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh anonymous
+installed-product README、doc302、milestones为3/3 qualifying PASS；independent reconciliation与131-artifact closeout分别为：
+
+```text
+071427e5656dbc65d9b4ea18ce148a02d490c363d4761199891b10c20bc68339
+92d671cf074919a2116043bfa509a4e571dec2499ba4c80d27af0b66dc568a5a
+```
+
+因此failure boundary现为qualified history。#347只修改docs，required Starter workflow/runtime/tests/oracle保持不变却完成自己的
+exact-main门；这证明恢复不需要弱化产品门，但不解释#346的`UNKNOWN`资源根因，也不把PASS回填失败world。
+
+[文档303](docs/303-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-recovery.md)
+形成具有新责任的docs-only feasibility recovery candidate：它把#346 failed run/job/Artifact/classification与doc302 qualified
+closeout纳入自己的独立对账，并在current exact main用新audit identity重新执行Provider successor与upstream continuity witness。
+Python 3.10 / 3.13 × normal / `-O`四格semantic digest分别稳定为：
+
+```text
+provider successor feasibility recovery
+a06190284adcef005010a3ceb069161f2f6528d6111abe5c90596723b5fbeb82
+
+upstream corrected-successor continuity
+0caf68d7a78b8ab1279399d5f3b0e258818010f366c2cac6816c7b0a1ef0474b
+```
+
+focused regression每格76 passed、1 skipped。本文只允许README、AGENTS、milestones与新增doc303；doc290–302、runtime、
+tests、workflows、Provider、Schema、Policy/Profile、manifest、persistence、Coverage与post-R1计划必须保持base bytes。自己的
+local gates、original PR、protected exact-head merge、new exact-main双门、fresh README/doc303/milestones readback与independent
+reconciliation闭合后，最多成为qualified feasibility history；在此以前implementation仍NOT_STARTED/NOT_AUTHORIZED，旧composition
+authority继续不可消费。

@@ -6229,3 +6229,53 @@ R2_R6_NOT_STARTED
 new exact-main Public CI与Browser Smoke、fresh README/doc302/milestones installed-product readback及independent reconciliation
 闭合后，最多使failure boundary成为qualified history。随后返回CONTROL LOOP；不能自动重试doc301、授权corrected Provider
 runtime、恢复composition或进入manifest/persistence/Coverage/public Review/R2–R6。
+## R1 corrected Provider successor 私有实现可行性恢复候选
+
+文档302由PR #347 final head `1586d096f6d51e9b54350e4b14324daaf2c3732c`合入
+`main@869e8190d4fcc6f3c046bb1661d6d27f1da36283`，tree
+`915f2559184c9bec00c8a3593b6a59e0e524254c`。original Public CI `39327705063`、new exact-main Public CI
+`39330968073`与Browser Smoke `39330968165`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh README、doc302、
+milestones各有唯一qualifying PASS；independent reconciliation与131-artifact closeout分别为：
+
+```text
+071427e5656dbc65d9b4ea18ce148a02d490c363d4761199891b10c20bc68339
+92d671cf074919a2116043bfa509a4e571dec2499ba4c80d27af0b66dc568a5a
+```
+
+因此`R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED`现为qualified
+history。#347只改变docs，冻结的required Starter lane、workflow、runtime、tests与oracle保持不变并完成自己的门；该事实只证明恢复不需要
+弱化门，不解释#346的`UNKNOWN`底层资源原因，也不把后继PASS回填失败world。
+
+fresh CONTROL LOOP确认当前不存在并行semantic PR或更早反例。[文档303](303-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-recovery.md)
+建立新的docs-only feasibility candidate。相对文档301，它新增以下资格责任：永久保留#346 failed run/job/Artifact/classification与
+`UNKNOWN`边界，复算doc302的qualified closeout，把三者与自己的exact world分开，并从头取得全部资格门。
+
+fresh Provider successor与upstream continuity audits在Python 3.10.6 / 3.13.13 × normal / `-O`四格分别得到稳定digest：
+
+```text
+a06190284adcef005010a3ceb069161f2f6528d6111abe5c90596723b5fbeb82
+0caf68d7a78b8ab1279399d5f3b0e258818010f366c2cac6816c7b0a1ef0474b
+```
+
+focused regression每格`Ran 77 tests / OK (skipped=1)`。当前状态为：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FROZEN
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_RECOVERY_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_NOT_AUDITED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc303。自己的local gates、original PR、protected exact-head merge、new
+exact-main双门、fresh README/doc303/milestones installed-product readback与independent reconciliation闭合后，最多使本文成为
+qualified feasibility history。文档301仍为merged but not-qualified，#346失败不变；runtime、旧composition、manifest、persistence、
+Coverage、public Review与R2–R6均未启动。
