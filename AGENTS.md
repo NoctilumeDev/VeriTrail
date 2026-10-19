@@ -4883,3 +4883,49 @@ Provider、manifest、persistence、Coverage或post-R1计划。自己的final-by
 new exact-main双门、fresh README/doc299/milestones读回与independent reconciliation闭合后，最多成为qualified contract
 candidate。`FROZEN`仍要求后继独立docs-only freeze publication；不得自动恢复旧授权、施工Provider或composition、选择manifest /
 persistence或启动Coverage、public Review、R2/R3。
+
+### R1 Relation Provider import-form conformance 修正合同冻结发布候选
+
+文档299由PR #344 final head `fbf4975202327ed22b7fd2ab02de0bd33f5b751c`合入
+`main@79be6a2af95a51e01318acc7f41b38100e658197`；original Public CI `39293777777`、exact-main Public CI
+`39297621450`与Browser Smoke `39297621269`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh
+README/doc299/milestones各有唯一qualifying PASS。
+
+readback setup1 bootstrap errors、setup2 history initialization error、fresh anonymous rate-exhaustion diagnostics均保留；
+formal observation只在fresh exact-commit preflight可用以后启动。independent reconciliation attempt 1因读取不存在的
+`final_report_verdict`字段终结为proof-facility schema-key error；attempt 2只读取产品summary实际发出的`verdict`字段，未修改
+oracle、formal observations、target、marker、预算、断言或状态规则。attempt 2 reconciliation与153-path closeout index分别为：
+
+```text
+fdc062209a0943c884bca364ebe38dcc020a6a450159dc54c44b56d4d67be207
+4ad67ab029611b00432addbb727523565c116ad0bcdc8d4816560d95fc5f2455
+```
+
+本publication复算发现closeout index把执行时为空、随后由wrapper写入121 bytes终态回显的
+`create-closeout-attempt-1.stdout.txt`记为empty digest；其余152项逐项一致。该self-capture finding独立保留，不能把
+153-path index叙述成153项全部终态封存；它不改变先于closeout完成的independent reconciliation与3/3 formal资格。
+
+因此文档299现为qualified contract candidate。fresh CONTROL LOOP确认remote main、上游frozen bytes、current Provider source与
+停止线连续，没有并行semantic PR或更早反例；下一最小合法问题是
+[文档300](docs/300-r1-relation-provider-import-form-conformance-correction-contract-freeze-publication.md)限定的独立docs-only冻结发布。
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_FEASIBILITY_AUDITED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_NOT_STARTED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_NOT_AUTHORIZED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+文档300只发布文档299已经资格化的semantic bytes；其`CONTRACT_FROZEN` marker在本publication自己的final-byte local gates、
+original PR、连续授权的exact-head protected merge、new exact-main Public CI与Browser Smoke、fresh
+README/doc299/doc300/milestones installed-product readback及independent reconciliation全部闭合以前不生效。冻结生效后也只能
+返回CONTROL LOOP；不能自动授权corrected Provider successor runtime、恢复旧composition、选择manifest/persistence或启动
+Coverage、public Review、R2–R6。

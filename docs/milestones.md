@@ -6077,3 +6077,53 @@ original PR Public CI、受保护exact-head merge、new exact-main Public CI与B
 README/doc299/milestones installed-product readback及independent reconciliation。闭合后最多成为qualified candidate；
 `FROZEN`必须由保留doc299字节的独立docs-only publication取得。corrected successor runtime、旧composition恢复、manifest、
 persistence、Coverage、public Review、R2/R3与post-R1 Benchmark均未启动。
+
+## R1 Relation Provider import-form conformance 修正合同冻结发布候选
+
+文档299由PR #344 final head `fbf4975202327ed22b7fd2ab02de0bd33f5b751c`合入
+`main@79be6a2af95a51e01318acc7f41b38100e658197`。original Public CI `39293777777`、exact-main Public CI
+`39297621450`与Browser Smoke `39297621269`均为attempt 1 SUCCESS，分别11/11、11/11与1/1；fresh
+README/doc299/milestones各有唯一qualifying PASS。
+
+readback setup1 bootstrap errors、setup2 history initialization error、fresh anonymous rate-exhaustion diagnostics均按原identity保留。
+independent reconciliation attempt 1因错误读取不存在的`final_report_verdict`字段终结；attempt 2只把proof-facility metadata读取
+修正为summary实际发出的`verdict`字段，没有改动产品oracle、formal observations、target、marker、预算、断言或状态规则：
+
+```text
+independent reconciliation attempt 2
+fdc062209a0943c884bca364ebe38dcc020a6a450159dc54c44b56d4d67be207
+
+153-path closeout index
+4ad67ab029611b00432addbb727523565c116ad0bcdc8d4816560d95fc5f2455
+
+doc299 full-file SHA256
+3ac477d8f5278983a5b4b0d672772d23cf356d102f6c1ffa4419ae608db42fb6
+```
+
+本publication复算发现closeout index把执行时为空、随后由wrapper写入121 bytes终态回显的
+`create-closeout-attempt-1.stdout.txt`记为empty digest；其余152项逐项一致。该proof-facility self-capture finding独立保留，
+不把153-path index误述为153项全部终态封存，也不改变先于closeout完成的independent reconciliation与3/3 formal资格。
+
+因此Provider import-form conformance correction contract现为qualified candidate。重新执行CONTROL LOOP后，上游Fact truth、
+application-owned complete assignment、Relation candidate semantics、Policy/Profile及doc299字节仍连续；需要处理的最小下一seam是
+[文档300](300-r1-relation-provider-import-form-conformance-correction-contract-freeze-publication.md)限定的独立docs-only冻结发布。
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_FEASIBILITY_AUDITED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_QUALIFIED_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTION_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_NOT_STARTED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_NOT_AUTHORIZED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+文档300只发布doc299已资格化语义；其中的`CONTRACT_FROZEN`是条件target。本publication自己的local gates、original PR、连续授权
+exact-head merge、new exact-main双门、fresh README/doc299/doc300/milestones readback与independent reconciliation闭合以前，
+合同仍未frozen。闭合后必须返回CONTROL LOOP；corrected Provider runtime、旧composition恢复、manifest、persistence、Coverage、
+public Review、R2–R6与post-R1 Benchmark均不自动启动。
