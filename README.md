@@ -250,10 +250,12 @@ python -m venv .venv
   [private transition implementation candidate](docs/309-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-candidate.md)：
   它在同一sealed Policy、完整Fact handoff与original live BudgetContext上构造冻结stage ownership、per-product closure、三类total Fact
   partition与complete successor obligation universe，复用冻结的import-form Provider并独立核对assignment、terminal与same-attempt
-  provenance。final focused/full四格、五world semantic comparison、compile与其余local gates已经PASS；两次compile隔离缓存设施错误
-  保留且未建立产品编译失败。single candidate commit、PR、protected merge、exact-main双门、fresh installed-product readback与
-  independent reconciliation仍须独立闭合。在此以前`NOT_QUALIFIED / NOT_FROZEN`，旧ReviewSliceSet/Coverage composition、manifest、persistence、
-  public Review产品与R2–R6均未启动。
+  provenance。该candidate已由PR #354精确合入`main@eadccc6…`；original/exact-main门、fresh README/doc309/milestones读回、
+  independent reconciliation与finite closeout全部闭合，现为`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。首个
+  milestones diagnostic的navigation ERROR、后继独立diagnostic COMPLETE与closeout stdout self-capture mismatch均按原身份保留。
+  当前进入[独立冻结发布](docs/310-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-freeze-publication.md)；
+  只有该docs-only publication自己的完整资格链闭合后才允许升级为`PRIVATE_IMPLEMENTATION_FROZEN`。旧ReviewSliceSet/Coverage
+  composition仍停止，manifest successor未选择，persistence保持OPEN，public Review产品与R2–R6均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

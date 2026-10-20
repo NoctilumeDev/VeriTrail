@@ -5229,3 +5229,39 @@ original PR、protected exact-head merge、new exact-main Public CI与Browser Sm
 independent reconciliation与finite closeout；全部闭合也只能取得`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。冻结必须由
 后继独立docs-only publication取得；旧ReviewSliceSet/Coverage composition authority继续不可消费，manifest successor未选择，
 persistence保持OPEN，public Review与R2–R6均未启动。
+
+### R1 Fact handoff → Relation corrected successor 私有 transition 实现冻结发布候选
+
+文档309的implementation candidate已由PR #354从exact base
+`aabab17ee183f6eec29b38658b044734016b197f`、head `8a41ddeaae9087589d16aec8f5ceb9bffc2fb428`、tree
+`9b230e69eca15379da0a75f428767373c9a89946`精确合入`main@eadccc6023196e5b31c3bf312f5de2c4578d2f5d`。
+original Public CI `39413230303`与exact-main Public CI `39416474939`均为attempt 1的11/11 SUCCESS，Browser Smoke
+`39416474952`为attempt 1的1/1 SUCCESS。fresh README/doc309/milestones各有唯一qualifying PASS，Plan/session/report分别为：
+
+```text
+doc309     r1-fr-trans-impl-formal-doc309-1-eadccc6     github-paired-86e6781ed6f94739b4a79f8917464a67     75b4901939c4d481e06b2f700a5170f7a2a87aa84311c777a1ac7dd92cb1a85c
+milestones r1-fr-trans-impl-formal-milestones-1-eadccc6 github-paired-60ac576f781647df8954ef2bb582b7d9     e418098209105bb7aa7021872af442820acc9f2ba6c474cad972abc783a121c0
+README     r1-fr-trans-impl-formal-readme-1-eadccc6     github-paired-48d1e7a85df44786b1c9bc2072b24922     d9b3cf9d1d130be0015b270887e33e7ba6eb29f384a284834dc4ec8d0c021623
+```
+
+independent reconciliation、155-artifact closeout、post-closeout stdout self-capture record与finite integrity的SHA-256分别为：
+
+```text
+3fad5d6aed4b0054750207bd527580373e096513eafc9cc2e4be330ed322e938
+984beb7124a79b64e5bca446afefe54ff0ba741350891759f78f5ac9bba5d252
+9cd19ee0228a7e3ba5e29e296e609e0c519833f8f2d78a50006e15b1c37ff1bc
+e750bfec27f1d246ad4d9148259450e294619b4d8a4e6f69c08ddae00f958073
+```
+
+milestones diagnostic #1在约30秒navigation后以`PublicRenderNetworkError`终结，底层原因保持`UNKNOWN`；fresh匿名rate/commit
+preflight后独立diagnostic #2为COMPLETE。首个ERROR没有被覆盖。closeout wrapper在enumeration前打开自己的stdout，形成唯一
+self-capture mismatch；其余154项终态一致，semantic与qualification effect均为`NONE`。因此candidate现在只能记录
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+[文档310](docs/310-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-freeze-publication.md)是独立docs-only
+conditional freeze publication，只允许README、AGENTS、milestones与新增doc310。它自己的final-byte local gates、original PR、
+protected exact-head merge、new exact-main Public CI与Browser Smoke、fresh README/doc309/doc310/milestones installed-product readback、
+independent reconciliation与finite closeout全部闭合以后，才允许
+`R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`生效。随后必须返回CONTROL LOOP；旧
+ReviewSliceSet/Coverage composition authority不会自动恢复，manifest successor、persistence、Coverage/public Review、post-R1
+Benchmark与R2–R6均不得自动启动。
