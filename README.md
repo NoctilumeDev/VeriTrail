@@ -265,8 +265,13 @@ python -m venv .venv
   fresh CONTROL LOOP进入
   [独立authority recovery publication](docs/312-r1-review-slice-set-coverage-composition-authority-recovery-publication.md)：
   它只条件化授权application-owned、versioned、one-shot的Relation transition → Slice bridge，要求独立重验exact continuation、
-  admission/history/inputs/context/eligibility和complete RelationSet，再签发successor Slice authority。本文自己的最后门闭合以前
-  `ALLOWED`不生效；manifest successor未选择，persistence保持OPEN，public Review产品与R2–R6均未启动。
+  admission/history/inputs/context/eligibility和complete RelationSet，再签发successor Slice authority。该publication已由PR #357
+  精确合入`main@3633319…`；original/exact-main门、fresh README/doc311/doc312/milestones读回、independent reconciliation与finite
+  closeout全部闭合，新的bounded private implementation authority现已生效。fresh CONTROL LOOP进入
+  [ReviewSliceSet / Coverage composition 私有实现候选](docs/313-r1-review-slice-set-coverage-composition-private-implementation-candidate.md)：
+  它消费exact one-shot transition continuation，独立重验complete RelationSet和same-attempt live authority，构造完整Slice
+  denominator、versioned private ReviewSliceSet与seven-stage CoverageLedger witness；当前仅为`LOCAL_GATES_PASS / NOT_QUALIFIED /
+  NOT_FROZEN`。manifest successor未选择，persistence保持OPEN，public Review产品与R2–R6均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -495,6 +500,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage composition 私有实现授权发布](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)：保存doc287已资格化可行性，条件化授权bounded A–J private successor；自己的最后门闭合以前`ALLOWED`不生效；
 - [ReviewSliceSet / Coverage composition authority recovery 当前状态审计](docs/311-r1-review-slice-set-coverage-composition-authority-recovery-current-state-audit.md)：从冻结Fact → Relation transition重验旧composition stop condition，确认current Slice exact-type gate正确拒绝新continuation，并把下一最小seam收敛为versioned Relation → Slice bridge的docs-only authority recovery publication；不授权runtime、manifest、persistence或public Review；
 - [ReviewSliceSet / Coverage composition authority recovery publication](docs/312-r1-review-slice-set-coverage-composition-authority-recovery-publication.md)：保存doc311已资格化current-state audit，条件化授权bounded private Relation transition → Slice bridge与后续composition A–J；自己的最后门闭合以前`ALLOWED`不生效，不选择manifest/persistence或启动public Review；
+- [ReviewSliceSet / Coverage composition 私有实现候选](docs/313-r1-review-slice-set-coverage-composition-private-implementation-candidate.md)：消费exact transition continuation，独立重验complete RelationSet与same-attempt authority，构造complete Slice denominator、private ReviewSliceSet successor及seven-stage Coverage witness；当前仅为local candidate，不发布merged、readback qualified或frozen状态；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

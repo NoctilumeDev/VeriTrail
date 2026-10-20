@@ -5370,3 +5370,67 @@ base bytes。自己的final-byte local gates、original PR、protected exact-hea
 doc312/milestones readback、independent reconciliation与finite closeout全部闭合后，才允许
 `R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED`生效。随后必须从新exact main返回CONTROL LOOP；
 implementation仍为`NOT_STARTED`，不得自动选择manifest/persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+### R1 ReviewSliceSet / Coverage composition 私有实现候选
+
+文档312已由PR #357 final head `e4503ad0392c762eaf2abeed5597b31c6853934b`从exact base
+`35e99a872d33234c4fb923a64995ccb148d9e3ba`受保护合入`main@36333195833a462169e883aab0d36637e2edbdf3`；
+candidate/merge tree均为`3731a6211abf976fd98d7e67b7ac315154ef1201`。original Public CI `39455940067`、
+exact-main Public CI `39460190492`与Browser Smoke `39460190387`均为attempt 1 SUCCESS；fresh README/doc311/doc312/
+milestones 4/4 PASS，independent reconciliation、finite closeout attempt 2与finite-integrity summary分别为：
+
+```text
+9a78a3df2dcc9117b49c2dea31cfad62cd3f8d683e64d71caec0371caf825d33
+da1855844e36ebcfc32a84873b988b88738e919fbc2c96addd62608005b0bafc
+82ea3195bca5e6bfea10c720b37e368df232ff483dd9145b41856f40dc8cccc1
+```
+
+closeout attempt 1 stdout self-capture mismatch保持原identity。因此
+`R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED`已生效。fresh CONTROL LOOP以该exact main建立
+[文档313](docs/313-r1-review-slice-set-coverage-composition-private-implementation-candidate.md)及private implementation branch。
+
+本候选新增application-owned、versioned、private、one-shot Relation transition → Slice authority bridge。它只消费exact
+`ClaimedFactRelationTransitionContinuation`，在任何Slice work前重新绑定qualified admission、complete Provider lineage/
+RelationSet/terminal history、obligation projection、original live `DerivationInputSet`、`BudgetContext`与`AttemptEligibility`。
+foreign、consumed、digest-only、fresh-context、resealed identity/history和legacy token必须fail closed；bridge不得改写transition ceiling、
+放宽legacy Slice exact-type gate、创建新claim/context或重跑Relation。
+
+Slice obligation producer之后必须由独立validator直接从冻结Policy/Profile、complete FactSet、RelationSet与accepted paths重建完整
+denominator；producer与validator共同漏项的falsifier不得通过。multi-path逐path MODULE closure、normal/partial、conflict unknown与valid
+closed-empty必须保留不同terminal semantics。private ReviewSliceSet membership与authority分离；missing、duplicate、foreign、mutated或
+cross-attempt member不能取得admission。
+
+Coverage只构造七阶段`S/A/N/D`、ordered Fact/Relation/Slice root chain与exactly-once terminal accounting；CoverageLedger 0.3继续只作
+validation witness，不生成上游事实、Slice authority、manifest、persistence或publication authority。legacy Slice三个实现文件由exact
+SHA guards保护，public/default composition、Schema、Policy/Profile、workflow与R2–R6保持不变。
+
+final focused四格在Python 3.10.6/3.13.13 × normal/`-O`各140/140 PASS。full四格各574 reported；3.10各571 passed/3
+skipped，3.13各572 passed/2 skipped。default、multi-path与zero-anchor semantic report四格逐字一致：
+
+```text
+ac29917eb0303931abbba15e25499f80fd39782562f0578c021fd119d5717048
+```
+
+`py_compile`、diff、Markdown/local links、global/local hygiene、public export/pyproject/workflow guard与primary `audit.json`
+continuity必须在final bytes重新闭合。semantic report首次读取不存在的`coverage_ledger_function`，归为proof-facility schema-key
+error并保留；修正只改读实际`artifact_kind / schema_version`，未修改产品或oracle。此前obligation/provider-id混淆、zero fixture、
+coverage inspection与conflict falsifier findings均为formal前prequalification history，不得覆盖或冒充正式产品失败。
+
+本candidate预期scope只允许README、AGENTS、milestones、doc313、新private composition模块与对应test。doc267、doc281、
+doc287–312、legacy Slice、Fact/Relation transition、CoverageLedger conformance、manifest、persistence与全部保留evidence必须保持base
+bytes。状态上限为：
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+single candidate commit、original PR gates、protected exact-head merge、new exact-main Public CI/Browser Smoke、fresh anonymous
+installed-product README/doc313/milestones readback、independent reconciliation与finite closeout全部闭合后，最多升级为
+`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP，另建docs-only freeze publication；不得从
+candidate PASS直接选择manifest/persistence或启动public Review/post-R1 Benchmark/R2–R6。
