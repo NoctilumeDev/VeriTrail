@@ -6777,3 +6777,54 @@ R2_R6_NOT_STARTED
 PR、protected exact-head merge、new exact-main Public CI/Browser Smoke、fresh anonymous README/doc313/milestones readback、
 independent reconciliation与finite closeout以后，状态最多为`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
 `FROZEN`必须由后继独立docs-only publication发布；不得自动选择manifest/persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+## R1 ReviewSliceSet / Coverage composition 私有实现冻结发布候选
+
+文档313 candidate已由PR #358从base `36333195833a462169e883aab0d36637e2edbdf3`、head
+`20789a22440cce40fab1a62c315ba21a11ae6e0e`、tree `4b478f917d21b6bc7f3e91f01c480c21591d0cbf`精确合入
+`main@7ae964fd86b45802ed77444bbffcf36caef20796`。original Public CI `39482381263`、exact-main Public CI
+`39486901626`与Browser Smoke `39486901758`均为attempt 1 SUCCESS，分别为11/11、11/11与1/1。fresh
+README/doc313/milestones 3/3 PASS。independent reconciliation、157-artifact finite closeout与finite integrity分别为：
+
+```text
+5112c50336484c7c9a55ef03ac2b077ac232c220f5737dfb10a51f2c646d8ce9
+52f89095522a8bf7a89d04bc22ac3e1610c4d84be76fb326853443596e2b380c
+33f0b418f84f7be89aca3149513c332f6e4b8409356a3bbc49ecf18e4fd65cd6
+```
+
+candidate readback的三个formal target均唯一PASS；六个pre-formal setup observations、三个diagnostic与两个post-closeout operator
+setup errors全部保留原identity。closeout显式排除自己的wrapper stdout/stderr，finite integrity确认157项封存对象全部匹配。因此
+doc313为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+第一次freeze publication PR #359的original Public CI `39492871239` attempt 1因`vite@8.2.2`命中
+`GHSA-698v-4r3x-3vcv`而以9 SUCCESS / 1 FAILURE / 1 SKIPPED终结；该PR关闭且未合并，保持
+`CLOSED / UNMERGED / NOT_QUALIFIED`。R1 runtime或docs-only regression未建立，底层exact registry propagation cause为
+`UNKNOWN`；原run不得rerun，后继PASS不得回填。
+
+独立maintenance PR #360只把`web/package.json`与`web/package-lock.json`中的Vite更新为8.2.4；original Public CI
+`39495044192`、exact-main Public CI `39499480536`与Browser Smoke `39499479537`均为attempt 1 SUCCESS，分别为11/11、
+11/11与1/1。受保护合入坐标为`main@3d2b230d0d00695a10fe2ff2f73d950e1674d2e6`、tree
+`84e187871537293f5e201a07f79b1e250f999521`。fresh installed Workbench readback确认range `^8.2.4`、installed/locked
+`8.2.4`与零漏洞；maintenance reconciliation、66-artifact closeout与integrity均PASS。
+
+[文档314](314-r1-review-slice-set-coverage-composition-private-implementation-freeze-publication.md)从维护后的新exact main建立新的独立
+docs-only conditional freeze publication，只允许README、AGENTS、milestones与新增doc314。doc267、doc281、doc287–313、private runtime、
+tests、workflows、Schema、Policy/Profile、Fact/Relation/Slice实现、CoverageLedger conformance、manifest、persistence与全部历史合同
+保持base bytes。本文不复活#359，也不把#360的PASS回填旧publication world。
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_READBACK_QUALIFIED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication自己的final-byte local gates、original PR、protected exact-head merge、new exact-main Public CI与Browser Smoke、fresh
+README/doc313/doc314/milestones installed-product readback、independent reconciliation与finite closeout全部闭合以后，才允许
+`R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN`生效。随后必须从新exact main返回CONTROL LOOP；不得
+自动选择manifest successor、persistence route或启动public Review、post-R1 Benchmark与R2–R6。
