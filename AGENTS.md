@@ -5324,3 +5324,49 @@ manifest、persistence与全部保留evidence必须保持base bytes。自己的f
 new exact-main双门、fresh README/doc311/milestones readback与independent reconciliation闭合以后，最多成为
 `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，单独发布docs-only composition authority recovery；不得从
 本审计直接施工bridge、启动ReviewSliceSet/Coverage runtime或选择manifest/persistence/public Review/R2–R6。
+
+### R1 ReviewSliceSet / Coverage composition authority recovery publication candidate
+
+文档311已由PR #356从base `e88310ca1c4c5a382d097e8d0b68193b106549c5`、head
+`af9e8c225efe14d5a9a3f5a0fb729f2fb6dbb360`、tree `b2c8e9dfd0cf2adb3e87ffbf8b1b01c9b044f155`
+精确合入`main@35e99a872d33234c4fb923a64995ccb148d9e3ba`。original Public CI `39435033981`、exact-main
+Public CI `39439635290`与Browser Smoke `39439635449`均为attempt 1 SUCCESS，分别为11/11、11/11与1/1。
+fresh README/doc311/milestones各有唯一qualifying PASS；setup1/2 marker投影边界、setup3 README formal #1/#2与
+milestones formal #1的non-success全部原样保留。independent reconciliation与230-artifact finite closeout分别为：
+
+```text
+71bc49fcb4c6c0b943f5c825cf61d885cd914f54d82253b5345fa607a397ad4f
+7a062bb3589d2252b3e999eda48338c5949c18fb3b970affb70efeeb56a432ba
+```
+
+因此doc311是`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP选择
+[文档312](docs/312-r1-review-slice-set-coverage-composition-authority-recovery-publication.md)作为独立docs-only authority recovery
+publication。它不复活doc288 identity，也不修改Fact → Relation transition ceiling或legacy Slice gate；最后门闭合后最多条件化
+授权application-owned、versioned、private、one-shot `RELATION_TRANSITION_TO_SLICE_AUTHORITY_BRIDGE`与文档267/287限定的
+composition A–J。
+
+新bridge必须消费exact transition continuation并独立重验transition identity/version、qualified admission、complete expected/
+emitted/terminal equality、complete RelationSet、same-attempt lineage、original `DerivationInputSet`、live `BudgetContext`与
+`AttemptEligibility`。相同bytes、digest、members或semantic result都不是Slice authority。不得放宽legacy exact-type gate、暴露或
+复用private token、伪造legacy qualification、创建新claim/context、重跑Relation，或按successful/representable subset缩小Slice/
+Coverage denominator。
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc312；doc267、doc281、doc287–311、runtime、tests、workflows、
+Schema、Policy/Profile、Fact/Relation transition、legacy Slice、CoverageLedger、manifest、persistence与全部保留evidence必须保持
+base bytes。自己的final-byte local gates、original PR、protected exact-head merge、new exact-main双门、fresh README/doc311/
+doc312/milestones readback、independent reconciliation与finite closeout全部闭合后，才允许
+`R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED`生效。随后必须从新exact main返回CONTROL LOOP；
+implementation仍为`NOT_STARTED`，不得自动选择manifest/persistence或启动public Review/post-R1 Benchmark/R2–R6。

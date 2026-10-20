@@ -6674,3 +6674,52 @@ R2_R6_NOT_STARTED
 exact-main Public CI与Browser Smoke、fresh README/doc311/milestones readback与independent reconciliation全部闭合以后，最多成为
 `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP；不得从本审计直接实现bridge、启动
 ReviewSliceSet/Coverage runtime、选择manifest successor/persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+## R1 ReviewSliceSet / Coverage composition authority recovery publication candidate
+
+文档311已由PR #356从base `e88310ca1c4c5a382d097e8d0b68193b106549c5`、head
+`af9e8c225efe14d5a9a3f5a0fb729f2fb6dbb360`、tree `b2c8e9dfd0cf2adb3e87ffbf8b1b01c9b044f155`
+精确合入`main@35e99a872d33234c4fb923a64995ccb148d9e3ba`。original Public CI `39435033981`、exact-main Public CI
+`39439635290`与Browser Smoke `39439635449`均为attempt 1 SUCCESS。fresh README/doc311/milestones各有唯一qualifying
+PASS；setup1/2的render marker投影问题、setup3的3个formal non-success、6个diagnostic与8个setup events均保留原identity。
+independent reconciliation与230-artifact finite closeout分别为：
+
+```text
+71bc49fcb4c6c0b943f5c825cf61d885cd914f54d82253b5345fa607a397ad4f
+7a062bb3589d2252b3e999eda48338c5949c18fb3b970affb70efeeb56a432ba
+```
+
+因此doc311现在是`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP建立
+[文档312](312-r1-review-slice-set-coverage-composition-authority-recovery-publication.md)，只发布新的bounded private authority；旧doc288
+authorization保持历史但继续不可直接消费。
+
+当前最小实现对象是application-owned、versioned、private、one-shot的
+`RELATION_TRANSITION_TO_SLICE_AUTHORITY_BRIDGE`。它必须消费exact transition continuation，独立重验qualified admission、complete
+RelationSet与terminal history、same-attempt lineage、original inputs/context/eligibility，签发与existing Slice primitives兼容且可区分的
+successor authority，然后才能继续doc267/287限定的Slice closure、ReviewSliceSet admission与seven-stage Coverage reconciliation。
+RelationSet digest、相同members、相同semantic result或后继PASS不能替代该edge qualification。
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc312。自己的local gates、original PR、protected exact-head merge、new
+exact-main Public CI与Browser Smoke、fresh README/doc311/doc312/milestones installed-product readback、independent reconciliation与
+finite closeout全部闭合以后，才允许升级为：
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+```
+
+闭合以后必须从新的exact main返回CONTROL LOOP。不得从publication直接声称bridge/runtime存在，也不得自动选择manifest successor、
+persistence route或启动public Review、post-R1 Benchmark、R2–R6、tag或Release。
