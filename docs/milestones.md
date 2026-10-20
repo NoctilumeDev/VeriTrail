@@ -6491,3 +6491,78 @@ Schema、manifest、persistence、Coverage与post-R1计划保持base bytes。自
 README/doc307/doc308/milestones readback与independent reconciliation全部闭合以后，才允许升级为
 `R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`，同时implementation仍`NOT_STARTED`。随后必须从新
 exact main返回CONTROL LOOP；旧ReviewSliceSet/Coverage composition authority不会自动恢复。
+
+## R1 Fact handoff → Relation corrected successor 私有 transition 实现候选
+
+文档308由PR #353 final head `fa7eb63aa450ab56925304cc94b7bb736b028f59`合入
+`main@aabab17ee183f6eec29b38658b044734016b197f`，candidate/merge tree均为
+`2b79c2802e35824284d3862f0f5573192f3c8843`。original Public CI `39384052591`、exact-main Public CI
+`39386875212`与Browser Smoke `39386875311`均为attempt 1 SUCCESS。fresh README、doc307、doc308、milestones各有唯一
+qualifying PASS；independent reconciliation、finite closeout与finite integrity分别为：
+
+```text
+38db55054abc1e1a123e9b9d1fc8de5b011240404491a1f1751b3014df41213a
+5c671ea25a53bc4e0fae128e5fb4f91b2697be247463bf4af9c9cbf166bcd76f
+f25a1d65a624abb7a9c1d1f7c30d779ee783028fd848417cfdafbdd9d79a722c
+```
+
+因此bounded private Fact handoff → corrected Relation implementation authority已经生效。
+[文档309](309-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-candidate.md)从该exact main形成单独
+implementation candidate：专用Relation handoff domain保留完整Fact source与original live BudgetContext；application从完整sealed
+Policy、authoritative FactSet和accepted products独立构造stage ownership、逐product/path closure、三类total Fact partition与complete
+successor obligation universe；冻结import-form Provider只执行明确assignment，transition再核对expected/assigned/emitted/terminal、
+request provenance与same-attempt lineage。完整Fact handoff history、carrier与admission都有独立canonical digest；private continuation
+不取得ReviewSliceSet、Coverage、manifest、persistence或public Review authority。
+
+prequalification working-byte review保留十六项修正；其中doc309初稿的base commit正确，但base tree被误抄为近似字符串，已在任何
+commit/PR/formal product identity产生前以`git rev-parse HEAD^{tree}`复核并改正。随后又发现live source/context/provenance没有与
+独立operand重绑定，Provider terminal/receipt/RelationSet也没有从frozen wire独立重建；两项均已增加direct falsifiers并修正。
+修正首跑又因terminal helper导入模块错误在loader阶段FAILED，作为第12项保留并纠正；下一run因helper插入位置截断既有
+RelationSet return而产生31-test/18-error failure，作为第13项保留并纠正。第14项证明live validator不能重造带时间戳的provenance；
+第15项证明内部交叉引用不能独立绑定attempt/claim/timestamp；第16项证明自洽的foreign Policy Provider lineage仍必须与外层
+exact inputs重绑定。全部finding无qualification effect，第10/11项发现前已成功的四格focused和3.10 normal full日志、
+第12项loader failure、第13/14项正常路径failure及第15/16项单测failure均为non-qualifying history。
+final candidate必须重新完成Python 3.10.6 / 3.13.13 × normal / `-O` focused/full matrix、canonical semantic comparison、
+compile/diff/Markdown/hygiene/private export/exact scope与primary audit continuity。
+
+修正后的final focused四格均为108 reported / 107 passed / 1 skipped；full四格均为564 reported，其中Python 3.10两格为
+561 passed / 3 skipped，Python 3.13两格为562 passed / 2 skipped。semantic report 0.1错误地按attempt-bound obligation identity
+顺序投影Provider assignment，首次四格比较产生139项位置差异；该
+`SEMANTIC_REPORT_ASSIGNMENT_ORDER_PROJECTION_ERROR`、原0.1报告与诊断保持non-qualifying原身份，且未建立产品语义分歧。
+versioned 0.2按完整稳定义务内容排序后，default、multi-path、known-empty、optional-advisory与UTF-8-SIG五个world在Python
+3.10.6 / 3.13.13 × normal / `-O`四格逐字相等，共同semantic digest为：
+
+```text
+2bd6c43da6a1a24450031df71638f83533527b93b05fa68076545eafaa9f9193
+```
+
+compile attempt 1未预建独立pycache根目录；attempt 2虽然预建根目录，但镜像目标路径达到277--319字符。两轮均只产生
+`FileNotFoundError`，分别机械分类为`COMPILEALL_PYCACHE_PREFIX_ROOT_SETUP_ERROR`与
+`COMPILEALL_PYCACHE_PREFIX_PATH_LENGTH_ERROR`，没有建立产品编译失败。fresh短隔离前缀的attempt 3在Python 3.10/3.13
+均exit 0；diff、Markdown/local links、global/local hygiene、private export、exact eight-path scope与primary audit continuity也
+全部PASS。首个pre-PR commit随后证明工作树`git diff --check`没有枚举untracked doc309，两处行尾空格只在base-to-commit
+检查中出现；commit `9896b654…`、exit 2输出及错误local qualification/seal attempt 1保持原身份，qualification effect为`NONE`。
+最终字节移除行尾空格并以commit-range门重新封存。因此candidate取得`LOCAL_GATES_PASS`，但在远端与readback资格链闭合以前
+仍`NOT_QUALIFIED / NOT_FROZEN`。
+
+当前只能记录：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_LOCAL_GATES_PASS
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_QUALIFIED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate必须完成自己的single commit、original PR gate、protected exact-head merge、new exact-main Public CI与Browser Smoke、fresh
+README/doc309/milestones installed-product readback、independent reconciliation与finite closeout。全部闭合最多为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；`FROZEN`必须由后继独立docs-only publication
+取得。旧ReviewSliceSet/Coverage composition authority不自动恢复，其余R1边界保持不变。

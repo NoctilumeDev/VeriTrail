@@ -25,7 +25,10 @@ from veritrail_review._language_support import (
     _revalidate_exact_inputs,
     classify_language_support,
 )
-from veritrail_review._fact_fulfillment_binding import _admit_closed_applicability
+from veritrail_review._fact_fulfillment_binding import (
+    _admit_closed_applicability,
+    _admit_relation_transition_fact_applicability,
+)
 from veritrail_review._fact_fulfillment_projection import qualify
 from veritrail_review._multi_provider_fact_composition import (
     _fact_set_document,
@@ -188,6 +191,7 @@ class OwnedProductFactConsumer:
         derivation_id: str,
         bindings: tuple[ProviderBinding, ...],
         required: Mapping[str, bool],
+        handoff_domain: str,
         transport_limits: ExecutionCellTransportSafetyLimits,
         cancellation_requested: Callable[[], bool] | None,
         _token: object,
@@ -221,6 +225,8 @@ class OwnedProductFactConsumer:
         self.__bindings = bindings
         self.__bound_bindings = bindings
         self.__required = dict(required)
+        self.__handoff_domain = handoff_domain
+        self.__bound_handoff_domain = handoff_domain
         self.__transport_limits = transport_limits
         self.__cancellation_requested = cancellation_requested
         self.__bound_cancellation_requested = cancellation_requested
@@ -239,6 +245,7 @@ class OwnedProductFactConsumer:
                     for binding in bindings
                 ],
                 "required": self.__required,
+                "handoff_domain": self.__handoff_domain,
                 "transport_limits": {
                     "request_payload_bytes": transport_limits.request_payload_bytes,
                     "terminal_payload_bytes": transport_limits.terminal_payload_bytes,
@@ -411,6 +418,7 @@ class OwnedProductFactConsumer:
                         for binding in self.__bindings
                     ],
                     "required": self.__required,
+                    "handoff_domain": self.__handoff_domain,
                     "transport_limits": {
                         "request_payload_bytes": self.__transport_limits.request_payload_bytes,
                         "terminal_payload_bytes": self.__transport_limits.terminal_payload_bytes,
@@ -467,9 +475,31 @@ class OwnedProductFactConsumer:
             self._revoke()
             raise
 
+    def _authorize_handoff_domain(self, purpose: str) -> None:
+        allowed = {
+            "LEGACY": {"LEGACY_CONTINUATION", "COVERAGE_HANDOFF"},
+            "RELATION_TRANSITION": {"RELATION_HANDOFF"},
+        }
+        if (
+            self.__handoff_domain != self.__bound_handoff_domain
+            or purpose not in allowed.get(self.__handoff_domain, set())
+        ):
+            self._revoke()
+            raise ProductFactConsumerError(
+                "consumer closure has no authority for this handoff domain"
+            )
+
     def _context_ref(self) -> BudgetContext:
         self._validate_live()
         return self.__context
+
+    def _inputs_ref(self):
+        self._validate_live()
+        return self.__inputs
+
+    def _classification_ref(self):
+        self._validate_live()
+        return self.__classification
 
     def _limits_ref(self) -> ExecutionCellTransportSafetyLimits:
         return self.__transport_limits
@@ -527,6 +557,7 @@ class OwnedProductFactConsumer:
                         for binding in self.__bindings
                     ],
                     "required": self.__required,
+                    "handoff_domain": self.__handoff_domain,
                     "transport_limits": {
                         "request_payload_bytes": self.__transport_limits.request_payload_bytes,
                         "terminal_payload_bytes": self.__transport_limits.terminal_payload_bytes,
@@ -1076,6 +1107,7 @@ class OwnedProductFactClosure:
             self.__claimed = True
             self.__claim_purpose = "LEGACY_CONTINUATION"
         try:
+            self.__parent._authorize_handoff_domain("LEGACY_CONTINUATION")
             self.__parent._authorize_continuation(self)
             return ClaimedProductFactContinuation(
                 self, self.__parent, _token=_CONTINUATION_TOKEN
@@ -1093,7 +1125,40 @@ class OwnedProductFactClosure:
             self.__claimed = True
             self.__claim_purpose = "COVERAGE_HANDOFF"
         try:
+            self.__parent._authorize_handoff_domain("COVERAGE_HANDOFF")
             return self.__parent._handoff_source_document(self)
+        except Exception:
+            self.__parent._revoke()
+            raise
+
+    def _claim_relation_handoff_source(
+        self,
+    ) -> tuple[
+        dict[str, object],
+        BudgetContext,
+        object,
+        object,
+        ExecutionCellTransportSafetyLimits,
+        Callable[[], bool] | None,
+    ]:
+        """Claim the same one-shot source for the versioned Relation transition."""
+
+        with self.__lock:
+            if self.__claimed:
+                raise ProductFactConsumerError("consumer source already consumed")
+            self.__claimed = True
+            self.__claim_purpose = "RELATION_HANDOFF"
+        try:
+            self.__parent._authorize_handoff_domain("RELATION_HANDOFF")
+            source, context = self.__parent._handoff_source_document(self)
+            return (
+                source,
+                context,
+                self.__parent._inputs_ref(),
+                self.__parent._classification_ref(),
+                self.__parent._limits_ref(),
+                self.__parent._cancellation_ref(),
+            )
         except Exception:
             self.__parent._revoke()
             raise
@@ -1167,6 +1232,48 @@ def create_product_fact_consumer(
     transport_limits: ExecutionCellTransportSafetyLimits = DEFAULT_TRANSPORT_LIMITS,
     cancellation_requested: Callable[[], bool] | None = None,
 ) -> OwnedProductFactConsumer:
+    return _create_product_fact_consumer(
+        closure,
+        derivation_id=derivation_id,
+        bindings=bindings,
+        transport_limits=transport_limits,
+        cancellation_requested=cancellation_requested,
+        applicability_admitter=_admit_closed_applicability,
+        handoff_domain="LEGACY",
+    )
+
+
+def create_product_fact_consumer_for_relation_transition(
+    closure: OwnedParseFulfillmentClosure,
+    *,
+    derivation_id: str,
+    bindings: Sequence[ProviderBinding],
+    transport_limits: ExecutionCellTransportSafetyLimits = DEFAULT_TRANSPORT_LIMITS,
+    cancellation_requested: Callable[[], bool] | None = None,
+) -> OwnedProductFactConsumer:
+    """Admit only the Fact-owned projection of a complete combined Policy."""
+
+    return _create_product_fact_consumer(
+        closure,
+        derivation_id=derivation_id,
+        bindings=bindings,
+        transport_limits=transport_limits,
+        cancellation_requested=cancellation_requested,
+        applicability_admitter=_admit_relation_transition_fact_applicability,
+        handoff_domain="RELATION_TRANSITION",
+    )
+
+
+def _create_product_fact_consumer(
+    closure: OwnedParseFulfillmentClosure,
+    *,
+    derivation_id: str,
+    bindings: Sequence[ProviderBinding],
+    transport_limits: ExecutionCellTransportSafetyLimits,
+    cancellation_requested: Callable[[], bool] | None,
+    applicability_admitter,
+    handoff_domain: str,
+) -> OwnedProductFactConsumer:
     if type(closure) is not OwnedParseFulfillmentClosure:
         raise ProductFactConsumerError("consumer requires an owned Parse closure")
     continuation = closure.claim_continuation()
@@ -1203,7 +1310,7 @@ def create_product_fact_consumer(
             != classification.language_support_function
         ):
             raise ValueError
-        required, normalized = _admit_closed_applicability(
+        required, normalized = applicability_admitter(
             inputs,
             derivation_id=derivation_id,
             bindings=bindings,
@@ -1215,6 +1322,7 @@ def create_product_fact_consumer(
             derivation_id=derivation_id,
             bindings=normalized,
             required=required,
+            handoff_domain=handoff_domain,
             transport_limits=transport_limits,
             cancellation_requested=cancellation_requested,
             _token=_PARENT_TOKEN,
