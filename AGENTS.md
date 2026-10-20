@@ -5103,3 +5103,38 @@ tests、workflows、Schema、Policy/Profile、旧composition、manifest、persis
 protected merge/new exact-main双门、fresh README/doc305/doc306/milestones readback与independent reconciliation全部闭合以前，
 `FROZEN`不生效。闭合以后必须返回CONTROL LOOP，重新审计Fact handoff → Relation composition authority；旧authorization history
 继续`PRESERVED / NOT_CONSUMABLE`，不能由implementation freeze自动恢复。
+
+### R1 Fact handoff → Relation corrected successor authority recovery 当前状态审计候选
+
+文档306由PR #351 final head `5b6ee8bbb3586e89fec3133960265b3f450a26d8`合入
+`main@6cbd7ae5088bb232cbb64e51acc7298441272ab6`，tree为
+`8026bbab89d5e2856fe8660a9dc36cc016f5ed66`。original Public CI `39368437171`、exact-main Public CI
+`39370392129`与Browser Smoke `39370391965`均为attempt 1 SUCCESS；fresh README/doc305/doc306/milestones为4/4
+qualifying PASS。independent reconciliation、finite closeout与finite-integrity summary分别为：
+
+```text
+43b74760aef0dcb102e0d0d8fcbd6ba068af7e1521f44b53db18f158613dafda
+bc0a7f29b80272eb8287598529c1bc9fae0490837645593b522b91af5e165abe
+bed71633b03a65bed58ddde4d0476ce3dd0478732ba8a22e40be3347210d2555
+```
+
+因此corrected Provider successor private implementation现已frozen。fresh CONTROL LOOP确认新versioned Provider已经在完整
+FROM_IMPORT、five-kind、multi-alias与two-path FactSet上解决旧Provider stop condition，但这只取得Provider conformance authority。
+current combined-policy Fact entry仍正确fail closed；Fact-only handoff不能与combined-Policy exact input跨world join；high-level
+Relation entry仍创建新BudgetContext并重跑Fact；import-form carrier没有handoff claim、original context、stage applicability、
+cross-stage ownership、per-product closure、complete obligation projection与expected/assigned obligation identities。因此
+Fact handoff-owned Relation transition/admission仍不存在。
+
+[文档307](docs/307-r1-fact-relation-corrected-successor-authority-recovery-current-state-audit.md)只形成current-state audit
+candidate。audit在Python 3.10.6 / 3.13.13 × normal / `-O`四格取得同一semantic digest：
+
+```text
+a2a96debfb98ddaf176057489493dbc917dcad3a898a295778ea43c7f9b58437
+```
+
+fresh focused attempt 2四格各200 reported / 199 passed / 1 skipped；attempt 1的错误module name loader failure保持
+`NON_QUALIFYING / NONE`。本candidate只允许README、AGENTS、milestones与新增doc307；doc290–306、runtime、tests、workflows、
+Provider、Schema、Policy/Profile、manifest、persistence、Coverage与public Review必须保持base bytes。自己的local/original PR/
+protected merge/exact-main双门、fresh README/doc307/milestones readback与independent reconciliation闭合后，最多成为
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，单独考虑docs-only corrected successor authority
+recovery publication；旧authority仍`PRESERVED / NOT_CONSUMABLE`，transition implementation仍`NOT_STARTED / NOT_AUTHORIZED`。

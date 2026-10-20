@@ -6403,3 +6403,51 @@ R2_R6_NOT_STARTED
 exact-head merge、new exact-main Public CI与Browser Smoke、fresh README/doc305/doc306/milestones installed-product readback与independent
 reconciliation。全部闭合以后仍须返回CONTROL LOOP；旧composition authority不会自动恢复，manifest、persistence、Coverage、
 public Review与R2–R6不会自动启动。
+
+## R1 Fact handoff → Relation corrected successor authority recovery 当前状态审计候选
+
+文档306由PR #351 final head `5b6ee8bbb3586e89fec3133960265b3f450a26d8`合入
+`main@6cbd7ae5088bb232cbb64e51acc7298441272ab6`，tree为
+`8026bbab89d5e2856fe8660a9dc36cc016f5ed66`。original Public CI `39368437171`、exact-main Public CI
+`39370392129`与Browser Smoke `39370391965`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh anonymous
+installed-product README、doc305、doc306、milestones为4/4 qualifying PASS；independent reconciliation、finite closeout与
+finite-integrity summary分别为：
+
+```text
+43b74760aef0dcb102e0d0d8fcbd6ba068af7e1521f44b53db18f158613dafda
+bc0a7f29b80272eb8287598529c1bc9fae0490837645593b522b91af5e165abe
+bed71633b03a65bed58ddde4d0476ce3dd0478732ba8a22e40be3347210d2555
+```
+
+因此当前状态是：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+fresh CONTROL LOOP确认versioned import-form Provider已在完整FROM_IMPORT、five-kind、multi-alias与two-path FactSet上解决旧Provider
+counterexample，但common exact input + claimed live Fact handoff → corrected Relation admission仍没有production transition：combined-policy
+Fact entry正确fail closed，Fact-only handoff不能和combined-Policy exact input跨world join，high-level Relation entry仍新建
+BudgetContext并重跑Fact，import-form carrier没有冻结transition所需的handoff、context、applicability、ownership、closure、projection与
+assignment identities。
+
+[文档307](307-r1-fact-relation-corrected-successor-authority-recovery-current-state-audit.md)只形成current-state audit candidate。
+read-only audit在Python 3.10.6 / 3.13.13 × normal / `-O`四格semantic digest一致：
+
+```text
+a2a96debfb98ddaf176057489493dbc917dcad3a898a295778ea43c7f9b58437
+```
+
+fresh focused attempt 2四格各200 reported / 199 passed / 1 skipped；attempt 1 module-name setup error保留且不参与资格。
+candidate只允许README、AGENTS、milestones与新增doc307。它自己的local/original PR/protected merge/new exact-main双门、fresh
+README/doc307/milestones readback与independent reconciliation全部闭合后，最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。
+然后必须返回CONTROL LOOP，单独考虑docs-only corrected successor authority recovery publication；不得从本审计直接施工或恢复旧
+composition、manifest、persistence、Coverage、public Review authority。
