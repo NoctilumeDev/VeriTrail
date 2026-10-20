@@ -21,8 +21,26 @@ def _descriptor(provider_id: str) -> ProviderDescriptor:
     )
 
 
+def _import_form_successor_descriptor(provider_id: str) -> ProviderDescriptor:
+    return ProviderDescriptor(
+        capability_id="review-relation-derivation",
+        provider_id=provider_id,
+        provider_version="0.1-test",
+        parser_id="cpython-3.10.6-import-alias-occurrence-parser",
+        parser_version="0.1-test",
+        runtime_id="veritrail-review-test-runtime",
+        runtime_version="0.1-test",
+    )
+
+
 _PROVIDER_A = _descriptor("closed-relation-provider-a")
 _PROVIDER_B = _descriptor("closed-relation-provider-b")
+_IMPORT_FORM_PROVIDER_A = _import_form_successor_descriptor(
+    "relation-import-form-provider-a"
+)
+_IMPORT_FORM_PROVIDER_B = _import_form_successor_descriptor(
+    "relation-import-form-provider-b"
+)
 
 _LAUNCH_KEYS: Mapping[str, ProviderDescriptor] = MappingProxyType(
     {
@@ -37,6 +55,8 @@ _LAUNCH_KEYS: Mapping[str, ProviderDescriptor] = MappingProxyType(
         "observation-b-conflict": _PROVIDER_B,
         "observation-b-slow": _PROVIDER_B,
         "observation-b-memory": _PROVIDER_B,
+        "import-form-observation-a": _IMPORT_FORM_PROVIDER_A,
+        "import-form-observation-b": _IMPORT_FORM_PROVIDER_B,
     }
 )
 
@@ -48,6 +68,39 @@ def closed_test_relation_observation_bindings() -> tuple[ProviderBinding, ...]:
         ProviderBinding(_PROVIDER_A, "observation-a"),
         ProviderBinding(_PROVIDER_B, "observation-b"),
     )
+
+
+def corrected_import_form_relation_observation_bindings(
+) -> tuple[ProviderBinding, ...]:
+    """Return the versioned private import-form successor responsibility sources."""
+
+    return (
+        ProviderBinding(_IMPORT_FORM_PROVIDER_A, "import-form-observation-a"),
+        ProviderBinding(_IMPORT_FORM_PROVIDER_B, "import-form-observation-b"),
+    )
+
+
+def relation_observation_binding_family_for_descriptor(
+    descriptor: ProviderDescriptor,
+) -> tuple[ProviderBinding, ...] | None:
+    """Resolve only an exact, complete private binding family."""
+
+    for bindings in (
+        closed_test_relation_observation_bindings(),
+        corrected_import_form_relation_observation_bindings(),
+    ):
+        if any(binding.descriptor == descriptor for binding in bindings):
+            return bindings
+    return None
+
+
+def relation_observation_binding_family_for_launch_key(
+    launch_key: str,
+) -> tuple[ProviderBinding, ...] | None:
+    descriptor = relation_observation_descriptor_for_launch_key(launch_key)
+    if descriptor is None:
+        return None
+    return relation_observation_binding_family_for_descriptor(descriptor)
 
 
 def relation_observation_binding_matches_allow_list(binding: object) -> bool:

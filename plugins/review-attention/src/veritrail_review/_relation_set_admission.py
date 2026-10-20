@@ -22,6 +22,7 @@ from veritrail_review._multi_provider_applicability import (
 )
 from veritrail_review._relation_observation_binding import (
     closed_test_relation_observation_bindings,
+    corrected_import_form_relation_observation_bindings,
     relation_observation_descriptor_rank,
 )
 from veritrail_review._relation_observation_cell_values import (
@@ -49,6 +50,7 @@ from veritrail_review._source_operation_projection_values import (
     OwnedSourceOperationProjection,
 )
 from veritrail_review._source_operation_relation_observation_application import (
+    IMPORT_FORM_OPERANDS_DOMAIN as RELATION_IMPORT_FORM_SOURCE_OPERATION_OPERANDS_DOMAIN,
     OPERANDS_DOMAIN as RELATION_OBSERVATION_SOURCE_OPERATION_OPERANDS_DOMAIN,
 )
 from veritrail_review._relation_set_admission_values import (
@@ -249,7 +251,7 @@ def _validate_qualification(
     fact_phases = value.fact_phase_results
     relation_phases = value.relation_phase_results
     expected_fact = closed_test_multi_provider_bindings()
-    expected_relation = closed_test_relation_observation_bindings()
+    expected_relation = _observation_binding_family_for_qualification(value)
     if (
         len(fact_phases) != len(expected_fact)
         or len(relation_phases) != len(expected_relation)
@@ -341,6 +343,11 @@ def _validate_qualification(
 
     relation_runs: list[dict[str, object]] = []
     receipts: list[dict[str, object]] = []
+    relation_operands_domain = (
+        RELATION_IMPORT_FORM_SOURCE_OPERATION_OPERANDS_DOMAIN
+        if expected_relation == corrected_import_form_relation_observation_bindings()
+        else RELATION_OBSERVATION_SOURCE_OPERATION_OPERANDS_DOMAIN
+    )
     for phase, projection in zip(
         relation_phases, relation_projections, strict=True
     ):
@@ -363,7 +370,7 @@ def _validate_qualification(
             )
         )
         expected_operands = _source_operation_operands_digest(
-            RELATION_OBSERVATION_SOURCE_OPERATION_OPERANDS_DOMAIN,
+            relation_operands_domain,
             value,
             phase.provider_descriptor,
             classification,
@@ -633,29 +640,45 @@ def _expected_observation_domain(
     qualification: OwnedRelationCompositionQualificationResult,
     facts: Sequence[Mapping[str, object]],
 ) -> dict[str, object]:
+    relation_bindings = _observation_binding_family_for_qualification(qualification)
+    legacy_domain = relation_bindings == closed_test_relation_observation_bindings()
     modules = [item for item in facts if item["fact_kind"] == "MODULE"]
     imports = [item for item in facts if item["fact_kind"] == "IMPORT_DECLARATION"]
-    if len(modules) != 1 or len(modules) + len(imports) != len(facts):
-        raise ValueError
-    module = modules[0]
-    module_path = module["source_anchor"]["git_path"]
-    if module["local_ordinal"] != 0:
-        raise ValueError
-    for item in imports:
-        attributes = item["semantic_attributes"]
-        if (
-            item["source_anchor"]["git_path"] != module_path
-            or item["local_ordinal"] != 0
-            or not isinstance(attributes, Mapping)
-            or set(attributes)
-            != {"import_form", "relative_level", "module_parts", "imported_name", "alias_name"}
-            or attributes["import_form"] != "IMPORT"
-            or attributes["relative_level"] != 0
-            or not isinstance(attributes["module_parts"], list)
-            or not attributes["module_parts"]
-            or attributes["imported_name"] is not None
-        ):
+    if legacy_domain:
+        if len(modules) != 1 or len(modules) + len(imports) != len(facts):
             raise ValueError
+        module_path = modules[0]["source_anchor"]["git_path"]
+        if modules[0]["local_ordinal"] != 0:
+            raise ValueError
+        for item in imports:
+            if (
+                item["source_anchor"]["git_path"] != module_path
+                or item["local_ordinal"] != 0
+                or not _valid_admission_import_attributes(
+                    item["semantic_attributes"], legacy=True
+                )
+            ):
+                raise ValueError
+    else:
+        modules_by_path: dict[bytes, Mapping[str, object]] = {}
+        for module in modules:
+            path = canonical_json_bytes(module["source_anchor"]["git_path"])
+            if module["local_ordinal"] != 0 or path in modules_by_path:
+                raise ValueError
+            modules_by_path[path] = module
+        if not modules_by_path:
+            raise ValueError
+        for item in imports:
+            path = canonical_json_bytes(item["source_anchor"]["git_path"])
+            if (
+                path not in modules_by_path
+                or type(item["local_ordinal"]) is not int
+                or item["local_ordinal"] < 0
+                or not _valid_admission_import_attributes(
+                    item["semantic_attributes"], legacy=False
+                )
+            ):
+                raise ValueError
     items: list[dict[str, object]] = []
     for fact in imports:
         for kind, role in (
@@ -687,7 +710,7 @@ def _expected_observation_domain(
             item["subject_fact_id"],
         )
     )
-    profile = observation_profile_document()
+    profile = observation_profile_document(relation_bindings)
     profile_digest = semantic_digest(
         "veritrail.review.relation-observation-profile/0.1",
         {**profile, "derivation_profile_digest": qualification.derivation_profile_digest},
@@ -739,6 +762,55 @@ def _expected_observation_domain(
     }
 
 
+def _observation_binding_family_for_qualification(
+    qualification: OwnedRelationCompositionQualificationResult,
+):
+    descriptors = tuple(
+        sorted(
+            (phase.provider_descriptor for phase in qualification.relation_phase_results),
+            key=relation_observation_descriptor_rank,
+        )
+    )
+    for bindings in (
+        closed_test_relation_observation_bindings(),
+        corrected_import_form_relation_observation_bindings(),
+    ):
+        if descriptors == tuple(binding.descriptor for binding in bindings):
+            return bindings
+    raise ValueError
+
+
+def _valid_admission_import_attributes(
+    attributes: object, *, legacy: bool
+) -> bool:
+    if not isinstance(attributes, Mapping) or set(attributes) != {
+        "import_form",
+        "relative_level",
+        "module_parts",
+        "imported_name",
+        "alias_name",
+    }:
+        return False
+    form = attributes["import_form"]
+    level = attributes["relative_level"]
+    parts = attributes["module_parts"]
+    imported_name = attributes["imported_name"]
+    alias_name = attributes["alias_name"]
+    if (
+        type(level) is not int
+        or level < 0
+        or not isinstance(parts, list)
+        or any(not isinstance(part, str) or not part for part in parts)
+        or not (alias_name is None or isinstance(alias_name, str))
+    ):
+        return False
+    if form == "IMPORT":
+        return level == 0 and bool(parts) and imported_name is None
+    if legacy or form != "FROM_IMPORT":
+        return False
+    return isinstance(imported_name, str) and bool(imported_name)
+
+
 def _validate_relations(
     qualification: OwnedRelationCompositionQualificationResult,
     facts: Sequence[Mapping[str, object]],
@@ -783,6 +855,8 @@ def _validate_relations(
                 or target["target_kind"] != "FACT"
                 or target["fact_id"] not in facts_by_id
                 or facts_by_id[target["fact_id"]]["fact_kind"] != "IMPORT_DECLARATION"
+                or facts_by_id[target["fact_id"]]["source_anchor"]["git_path"]
+                != source["source_anchor"]["git_path"]
             ):
                 raise ValueError
         elif relation["relation_kind"] == "IMPORT_TARGET_LITERAL":

@@ -5048,3 +5048,35 @@ bbc6f3b018da7591737526a767b5c98fd7b64feda33b132d6ca880c3235ff8e1
 manifest、persistence、Coverage或public Review。它自己的local/original PR/protected merge/exact-main双门、fresh
 README/doc303/doc304/milestones readback与independent reconciliation全部闭合以前，`ALLOWED`不生效；闭合后仍为
 implementation NOT_STARTED，并必须返回CONTROL LOOP。
+
+### R1 corrected Provider successor 私有实现候选
+
+文档304由PR #349 final head `b5d66949657449efa5cbfc6315d810696f76e861`合入
+`main@4411c02c7278b8ecb4aa36415fdea77e7cb90168`；candidate与merge tree均为
+`7e13b5d8acf374c5e9e854554824b28ad606f677`。original Public CI `39344764110`、exact-main Public CI
+`39348029772`与Browser Smoke `39348029859`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh anonymous
+installed-product README、doc303、doc304、milestones为4/4 qualifying PASS；independent reconciliation与178-artifact closeout分别为：
+
+```text
+cbe3144f61e7e68b9bee9af11f463ebc38ec017d50fd98c2a6fde4742dc19d2e
+fe760ad7716b0d62ec22b37a906e6031e7ff152bb4838ec5e7114dbb69d815a0
+```
+
+因此bounded private Provider successor A–J authority已经生效。[文档305](docs/305-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-candidate.md)
+在exact base `4411c02c…`上形成独立implementation candidate：新增versioned private binding/profile/wire与Provider，保持完整FactSet，
+枚举CPython 3.10 import-form occurrence，执行双向Fact核账、per-path MODULE closure、完整assignment与legacy-compatible ordinal，并复用
+既有qualification/admission/lifecycle。旧Provider/public/default composition不变。
+
+prequalification review在formal qualification以前发现并修正UTF-8-SIG首行BOM byte-offset defect与RPIF-013 proof target过弱；两项
+identity及修正前focused日志继续保留。final focused四格均为95 reported / 94 passed / 1 skipped；full Review Attention四格为531
+reported，Python 3.10每格528 passed / 3 skipped，Python 3.13每格529 passed / 2 skipped。semantic report attempt 1 method error与
+attempt 2 non-semantic timestamp mismatch均保留，attempt 3四格digest一致：
+
+```text
+1d663d655365cddbcb00375066fbd523475586cc754ee461be3695628ed06c6c
+```
+
+本文仍只是本地candidate。它必须取得自己的original PR gate、protected merge、new exact-main双门、fresh README/doc305/milestones
+readback与independent reconciliation；全部闭合最多为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。
+`FROZEN`只能由后继独立docs-only publication取得。旧Fact handoff → Relation composition authority继续不可消费，manifest、
+persistence、Coverage、public Review与R2–R6均未启动。

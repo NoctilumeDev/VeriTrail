@@ -43,6 +43,7 @@ from veritrail_review._relation_derivation_values import (
 )
 from veritrail_review._relation_observation_binding import (
     closed_test_relation_observation_bindings,
+    corrected_import_form_relation_observation_bindings,
     relation_observation_binding_matches_allow_list,
     relation_observation_descriptor_rank,
 )
@@ -142,6 +143,16 @@ def closed_test_relation_observation_qualification_bindings(
     return (
         *closed_test_multi_provider_bindings(),
         *closed_test_relation_observation_bindings(),
+    )
+
+
+def corrected_import_form_relation_observation_qualification_bindings(
+) -> tuple[ProviderBinding, ...]:
+    """Bind the existing Fact sources to the private import-form successor."""
+
+    return (
+        *closed_test_multi_provider_bindings(),
+        *corrected_import_form_relation_observation_bindings(),
     )
 
 
@@ -291,7 +302,10 @@ def _admit_observation_qualification_applicability(
             _RelationDerivationFailureCode.INVALID_DERIVATION_REQUEST
         )
     expected_fact = closed_test_multi_provider_bindings()
-    expected_relation = closed_test_relation_observation_bindings()
+    allowed_relation_families = (
+        closed_test_relation_observation_bindings(),
+        corrected_import_form_relation_observation_bindings(),
+    )
     try:
         submitted = tuple(bindings)
         fact = tuple(
@@ -320,9 +334,9 @@ def _admit_observation_qualification_applicability(
             )
         )
         if (
-            len(submitted) != len(expected_fact) + len(expected_relation)
+            len(submitted) != len(expected_fact) + len(relation)
             or fact != expected_fact
-            or relation != expected_relation
+            or relation not in allowed_relation_families
             or any(
                 not relation_observation_binding_matches_allow_list(item)
                 for item in relation
