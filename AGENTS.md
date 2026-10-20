@@ -5265,3 +5265,62 @@ independent reconciliation与finite closeout全部闭合以后，才允许
 `R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`生效。随后必须返回CONTROL LOOP；旧
 ReviewSliceSet/Coverage composition authority不会自动恢复，manifest successor、persistence、Coverage/public Review、post-R1
 Benchmark与R2–R6均不得自动启动。
+
+### R1 ReviewSliceSet / Coverage composition authority recovery 当前状态审计候选
+
+文档310由PR #355从base `eadccc6023196e5b31c3bf312f5de2c4578d2f5d`、head
+`c2dd1ed7b9b8d2cb6e82a523eadfabbc390ae77b`、tree `43ac035e0cd2e012fac5b390f54244f591551a40`
+精确合入`main@e88310ca1c4c5a382d097e8d0b68193b106549c5`。original Public CI `39421644660`、exact-main
+Public CI `39425547417`与Browser Smoke `39425547424`均为attempt 1 SUCCESS，分别为11/11、11/11与1/1。fresh
+doc309、doc310、milestones与README为4/4 qualifying PASS；independent reconciliation、162-artifact closeout与finite
+integrity分别为：
+
+```text
+f4fac71760ebb77cc676e2040852be29d6df36ee1da9e0f02e5cad55af5232e5
+bd97fe2171315408a2248bcd2e045946d7727865d1aa6b816abb265d72552054
+671d65e2680a0c69ef785cbbfe43ef9089f8d907dda71186c678555a9abb5d37
+```
+
+因此Fact handoff → Relation corrected successor private implementation现已frozen。fresh CONTROL LOOP不直接恢复旧composition，
+而由[文档311](docs/311-r1-review-slice-set-coverage-composition-authority-recovery-current-state-audit.md)重验current authority topology。
+新transition admission为`QUALIFIED`，默认world保留14个Facts、10个obligations与10个Relations；one-shot continuation保持同一
+`DerivationInputSet`、`BudgetContext`与`AttemptEligibility`。但transition authority ceiling继续令ReviewSliceSet/Coverage为false，
+current Slice入口只接受exact `OwnedRelationQualificationContinuation`，并对`OwnedFactRelationTransitionAdmission`与
+`ClaimedFactRelationTransitionContinuation`均以`ADMISSION_BINDING_REJECTED` fail closed。源码没有新continuation consumer或
+到legacy Slice authority的adapter；相同content、RelationSet、inputs/context/eligibility或digest不能绕过该边界。
+
+read-only audit在Python 3.10.6 / 3.13.13 × normal / `-O`四格取得同一semantic digest：
+
+```text
+29a2cc8b30cd43b18cb8be214de88803dfdf9879e0930129a9ed26f7b943608b
+```
+
+audit attempt 1的postponed annotation object-identity proof-facility error与focused attempt 1的test-root loader error均保留，
+semantic/qualification effect为`NONE`。fresh audit attempt 2四格一致；fresh focused attempt 2四格各`193/193 PASS`，summary为
+`770cf74e9a42158ac3637c04d21d40775eb02b1bb67c7b3a9e0b0d8dcbcefaf3`。
+
+当前裁决是Fact → Relation stop condition只解决到Relation admission；旧doc288 composition authorization保持历史但不可直接消费。
+文档267/287的versioned Slice successor与A–J semantics仍可作为design basis，下一最小合法seam是一个docs-only composition
+authority recovery publication，至多条件化授权application-owned `RELATION_TRANSITION_TO_SLICE_AUTHORITY_BRIDGE`：消费exact
+one-shot transition continuation、独立重验admission/history/inputs/context/eligibility，再签发与existing Slice primitives兼容的
+successor authority。它不能修改transition ceiling、放宽legacy type gate、伪造legacy qualification、重跑Relation或选择
+manifest/persistence。
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_RESOLVED_THROUGH_RELATION_ADMISSION_ONLY
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、milestones与新增doc311；doc267、doc287–310、runtime、tests、workflows、Schema、Policy/Profile、
+manifest、persistence与全部保留evidence必须保持base bytes。自己的final-byte local gates、original PR、protected exact-head merge、
+new exact-main双门、fresh README/doc311/milestones readback与independent reconciliation闭合以后，最多成为
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，单独发布docs-only composition authority recovery；不得从
+本审计直接施工bridge、启动ReviewSliceSet/Coverage runtime或选择manifest/persistence/public Review/R2–R6。
