@@ -235,8 +235,12 @@ python -m venv .venv
   bounded private Provider successor A–J authority现已生效。fresh CONTROL LOOP进入
   [private implementation candidate](docs/305-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-candidate.md)：
   它以versioned private identity实现完整import-form occurrence、双向Fact核账、per-path MODULE closure、完整assignment与legacy-compatible
-  ordinal，并在Python 3.10 / 3.13 × normal / `-O`完成focused/full regressions与semantic comparison；当前仍只是本地候选，旧
-  composition、manifest、persistence、Coverage与public Review产品均未启动。
+  ordinal，并在Python 3.10 / 3.13 × normal / `-O`完成focused/full regressions与semantic comparison。该candidate已由PR #350合入
+  `main@b4438d29…`，original/exact-main门、fresh README/doc305/milestones读回与independent reconciliation全部闭合，现为
+  `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。当前
+  [独立冻结发布](docs/306-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-freeze-publication.md)
+  只条件化发布private implementation frozen target；它自己的完整资格链闭合以前FROZEN不生效。旧composition authority仍不可消费，
+  manifest、persistence、Coverage与public Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

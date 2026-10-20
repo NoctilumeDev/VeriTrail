@@ -6370,3 +6370,36 @@ R2_R6_NOT_STARTED
 README/doc305/milestones installed-product readback与independent reconciliation；全部闭合最多为
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。`FROZEN`必须另建独立docs-only publication。旧composition、
 manifest、persistence、Coverage、public Review与R2–R6不会自动启动。
+
+## R1 corrected Provider successor 私有实现冻结发布候选
+
+文档305由PR #350 final head `cb46053b9dc73e53b7cea0f37a1ec34baaa8deea`合入
+`main@b4438d29cbd856d5ccbc3a4ef9cb0040de13da74`，candidate/merge tree均为
+`d05cb480f77288b34ba994eb5a1547261dec80ce`。original Public CI `39361779895`、new exact-main Public CI
+`39364238110`与Browser Smoke `39364238111`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh README、doc305、
+milestones各有唯一qualifying PASS；independent reconciliation与133-artifact closeout分别为：
+
+```text
+1394b9678ab5abc7b2a141bdb0434dae16770e9ceb2dc08f9cd912437cea109d
+addf39c28a3bfe04b63cd739e6d8d5a3956a0684c499c1a2f5e5795304ab7352
+```
+
+closeout stdout self-capture mismatch保持原身份，其余132项终态一致，semantic/qualification effect为`NONE`。因此当前状态是：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_READBACK_QUALIFIED
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+[文档306](306-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-freeze-publication.md)
+只以独立docs-only patch条件化发布`PRIVATE_IMPLEMENTATION_FROZEN` target。它必须完成自己的local gates、original PR、protected
+exact-head merge、new exact-main Public CI与Browser Smoke、fresh README/doc305/doc306/milestones installed-product readback与independent
+reconciliation。全部闭合以后仍须返回CONTROL LOOP；旧composition authority不会自动恢复，manifest、persistence、Coverage、
+public Review与R2–R6不会自动启动。
