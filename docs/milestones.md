@@ -6566,3 +6566,52 @@ R2_R6_NOT_STARTED
 README/doc309/milestones installed-product readback、independent reconciliation与finite closeout。全部闭合最多为
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；`FROZEN`必须由后继独立docs-only publication
 取得。旧ReviewSliceSet/Coverage composition authority不自动恢复，其余R1边界保持不变。
+
+## R1 Fact handoff → Relation corrected successor 私有 transition 实现冻结发布候选
+
+文档309的candidate已由PR #354从base `aabab17ee183f6eec29b38658b044734016b197f`、head
+`8a41ddeaae9087589d16aec8f5ceb9bffc2fb428`、tree `9b230e69eca15379da0a75f428767373c9a89946`精确合入
+`main@eadccc6023196e5b31c3bf312f5de2c4578d2f5d`。original Public CI `39413230303`与exact-main Public CI
+`39416474939`均为attempt 1的11/11 SUCCESS，Browser Smoke `39416474952`为attempt 1的1/1 SUCCESS。fresh
+README/doc309/milestones的formal readback为3 PASS / 0 formal non-success；三个report SHA-256分别为：
+
+```text
+75b4901939c4d481e06b2f700a5170f7a2a87aa84311c777a1ac7dd92cb1a85c
+e418098209105bb7aa7021872af442820acc9f2ba6c474cad972abc783a121c0
+d9b3cf9d1d130be0015b270887e33e7ba6eb29f384a284834dc4ec8d0c021623
+```
+
+independent reconciliation、155-artifact closeout、post-closeout stdout self-capture record与finite integrity分别为：
+
+```text
+3fad5d6aed4b0054750207bd527580373e096513eafc9cc2e4be330ed322e938
+984beb7124a79b64e5bca446afefe54ff0ba741350891759f78f5ac9bba5d252
+9cd19ee0228a7e3ba5e29e296e609e0c519833f8f2d78a50006e15b1c37ff1bc
+e750bfec27f1d246ad4d9148259450e294619b4d8a4e6f69c08ddae00f958073
+```
+
+milestones diagnostic #1的navigation约30秒后以`PublicRenderNetworkError`终结，底层原因`UNKNOWN`；fresh anonymous
+rate/commit preflight后独立diagnostic #2为COMPLETE，首个ERROR保留。closeout stdout self-capture mismatch只涉及wrapper输出本身，
+其余154项终态一致，semantic与qualification effect均为`NONE`。因此文档309现在为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+[文档310](310-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-freeze-publication.md)从该exact main建立独立
+docs-only conditional freeze publication。它只允许修改README、AGENTS、milestones与新增doc310；doc290–309、private runtime、tests、
+workflows、Schema、Policy/Profile与全部历史合同保持base bytes。本publication自己的local gates、original PR、protected exact-head
+merge、new exact-main Public CI 11/11与Browser Smoke 1/1、fresh README/doc309/doc310/milestones readback、independent
+reconciliation与finite closeout全部闭合以后，才允许升级为：
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+闭合以后必须从新的exact main返回CONTROL LOOP。transition冻结不自动恢复旧ReviewSliceSet/Coverage composition authority，
+也不选择manifest successor、persistence route或启动Coverage/public Review、post-R1 Benchmark与R2–R6。
