@@ -6723,3 +6723,57 @@ R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
 
 闭合以后必须从新的exact main返回CONTROL LOOP。不得从publication直接声称bridge/runtime存在，也不得自动选择manifest successor、
 persistence route或启动public Review、post-R1 Benchmark、R2–R6、tag或Release。
+
+## R1 ReviewSliceSet / Coverage composition 私有实现候选
+
+文档312已经完成独立资格链。PR #357 final head `e4503ad0392c762eaf2abeed5597b31c6853934b`从
+`main@35e99a872d33234c4fb923a64995ccb148d9e3ba`精确合入`main@36333195833a462169e883aab0d36637e2edbdf3`，
+tree `3731a6211abf976fd98d7e67b7ac315154ef1201`。original Public CI `39455940067`、exact-main Public CI
+`39460190492`与Browser Smoke `39460190387`均为attempt 1 SUCCESS；fresh README/doc311/doc312/milestones 4/4 PASS。
+independent reconciliation、finite closeout attempt 2与finite-integrity summary为：
+
+```text
+9a78a3df2dcc9117b49c2dea31cfad62cd3f8d683e64d71caec0371caf825d33
+da1855844e36ebcfc32a84873b988b88738e919fbc2c96addd62608005b0bafc
+82ea3195bca5e6bfea10c720b37e368df232ff483dd9145b41856f40dc8cccc1
+```
+
+因此新的bounded private implementation authority已经生效。fresh CONTROL LOOP建立
+[文档313](313-r1-review-slice-set-coverage-composition-private-implementation-candidate.md)与implementation branch，只施工
+application-owned、versioned、private、one-shot Relation transition → Slice bridge、private ReviewSliceSet successor及seven-stage
+Coverage validation witness。
+
+candidate消费exact transition continuation并重新核对qualified admission、complete RelationSet与terminal history、same-attempt
+lineage和original live inputs/context/eligibility。Slice denominator从complete upstream world推导，再由独立reconstruction拒绝producer
+与validator共同漏项；multi-path、partial、unknown与closed-empty保持不同terminal semantics。CoverageLedger 0.3只验证ordered
+Fact/Relation/Slice root chain与seven-stage accounting，不取得事实、Slice、manifest、persistence或publication authority。
+
+本地final witness为：
+
+```text
+focused Python 3.10 normal / -O: each 140 / 140 PASS
+focused Python 3.13 normal / -O: each 140 / 140 PASS
+full Python 3.10 normal / -O:    each 574 reported / 571 passed / 3 skipped
+full Python 3.13 normal / -O:    each 574 reported / 572 passed / 2 skipped
+three-world semantic digest:     ac29917eb0303931abbba15e25499f80fd39782562f0578c021fd119d5717048
+```
+
+direct falsifiers覆盖foreign/consumed/digest-only/legacy authority、common-mode denominator omission、mutated Slice candidate、resealed
+transition history、Relation conflict、multi-path与zero-anchor；legacy Slice三个实现文件用exact SHA guards保持不变。semantic report首个
+attempt读取不存在字段而在projection层终结，完整保留为proof-facility error；后继只修正报告字段，未改产品或oracle。
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones、doc313、新private composition模块与对应test。完成single candidate commit、original
+PR、protected exact-head merge、new exact-main Public CI/Browser Smoke、fresh anonymous README/doc313/milestones readback、
+independent reconciliation与finite closeout以后，状态最多为`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+`FROZEN`必须由后继独立docs-only publication发布；不得自动选择manifest/persistence或启动public Review/post-R1 Benchmark/R2–R6。
