@@ -5028,3 +5028,23 @@ tests、workflows、Provider、Schema、Policy/Profile、manifest、persistence�
 local gates、original PR、protected exact-head merge、new exact-main双门、fresh README/doc303/milestones readback与independent
 reconciliation闭合后，最多成为qualified feasibility history；在此以前implementation仍NOT_STARTED/NOT_AUTHORIZED，旧composition
 authority继续不可消费。
+
+### R1 corrected Provider successor 私有实现授权发布候选
+
+文档303由PR #348 final head `68e206ca8a7f22ba63b3e6672f23039446a4a796`合入
+`main@0f0c93a7b0fc2d33572dbb284ab7e54a997ea88b`；candidate与merge tree均为
+`72c9e720edc3099e0d60c74821d41db0b9de8f2c`。original Public CI `39336445825`、exact-main Public CI
+`39340041479`与Browser Smoke `39340041520`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh anonymous
+installed-product README、doc303、milestones为3/3 qualifying PASS；independent reconciliation与132-artifact closeout分别为：
+
+```text
+4e03b11727cca784a0797bdbaeb9d66fb44be886e8c4072b077c0395a534e430
+bbc6f3b018da7591737526a767b5c98fd7b64feda33b132d6ca880c3235ff8e1
+```
+
+因此doc303现为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；doc301保持merged but not-qualified，#346失败、Artifact与`UNKNOWN`
+根因不变。[文档304](docs/304-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-authorization-publication.md)
+只条件化发布bounded private Provider successor A–J authority，不修改runtime/tests/workflows/Provider/Schema/Policy/Profile、旧composition、
+manifest、persistence、Coverage或public Review。它自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc303/doc304/milestones readback与independent reconciliation全部闭合以前，`ALLOWED`不生效；闭合后仍为
+implementation NOT_STARTED，并必须返回CONTROL LOOP。
