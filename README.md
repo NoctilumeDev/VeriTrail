@@ -229,10 +229,14 @@ python -m venv .venv
   [独立feasibility恢复候选](docs/303-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-feasibility-recovery.md)：
   它以#346失败与doc302 closeout为新增资格输入，在current exact main重新执行semantic audit并承担完整独立资格链。旧授权历史仍不可消费；
   该候选已由PR #348合入`main@0f0c93a…`，并完成original/exact-main门、fresh README/doc303/milestones读回与独立对账，现为
-  qualified feasibility history。fresh CONTROL LOOP进入
-  [独立实现授权发布候选](docs/304-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-authorization-publication.md)：
-  它只条件化授权bounded private Provider successor A–J；自己的最后门闭合以前`ALLOWED`不生效，runtime、旧composition、manifest、
-  persistence、Coverage与public Review产品均未启动。
+  qualified feasibility history。随后
+  [独立实现授权发布](docs/304-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-authorization-publication.md)
+  由PR #349合入`main@4411c02c…`，original/exact-main门、fresh README/doc303/doc304/milestones读回与独立对账全部闭合，
+  bounded private Provider successor A–J authority现已生效。fresh CONTROL LOOP进入
+  [private implementation candidate](docs/305-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-candidate.md)：
+  它以versioned private identity实现完整import-form occurrence、双向Fact核账、per-path MODULE closure、完整assignment与legacy-compatible
+  ordinal，并在Python 3.10 / 3.13 × normal / `-O`完成focused/full regressions与semantic comparison；当前仍只是本地候选，旧
+  composition、manifest、persistence、Coverage与public Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

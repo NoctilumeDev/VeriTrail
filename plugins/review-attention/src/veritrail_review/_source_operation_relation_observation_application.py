@@ -23,7 +23,9 @@ from veritrail_review._relation_observation_application import (
     validate_relation_observation_terminal_document as _validate_historical_terminal,
 )
 from veritrail_review._relation_observation_binding import (
-    closed_test_relation_observation_bindings,
+    corrected_import_form_relation_observation_bindings,
+    relation_observation_binding_family_for_descriptor,
+    relation_observation_binding_family_for_launch_key,
     relation_observation_descriptor_for_launch_key,
 )
 from veritrail_review._relation_observation_domain import (
@@ -51,9 +53,11 @@ from veritrail_review.derivation_input_contracts import DerivationInputSet
 
 
 PROTOCOL = "veritrail-review-relation-cell/0.4"
+IMPORT_FORM_PROTOCOL = "veritrail-review-relation-cell/0.5"
 REQUEST_KIND = "RELATION_OBSERVATION_CELL_REQUEST"
 TERMINAL_KIND = "RELATION_OBSERVATION_CELL_TERMINAL"
 OPERANDS_DOMAIN = "veritrail.review.provider-operands/0.6"
+IMPORT_FORM_OPERANDS_DOMAIN = "veritrail.review.provider-operands/0.7"
 
 _REQUEST_KEYS = frozenset(
     {
@@ -150,7 +154,16 @@ def relation_observation_source_operation_operands_digest(
 ) -> str:
     """Bind the historical observation operands plus exact gate semantics."""
 
+    relation_bindings = relation_observation_binding_family_for_descriptor(
+        descriptor
+    )
+    if relation_bindings is None:
+        raise RelationObservationSourceOperationProtocolError(
+            "unknown Relation observation Provider descriptor"
+        )
+    _, operands_domain = _wire_identities(relation_bindings)
     return _operands_digest_from_parts(
+        operands_domain=operands_domain,
         source_snapshot_digest=inputs.source_snapshot_digest,
         policy_digest=inputs.policy_digest,
         analysis_scope_digest=inputs.analysis_scope_digest,
@@ -192,11 +205,19 @@ def build_relation_observation_source_operation_request_document(
         classification, snapshot=snapshot, policy=policy, profile=profile
     )
     owned_fact_set = copy.deepcopy(dict(fact_set_document))
+    relation_bindings = relation_observation_binding_family_for_descriptor(
+        descriptor
+    )
+    if relation_bindings is None:
+        raise RelationObservationSourceOperationProtocolError(
+            "unknown Relation observation Provider descriptor"
+        )
+    protocol, _ = _wire_identities(relation_bindings)
     validated_domain = validate_declared_relation_observation_domain(
         observation_domain,
         inputs=inputs,
         fact_set_document=owned_fact_set,
-        relation_bindings=closed_test_relation_observation_bindings(),
+        relation_bindings=relation_bindings,
     )
     responsibility = responsibility_for_descriptor(validated_domain, descriptor)
     assigned = responsibility["assigned_observation_item_ids"]
@@ -233,7 +254,7 @@ def build_relation_observation_source_operation_request_document(
         projection,
     )
     return {
-        "protocol": PROTOCOL,
+        "protocol": protocol,
         "message_kind": REQUEST_KIND,
         "derivation_id": derivation_id,
         "request_provenance": copy.deepcopy(dict(request_provenance)),
@@ -264,7 +285,7 @@ def validate_relation_observation_source_operation_request_document(
     try:
         if set(document) != _REQUEST_KEYS:
             raise ValueError
-        if document["protocol"] != PROTOCOL or document["message_kind"] != REQUEST_KIND:
+        if document["message_kind"] != REQUEST_KIND:
             raise ValueError
         derivation_id = document["derivation_id"]
         if not isinstance(derivation_id, str) or not derivation_id:
@@ -274,6 +295,14 @@ def validate_relation_observation_source_operation_request_document(
             launch_key
         )
         if expected_descriptor is None or descriptor != expected_descriptor:
+            raise ValueError
+        relation_bindings = relation_observation_binding_family_for_launch_key(
+            launch_key
+        )
+        if relation_bindings is None:
+            raise ValueError
+        protocol, operands_domain = _wire_identities(relation_bindings)
+        if document["protocol"] != protocol:
             raise ValueError
         snapshot = document["source_snapshot"]
         policy = document["review_policy"]
@@ -333,7 +362,7 @@ def validate_relation_observation_source_operation_request_document(
             document["observation_domain"],
             inputs=ephemeral_inputs,
             fact_set_document=semantic_fact_set,
-            relation_bindings=closed_test_relation_observation_bindings(),
+            relation_bindings=relation_bindings,
         )
         responsibility = responsibility_for_descriptor(domain, descriptor)
         assigned = responsibility["assigned_observation_item_ids"]
@@ -359,6 +388,7 @@ def validate_relation_observation_source_operation_request_document(
             document["source_blobs"], classification, projection
         )
         expected_operands = _operands_digest_from_parts(
+            operands_domain=operands_domain,
             **expected_digests,
             descriptor=descriptor,
             fact_set_digest=document["fact_set_digest"],
@@ -436,7 +466,7 @@ def relation_observation_source_operation_terminal_document(
         raise RelationObservationSourceOperationProtocolError(
             "invalid corrected Relation observation terminal"
         ) from exc
-    document["protocol"] = PROTOCOL
+    document["protocol"] = request.document["protocol"]
     return document
 
 
@@ -446,10 +476,16 @@ def validate_relation_observation_source_operation_terminal_document(
     try:
         if set(document) != _TERMINAL_KEYS:
             raise ValueError
-        if (
-            document["protocol"] != PROTOCOL
-            or document["message_kind"] != TERMINAL_KIND
-        ):
+        if document["message_kind"] != TERMINAL_KIND:
+            raise ValueError
+        descriptor = _descriptor_from_document(request["provider_descriptor"])
+        relation_bindings = relation_observation_binding_family_for_descriptor(
+            descriptor
+        )
+        if relation_bindings is None:
+            raise ValueError
+        protocol, _ = _wire_identities(relation_bindings)
+        if document["protocol"] != protocol or request["protocol"] != protocol:
             raise ValueError
         historical = copy.deepcopy(dict(document))
         historical["protocol"] = "veritrail-review-relation-cell/0.2"
@@ -463,6 +499,7 @@ def validate_relation_observation_source_operation_terminal_document(
 
 def _operands_digest_from_parts(
     *,
+    operands_domain: str,
     source_snapshot_digest: str,
     policy_digest: str,
     analysis_scope_digest: str,
@@ -477,7 +514,7 @@ def _operands_digest_from_parts(
     source_operation_projection_digest: str,
 ) -> str:
     return semantic_digest(
-        OPERANDS_DOMAIN,
+        operands_domain,
         {
             "source_snapshot_digest": source_snapshot_digest,
             "policy_digest": policy_digest,
@@ -497,6 +534,14 @@ def _operands_digest_from_parts(
             ),
         },
     )
+
+
+def _wire_identities(
+    relation_bindings: Sequence[object],
+) -> tuple[str, str]:
+    if tuple(relation_bindings) == corrected_import_form_relation_observation_bindings():
+        return IMPORT_FORM_PROTOCOL, IMPORT_FORM_OPERANDS_DOMAIN
+    return PROTOCOL, OPERANDS_DOMAIN
 
 
 def _classification_index(

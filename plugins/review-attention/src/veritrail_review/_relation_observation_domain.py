@@ -6,6 +6,7 @@ from typing import Mapping, Sequence
 from veritrail_review._execution_cell_binding import ProviderBinding, ProviderDescriptor
 from veritrail_review._relation_observation_binding import (
     closed_test_relation_observation_bindings,
+    corrected_import_form_relation_observation_bindings,
     relation_observation_descriptor_rank,
 )
 from veritrail_review.canonical import canonical_json_bytes, semantic_digest
@@ -14,6 +15,8 @@ from veritrail_review.derivation_input_contracts import DerivationInputSet
 
 OBSERVATION_PROFILE_ID = "closed-python-import-observation"
 OBSERVATION_PROFILE_VERSION = "0.1-test"
+IMPORT_FORM_OBSERVATION_PROFILE_ID = "closed-python-import-form-observation"
+IMPORT_FORM_OBSERVATION_PROFILE_VERSION = "0.1-test"
 CAPABILITY_ID = "review-relation-derivation"
 
 _FAMILY_RANK = {"LEXICAL_CONTAINS": 0, "IMPORT_TARGET_LITERAL": 1}
@@ -24,8 +27,22 @@ class RelationObservationDomainError(ValueError):
     pass
 
 
-def observation_profile_document() -> dict[str, object]:
-    bindings = closed_test_relation_observation_bindings()
+def observation_profile_document(
+    relation_bindings: Sequence[ProviderBinding] | None = None,
+) -> dict[str, object]:
+    bindings = _normalized_binding_family(
+        closed_test_relation_observation_bindings()
+        if relation_bindings is None
+        else relation_bindings
+    )
+    if bindings == closed_test_relation_observation_bindings():
+        profile_id = OBSERVATION_PROFILE_ID
+        profile_version = OBSERVATION_PROFILE_VERSION
+    elif bindings == corrected_import_form_relation_observation_bindings():
+        profile_id = IMPORT_FORM_OBSERVATION_PROFILE_ID
+        profile_version = IMPORT_FORM_OBSERVATION_PROFILE_VERSION
+    else:  # pragma: no cover - guarded by _normalized_binding_family
+        raise RelationObservationDomainError("unknown observation binding family")
     family_rules = [
         {
             "relation_kind": "LEXICAL_CONTAINS",
@@ -63,8 +80,8 @@ def observation_profile_document() -> dict[str, object]:
         )
     )
     return {
-        "observation_profile_id": OBSERVATION_PROFILE_ID,
-        "observation_profile_version": OBSERVATION_PROFILE_VERSION,
+        "observation_profile_id": profile_id,
+        "observation_profile_version": profile_version,
         "capability_id": CAPABILITY_ID,
         "required": True,
         "composition_mode": "CUMULATIVE",
@@ -103,17 +120,8 @@ def build_declared_relation_observation_domain(
             }
         ]:
             raise ValueError
-        expected_bindings = closed_test_relation_observation_bindings()
-        normalized = tuple(
-            sorted(
-                relation_bindings,
-                key=lambda item: relation_observation_descriptor_rank(
-                    item.descriptor
-                ),
-            )
-        )
-        if normalized != expected_bindings:
-            raise ValueError
+        normalized = _normalized_binding_family(relation_bindings)
+        legacy_domain = normalized == closed_test_relation_observation_bindings()
         facts = fact_set_document["facts"]
         conflicts = fact_set_document["conflicts"]
         if not isinstance(facts, list) or conflicts != []:
@@ -126,47 +134,46 @@ def build_declared_relation_observation_domain(
         imports = [
             fact for fact in facts if fact.get("fact_kind") == "IMPORT_DECLARATION"
         ]
-        if len(modules) != 1 or len(modules) + len(imports) != len(facts):
-            raise ValueError
-        module_path = modules[0]["source_anchor"]["git_path"]["git_path_hex"]
         snapshot = inputs.source_snapshot_document_copy()
-        inventory_matches = [
-            entry
-            for entry in snapshot["inventory"]
-            if entry["git_path"]["git_path_hex"] == module_path
-        ]
-        module_anchor = modules[0]["source_anchor"]
-        if (
-            len(inventory_matches) != 1
-            or inventory_matches[0]["entry_kind"]
-            not in set(profile["supported_entry_kinds"])
-            or inventory_matches[0]["git_object"]["object_type"] != "BLOB"
-            or modules[0]["local_ordinal"] != 0
-            or module_anchor["start_byte"] != 0
-            or module_anchor["end_byte"]
-            != inventory_matches[0]["content"]["size_bytes"]
-        ):
-            raise ValueError
-        for fact in imports:
-            attributes = fact["semantic_attributes"]
-            if (
-                fact["source_anchor"]["git_path"]["git_path_hex"] != module_path
-                or fact["local_ordinal"] != 0
-                or set(attributes)
-                != {
-                    "import_form",
-                    "relative_level",
-                    "module_parts",
-                    "imported_name",
-                    "alias_name",
-                }
-                or attributes["import_form"] != "IMPORT"
-                or attributes["relative_level"] != 0
-                or not isinstance(attributes["module_parts"], list)
-                or not attributes["module_parts"]
-                or attributes["imported_name"] is not None
-            ):
+        if legacy_domain:
+            if len(modules) != 1 or len(modules) + len(imports) != len(facts):
                 raise ValueError
+            module_path = modules[0]["source_anchor"]["git_path"]["git_path_hex"]
+            _validate_module_fact(
+                modules[0], module_path=module_path, snapshot=snapshot, profile=profile
+            )
+            for fact in imports:
+                if (
+                    fact["source_anchor"]["git_path"]["git_path_hex"] != module_path
+                    or fact["local_ordinal"] != 0
+                    or not _valid_import_attributes(
+                        fact["semantic_attributes"], legacy=True
+                    )
+                ):
+                    raise ValueError
+        else:
+            module_by_path: dict[str, dict[str, object]] = {}
+            for module in modules:
+                module_path = module["source_anchor"]["git_path"]["git_path_hex"]
+                if module_path in module_by_path:
+                    raise ValueError
+                _validate_module_fact(
+                    module, module_path=module_path, snapshot=snapshot, profile=profile
+                )
+                module_by_path[module_path] = module
+            if not module_by_path:
+                raise ValueError
+            for fact in imports:
+                path_hex = fact["source_anchor"]["git_path"]["git_path_hex"]
+                if (
+                    path_hex not in module_by_path
+                    or type(fact["local_ordinal"]) is not int
+                    or fact["local_ordinal"] < 0
+                    or not _valid_import_attributes(
+                        fact["semantic_attributes"], legacy=False
+                    )
+                ):
+                    raise ValueError
 
         items: list[dict[str, object]] = []
         for fact in imports:
@@ -195,7 +202,7 @@ def build_declared_relation_observation_domain(
         if len({item["observation_item_id"] for item in items}) != len(items):
             raise ValueError
 
-        profile_document = observation_profile_document()
+        profile_document = observation_profile_document(normalized)
         profile_payload = {
             **profile_document,
             "derivation_profile_digest": inputs.derivation_profile_digest,
@@ -240,8 +247,10 @@ def build_declared_relation_observation_domain(
             "analysis_scope_digest": inputs.analysis_scope_digest,
             "derivation_profile_digest": inputs.derivation_profile_digest,
             "fact_set_digest": fact_set_document["fact_set_digest"],
-            "observation_profile_id": OBSERVATION_PROFILE_ID,
-            "observation_profile_version": OBSERVATION_PROFILE_VERSION,
+            "observation_profile_id": profile_document["observation_profile_id"],
+            "observation_profile_version": profile_document[
+                "observation_profile_version"
+            ],
             "observation_profile_digest": observation_profile_digest,
             "capability_id": CAPABILITY_ID,
             "required": True,
@@ -310,6 +319,80 @@ def family_rule_for_item(
     if len(rules) != 1 or item["derivation_profile_digest"] != derivation_profile_digest:
         raise RelationObservationDomainError("invalid observation family")
     return copy.deepcopy(rules[0])
+
+
+def _normalized_binding_family(
+    relation_bindings: Sequence[ProviderBinding],
+) -> tuple[ProviderBinding, ...]:
+    normalized = tuple(
+        sorted(
+            relation_bindings,
+            key=lambda item: relation_observation_descriptor_rank(item.descriptor),
+        )
+    )
+    if normalized not in (
+        closed_test_relation_observation_bindings(),
+        corrected_import_form_relation_observation_bindings(),
+    ):
+        raise RelationObservationDomainError("unknown observation binding family")
+    return normalized
+
+
+def _validate_module_fact(
+    module: Mapping[str, object],
+    *,
+    module_path: str,
+    snapshot: Mapping[str, object],
+    profile: Mapping[str, object],
+) -> None:
+    inventory_matches = [
+        entry
+        for entry in snapshot["inventory"]
+        if entry["git_path"]["git_path_hex"] == module_path
+    ]
+    module_anchor = module["source_anchor"]
+    if (
+        len(inventory_matches) != 1
+        or inventory_matches[0]["entry_kind"]
+        not in set(profile["supported_entry_kinds"])
+        or inventory_matches[0]["git_object"]["object_type"] != "BLOB"
+        or module["local_ordinal"] != 0
+        or module_anchor["start_byte"] != 0
+        or module_anchor["end_byte"]
+        != inventory_matches[0]["content"]["size_bytes"]
+    ):
+        raise ValueError
+
+
+def _valid_import_attributes(
+    attributes: object, *, legacy: bool
+) -> bool:
+    if not isinstance(attributes, Mapping) or set(attributes) != {
+        "import_form",
+        "relative_level",
+        "module_parts",
+        "imported_name",
+        "alias_name",
+    }:
+        return False
+    form = attributes["import_form"]
+    level = attributes["relative_level"]
+    parts = attributes["module_parts"]
+    imported_name = attributes["imported_name"]
+    alias_name = attributes["alias_name"]
+    if (
+        type(level) is not int
+        or level < 0
+        or not isinstance(parts, list)
+        or any(not isinstance(part, str) or not part for part in parts)
+        or not (alias_name is None or isinstance(alias_name, str))
+    ):
+        return False
+    if form == "IMPORT":
+        return level == 0 and bool(parts) and imported_name is None
+    if legacy or form != "FROM_IMPORT":
+        return False
+    return isinstance(imported_name, str) and bool(imported_name)
 
 
 def _item_rank(item: Mapping[str, object]) -> tuple[object, ...]:

@@ -24,6 +24,10 @@ from veritrail_review._relation_observation_provider import (  # noqa: E402
     ClosedRelationObservationProviderUnavailable,
     run_closed_relation_observation_provider,
 )
+from veritrail_review._relation_import_form_provider import (  # noqa: E402
+    RelationImportFormProviderFailed,
+    run_relation_import_form_provider,
+)
 
 
 def main(arguments: list[str] | None = None) -> int:
@@ -54,12 +58,19 @@ def main(arguments: list[str] | None = None) -> int:
     outcomes: list[dict[str, object]] = []
     try:
         with contextlib.redirect_stdout(io.StringIO()):
-            candidates, raw_outcomes = run_closed_relation_observation_provider(
+            provider_request = (
                 _app.copy_relation_observation_source_operation_request_for_provider(
                     request
-                ),
-                launch_key=launch_key,
+                )
             )
+            if launch_key.startswith("import-form-observation-"):
+                candidates, raw_outcomes = run_relation_import_form_provider(
+                    provider_request, launch_key=launch_key
+                )
+            else:
+                candidates, raw_outcomes = run_closed_relation_observation_provider(
+                    provider_request, launch_key=launch_key
+                )
         relations = (
             _app.canonicalize_relation_observation_source_operation_candidates(
                 request, candidates
@@ -73,6 +84,8 @@ def main(arguments: list[str] | None = None) -> int:
     except ClosedRelationObservationProviderUnavailable:
         terminal_kind = "PROVIDER_UNAVAILABLE"
     except ClosedRelationObservationProviderFailed:
+        terminal_kind = "PROVIDER_FAILED"
+    except RelationImportFormProviderFailed:
         terminal_kind = "PROVIDER_FAILED"
     except _app.RelationObservationSourceOperationProtocolError:
         terminal_kind = "NONCONFORMANT_PROVIDER_OUTPUT"
