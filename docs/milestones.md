@@ -6615,3 +6615,62 @@ R2_R6_NOT_STARTED
 
 闭合以后必须从新的exact main返回CONTROL LOOP。transition冻结不自动恢复旧ReviewSliceSet/Coverage composition authority，
 也不选择manifest successor、persistence route或启动Coverage/public Review、post-R1 Benchmark与R2–R6。
+
+## R1 ReviewSliceSet / Coverage composition authority recovery 当前状态审计候选
+
+文档310已由PR #355精确合入`main@e88310ca1c4c5a382d097e8d0b68193b106549c5`，tree
+`43ac035e0cd2e012fac5b390f54244f591551a40`。original Public CI `39421644660`、exact-main Public CI
+`39425547417`与Browser Smoke `39425547424`均为attempt 1 SUCCESS；fresh doc309、doc310、milestones与README为4/4
+qualifying PASS。independent reconciliation、162-artifact closeout与finite integrity分别为：
+
+```text
+f4fac71760ebb77cc676e2040852be29d6df36ee1da9e0f02e5cad55af5232e5
+bd97fe2171315408a2248bcd2e045946d7727865d1aa6b816abb265d72552054
+671d65e2680a0c69ef785cbbfe43ef9089f8d907dda71186c678555a9abb5d37
+```
+
+因此`R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`已经生效。fresh CONTROL LOOP建立
+[文档311](311-r1-review-slice-set-coverage-composition-authority-recovery-current-state-audit.md)，只审旧composition stop condition与
+authority recovery current state。
+
+机械audit确认新transition admission为`QUALIFIED`，默认world的14个Facts、10个obligations与10个Relations闭合；continuation
+保留original exact inputs/context/eligibility并保持one-shot。但其authority ceiling明确不给ReviewSliceSet/Coverage。current Slice入口
+只接受exact `OwnedRelationQualificationContinuation`，对新transition admission与continuation均以
+`ADMISSION_BINDING_REJECTED`停止，且源码没有adapter或consumer。这项拒绝是正确的authority boundary，不得通过放宽type gate、
+暴露private token、伪造legacy qualification或重跑Relation绕过。
+
+audit attempt 1的postponed annotation object-identity错误与focused attempt 1的test-root loader错误均作为non-qualifying
+proof-facility history保留。fresh audit attempt 2在Python 3.10.6 / 3.13.13 × normal / `-O`四格共同semantic digest为：
+
+```text
+29a2cc8b30cd43b18cb8be214de88803dfdf9879e0930129a9ed26f7b943608b
+```
+
+fresh focused attempt 2四格各`193/193 PASS`，summary SHA-256为：
+
+```text
+770cf74e9a42158ac3637c04d21d40775eb02b1bb67c7b3a9e0b0d8dcbcefaf3
+```
+
+当前结论是旧composition authorization history保持，但只能通过新的docs-only authority recovery publication重新取得可消费
+authority。下一最小实现对象是application-owned、versioned、one-shot的
+`RELATION_TRANSITION_TO_SLICE_AUTHORITY_BRIDGE`；它消费exact transition continuation并独立重验admission/history/
+inputs/context/eligibility，不能修改transition ceiling或legacy Slice bytes。
+
+```text
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_RESOLVED_THROUGH_RELATION_ADMISSION_ONLY
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDIT_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc311。自己的local gates、original PR、protected exact-head merge、new
+exact-main Public CI与Browser Smoke、fresh README/doc311/milestones readback与independent reconciliation全部闭合以后，最多成为
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP；不得从本审计直接实现bridge、启动
+ReviewSliceSet/Coverage runtime、选择manifest successor/persistence或启动public Review/post-R1 Benchmark/R2–R6。

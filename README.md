@@ -253,9 +253,15 @@ python -m venv .venv
   provenance。该candidate已由PR #354精确合入`main@eadccc6…`；original/exact-main门、fresh README/doc309/milestones读回、
   independent reconciliation与finite closeout全部闭合，现为`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。首个
   milestones diagnostic的navigation ERROR、后继独立diagnostic COMPLETE与closeout stdout self-capture mismatch均按原身份保留。
-  当前进入[独立冻结发布](docs/310-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-freeze-publication.md)；
-  只有该docs-only publication自己的完整资格链闭合后才允许升级为`PRIVATE_IMPLEMENTATION_FROZEN`。旧ReviewSliceSet/Coverage
-  composition仍停止，manifest successor未选择，persistence保持OPEN，public Review产品与R2–R6均未启动。
+  [独立冻结发布](docs/310-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-freeze-publication.md)
+  已由PR #355合入`main@e88310c…`，original/exact-main门、fresh README/doc309/doc310/milestones读回、independent
+  reconciliation与finite closeout全部闭合，Fact → Relation corrected successor private implementation现已frozen。fresh
+  CONTROL LOOP进入
+  [ReviewSliceSet / Coverage composition authority recovery当前状态审计](docs/311-r1-review-slice-set-coverage-composition-authority-recovery-current-state-audit.md)：
+  新transition admission与continuation保持exact inputs、original context/eligibility和complete RelationSet，但current Slice入口只接受
+  legacy `OwnedRelationQualificationContinuation`，对两者均正确fail closed。旧composition authority保持历史且不可直接消费；本审计只
+  判断versioned Relation → Slice bridge与docs-only authority recovery publication是否仍为最小合法seam。manifest successor未选择，
+  persistence保持OPEN，public Review产品与R2–R6均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -482,6 +488,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [CoverageLedger 0.3 child Schema / conformance 私有实现独立冻结发布](docs/286-r1-review-coverage-ledger-0-3-schema-conformance-implementation-freeze-publication.md)：保留doc285已资格化实现字节；其完整资格门已闭合，private implementation现已frozen，但不授权composition、manifest successor或persistence；
 - [ReviewSliceSet / Coverage composition 私有实现可行性审计](docs/287-r1-review-slice-set-coverage-composition-private-implementation-feasibility-audit.md)：核对one-shot Fact handoff、legacy Relation/Slice authority path、低层可复用primitive、0.3 conformance与manifest topology；只形成bounded successor可行性候选，不授权实现；
 - [ReviewSliceSet / Coverage composition 私有实现授权发布](docs/288-r1-review-slice-set-coverage-composition-private-implementation-authorization-publication.md)：保存doc287已资格化可行性，条件化授权bounded A–J private successor；自己的最后门闭合以前`ALLOWED`不生效；
+- [ReviewSliceSet / Coverage composition authority recovery 当前状态审计](docs/311-r1-review-slice-set-coverage-composition-authority-recovery-current-state-audit.md)：从冻结Fact → Relation transition重验旧composition stop condition，确认current Slice exact-type gate正确拒绝新continuation，并把下一最小seam收敛为versioned Relation → Slice bridge的docs-only authority recovery publication；不授权runtime、manifest、persistence或public Review；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
