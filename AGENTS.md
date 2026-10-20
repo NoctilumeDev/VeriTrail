@@ -5080,3 +5080,26 @@ attempt 2 non-semantic timestamp mismatch均保留，attempt 3四格digest一致
 readback与independent reconciliation；全部闭合最多为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。
 `FROZEN`只能由后继独立docs-only publication取得。旧Fact handoff → Relation composition authority继续不可消费，manifest、
 persistence、Coverage、public Review与R2–R6均未启动。
+
+### R1 corrected Provider successor 私有实现冻结发布候选
+
+文档305由PR #350 final head `cb46053b9dc73e53b7cea0f37a1ec34baaa8deea`合入
+`main@b4438d29cbd856d5ccbc3a4ef9cb0040de13da74`；candidate/merge tree均为
+`d05cb480f77288b34ba994eb5a1547261dec80ce`。original Public CI `39361779895`、exact-main Public CI
+`39364238110`与Browser Smoke `39364238111`均为attempt 1 SUCCESS，分别11/11、11/11与1/1。fresh anonymous
+installed-product README、doc305、milestones为3/3 qualifying PASS；independent reconciliation与133-artifact closeout分别为：
+
+```text
+1394b9678ab5abc7b2a141bdb0434dae16770e9ceb2dc08f9cd912437cea109d
+addf39c28a3bfe04b63cd739e6d8d5a3956a0684c499c1a2f5e5795304ab7352
+```
+
+closeout wrapper的stdout self-capture mismatch已单独保留；其余132项终态一致，semantic与qualification effect均为`NONE`。因此
+doc305现为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+[文档306](docs/306-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-freeze-publication.md)
+只条件化发布private implementation frozen target，tracked scope只允许README、AGENTS、milestones与新增doc306。它不修改runtime、
+tests、workflows、Schema、Policy/Profile、旧composition、manifest、persistence、Coverage或public Review。自己的local/original PR/
+protected merge/new exact-main双门、fresh README/doc305/doc306/milestones readback与independent reconciliation全部闭合以前，
+`FROZEN`不生效。闭合以后必须返回CONTROL LOOP，重新审计Fact handoff → Relation composition authority；旧authorization history
+继续`PRESERVED / NOT_CONSUMABLE`，不能由implementation freeze自动恢复。
