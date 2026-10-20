@@ -5138,3 +5138,45 @@ Provider、Schema、Policy/Profile、manifest、persistence、Coverage与public 
 protected merge/exact-main双门、fresh README/doc307/milestones readback与independent reconciliation闭合后，最多成为
 `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，单独考虑docs-only corrected successor authority
 recovery publication；旧authority仍`PRESERVED / NOT_CONSUMABLE`，transition implementation仍`NOT_STARTED / NOT_AUTHORIZED`。
+
+### R1 Fact handoff → Relation corrected successor authority recovery publication candidate
+
+文档307由PR #352 final head `ed5211609271dd522b3ca474201b76cc02748139`合入
+`main@2a461ad476aaeed207f4d60bcabd3e235c4aba7e`。original Public CI `39375812065`、exact-main Public CI
+`39378248233`与Browser Smoke `39378248142`均attempt 1 SUCCESS。fresh doc307、milestones与README各有唯一qualifying
+PASS；README formal #1的P1 API额度耗尽错误完整保留，reset后的fresh formal #2才取得PASS。independent reconciliation、
+162-artifact closeout与finite integrity分别为：
+
+```text
+e78ebd5296652e0168b73ef73cb1d8dbbd26ae2c7078379a76217e485435ef50
+f10c27507f7fa799675525a0e8820dffe0c9aaf25fe27beee2cc1f16634efc27
+44a2ca60f68f8fd458f19ad022e6a1c4fbb326af21b8726c208064a247b8ba44
+```
+
+因此doc307现在是`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP确认Provider stop condition已由冻结的
+versioned import-form Provider解决，但common exact input + live handoff → corrected Relation admission transition仍不存在；旧doc297
+authority继续保留历史且不可消费。
+
+[文档308](docs/308-r1-fact-relation-corrected-successor-authority-recovery-publication.md)只条件化恢复一个bounded、private、
+versioned、handoff-owned transition A–J：绑定exact input、一次领取的完整Fact handoff与original live BudgetContext，构造冻结的stage
+applicability、per-product closure与complete obligation universe，复用已冻结import-form Provider，再独立核对expected/emitted/terminal
+partition与same-attempt provenance。它不得过滤FactSet、缩小Policy、新建claim/context、重跑Fact、跨world join、改写legacy/public
+bytes或恢复旧ReviewSliceSet/Coverage composition。
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_RECOVERY_PUBLICATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc308；自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc307/doc308/milestones readback与independent reconciliation全部闭合以前，`ALLOWED`不生效。闭合以后也必须返回
+CONTROL LOOP，才允许从新exact main创建implementation branch；不得自动启动manifest、persistence、Coverage、public Review或R2–R6。

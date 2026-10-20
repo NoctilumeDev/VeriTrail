@@ -6451,3 +6451,43 @@ candidate只允许README、AGENTS、milestones与新增doc307。它自己的loca
 README/doc307/milestones readback与independent reconciliation全部闭合后，最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。
 然后必须返回CONTROL LOOP，单独考虑docs-only corrected successor authority recovery publication；不得从本审计直接施工或恢复旧
 composition、manifest、persistence、Coverage、public Review authority。
+
+## R1 Fact handoff → Relation corrected successor authority recovery publication candidate
+
+文档307由PR #352 final head `ed5211609271dd522b3ca474201b76cc02748139`合入
+`main@2a461ad476aaeed207f4d60bcabd3e235c4aba7e`。original Public CI `39375812065`、exact-main Public CI
+`39378248233`与Browser Smoke `39378248142`均attempt 1 SUCCESS。fresh doc307、milestones与README各有唯一qualifying
+PASS；README formal #1的P1 API额度耗尽错误保留，reset后的fresh formal #2才取得PASS。independent reconciliation、
+162-artifact closeout与finite integrity分别为：
+
+```text
+e78ebd5296652e0168b73ef73cb1d8dbbd26ae2c7078379a76217e485435ef50
+f10c27507f7fa799675525a0e8820dffe0c9aaf25fe27beee2cc1f16634efc27
+44a2ca60f68f8fd458f19ad022e6a1c4fbb326af21b8726c208064a247b8ba44
+```
+
+因此doc307是`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP选择
+[文档308](308-r1-fact-relation-corrected-successor-authority-recovery-publication.md)作为下一最小合法seam。它只条件化恢复
+common exact input + live handoff → corrected Relation admission的bounded private implementation authority；施工面限于exact
+input/handoff/context join、冻结stage ownership、per-product closure、complete obligation projection、versioned handoff-owned carrier、
+冻结import-form Provider复用、独立qualification/admission、same-attempt continuation与direct falsifiers。
+
+```text
+R1_RELATION_PROVIDER_IMPORT_FORM_CONFORMANCE_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_ALLOWED_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORITY_RECOVERY_PUBLICATION_CANDIDATE
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_IMPLEMENTATION_STOP_CONDITION_TRIGGERED
+R1_REVIEW_SLICE_SET_COVERAGE_MANIFEST_SUCCESSOR_NOT_SELECTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc308；doc290–307、runtime、tests、workflows、Policy/Profile、Provider、
+Schema、manifest、persistence、Coverage与post-R1计划保持base bytes。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc307/doc308/milestones readback与independent reconciliation全部闭合以后，才允许升级为
+`R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`，同时implementation仍`NOT_STARTED`。随后必须从新
+exact main返回CONTROL LOOP；旧ReviewSliceSet/Coverage composition authority不会自动恢复。
