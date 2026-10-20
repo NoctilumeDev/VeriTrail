@@ -241,10 +241,13 @@ python -m venv .venv
   [独立冻结发布](docs/306-r1-relation-provider-import-form-conformance-corrected-successor-private-implementation-freeze-publication.md)
   已在`main@6cbd7ae…`闭合original/exact-main门、fresh README/doc305/doc306/milestones读回与独立对账，corrected Provider
   successor private implementation现已frozen。fresh CONTROL LOOP进入
-  [Fact handoff → Relation corrected successor authority recovery当前状态审计](docs/307-r1-fact-relation-corrected-successor-authority-recovery-current-state-audit.md)：
-  versioned import-form Provider已经解决旧Provider counterexample，但common exact input + live handoff → corrected Relation admission
-  transition仍不存在；旧composition authority继续保留历史且不可消费。本候选只审计恢复边界，不授权施工；manifest、persistence、
-  Coverage与public Review产品均未启动。
+  [Fact handoff → Relation corrected successor authority recovery当前状态审计](docs/307-r1-fact-relation-corrected-successor-authority-recovery-current-state-audit.md)
+  已在`main@2a461ad…`闭合original/exact-main门、fresh README/doc307/milestones读回与independent reconciliation，成为
+  `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`；匿名额度耗尽的README formal #1完整保留，reset后的fresh formal #2才取得PASS。
+  当前[独立authority recovery publication](docs/308-r1-fact-relation-corrected-successor-authority-recovery-publication.md)只条件化恢复
+  common exact input + live handoff → corrected Relation admission的bounded private施工权；publication自己的完整资格链闭合以前，
+  authority仍`PRESERVED / NOT_CONSUMABLE`，transition仍`NOT_STARTED / NOT_AUTHORIZED`，manifest、persistence、Coverage与public
+  Review产品均未启动。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
