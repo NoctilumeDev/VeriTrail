@@ -276,8 +276,12 @@ python -m venv .venv
   original dependency audit因`vite@8.2.2`命中`GHSA-698v-4r3x-3vcv`而失败，已关闭且未合并；该失败不归因为R1 runtime或docs
   regression，也不允许rerun回填。独立PR #360把Vite更新到8.2.4，并在original/exact-main双门、fresh installed Workbench readback
   与independent reconciliation后合入`main@3d2b230…`。fresh CONTROL LOOP从该新exact main重建
-  [独立冻结发布](docs/314-r1-review-slice-set-coverage-composition-private-implementation-freeze-publication.md)，只条件化发布该private
-  implementation的frozen状态；manifest successor未选择，persistence保持OPEN，public Review产品与R2–R6均未启动。
+  [独立冻结发布](docs/314-r1-review-slice-set-coverage-composition-private-implementation-freeze-publication.md)已由PR #361合入
+  `main@add5a8c…`；original/exact-main双门、fresh README/doc313/doc314/milestones读回、independent reconciliation与finite
+  closeout全部闭合，private composition implementation现已frozen。fresh CONTROL LOOP进入
+  [manifest negative-world successor可行性审计](docs/315-r1-review-derivation-manifest-negative-world-successor-feasibility-audit.md)：
+  它只审 immutable 0.1 topology、八个0.3 root worlds、实际存在文件的presence projection与cross-artifact falsifiers；不选择
+  正式successor version，不创建Schema/runtime，不选择persistence，也不启动public Review产品或R2–R6。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -508,6 +512,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage composition authority recovery publication](docs/312-r1-review-slice-set-coverage-composition-authority-recovery-publication.md)：保存doc311已资格化current-state audit，条件化授权bounded private Relation transition → Slice bridge与后续composition A–J；自己的最后门闭合以前`ALLOWED`不生效，不选择manifest/persistence或启动public Review；
 - [ReviewSliceSet / Coverage composition 私有实现候选](docs/313-r1-review-slice-set-coverage-composition-private-implementation-candidate.md)：消费exact transition continuation，独立重验complete RelationSet与same-attempt authority，构造complete Slice denominator、private ReviewSliceSet successor及seven-stage Coverage witness；candidate已取得exact-main与fresh readback资格，但仍为NOT_FROZEN；
 - [ReviewSliceSet / Coverage composition 私有实现冻结发布](docs/314-r1-review-slice-set-coverage-composition-private-implementation-freeze-publication.md)：保留doc313已资格化实现字节、#359失败identity与#360独立maintenance资格，从维护后的新exact main条件化重建private implementation frozen target；自己的完整资格链闭合前不得声称FROZEN，也不选择manifest/persistence或启动public Review；
+- [Review derivation manifest negative-world successor 可行性审计](docs/315-r1-review-derivation-manifest-negative-world-successor-feasibility-audit.md)：从已冻结composition重验immutable 0.1 COMPLETE/DIAGNOSTIC topology与八个CoverageLedger 0.3 worlds，证明不制造placeholder的versioned transport successor存在有限解；不选择正式版本、Schema、persistence或public product；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
