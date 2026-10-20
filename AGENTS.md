@@ -5180,3 +5180,52 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与新增doc308；自己的local/original PR/protected merge/exact-main双门、fresh
 README/doc307/doc308/milestones readback与independent reconciliation全部闭合以前，`ALLOWED`不生效。闭合以后也必须返回
 CONTROL LOOP，才允许从新exact main创建implementation branch；不得自动启动manifest、persistence、Coverage、public Review或R2–R6。
+
+### R1 Fact handoff → Relation corrected successor 私有 transition 实现候选
+
+文档308由PR #353 final head `fa7eb63aa450ab56925304cc94b7bb736b028f59`合入
+`main@aabab17ee183f6eec29b38658b044734016b197f`，candidate/merge tree均为
+`2b79c2802e35824284d3862f0f5573192f3c8843`。original Public CI `39384052591`、exact-main Public CI
+`39386875212`与Browser Smoke `39386875311`均为attempt 1 SUCCESS；fresh README/doc307/doc308/milestones为4/4
+qualifying PASS。independent reconciliation、finite closeout与finite integrity分别为：
+
+```text
+38db55054abc1e1a123e9b9d1fc8de5b011240404491a1f1751b3014df41213a
+5c671ea25a53bc4e0fae128e5fb4f91b2697be247463bf4af9c9cbf166bcd76f
+f25a1d65a624abb7a9c1d1f7c30d779ee783028fd848417cfdafbdd9d79a722c
+```
+
+因此`R1_FACT_HANDOFF_RELATION_CORRECTED_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。
+[文档309](docs/309-r1-fact-handoff-relation-corrected-successor-private-transition-implementation-candidate.md)在该exact main上形成
+bounded private transition candidate：它从专用Relation handoff domain一次性领取完整Fact source与original live BudgetContext，
+机械复算完整Policy的stage ownership、逐product/path closure、三类total Fact partition与complete successor obligation universe，
+复用冻结的import-form Provider并独立核对assignment、emitted/terminal partition、request provenance与same-attempt lineage。carrier
+copy-own完整Fact handoff history，admission绑定完整carrier，one-shot continuation的authority ceiling不包含ReviewSliceSet、Coverage、
+manifest、persistence或public Review。
+
+prequalification working-byte review保留十六项已修正finding，包括subject/path混用、assignment与terminal假设、Coverage/Relation
+handoff串域、Coverage negative path回归、carrier/admission绑定不足、Fact partition遗漏STRUCTURAL_ANCHOR、successor obligation
+identity不足、complete Fact history遗漏、doc309 exact base tree误抄、live source/context/provenance未与独立operand重绑定，以及
+Provider terminal/receipt/RelationSet未从frozen wire独立重建、第10/11项修正首跑把terminal helper导入错误模块，以及下一run把
+carrier helper插入到RelationSet constructor return以前。后续复核又发现provenance校验重造`resolved_at`、attempt/claim/timestamp只在
+carrier内部互相引用，以及foreign Policy Provider lineage可自洽地跨入外层exact world；三项均以新direct falsifier实证并修正。
+全部发生在commit/PR/formal product identity以前；修正前working logs、第10/11项发现前的四格focused与3.10 normal full成功、
+第12项loader failure、第13/14项31-test/18-error run及第15/16项单测failure保持非资格证据，
+final bytes必须重新完成Python 3.10/3.13 ×
+normal/`-O` focused/full matrix与semantic comparison。现有final focused四格均为108 reported / 107 passed / 1 skipped；
+full四格均为564 reported，其中Python 3.10两格为561 passed / 3 skipped，Python 3.13两格为562 passed / 2 skipped。
+semantic report 0.1因按attempt-bound obligation identity顺序投影assignment产生139项位置差异，已保留为
+`SEMANTIC_REPORT_ASSIGNMENT_ORDER_PROJECTION_ERROR`且未建立产品分歧；versioned 0.2按稳定义务内容排序后，在default、multi-path、
+known-empty、optional-advisory与UTF-8-SIG五个world的四格共同digest为
+`2bd6c43da6a1a24450031df71638f83533527b93b05fa68076545eafaa9f9193`。compile attempt 1未创建独立pycache根、attempt 2的
+镜像目标路径达到277--319字符，两次均只建立proof-facility setup error且没有`SyntaxError`/`IndentationError`；fresh短前缀的
+attempt 3在Python 3.10/3.13均exit 0。diff、Markdown/local links、global/local hygiene、private export、exact eight-path scope与
+primary audit continuity也已PASS。首个pre-PR commit又证明工作树`git diff --check`遗漏untracked doc309的两处行尾空格；
+commit `9896b654…`、exit 2输出与错误local qualification/seal attempt 1保留，最终字节改用base-to-candidate commit-range门并
+重新封存。因此当前为`IMPLEMENTATION_CANDIDATE / LOCAL_GATES_PASS / NOT_QUALIFIED / NOT_FROZEN`。
+
+当前状态上限为本地`IMPLEMENTATION_CANDIDATE / LOCAL_GATES_PASS / NOT_QUALIFIED / NOT_FROZEN`。它必须完成自己的single candidate commit、
+original PR、protected exact-head merge、new exact-main Public CI与Browser Smoke、fresh README/doc309/milestones installed-product readback、
+independent reconciliation与finite closeout；全部闭合也只能取得`EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。冻结必须由
+后继独立docs-only publication取得；旧ReviewSliceSet/Coverage composition authority继续不可消费，manifest successor未选择，
+persistence保持OPEN，public Review与R2–R6均未启动。
