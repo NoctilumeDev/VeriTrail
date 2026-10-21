@@ -6940,3 +6940,17 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与新增doc317。自己的local/original PR/protected merge/exact-main双门、fresh
 README/doc316/doc317/milestones readback、independent reconciliation与finite closeout全部闭合以后，才允许contract frozen生效。
 随后必须返回CONTROL LOOP独立审计implementation feasibility；不得直接创建Schema、fixture、runtime、persistence或public产品。
+
+PR #364已把doc317精确合入`main@8cdd613c3848476f7c4c0162f42581dc32903a33`；original/exact-main双门、fresh
+README/doc316/doc317/milestones、independent reconciliation与174-artifact closeout全部闭合，因此
+`R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN`已生效。fresh CONTROL LOOP的
+[文档318](318-r1-review-derivation-manifest-negative-world-successor-implementation-feasibility-correction-audit.md)
+发现两个正交的unproved upstream seams：四个Fact阻断world只有one-shot handoff与fixture，没有owned Coverage result；corrected
+transition/composition没有same-attempt DerivationEvidence carrier，legacy Evidence projection又只接受旧
+`OwnedRelationSetAdmissionState`。合同未被击穿，但manifest implementation必须保持`NOT_STARTED / NOT_AUTHORIZED`。
+
+文档318只允许README、AGENTS、milestones与新增doc318。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc317/doc318/milestones readback、independent reconciliation与finite closeout全部闭合以后，最多发布
+`IMPLEMENTATION_FEASIBILITY_AUDITED_BLOCKED_BY_UPSTREAM_PRIVATE_AUTHORITY_GAPS` qualified history。随后必须返回CONTROL LOOP，
+独立审计`NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY`；不得直接创建manifest 0.2 Schema、fixture、producer、Evidence、persistence或
+public Review产品。
