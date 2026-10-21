@@ -5524,3 +5524,36 @@ R2_R6_NOT_STARTED
 exact-main Public CI与Browser Smoke、fresh README/doc315/milestones installed-product readback与independent reconciliation全部闭合后，
 最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP；不得从审计直接创建successor Schema/runtime、
 选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+### R1 Review derivation manifest negative-world successor 最小合同候选
+
+文档315已由PR #362精确合入`main@a4fb97ea1a98dbe3014bbae17635396e2d676c85`，tree
+`8b810bd2acb89bb0865ace2a92521e36617dcd6d`。original Public CI `39512467514`、exact-main Public CI
+`39515876073`与Browser Smoke `39515876085`均为attempt 1 SUCCESS。fresh doc315/milestones与versioned README marker
+successor各有一份qualifying PASS；README第一次formal marker selection ERROR按原identity保留，不回填。independent
+reconciliation与184-artifact finite closeout分别为：
+
+```text
+cefd7f3f37130cada58135060cfca5bde2afd0e6c94e49bb282914d015cda0a3
+f821a4ed7f94bfdedfc171806dd8b2f192e151652047e2efceca66a2af2d4470
+```
+
+因此doc315已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP建立
+[文档316](docs/316-r1-review-derivation-manifest-negative-world-successor-contract.md)，选择immutable 0.1的唯一0.2 successor、
+新`COVERAGE` outcome、4项固定前缀、按Ledger presence projection出现的Fact/Relation/Slice carriers与最后一份Ledger。
+cross-artifact conformance identity固定为`r1-review-derivation-manifest-coverage-topology/0.1`；Schema validation不能替代它，
+manifest不复制或推断root truth。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_FEASIBILITY_AUDITED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_CANDIDATE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本contract candidate只允许README、AGENTS、milestones与新增doc316。自己的完整资格链闭合后最多为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；必须再经独立docs-only freeze publication的完整资格链才允许contract frozen。
+随后仍须返回CONTROL LOOP独立审计implementation feasibility；不得直接创建Schema、fixture、runtime、persistence或public产品。

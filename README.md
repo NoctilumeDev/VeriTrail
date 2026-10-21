@@ -280,8 +280,11 @@ python -m venv .venv
   `main@add5a8c…`；original/exact-main双门、fresh README/doc313/doc314/milestones读回、independent reconciliation与finite
   closeout全部闭合，private composition implementation现已frozen。fresh CONTROL LOOP进入
   [manifest negative-world successor可行性审计](docs/315-r1-review-derivation-manifest-negative-world-successor-feasibility-audit.md)：
-  它只审 immutable 0.1 topology、八个0.3 root worlds、实际存在文件的presence projection与cross-artifact falsifiers；不选择
-  正式successor version，不创建Schema/runtime，不选择persistence，也不启动public Review产品或R2–R6。
+  它只审 immutable 0.1 topology、八个0.3 root worlds、实际存在文件的presence projection与cross-artifact falsifiers；现已完成
+  自己的资格链，成为qualified history。fresh CONTROL LOOP进入
+  [manifest negative-world successor最小合同候选](docs/316-r1-review-derivation-manifest-negative-world-successor-contract.md)，
+  选择0.2/`COVERAGE` transport、固定role/path/cardinality与独立cross-artifact conformance；不创建Schema/runtime，
+  不选择persistence，也不启动public Review产品或R2–R6。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
