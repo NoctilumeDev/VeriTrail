@@ -291,6 +291,12 @@ python -m venv .venv
   [实现可行性修正审计](docs/318-r1-review-derivation-manifest-negative-world-successor-implementation-feasibility-correction-audit.md)：
   current runtime没有四个Fact阻断world的owned Coverage结果，corrected path也没有same-attempt Evidence carrier；因此
   manifest implementation保持`NOT_STARTED / NOT_AUTHORIZED`，下一最小seam是negative-world Coverage authority recovery审计。
+  该审计的资格链已在`main@03b6d49…`闭合。fresh CONTROL LOOP进入
+  [negative-world Coverage authority recovery修正审计](docs/319-r1-negative-world-coverage-authority-recovery-audit.md)：normal
+  Relation path保留原始`DerivationInputSet`，但只接受`NORMAL_FULFILLED`；0.1 Fact→Coverage handoff能保留Fact终态与digest，
+  不能枚举四个Fact阻断world所需的完整Snapshot inventory、Policy scope或证明旁路input属于原始same-attempt object graph。
+  当前最小后继是versioned Fact→Coverage exact-input handoff successor feasibility；Coverage producer、manifest implementation与
+  same-attempt Evidence continuity仍为`NOT_STARTED / NOT_AUTHORIZED`。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
