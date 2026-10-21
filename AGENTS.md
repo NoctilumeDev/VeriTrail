@@ -5641,3 +5641,50 @@ R2_R6_NOT_STARTED
 README/doc318/doc319/milestones readback、independent reconciliation与finite closeout全部闭合以后，最多成为
 `AUDITED_BLOCKED_BY_FACT_TO_COVERAGE_HANDOFF_0_1_INPUT_AUTHORITY_GAP / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，
 独立建立handoff successor feasibility；不得直接创建successor、Coverage producer、manifest、Evidence、persistence或public产品。
+
+### R1 Fact→Coverage exact-input successor 私有实现可行性审计候选
+
+文档319已由PR #366从`base=03b6d49a37a09f0d3cd2cdac4dca29454206e704`、
+`head=02271650a83f099a58bd469d466d4c62c097f6c1`、`tree=7615e0d04059f766d103c87383989851b57b7852`
+精确合入`main@9701b192b6b60499b70a5e429ecbbb83b1134b70`。original Public CI `39546108067`、exact-main
+Public CI `39548733536`与Browser Smoke `39548733661`均为attempt 1 SUCCESS；fresh README/doc318/doc319/milestones
+4/4 PASS。independent reconciliation与162-artifact finite closeout分别为：
+
+```text
+e4c080206842e189e31de01b900bd37c24c8149f9ab8aab5648855bd93407fb7
+fd7c23e7665c42747a774decdf5efccc1f05eb4fe31056142876471e6312269e
+```
+
+因此doc319已成为`AUDITED_BLOCKED_BY_FACT_TO_COVERAGE_HANDOFF_0_1_INPUT_AUTHORITY_GAP / QUALIFIED_HISTORY`。
+fresh CONTROL LOOP建立[文档320](docs/320-r1-fact-to-coverage-exact-input-successor-private-implementation-feasibility-audit.md)。
+attempt 1证明`parent._inputs_ref()`不是五终态统一解：required Provider non-success会正确把parent eligibility保持为
+`REVOKED`，live accessor因而拒绝。原四格失败保留为`FEASIBILITY_DESIGN_COUNTEREXAMPLE`，不重解释、不回填。
+
+attempt 2改审`TERMINAL_VALIDATED_ORIGINAL_DERIVATION_INPUT_SET_REFERENCE`：parent先完成既有terminal handoff validation，
+再在同一one-shot closure claim内交付其bound original immutable inputs与BudgetContext。五终态、三个零Parse分母world、
+foreign-equal identity、legacy replay与late-stop falsifiers在Python 3.10.6/3.13.13 × normal/`-O`四格均PASS，canonical
+report SHA-256一致：
+
+```text
+edcc90fdaba37646dc1065c24bb513f79ba2dac17741af0a4bdaef5ef8239a66
+```
+
+focused regression四格各99/99 PASS。0.1 function/consumer/document bytes与历史不变；successor只能携带terminal-validated
+original inputs，不能复活Provider execution、产生Coverage status或取得manifest/Evidence/persistence/public authority。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AUDITED_BLOCKED_BY_FACT_TO_COVERAGE_HANDOFF_0_1_INPUT_AUTHORITY_GAP
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc320。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc319/doc320/milestones readback、independent reconciliation与finite closeout全部闭合后，最多成为
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP独立建立successor contract；不得直接修改runtime、
+创建Coverage producer、实现manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。

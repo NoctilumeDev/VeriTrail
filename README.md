@@ -295,7 +295,10 @@ python -m venv .venv
   [negative-world Coverage authority recovery修正审计](docs/319-r1-negative-world-coverage-authority-recovery-audit.md)：normal
   Relation path保留原始`DerivationInputSet`，但只接受`NORMAL_FULFILLED`；0.1 Fact→Coverage handoff能保留Fact终态与digest，
   不能枚举四个Fact阻断world所需的完整Snapshot inventory、Policy scope或证明旁路input属于原始same-attempt object graph。
-  当前最小后继是versioned Fact→Coverage exact-input handoff successor feasibility；Coverage producer、manifest implementation与
+  当前进入[Fact→Coverage exact-input successor私有实现可行性审计](docs/320-r1-fact-to-coverage-exact-input-successor-private-implementation-feasibility-audit.md)：
+  首个live parent input accessor候选被required Provider failure反例击穿，因为该终态的parent eligibility正确保持`REVOKED`；
+  parent-owned terminal validation后交付其bound original `DerivationInputSet`的versioned one-shot carrier则在五终态、三分母world与
+  identity/late-stop falsifiers中成立。0.1 bytes/history保持不变；successor contract、实现、Coverage producer、manifest与
   same-attempt Evidence continuity仍为`NOT_STARTED / NOT_AUTHORIZED`。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
