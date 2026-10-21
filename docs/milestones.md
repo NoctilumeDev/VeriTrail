@@ -6908,3 +6908,35 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与新增doc316。完整资格链闭合后最多为qualified contract candidate /
 not frozen；后继独立freeze publication闭合以前不得声称contract frozen。之后仍须返回CONTROL LOOP独立判断implementation
 feasibility，不得直接创建Schema/fixture/runtime、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+### R1 Review derivation manifest negative-world successor 合同冻结发布候选
+
+文档316已由PR #363从`base=a4fb97ea1a98dbe3014bbae17635396e2d676c85`、`head=18044cdb8b02a01d42c2571af18a4592d6a35e74`、
+`tree=7ecf71e1e0d05cd3acf7b4fe9e503085c024c3b6`精确合入`main@a0dd817d4fd1743a2de9d5e040afaee2a65697ed`。
+original Public CI `39521206997`、exact-main Public CI `39523916099`与Browser Smoke `39523916109`均attempt 1 SUCCESS；
+fresh README/doc315/doc316/milestones 4/4 PASS。independent reconciliation与184-artifact closeout为：
+
+```text
+9a046576e8404c4615676be0c1338454b0204053e635554ed12dd1a96add4e29
+e45c95c54c0e5bbd768b134cb3ea1acbccb6b547d7eaad2cab525bf34f1b744c
+```
+
+因此doc316是`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档317](317-r1-review-derivation-manifest-negative-world-successor-contract-freeze-publication.md)，只条件化发布
+`R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN`。它不修改doc316、Schema、fixture、runtime、tests、
+workflows、CoverageLedger 0.3、composition或0.1 bytes。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_FEASIBILITY_AUDITED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc317。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc316/doc317/milestones readback、independent reconciliation与finite closeout全部闭合以后，才允许contract frozen生效。
+随后必须返回CONTROL LOOP独立审计implementation feasibility；不得直接创建Schema、fixture、runtime、persistence或public产品。
