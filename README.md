@@ -299,9 +299,12 @@ python -m venv .venv
   已在`main@b8a1ecd…`完成original/exact-main双门、fresh README/doc319/doc320/milestones读回、independent reconciliation与
   finite closeout，现为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。首个live parent input accessor候选仍由required Provider
   failure反例否定；parent-owned terminal validation后交付bound original `DerivationInputSet`的候选成立。fresh CONTROL LOOP进入
-  [0.2 successor最小合同候选](docs/321-r1-fact-to-coverage-exact-input-handoff-successor-contract.md)：它冻结五终态、三分母world、
-  original input/object seal、shared one-shot、live context与fail-closed边界。0.1 bytes/history保持不变；合同冻结、runtime、
-  Coverage producer、manifest与same-attempt Evidence continuity仍未取得authority。
+  [0.2 successor最小合同候选](docs/321-r1-fact-to-coverage-exact-input-handoff-successor-contract.md)已在
+  `main@9727dc3…`完成original/exact-main双门、fresh README/doc320/doc321/milestones读回、independent reconciliation与
+  finite closeout，现为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。它冻结五终态、三分母world、original input/object
+  seal、shared one-shot、live context与fail-closed边界。fresh CONTROL LOOP进入
+  [合同冻结发布候选](docs/322-r1-fact-to-coverage-exact-input-successor-contract-freeze-publication.md)；其完整资格链闭合以前，
+  `CONTRACT_FROZEN`不生效，runtime、Coverage producer、manifest与same-attempt Evidence continuity仍未取得authority。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
