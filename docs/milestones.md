@@ -6954,3 +6954,39 @@ README/doc317/doc318/milestones readback、independent reconciliation与finite c
 `IMPLEMENTATION_FEASIBILITY_AUDITED_BLOCKED_BY_UPSTREAM_PRIVATE_AUTHORITY_GAPS` qualified history。随后必须返回CONTROL LOOP，
 独立审计`NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY`；不得直接创建manifest 0.2 Schema、fixture、producer、Evidence、persistence或
 public Review产品。
+
+### R1 negative-world Coverage authority recovery 修正审计候选
+
+文档318已由PR #365精确合入`main@03b6d49a37a09f0d3cd2cdac4dca29454206e704`，tree
+`1abe4a4fcc958ba306f59c420f355718af699922`。original Public CI `39537858764`、exact-main Public CI
+`39540823614`与Browser Smoke `39540823601`均attempt 1 SUCCESS；fresh README/doc317/doc318/milestones 4/4 PASS。
+independent reconciliation与234-artifact finite closeout为：
+
+```text
+3bb7c89c434d526b675430c9539469aca96b307c6eb5119ebfed4f4399602743
+048fdd8f0196d90d3d14c8fb103b21bd18bae01f3accc6d783055f2b32a47776
+```
+
+fresh CONTROL LOOP建立[文档319](319-r1-negative-world-coverage-authority-recovery-audit.md)。normal Relation path持有原始
+`DerivationInputSet`，但不能消费四个Fact阻断world；0.1 Fact→Coverage handoff保持五分支、Fact历史、digest、one-shot与live
+BudgetContext，却没有`_inputs_ref`或可枚举的Snapshot inventory/total Policy scope carrier。
+
+empty、unsupported-only与Policy-excluded-only三个world的Fact可见状态均为Parse `0/0/0`、Fact U/E `0/0`、FactSet null，
+实际Snapshot/Policy分母分别为`0/0`、`1/1`、`1/1`。因此直接从0.1 handoff构造negative-world Coverage会允许缩小分母；
+内容相等的旁路input也没有原始same-attempt object-graph authority。0.1 history继续冻结，最小重开边界是versioned
+Fact→Coverage exact-input handoff successor feasibility。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_FEASIBILITY_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc319。完整资格链闭合后最多成为qualified correction-audit history；随后
+必须返回CONTROL LOOP建立handoff successor feasibility，不得直接创建successor、Coverage producer、manifest、Evidence、
+persistence或public Review/post-R1 Benchmark/R2–R6。
