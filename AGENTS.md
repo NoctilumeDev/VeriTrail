@@ -5729,3 +5729,39 @@ R2_R6_NOT_STARTED
 README/doc320/doc321/milestones readback、independent reconciliation与finite closeout全部闭合后，最多成为
 `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only freeze publication；不得从本合同
 直接修改runtime、创建Coverage producer、实现manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+### R1 Fact→Coverage exact-input handoff successor 合同冻结发布候选
+
+文档321已由PR #368从`base=b8a1ecd6e01d711f380d0774e7a6920aad005fc8`、
+`head=1c2d82b6502053ed2c1b751568d8ed71a6c58196`、`tree=0c24c45fb52e5f29fc539d96762a31c0e3d0c899`
+精确合入`main@9727dc3ab536ba05ab3bfc0baf9186057fc3e73c`。original Public CI `39564224949`、exact-main
+Public CI `39567939524`与Browser Smoke `39567939496`均为attempt 1 SUCCESS；fresh README/doc320/doc321/milestones
+4/4取得qualifying PASS。doc320 formal #1匿名额度耗尽ERROR仍保留，后继formal #2 PASS不覆盖它。independent reconciliation
+与176-artifact finite closeout分别为：
+
+```text
+e8f98083143bc6be3f326414f9c65f84461b2e73dd820cf03ee1b23de584a71e
+3b1f1ae300ecbfc26637c6298956d2cb838b05366cf2fd5cc5aa371a7e3be209
+```
+
+因此doc321已成为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP进入
+[文档322](docs/322-r1-fact-to-coverage-exact-input-successor-contract-freeze-publication.md)，只发布0.2合同冻结状态，保持
+0.1 bytes/history、runtime、tests、Coverage producer、composition、manifest、Evidence、persistence与public产品不变。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AUDITED_BLOCKED_BY_FACT_TO_COVERAGE_HANDOFF_0_1_INPUT_AUTHORITY_GAP
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc322。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc321/doc322/milestones readback、independent reconciliation与finite closeout全部闭合后，才让`CONTRACT_FROZEN`
+生效。按人类停止线，#369闭合后立即暂停，不创建#370或启动implementation feasibility。
