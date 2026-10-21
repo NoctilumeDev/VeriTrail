@@ -7033,3 +7033,38 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与新增doc320。完整资格链闭合后最多成为`FEASIBILITY_AUDITED /
 QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP独立建立successor contract，不得直接修改runtime、创建Coverage producer、实现
 manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+## R1 Fact→Coverage exact-input handoff successor 最小合同候选
+
+文档320已由PR #367精确合入`main@b8a1ecd6e01d711f380d0774e7a6920aad005fc8`，tree
+`f58e3be4110885ab0760e4faa2d71ff3321e7dbf`。original Public CI `39555193491`、exact-main Public CI
+`39558171201`与Browser Smoke `39558171203`均attempt 1 SUCCESS；fresh README/doc319/doc320/milestones 4/4 PASS。
+independent reconciliation与166-artifact finite closeout分别为：
+
+```text
+2959c0b5288abd97e15e00547a6845327f8ee64849e095831d33d0314877beb5
+7d235b233a27878dfe8e6150a6eaf0d0485ccfe024b78e8cfcc4de621e96e9a0
+```
+
+因此doc320是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP进入
+[文档321](321-r1-fact-to-coverage-exact-input-handoff-successor-contract.md)，冻结唯一0.2 function/purpose/consumer/carrier
+identity、五terminal branches、三个zero-Parse分母world、original `DerivationInputSet` object+seal、live BudgetContext与shared
+one-shot竞争。parent必须先完成terminal validation，再在同一同步claim交付bound original inputs；required-provider-failure不得复活
+execution eligibility，equal foreign inputs、late stop、mutation、cross-attempt与replay全部fail closed。0.1 bytes/API/history保持不变。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AUDITED_BLOCKED_BY_FACT_TO_COVERAGE_HANDOFF_0_1_INPUT_AUTHORITY_GAP
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc321。完整资格链闭合后最多成为`QUALIFIED_CONTRACT_CANDIDATE /
+NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立freeze publication，不得直接修改runtime、创建Coverage producer、实现
+manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
