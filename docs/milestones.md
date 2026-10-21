@@ -6990,3 +6990,46 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与新增doc319。完整资格链闭合后最多成为qualified correction-audit history；随后
 必须返回CONTROL LOOP建立handoff successor feasibility，不得直接创建successor、Coverage producer、manifest、Evidence、
 persistence或public Review/post-R1 Benchmark/R2–R6。
+
+## R1 Fact→Coverage exact-input successor 私有实现可行性审计候选
+
+文档319已由PR #366精确合入`main@9701b192b6b60499b70a5e429ecbbb83b1134b70`，tree
+`7615e0d04059f766d103c87383989851b57b7852`。original Public CI `39546108067`、exact-main Public CI
+`39548733536`与Browser Smoke `39548733661`均attempt 1 SUCCESS；fresh README/doc318/doc319/milestones 4/4 PASS。
+independent reconciliation与162-artifact finite closeout为：
+
+```text
+e4c080206842e189e31de01b900bd37c24c8149f9ab8aab5648855bd93407fb7
+fd7c23e7665c42747a774decdf5efccc1f05eb4fe31056142876471e6312269e
+```
+
+fresh CONTROL LOOP进入[文档320](320-r1-fact-to-coverage-exact-input-successor-private-implementation-feasibility-audit.md)。
+attempt 1在四格都证明live `parent._inputs_ref()`候选不能覆盖required Provider non-success：该终态的parent eligibility正确为
+`REVOKED`，所以live accessor拒绝。该`FEASIBILITY_DESIGN_COUNTEREXAMPLE`及原始输出永久保留。
+
+attempt 2改为parent-owned terminal validation后交付bound original `DerivationInputSet`与BudgetContext，并与0.1/legacy
+continuation共享closure的one-shot claim。五终态、三个零Parse分母world、foreign-equal identity、legacy replay与late-stop
+falsifiers在Python 3.10.6/3.13.13 × normal/`-O`四格均PASS，canonical report SHA-256为：
+
+```text
+edcc90fdaba37646dc1065c24bb513f79ba2dac17741af0a4bdaef5ef8239a66
+```
+
+focused regression四格各99/99 PASS。该结果只支持bounded versioned successor可行；0.1 bytes/history不变，正式contract与
+runtime仍未授权。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AUDITED_BLOCKED_BY_FACT_TO_COVERAGE_HANDOFF_0_1_INPUT_AUTHORITY_GAP
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc320。完整资格链闭合后最多成为`FEASIBILITY_AUDITED /
+QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP独立建立successor contract，不得直接修改runtime、创建Coverage producer、实现
+manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
