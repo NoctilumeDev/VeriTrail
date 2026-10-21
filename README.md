@@ -286,8 +286,11 @@ python -m venv .venv
   选择0.2/`COVERAGE` transport、固定role/path/cardinality与独立cross-artifact conformance。该candidate已由PR #363精确合入
   `main@a0dd817…`；original/exact-main双门、fresh README/doc315/doc316/milestones读回、independent reconciliation与
   184-artifact finite closeout全部闭合，现为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP进入
-  [独立合同冻结发布](docs/317-r1-review-derivation-manifest-negative-world-successor-contract-freeze-publication.md)；
-  它只条件化发布contract frozen target，不创建Schema/runtime，不选择persistence，也不启动public Review产品或R2–R6。
+  [独立合同冻结发布](docs/317-r1-review-derivation-manifest-negative-world-successor-contract-freeze-publication.md)；其完整资格链已在
+  `main@8cdd613…`闭合，0.2 successor contract现为`FROZEN`。fresh CONTROL LOOP随后进入
+  [实现可行性修正审计](docs/318-r1-review-derivation-manifest-negative-world-successor-implementation-feasibility-correction-audit.md)：
+  current runtime没有四个Fact阻断world的owned Coverage结果，corrected path也没有same-attempt Evidence carrier；因此
+  manifest implementation保持`NOT_STARTED / NOT_AUTHORIZED`，下一最小seam是negative-world Coverage authority recovery审计。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
