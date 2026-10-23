@@ -484,6 +484,9 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Post-R1 外部错题本 Benchmark 与 Oracle 资格计划](docs/292-post-r1-external-counterexample-benchmark-and-oracle-qualification-plan.md)
   保存 R1 完整闭合后的外部反例攻击方法、claim-specific Oracle independence、common-mode falsifiers 与 Attention
   效益边界。它当前为 `PLANNED / NOT_STARTED`，不改变 R1 主线，也不启动 R2、R3 或公共 Benchmark 产品。
+- [青野外部语义角色绑定反例收件记录](docs/323-external-semantic-role-binding-counterexample-intake.md)保存一条
+  `SchemaValid + Authorized + SourceExcerptExists` 仍不能推出 `RoleBindingCorrect` 的外部观察。它当前仅为
+  `INTAKE_CAPTURED / RESEARCH_NOT_STARTED`，不改变 R1 状态，也不证明案例或 Oracle 已取得资格。
 
 ### 想看外部方法参照
 
