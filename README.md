@@ -316,10 +316,16 @@ python -m venv .venv
   [maintenance资格恢复](docs/325-r1-workbench-vitest-undici-maintenance-qualification-recovery.md)已由PR #376精确合入
   `main@ebeb890…`，完成original/exact-main双门、fresh README/doc324/doc325/milestones读回、independent
   reconciliation与finite closeout，现为`MAINTENANCE_QUALIFICATION_RECOVERY_AUDITED / QUALIFIED_HISTORY`；它不解释或
-  回填#372/#373。fresh CONTROL LOOP现进入
-  [Fact→Coverage successor私有实现授权恢复发布候选](docs/326-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-recovery-publication.md)：
-  它从新的exact world重验0.2合同、maintenance恢复及全部保留失败，只条件化发布bounded private implementation authority；
-  自己的最后门闭合前implementation仍为`NOT_AUTHORIZED / NOT_STARTED`。
+  回填#372/#373。fresh CONTROL LOOP随后建立
+  [Fact→Coverage successor私有实现授权恢复发布](docs/326-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-recovery-publication.md)。
+  PR #377的original Public CI `40506198552` attempt 1为11/11 SUCCESS，并以exact head `7c9ba8b…`合入
+  `main@310285a…`；Browser Smoke `40510081338` attempt 1为1/1 SUCCESS，但exact-main Public CI
+  `40510081408` attempt 1在required Starter job `122222945703`观察到desktop console
+  `net::ERR_NO_BUFFER_SPACE`，以10/11 FAILURE终结。既有oracle正确拒绝，精确失败resource与底层host原因均保持UNKNOWN；
+  installed-product readback没有启动，文档326保持`MERGED / NOT_QUALIFIED`，implementation仍为
+  `NOT_AUTHORIZED / NOT_STARTED`。fresh CONTROL LOOP现进入
+  [exact-main资格失败边界审计](docs/327-r1-fact-to-coverage-successor-authorization-recovery-exact-main-qualification-failure-boundary-audit.md)，
+  只冻结失败identity、qualification effect与最小恢复seam，不弱化oracle、不rerun，也不回填#377。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
