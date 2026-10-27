@@ -7303,3 +7303,41 @@ R2_R6_NOT_STARTED
 文档328完整资格链闭合后，只让bounded A–I private implementation authority生效并保持implementation`NOT_STARTED`；随后返回
 CONTROL LOOP。禁止回填#377、弱化required oracle、把publication当成implementation、创建Coverage producer、消费旧composition
 authority、选择manifest/persistence或启动R2–R6。
+
+## R1 Fact→Coverage exact-input successor 私有实现候选
+
+文档328由PR #379完成original/exact-main双门、fresh七目标readback、independent reconciliation
+`8861f480d643904fd75ed61afe09ccd61a4c978a8a3fcb253625d7927e729050`与finite closeout
+`72ae34c8ec41ab963c4dee2a8bc005c131f60d12e69982f521250bfa0d15e382`，精确形成
+`main@494fedb1fbae9d5f847cb9f1873e7e13996b893a`。active adapter freeze attempt 2为
+`8799458f7bb570e8291c00f206537ecdf49602ba3b75941d1e7f5e61762cef7c`；错误upstream coordinate、过早freeze
+attempt 1与#377 exact-main failure/UNKNOWN继续保留。因此bounded A–I `PRIVATE_IMPLEMENTATION_ALLOWED`已生效。
+
+fresh CONTROL LOOP建立
+[文档329](329-r1-fact-to-coverage-exact-input-successor-private-implementation-candidate.md)。candidate新增private versioned 0.2
+terminal-bound carrier：parent先重验Fact terminal source，再返回原始`BudgetContext`与原始`DerivationInputSet`；新claim与legacy
+continuation、Coverage 0.1及Relation共享one-shot；carrier每次读取都重验live context、input seal、三canonical bytes、blob map、
+五digest、source与claim identity。五terminal branches、三zero-Parse denominator worlds与required-provider-failure都保留原始输入
+identity，且不创建Coverage outcome、ledger、manifest或public authority。
+
+source review在formal qualification前修复foreign-closure substitution可能未撤销原bound authority的private implementation defect；
+旧字节测试全部降为non-qualifying，并由fresh final四格重跑。semantic attempt 1 proof schema error、attempt 2旧字节与全部test setup
+history均保留。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones、doc329、`_fact_fulfillment.py`、private carrier module与private test。自己的
+local/original PR/protected merge/exact-main双门、fresh README/doc329/milestones readback、independent reconciliation与finite
+closeout全部闭合后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+FROZEN必须另建docs-only publication；不得启动Coverage producer、旧composition消费、manifest/Evidence/persistence、public Review
+或R2–R6。
