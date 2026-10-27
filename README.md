@@ -313,9 +313,13 @@ python -m venv .venv
   已在`main@c850332…`完成自己的original/exact-main双门、fresh README/doc324/milestones读回、independent
   reconciliation与finite closeout，现为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；precise decisive assertion仍保持
   `UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`，不回填#372/#373。fresh CONTROL LOOP进入
-  [maintenance资格恢复候选](docs/325-r1-workbench-vitest-undici-maintenance-qualification-recovery.md)：它在新的exact world
-  重新核验Vitest/`@vitest/mocker` 4.1.12、undici 7.30.1、零advisory与完整required gates，并把#373失败与doc324
-  qualified history作为独立输入；它不是rerun、空提交或旧world资格回填。
+  [maintenance资格恢复](docs/325-r1-workbench-vitest-undici-maintenance-qualification-recovery.md)已由PR #376精确合入
+  `main@ebeb890…`，完成original/exact-main双门、fresh README/doc324/doc325/milestones读回、independent
+  reconciliation与finite closeout，现为`MAINTENANCE_QUALIFICATION_RECOVERY_AUDITED / QUALIFIED_HISTORY`；它不解释或
+  回填#372/#373。fresh CONTROL LOOP现进入
+  [Fact→Coverage successor私有实现授权恢复发布候选](docs/326-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-recovery-publication.md)：
+  它从新的exact world重验0.2合同、maintenance恢复及全部保留失败，只条件化发布bounded private implementation authority；
+  自己的最后门闭合前implementation仍为`NOT_AUTHORIZED / NOT_STARTED`。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

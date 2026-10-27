@@ -5861,3 +5861,48 @@ R2_R6_NOT_STARTED
 README/doc324/doc325/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，最多成为
 `MAINTENANCE_QUALIFICATION_RECOVERY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新的exact main重建独立
 implementation authorization；禁止rerun、空提交、回填#372/#373、弱化required Core gate或直接启动runtime/Coverage施工。
+
+### R1 Fact→Coverage exact-input successor 私有实现授权恢复发布候选
+
+文档325已由PR #376从`base=c8503321934a8f65fc8744dc503cb1d476ab28a2`、
+`head=01267dc7bcb6d0a752a58bf81721c95ae57d3c19`、`tree=8b14018edf7f77b6bc5eb540204e8e084243c43b`
+精确合入`main@ebeb890da1936cc15bcefe7e23c9bd532efd4787`。original Public CI `40495667837`、exact-main
+Public CI `40499231916`与Browser Smoke `40499231632`均为attempt 1 SUCCESS；fresh
+README/doc324/doc325/milestones 4/4取得唯一qualifying PASS。readback bootstrap的`--no-index` dependency wheelhouse误判与
+首次Plan id前缀超长setup ERROR均保留。independent reconciliation与167-artifact finite closeout分别为：
+
+```text
+5f514c9fbcb24e1a89154632dc79cfe2407f8bd3293b0243f7bbd6082ab5b559
+31c83dc18a5b19b98d95779b61dfa6895a00205d7b9ca56a2fe39d09457488a0
+```
+
+因此maintenance recovery现为`AUDITED / QUALIFIED_HISTORY`，但PR #372/#373的失败与UNKNOWN原身份不变。fresh CONTROL
+LOOP从`main@ebeb890…`建立[文档326](docs/326-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-recovery-publication.md)。
+独立continuity audit重新核对四个private source、docs320–325、contract/maintenance资格链、五个terminal world、三个zero-Parse
+denominator world、same-object identity与shared one-shot falsifiers；Python 3.10.6/3.13 × normal/`-O`四格语义一致，focused
+suite每格99/99 PASS。continuity qualification SHA-256为：
+
+```text
+a6aa4f4fa8ee63431cfb89b10867d66fa78ff39304ee610c7bc5983b5f00a588
+```
+
+Codex worktree工具因app当前目录不是Git仓库返回的setup ERROR已经保留，qualification effect为NONE；后继从显式VeriTrail
+仓库与exact commit建立隔离worktree。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_RECOVERY_PUBLICATION_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc326。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc321/doc322/doc324/doc325/doc326/milestones installed-product readback、independent reconciliation与finite closeout
+全部闭合后，才让`PRIVATE_IMPLEMENTATION_ALLOWED`生效；implementation仍保持`NOT_STARTED`并返回CONTROL LOOP。禁止回填
+#372/#373、弱化required gate、直接创建Coverage producer、消费旧composition authority、选择manifest/persistence或启动R2–R6。

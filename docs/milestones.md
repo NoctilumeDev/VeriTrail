@@ -7186,3 +7186,45 @@ R2_R6_NOT_STARTED
 `MAINTENANCE_QUALIFICATION_RECOVERY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP并从新的exact main重建
 implementation authorization。禁止rerun、retry-until-PASS、空提交、回填#372/#373、弱化required Core gate或直接启动
 runtime/Coverage施工。
+
+## R1 Fact→Coverage exact-input successor 私有实现授权恢复发布候选
+
+PR #376已把文档325从`base=c8503321934a8f65fc8744dc503cb1d476ab28a2`、
+`head=01267dc7bcb6d0a752a58bf81721c95ae57d3c19`、`tree=8b14018edf7f77b6bc5eb540204e8e084243c43b`
+精确合入`main@ebeb890da1936cc15bcefe7e23c9bd532efd4787`。original Public CI `40495667837`、exact-main
+Public CI `40499231916`与Browser Smoke `40499231632`均为attempt 1 SUCCESS。fresh README/doc324/doc325/milestones
+4/4取得唯一qualifying PASS；bootstrap wheelhouse与首次Plan id前缀setup ERROR保持原身份。independent reconciliation与
+167-artifact finite closeout分别为：
+
+```text
+5f514c9fbcb24e1a89154632dc79cfe2407f8bd3293b0243f7bbd6082ab5b559
+31c83dc18a5b19b98d95779b61dfa6895a00205d7b9ca56a2fe39d09457488a0
+```
+
+因此文档325现为`MAINTENANCE_QUALIFICATION_RECOVERY_AUDITED / QUALIFIED_HISTORY`；PR #372/#373的失败、未资格化与
+`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`均不被回填。fresh CONTROL LOOP从新exact main建立
+[文档326](326-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-recovery-publication.md)。独立continuity
+audit重新核对四个private source、docs320–325、全部qualification identity、五terminal worlds、三个zero-Parse denominator
+worlds、same-object identity与shared one-shot falsifiers；Python 3.10.6/3.13 × normal/`-O`四格语义一致，focused regression
+每格99/99 PASS。continuity qualification SHA-256为：
+
+```text
+a6aa4f4fa8ee63431cfb89b10867d66fa78ff39304ee610c7bc5983b5f00a588
+```
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_RECOVERY_PUBLICATION_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与doc326。完整资格链闭合前`PRIVATE_IMPLEMENTATION_ALLOWED`不生效；闭合以后
+implementation仍为`NOT_STARTED`，必须返回CONTROL LOOP。禁止回填#372/#373、弱化required gate、直接实现Coverage producer、
+消费旧composition authority、选择manifest/persistence或启动R2–R6。
