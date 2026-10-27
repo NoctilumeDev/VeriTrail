@@ -5765,3 +5765,40 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与新增doc322。自己的local/original PR/protected merge/exact-main双门、fresh
 README/doc321/doc322/milestones readback、independent reconciliation与finite closeout全部闭合后，才让`CONTRACT_FROZEN`
 生效。按人类停止线，#369闭合后立即暂停，不创建#370或启动implementation feasibility。
+
+## R1 Fact→Coverage exact-input successor 私有实现授权发布候选
+
+文档322已由PR #369精确合入`main@b2626e8e31c7c2681dc87e74dff799471886648b`，tree
+`b757b130c767013a8f2f3db621e83123cf629ee4`。original Public CI `39573932263`、exact-main Public CI
+`39578176854`与Browser Smoke `39578176781`均为attempt 1 SUCCESS；fresh README/doc321/doc322/milestones 4/4取得
+qualifying PASS。independent reconciliation与160-artifact finite closeout为：
+
+```text
+f1cefeaa6f7d4deb862cc4a5f9a8684774e6d85718587b32ae1a911f2523e050
+78bce5110f50afcdb961b48be9369d4b36724d7e7019747f020eb23c4c26d73a
+```
+
+因此0.2 contract已经`FROZEN`。2026-10-27人类明确恢复R1长任务；fresh CONTROL LOOP重新核对doc320/321/322、四个private source
+seam、五终态、三分母、equal-foreign、shared one-shot、late-stop与required-failure边界。Python 3.10/3.13 × normal/`-O`四格
+continuity report一致，focused suite每格99/99 PASS；qualification SHA为
+`16e7a304af5c9eb26a2c37e315a5629c7d9971882e7cb00a2742a9e8e682294b`。因此fresh CONTROL LOOP进入
+[文档323](docs/323-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-publication.md)，只发布bounded A–I
+private implementation authority。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc323。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc321/doc322/doc323/milestones readback、independent reconciliation与finite closeout全部闭合后，才让
+`PRIVATE_IMPLEMENTATION_ALLOWED`生效；随后必须返回CONTROL LOOP，不能把authorization publication算作implementation evidence。
