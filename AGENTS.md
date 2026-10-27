@@ -5765,3 +5765,57 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与新增doc322。自己的local/original PR/protected merge/exact-main双门、fresh
 README/doc321/doc322/milestones readback、independent reconciliation与finite closeout全部闭合后，才让`CONTRACT_FROZEN`
 生效。按人类停止线，#369闭合后立即暂停，不创建#370或启动implementation feasibility。
+
+### R1 Workbench Vitest/undici maintenance exact-main 资格失败边界审计候选
+
+PR #369已精确合入`main@b2626e8e31c7c2681dc87e74dff799471886648b`，tree
+`b757b130c767013a8f2f3db621e83123cf629ee4`。original Public CI `39573932263`、exact-main Public CI
+`39578176854`与Browser Smoke `39578176781`均为attempt 1 SUCCESS；fresh README/doc321/doc322/milestones 4/4 PASS。
+independent reconciliation与150-artifact finite closeout为：
+
+```text
+f1cefeaa6f7d4deb862cc4a5f9a8684774e6d85718587b32ae1a911f2523e050
+78bce5110f50afcdb961b48be9369d4b36724d7e7019747f020eb23c4c26d73a
+```
+
+因此`R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN`已生效。第一次docs-only implementation
+authorization PR #372的original Public CI `40470062665` attempt 1因Vitest 4.1.11与undici 7.30.0的五个advisory
+以9 SUCCESS / 1 FAILURE / 1 SKIPPED终结；PR关闭且未合并，保持`CLOSED / UNMERGED / NOT_QUALIFIED`。
+
+独立maintenance PR #373只把`web/package.json`与`web/package-lock.json`更新到Vitest/`@vitest/mocker` 4.1.12及
+undici 7.30.1。两次fresh构造与本地tests/lint/build/audit全部PASS，original Public CI `40474320234` attempt 1为
+11/11 SUCCESS，随后精确合入`main@5aeb53eeb0cca2dc92175fb5dfe4521388dca67a`，tree
+`96ff0ce193799760c41676404f1d33af63652ba9`。
+
+new exact-main Browser Smoke `40478059772` attempt 1为1/1 SUCCESS，但Public CI `40478059827` attempt 1为
+3 SUCCESS / 1 FAILURE / 4 SKIPPED。Python 3.10 job `122101107016`的Core regression在494项中仅
+`test_catalog_accepts_public_m10_outcomes_and_isolates_a_corrupt_copy`失败：expected top-level verdict `PASS`，actual
+`FAIL`。日志没有保留该临时Bundle的decisive assertion或attachments，故precise cause只能保持
+`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`。同一run的Python 3.13与Workbench job成功；CPython 3.10.6 isolated repeat
+PASS只属non-qualifying diagnostic，不解释或回填原失败。maintenance因此保持`MERGED / NOT_QUALIFIED`，installed Workbench
+readback没有启动。
+
+fresh CONTROL LOOP建立
+[文档324](docs/324-r1-workbench-vitest-undici-maintenance-exact-main-qualification-failure-boundary-audit.md)，只冻结失败identity、
+qualification effect与recovery seam。它保持Core/Workbench runtime、tests、fixtures、workflow、required lane、timeout、oracle、
+docs/321–322、Schema、Coverage、manifest与persistence为base bytes。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PR_372_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_WORKBENCH_VITEST_UNDICI_ADVISORY_MAINTENANCE_MERGED_NOT_QUALIFIED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_EXACT_MAIN_PUBLIC_CI_FAILED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc324。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc324/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP；只有存在新工程事实与新资格责任时，才允许建立
+独立maintenance recovery candidate，再从恢复后的新exact main重建implementation authorization。禁止rerun、retry until PASS、
+空提交、回填PR #372/#373或弱化required Core gate。
