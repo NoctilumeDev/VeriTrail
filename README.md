@@ -303,8 +303,14 @@ python -m venv .venv
   `main@9727dc3…`完成original/exact-main双门、fresh README/doc320/doc321/milestones读回、independent reconciliation与
   finite closeout，现为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。它冻结五终态、三分母world、original input/object
   seal、shared one-shot、live context与fail-closed边界。fresh CONTROL LOOP进入
-  [合同冻结发布候选](docs/322-r1-fact-to-coverage-exact-input-successor-contract-freeze-publication.md)；其完整资格链闭合以前，
-  `CONTRACT_FROZEN`不生效，runtime、Coverage producer、manifest与same-attempt Evidence continuity仍未取得authority。
+  [合同冻结发布](docs/322-r1-fact-to-coverage-exact-input-successor-contract-freeze-publication.md)，并在`main@b2626e8…`
+  完成original/exact-main双门、fresh README/doc321/doc322/milestones读回、independent reconciliation与finite closeout；
+  `R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN`已经生效。第一次implementation authorization
+  PR #372因Vitest/undici advisory关闭且未合并。独立PR #373修正依赖后合入`main@5aeb53e…`，但其exact-main Public CI
+  `40478059827` attempt 1在未改动的Python 3.10 M10正向fixture中观察到`PASS -> FAIL`，因此maintenance保持
+  `MERGED / NOT_QUALIFIED`，authorization仍未生效。当前进入
+  [exact-main资格失败边界审计](docs/324-r1-workbench-vitest-undici-maintenance-exact-main-qualification-failure-boundary-audit.md)；
+  precise decisive assertion保持`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`，禁止rerun、回填或弱化required Core gate。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

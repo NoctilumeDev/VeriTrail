@@ -7101,3 +7101,47 @@ R2_R6_NOT_STARTED
 
 本publication只允许README、AGENTS、milestones与新增doc322。自己的完整资格链闭合以前，`CONTRACT_FROZEN`只是条件target；
 #369闭合后按人类停止线立即暂停，不创建#370或启动implementation feasibility。
+
+## R1 Workbench Vitest/undici maintenance exact-main 资格失败边界审计候选
+
+PR #369已合入`main@b2626e8e31c7c2681dc87e74dff799471886648b`并完成original/exact-main双门、fresh
+README/doc321/doc322/milestones 4/4读回、independent reconciliation
+`f1cefeaa6f7d4deb862cc4a5f9a8684774e6d85718587b32ae1a911f2523e050`与150-artifact finite closeout
+`78bce5110f50afcdb961b48be9369d4b36724d7e7019747f020eb23c4c26d73a`。因此Fact→Coverage exact-input successor
+0.2合同已经`FROZEN`。
+
+第一次implementation authorization PR #372的original Public CI `40470062665` attempt 1在Workbench dependency audit
+观察到Vitest 4.1.11与undici 7.30.0的五个advisory；该PR以9 SUCCESS / 1 FAILURE / 1 SKIPPED终结，关闭且未合并。
+独立maintenance PR #373只修改`web/package.json`与`web/package-lock.json`，将Vitest/`@vitest/mocker`更新到4.1.12、
+undici更新到7.30.1；本地fresh construction、tests/lint/build/audit与original Public CI `40474320234` attempt 1
+11/11均PASS。protected merge为`main@5aeb53eeb0cca2dc92175fb5dfe4521388dca67a`，tree
+`96ff0ce193799760c41676404f1d33af63652ba9`。
+
+该merge的Browser Smoke `40478059772` attempt 1为1/1 SUCCESS，Public CI `40478059827` attempt 1却以
+3 SUCCESS / 1 FAILURE / 4 SKIPPED终结。Python 3.10 job `122101107016`在494项Core regression中只观察到一个
+既有M10正向fixture失败：`test_catalog_accepts_public_m10_outcomes_and_isolates_a_corrupt_copy`的expected verdict为
+`PASS`、actual为`FAIL`。该test/log没有保留decisive assertion或临时Bundle，precise cause保持
+`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`。同run Python 3.13与Workbench job均SUCCESS；隔离Python 3.10复跑PASS不解释、
+不回填原失败。故maintenance已merge但没有qualification，installed-product readback没有启动。
+
+[文档324](324-r1-workbench-vitest-undici-maintenance-exact-main-qualification-failure-boundary-audit.md)只冻结失败identity、
+资格影响与最小恢复边界：先让本failure-boundary audit取得自己的完整资格，再由fresh CONTROL LOOP判断是否存在具有新事实与
+新责任的maintenance recovery candidate；maintenance恢复以后才能重建implementation authorization。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PR_372_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_WORKBENCH_VITEST_UNDICI_ADVISORY_MAINTENANCE_MERGED_NOT_QUALIFIED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_EXACT_MAIN_PUBLIC_CI_FAILED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDIT_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc324。完整资格链闭合以前不得声称
+`FAILURE_BOUNDARY_AUDITED`；闭合以后也不得rerun #373、回填#372/#373、以空提交重试、弱化required Core gate或直接启动
+Fact→Coverage implementation。
