@@ -55,6 +55,7 @@ from veritrail_review._windows_execution_cell import (
 )
 from veritrail_review.budget import BudgetContext, BudgetState
 from veritrail_review.canonical import canonical_json_bytes, semantic_digest
+from veritrail_review.derivation_input_contracts import DerivationInputSet
 from veritrail_review.errors import BudgetPrimitiveError
 
 
@@ -64,6 +65,7 @@ _CLAIMED_TOKEN = object()
 _OBSERVATION_TOKEN = object()
 _CLOSURE_TOKEN = object()
 _CONTINUATION_TOKEN = object()
+_EXACT_INPUT_HANDOFF_TOKEN = object()
 
 
 class ProductFactConsumerError(ValueError):
@@ -477,7 +479,11 @@ class OwnedProductFactConsumer:
 
     def _authorize_handoff_domain(self, purpose: str) -> None:
         allowed = {
-            "LEGACY": {"LEGACY_CONTINUATION", "COVERAGE_HANDOFF"},
+            "LEGACY": {
+                "LEGACY_CONTINUATION",
+                "COVERAGE_HANDOFF",
+                "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2",
+            },
             "RELATION_TRANSITION": {"RELATION_HANDOFF"},
         }
         if (
@@ -755,6 +761,31 @@ class OwnedProductFactConsumer:
                 raise
             raise ProductFactConsumerError(
                 "Fact handoff source validation failed closed"
+            ) from exc
+
+    def _handoff_source_with_original_inputs(
+        self, closure: "OwnedProductFactClosure", *, _token: object
+    ) -> tuple[dict[str, object], BudgetContext, DerivationInputSet]:
+        """Return the bound inputs only after terminal Fact revalidation."""
+
+        try:
+            if _token is not _EXACT_INPUT_HANDOFF_TOKEN:
+                raise ValueError
+            source, context = self._handoff_source_document(closure)
+            if (
+                self.__inputs is not self.__bound_inputs
+                or context is not self.__context
+                or type(self.__inputs) is not DerivationInputSet
+                or _input_state_seal(self.__inputs) != self.__input_seal
+            ):
+                raise ValueError
+            return source, context, self.__inputs
+        except Exception as exc:
+            self._revoke()
+            if isinstance(exc, ProductFactConsumerError):
+                raise
+            raise ProductFactConsumerError(
+                "Fact exact-input handoff validation failed closed"
             ) from exc
 
     def reconcile(
@@ -1162,6 +1193,48 @@ class OwnedProductFactClosure:
         except Exception:
             self.__parent._revoke()
             raise
+
+    def _claim_exact_input_successor_source(
+        self,
+    ) -> tuple[dict[str, object], BudgetContext, DerivationInputSet]:
+        """Claim the shared source for the versioned exact-input successor."""
+
+        with self.__lock:
+            if self.__claimed:
+                raise ProductFactConsumerError("consumer source already consumed")
+            self.__claimed = True
+            self.__claim_purpose = (
+                "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2"
+            )
+        try:
+            self.__parent._authorize_handoff_domain(
+                "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2"
+            )
+            return self.__parent._handoff_source_with_original_inputs(
+                self, _token=_EXACT_INPUT_HANDOFF_TOKEN
+            )
+        except Exception:
+            self.__parent._revoke()
+            raise
+
+    def _validate_exact_input_successor_source(
+        self,
+    ) -> tuple[dict[str, object], BudgetContext, DerivationInputSet]:
+        """Revalidate a previously claimed exact-input carrier source."""
+
+        with self.__lock:
+            if (
+                not self.__claimed
+                or self.__claim_purpose
+                != "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2"
+            ):
+                self.__parent._revoke()
+                raise ProductFactConsumerError(
+                    "exact-input successor source is not claimed"
+                )
+        return self.__parent._handoff_source_with_original_inputs(
+            self, _token=_EXACT_INPUT_HANDOFF_TOKEN
+        )
 
     def _observations_ref(self) -> tuple[OwnedProductFactObservation, ...]:
         self.document_copy()

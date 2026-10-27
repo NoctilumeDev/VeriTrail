@@ -328,7 +328,12 @@ python -m venv .venv
   closeout均已闭合；formal README #1额度ERROR继续保留，文档327现为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，且不
   回填#377。新的
   [authorization recovery successor publication](docs/328-r1-fact-to-coverage-exact-input-successor-private-implementation-authorization-recovery-successor-publication.md)
-  只发布一份条件化的bounded A–I authority；其完整资格链闭合以前，implementation仍为`NOT_AUTHORIZED / NOT_STARTED`。
+  已由PR #379完成original/exact-main双门、fresh七目标readback、independent reconciliation与finite closeout，bounded A–I
+  `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh CONTROL LOOP进入
+  [private implementation candidate](docs/329-r1-fact-to-coverage-exact-input-successor-private-implementation-candidate.md)：它以
+  terminal-bound parent accessor交付原始`DerivationInputSet`与`BudgetContext`，把successor纳入shared one-shot，并在每次
+  carrier read重验input seal、canonical bytes、blob map、五digest、source与live context；当前只为candidate，仍未FROZEN，
+  也没有创建Coverage producer或恢复旧composition authority。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

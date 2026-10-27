@@ -5985,3 +5985,49 @@ R2_R6_NOT_STARTED
 文档328完整资格链闭合后，只让bounded A–I private implementation authority生效并保持implementation`NOT_STARTED`；随后必须
 返回CONTROL LOOP。禁止把本publication当作实现证据、回填#377、弱化required oracle、创建Coverage producer、消费旧composition
 authority、选择manifest/persistence或启动R2–R6。
+
+### R1 Fact→Coverage exact-input successor 私有实现候选
+
+文档328已由PR #379完整闭合并精确形成`main@494fedb1fbae9d5f847cb9f1873e7e13996b893a`，tree
+`c60c01e5a1a380fe1aba0c217faa834241bea545`。original Public CI `40531345541`、exact-main Public CI
+`40535859530`与Browser Smoke `40535859486`均为attempt 1 SUCCESS；fresh七目标readback取得唯一qualifying PASS。
+independent reconciliation、finite closeout与active adapter freeze attempt 2分别为：
+
+```text
+8861f480d643904fd75ed61afe09ccd61a4c978a8a3fcb253625d7927e729050
+72ae34c8ec41ab963c4dee2a8bc005c131f60d12e69982f521250bfa0d15e382
+8799458f7bb570e8291c00f206537ecdf49602ba3b75941d1e7f5e61762cef7c
+```
+
+错误upstream coordinate与过早adapter freeze attempt 1保持原identity；#377 exact-main failure、Artifact `12737259914`、
+resource `UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`与root cause `UNKNOWN`也不被回填。因此
+`R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。
+
+fresh CONTROL LOOP进入
+[文档329](docs/329-r1-fact-to-coverage-exact-input-successor-private-implementation-candidate.md)。本candidate新增versioned private
+0.2 carrier：parent-only terminal accessor在完整Fact terminal revalidation以后返回同一source、原始`BudgetContext`与原始
+`DerivationInputSet`；successor与legacy continuation、Coverage 0.1及Relation共享one-shot；每次carrier read重验context、stop、
+deadline、input seal、三canonical bytes、blob map、五digest、source与claim identity。它保留五terminal branch与三zero-Parse
+denominator world，且只返回copy-owned input truth，不产生Coverage outcome、ledger或manifest authority。
+
+source review在formal qualification前发现初版foreign-closure substitution失败路径可能没有撤销原始bound authority；final bytes改为
+始终撤销bound closure并增加原eligibility `REVOKED` falsifier。全部旧字节测试观察保持non-qualifying，fresh final focused与full
+四格必须独立重跑。semantic attempt 1的null FactSet proof-facility schema error与attempt 2旧字节也保持原identity。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones、doc329、`_fact_fulfillment.py`、新增private carrier module与其private test。
+自己的local/original PR/protected merge/exact-main双门、fresh README/doc329/milestones readback、independent reconciliation与finite
+closeout全部闭合后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须
+返回CONTROL LOOP建立独立docs-only implementation freeze publication。禁止从本candidate直接创建Coverage producer、消费旧composition
+authority、选择manifest/Evidence/persistence、发布public Review或启动R2–R6。
