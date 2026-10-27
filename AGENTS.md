@@ -6031,3 +6031,42 @@ R2_R6_NOT_STARTED
 closeout全部闭合后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须
 返回CONTROL LOOP建立独立docs-only implementation freeze publication。禁止从本candidate直接创建Coverage producer、消费旧composition
 authority、选择manifest/Evidence/persistence、发布public Review或启动R2–R6。
+
+### R1 Fact→Coverage exact-input successor 私有实现冻结发布候选
+
+文档329已由PR #380以exact head `2177ce675c23d1e6793c696f1bfabd67e6702b5d`合入
+`main@8f258e3c4fb425af3d057493a63009c3099f03c4`，tree `69f826fd5d82e08ba2cd201b043f473fcc7a722e`。
+original Public CI `40551350656`、exact-main Public CI `40556421233`与Browser Smoke `40556420712`均为attempt 1
+SUCCESS；fresh README/doc329/milestones 3/3取得唯一qualifying PASS。independent reconciliation与134-artifact finite closeout为：
+
+```text
+0852c865880cba6d50caee93920e27e2aa07443fccdcc5b756a4d78cea15bbbb
+e18860cf91973a906529274767e817760407c6a1cbe18a425225a6765630e638
+```
+
+closeout stdout self-capture mismatch另以`47ed145338746cb9e3008daeee4b1081fe2f59c73f31aed4d53ed4bb43e77b58`
+保留，semantic/qualification effect均为`NONE`；其余133项终态一致。因此candidate为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立
+[文档330](docs/330-r1-fact-to-coverage-exact-input-successor-private-implementation-freeze-publication.md)，只以docs-only状态发布
+条件化冻结已资格化private carrier。当前只能记录：
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_READBACK_QUALIFIED
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与doc330。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc329/doc330/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，
+`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL LOOP；禁止直接创建Coverage producer、消费旧composition
+authority、选择manifest/Evidence/persistence、发布public Review或启动R2–R6。
