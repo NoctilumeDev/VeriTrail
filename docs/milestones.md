@@ -7145,3 +7145,44 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc324。完整资格链闭合以前不得声称
 `FAILURE_BOUNDARY_AUDITED`；闭合以后也不得rerun #373、回填#372/#373、以空提交重试、弱化required Core gate或直接启动
 Fact→Coverage implementation。
+
+## R1 Workbench Vitest/undici maintenance 资格恢复候选
+
+文档324由PR #375精确合入`main@c8503321934a8f65fc8744dc503cb1d476ab28a2`，tree
+`739c9ed21cb5dcada0a66c6de651edc80665a768`。第一次original Public CI `40482098220` attempt 1因
+concurrency cancellation终止并永久保留；独立第二次pull_request事件run `40482288836`、exact-main Public CI
+`40486037853`与Browser Smoke `40486037792`均为attempt 1 SUCCESS。fresh README/doc324/milestones 3/3
+qualifying PASS；milestones formal #1的匿名API额度耗尽ERROR保留，真实reset后的formal #2 PASS不覆盖它。independent
+reconciliation与151-artifact finite closeout分别为：
+
+```text
+ebe07c9fd593d1f0c5d50d90677f6499352ad50c0169a14ee8f891f2b7d8915c
+9bc218b6f52b6758f0b53dbb76ee0d063bc247254aedc8614894861fe59b05f2
+```
+
+因此failure boundary现为qualified history。它保持PR #373的exact-main failure与
+`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`原identity，不回填#372/#373。fresh CONTROL LOOP进入
+[文档325](325-r1-workbench-vitest-undici-maintenance-qualification-recovery.md)：新candidate在`main@c850332…`重新观察
+Vitest/`@vitest/mocker` 4.1.12、undici 7.30.1、Vite 8.2.4、14-file/179-test PASS、lint/build PASS及official
+npm registry零advisory，并承担#373失败与doc324完整资格链的独立对账责任。默认npmmirror audit endpoint HTTP 404作为
+setup ERROR保留；命令级official registry观察不修改全局配置，也不覆盖前一ERROR。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PR_372_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_WORKBENCH_VITEST_UNDICI_ADVISORY_MAINTENANCE_MERGED_NOT_QUALIFIED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_EXACT_MAIN_PUBLIC_CI_FAILED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDITED
+R1_WORKBENCH_VITEST_UNDICI_MAINTENANCE_QUALIFICATION_RECOVERY_CANDIDATE
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc325。完整资格链闭合后最多成为
+`MAINTENANCE_QUALIFICATION_RECOVERY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP并从新的exact main重建
+implementation authorization。禁止rerun、retry-until-PASS、空提交、回填#372/#373、弱化required Core gate或直接启动
+runtime/Coverage施工。

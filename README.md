@@ -308,9 +308,14 @@ python -m venv .venv
   `R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_CONTRACT_FROZEN`已经生效。第一次implementation authorization
   PR #372因Vitest/undici advisory关闭且未合并。独立PR #373修正依赖后合入`main@5aeb53e…`，但其exact-main Public CI
   `40478059827` attempt 1在未改动的Python 3.10 M10正向fixture中观察到`PASS -> FAIL`，因此maintenance保持
-  `MERGED / NOT_QUALIFIED`，authorization仍未生效。当前进入
-  [exact-main资格失败边界审计](docs/324-r1-workbench-vitest-undici-maintenance-exact-main-qualification-failure-boundary-audit.md)；
-  precise decisive assertion保持`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`，禁止rerun、回填或弱化required Core gate。
+  `MERGED / NOT_QUALIFIED`，authorization仍未生效。
+  [exact-main资格失败边界审计](docs/324-r1-workbench-vitest-undici-maintenance-exact-main-qualification-failure-boundary-audit.md)
+  已在`main@c850332…`完成自己的original/exact-main双门、fresh README/doc324/milestones读回、independent
+  reconciliation与finite closeout，现为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；precise decisive assertion仍保持
+  `UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`，不回填#372/#373。fresh CONTROL LOOP进入
+  [maintenance资格恢复候选](docs/325-r1-workbench-vitest-undici-maintenance-qualification-recovery.md)：它在新的exact world
+  重新核验Vitest/`@vitest/mocker` 4.1.12、undici 7.30.1、零advisory与完整required gates，并把#373失败与doc324
+  qualified history作为独立输入；它不是rerun、空提交或旧world资格回填。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
