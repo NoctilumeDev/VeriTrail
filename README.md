@@ -336,7 +336,12 @@ python -m venv .venv
   双门、fresh三目标installed-product readback、independent reconciliation与finite closeout；candidate现为exact-main verified /
   readback qualified但仍未FROZEN。新的
   [implementation freeze publication](docs/330-r1-fact-to-coverage-exact-input-successor-private-implementation-freeze-publication.md)
-  只条件化发布该private implementation frozen target，也不创建Coverage producer或恢复旧composition authority。
+  已由PR #381完成original/exact-main双门、fresh README/doc329/doc330/milestones读回、independent reconciliation与finite
+  closeout；`PRIVATE_IMPLEMENTATION_FROZEN`已经生效，但不创建Coverage producer或恢复旧composition authority。fresh
+  CONTROL LOOP进入
+  [negative-world Coverage authority recovery exact-input后继审计](docs/331-r1-negative-world-coverage-authority-recovery-after-exact-input-audit.md)：
+  0.2 carrier已经关闭doc319的原始input-authority blocker，CoverageLedger 0.3也已有四类负世界语义，但current runtime仍没有消费
+  carrier的application-owned Coverage producer/admission；下一最小边界是独立producer合同，而不是重开Ledger或positive composition。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

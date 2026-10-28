@@ -7376,3 +7376,51 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与doc330。完整资格链闭合前不得声称
 `PRIVATE_IMPLEMENTATION_FROZEN`；闭合以后也必须返回CONTROL LOOP，不能自动启动Coverage producer、消费旧composition authority、
 选择manifest/Evidence/persistence、发布public Review或启动R2–R6。
+
+## R1 negative-world Coverage authority recovery exact-input 后继审计候选
+
+文档330由PR #381精确合入`main@02705eb21e9d416ab34f857f1b09e463fc37551e`，tree
+`437a7af7c567b14dd92a3d0e774294656a87cafc`。original Public CI `40563101450`、exact-main Public CI
+`40567545888`与Browser Smoke `40567545741`均为attempt 1 SUCCESS；fresh README/doc329/doc330/milestones 4/4 PASS。
+independent reconciliation、161-artifact finite closeout与finite integrity分别为：
+
+```text
+f569847502882ea85a2455bdba5ea01d4a727cebed945fb64996983ce43137be
+36b7e8b16c0016969e80bcfef6ae923ac56f1992d0689651eaac81d7ec501e00
+d3cc4dc518627d59090166465cb1cf916e3c306e54f3205b047f31bb9811c816
+```
+
+因此`R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`已经生效。fresh CONTROL LOOP建立
+[文档331](331-r1-negative-world-coverage-authority-recovery-after-exact-input-audit.md)，只重审doc319的第一条upstream seam。
+
+0.2 carrier已能在五个Fact terminal branches中交付terminal-validated original inputs与same-object-graph proof；CoverageLedger
+0.3也已冻结四个safe-negative root worlds。current source没有第二个runtime模块消费该carrier，positive composition又只接受normal
+Relation transition continuation，validator本身不生成root或candidate。因此旧0.1 input gap在current world已关闭，但
+application-owned negative-world Coverage producer/admission仍不存在。
+
+四格read-only audit canonical SHA-256一致：
+
+```text
+851fd5814cc8997611241c1a00fa13a06f207c42b6a1547605f5eb9640a2ee86
+```
+
+focused witness四格各139 tests / 138 passed / 1 skipped。下一最小seam是独立
+`NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT`；它必须冻结完整Snapshot/Policy/Language/Parse/Fact denominator、四个Fact
+absent roots、Relation/Slice predecessor-absent、0.3 candidate、独立validation与same-attempt admission，且不得修改Ledger 0.3或
+positive composition。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AFTER_EXACT_INPUT_AUDIT_CANDIDATE
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_CONTRACT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc331。完整资格链闭合后最多成为qualified current-state audit history；随后
+必须返回CONTROL LOOP独立建立producer合同，不能直接施工runtime、manifest/Evidence/persistence/public Review或R2–R6。
