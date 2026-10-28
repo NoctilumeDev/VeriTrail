@@ -6123,3 +6123,54 @@ R2_R6_NOT_STARTED
 README/doc330/doc331/milestones readback、independent reconciliation与finite closeout全部闭合后，最多成为qualified current-state
 audit history。随后必须返回CONTROL LOOP独立建立producer合同；不得直接修改runtime、消费旧composition authority、实现manifest/
 Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+### R1 negative-world Coverage authority recovery 合同候选
+
+文档331由PR #382精确合入`main@348b3bdcbf8b459d52f17d2091cb1bb00a60197d`，tree
+`5a1ec99b4e115238977b2a2b1276e0f330a863b8`。original Public CI `40653480197`、exact-main Public CI
+`40657251132`与Browser Smoke `40657251257`均为attempt 1 SUCCESS；fresh README/doc330/doc331/milestones 4/4最终PASS。
+formal README #1匿名额度ERROR、finite closeout stdout self-capture mismatch及全部setup history继续保留。independent reconciliation、
+181-artifact closeout、finite mismatch与finite integrity分别为：
+
+```text
+bf5d0b9357a8b3d1bd763edc0fd695d2fa293503dbfa484e9120f825adf865fa
+468dad82c71bd6f73ed16ebe50c68f6e937f40dfaa0f111fd971266567490ea4
+413a4118da8e185407e360f92781bf9a838916095c8f1109267c3e825b684ad7
+c3c0666f3017ddffaa72ff1ca75b2db07b4278e72fab12d86672daa8638eddc5
+```
+
+因此`R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AFTER_EXACT_INPUT_AUDITED_INPUT_AVAILABLE_PRODUCER_ABSENT`
+成为qualified history。fresh CONTROL LOOP建立
+[文档332](docs/332-r1-negative-world-coverage-authority-recovery-contract.md)。本合同新增的关键边界不是另一个万能validator，而是：
+producer只生成candidate；independent validator必须从original 0.2 carrier重枚举Snapshot/Policy/Language/Parse/Fact denominator、
+branch-specific absent roots与stage history，再用自己构造的conformance source调用既有Ledger 0.3 validation，最后由same-attempt
+one-shot admission取得private authority。
+
+read-only audit证明current validation-only seam在caller同时缩小candidate与source时可以正确证明二者一致；因此agreement不能替代
+original-input completeness。它还证明同一`ZERO_PARSE_DENOMINATOR`下，empty world是COMPLETE，而unsupported-only与policy-excluded-only
+world均为PARTIAL。Python3.10.6/3.13.13 × normal/-O四格canonical SHA-256为：
+
+```text
+ed0450c8a63a2c99222d996d6832cbf8f14dea82e5022c0ef6cb2bcbe4a9a903
+```
+
+首轮prequalification audit facility曾把required-provider expected数误记成completed数；该报告不取得资格且永久保留。修正后合同冻结
+Provider `FAILED -> DERIVATION_ERROR`、`UNAVAILABLE -> PROVIDER_UNAVAILABLE`，并禁止恢复revoked upstream eligibility。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AFTER_EXACT_INPUT_AUDITED_INPUT_AVAILABLE_PRODUCER_ABSENT
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc332。它自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc331/doc332/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，仍只可成为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。必须返回CONTROL LOOP建立独立freeze publication；不得直接施工runtime、修改Ledger
+0.3/positive composition、实现manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
