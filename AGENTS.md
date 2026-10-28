@@ -6374,3 +6374,42 @@ R2_R6_NOT_STARTED
 fresh README/doc336/doc338/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，才让
 `PRIVATE_IMPLEMENTATION_FROZEN`生效；随后必须返回CONTROL LOOP。禁止把#389维护当成产品语义证据或旧composition可消费authority，
 也不得启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 Review / Coverage composition authority recovery 当前状态审计候选
+
+文档338已由PR #390以exact head `7f31acdd88ffa10e4e88746465149c8b3841f586`合入
+`main@4baf57268f6a06e584a4396b6d4e7a9d24735744`，tree `388892cc80caa5b7f9d135f11c621c427b8f07f7`。
+original Public CI `40775454879`、exact-main Public CI `40779905310`与Browser Smoke `40779905322`均为attempt 1
+SUCCESS；fresh README/doc336/doc338/milestones 4/4 PASS。independent reconciliation、finite closeout、finite integrity与
+保留的stdout self-capture mismatch分别为：
+
+```text
+e85dc7c7d85f3178e26ede72ac613037c7b277886efceaed1767c838bbfbe63d
+d38212c2994e756a6a6c50633d9e91c1f1314e0ec3defbeab56dbe97e0c0fb23
+ed759c7f7e91bd8e312d16ca3ae2a19b22f39052d7d95136f7789e7e813d85e9
+bbcde590980961ee95f6e53e8dcc6e470342bacd505c20b9f66e855eb7b164eb
+```
+
+因此negative-world Coverage private implementation已经frozen；#388 CANCELLED与UNKNOWN不被回填。fresh CONTROL LOOP建立
+[文档339](docs/339-r1-review-coverage-composition-authority-recovery-current-state-audit.md)。read-only audit证明normal branch的positive
+composition与四类negative branch的negative producer都在各自applicability内成立，五分支partition total且disjoint；但Fact consumer
+handoff domain在terminal branch可知以前已经固定。`RELATION_TRANSITION`不能签发exact-input successor，`LEGACY`不能签发Relation
+handoff，wrong-route还会烧毁共享one-shot，所以trial/fallback routing不安全，也不存在共同application admission。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDIT_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc339。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc339/milestones installed-product readback、independent reconciliation与finite closeout闭合后，最多成为
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP独立建立post-terminal dual-successor authority合同；不得
+直接修改runtime、用union type冒充共同admission、消费旧global composition authority或启动manifest/Evidence/persistence/public
+Review/R2–R6。
