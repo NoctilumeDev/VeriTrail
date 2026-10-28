@@ -6256,3 +6256,43 @@ R2_R6_NOT_STARTED
 README/doc333/doc334/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，最多成为
 `FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立docs-only implementation authorization
 publication；不得直接施工runtime、消费旧composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 negative-world Coverage authority recovery 私有实现授权发布候选
+
+文档334已由PR #385以exact head `aaf5980b6721dfa34001b0554d34b6416253b7a9`合入
+`main@91a7e6ba466b375ff6e4568ccc3a57ddd60ca044`，tree
+`47d6bfdad66f022bf386b5c1e2bf2b2d2f9a2171`。original Public CI `40691909691`、exact-main Public CI
+`40695985547`与Browser Smoke `40695985611`均为attempt 1 SUCCESS；fresh README/doc333/doc334/milestones 4/4
+取得唯一qualifying PASS。independent reconciliation、272-artifact successor closeout、self-capture mismatch与finite integrity为：
+
+```text
+81ba15df22399af8de1378a3dc159b70652f4f8be918237eca3307a465af084b
+0ff6fbf2c6c6f20435a0ae04a08c3f14f279184b94cc1fcd47faae3d3c835438
+9914883f492792ea91ab7c3cc28322d615617905b99268f50f29c750ab4479e7
+c115f28ecbd8e0327314f33d4c7ddcb56264fb802f85068a108325519b085eb9
+```
+
+setup1 Windows long-path worktree失败、setup2 README formal #1 path-length ERROR、setup3 README formal #2 public-render
+ERROR、diagnostic render ERROR、原closeout checker filename错误与后继history-drift错误继续保留。versioned successor facility只修正
+proof-facility identity，没有重解释任何产品观察。因此doc334现为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；runtime仍
+`NOT_STARTED / NOT_AUTHORIZED`。fresh CONTROL LOOP建立
+[文档335](docs/335-r1-negative-world-coverage-authority-recovery-private-implementation-authorization-publication.md)，只条件化授权
+bounded private producer、independent validator与same-attempt one-shot admission A–J。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc335。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc334/doc335/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，才让
+`PRIVATE_IMPLEMENTATION_ALLOWED`生效；implementation仍保持`NOT_STARTED`并返回CONTROL LOOP。禁止把授权发布当成runtime证据，
+也不得消费旧composition authority、实现manifest/Evidence、选择persistence或启动public Review/R2–R6。
