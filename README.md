@@ -358,8 +358,12 @@ python -m venv .venv
   PR #386已完成original/exact-main双门、fresh四目标readback、independent reconciliation与finite closeout，因此只在bounded A–J内
   `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh CONTROL LOOP进入
   [private implementation candidate](docs/336-r1-negative-world-coverage-authority-recovery-private-implementation-candidate.md)：它实现完整
-  seven-stage denominator、branch-specific absent roots、独立validator与same-attempt one-shot admission；candidate仍未取得original PR、
-  exact-main、readback或freeze资格，旧composition authority仍不可消费。
+  seven-stage denominator、branch-specific absent roots、独立validator与same-attempt one-shot admission。PR #387已完成original/exact-main
+  双门、fresh README/doc336/milestones readback、independent reconciliation与finite closeout；candidate现为exact-main verified /
+  readback qualified但仍未FROZEN。首次doc337 publication的original Public CI在固定30分钟外层job上限终结为CANCELLED，PR #388已
+  关闭且未合并；独立PR #389只把聚合Python job上限30→35分钟并完整取得original/exact-main门。新的版本化
+  [implementation freeze successor publication](docs/338-r1-negative-world-coverage-authority-recovery-private-implementation-freeze-successor-publication.md)
+  条件化发布`PRIVATE_IMPLEMENTATION_FROZEN`；它自己的完整资格链闭合以前该状态不生效，#388不被回填，旧composition authority仍不可消费。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

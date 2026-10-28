@@ -7620,3 +7620,40 @@ R2_R6_NOT_STARTED
 本candidate完整资格链为final local gates、original PR、exact-head protected merge、新exact-main Public CI/Browser Smoke、fresh
 README/doc336/milestones installed-product readback、independent reconciliation与finite closeout。全部闭合后仍是
 `READBACK_QUALIFIED / NOT_FROZEN`；独立freeze publication以前不得恢复旧composition authority或启动下游施工。
+
+## R1 negative-world Coverage authority recovery 私有实现冻结发布后继候选
+
+文档336由PR #387以`base=e9602e0dc771ae9abf0fd4edd0e2f94a1bfba6d8`、
+`head=171d3535c2a7a153420e7422219c80f6e19eb98c`、`tree=f6a3e61570bf301eba83564afc8f53020f349780`
+精确合入`main@0107fb3d9f6b6450da5aa57050064bd913e9b610`。original Public CI `40748382813`、exact-main Public CI
+`40753178770`与Browser Smoke `40753178769`均为attempt 1 SUCCESS；fresh README/doc336/milestones 3/3取得唯一qualifying
+PASS。independent reconciliation、149-artifact closeout与finite integrity分别为：
+
+```text
+4d184b96f22c45867f4a2189ed2ff8dc9fc08b0d62e9094198950e199e3ab8b2
+5211b4caf34d3f28784bbe8e32d33cdd47e3f961a25b1a92288705b19a4f358c
+813eeaaf8cf58cbaa1fc95af2419b2132f082a401346f49578678cfab5d72bfe
+```
+
+因此doc336为`CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。首次doc337 publication在PR #388的
+original Public CI `40760128790` attempt 1中因Python 3.10聚合job命中固定30分钟外层上限而CANCELLED；PR关闭未合并，底层
+runner variance原因UNKNOWN，later PASS不回填。独立PR #389只把该外层上限30→35分钟，以exact head
+`113862ec60027b537c6c86855477098719facd98`合入`main@c816c3700c7a6bf1d612d737abf7f3567f5f0554`；original/
+exact-main Public CI与Browser Smoke均attempt 1 SUCCESS，raw workflow bytes一致。fresh CONTROL LOOP建立
+[文档338](338-r1-negative-world-coverage-authority-recovery-private-implementation-freeze-successor-publication.md)。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_READBACK_QUALIFIED
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FREEZE_SUCCESSOR_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本successor publication只允许README、AGENTS、milestones与doc338。完整资格链闭合前`PRIVATE_IMPLEMENTATION_FROZEN`不生效；
+闭合后仍必须返回CONTROL LOOP，重新审计composition可消费authority，不能按编号自动启动manifest/Evidence/persistence或R2–R6。

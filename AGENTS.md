@@ -6333,3 +6333,44 @@ R2_R6_NOT_STARTED
 module与一个focused test module。完整local/original PR/protected merge/exact-main双门、fresh README/doc336/milestones readback、
 independent reconciliation与finite closeout闭合后，最高仍只是`READBACK_QUALIFIED / NOT_FROZEN`；必须另建docs-only freeze
 publication。禁止借candidate恢复旧composition消费权或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 negative-world Coverage authority recovery 私有实现冻结发布后继候选
+
+文档336已由PR #387以`base=e9602e0dc771ae9abf0fd4edd0e2f94a1bfba6d8`、
+`head=171d3535c2a7a153420e7422219c80f6e19eb98c`、`tree=f6a3e61570bf301eba83564afc8f53020f349780`
+精确合入`main@0107fb3d9f6b6450da5aa57050064bd913e9b610`。original Public CI `40748382813`、exact-main Public CI
+`40753178770`与Browser Smoke `40753178769`均为attempt 1 SUCCESS；fresh README/doc336/milestones 3/3取得唯一qualifying
+PASS。independent reconciliation、149-artifact closeout与finite integrity分别为：
+
+```text
+4d184b96f22c45867f4a2189ed2ff8dc9fc08b0d62e9094198950e199e3ab8b2
+5211b4caf34d3f28784bbe8e32d33cdd47e3f961a25b1a92288705b19a4f358c
+813eeaaf8cf58cbaa1fc95af2419b2132f082a401346f49578678cfab5d72bfe
+```
+
+因此doc336是`CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。首次doc337 publication的PR #388
+original Public CI `40760128790` attempt 1在Python 3.10聚合job固定30分钟外层上限终结为CANCELLED；其已启动产品测试均PASS，
+runner variance底层原因保持UNKNOWN。PR #388已关闭未合并，不能由later PASS回填。独立maintenance PR #389只修改
+`.github/workflows/ci.yml`一处30→35分钟外层上限，以exact head `113862ec60027b537c6c86855477098719facd98`
+合入`main@c816c3700c7a6bf1d612d737abf7f3567f5f0554`；original Public CI `40765509841`、exact-main Public CI
+`40770259587`与Browser Smoke `40770259559`均为attempt 1 SUCCESS，raw workflow bytes与main一致。fresh CONTROL LOOP建立
+[文档338](docs/338-r1-negative-world-coverage-authority-recovery-private-implementation-freeze-successor-publication.md)，不复用
+doc337/head/PR identity，只条件化发布固定candidate的`PRIVATE_IMPLEMENTATION_FROZEN` target。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_READBACK_QUALIFIED
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FREEZE_SUCCESSOR_PUBLICATION_CANDIDATE
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本successor publication只允许README、AGENTS、milestones与新增doc338。自己的local/original PR/protected merge/exact-main双门、
+fresh README/doc336/doc338/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，才让
+`PRIVATE_IMPLEMENTATION_FROZEN`生效；随后必须返回CONTROL LOOP。禁止把#389维护当成产品语义证据或旧composition可消费authority，
+也不得启动manifest/Evidence/persistence/public Review/R2–R6。
