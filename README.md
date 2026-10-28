@@ -346,8 +346,12 @@ python -m venv .venv
   denominator、branch-specific absent roots、0.3 candidate、独立复算与same-attempt admission；尤其禁止producer把自己缩小后的
   projections同时交给validation-only conformance来自证。PR #383的完整资格链已在`main@a170489…`使它成为
   `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。新的
-  [独立合同冻结发布](docs/333-r1-negative-world-coverage-authority-recovery-contract-freeze-publication.md)只条件化发布frozen target；它自己的
-  最后门闭合以前`CONTRACT_FROZEN`不生效，闭合以后也不自动授权runtime施工。
+  [独立合同冻结发布](docs/333-r1-negative-world-coverage-authority-recovery-contract-freeze-publication.md)已由PR #384完成
+  original/exact-main双门、fresh四目标readback、independent reconciliation与finite closeout；
+  `CONTRACT_FROZEN`已经生效，但runtime仍未授权。fresh CONTROL LOOP进入
+  [private implementation feasibility audit](docs/334-r1-negative-world-coverage-authority-recovery-private-implementation-feasibility-audit.md)：
+  七个live denominator world、三个common-mode falsifier与既有one-shot/phase-commit primitive证明冻结合同内存在有界实现面；
+  本审计自己的资格链闭合以前仍只是candidate，闭合以后也只能进入独立docs-only implementation authorization publication。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
