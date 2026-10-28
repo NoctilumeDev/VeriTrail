@@ -7424,3 +7424,52 @@ R2_R6_NOT_STARTED
 
 本candidate只允许README、AGENTS、milestones与新增doc331。完整资格链闭合后最多成为qualified current-state audit history；随后
 必须返回CONTROL LOOP独立建立producer合同，不能直接施工runtime、manifest/Evidence/persistence/public Review或R2–R6。
+
+## R1 negative-world Coverage authority recovery 合同候选
+
+文档331由PR #382精确合入`main@348b3bdcbf8b459d52f17d2091cb1bb00a60197d`，tree
+`5a1ec99b4e115238977b2a2b1276e0f330a863b8`。original Public CI `40653480197`、exact-main Public CI
+`40657251132`与Browser Smoke `40657251257`均为attempt 1 SUCCESS；fresh README/doc330/doc331/milestones 4/4最终PASS。
+formal README #1匿名额度ERROR与finite self-capture mismatch保持原identity。independent reconciliation、181-artifact closeout、mismatch与
+finite integrity为：
+
+```text
+bf5d0b9357a8b3d1bd763edc0fd695d2fa293503dbfa484e9120f825adf865fa
+468dad82c71bd6f73ed16ebe50c68f6e937f40dfaa0f111fd971266567490ea4
+413a4118da8e185407e360f92781bf9a838916095c8f1109267c3e825b684ad7
+c3c0666f3017ddffaa72ff1ca75b2db07b4278e72fab12d86672daa8638eddc5
+```
+
+因此exact-input后继审计成为qualified history。fresh CONTROL LOOP建立
+[文档332](332-r1-negative-world-coverage-authority-recovery-contract.md)，只冻结0.2 carrier到private negative Coverage admission的最小边。
+
+本合同明确禁止producer自证：independent validator必须从original input独立复算完整denominator、root/stage projections，用自己构造的
+source调用现有0.3 conformance，再绑定同一live carrier/context进行one-shot admission。read-only反例证明caller同时缩小Parse
+denominator与source、或一致改写Fact branch时，validation-only seam仍会PASS；这属于其声明边界，不能升级为authority。
+
+七类live denominator world又证明：真正empty的`ZERO_PARSE_DENOMINATOR`是COMPLETE，unsupported-only与policy-excluded-only虽共享
+Fact branch却都是PARTIAL；Provider failure与unavailable也必须分别保留`DERIVATION_ERROR`与`PROVIDER_UNAVAILABLE`。修正后的
+Python3.10.6/3.13.13 × normal/-O四格canonical SHA-256一致：
+
+```text
+ed0450c8a63a2c99222d996d6832cbf8f14dea82e5022c0ef6cb2bcbe4a9a903
+```
+
+首轮prequalification facility把expected误汇总为completed的报告永久保留但不取得资格。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AFTER_EXACT_INPUT_AUDITED_INPUT_AVAILABLE_PRODUCER_ABSENT
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc332。完整资格链闭合后仍为qualified contract candidate / not frozen；必须返回
+CONTROL LOOP建立独立freeze publication，不能直接施工runtime、修改Ledger/positive composition或启动manifest/Evidence/persistence/
+public Review/R2–R6。
