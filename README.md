@@ -344,7 +344,10 @@ python -m venv .venv
   carrier的application-owned Coverage producer/admission；下一最小边界是独立producer合同，而不是重开Ledger或positive composition。新的
   [negative-world Coverage authority recovery合同](docs/332-r1-negative-world-coverage-authority-recovery-contract.md)进一步冻结carrier消费、完整
   denominator、branch-specific absent roots、0.3 candidate、独立复算与same-attempt admission；尤其禁止producer把自己缩小后的
-  projections同时交给validation-only conformance来自证。该合同仍是`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`，没有runtime施工权。
+  projections同时交给validation-only conformance来自证。PR #383的完整资格链已在`main@a170489…`使它成为
+  `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。新的
+  [独立合同冻结发布](docs/333-r1-negative-world-coverage-authority-recovery-contract-freeze-publication.md)只条件化发布frozen target；它自己的
+  最后门闭合以前`CONTRACT_FROZEN`不生效，闭合以后也不自动授权runtime施工。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
