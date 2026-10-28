@@ -351,7 +351,12 @@ python -m venv .venv
   `CONTRACT_FROZEN`已经生效，但runtime仍未授权。fresh CONTROL LOOP进入
   [private implementation feasibility audit](docs/334-r1-negative-world-coverage-authority-recovery-private-implementation-feasibility-audit.md)：
   七个live denominator world、三个common-mode falsifier与既有one-shot/phase-commit primitive证明冻结合同内存在有界实现面；
-  本审计自己的资格链闭合以前仍只是candidate，闭合以后也只能进入独立docs-only implementation authorization publication。
+  PR #385已完成original/exact-main双门、fresh README/doc333/doc334/milestones读回、independent reconciliation与finite
+  closeout；保留的Windows path-length、public-render与proof-facility失败均未被后继PASS覆盖。因此doc334现在是
+  `FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP进入
+  [private implementation authorization publication](docs/335-r1-negative-world-coverage-authority-recovery-private-implementation-authorization-publication.md)：
+  它只条件化授权bounded private producer / independent validator / same-attempt admission A–J；自己的完整资格链闭合以前
+  `PRIVATE_IMPLEMENTATION_ALLOWED`不生效，runtime仍未开始。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
