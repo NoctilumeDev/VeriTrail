@@ -7592,3 +7592,31 @@ R2_R6_NOT_STARTED
 
 本publication只允许README、AGENTS、milestones与doc335。完整资格链闭合前`PRIVATE_IMPLEMENTATION_ALLOWED`不生效；闭合后
 仍只是`ALLOWED / NOT_STARTED`，必须返回CONTROL LOOP建立独立runtime candidate，不能按编号自动施工或启动下游authority。
+
+## R1 negative-world Coverage authority recovery 私有实现候选
+
+文档335由PR #386精确合入`main@e9602e0dc771ae9abf0fd4edd0e2f94a1bfba6d8`。original Public CI
+`40719298650`、exact-main Public CI `40724767076`与Browser Smoke `40724767006`均为attempt 1 SUCCESS；fresh四目标readback、
+independent reconciliation与finite closeout闭合，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。
+
+fresh CONTROL LOOP建立[文档336](336-r1-negative-world-coverage-authority-recovery-private-implementation-candidate.md)。candidate从同一live
+0.2 carrier构造七阶段完整分母、branch-specific absent roots与CoverageLedger 0.3 candidate；独立validator从original world重新枚举，
+不调用producer关键projector；admission绑定同一carrier/context/candidate/validation并exactly once commit。copy-equal carrier、attempt与
+validation的两个prequalification反例已保留并修正，旧0.3 conformance、positive composition、Fact terminal与public surface不变。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate完整资格链为final local gates、original PR、exact-head protected merge、新exact-main Public CI/Browser Smoke、fresh
+README/doc336/milestones installed-product readback、independent reconciliation与finite closeout。全部闭合后仍是
+`READBACK_QUALIFIED / NOT_FROZEN`；独立freeze publication以前不得恢复旧composition authority或启动下游施工。

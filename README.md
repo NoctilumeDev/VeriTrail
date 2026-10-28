@@ -355,8 +355,11 @@ python -m venv .venv
   closeout；保留的Windows path-length、public-render与proof-facility失败均未被后继PASS覆盖。因此doc334现在是
   `FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP进入
   [private implementation authorization publication](docs/335-r1-negative-world-coverage-authority-recovery-private-implementation-authorization-publication.md)：
-  它只条件化授权bounded private producer / independent validator / same-attempt admission A–J；自己的完整资格链闭合以前
-  `PRIVATE_IMPLEMENTATION_ALLOWED`不生效，runtime仍未开始。
+  PR #386已完成original/exact-main双门、fresh四目标readback、independent reconciliation与finite closeout，因此只在bounded A–J内
+  `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh CONTROL LOOP进入
+  [private implementation candidate](docs/336-r1-negative-world-coverage-authority-recovery-private-implementation-candidate.md)：它实现完整
+  seven-stage denominator、branch-specific absent roots、独立validator与same-attempt one-shot admission；candidate仍未取得original PR、
+  exact-main、readback或freeze资格，旧composition authority仍不可消费。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
