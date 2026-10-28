@@ -6174,3 +6174,39 @@ R2_R6_NOT_STARTED
 README/doc331/doc332/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，仍只可成为
 `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。必须返回CONTROL LOOP建立独立freeze publication；不得直接施工runtime、修改Ledger
 0.3/positive composition、实现manifest/Evidence、选择persistence或启动public Review/post-R1 Benchmark/R2–R6。
+
+### R1 negative-world Coverage authority recovery 合同独立冻结发布候选
+
+文档332已由PR #383以exact head `434e7d15d5b43a7dd950e5ce0d0ff865c17fa7ac`合入
+`main@a170489cf3adc59679b62da16c1d4aa9c2ae431c`，tree `6c2859f8758bf6e05a2fc461ea63dcd9b9585cc3`。
+original Public CI `40667909542`、exact-main Public CI `40671677582`与Browser Smoke `40671677399`均为attempt 1
+SUCCESS；fresh README/doc331/doc332/milestones 4/4取得唯一qualifying PASS。independent reconciliation、171-artifact
+finite closeout与finite integrity分别为：
+
+```text
+e171b185d5d692cee8170c6b88a1ad6113144db44e87b91d0e3a1d4f2d3a2754
+3c660100e363a67055101316cdbf983c6f66945e5f89205b9092e67b67876fca
+ef6e59d010f3ecb538f0b9bb7c92e23588f3e538d5d5bb11cf6a2725f5a44457
+```
+
+因此doc332只成为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档333](docs/333-r1-negative-world-coverage-authority-recovery-contract-freeze-publication.md)，只条件化发布同一合同字节的frozen target。
+
+```text
+R1_FACT_TO_COVERAGE_HANDOFF_EXACT_INPUT_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_AFTER_EXACT_INPUT_AUDITED_INPUT_AVAILABLE_PRODUCER_ABSENT
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_FREEZE_PUBLICATION_CANDIDATE
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与doc333。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc332/doc333/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，
+`CONTRACT_FROZEN`才生效。随后必须返回CONTROL LOOP；禁止直接施工runtime、消费旧composition authority、选择manifest/
+Evidence/persistence、发布public Review或启动R2–R6。
