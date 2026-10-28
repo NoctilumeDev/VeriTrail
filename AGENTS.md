@@ -6296,3 +6296,40 @@ R2_R6_NOT_STARTED
 README/doc334/doc335/milestones installed-product readback、independent reconciliation与finite closeout全部闭合后，才让
 `PRIVATE_IMPLEMENTATION_ALLOWED`生效；implementation仍保持`NOT_STARTED`并返回CONTROL LOOP。禁止把授权发布当成runtime证据，
 也不得消费旧composition authority、实现manifest/Evidence、选择persistence或启动public Review/R2–R6。
+
+### R1 negative-world Coverage authority recovery 私有实现候选
+
+文档335已由PR #386精确合入`main@e9602e0dc771ae9abf0fd4edd0e2f94a1bfba6d8`。original Public CI
+`40719298650`、exact-main Public CI `40724767076`与Browser Smoke `40724767006`均为attempt 1 SUCCESS；fresh
+README/doc334/doc335/milestones 4/4取得唯一qualifying PASS。independent reconciliation、1360-artifact closeout、finite
+integrity与保留的stdout self-capture mismatch分别为：
+
+```text
+f1483e93b72fb5fe0f3213344df7737591c38f0dba5b098a73cf2dbeb8f4d91f
+c2f1a621efc632ef4eb185b365ce4631327cd24c34da663e163e8455163dc7a2
+2b156324547e7a8cadb96966c650b6bef68280e2b745aa7448c1997f081c5f21
+afeffa6503cd6efbbb892493f18a7d88879a4bfa5da914e02b3f709bdb0f34cd
+```
+
+因此`R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh CONTROL LOOP建立
+[文档336](docs/336-r1-negative-world-coverage-authority-recovery-private-implementation-candidate.md)，只在A–J内实现private producer、
+独立validator、one-shot admission与14项normative falsifier。carrier浅拷贝共享一次性consume state；attempt、validation与admitted
+result不可复制。producer与validator不共享关键stage/root projector，旧0.3 conformance与positive composition保持不变。
+
+```text
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_AUTHORITY_HISTORY_PRESERVED_NOT_CONSUMABLE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、doc336、milestones、一个private carrier consume hook、一个private producer/validator/admission
+module与一个focused test module。完整local/original PR/protected merge/exact-main双门、fresh README/doc336/milestones readback、
+independent reconciliation与finite closeout闭合后，最高仍只是`READBACK_QUALIFIED / NOT_FROZEN`；必须另建docs-only freeze
+publication。禁止借candidate恢复旧composition消费权或启动manifest/Evidence/persistence/public Review/R2–R6。

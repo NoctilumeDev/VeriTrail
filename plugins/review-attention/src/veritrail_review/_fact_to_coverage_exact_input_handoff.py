@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
 from typing import Mapping
 from uuid import uuid4
 
@@ -26,11 +27,20 @@ HANDOFF_CONSUMER = "r1-negative-world-coverage-exact-input-consumer/0.1"
 CARRIER_IDENTITY = "r1-terminal-validated-original-derivation-input-carrier/0.1"
 
 _CARRIER_TOKEN = object()
+_NEGATIVE_WORLD_CONSUMER_TOKEN = object()
 _CANONICAL_FIELDS = (
     "source_snapshot_canonical_bytes",
     "review_policy_canonical_bytes",
     "derivation_profile_canonical_bytes",
 )
+
+
+class _NegativeWorldConsumeState:
+    """One copy-stable lock and consume bit for the private successor seam."""
+
+    def __init__(self) -> None:
+        self.lock = threading.Lock()
+        self.consumed = False
 _DIGEST_FIELDS = (
     "source_snapshot_digest",
     "policy_digest",
@@ -130,6 +140,7 @@ class ClaimedFactToCoverageExactInputHandoff:
         self.__document_bytes = canonical_json_bytes(self.__document())
         self.__bound_document_bytes = self.__document_bytes
         self.__failed = False
+        self.__negative_world_consume_state = _NegativeWorldConsumeState()
         self.__validate()
 
     def __document(self) -> dict[str, object]:
@@ -243,6 +254,45 @@ class ClaimedFactToCoverageExactInputHandoff:
                 "same_object_graph_proof",
             )
         }
+
+    def _consume_negative_world_authority(self, *, _token: object):
+        """Bind one private negative-world attempt to this exact carrier.
+
+        The hook deliberately returns the original object graph only to the
+        sibling private implementation that owns the opaque token.  It does
+        not add a public method, alter the carrier identity, or construct any
+        Coverage history.
+        """
+
+        if _token is not _NEGATIVE_WORLD_CONSUMER_TOKEN:
+            raise FactToCoverageExactInputHandoffError(
+                "negative-world carrier consumer is not supported"
+            )
+        state = self.__negative_world_consume_state
+        with state.lock:
+            self.__validate()
+            if state.consumed:
+                raise FactToCoverageExactInputHandoffError(
+                    "negative-world carrier was already consumed"
+                )
+            source = json.loads(self.__source_bytes)
+            if source.get("branch") not in {
+                "ZERO_PARSE_DENOMINATOR",
+                "ALL_PARSE_REJECTED",
+                "PROJECTION_BLOCKED",
+                "REQUIRED_PROVIDER_NON_SUCCESS",
+            }:
+                raise FactToCoverageExactInputHandoffError(
+                    "terminal branch is not a negative-world branch"
+                )
+            state.consumed = True
+            return (
+                source,
+                self.__inputs,
+                self.__context,
+                self.__closure,
+                self.__claim_id,
+            )
 
 
 def claim_fact_to_coverage_exact_input_handoff(
