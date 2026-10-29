@@ -367,8 +367,13 @@ python -m venv .venv
   reconciliation与finite closeout全部闭合，`PRIVATE_IMPLEMENTATION_FROZEN`现已生效，#388仍不被回填。fresh CONTROL LOOP进入
   [Review / Coverage composition authority recovery当前状态审计](docs/339-r1-review-coverage-composition-authority-recovery-current-state-audit.md)：
   positive与negative实现分别在互斥terminal applicability内成立，但Fact handoff domain在terminal branch已知前就被固定，wrong-route
-  fallback还会烧毁共享one-shot；因此旧global composition authority仍不可消费，下一最小边界收敛为versioned post-terminal dual-successor
-  authority合同，manifest/Evidence/persistence继续未授权。
+  fallback还会烧毁共享one-shot。PR #391的original/exact-main双门、fresh README/doc339/milestones读回、independent reconciliation与
+  finite closeout现已闭合，因此doc339成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`；两个匿名额度formal ERROR继续保留。fresh
+  CONTROL LOOP进入新的
+  [post-terminal Fact dual-successor authority recovery合同](docs/340-r1-post-terminal-fact-dual-successor-authority-recovery-contract.md)：
+  它只允许新versioned private successor在完整Fact terminal source重验后，从共享one-shot中签发Relation或exact-input二者之一；
+  pre-terminal、wrong-route、fallback、replay、copy-equal与common-mode branch rewrite全部fail closed。当前仅为
+  `CONTRACT_CANDIDATE / NOT_FROZEN`，旧global composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
