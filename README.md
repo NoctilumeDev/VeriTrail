@@ -377,8 +377,14 @@ python -m venv .venv
   `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；milestones diagnostic #1的public-render response-body ERROR与reconciliation
   attempt 1的schema-key setup error均以原identity保留。fresh CONTROL LOOP进入独立
   [contract freeze publication](docs/341-r1-post-terminal-fact-dual-successor-authority-recovery-contract-freeze-publication.md)：
-  它只条件化发布固定doc340合同的`CONTRACT_FROZEN` target。publication自己的完整资格链闭合以前runtime仍
-  `NOT_STARTED / NOT_AUTHORIZED`，旧global composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
+  PR #393已完成original/exact-main双门、fresh README/doc340/doc341/milestones读回、independent reconciliation与finite
+  closeout；保留的Python bootstrap、public-bytes、anonymous rate、marker drift、active-pointer与reconciliation setup failures均未被
+  后继PASS覆盖，因此`CONTRACT_FROZEN`现已生效，runtime仍`NOT_STARTED / NOT_AUTHORIZED`。fresh CONTROL LOOP进入
+  [private implementation feasibility audit](docs/342-r1-post-terminal-fact-dual-successor-private-implementation-feasibility-audit.md)：
+  current Fact terminal source已经独立重建五分支，closure已有single shared claim slot，positive Relation与negative exact-input downstream
+  也分别拥有自己的验证入口；read-only audit因此证明一个new private selector、exact domain factory与claimed-source adapter构成bounded
+  implementation surface。本文完整资格链闭合前它仍只是candidate；下一步只能是独立docs-only implementation authorization，旧global
+  composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

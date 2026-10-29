@@ -6498,3 +6498,44 @@ R2_R6_NOT_STARTED
 README/doc340/doc341/milestones installed-product readback、independent reconciliation与finite closeout全部闭合以后，
 `CONTRACT_FROZEN`才生效；随后必须返回CONTROL LOOP独立审计private implementation feasibility。不得提前施工runtime、恢复旧global
 composition authority、选择manifest/Evidence/persistence或启动public Review/R2–R6。
+
+### R1 post-terminal Fact dual-successor 私有实现可行性审计候选
+
+文档341由PR #393以exact head `c49f8f1327ad6f528a10eadcb6f25eec9cf8009a`合入
+`main@99244df24360787b5f1b97a1cad89dc26d8aefe0`，tree `f398de23047a8ca6ecd5822e204d50abfc40b8c7`。
+original Public CI `40830900921`、exact-main Public CI `40834389932`与Browser Smoke `40834389934`均为attempt 1 SUCCESS；
+fresh README/doc340/doc341/milestones 4/4取得唯一qualifying PASS。independent reconciliation、226-artifact finite closeout、
+self-capture mismatch与finite integrity分别为：
+
+```text
+4463042f2452fc5b3f8c9920eb1a0b472bb3bbd9fe699d6fcc8db44fd08e78fe
+e501f171f09cb569dc21cd1d4b1854e56993988b032a98d94546f2ff3cf906b7
+907b5638bf444528a627cd78a7863ae3b6bcfb7a9b17b87776e48663196aa1a8
+8db5b5693695ba85ce5f4f100116d4b4b57e2804d43b441ebf02cafaa7f59be1
+```
+
+因此`R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN`已经生效；所有bootstrap、rate、marker、
+active-pointer及reconciliation setup failures仍按原identity保留。fresh CONTROL LOOP建立
+[文档342](docs/342-r1-post-terminal-fact-dual-successor-private-implementation-feasibility-audit.md)。read-only audit证明current
+Fact consumer已经拥有complete Policy applicability、original terminal source五分支重建、single shared claim slot及两个downstream
+source seam；new exact domain、private selector/claimed-route carrier与bounded Relation claimed-source adapter可以在不修改既有
+Fact/Relation/Coverage/public边界的前提下实现。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc342。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc341/doc342/milestones installed-product readback、independent reconciliation与finite closeout闭合后，最多成为
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立docs-only implementation authorization publication；
+不得直接施工runtime、恢复旧global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
