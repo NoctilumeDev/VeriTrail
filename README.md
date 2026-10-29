@@ -372,8 +372,13 @@ python -m venv .venv
   CONTROL LOOP进入新的
   [post-terminal Fact dual-successor authority recovery合同](docs/340-r1-post-terminal-fact-dual-successor-authority-recovery-contract.md)：
   它只允许新versioned private successor在完整Fact terminal source重验后，从共享one-shot中签发Relation或exact-input二者之一；
-  pre-terminal、wrong-route、fallback、replay、copy-equal与common-mode branch rewrite全部fail closed。当前仅为
-  `CONTRACT_CANDIDATE / NOT_FROZEN`，旧global composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
+  pre-terminal、wrong-route、fallback、replay、copy-equal与common-mode branch rewrite全部fail closed。PR #392已完成
+  original/exact-main双门、fresh README/doc340/milestones读回、independent reconciliation与finite closeout，因此doc340现在是
+  `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；milestones diagnostic #1的public-render response-body ERROR与reconciliation
+  attempt 1的schema-key setup error均以原identity保留。fresh CONTROL LOOP进入独立
+  [contract freeze publication](docs/341-r1-post-terminal-fact-dual-successor-authority-recovery-contract-freeze-publication.md)：
+  它只条件化发布固定doc340合同的`CONTRACT_FROZEN` target。publication自己的完整资格链闭合以前runtime仍
+  `NOT_STARTED / NOT_AUTHORIZED`，旧global composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

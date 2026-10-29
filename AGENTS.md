@@ -6456,6 +6456,45 @@ R2_R6_NOT_STARTED
 ```
 
 本candidate只允许README、AGENTS、milestones与新增doc340。自己的local/original PR/protected merge/exact-main双门、fresh
-README/doc340/milestones installed-product readback、independent reconciliation与finite closeout闭合后，最多成为
-`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only freeze publication；不得直接施工
-runtime、恢复旧global composition authority、选择manifest/Evidence/persistence或启动public Review/R2–R6。
+README/doc340/milestones installed-product readback、independent reconciliation与finite closeout已经闭合，因此doc340现为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。milestones diagnostic #1的public-render response-body ERROR与independent
+reconciliation attempt 1的schema-key setup error按原identity保留，不被后继PASS改写。
+
+### R1 post-terminal Fact dual-successor authority recovery 合同冻结发布候选
+
+文档340由PR #392以exact head `fe0d1c9ba6a967142542fe4606a70f3a91bb5475`合入
+`main@c819dd1cca35a96efc22908cce546fad8185d9d8`，tree `a80eb8913f225a8494bc50cd09e9a6edb35df0a6`。
+original Public CI `40821427690`、exact-main Public CI `40825476221`与Browser Smoke `40825476284`均为attempt 1
+SUCCESS，分别11/11、11/11与1/1；fresh README/doc340/milestones各取得唯一`FORMAL_READBACK_PASS`。independent
+reconciliation、140-artifact finite closeout、保留的stdout self-capture mismatch与finite integrity分别为：
+
+```text
+44462f6dc318aadc2931c252d5c8f5586dd8de10db2377ac11368cfc9d253c40
+379234bcd445d25059e5008b90299cc0d2963eea8b49e1ccfac23fca319240f8
+6c7d0a427d5ce6f62a9c9b91e92abc4b57c6fa7519fc5fd89119875d0fa3e6ff
+f348f7a17348549752c0f681e3400e362258d6872b5963b897471f3064f954a5
+```
+
+因此fresh CONTROL LOOP建立
+[文档341](docs/341-r1-post-terminal-fact-dual-successor-authority-recovery-contract-freeze-publication.md)。本publication不修改
+doc340合同、runtime、tests、workflow、Schema、Fact/Relation/Coverage semantics或任何public surface；它只条件化发布固定
+`POST_TERMINAL_DUAL_SUCCESSOR_0_1`合同的`CONTRACT_FROZEN` target。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc341。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc340/doc341/milestones installed-product readback、independent reconciliation与finite closeout全部闭合以后，
+`CONTRACT_FROZEN`才生效；随后必须返回CONTROL LOOP独立审计private implementation feasibility。不得提前施工runtime、恢复旧global
+composition authority、选择manifest/Evidence/persistence或启动public Review/R2–R6。
