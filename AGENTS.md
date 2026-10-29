@@ -6413,3 +6413,49 @@ README/doc339/milestones installed-product readback、independent reconciliation
 `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP独立建立post-terminal dual-successor authority合同；不得
 直接修改runtime、用union type冒充共同admission、消费旧global composition authority或启动manifest/Evidence/persistence/public
 Review/R2–R6。
+
+### R1 post-terminal Fact dual-successor authority recovery 合同候选
+
+文档339由PR #391以exact head `35332adabb8bd7c9259680e4a5132dbda5b808ce`合入
+`main@328ba21aa885a51f99c234ed90bee7056e8a320f`，tree `a0b21cdc13af58c9db2b8709e291b2fd1a9dd0bf`。
+original Public CI `40789265601`、exact-main Public CI `40792519912`与Browser Smoke `40792519857`均为attempt 1
+SUCCESS，分别11/11、11/11与1/1；fresh README/doc339/milestones各取得唯一qualifying PASS。README formal #1与
+milestones formal #1的anonymous rate exhaustion ERROR继续保留。independent reconciliation、191-artifact finite closeout、
+self-capture mismatch与finite integrity分别为：
+
+```text
+69ee5b048581dc3afa80401fd864339245148a7a20f1d07a8802f8c02440791b
+dd056c1a795b7b912515c6d7fa85f1e7618560a394ee42f77a22797fd3d011fa
+b3abc805297dfd94efc059c4434708bc5dfcdf08406131a097c3cd63b278d846
+c89da379acdf8237f3e34550d7e354470ccf68160015c20a34ef44774c6bf89b
+```
+
+因此doc339现为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP建立
+[文档340](docs/340-r1-post-terminal-fact-dual-successor-authority-recovery-contract.md)。本合同冻结新的private
+`POST_TERMINAL_DUAL_SUCCESSOR_0_1`domain：successor在Fact执行前只绑定完整world，不签发route；complete Fact terminal source重验后，
+`NORMAL_FULFILLED`只能取得Relation handoff，四类negative branch只能取得exact-input successor 0.2。两条route共享一个consume
+slot；pre-terminal、wrong-route、fail-then-fallback、replay、copy-equal、branch rewrite、denominator shrink与shared-projector
+common-mode全部fail closed。
+
+candidate-local semantic audit在Python 3.10.6/3.13.13 × normal/`-O`四格逐字节一致，audit source与report SHA-256分别为
+`47b5c4ab2185a51d2721ebfa37ae14b7dad02a6afd5e039e1886fe57722a8a4b`与
+`254cac8a3d722d8e5cc95f0c89859689ea4da411e768463aa75ecf38f13b9dae`；focused matrix四格各214 reported / 213 passed /
+1 skipped。assertion/fragment、incomplete falsifier coverage与runner syntax setup errors均保留，effect为`NONE`。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_CANDIDATE_NOT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与新增doc340。自己的local/original PR/protected merge/exact-main双门、fresh
+README/doc340/milestones installed-product readback、independent reconciliation与finite closeout闭合后，最多成为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only freeze publication；不得直接施工
+runtime、恢复旧global composition authority、选择manifest/Evidence/persistence或启动public Review/R2–R6。
