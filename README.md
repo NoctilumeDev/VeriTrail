@@ -363,7 +363,12 @@ python -m venv .venv
   readback qualified但仍未FROZEN。首次doc337 publication的original Public CI在固定30分钟外层job上限终结为CANCELLED，PR #388已
   关闭且未合并；独立PR #389只把聚合Python job上限30→35分钟并完整取得original/exact-main门。新的版本化
   [implementation freeze successor publication](docs/338-r1-negative-world-coverage-authority-recovery-private-implementation-freeze-successor-publication.md)
-  条件化发布`PRIVATE_IMPLEMENTATION_FROZEN`；它自己的完整资格链闭合以前该状态不生效，#388不被回填，旧composition authority仍不可消费。
+  已由PR #390合入`main@4baf572…`，original/exact-main双门、fresh README/doc336/doc338/milestones读回、independent
+  reconciliation与finite closeout全部闭合，`PRIVATE_IMPLEMENTATION_FROZEN`现已生效，#388仍不被回填。fresh CONTROL LOOP进入
+  [Review / Coverage composition authority recovery当前状态审计](docs/339-r1-review-coverage-composition-authority-recovery-current-state-audit.md)：
+  positive与negative实现分别在互斥terminal applicability内成立，但Fact handoff domain在terminal branch已知前就被固定，wrong-route
+  fallback还会烧毁共享one-shot；因此旧global composition authority仍不可消费，下一最小边界收敛为versioned post-terminal dual-successor
+  authority合同，manifest/Evidence/persistence继续未授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

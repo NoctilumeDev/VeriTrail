@@ -7657,3 +7657,47 @@ R2_R6_NOT_STARTED
 
 本successor publication只允许README、AGENTS、milestones与doc338。完整资格链闭合前`PRIVATE_IMPLEMENTATION_FROZEN`不生效；
 闭合后仍必须返回CONTROL LOOP，重新审计composition可消费authority，不能按编号自动启动manifest/Evidence/persistence或R2–R6。
+
+## R1 Review / Coverage composition authority recovery 当前状态审计候选
+
+文档338由PR #390以exact head `7f31acdd88ffa10e4e88746465149c8b3841f586`合入
+`main@4baf57268f6a06e584a4396b6d4e7a9d24735744`，tree `388892cc80caa5b7f9d135f11c621c427b8f07f7`。
+original Public CI `40775454879`、exact-main Public CI `40779905310`与Browser Smoke `40779905322`均为attempt 1
+SUCCESS；fresh README/doc336/doc338/milestones 4/4 PASS。independent reconciliation、finite closeout、finite integrity与
+保留的stdout self-capture mismatch分别为：
+
+```text
+e85dc7c7d85f3178e26ede72ac613037c7b277886efceaed1767c838bbfbe63d
+d38212c2994e756a6a6c50633d9e91c1f1314e0ec3defbeab56dbe97e0c0fb23
+ed759c7f7e91bd8e312d16ca3ae2a19b22f39052d7d95136f7789e7e813d85e9
+bbcde590980961ee95f6e53e8dcc6e470342bacd505c20b9f66e855eb7b164eb
+```
+
+因此`R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN`已经生效；旧composition authority仍只保留
+历史。fresh CONTROL LOOP建立
+[文档339](339-r1-review-coverage-composition-authority-recovery-current-state-audit.md)。四格read-only audit的canonical SHA-256一致：
+
+```text
+0e595b9145244f3ea53b5e728fabca48be411042d1491f42d359403cd559ffaa
+```
+
+focused witness四格各153项、152 passed / 1 skipped。normal与四类negative terminal branch形成total、disjoint partition，两个冻结
+局部实现分别成立；但Fact consumer必须在terminal branch可知以前选择互斥handoff domain，且wrong-route/fallback会烧毁one-shot。
+attempt 1 field-selection ERROR、attempt 2真实domain拒绝、attempt 3 mixed working-byte facility error均按原identity保留，只有固定bytes的
+attempt 4计入本地审计。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDIT_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc339。完整资格链闭合后最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`；
+下一步必须独立冻结post-terminal dual-successor authority合同，不能直接施工runtime、恢复global composition或启动manifest/Evidence/
+persistence/public Review/R2–R6。
