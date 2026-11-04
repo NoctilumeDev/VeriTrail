@@ -1,5 +1,8 @@
 # 00. 产品定义
 
+> 跨阶段的长期产品目标、权威边界与演进原则见
+> [VeriTrail 产品目标、权威边界与演进原则](product-goal-authority-and-evolution-principles.md)。该文档不是当前状态声明、冻结合同、Roadmap 或施工授权。
+
 ## 1. 一句话定位
 
 VeriTrail 是一个本地优先的全链路验收证据工作台：它用控制变量法组织实验，在明确的
