@@ -7934,3 +7934,53 @@ R2_R6_NOT_STARTED
 reconciliation与finite closeout全部闭合后最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；冻结必须
 由后继docs-only publication独立取得资格。不得从本candidate直接恢复global composition authority或启动manifest/Evidence/persistence/
 public Review/R2–R6。
+
+## R1 public project-state projection recovery gate failure-boundary audit candidate（2026-11-05）
+
+doc346 implementation由PR #398以
+`base=aa0cd335a98269dcdb843645f9643c0e7982a5c8 / head=c1952d76f82808d2c9c7ccca719d32db20364000 /
+tree=81790b398fb3d07ed53d67269b80d99d94675807`受保护合入
+`main@6a30957429c7b6a815608e8355893deb35873f24`。original Public CI `41893051274`、exact-main Public CI
+`41898679833`与Browser Smoke `41898679711`均为attempt 1 SUCCESS。fresh README/doc345/doc346 formal readback各有唯一
+PASS，但milestones diagnostic观察到526260 UTF-8 bytes超过frozen 524288-byte Public Render上限，正确终结为
+`PARTIAL / CONTENT_TRUNCATED`且formal未运行。因此#398只能是`MERGED / EXACT_MAIN_DUAL_GATES_PASS /
+READBACK_NOT_QUALIFIED / NOT_FROZEN`；该失败不允许提高P2上限、把PARTIAL改名为COMPLETE或拼接三个已有PASS。
+
+第一次public project-state projection recovery使用doc347身份；PR #399 exact
+`base=6a30957429c7b6a815608e8355893deb35873f24 / head=42df6f6c7f5da44640b47009e942390d55345565 /
+tree=1136377bebfd3a9d935024160b84c05377a28300`。original Public CI `41908195831` attempt 1在required Python
+3.13 job `126848392933`中真实FAIL：fixture `git cat-file`耗尽剩余`3.1687451000000237`秒acquisition budget，产品正确映射
+`SAFETY_BUDGET_EXHAUSTED`。该PR未rerun、已关闭且未合并；doc347与`docs/project-state.md`只属于failed head。same-run
+Python 3.10 PASS与prior exact-base Python 3.13 PASS不能拼接为#399资格；candidate regression与product defect没有建立，
+runner/subprocess stall底层原因保持`UNKNOWN`。failure-boundary、44-artifact closeout与finite integrity分别为：
+
+```text
+fd7131e454301589e521c7078ac92f63fdb9dbcaa10af6c15ceb0c5af6ccca5e
+4b4dcd0dd01cc09c244e7ded476bf77978a3569bd06129f428a394bb6b7ef20c
+c28e9c631e80cfd97cbe0de2d909acc8ad787708f517f344d135fe9afd0374b4
+```
+
+fresh CONTROL LOOP建立
+[文档348](348-r1-public-state-projection-recovery-gate-failure-boundary-audit.md)，只保存两条失败链、公开容量边界与后继
+versioned recovery责任。因milestones已经被真实证明超过P2 Render上限，本candidate自己的合入后readback对README/doc348使用
+fresh anonymous Public Render，对AGENTS/milestones使用fresh anonymous exact-commit public/API raw-byte observation；raw bytes不得
+冒充render COMPLETE，独立reconciliation必须同时核对两条失败身份。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_MERGED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_EXACT_MAIN_DUAL_GATES_PASS
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_PR_399_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_GATE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_NOT_EFFECTIVE
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc348。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned docs-only public
+project-state projection recovery candidate且不得复用doc347。不得回填#398/#399、修改P2 oracle、直接冻结implementation或启动
+runtime/manifest/Evidence/persistence/public Review/R2–R6。
