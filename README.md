@@ -383,8 +383,12 @@ python -m venv .venv
   [private implementation feasibility audit](docs/342-r1-post-terminal-fact-dual-successor-private-implementation-feasibility-audit.md)：
   current Fact terminal source已经独立重建五分支，closure已有single shared claim slot，positive Relation与negative exact-input downstream
   也分别拥有自己的验证入口；read-only audit因此证明一个new private selector、exact domain factory与claimed-source adapter构成bounded
-  implementation surface。本文完整资格链闭合前它仍只是candidate；下一步只能是独立docs-only implementation authorization，旧global
-  composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
+  implementation surface。PR #394的original/exact-main双门、fresh README/doc341/doc342/milestones readback、independent reconciliation与
+  finite closeout现已闭合，因此doc342成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；全部anonymous rate/preflight与continuity-check
+  non-success仍按原identity保留。fresh CONTROL LOOP进入独立
+  [private implementation authorization publication](docs/343-r1-post-terminal-fact-dual-successor-private-implementation-authorization-publication.md)：
+  它只条件化允许bounded private dual-successor A–J；自己的完整资格链闭合前`ALLOWED`不生效，runtime仍`NOT_STARTED /
+  NOT_AUTHORIZED`，旧global composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

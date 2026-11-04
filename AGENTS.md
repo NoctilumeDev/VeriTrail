@@ -6539,3 +6539,46 @@ R2_R6_NOT_STARTED
 README/doc341/doc342/milestones installed-product readback、independent reconciliation与finite closeout闭合后，最多成为
 `FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立docs-only implementation authorization publication；
 不得直接施工runtime、恢复旧global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 post-terminal Fact dual-successor 私有实现授权发布候选
+
+文档342由PR #394以exact head `3abf3afc56f9e00622e34f9e320ae16ae2f75d47`合入
+`main@2e9e5fbb56c84152de6a90be535345666becb733`，tree `be764de0a27d1b61cc1f0d51f14a29ad3894ce58`。
+original Public CI `40848292961`、exact-main Public CI `40853811383`与Browser Smoke `40853811154`均为attempt 1 SUCCESS；
+fresh README/doc341/doc342/milestones 4/4取得唯一qualifying PASS。independent reconciliation、173-artifact finite closeout、
+self-capture mismatch与finite integrity分别为：
+
+```text
+94acea18208b363fef7ac23bc19fa3a39c43bc72347a2a41729beb0dd11d909c
+87c64f49bb9bc2b086327ae68b4fb66a9d4267bd0a6d239f3e9b055c3e473d49
+4087bc023c8a58e0a0b511a4cf304b30bffa9500a9b837abd99530045bada35c
+f31e6ebab9f34522eee7b43717d1daf801bd531cb9fc2aa069ca901b797f5bd4
+```
+
+首次anonymous rate/preflight exhaustion、reset后continuity-check attempt 1/2 proof-facility setup errors、diagnostic #2与preflight #2
+匿名配额视图冲突均继续按原identity保留；后继PASS不回填。因此doc342现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，runtime
+仍是`NOT_STARTED / NOT_AUTHORIZED`。fresh CONTROL LOOP建立
+[文档343](docs/343-r1-post-terminal-fact-dual-successor-private-implementation-authorization-publication.md)。
+
+```text
+R1_REVIEW_SLICE_SET_COVERAGE_COMPOSITION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_NEGATIVE_WORLD_COVERAGE_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_COVERAGE_COMPOSITION_AUTHORITY_RECOVERY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与新增doc343；只条件化授权versioned private domain/factory、post-terminal selector、
+shared one-shot claim、normal Relation claimed-source adapter、negative exact-input 0.2 delegation及对应PTDS-000–017 tests。自己的
+local/original PR/protected merge/exact-main双门、fresh README/doc342/doc343/milestones installed-product readback、independent
+reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED`才生效，同时implementation仍保持`NOT_STARTED`。
+随后必须返回CONTROL LOOP；不得在本publication中施工runtime、修改frozen/public surface、恢复旧global composition authority或启动
+manifest/Evidence/persistence/public Review/R2–R6。
