@@ -9,7 +9,8 @@ from __future__ import annotations
 import hashlib
 import json
 import threading
-from typing import Mapping
+import weakref
+from typing import Callable, Mapping
 from uuid import uuid4
 
 from veritrail_review._fact_fulfillment import (
@@ -102,6 +103,12 @@ class ClaimedFactToCoverageExactInputHandoff:
         closure: OwnedProductFactClosure,
         claim_id: str,
         *,
+        route_validator: Callable[
+            [], tuple[dict[str, object], BudgetContext, DerivationInputSet]
+        ]
+        | None = None,
+        route_revoker: Callable[[], None] | None = None,
+        route_replay_revoker: Callable[[], None] | None = None,
         _token: object,
     ) -> None:
         if (
@@ -124,6 +131,15 @@ class ClaimedFactToCoverageExactInputHandoff:
         self.__bound_context = context
         self.__claim_id = claim_id
         self.__bound_claim_id = claim_id
+        self.__route_validator = route_validator
+        self.__bound_route_validator = route_validator
+        self.__route_revoker = route_revoker
+        self.__bound_route_revoker = route_revoker
+        self.__route_replay_revoker = route_replay_revoker
+        self.__bound_route_replay_revoker = route_replay_revoker
+        self.__post_terminal_identity_ref = (
+            None if route_validator is None else weakref.ref(self)
+        )
         self.__source_bytes = canonical_json_bytes(dict(source))
         self.__bound_source_bytes = self.__source_bytes
         self.__input_state_seal = _input_state_seal(inputs)
@@ -164,6 +180,11 @@ class ClaimedFactToCoverageExactInputHandoff:
 
     def __fail(self, _exc: Exception) -> FactToCoverageExactInputHandoffError:
         self.__failed = True
+        if self.__route_revoker is not None:
+            try:
+                self.__route_revoker()
+            except Exception:
+                pass
         for closure in (self.__bound_closure, self.__closure):
             try:
                 closure._revoke_handoff_source()
@@ -182,6 +203,14 @@ class ClaimedFactToCoverageExactInputHandoff:
                 or self.__inputs is not self.__bound_inputs
                 or self.__context is not self.__bound_context
                 or self.__claim_id != self.__bound_claim_id
+                or self.__route_validator is not self.__bound_route_validator
+                or self.__route_revoker is not self.__bound_route_revoker
+                or self.__route_replay_revoker
+                is not self.__bound_route_replay_revoker
+                or (
+                    self.__post_terminal_identity_ref is not None
+                    and self.__post_terminal_identity_ref() is not self
+                )
                 or self.__source_bytes is not self.__bound_source_bytes
                 or self.__document_bytes is not self.__bound_document_bytes
                 or type(self.__source_bytes) is not bytes
@@ -203,9 +232,12 @@ class ClaimedFactToCoverageExactInputHandoff:
                 != self.__digests
             ):
                 raise ValueError
-            source, context, inputs = (
-                self.__closure._validate_exact_input_successor_source()
-            )
+            if self.__route_validator is None:
+                source, context, inputs = (
+                    self.__closure._validate_exact_input_successor_source()
+                )
+            else:
+                source, context, inputs = self.__route_validator()
             if (
                 context is not self.__context
                 or inputs is not self.__inputs
@@ -272,6 +304,11 @@ class ClaimedFactToCoverageExactInputHandoff:
         with state.lock:
             self.__validate()
             if state.consumed:
+                if self.__route_replay_revoker is not None:
+                    try:
+                        self.__route_replay_revoker()
+                    except Exception:
+                        pass
                 raise FactToCoverageExactInputHandoffError(
                     "negative-world carrier was already consumed"
                 )
@@ -349,3 +386,59 @@ def claim_fact_to_coverage_exact_input_handoff(
         raise FactToCoverageExactInputHandoffError(
             "exact-input handoff claim failed closed"
         ) from exc
+
+
+def _claim_fact_to_coverage_exact_input_from_post_terminal(
+    *,
+    source: Mapping[str, object],
+    inputs: DerivationInputSet,
+    context: BudgetContext,
+    closure: OwnedProductFactClosure,
+    claim_id: str,
+    route_validator: Callable[
+        [], tuple[dict[str, object], BudgetContext, DerivationInputSet]
+    ],
+    route_revoker: Callable[[], None],
+    route_replay_revoker: Callable[[], None],
+) -> ClaimedFactToCoverageExactInputHandoff:
+    """Bind the frozen exact-input carrier to the new shared route slot."""
+
+    if (
+        type(source) is not dict
+        or source.get("branch")
+        not in {
+            "ZERO_PARSE_DENOMINATOR",
+            "ALL_PARSE_REJECTED",
+            "PROJECTION_BLOCKED",
+            "REQUIRED_PROVIDER_NON_SUCCESS",
+        }
+        or type(inputs) is not DerivationInputSet
+        or type(context) is not BudgetContext
+        or type(closure) is not OwnedProductFactClosure
+        or type(claim_id) is not str
+        or not claim_id
+        or not callable(route_validator)
+        or not callable(route_revoker)
+        or not callable(route_replay_revoker)
+    ):
+        raise FactToCoverageExactInputHandoffError(
+            "post-terminal exact-input route is invalid"
+        )
+    try:
+        return ClaimedFactToCoverageExactInputHandoff(
+            source,
+            inputs,
+            context,
+            closure,
+            claim_id,
+            route_validator=route_validator,
+            route_revoker=route_revoker,
+            route_replay_revoker=route_replay_revoker,
+            _token=_CARRIER_TOKEN,
+        )
+    except Exception:
+        try:
+            route_revoker()
+        except Exception:
+            pass
+        raise

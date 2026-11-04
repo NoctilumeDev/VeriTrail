@@ -88,6 +88,7 @@ class OwnedFactRelationTransitionAdmission:
         fact_handoff_source: Mapping[str, object],
         request_provenance: Mapping[str, object],
         transition_identity: Mapping[str, object],
+        route_claim: object | None = None,
         _token: object,
     ) -> None:
         if _token is not _RESULT_TOKEN:
@@ -112,6 +113,8 @@ class OwnedFactRelationTransitionAdmission:
             dict(transition_identity)
         )
         self.__bound_transition_identity_bytes = self.__transition_identity_bytes
+        self.__route_claim = route_claim
+        self.__bound_route_claim = route_claim
         self.__claimed = False
         self.__lock = Lock()
 
@@ -146,6 +149,7 @@ class OwnedFactRelationTransitionAdmission:
                 is not self.__bound_request_provenance_bytes
                 or self.__transition_identity_bytes
                 is not self.__bound_transition_identity_bytes
+                or self.__route_claim is not self.__bound_route_claim
                 or self.__context.state is not BudgetState.RUNNING
                 or self.__context.stop_trigger is not None
                 or self.__eligibility.state is not AttemptEligibilityState.ADMITTED
@@ -154,6 +158,16 @@ class OwnedFactRelationTransitionAdmission:
                 raise ValueError
             _revalidate_exact_inputs(self.__inputs)
             document = json.loads(self.__bytes)
+            if self.__route_claim is not None:
+                values = self.__route_claim._validate_relation_claim_for_admission()
+                source, context, inputs = values[:3]
+                if (
+                    canonical_json_bytes(source)
+                    != self.__fact_handoff_source_bytes
+                    or context is not self.__context
+                    or inputs is not self.__inputs
+                ):
+                    raise ValueError
             if (
                 document["transition_function"] != TRANSITION_FUNCTION
                 or document["admission"]["function"] != ADMISSION_FUNCTION
@@ -241,6 +255,86 @@ def run_fact_handoff_relation_transition(
     except Exception as exc:
         raise FactRelationTransitionError("Fact handoff claim failed closed") from exc
 
+    return _run_fact_handoff_relation_transition_from_source(
+        source=source,
+        context=context,
+        inputs=inputs,
+        classification=classification,
+        inherited_limits=inherited_limits,
+        inherited_cancellation=inherited_cancellation,
+        relation_bindings=relation_bindings,
+        cancellation_requested=cancellation_requested,
+        transport_limits=transport_limits,
+        route_claim=None,
+        handoff_claim_id_override=None,
+    )
+
+
+def run_claimed_fact_handoff_relation_transition(
+    claimed_source,
+    *,
+    relation_bindings: Sequence[ProviderBinding] = (),
+    cancellation_requested: Callable[[], bool] | None = None,
+    transport_limits: ExecutionCellTransportSafetyLimits | None = None,
+) -> OwnedFactRelationTransitionAdmission:
+    """Run the existing Relation executor from the new route-specific carrier."""
+
+    from veritrail_review._post_terminal_fact_dual_successor import (
+        ClaimedPostTerminalRelationSource,
+    )
+
+    if type(claimed_source) is not ClaimedPostTerminalRelationSource:
+        raise FactRelationTransitionError(
+            "transition requires a claimed post-terminal Relation source"
+        )
+    try:
+        route_document = claimed_source.document_copy()
+        (
+            source,
+            context,
+            inputs,
+            classification,
+            inherited_limits,
+            inherited_cancellation,
+        ) = claimed_source._claim_transition_source()
+        return _run_fact_handoff_relation_transition_from_source(
+            source=source,
+            context=context,
+            inputs=inputs,
+            classification=classification,
+            inherited_limits=inherited_limits,
+            inherited_cancellation=inherited_cancellation,
+            relation_bindings=relation_bindings,
+            cancellation_requested=cancellation_requested,
+            transport_limits=transport_limits,
+            route_claim=claimed_source,
+            handoff_claim_id_override=route_document["claim_id"],
+        )
+    except Exception as exc:
+        claimed_source._revoke_from_relation_transition()
+        if isinstance(exc, FactRelationTransitionError):
+            raise
+        raise FactRelationTransitionError(
+            "claimed post-terminal Relation transition failed closed"
+        ) from exc
+
+
+def _run_fact_handoff_relation_transition_from_source(
+    *,
+    source: Mapping[str, object],
+    context: BudgetContext,
+    inputs: DerivationInputSet,
+    classification: OwnedLanguageSupportClassification,
+    inherited_limits: ExecutionCellTransportSafetyLimits,
+    inherited_cancellation: Callable[[], bool] | None,
+    relation_bindings: Sequence[ProviderBinding],
+    cancellation_requested: Callable[[], bool] | None,
+    transport_limits: ExecutionCellTransportSafetyLimits | None,
+    route_claim: object | None,
+    handoff_claim_id_override: str | None,
+) -> OwnedFactRelationTransitionAdmission:
+    """Execute the unchanged Relation transition against a bound Fact source."""
+
     parent = AttemptEligibility()
     attempts = []
     try:
@@ -286,7 +380,13 @@ def run_fact_handoff_relation_transition(
             raise ValueError("transition cannot replace inherited cancellation identity")
 
         transition_attempt_id = str(uuid4())
-        handoff_claim_id = str(uuid4())
+        handoff_claim_id = (
+            str(uuid4())
+            if handoff_claim_id_override is None
+            else handoff_claim_id_override
+        )
+        if type(handoff_claim_id) is not str or not handoff_claim_id:
+            raise ValueError
         attempt_started_at = _utc_now()
         transition_identity = {
             "transition_attempt_id": transition_attempt_id,
@@ -412,12 +512,18 @@ def run_fact_handoff_relation_transition(
             fact_handoff_source=source,
             request_provenance=provenance,
             transition_identity=transition_identity,
+            route_claim=route_claim,
             _token=_RESULT_TOKEN,
         )
     except Exception as exc:
         parent.revoke()
         for attempt in attempts:
             attempt.eligibility.revoke()
+        if route_claim is not None:
+            try:
+                route_claim._revoke_from_relation_transition()
+            except Exception:
+                pass
         if isinstance(exc, FactRelationTransitionError):
             raise
         raise FactRelationTransitionError(

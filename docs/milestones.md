@@ -7473,7 +7473,6 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc332。完整资格链闭合后仍为qualified contract candidate / not frozen；必须返回
 CONTROL LOOP建立独立freeze publication，不能直接施工runtime、修改Ledger/positive composition或启动manifest/Evidence/persistence/
 public Review/R2–R6。
-
 ## R1 negative-world Coverage authority recovery 合同独立冻结发布候选
 
 文档332由PR #383以`base=348b3bdcbf8b459d52f17d2091cb1bb00a60197d`、
@@ -7900,3 +7899,38 @@ R2_R6_NOT_STARTED
 `PRIVATE_IMPLEMENTATION_ALLOWED`不生效；闭合后也只允许从新exact main返回CONTROL LOOP，再独立建立runtime implementation
 candidate。禁止复用doc343/#395、把maintenance当作runtime证据、修改frozen/public surface、恢复旧global composition authority或
 启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 post-terminal Fact dual-successor 私有实现候选（2026-11-05）
+
+doc345 authorization successor由PR #397以
+`base=a1899bc857d7933833b4b2393ae1bd7a71af2e14 / head=ab1e5f37b18e96e676da5aa05641f0a987ec15f2 /
+tree=eb4a9529867169f0ef695609c6cd8265d161df4e`受保护合入
+`main@aa0cd335a98269dcdb843645f9643c0e7982a5c8`。original Public CI `41849292451`、exact-main Public CI
+`41854217488`与Browser Smoke `41854217661`均为attempt 1 SUCCESS。fresh README/doc342/doc344/doc345/milestones各有
+唯一qualifying PASS；independent reconciliation `cb652ab7de58b7480252af142ffddd38ca5bfb4949dbaffe335e6e1f7b6c1572`与
+189-artifact closeout `855d9ab3f5d6af5680712ae2155cc56004db5d27334d9e5e16a238705e3000b3`成立。因此bounded
+private implementation A–J已经获得authority。
+
+fresh CONTROL LOOP建立[文档346](346-r1-post-terminal-fact-dual-successor-private-implementation-candidate.md)。candidate新增private
+`POST_TERMINAL_DUAL_SUCCESSOR_0_1` selector/shared slot，terminal normal只签发Relation claimed-source，四类negative只签发现有
+exact-input 0.2 carrier；旧Fact/Relation/exact-input/public/default paths保持不变。prequalification review发现并修正required-provider
+terminal validation与typed terminal replay两项实现缺陷，原失败日志保留。最终focused四格各174项、full四格各621项PASS；semantic
+四格逐字节一致，canonical SHA为`638b370d5cca5f3d8e854513386664de6e5ce33c5cea3796e29c8e2a48b69b16`。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_MERGED_NOT_EXACT_MAIN_VERIFIED_NOT_READBACK_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate自己的local/original PR/protected merge/exact-main双门、fresh README/doc345/doc346/milestones readback、independent
+reconciliation与finite closeout全部闭合后最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；冻结必须
+由后继docs-only publication独立取得资格。不得从本candidate直接恢复global composition authority或启动manifest/Evidence/persistence/
+public Review/R2–R6。

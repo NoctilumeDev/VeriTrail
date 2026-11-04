@@ -6617,3 +6617,35 @@ tests。自己的local/original PR/protected merge/exact-main双门、fresh READ
 independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED`才生效，同时implementation仍保持
 `NOT_STARTED`。随后必须返回CONTROL LOOP；不得复用doc343/#395、把#396 maintenance算作runtime证据、修改frozen/public surface、
 恢复旧global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+### R1 post-terminal Fact dual-successor 私有实现候选
+
+doc345 successor publication由PR #397以exact head `ab1e5f37b18e96e676da5aa05641f0a987ec15f2`受保护合入
+`main@aa0cd335a98269dcdb843645f9643c0e7982a5c8`，tree `eb4a9529867169f0ef695609c6cd8265d161df4e`。
+original Public CI `41849292451`、exact-main Public CI `41854217488`与Browser Smoke `41854217661`均为attempt 1
+SUCCESS；fresh README/doc342/doc344/doc345/milestones各取得唯一qualifying PASS，independent reconciliation与finite closeout
+也已闭合。因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；#395/doc343失败world与#396 maintenance继续保持独立。
+
+fresh CONTROL LOOP从该exact main建立
+[文档346](docs/346-r1-post-terminal-fact-dual-successor-private-implementation-candidate.md)。候选新增versioned private selector与shared
+one-shot claim，normal route委托existing Relation executor，四类negative route委托existing exact-input 0.2 carrier；18项PTDS
+falsifier、两个downstream end-to-end入口、旧public/default path与full Review Attention均已进入本地witness。formal qualification以前
+发现并修正required-provider terminal validation与typed terminal replay两项implementation defect，原失败日志永久保留。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_MERGED_NOT_EXACT_MAIN_VERIFIED_NOT_READBACK_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones、doc346、四个private relation modules与一个private test module。自己的local/
+original PR/protected merge/exact-main双门、fresh README/doc345/doc346/milestones installed-product readback、independent reconciliation与
+finite closeout全部闭合后，最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回
+CONTROL LOOP建立独立docs-only implementation freeze publication；不得直接恢复global composition authority或启动manifest/Evidence/
+persistence/public Review/R2–R6。
