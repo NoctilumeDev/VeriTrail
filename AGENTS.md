@@ -6574,3 +6574,46 @@ protected merge/exact-main双门、fresh README/doc342/doc344/milestones readbac
 最多成为`R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新exact main建立versioned
 docs-only authorization successor；不得恢复#395、复用doc343、直接施工runtime或启动manifest/Evidence/persistence/public
 Review/R2–R6。
+
+### R1 post-terminal Fact dual-successor 私有实现授权 successor 0.2 发布候选
+
+doc344 maintenance已由PR #396以exact head `ff104f212fb9cbb955ebfbfe4e2b85c201ef7928`合入
+`main@a1899bc857d7933833b4b2393ae1bd7a71af2e14`，tree `19a897fcba6fed897c2fd8d51beff65a668d8876`。
+original Public CI `41819486547`、exact-main Public CI `41824009644`与Browser Smoke `41824009444`均为attempt 1
+SUCCESS；fresh README/doc342/doc344/milestones各取得唯一qualifying PASS。independent reconciliation、218-artifact finite
+closeout、self-capture mismatch与finite integrity分别为：
+
+```text
+8f4d91fb0f25bd305fd3bce951c7363ef91addf18adaca5eaede708295ae6566
+843f1986666c9b568e6e088a51dc986a38807a998023a95651677ef375781069
+ed74a25cc5702ef18e66d2320ce8f8f08b1556f77e2d77f1586ec8ee230fcd4e
+c48361e22262e5a9c9f380b6297cbdb17e9e8734834f69743da8a0c3c07af944
+```
+
+#395 original required Workbench failure、doc343失败candidate、Node 20双侧相同失败、README marker proof-facility ERROR、anonymous
+rate exhaustion、reset/setup history与stdout self-capture mismatch均按原identity保留；后继PASS不回填。因此doc344现为
+`R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY`，但runtime implementation仍是`NOT_STARTED / NOT_AUTHORIZED`。
+fresh CONTROL LOOP从新exact main建立
+[文档345](docs/345-r1-post-terminal-fact-dual-successor-private-implementation-authorization-successor-publication.md)。本文只把
+authorization publication本身version bump为successor 0.2，不修改frozen `POST_TERMINAL_DUAL_SUCCESSOR_0_1`合同或bounded A–J。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PR_395_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_SUCCESSOR_0_2_PUBLICATION_CANDIDATE
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本successor publication只允许README、AGENTS、milestones与新增doc345；只条件化授权versioned private domain/factory、post-terminal
+selector、shared one-shot claim、normal Relation claimed-source adapter、negative exact-input 0.2 delegation及对应PTDS-000–017
+tests。自己的local/original PR/protected merge/exact-main双门、fresh README/doc342/doc344/doc345/milestones installed-product readback、
+independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED`才生效，同时implementation仍保持
+`NOT_STARTED`。随后必须返回CONTROL LOOP；不得复用doc343/#395、把#396 maintenance算作runtime证据、修改frozen/public surface、
+恢复旧global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
