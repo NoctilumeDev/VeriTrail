@@ -402,9 +402,12 @@ python -m venv .venv
   READBACK_NOT_QUALIFIED / NOT_FROZEN`。第一次public project-state projection recovery使用doc347身份，PR #399 original Public CI
   `41908195831` attempt 1在未改动的Python 3.13 Review Attention path中因fixture `git cat-file`耗尽剩余3.1687451秒
   acquisition budget而FAIL；产品正确映射`SAFETY_BUDGET_EXHAUSTED`。该PR未rerun、已关闭且未合并；candidate regression与
-  product defect均未建立，runner/subprocess stall底层原因保持`UNKNOWN`。fresh CONTROL LOOP进入独立
-  [gate failure-boundary audit](docs/348-r1-public-state-projection-recovery-gate-failure-boundary-audit.md)，只保存两条失败链、
-  公开容量边界与versioned recovery责任；当前仍为candidate，不能回填#398/#399或授权后继runtime。
+  product defect均未建立，runner/subprocess stall底层原因保持`UNKNOWN`。独立
+  [gate failure-boundary audit](docs/348-r1-public-state-projection-recovery-gate-failure-boundary-audit.md)已由PR #400合入
+  `main@34de942…`并完成original/exact-main双门、fresh changed-target observations、independent reconciliation与finite
+  closeout，现为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填#398/#399。fresh CONTROL LOOP从该新exact main建立
+  [versioned recovery successor 0.2](docs/349-r1-public-project-state-projection-recovery-successor-contract.md)及
+  [有界当前状态投影](docs/project-state.md)候选；完整milestones保持原字节，投影不拥有事实、资格、调度或施工授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
@@ -594,6 +597,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 ### 想复核工程事实
 
 - [里程碑冻结历史与完整文档索引](docs/milestones.md)：集中查询冻结边界、来源坐标和保留失败；
+- [有界当前项目状态公开投影候选](docs/project-state.md)：提供短的current-state阅读面；它不是事实权威、状态机或施工调度器；
 - [首页工程记录保留页](docs/readme-engineering-records.md)：保留从本次候选首页迁出的长篇记录，以及原来的 106 项工程事实入口；
 - [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)与[GitHub Evidence Plugin 发布读回](docs/108-p4-github-evidence-release-readback-facts.md)：复核已交付产品；
 - [Parse → Fact consumer A–J 冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)与[Fact 当前状态再审计及条件化后继计划](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)：区分已有 product-use proof 与尚未建立的完整 Fact 履责；

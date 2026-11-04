@@ -6697,3 +6697,49 @@ R2_R6_NOT_STARTED
 finite closeout全部闭合后，最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新exact main
 建立独立versioned docs-only projection recovery candidate（不得复用doc347）；不得直接冻结#398、恢复#399、修改P2上限或启动
 runtime/manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection recovery successor 0.2 contract candidate
+
+doc348 failure-boundary audit由PR #400以exact head `e9d593173aa6ff29ab67d01f595f0ca8d3eb9924`受保护合入
+`main@34de9427d64ba8a3c77ac38eefe146fa8d2e2d77`，tree `f6edc136e2bd156409fad553c6453ceee73ccd97`。
+original Public CI `41917042638`、exact-main Public CI `41921759669`与Browser Smoke `41921759657`均为attempt 1
+SUCCESS。fresh README/doc348 Public Render formal readback与AGENTS/milestones exact-commit public/API raw-byte observation各有
+唯一PASS；independent reconciliation、186-artifact closeout、stdout self-capture mismatch与finite integrity分别为：
+
+```text
+fb4dd585026bc0f03ef3a6e9180b1874786f856b864c856dfb3612a140946c17
+cc7c6da94ef73715bf39d0291bc62eff08b200a16eb6c4ebb21285767a96bd2f
+35fdef9373f6c96f6db4ad225ad2e3e0e6340d90b6872faa6edafbfc7a6af229
+d1c660f86636465498300261284de9165bd7eb9eb26a39e977918c5821fd4fe5
+```
+
+README formal #1 marker drift、doc348 diagnostic #1 multiplicity及全部setup failure仍按原identity保留。因此doc348现为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填#398/#399，也不创建bounded project-state bytes。
+
+fresh CONTROL LOOP从该exact main建立
+[文档349](docs/349-r1-public-project-state-projection-recovery-successor-contract.md)与
+[有界当前状态投影](docs/project-state.md)候选。successor `R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2`重新绑定current exact base/tree与
+完整milestones SHA-256 `d468191fcfbbaa8df31f592db35e494a8363ddd4f9c1c735dec26ab41a495ccf`；milestones保持568856
+UTF-8 bytes不变。doc347及failed-head project-state bytes不复用、不继承资格。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_MERGED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_EXACT_MAIN_DUAL_GATES_PASS
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_PR_399_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、doc349与`docs/project-state.md`；`docs/milestones.md`必须保持exact-base bytes。自己的local/
+original PR/protected merge/exact-main双门、fresh README/project-state/doc349 Public Render、fresh AGENTS/milestones exact-commit
+public/API raw-byte observations、independent reconciliation与finite closeout全部闭合后，最多成为
+`QUALIFIED_CONTRACT_CANDIDATE / QUALIFIED_PROJECTION_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only
+freeze publication；不得回填#398/#399、修改P2上限、直接冻结private implementation或启动runtime/manifest/Evidence/persistence/
+public Review/R2–R6。
