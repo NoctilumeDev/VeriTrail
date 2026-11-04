@@ -7820,6 +7820,39 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 R2_R6_NOT_STARTED
 ```
 
-本candidate只允许README、AGENTS、milestones与doc342。完整资格链闭合以后最多成为
-`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；下一合法seam只能是独立docs-only implementation authorization publication，不能从
+本candidate只允许README、AGENTS、milestones与doc342。其完整资格链已经闭合，因此现为
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；下一合法seam是独立docs-only implementation authorization publication，不能从
 本文直接施工runtime或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 Workbench dependency audit recovery 候选
+
+第一次authorization publication使用doc343身份，PR #395 exact
+`base=2e9e5fbb56c84152de6a90be535345666becb733 / head=a9824e8451cc61242884cefb23b6c772aba07bee /
+tree=0725a796cbecda85397969c4762ce6d488b11a64`。其original Public CI `41811545926` attempt 1中required Workbench
+job `126511760426`真实FAIL：test/lint/build通过，未修改的moderate audit观察到16个moderate advisory。该PR未rerun、已关闭且
+未合并；clean exact base也以相同lock复现16个advisory，因此authorization content failure与candidate regression没有建立，底层
+external advisory activation原因保持`UNKNOWN`。doc343继续只属于失败candidate，不在main复用。
+
+fresh CONTROL LOOP建立[文档344](344-r1-workbench-dependency-audit-recovery.md)。候选只把Workbench dev graph的`glob`与
+`minimatch`用exact dev pins和npm overrides收敛到`14.0.3 / 11.0.4`，lock SHA-256为
+`ff6b4bb86dbe3c369d29f6230633b7db57c73a650ddc3fe923e6d5c821aa9904`。Node 22.23.4/npm 11.19.1下
+179 tests、lint、build、原moderate audit 0 vulnerabilities与dependency tree全部PASS。额外Node 20.19.0诊断在candidate与clean exact
+base上均出现相同6 files / 79 tests失败与WebCrypto realm错误，因此candidate regression仍未建立，底层原因保持`UNKNOWN`，且该失败
+不被Node 22 PASS覆盖。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PR_395_FAILED_CLOSED_UNMERGED
+R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本maintenance candidate只允许README、AGENTS、milestones、doc344与两个Workbench package files。自己的完整资格链闭合后最多成为
+`R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立versioned docs-only
+authorization successor。不得恢复#395、复用doc343、直接施工runtime或启动manifest/Evidence/persistence/public Review/R2–R6。

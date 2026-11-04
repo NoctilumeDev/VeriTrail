@@ -6535,7 +6535,42 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 R2_R6_NOT_STARTED
 ```
 
-本candidate只允许README、AGENTS、milestones与新增doc342。自己的local/original PR/protected merge/exact-main双门、fresh
-README/doc341/doc342/milestones installed-product readback、independent reconciliation与finite closeout闭合后，最多成为
-`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立docs-only implementation authorization publication；
+本candidate只允许README、AGENTS、milestones与新增doc342。其local/original PR/protected merge/exact-main双门、fresh
+README/doc341/doc342/milestones installed-product readback、independent reconciliation与finite closeout已经闭合，因此现为
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后fresh CONTROL LOOP建立独立docs-only implementation authorization publication；
 不得直接施工runtime、恢复旧global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 Workbench dependency audit recovery 候选
+
+第一次authorization publication使用doc343身份，PR #395 exact
+`base=2e9e5fbb56c84152de6a90be535345666becb733 / head=a9824e8451cc61242884cefb23b6c772aba07bee /
+tree=0725a796cbecda85397969c4762ce6d488b11a64`。其original Public CI `41811545926` attempt 1在required
+Workbench job `126511760426`中真实FAIL：test/lint/build已经PASS，但未改动的npm 11.19.1 moderate audit观察到16个moderate
+advisory。该PR没有rerun，已经关闭且未合并；doc343继续只属于失败candidate，不能在main复用。clean exact base、原lock
+`bd3bd3d6e8e6aba77ee7b02174fca07aee91d5ccc0deca16aac04be159d1880c`独立复现相同live audit，因此authorization
+content failure与candidate regression均未建立，外部advisory激活根因保持`UNKNOWN`。
+
+fresh CONTROL LOOP建立[文档344](docs/344-r1-workbench-dependency-audit-recovery.md)。候选只修改`web/package.json`与lock：
+exact dev pins和npm overrides把`glob`/`minimatch`收敛到`14.0.3 / 11.0.4`，原Node 22 workflow、moderate audit oracle、
+Workbench source/tests与R1语义保持不变。Node 22.23.4/npm 11.19.1下179 tests、lint、build、audit 0 vulnerabilities与
+dependency tree全部PASS；额外Node 20.19.0探针在candidate和clean exact base上均以同一WebCrypto realm错误得到79 failed / 100
+passed，故candidate regression仍未建立，底层原因保持`UNKNOWN`且该失败不被Node 22 PASS覆盖。当前状态为：
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PR_395_FAILED_CLOSED_UNMERGED
+R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本maintenance candidate只允许README、AGENTS、milestones、doc344与两个Workbench package files。自己的local/original PR/
+protected merge/exact-main双门、fresh README/doc342/doc344/milestones readback、independent reconciliation与finite closeout全部闭合后，
+最多成为`R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新exact main建立versioned
+docs-only authorization successor；不得恢复#395、复用doc343、直接施工runtime或启动manifest/Evidence/persistence/public
+Review/R2–R6。
