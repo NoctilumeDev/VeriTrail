@@ -393,8 +393,11 @@ python -m venv .venv
   README/doc342/doc344/milestones readback、independent reconciliation与finite closeout已经闭合，因此maintenance现在是qualified
   history，doc343仍只属于失败world且不得复用。fresh CONTROL LOOP从新exact main建立
   [versioned implementation authorization successor 0.2](docs/345-r1-post-terminal-fact-dual-successor-private-implementation-authorization-successor-publication.md)：
-  它只条件化允许同一bounded private dual-successor A–J；自己的完整资格链闭合前`ALLOWED`不生效，private implementation仍
-  `NOT_STARTED / NOT_AUTHORIZED`。
+  PR #397已完成original/exact-main双门、fresh README/doc342/doc344/doc345/milestones readback、independent reconciliation与
+  finite closeout，因此`PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh CONTROL LOOP从新exact main建立
+  [private implementation candidate](docs/346-r1-post-terminal-fact-dual-successor-private-implementation-candidate.md)：它实现新private
+  selector/shared one-shot、normal Relation claimed-source与negative exact-input 0.2 delegation，并保持旧public/default paths不变；
+  当前仍是`NOT_MERGED / NOT_EXACT_MAIN_VERIFIED / NOT_READBACK_QUALIFIED / NOT_FROZEN`。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

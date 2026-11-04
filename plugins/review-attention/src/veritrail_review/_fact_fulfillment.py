@@ -196,6 +196,7 @@ class OwnedProductFactConsumer:
         handoff_domain: str,
         transport_limits: ExecutionCellTransportSafetyLimits,
         cancellation_requested: Callable[[], bool] | None,
+        post_terminal_dual_successor_slot: object | None,
         _token: object,
     ) -> None:
         if _token is not _PARENT_TOKEN:
@@ -229,6 +230,10 @@ class OwnedProductFactConsumer:
         self.__required = dict(required)
         self.__handoff_domain = handoff_domain
         self.__bound_handoff_domain = handoff_domain
+        self.__post_terminal_dual_successor_slot = post_terminal_dual_successor_slot
+        self.__bound_post_terminal_dual_successor_slot = (
+            post_terminal_dual_successor_slot
+        )
         self.__transport_limits = transport_limits
         self.__cancellation_requested = cancellation_requested
         self.__bound_cancellation_requested = cancellation_requested
@@ -401,6 +406,13 @@ class OwnedProductFactConsumer:
                 or self.__bindings is not self.__bound_bindings
                 or self.__cancellation_requested
                 is not self.__bound_cancellation_requested
+                or self.__post_terminal_dual_successor_slot
+                is not self.__bound_post_terminal_dual_successor_slot
+                or (
+                    self.__handoff_domain
+                    == "POST_TERMINAL_DUAL_SUCCESSOR_0_1"
+                )
+                is (self.__post_terminal_dual_successor_slot is None)
                 or _input_state_seal(self.__inputs) != self.__input_seal
                 or self.__context.state is not BudgetState.RUNNING
                 or self.__context.stop_trigger is not None
@@ -485,6 +497,9 @@ class OwnedProductFactConsumer:
                 "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2",
             },
             "RELATION_TRANSITION": {"RELATION_HANDOFF"},
+            "POST_TERMINAL_DUAL_SUCCESSOR_0_1": {
+                "POST_TERMINAL_DUAL_SUCCESSOR_SELECT_0_1"
+            },
         }
         if (
             self.__handoff_domain != self.__bound_handoff_domain
@@ -516,6 +531,82 @@ class OwnedProductFactConsumer:
     def _revoke(self) -> None:
         for eligibility in (self.__bound_eligibility, self.__eligibility):
             eligibility.revoke()
+
+    def _post_terminal_dual_successor_sealed_state(
+        self, slot: object
+    ) -> dict[str, object]:
+        """Return the exact pre-terminal object graph for the private 0.1 selector."""
+
+        try:
+            self._validate_live()
+            if (
+                self.__handoff_domain != "POST_TERMINAL_DUAL_SUCCESSOR_0_1"
+                or slot is not self.__post_terminal_dual_successor_slot
+                or slot is not self.__bound_post_terminal_dual_successor_slot
+            ):
+                raise ValueError
+            return {
+                "consumer": self,
+                "attempt": self.__attempt,
+                "inputs": self.__inputs,
+                "context": self.__context,
+                "classification": self.__classification,
+                "continuation": self.__continuation,
+                "product_set": self.__product_set,
+                "eligibility": self.__eligibility,
+                "bindings": self.__bindings,
+                "required": dict(self.__required),
+                "qualification_bytes": memoryview(self.__qualification).tobytes(),
+                "static_bytes": memoryview(self.__bound_static).tobytes(),
+                "transport_limits": self.__transport_limits,
+                "cancellation_requested": self.__cancellation_requested,
+            }
+        except Exception as exc:
+            self._revoke()
+            if isinstance(exc, ProductFactConsumerError):
+                raise
+            raise ProductFactConsumerError(
+                "post-terminal dual-successor sealed state is invalid"
+            ) from exc
+
+    def _post_terminal_dual_successor_terminal_source(
+        self, closure: "OwnedProductFactClosure", slot: object
+    ) -> tuple[
+        dict[str, object],
+        BudgetContext,
+        DerivationInputSet,
+        object,
+        ExecutionCellTransportSafetyLimits,
+        Callable[[], bool] | None,
+    ]:
+        """Revalidate terminal Fact truth without consuming a downstream route."""
+
+        try:
+            if (
+                self.__handoff_domain != "POST_TERMINAL_DUAL_SUCCESSOR_0_1"
+                or slot is not self.__post_terminal_dual_successor_slot
+                or slot is not self.__bound_post_terminal_dual_successor_slot
+            ):
+                raise ValueError
+            self._authorize_handoff_domain(
+                "POST_TERMINAL_DUAL_SUCCESSOR_SELECT_0_1"
+            )
+            source, context = self._handoff_source_document(closure)
+            return (
+                source,
+                context,
+                self.__inputs,
+                self.__classification,
+                self.__transport_limits,
+                self.__cancellation_requested,
+            )
+        except Exception as exc:
+            self._revoke()
+            if isinstance(exc, ProductFactConsumerError):
+                raise
+            raise ProductFactConsumerError(
+                "post-terminal dual-successor terminal source is invalid"
+            ) from exc
 
     def _handoff_source_document(
         self, closure: "OwnedProductFactClosure"
@@ -1346,6 +1437,7 @@ def _create_product_fact_consumer(
     cancellation_requested: Callable[[], bool] | None,
     applicability_admitter,
     handoff_domain: str,
+    post_terminal_dual_successor_slot: object | None = None,
 ) -> OwnedProductFactConsumer:
     if type(closure) is not OwnedParseFulfillmentClosure:
         raise ProductFactConsumerError("consumer requires an owned Parse closure")
@@ -1398,6 +1490,7 @@ def _create_product_fact_consumer(
             handoff_domain=handoff_domain,
             transport_limits=transport_limits,
             cancellation_requested=cancellation_requested,
+            post_terminal_dual_successor_slot=post_terminal_dual_successor_slot,
             _token=_PARENT_TOKEN,
         )
     except Exception as exc:
