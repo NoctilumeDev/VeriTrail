@@ -389,8 +389,12 @@ python -m venv .venv
   该PR未rerun、已关闭且未合并。clean exact base复现相同audit failure，因此authorization content/candidate regression均未建立，外部
   advisory激活原因保持`UNKNOWN`。fresh CONTROL LOOP进入独立
   [Workbench dependency audit recovery](docs/344-r1-workbench-dependency-audit-recovery.md)：只把`glob`/`minimatch` dev graph收敛到patched
-  exact coordinates并保持原audit oracle、workflow、Workbench source与R1 semantics不变；当前仍只是maintenance candidate，doc343不在
-  main且不得复用，private implementation仍`NOT_STARTED / NOT_AUTHORIZED`。
+  exact coordinates并保持原audit oracle、workflow、Workbench source与R1 semantics不变。PR #396的original/exact-main双门、fresh
+  README/doc342/doc344/milestones readback、independent reconciliation与finite closeout已经闭合，因此maintenance现在是qualified
+  history，doc343仍只属于失败world且不得复用。fresh CONTROL LOOP从新exact main建立
+  [versioned implementation authorization successor 0.2](docs/345-r1-post-terminal-fact-dual-successor-private-implementation-authorization-successor-publication.md)：
+  它只条件化允许同一bounded private dual-successor A–J；自己的完整资格链闭合前`ALLOWED`不生效，private implementation仍
+  `NOT_STARTED / NOT_AUTHORIZED`。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
