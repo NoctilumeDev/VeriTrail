@@ -383,8 +383,14 @@ python -m venv .venv
   [private implementation feasibility audit](docs/342-r1-post-terminal-fact-dual-successor-private-implementation-feasibility-audit.md)：
   current Fact terminal source已经独立重建五分支，closure已有single shared claim slot，positive Relation与negative exact-input downstream
   也分别拥有自己的验证入口；read-only audit因此证明一个new private selector、exact domain factory与claimed-source adapter构成bounded
-  implementation surface。本文完整资格链闭合前它仍只是candidate；下一步只能是独立docs-only implementation authorization，旧global
-  composition authority仍不可消费，manifest/Evidence/persistence继续未授权。
+  implementation surface。PR #394已经完成original/exact-main双门、fresh README/doc341/doc342/milestones readback、independent
+  reconciliation与finite closeout，因此doc342现为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。第一次docs-only authorization使用doc343
+  身份，但PR #395 original Public CI `41811545926` attempt 1在required Workbench live dependency audit观察到16个moderate advisory后失败；
+  该PR未rerun、已关闭且未合并。clean exact base复现相同audit failure，因此authorization content/candidate regression均未建立，外部
+  advisory激活原因保持`UNKNOWN`。fresh CONTROL LOOP进入独立
+  [Workbench dependency audit recovery](docs/344-r1-workbench-dependency-audit-recovery.md)：只把`glob`/`minimatch` dev graph收敛到patched
+  exact coordinates并保持原audit oracle、workflow、Workbench source与R1 semantics不变；当前仍只是maintenance candidate，doc343不在
+  main且不得复用，private implementation仍`NOT_STARTED / NOT_AUTHORIZED`。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
