@@ -130,6 +130,11 @@ python -m venv .venv
 已有产品、内部机制与候选问题分别列出；下面是成熟度摘要，不把路线图当成实现证据。
 完整状态标识、资格链与保留失败见[首页工程记录保留页](docs/readme-engineering-records.md#精确状态与施工记录)及[里程碑索引](docs/milestones.md)。
 
+当前另有一个[有界公开状态投影候选](docs/project-state.md)，用于在固定 Public Render 容量内阅读 current state；它以完整
+milestones SHA 机械绑定历史账本，但不替代账本、冻结合同、资格证据或施工授权。其边界与 #398 readback truncation 首败见
+[恢复合同候选](docs/347-r1-public-project-state-projection-recovery-contract.md)。该合同完整资格链闭合前，投影仍是
+`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。
+
 ### 已交付产品
 
 - **Core / M**：计划、证据、运行、裁决与不可变 Bundle。当前为 `v0.13.0 RELEASED / MAINTENANCE_FROZEN`，M0–M14 已冻结。见[发布事实](docs/106-core-v0.13.0-release-readback-facts.md)。

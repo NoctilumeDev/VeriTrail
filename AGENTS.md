@@ -6649,3 +6649,37 @@ original PR/protected merge/exact-main双门、fresh README/doc345/doc346/milest
 finite closeout全部闭合后，最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回
 CONTROL LOOP建立独立docs-only implementation freeze publication；不得直接恢复global composition authority或启动manifest/Evidence/
 persistence/public Review/R2–R6。
+
+### R1 公开项目状态投影恢复合同候选
+
+PR #398 private implementation已经精确合入`main@6a30957429c7b6a815608e8355893deb35873f24`，tree
+`81790b398fb3d07ed53d67269b80d99d94675807`；original Public CI `41893051274`、exact-main Public CI
+`41898679833`与Browser Smoke `41898679711`均为attempt 1 SUCCESS。fresh README/doc345/doc346各有唯一formal PASS，
+但首次且唯一milestones diagnostic观察到526260 UTF-8 bytes，超过冻结524288-byte Public Render上限1972 bytes，正确返回
+`PARTIAL / CONTENT_TRUNCATED`；milestones formal未运行。152-artifact failed-readback closeout SHA为
+`1b3c3a64bace28e5eab3bb2e6674823ed4f5edaf9adc1c5943b8e90d118a91ff`。Collector符合P2合同；Collector regression与
+private runtime semantic regression均未建立，public projection capacity boundary crossing已经建立。
+
+fresh CONTROL LOOP只重开public project-state projection/readback target，建立
+[文档347](docs/347-r1-public-project-state-projection-recovery-contract.md)与
+[有界公开状态投影](docs/project-state.md)。完整`docs/milestones.md`继续按原字节承担append-only历史责任；本候选不得修改它、
+提高512 KiB oracle、rerun失败diagnostic、补跑milestones formal或覆盖三项PASS。新投影只以source exact base/tree与完整
+milestones SHA绑定current-state阅读面，不拥有事实、资格、状态升级或施工授权。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_PRIVATE_IMPLEMENTATION_MERGED_EXACT_MAIN_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、`docs/project-state.md`与doc347；milestones必须保持exact-base SHA
+`5c16f46bcd407cd8932a1233c25afe306288f916e04a41c6cf7dcfae77a6c926`。自己的local/original PR/protected merge/
+exact-main双门、fresh README/project-state/doc347 anonymous installed-product readback、完整milestones public raw bytes SHA、independent
+reconciliation与finite closeout全部闭合后，最多成为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立
+独立docs-only freeze publication；不得直接资格化或冻结#398 runtime，也不得启动manifest/Evidence/persistence/public Review/R2–R6。
