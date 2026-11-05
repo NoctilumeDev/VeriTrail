@@ -6929,3 +6929,38 @@ original/exact-main双门、fresh installed-product三目标readback、independe
 最多使`RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`生效。随后必须返回CONTROL LOOP，从新exact main
 重建失败的docs-only audit；不得重跑#407/#408、复用doc355/doc356候选、修改下载器默认/完整性oracle、扩张外层job budget、
 直接恢复public projection或启动R2-R6。
+
+### R1 public project-state projection failure-chain audit candidate
+
+PR #406合入后的唯一README formal在同一session内得到Render `COMPLETE / HTTP 200 / marker once / cleanup complete`，
+但API为`ERROR / HTTP 403 / COLLECTION_BUDGET_EXHAUSTED`，Core Verdict未创建；failure-boundary、failed closeout与
+finite integrity为`5f7abf1... / 049fc88c... / cbefd722...`。该formal与未运行目标继续保留，匿名出口分配根因`UNKNOWN`。
+
+PR #407与#408随后从同一旧exact main建立不同docs-only candidate，并分别在original Public CI attempt 1的E1 Python 3.10
+lane与E3 lane对不同immutable Release asset连续收到6次HTTP 504；两者都由60秒绝对恢复预算正确fail closed，均已关闭、
+未合并、未重跑。它们的failure-boundary / failed closeout / finite integrity分别为
+`48c43a... / c01e86... / b010e77...`与`032318... / 311436... / 0618ad...`，底层GitHub/proxy/shared-egress/
+network原因继续为`UNKNOWN`。
+
+后继[文档357](docs/357-release-download-multi-asset-lane-budget-correction.md)由PR #409以exact candidate
+`aa037bd2b3aeb1e8c5c58b2ce6ba5b766ee14bad`、tree`b35a265d341f68bd16f6bca2ebc642446c0969fe`合入
+`main@fa26311fb156d2e07a79ecc76c8d8b5169f64891`。original Public CI `42065715143`、exact-main Public CI
+`42071677326`与Browser Smoke `42071677329`均attempt 1 SUCCESS；fresh README/doc357/milestones各唯一PASS，
+independent reconciliation`38f57c...`、93-artifact closeout`382898...`与finite integrity`b13fe2...`成立。因此
+`RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`已生效；它不回填#407/#408或解释其`UNKNOWN`。
+
+[文档358](docs/358-r1-public-state-projection-failure-chain-audit.md)从该新exact main建立联合docs-only候选，只把#406、
+#407、#408失败world与#409 qualified maintenance并列发布；不修改runtime/workflow/tests/oracle，也不使未合并doc355/doc356
+获得资格。候选scope仅README、AGENTS、milestones与doc358。自己的original/exact-main双门、fresh四目标observation、
+independent reconciliation与finite closeout全部成立后，最多成为`FAILURE_CHAIN_AUDITED / QUALIFIED_HISTORY`；随后必须返回
+CONTROL LOOP，最多建立独立versioned doc354 readback recovery publication。不得重跑旧attempt、弱化oracle、直接恢复
+projection/private implementation或启动R2–R6。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_CANDIDATE_NOT_QUALIFIED
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```

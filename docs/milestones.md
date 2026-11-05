@@ -8194,3 +8194,41 @@ R2_R6_NOT_STARTED
 `RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`生效。之后必须返回CONTROL LOOP并从新exact main重建
 失败的docs-only audit；不得重跑#407/#408、复用doc355/doc356候选、修改下载器默认/完整性oracle、扩张外层job budget、
 直接恢复public projection或启动R2-R6。
+
+## R1 public project-state projection failure-chain audit candidate（2026-11-06）
+
+#406的唯一README formal在同一paired session中得到Render `COMPLETE / HTTP 200 / marker once / cleanup complete`，
+但API为`ERROR / HTTP 403 / COLLECTION_BUDGET_EXHAUSTED`，Core Verdict未创建。#407/#408随后在不同required lane、
+不同head/job/asset上各自连续收到6次HTTP 504并耗尽60秒绝对恢复预算；两者都关闭、未合并、未重跑，底层外部原因保持
+`UNKNOWN`。三条失败不得相互拼接或被后继PASS覆盖。
+
+PR #409只把两个被反例击中的multi-asset loop显式改为120秒，已以candidate`aa037bd2...`、tree`b35a265...`
+合入`main@fa26311fb156d2e07a79ecc76c8d8b5169f64891`。original Public CI `42065715143`、exact-main Public CI
+`42071677326`、Browser Smoke `42071677329`均attempt 1 SUCCESS；fresh README/doc357/milestones各唯一PASS，
+reconciliation / closeout / integrity为：
+
+```text
+38f57c488fa9ab67ed5d5d42d056d2b8083142e2eba2e37db03c73f2ed135385
+3828981eee1ae9458090a6f28a8d7ab42082584c35f518d8437c5cfa4cfff9e3
+b13fe22900b2d939168e73a5ccf05136fa5081a93e27e6b4a610f38abf04187a
+```
+
+因此`RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`已生效；下载器默认60秒、完整性门与外层job budget未变。
+[文档358](358-r1-public-state-projection-failure-chain-audit.md)从该新exact main建立4文件docs-only联合audit candidate；它只发布
+#406/#407/#408分离失败与#409 maintenance qualification，不回填doc355/doc356、不恢复projection。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_CANDIDATE_NOT_QUALIFIED
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的local/original/protected/exact-main/readback/reconciliation/finite-closeout链全部成立后，最多成为
+`FAILURE_CHAIN_AUDITED / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP，最多从新exact main建立独立versioned doc354
+readback recovery publication；不得重跑#406/#407/#408、复用旧candidate qualification、弱化oracle、修改primary audit或启动R2–R6。
