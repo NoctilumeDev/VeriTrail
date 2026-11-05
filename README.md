@@ -15,6 +15,10 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
+当前工程资格状态的有界公开投影仍是候选；successor 0.2 的 README 正式读回失败已按原身份保留，见
+[failure-boundary audit](docs/350-r1-public-state-projection-successor-readback-failure-boundary-audit.md)。完整施工事实仍以
+[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
@@ -407,7 +411,10 @@ python -m venv .venv
   `main@34de942…`并完成original/exact-main双门、fresh changed-target observations、independent reconciliation与finite
   closeout，现为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填#398/#399。fresh CONTROL LOOP从该新exact main建立
   [versioned recovery successor 0.2](docs/349-r1-public-project-state-projection-recovery-successor-contract.md)及
-  [有界当前状态投影](docs/project-state.md)候选；完整milestones保持原字节，投影不拥有事实、资格、调度或施工授权。
+  [有界当前状态投影](docs/project-state.md)。PR #401的original/exact-main双门均PASS，但README formal #1观察到封存marker在
+  rendered text中为零，产品fail closed为`FORMAL_READBACK_ERROR`；因此doc349与projection 0.2保持
+  `MERGED / READBACK_NOT_QUALIFIED / NOT_FROZEN`。精确失败见[文档350](docs/350-r1-public-state-projection-successor-readback-failure-boundary-audit.md)；
+  完整milestones保持原历史责任，投影不拥有事实、资格、调度或施工授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

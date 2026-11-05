@@ -7984,3 +7984,50 @@ R2_R6_NOT_STARTED
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned docs-only public
 project-state projection recovery candidate且不得复用doc347。不得回填#398/#399、修改P2 oracle、直接冻结implementation或启动
 runtime/manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 public project-state projection successor 0.2 readback failure-boundary audit candidate（2026-11-05）
+
+doc348 audit由PR #400完整资格化后，fresh CONTROL LOOP建立doc349与bounded `docs/project-state.md` successor 0.2。PR #401
+exact `base=34de9427d64ba8a3c77ac38eefe146fa8d2e2d77 / head=fc20dfb9474924d37787d9022ebfefcac6894743 /
+tree=116dc7dfa3ce98424a4fa89cf98209329e2c83ff`。original Public CI `41932436048`、exact-main Public CI
+`41937014486`与Browser Smoke `41937014373`均为attempt 1 SUCCESS；protected merge为
+`main@f553822f8ce54793103efd97c2e1ac8da487349e`。
+
+fresh anonymous README diagnostic为`COMPLETE / HTTP 200`。唯一formal
+`r1-psp-recovery-v2-formal-readme-1-f553822`的API/Render coverage也均为`COMPLETE`，但封存literal
+`versioned recovery successor 0.2`在exact source中存在一次、在三次稳定rendered-text sample中为零；产品在Core Verdict形成前以
+`FORMAL_READBACK_ERROR / Render Evidence marker drifted` fail closed。project-state/doc349 diagnostic/formal与AGENTS/milestones raw
+formal均未运行，不与旧world拼接。failure-boundary、94-artifact failed closeout与finite integrity为：
+
+```text
+36f6dca90c5c5a75aece92e3adc97b9a1d24c4e1c0988c2f91fe995e74fcda10
+07d06a30890e6590dc6c759e0163ed2e8d84f4dc8cce7ebaac471b4eeeb2826f
+6a44688d312185c659c7b6e09ada0f6e597335bf34f6a135ed99ce5ebd996543
+```
+
+因此doc349与projection 0.2只能是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。
+Collector fail-closed行为成立；collector/private runtime regression未建立，GitHub render/visibility底层机制保持`UNKNOWN`。
+
+fresh CONTROL LOOP建立
+[文档350](350-r1-public-state-projection-successor-readback-failure-boundary-audit.md)，只冻结#401失败身份、未运行目标、资格影响与
+后继versioned proof-target recovery责任；不修改doc349/project-state、runtime/tests/workflow/Schema/oracle或frozen semantics。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_MERGED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_EXACT_MAIN_DUAL_GATES_PASS
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_PR_399_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_2_READBACK_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc350。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned public projection
+readback recovery candidate。不得重跑#401 formal、弱化marker oracle、静默追写0.2或启动后续runtime seam。
