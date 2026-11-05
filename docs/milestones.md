@@ -8031,3 +8031,49 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc350。自己的完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned public projection
 readback recovery candidate。不得重跑#401 formal、弱化marker oracle、静默追写0.2或启动后续runtime seam。
+
+## R1 public project-state projection audit readback bundle-persistence failure-boundary candidate（2026-11-05）
+
+doc350候选由PR #402以exact
+`base=f553822f8ce54793103efd97c2e1ac8da487349e / head=77c9140a736f95b311617e568ad06a5ce5f4b679 /
+tree=0ea5aaed6e0dfe50e6af2c50a7f7891108be8141`进入资格链。original Public CI `41956025003`为11/11 SUCCESS；
+protected merge是`main@4fd9a78ab994475b05a2cb5bc1f2d6108a9572ea`，exact-main Public CI `41960100228`与Browser Smoke
+`41960100243`分别为11/11和1/1 SUCCESS，全部是attempt 1且没有rerun。
+
+fresh detached exact-main readback先取得README diagnostic `COMPLETE / HTTP 200`。唯一formal
+`r1-psp-v2-readback-fb-audit-formal-readme-1-4fd9a78`的API/Render也均为`COMPLETE`，三次content-window sample稳定，
+新marker在rendered text中出现一次，active streams为0且cleanup无错误。Acceptance Core随后在Verdict形成前持久化Evidence时，对
+271字符目标路径触发`FileNotFoundError [Errno 2]`；因此formal以`FORMAL_READBACK_ERROR`结束，Core Verdict为`NONE`。
+doc350 diagnostic/formal与AGENTS/milestones raw formal均未运行，不与旧world拼接。
+
+failure-boundary、93-artifact failed-readback closeout与finite integrity SHA-256为：
+
+```text
+6e33bedd7228ac7f080f9209374b9fa3671d8e12e6fb318832e943477e90e397
+87592d66e1c3d3eed5e2ea5b73a60f3bbd90047c15416318a3b18ee04e31dd7e
+35ea330b2d05646fbef5b7693fc78fa417526e1130419ed5b61f0d960396f6a6
+```
+
+这条事实只建立`proof facility local output failure`；candidate semantic regression与Collector regression未建立，长路径/MAX_PATH
+是否构成单一因果仍是`HYPOTHESIS / NOT_ESTABLISHED`，底层本地文件系统原因保持`UNKNOWN`。doc350因此只能是
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立
+[文档351](351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)，只冻结#402 formal failure、未运行目标、
+资格影响、proof-facility归层与最小恢复责任；不修改doc350/doc349/project-state、runtime/tests/workflow/Schema/oracle或frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_2_READBACK_FAILURE_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_AUDIT_READBACK_BUNDLE_PERSISTENCE_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc351。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，建立独立versioned doc350 readback recovery
+publication。不得重跑#402 formal、从本审计直接恢复projection 0.2/0.3或启动后续runtime seam。

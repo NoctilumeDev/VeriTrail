@@ -6776,3 +6776,34 @@ R2_R6_NOT_STARTED
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned public projection
 readback recovery candidate。不得回填#401、复用失败formal、弱化marker oracle、直接冻结private implementation或启动
 runtime/manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection audit readback bundle-persistence failure-boundary candidate
+
+PR #402以exact `base=f553822f8ce54793103efd97c2e1ac8da487349e / head=77c9140a736f95b311617e568ad06a5ce5f4b679 /
+tree=0ea5aaed6e0dfe50e6af2c50a7f7891108be8141`合入`main@4fd9a78ab994475b05a2cb5bc1f2d6108a9572ea`。
+original Public CI `41956025003`、exact-main Public CI `41960100228`与Browser Smoke `41960100243`均为attempt 1
+SUCCESS。它们只证明doc350 exact world的声明门通过，不使doc350自动资格化。
+
+fresh readback的README diagnostic为`COMPLETE / HTTP 200`。唯一formal
+`r1-psp-v2-readback-fb-audit-formal-readme-1-4fd9a78`也取得API/Render `COMPLETE`、三次稳定sample、marker一次、
+active streams 0与cleanup complete；随后Acceptance Core在Verdict形成前持久化Evidence时，对271字符本地目标路径触发
+`FileNotFoundError`。formal因此是`FORMAL_READBACK_ERROR / VERDICT_NOT_CREATED`；doc350与AGENTS/milestones目标均未继续。
+长路径/MAX_PATH只保留为hypothesis，底层本地文件系统机制为`UNKNOWN`；candidate semantic regression与Collector regression未建立。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_2_READBACK_FAILURE_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_AUDIT_READBACK_BUNDLE_PERSISTENCE_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)只保存#402 formal错误、
+未运行目标、证明设施归层与后继责任；不修改doc350/doc349/project-state、runtime、tests、workflow、Schema、oracle或frozen semantics。
+自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，先建立独立versioned
+doc350 readback recovery publication；不得重跑#402 formal、直接创建projection successor 0.3或启动runtime/manifest/Evidence/
+persistence/public Review/R2–R6。
