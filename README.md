@@ -34,6 +34,9 @@ Public Render `COMPLETE / HTTP 200 / marker once`，但anonymous API首个reposi
 [文档360](docs/360-r1-public-state-projection-failure-chain-audit-readback-recovery.md)以新的 exact world 重发
 #406/#407/#408 与 #409 的联合审计责任；它保留 #410 的唯一 formal ERROR 和 #411 首次 reconciliation 的 stale-next
 proof-facility defect，不把后继 PASS 回填给旧身份，也不恢复公开投影。
+**failure-chain audit recovery 0.1 已完成自身资格；doc354 readback recovery 0.1 仍是候选。**
+[文档361](docs/361-r1-public-state-projection-doc354-readback-recovery.md)只在新的 exact world 重新发布 doc354 的
+marker-drift failure-boundary 责任。它不重跑 #406 formal、不回填旧 ERROR，也不使 doc350 或公开投影获得资格。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**

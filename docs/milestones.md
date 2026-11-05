@@ -8315,3 +8315,42 @@ R2_R6_NOT_STARTED
 candidate自己的local/original/protected/exact-main/fresh readback/reconciliation/finite-closeout链全部成立后，最多成为
 `FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1 / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP并从新exact main建立独立
 versioned doc354 readback recovery publication；不得回填#410、重跑其formal、弱化oracle或启动后续runtime seam。
+
+## R1 public project-state projection doc354 readback recovery 0.1 candidate（2026-11-06）
+
+PR #412把doc360以candidate`7d4e499ebb317a67f121b4b9a299d96edccef82f`、tree
+`ee26ff57e7d6737e1a2d615633ebf2d93036a61b`合入`main@4ba50edff463e9f9c0560abd17d502ebc5c4ce92`。
+original Public CI `42113565597`、exact-main Public CI `42118009840`与Browser Smoke `42118009860`均attempt 1
+SUCCESS。fresh README/doc360 formal各自唯一PASS，AGENTS/milestones各自唯一raw/API/exact-Git逐字节一致。
+
+independent reconciliation / 98-artifact closeout / finite integrity为：
+
+```text
+cdf60f515fd1b1ade4773d5735d35e491ee92e520189c4ebc4381a9dd9be8937
+9574b941a3163cce545fe0153672aa0cb66bc3ae2d6acc585245b327e4baf79e
+e80e1c1f240f702bed74785650b587d60f02008ce92ac414521549331635cca2
+```
+
+expected stdout self-capture mismatch `ef24861ad4b5d367577c072d25e9630a30a81d8f3f73b0ecbf4c15f04d5e4165`
+继续保留。因此doc360是`FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1 / QUALIFIED_HISTORY`；#410/doc358与
+#406/doc354仍保持原NOT_QUALIFIED身份。
+
+[文档361](361-r1-public-state-projection-doc354-readback-recovery.md)从新的exact main重发doc354的marker-drift
+failure-boundary责任。它保留#405的source/render marker contradiction、#406唯一formal的anonymous API exhaustion、
+未运行目标与底层`UNKNOWN`，不修改runtime/workflow/tests/Schema/Provider/Collector/P2/Core oracle或frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为
+`R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，最多建立
+独立versioned doc350 readback recovery publication；不得回填或重跑旧formal、弱化oracle或启动后续runtime seam。
