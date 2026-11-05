@@ -19,8 +19,12 @@ AI说任务完成了。**但是，凭什么相信？**
 持久化失败均按原身份保留；[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
 已成为 qualified history，但不回填旧失败。PR #404 的 original gate cancellation 也不被后继 PASS 改写；PR #405
 在新 world 通过 original 与 exact-main 双门，却在 fresh README formal 中再次观察到源码 marker 一次、公开渲染零次。
-[文档354](docs/354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)只归层这条读回失败；
-**doc353 的 README 正式读回失败已按原身份保留。**完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
+[文档354](docs/354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)只归层这条读回失败。PR #406
+随后也通过 original 与 exact-main 双门；它的 README diagnostic 为 `COMPLETE / HTTP 200`，唯一 formal 的 Render
+同样 `COMPLETE` 且 reader-visible marker 出现一次，但 anonymous API 以 403 `COLLECTION_BUDGET_EXHAUSTED` 停止，Core
+Verdict 未形成。[文档355](docs/355-r1-public-state-projection-doc354-readback-anonymous-rate-exhaustion-failure-boundary.md)
+只保存该 API budget failure、未运行目标与 `UNKNOWN` 归因上限；**doc354 的 README 正式读回匿名 API 额度耗尽已按原身份保留。**
+完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 

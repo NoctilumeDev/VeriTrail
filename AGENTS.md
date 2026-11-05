@@ -6891,3 +6891,44 @@ R2_R6_NOT_STARTED
 本audit candidate只允许README、AGENTS、milestones与doc354。自己的完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned doc350 readback
 recovery publication。不得重跑#405 formal、复用失败readback、弱化marker oracle、扩张35分钟budget或启动后续runtime seam。
+
+### R1 doc354 fresh readback anonymous API rate-exhaustion failure-boundary audit candidate
+
+文档354已由PR #406以exact head `a5dd28fa8b24b5517a09e5be9733e7e479658746`合入
+`main@95add9053c2984c0efe0cb87d1a4b64812215683`，tree `3619ceeba79145ebfe3af230e4ba22c89798c306`。
+original Public CI `42003156856`、exact-main Public CI `42007684666`与Browser Smoke `42007684466`均为attempt 1
+SUCCESS（11/11、11/11、1/1）。这不回填#405的marker drift，也不自动资格化doc354。
+
+fresh short-root `C:\\vt354e` 的 README diagnostic 为`COMPLETE / HTTP 200`。唯一formal
+`r1-psp-doc353-readback-fb-formal-readme-1-95add90`的Render同样`COMPLETE / HTTP 200`、三次sample稳定、
+reader-visible marker出现一次、cleanup complete；paired anonymous API却在repository probe返回403
+`COLLECTION_BUDGET_EXHAUSTED`，remaining 0，Core Verdict未创建。doc354与AGENTS/milestones目标因此未运行。
+failure-boundary、92-artifact failed closeout与finite integrity分别为：
+
+```text
+5f7abf1afbc8cef0430c19a9c2598ce54f25568d818b1789d95a41b3d803c994
+049fc88c8aa3f4c379b3e2697d9ddc0a7b32f285acfd9661968d53bcaa294705
+cbefd722d816d0d736cb575dd12469583267bfcf13fe610be595acbf62b4e29d
+```
+
+匿名API rate-budget exhaustion已建立；shared-egress rate allocation或外部使用的底层原因保持`UNKNOWN`。Collector正确fail
+closed，candidate semantic regression与Collector regression未建立。fresh CONTROL LOOP建立
+[文档355](docs/355-r1-public-state-projection-doc354-readback-anonymous-rate-exhaustion-failure-boundary.md)，只保存#406
+exact gates、formal API error、完整Render observation、未运行目标、归因上限与后继责任；不修改doc354/doc353/doc350/
+project-state、workflow/runtime/tests/Schema/oracle/frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC353_READBACK_MARKER_DRIFT_FAILURE_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_ANONYMOUS_RATE_EXHAUSTION_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc355。完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP建立独立versioned doc354 readback recovery publication。
+不得重跑#406 formal、继续未运行目标、用认证替代匿名观察、弱化oracle或启动后续runtime seam。
