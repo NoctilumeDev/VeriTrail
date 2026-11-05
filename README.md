@@ -20,7 +20,10 @@ AI说任务完成了。**但是，凭什么相信？**
 已成为 qualified history，但不回填旧失败。PR #404 的 original gate cancellation 也不被后继 PASS 改写；PR #405
 在新 world 通过 original 与 exact-main 双门，却在 fresh README formal 中再次观察到源码 marker 一次、公开渲染零次。
 [文档354](docs/354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)只归层这条读回失败；
-**doc353 的 README 正式读回失败已按原身份保留。**完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
+**doc353 的 README 正式读回失败已按原身份保留。**后继 doc355 audit candidate 的 original PR gate 又在第六个
+E1 Release 资产连续 HTTP 504 后耗尽固定恢复预算；[文档356](docs/356-r1-public-state-projection-doc355-original-gate-release-asset-recovery-budget-failure-boundary.md)
+只归层这条新失败，**PR #407 的原始门下载恢复预算失败已按原身份保留。**完整施工事实仍以
+[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 

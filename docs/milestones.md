@@ -8163,3 +8163,49 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc354。完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP建立独立versioned doc350 readback recovery publication。
 不得重跑#405 formal、拼接未运行目标、弱化marker oracle、扩张35分钟budget或启动后续runtime seam。
+
+## R1 doc355 original-gate Release asset recovery-budget failure-boundary audit candidate（2026-11-05）
+
+doc354由PR #406以exact head `a5dd28fa8b24b5517a09e5be9733e7e479658746`合入
+`main@95add9053c2984c0efe0cb87d1a4b64812215683`；original/exact-main Public CI与Browser Smoke均attempt 1
+SUCCESS。其fresh README formal保留anonymous API rate-budget exhaustion与Render COMPLETE，Verdict未创建，doc354未资格化。
+
+后继doc355 candidate以exact
+`base=95add9053c2984c0efe0cb87d1a4b64812215683 / head=ade665c3b4e760a57c2d2de4fb1c92fcd21d1b98 /
+tree=66dad764b58927a29e0d7e3aeafb6f237f165510`进入PR #407。original Public CI `42037283423` attempt 1在required
+Python 3.10 job `127278597232`真实FAILURE：step 31下载E1冻结资产时，前五项成功，第六项
+`authoring-skill-e1-validation-summary.json`连续HTTP 504，五次尝试耗尽固定60秒恢复预算；E1 clean install未运行。
+Python 3.13、E3与Workbench的同run SUCCESS及四个依赖job SKIPPED均不提供拼接资格。
+
+PR #407未rerun，已关闭且未合并，remote main不变；exact-main gates与readback未开始。下载工具fail closed符合既有边界；
+candidate semantic regression与docs content failure未建立，底层GitHub/proxy/shared-egress/network原因保持`UNKNOWN`。raw capture、
+failure-boundary、8-artifact seal、123-artifact failed closeout与finite integrity为：
+
+```text
+3b376279543da71acf14e4bec364dc5215b764d0d727927ed6d5637d5c4a7a76
+48c43a66843c6fdf010650b186c6b82e3773a79fe641e2b59cbb2aaf3cf3323e
+d17fbf95321ec695fc12dd0e546fbcbe4ccd4d69a060c590f2a55376a04bf39c
+c01e86ea670dc0a2d0de9bdfb1c7d2145fe8c0185c7590f595d6198baa7ef896
+b010e77087f24330a168e48023b3708005bd163503bdb29d701ef8696bb5607c
+```
+
+fresh CONTROL LOOP建立
+[文档356](356-r1-public-state-projection-doc355-original-gate-release-asset-recovery-budget-failure-boundary.md)，只保存#407
+original-gate失败、未开始目标、fail-closed归层与后继责任；不修改doc355/doc354/project-state、workflow/runtime/tests/Schema/
+oracle/frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_ANONYMOUS_RATE_EXHAUSTION_FAILURE_BOUNDARY_AUDIT_PR_407_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC355_ORIGINAL_GATE_RELEASE_ASSET_RECOVERY_BUDGET_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc356。完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP重审Release下载恢复maintenance是否仍为最小合法seam。
+不得重跑#407、增加恢复预算、复用doc355、拼接Python 3.13成功或启动后续runtime seam。
