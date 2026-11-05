@@ -8232,3 +8232,46 @@ R2_R6_NOT_STARTED
 candidate自己的local/original/protected/exact-main/readback/reconciliation/finite-closeout链全部成立后，最多成为
 `FAILURE_CHAIN_AUDITED / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP，最多从新exact main建立独立versioned doc354
 readback recovery publication；不得重跑#406/#407/#408、复用旧candidate qualification、弱化oracle、修改primary audit或启动R2–R6。
+
+## R1 public project-state projection failure-chain audit readback rate-exhaustion failure-boundary candidate（2026-11-06）
+
+PR #410已以candidate `9f7e0071178e0c9a9f5e62ac4c745a5d1cc2e47d`、tree
+`fcce220c39605f316ad917e0457a072675901895`合入`main@c613129814cec4812066d747e34ebdb40e44fa03`。
+original Public CI `42084370751`、exact-main Public CI `42090149115`与Browser Smoke `42090149265`均attempt 1
+SUCCESS（11/11、11/11、1/1）。
+
+fresh README/doc358 Public Render diagnostic均`COMPLETE / HTTP 200`。匿名rate diagnostic与API preflight先后观察到
+`remaining=17`与`remaining=16`；约43秒后的唯一README formal在同一paired session中得到Render
+`COMPLETE / HTTP 200 / marker once / cleanup complete`，但API首个repository probe为
+`403 / COLLECTION_BUDGET_EXHAUSTED / remaining 0`，Core Verdict未创建。reset metadata在这些观察间也不稳定；
+底层anonymous shared-egress consumer或egress allocation原因保持`UNKNOWN`。candidate semantic regression与Collector
+regression均未建立。doc358 formal与AGENTS/milestones raw目标没有运行，不得重跑或拼接。
+
+failure-boundary、62-artifact failed closeout与finite integrity SHA-256为：
+
+```text
+0d5cb71ca998418f286fb68607f650387f1b6fa1cee7459dfc65c2bb12996262
+2531254a857f1be4bd4c1ee9b44cb1b6fc2fc93c86e7967afd549b4f4f465143
+ac8707c94a8248dcea037953e17d387daeace9be7f8cfc98d97b31e8aa04c612
+```
+
+[文档359](359-r1-public-state-projection-failure-chain-audit-readback-rate-exhaustion-failure-boundary.md)只冻结
+#410 exact gates、fresh diagnostic、pre-formal rate observations、唯一formal non-success、未运行目标与UNKNOWN归因；不修改
+doc358、runtime/workflow/tests/Schema/Provider/Collector/P2/Core oracle或frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RATE_EXHAUSTION_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，
+从新exact main建立独立versioned doc358 readback recovery publication；不得重跑#410 formal、继续未运行目标后拼接资格、
+使用认证替代匿名观察、弱化oracle、直接恢复projection/private implementation或启动后续seam。
