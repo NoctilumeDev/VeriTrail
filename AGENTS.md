@@ -6850,3 +6850,44 @@ R2_R6_NOT_STARTED
 自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，先建立独立versioned
 doc350 readback recovery publication；不得重跑#402 formal、直接创建projection successor 0.3或启动runtime/manifest/Evidence/
 persistence/public Review/R2–R6。
+
+### R1 doc353 fresh readback marker-drift failure-boundary audit candidate
+
+文档353已由PR #405以exact head `400d469b821d69816a17ccd7c060046ae66ccb45`合入
+`main@6af0dac952ec2bd3e015bc827b2b709908282036`，tree `1fe75d2b3431b04167fe87262a7bc27c67b3a2d3`。
+original Public CI `41987752615`、exact-main Public CI `41991308866`与Browser Smoke `41991308859`均为attempt 1
+SUCCESS（11/11、11/11、1/1）。该新world未修改35分钟workflow budget、runtime、tests或oracle，Python 3.10/3.13
+required lanes均完成；它证明恢复不要求先扩张containment budget，但不回填PR #404的`CANCELLED`或解释duration variance
+`UNKNOWN`。
+
+fresh short-root readback保留全部setup、anonymous rate、HTTP 504与navigation-timeout身份。README formal #3最终取得API/Render
+`COMPLETE / HTTP 200`与三次稳定sample，但sealed source marker一次、rendered-text marker零次；产品在Core Verdict形成前以
+`Render Evidence marker drifted` fail closed。doc353 formal与AGENTS/milestones raw目标因此未运行。failure-boundary、140-artifact
+failed closeout与finite integrity分别为：
+
+```text
+e393470939acc052a94f3ac44d89694b8a8012b0389e207912ba3658663d4c61
+4165a90d119830e54aa91bcb6ab30306ac260b6e9bcf4a0a2633c0834e775737
+aac1c1afe19b384857b7fabcc0966a52d7fbceb2085f6613247e798d1611f72a
+```
+
+GitHub render/visibility底层机制保持`UNKNOWN`；candidate semantic regression与Collector regression均未建立。fresh CONTROL LOOP
+建立[文档354](docs/354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)，只保存#405 exact gates、
+所有readback non-success、未运行目标、fail-closed归层与后继reader-visible proof-target责任；不修改doc353/doc350/project-state、
+workflow/runtime/tests/Schema/oracle或frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_RECOVERY_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC353_READBACK_MARKER_DRIFT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本audit candidate只允许README、AGENTS、milestones与doc354。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned doc350 readback
+recovery publication。不得重跑#405 formal、复用失败readback、弱化marker oracle、扩张35分钟budget或启动后续runtime seam。

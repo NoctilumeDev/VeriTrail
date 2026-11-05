@@ -17,10 +17,10 @@ AI说任务完成了。**但是，凭什么相信？**
 
 当前工程资格状态的有界公开投影仍是候选。successor 0.2 的 marker readback 与后继 acceptance-bundle
 持久化失败均按原身份保留；[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
-已成为 qualified history，但不回填旧失败。后继 doc350 recovery publication 的 original gate 又在 Python 3.10
-耗尽35分钟 job budget后被取消；新的
-[failure-boundary audit](docs/353-r1-public-state-projection-doc350-recovery-original-gate-cancellation-boundary.md)
-只归层该 `CANCELLED` world，不重跑或恢复失败candidate。完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
+已成为 qualified history，但不回填旧失败。PR #404 的 original gate cancellation 也不被后继 PASS 改写；PR #405
+在新 world 通过 original 与 exact-main 双门，却在 fresh README formal 中再次观察到源码 marker 一次、公开渲染零次。
+[文档354](docs/354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)只归层这条读回失败；
+**doc353 的 README 正式读回失败已按原身份保留。**完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
