@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.download_release_asset import (
+    DEFAULT_RETRY_BUDGET_SECONDS,
     DigestMismatch,
     DownloadAttemptResult,
     NonRetryableDownloadError,
@@ -149,6 +150,50 @@ class ReleaseAssetDownloadTests(unittest.TestCase):
             self.assertEqual(clock.now, 46.0)
             self.assertFalse((root / "asset.bin").exists())
             self.assertEqual(list(root.glob(".*.part")), [])
+
+    def test_explicit_multi_asset_lane_budget_can_cross_the_default_window(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:
+            root = Path(raw_temp)
+            clock = FakeClock()
+            runner = ScriptedAttemptRunner(
+                [
+                    AttemptFixture(http_result(504), elapsed=11.0),
+                    *[
+                        AttemptFixture(http_result(504), elapsed=0.2)
+                        for _ in range(5)
+                    ],
+                    AttemptFixture(success_result(), PAYLOAD),
+                ],
+                clock,
+            )
+
+            output = self.run_download(
+                root,
+                runner,
+                clock,
+                retry_budget_seconds=120.0,
+            )
+
+            self.assertEqual(DEFAULT_RETRY_BUDGET_SECONDS, 60.0)
+            self.assertEqual(output.read_bytes(), PAYLOAD)
+            self.assertEqual(runner.calls, 7)
+            self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0, 16.0, 16.0])
+            self.assertGreater(clock.now, DEFAULT_RETRY_BUDGET_SECONDS)
+
+    def test_only_the_two_multi_asset_release_lanes_request_the_larger_budget(self) -> None:
+        workflow = (
+            Path(__file__).resolve().parents[1] / ".github" / "workflows" / "ci.yml"
+        ).read_text(encoding="utf-8")
+        e1 = workflow.split(
+            "- name: Download the frozen E1 entry-layer release assets", 1
+        )[1].split("- name: Run E1 release clean-install acceptance", 1)[0]
+        e3 = workflow.split(
+            "- name: Download and verify the frozen Core and E3 release assets", 1
+        )[1].split("- name: Run E3 release clean-install acceptance", 1)[0]
+
+        self.assertEqual(workflow.count("--retry-budget-seconds 120"), 2)
+        self.assertEqual(e1.count("--retry-budget-seconds 120"), 1)
+        self.assertEqual(e3.count("--retry-budget-seconds 120"), 1)
 
     def test_404_fails_immediately_without_retry(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:

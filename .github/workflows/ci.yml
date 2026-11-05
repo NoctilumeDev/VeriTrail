@@ -228,7 +228,8 @@ jobs:
             python -I scripts/download_release_asset.py `
               --url $url `
               --output (Join-Path $assetRoot $name) `
-              --sha256 $expected
+              --sha256 $expected `
+              --retry-budget-seconds 120
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
           "VERITRAIL_E1_ASSETS=$assetRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
@@ -666,7 +667,8 @@ jobs:
             python -I scripts/download_release_asset.py `
               --url $url `
               --output $target `
-              --sha256 $expected
+              --sha256 $expected `
+              --retry-budget-seconds 120
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
           "VERITRAIL_CORE_WHEEL_E3=$coreWheel" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
