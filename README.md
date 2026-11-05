@@ -15,11 +15,12 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前工程资格状态的有界公开投影仍是候选；successor 0.2 的 README 正式读回失败已按原身份保留，见
-[failure-boundary audit](docs/350-r1-public-state-projection-successor-readback-failure-boundary-audit.md)。该audit自己的fresh formal又在
-匿名观察完整、marker可见后于acceptance-bundle本地持久化阶段fail closed；新failure boundary见
-[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)。完整施工事实仍以
-[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
+当前工程资格状态的有界公开投影仍是候选。successor 0.2 的 marker readback 与后继 acceptance-bundle
+持久化失败均按原身份保留；[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
+已成为 qualified history，但不回填旧失败。后继 doc350 recovery publication 的 original gate 又在 Python 3.10
+耗尽35分钟 job budget后被取消；新的
+[failure-boundary audit](docs/353-r1-public-state-projection-doc350-recovery-original-gate-cancellation-boundary.md)
+只归层该 `CANCELLED` world，不重跑或恢复失败candidate。完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -419,7 +420,12 @@ python -m venv .venv
   PR #402随后把该失败审计合入`main@4fd9a78…`并通过original/exact-main双门，但fresh README formal在marker已稳定出现一次、
   API/Render均`COMPLETE`且cleanup完成后，于acceptance-bundle evidence持久化时对271字符本地目标路径触发`FileNotFoundError`；
   Core Verdict未形成，剩余目标未运行。该失败由[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
-  独立归层；长路径是否为单一根因保持`UNKNOWN`，doc350仍是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。
+  独立归层。PR #403随后使doc351成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但长路径是否为单一根因仍是
+  `UNKNOWN`，doc350仍是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP建立的
+  doc350 recovery publication 0.1由PR #404受审；其docs-only候选未修改workflow/runtime/tests/oracle，original Public CI attempt 1
+  却在required Python 3.10 job耗尽`.github/workflows/ci.yml`的35分钟外层预算时被取消。该PR未rerun、已关闭且未合并；
+  [文档353](docs/353-r1-public-state-projection-doc350-recovery-original-gate-cancellation-boundary.md)只保存该失败边界，
+  candidate semantic regression未建立，底层duration variance原因保持`UNKNOWN`。
   完整milestones保持原历史责任，投影不拥有事实、资格、调度或施工授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
