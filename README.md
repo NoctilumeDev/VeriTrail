@@ -25,6 +25,11 @@ AI说任务完成了。**但是，凭什么相信？**
 恢复预算耗尽；后两者均关闭且未合并。[文档357](docs/357-release-download-multi-asset-lane-budget-correction.md)
 限定的两个120秒 multi-asset lane 已完成自身资格链，下载器默认60秒、完整性门和外层 job budget保持不变；
 [文档358](docs/358-r1-public-state-projection-failure-chain-audit.md)只发布这组分离的失败与修正事实候选，不回填旧world。
+**#410 的 failure-chain audit fresh README formal 也已按原身份停止。** 该唯一formal在同一session内观察到
+Public Render `COMPLETE / HTTP 200 / marker once`，但anonymous API首个repository probe为
+`403 / COLLECTION_BUDGET_EXHAUSTED / remaining 0`，Core Verdict未创建；其余formal/raw目标未运行。
+[文档359](docs/359-r1-public-state-projection-failure-chain-audit-readback-rate-exhaustion-failure-boundary.md)
+只冻结这条新失败边界，不回填#410或恢复公开投影。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
