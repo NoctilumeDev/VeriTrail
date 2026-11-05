@@ -8123,3 +8123,43 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc353。完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP，重新审计CI containment budget maintenance是否仍是
 最小合法seam。不得重跑#404、复用doc352、直接增加timeout或启动后续runtime seam。
+
+## R1 doc353 fresh readback marker-drift failure-boundary audit candidate（2026-11-05）
+
+文档353由PR #405以exact
+`base=da6a6b3e692bf2486ca428dd5ed9c2068918e982 / head=400d469b821d69816a17ccd7c060046ae66ccb45 /
+tree=1fe75d2b3431b04167fe87262a7bc27c67b3a2d3`进入资格链。original Public CI `41987752615`、exact-main Public CI
+`41991308866`与Browser Smoke `41991308859`均为attempt 1 SUCCESS；protected merge/current exact main为
+`6af0dac952ec2bd3e015bc827b2b709908282036`。该新world未修改35分钟budget、runtime、tests或oracle，required Python
+3.10/3.13 lanes均完成；它不回填#404的`CANCELLED`或解释其`UNKNOWN`。
+
+fresh short-root readback保留全部setup、anonymous rate、HTTP 504与navigation-timeout non-success。README formal #3最终取得
+API/Render `COMPLETE / HTTP 200`与稳定sample，但sealed source marker一次、rendered-text marker零次；产品在Verdict形成前
+fail closed。doc353 formal与AGENTS/milestones raw目标未运行。failure-boundary、140-artifact failed closeout与finite integrity为：
+
+```text
+e393470939acc052a94f3ac44d89694b8a8012b0389e207912ba3658663d4c61
+4165a90d119830e54aa91bcb6ab30306ac260b6e9bcf4a0a2633c0834e775737
+aac1c1afe19b384857b7fabcc0966a52d7fbceb2085f6613247e798d1611f72a
+```
+
+GitHub render/visibility机制保持`UNKNOWN`；candidate semantic regression与Collector regression未建立。fresh CONTROL LOOP建立
+[文档354](354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)，只保存#405 exact gates、readback
+失败、未运行目标、fail-closed归层与后继reader-visible proof-target责任；不修改doc353/doc350/project-state、workflow/runtime/
+tests/Schema/oracle/frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_RECOVERY_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC353_READBACK_MARKER_DRIFT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc354。完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP建立独立versioned doc350 readback recovery publication。
+不得重跑#405 formal、拼接未运行目标、弱化marker oracle、扩张35分钟budget或启动后续runtime seam。
