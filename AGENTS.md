@@ -7009,3 +7009,46 @@ R2_R6_NOT_STARTED
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned doc358
 readback recovery publication。不得重跑#410 formal、继续未运行目标后拼接资格、使用认证替代匿名观察、弱化oracle、直接恢复
 projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection failure-chain audit readback recovery 0.1 candidate
+
+doc359由PR #411以candidate `45d1738c8c22eb590d40e46ec0325cbfb8bb6d8d`、tree
+`2c2a66d4f6ffe628dac881352152bccb2a7844d5`精确合入`main@2270374bd288d34c35fe5848318b915d584a4156`。
+original Public CI `42100538777`、exact-main Public CI `42105874643`与Browser Smoke `42105874834`均attempt 1
+SUCCESS（11/11、11/11、1/1）。fresh README/doc359各自唯一formal均为API/Render `COMPLETE`、Core `PASS`；
+AGENTS/milestones各自唯一raw/API/exact-Git观察逐字节一致。
+
+第一次independent reconciliation虽然输出PASS，却沿用前序proof facility的硬编码next seam，把doc359授权的versioned doc358
+recovery错误写成doc354 recovery。该contradiction与原reconciliation、99-artifact closeout及finite integrity均按原字节保留为
+`PROOF_FACILITY_RECONCILIATION_STALE_NEXT_SEAM_DEFECT / NONE`，不得冒充资格。没有重跑任何产品观察；独立冻结的attempt 2只纠正
+reconciliation/closeout边界，reconciliation、118-artifact closeout与finite integrity分别为：
+
+```text
+79f5de7c77181fef2667402fdf8b2c6752fc814eb269e2b9a01613e86efe17b2
+e4b3a78245cc5d04025f72c26068eeb7ffb56b792657bcf002863aa6b9f28f3e
+922beb2a662bdaf31bf893147c38a9e8e695fcd9c987f76ab986710715aa5392
+```
+
+因此doc359现在是`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；#410/doc358仍保持merged但readback NOT_QUALIFIED，
+anonymous shared-egress consumer/egress allocation原因仍为`UNKNOWN`。fresh CONTROL LOOP建立
+[文档360](docs/360-r1-public-state-projection-failure-chain-audit-readback-recovery.md)，只在新exact world重发doc358的联合审计责任，
+不修改doc358/doc359、runtime/workflow/tests/Schema/Provider/Collector/P2/Core oracle或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RATE_EXHAUSTION_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_PR_410_MERGED_READBACK_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc360。自己的完整资格链闭合后最多成为
+`FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1 / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立
+versioned doc354 readback recovery publication。不得回填#410、重跑其formal、复用#411产品观察资格、弱化oracle、直接恢复
+projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
