@@ -8275,3 +8275,43 @@ R2_R6_NOT_STARTED
 candidate自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，
 从新exact main建立独立versioned doc358 readback recovery publication；不得重跑#410 formal、继续未运行目标后拼接资格、
 使用认证替代匿名观察、弱化oracle、直接恢复projection/private implementation或启动后续seam。
+
+## R1 public project-state projection failure-chain audit readback recovery 0.1 candidate（2026-11-06）
+
+PR #411把doc359以candidate`45d1738c8c22eb590d40e46ec0325cbfb8bb6d8d`、tree
+`2c2a66d4f6ffe628dac881352152bccb2a7844d5`合入`main@2270374bd288d34c35fe5848318b915d584a4156`。
+original Public CI `42100538777`、exact-main Public CI `42105874643`与Browser Smoke `42105874834`均attempt 1
+SUCCESS。fresh README/doc359 formal各自唯一PASS，AGENTS/milestones各自唯一raw/API/exact-Git逐字节一致。
+
+第一次reconciliation错误保留了前序proof facility的doc354 next seam，与doc359授权的doc358 recovery矛盾。其
+reconciliation、99-artifact closeout与finite integrity原字节保留且qualification effect为NONE；failure-boundary SHA-256为
+`c0e5ffe01a83cc4d08706bcd804dc723a18cb8de9643bd31188e226d3550fd11`。没有重跑任何产品观察。独立冻结后的
+attempt 2 reconciliation / 118-artifact closeout / finite integrity为：
+
+```text
+79f5de7c77181fef2667402fdf8b2c6752fc814eb269e2b9a01613e86efe17b2
+e4b3a78245cc5d04025f72c26068eeb7ffb56b792657bcf002863aa6b9f28f3e
+922beb2a662bdaf31bf893147c38a9e8e695fcd9c987f76ab986710715aa5392
+```
+
+doc359因此成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但#410/doc358继续是merged且readback NOT_QUALIFIED。
+[文档360](360-r1-public-state-projection-failure-chain-audit-readback-recovery.md)从新的exact main重发doc358联合审计责任，
+不回填#410，不解释其`UNKNOWN`，也不恢复projection 0.2。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RATE_EXHAUSTION_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_PR_410_MERGED_READBACK_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的local/original/protected/exact-main/fresh readback/reconciliation/finite-closeout链全部成立后，最多成为
+`FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1 / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP并从新exact main建立独立
+versioned doc354 readback recovery publication；不得回填#410、重跑其formal、弱化oracle或启动后续runtime seam。
