@@ -8163,3 +8163,34 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc354。完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP建立独立versioned doc350 readback recovery publication。
 不得重跑#405 formal、拼接未运行目标、弱化marker oracle、扩张35分钟budget或启动后续runtime seam。
+
+## Release download multi-asset lane recovery 0.2 correction candidate
+
+doc354后继 PR #407 与其audit PR #408 都在各自original Public CI attempt 1真实失败后关闭、未合并且未重跑。
+#407在Python 3.10 required lane的E1第6项资产、#408在E3 0.2 lane的首个E3资产分别连续观察6次HTTP 504；
+两者都正确耗尽60秒绝对恢复预算并fail closed。它们是不同run/job/head/asset identity，不得拼接；candidate
+semantic regression、asset digest drift与底层GitHub/proxy/shared-egress/network单一根因均未建立。
+
+[文档357](357-release-download-multi-asset-lane-budget-correction.md)只把这两个multi-asset loop显式改为120秒恢复窗口。
+下载器默认60秒、15秒单请求、capped backoff、retryable错误集合、owned partial、digest、不覆盖发布及35/15分钟外层
+containment budget都保持不变。确定性witness模拟首个504消费11秒、后五个504各消费0.2秒，要求新window在第7次
+尝试可发布精确字节；workflow placement同时证明120秒参数精确出现两次。
+
+```text
+PR #407 = FAILURE / CLOSED / UNMERGED / NOT_QUALIFIED
+PR #408 = FAILURE / CLOSED / UNMERGED / NOT_QUALIFIED
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC353_READBACK_MARKER_DRIFT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+候选自己的local/original/protected/exact-main/readback/reconciliation/finite-closeout链全部成立后，最多使
+`RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`生效。之后必须返回CONTROL LOOP并从新exact main重建
+失败的docs-only audit；不得重跑#407/#408、复用doc355/doc356候选、修改下载器默认/完整性oracle、扩张外层job budget、
+直接恢复public projection或启动R2-R6。

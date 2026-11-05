@@ -6891,3 +6891,41 @@ R2_R6_NOT_STARTED
 本audit candidate只允许README、AGENTS、milestones与doc354。自己的完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立versioned doc350 readback
 recovery publication。不得重跑#405 formal、复用失败readback、弱化marker oracle、扩张35分钟budget或启动后续runtime seam。
+
+### Release download multi-asset lane recovery 0.2 correction candidate
+
+doc354后继audit candidate PR #407 与其failure-boundary audit PR #408 均从
+`main@95add9053c2984c0efe0cb87d1a4b64812215683`独立建立，并都在original Public CI attempt 1真实失败后关闭、
+未合并、未重跑。#407的Python 3.10 required lane在E1资产列表第6项
+`authoring-skill-e1-validation-summary.json`连续收到6次HTTP 504；#408的E3 0.2 lane在Core wheel成功后、首个E3资产
+`veritrail_starter-0.2.0-py3-none-any.whl`连续收到6次HTTP 504。两条路径都由60秒绝对预算正确fail closed；
+candidate semantic regression与资产摘要漂移未建立，底层GitHub/proxy/shared-egress/network原因保持`UNKNOWN`。
+
+```text
+PR #407 = FAILURE / CLOSED / UNMERGED / NOT_QUALIFIED
+PR #408 = FAILURE / CLOSED / UNMERGED / NOT_QUALIFIED
+classification = RELEASE_ASSET_HTTP_504_RECOVERY_BUDGET_EXHAUSTED
+download tool fail-closed behavior = CONFORMING
+```
+
+[文档357](docs/357-release-download-multi-asset-lane-budget-correction.md)只重开两个被击中的multi-asset workflow
+lane budget policy：E1与E3 asset loop显式使用120秒；下载器默认60秒、15秒单请求、`2/4/8/16` capped backoff、
+错误集合、owned partial、摘要校验、不覆盖发布、35/15分钟外层containment budget与所有其他lane不变。
+
+```text
+RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC353_READBACK_MARKER_DRIFT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本maintenance candidate只允许CI workflow、下载器定向测试、README、AGENTS、milestones与doc357。自己的
+original/exact-main双门、fresh installed-product三目标readback、independent reconciliation与finite closeout全部成立后，
+最多使`RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`生效。随后必须返回CONTROL LOOP，从新exact main
+重建失败的docs-only audit；不得重跑#407/#408、复用doc355/doc356候选、修改下载器默认/完整性oracle、扩张外层job budget、
+直接恢复public projection或启动R2-R6。
