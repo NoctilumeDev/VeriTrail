@@ -15,10 +15,11 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前工程资格状态的有界公开投影仍是候选；successor 0.2 的 README 正式读回失败已按原身份保留，见
-[failure-boundary audit](docs/350-r1-public-state-projection-successor-readback-failure-boundary-audit.md)。该audit自己的fresh formal又在
-匿名观察完整、marker可见后于acceptance-bundle本地持久化阶段fail closed；新failure boundary见
-[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)。完整施工事实仍以
+当前工程资格状态的有界公开投影仍是候选；successor 0.2 的 README 正式读回失败与后继 acceptance-bundle
+持久化错误均按原身份保留。后者的 [文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
+已经在独立 exact world 完成资格链，现为 qualified history，但不回填 #401/#402。新的
+[doc350 readback recovery publication 0.1](docs/352-r1-public-state-projection-doc350-readback-recovery-publication.md)
+只重新绑定 doc350 的公开观察与短路径证明设施；它不恢复 projection 0.2，也不解释旧错误的 UNKNOWN。完整施工事实仍以
 [里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
@@ -419,7 +420,11 @@ python -m venv .venv
   PR #402随后把该失败审计合入`main@4fd9a78…`并通过original/exact-main双门，但fresh README formal在marker已稳定出现一次、
   API/Render均`COMPLETE`且cleanup完成后，于acceptance-bundle evidence持久化时对271字符本地目标路径触发`FileNotFoundError`；
   Core Verdict未形成，剩余目标未运行。该失败由[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
-  独立归层；长路径是否为单一根因保持`UNKNOWN`，doc350仍是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。
+  独立归层；长路径是否为单一根因保持`UNKNOWN`。PR #403随后把doc351合入`main@da6a6b3…`并完成original/exact-main
+  双门、fresh README/doc351 formal、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout；doc351因此是
+  `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但doc350的#402 readback仍保持失败。fresh CONTROL LOOP建立
+  [doc350 readback recovery publication 0.1](docs/352-r1-public-state-projection-doc350-readback-recovery-publication.md)，只允许在新的exact world、
+  新身份和预声明短output root下重新观察doc350；不得重跑#402或恢复projection 0.2。
   完整milestones保持原历史责任，投影不拥有事实、资格、调度或施工授权。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。

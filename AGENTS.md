@@ -6650,6 +6650,48 @@ finite closeout全部闭合后，最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED 
 CONTROL LOOP建立独立docs-only implementation freeze publication；不得直接恢复global composition authority或启动manifest/Evidence/
 persistence/public Review/R2–R6。
 
+### R1 public project-state projection doc350 readback recovery publication 0.1 candidate
+
+PR #403以exact `base=4fd9a78ab994475b05a2cb5bc1f2d6108a9572ea / head=d6ee533e9751380d4e981204c1d5c6e95fc26762 /
+tree=102b1e3e5f6844b278edee3caa83d10dc6dc8179`把doc351合入
+`main@da6a6b3e692bf2486ca428dd5ed9c2068918e982`。original Public CI `41968023423`、exact-main Public CI
+`41971091826`与Browser Smoke `41971091790`均为attempt 1 SUCCESS。fresh README/doc351 formal与AGENTS/milestones
+raw-byte observation各有唯一PASS；independent reconciliation、147-artifact closeout、stdout self-capture mismatch与finite integrity为：
+
+```text
+972b9fa8c37c90f6a214128cae28e60d1647662ae1808040c96efa074673d24f
+45f26afccb77ea779bf0ed47b8780779129c22f7e17af27f802b518b8b00452f
+0de80aa38eb2f223591e5d37f1214f33d3ada6d5044848f2433afafd180a8172
+1b2243f5ec2a008c3145baed9398dfae69db0a1ecaebaaaf9facbd6653d3b70f
+```
+
+exact-main gate capture attempt 1的stale parent、attempt 2的stale PR identity、anonymous rate exhaustion与self-capture mismatch均按
+原identity保留。因此doc351现在是`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；#402的271字符持久化ERROR、MAX_PATH
+hypothesis与底层文件系统`UNKNOWN`不变，doc350仍未资格化。
+
+fresh CONTROL LOOP建立
+[文档352](docs/352-r1-public-state-projection-doc350-readback-recovery-publication.md)。该versioned docs-only publication只允许
+README、AGENTS、doc352与milestones变化；doc350/doc351/doc349/project-state、runtime、tests、workflow、Schema、oracle与frozen
+semantics保持不变。它必须预声明短readback root，并从新的exact main对README/doc350/doc351/doc352分别取得fresh anonymous
+diagnostic与唯一formal，再对AGENTS/milestones取得exact-commit public/API raw-byte PASS，最后独立reconciliation与finite closeout。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_2_READBACK_FAILURE_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_AUDIT_READBACK_BUNDLE_PERSISTENCE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_1_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+全部门闭合后最多让doc350在新的publication world成为`READBACK_RECOVERED / FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；
+PR #402自己的formal仍是ERROR。随后必须返回CONTROL LOOP，不能按文档编号直接创建projection successor、冻结private implementation或
+启动runtime/manifest/Evidence/persistence/public Review/R2–R6。
+
 ### R1 public project-state projection recovery gate failure-boundary audit candidate
 
 doc346 implementation由PR #398以exact head `c1952d76f82808d2c9c7ccca719d32db20364000`受保护合入

@@ -8077,3 +8077,47 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc351。自己的完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，建立独立versioned doc350 readback recovery
 publication。不得重跑#402 formal、从本审计直接恢复projection 0.2/0.3或启动后续runtime seam。
+
+## R1 public project-state projection doc350 readback recovery publication 0.1 candidate（2026-11-05）
+
+doc351由PR #403以exact
+`base=4fd9a78ab994475b05a2cb5bc1f2d6108a9572ea / head=d6ee533e9751380d4e981204c1d5c6e95fc26762 /
+tree=102b1e3e5f6844b278edee3caa83d10dc6dc8179`进入资格链。original Public CI `41968023423`为11/11 SUCCESS；
+protected merge是`main@da6a6b3e692bf2486ca428dd5ed9c2068918e982`，exact-main Public CI `41971091826`与Browser Smoke
+`41971091790`分别为11/11和1/1 SUCCESS，全部为attempt 1。
+
+fresh readback使用预声明短root `C:\vt351e`，最坏case目标141字符。README与doc351各有唯一
+`FORMAL_READBACK_PASS`，AGENTS与milestones各有唯一`FORMAL_RAW_BYTE_OBSERVATION_PASS`。independent reconciliation、
+147-artifact closeout、stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+972b9fa8c37c90f6a214128cae28e60d1647662ae1808040c96efa074673d24f
+45f26afccb77ea779bf0ed47b8780779129c22f7e17af27f802b518b8b00452f
+0de80aa38eb2f223591e5d37f1214f33d3ada6d5044848f2433afafd180a8172
+1b2243f5ec2a008c3145baed9398dfae69db0a1ecaebaaaf9facbd6653d3b70f
+```
+
+exact-main gate capture attempt 1的stale parent、attempt 2的stale PR identity、anonymous rate diagnostic #1 exhaustion与
+self-capture mismatch均保留，后继PASS不覆盖它们。doc351因此成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填
+#402，271字符持久化ERROR与底层原因`UNKNOWN`不变。
+
+fresh CONTROL LOOP建立
+[文档352](352-r1-public-state-projection-doc350-readback-recovery-publication.md)。它只version doc350的readback recovery
+publication身份，不修改doc350/doc351/doc349/project-state或任何runtime/semantic bytes。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_2_READBACK_FAILURE_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_AUDIT_READBACK_BUNDLE_PERSISTENCE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_1_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc352变化。完整资格链闭合后，doc350只能在新的publication world成为
+`READBACK_RECOVERED / FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；#402 formal仍是ERROR，doc349/projection 0.2仍未资格化。
+任何新事实形成后必须返回CONTROL LOOP，不得直接恢复projection、private implementation或后续runtime seam。
