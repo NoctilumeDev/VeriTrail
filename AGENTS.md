@@ -6650,6 +6650,49 @@ finite closeout全部闭合后，最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED 
 CONTROL LOOP建立独立docs-only implementation freeze publication；不得直接恢复global composition authority或启动manifest/Evidence/
 persistence/public Review/R2–R6。
 
+### R1 doc350 recovery original gate cancellation failure-boundary audit candidate
+
+PR #403以exact `base=4fd9a78ab994475b05a2cb5bc1f2d6108a9572ea / head=d6ee533e9751380d4e981204c1d5c6e95fc26762 /
+tree=102b1e3e5f6844b278edee3caa83d10dc6dc8179`把doc351合入
+`main@da6a6b3e692bf2486ca428dd5ed9c2068918e982`。original Public CI `41968023423`、exact-main Public CI
+`41971091826`与Browser Smoke `41971091790`均为attempt 1 SUCCESS；fresh README/doc351 formal、AGENTS/milestones
+exact-commit raw-byte observation、independent reconciliation与finite closeout闭合。因此doc351是
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但#402错误与底层原因`UNKNOWN`不变。
+
+fresh CONTROL LOOP建立的doc350 recovery publication 0.1由PR #404以exact
+`base=da6a6b3e692bf2486ca428dd5ed9c2068918e982 / head=74ede8dff9fb4bf9a79b8749b5ed6f593f161371 /
+tree=2ae6b7bd3604397def22c88ac826b0ba236c287f`进入original gate。local四格focused、8组hygiene、路径预算与
+primary audit continuity均PASS，但original Public CI `41980701750` attempt 1终结为`CANCELLED`：required Python 3.10 job
+`127089895170`前31步成功，随后在E1 clean-install acceptance内收到`KeyboardInterrupt`与runner cancellation；job从
+`06:29:04Z`运行到`07:04:13Z`，耗尽workflow明确的35分钟外层containment budget。Python 3.13、E3与Workbench jobs成功，
+四个downstream required jobs因dependency被skipped。PR未rerun、已关闭且未合并，remote main保持本节构造坐标。
+
+original run API EOF、错误workflow文件名、local monitor cancellation、全部raw run/job/log、cancellation boundary、73-artifact failed
+closeout与finite integrity均保留。已建立`RUNNER_JOB_TIMEOUT_BUDGET_EXHAUSTED`；candidate semantic regression未建立，为什么同一未改
+workflow/runtime/tests/oracle的lane本次跨过预算仍是`UNKNOWN`。
+
+[文档353](docs/353-r1-public-state-projection-doc350-recovery-original-gate-cancellation-boundary.md)只允许README、AGENTS、
+milestones与doc353变化。它不得增加timeout、重跑#404、复用失败head或恢复doc352。自己的original PR/protected merge/exact-main
+双门、fresh README/doc353 render与AGENTS/milestones exact-commit raw-byte observation、independent reconciliation及finite closeout
+全部闭合后，最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，独立判断CI containment budget
+maintenance是否仍是最小seam。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_AUDIT_READBACK_BUNDLE_PERSISTENCE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_1_PR_404_CANCELLED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_RECOVERY_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本audit不解释duration variance、不把3/4 job PASS拼成资格、不改写#402/#404，也不授权doc350 recovery successor、runtime、
+manifest/Evidence/persistence/public Review或R2–R6。
+
 ### R1 public project-state projection recovery gate failure-boundary audit candidate
 
 doc346 implementation由PR #398以exact head `c1952d76f82808d2c9c7ccca719d32db20364000`受保护合入

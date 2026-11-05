@@ -8077,3 +8077,49 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、milestones与doc351。自己的完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，建立独立versioned doc350 readback recovery
 publication。不得重跑#402 formal、从本审计直接恢复projection 0.2/0.3或启动后续runtime seam。
+
+## R1 doc350 recovery original gate cancellation failure-boundary audit candidate（2026-11-05）
+
+doc351由PR #403精确合入`main@da6a6b3e692bf2486ca428dd5ed9c2068918e982`；original/exact-main Public CI与
+Browser Smoke均为attempt 1 SUCCESS，fresh README/doc351 formal、AGENTS/milestones raw-byte observation、independent
+reconciliation与finite closeout全部闭合。因此doc351为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但不回填#402。
+
+后继doc350 recovery publication 0.1 candidate使用exact
+`base=da6a6b3e692bf2486ca428dd5ed9c2068918e982 / head=74ede8dff9fb4bf9a79b8749b5ed6f593f161371 /
+tree=2ae6b7bd3604397def22c88ac826b0ba236c287f`，PR #404，1 commit / 4 docs files。local qualification PASS；original
+Public CI `41980701750` attempt 1却为`CANCELLED`。required Python 3.10 job `127089895170`前31步成功，E1 clean-install
+acceptance执行中收到`KeyboardInterrupt`与`The operation was canceled`；job持续2109秒，对应`.github/workflows/ci.yml`明确的
+35分钟外层budget。Python 3.13、E3、Workbench为SUCCESS，四个downstream jobs为SKIPPED。PR #404未rerun、已关闭且未合并。
+
+original cancellation boundary、794934-byte job log、73-artifact failed closeout与finite integrity SHA-256为：
+
+```text
+a4a973bd5f0d7d03cde38d15467abe0fc56e85886cb4d3d312085d91295bf070
+9b6e316956010ee41526e103a86b0ee6b317a60586012e399340aa30d8d3f41f
+e583d7b9b3b3fdff5b0a1adf4f41f2f00f06d7e82ae146674d59a9131bba0b16
+65651af8e72f1a1bb9bff67a39d66e8a3936d604331f36ce3283ad9a7495a614
+```
+
+run API EOF、wrong workflow filename与local watch cancellation均按原identity保留。已建立
+`RUNNER_JOB_TIMEOUT_BUDGET_EXHAUSTED`；candidate semantic regression未建立，底层duration variance原因保持`UNKNOWN`。
+
+fresh CONTROL LOOP建立
+[文档353](353-r1-public-state-projection-doc350-recovery-original-gate-cancellation-boundary.md)，只保存#404 exact candidate、
+original run、取消位置、资格影响与后继责任，不修改workflow/runtime/tests/Schema/oracle/frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_AUDIT_READBACK_BUNDLE_PERSISTENCE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_1_PR_404_CANCELLED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_RECOVERY_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_MERGED_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc353。完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后返回CONTROL LOOP，重新审计CI containment budget maintenance是否仍是
+最小合法seam。不得重跑#404、复用doc352、直接增加timeout或启动后续runtime seam。
