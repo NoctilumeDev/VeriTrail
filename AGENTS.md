@@ -7052,3 +7052,45 @@ R2_R6_NOT_STARTED
 `FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1 / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main建立独立
 versioned doc354 readback recovery publication。不得回填#410、重跑其formal、复用#411产品观察资格、弱化oracle、直接恢复
 projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection doc354 readback recovery 0.1 candidate
+
+doc360由PR #412以candidate `7d4e499ebb317a67f121b4b9a299d96edccef82f`、tree
+`ee26ff57e7d6737e1a2d615633ebf2d93036a61b`精确合入`main@4ba50edff463e9f9c0560abd17d502ebc5c4ce92`。
+original Public CI `42113565597`、exact-main Public CI `42118009840`与Browser Smoke `42118009860`均attempt 1
+SUCCESS（11/11、11/11、1/1）。fresh README/doc360各自唯一formal均为API/Render `COMPLETE`、Core `PASS`；
+AGENTS/milestones各自唯一raw/API/exact-Git观察逐字节一致。independent reconciliation、98-artifact closeout与finite
+integrity分别为：
+
+```text
+cdf60f515fd1b1ade4773d5735d35e491ee92e520189c4ebc4381a9dd9be8937
+9574b941a3163cce545fe0153672aa0cb66bc3ae2d6acc585245b327e4baf79e
+e80e1c1f240f702bed74785650b587d60f02008ce92ac414521549331635cca2
+```
+
+stdout self-capture mismatch `ef24861ad4b5d367577c072d25e9630a30a81d8f3f73b0ecbf4c15f04d5e4165`按原身份保留。
+因此doc360现在是`FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1 / QUALIFIED_HISTORY`；#410/doc358仍不资格化，
+#406/doc354也仍是merged但readback NOT_QUALIFIED。
+
+fresh CONTROL LOOP建立
+[文档361](docs/361-r1-public-state-projection-doc354-readback-recovery.md)，只在新的exact world重发doc354的
+marker-drift failure-boundary责任。它保留#405 source/render marker contradiction、#406唯一README formal的
+`403 / COLLECTION_BUDGET_EXHAUSTED`、未运行目标与`UNKNOWN`，不修改doc354、runtime、workflow、tests、Schema、
+Provider、Collector、P2/Core oracle或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_FAILURE_CHAIN_AUDIT_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc361。自己的完整资格链闭合后最多成为
+`R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，
+最多从新exact main建立独立versioned doc350 readback recovery publication。不得回填#405/#406、重跑其formal、复用#412
+产品观察资格、弱化oracle、直接恢复projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
