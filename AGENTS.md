@@ -7252,3 +7252,43 @@ README/project-state/doc345/doc346/doc364/doc365 formal、AGENTS/milestones raw 
 closeout全部成立后，最多使#398/doc346成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须
 返回CONTROL LOOP，先version/rebind因新状态而过时的project-state projection，再独立判断implementation freeze；不得直接启动
 manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection successor 0.4 contract candidate
+
+PR #417已经把doc365 candidate `d400a738e39c97e743ba7bec7315c68e9f534bb1`、tree
+`f96b396e7bbdb42af9f4f6a75bbc8d730eede7af`精确合入`main@27f0b93eeb5ace7b5428ebc0c07cb1ebe4199f25`。
+original Public CI `42191635218`、exact-main Public CI `42196105120`与Browser Smoke `42196105123`均attempt 1
+SUCCESS（11/11、11/11、1/1）。前两个fresh root分别保留README formal的anonymous API budget exhaustion与reader-visible
+marker target selection failure；它们都没有Core Verdict，也不建立subject或candidate regression。第三个fresh root的README、
+project-state、doc345、doc346、doc364、doc365各自唯一formal均为API/Render `COMPLETE`与Core `PASS`；AGENTS/milestones
+raw/API/exact-Git逐字节一致。independent reconciliation、177-artifact closeout、stdout self-capture mismatch与finite integrity为：
+
+```text
+b5a02d33ce7423c4173f4196326c5deafdd829f9a0d531cdb36b18cf6a50d448
+d9d69aec5da9baf0dc48a5966ce6595ac85f6d88aa2a4d8edaa7a9f1ea7d04c4
+46ac81de42273097329102a46be88d412084d8ef57b2e531842aa22c86cd8c0a
+e526f7ca23ba0d9ef3d25eb44dd745466efc6fe215f52f58e45ae2ba2f7e478f
+```
+
+因此doc365现在是qualified history，#398/doc346成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED /
+NOT_FROZEN`；旧milestones truncation、#399原始门失败、两次恢复formal non-success及其`UNKNOWN`归因继续保留。这个新有效事实
+使frozen projection 0.3成为历史投影。fresh CONTROL LOOP建立
+[文档366](docs/366-r1-public-project-state-projection-successor-0.4-contract.md)与versioned
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4` candidate，只重绑当前有界公开投影与final same-candidate milestones bytes；不修改
+runtime、tests、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或任何frozen semantic bytes。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`，随后必须返回CONTROL LOOP
+建立独立docs-only freeze publication。不得从本文直接冻结private implementation、恢复global composition authority或启动
+manifest/Evidence/persistence/public Review/R2–R6。

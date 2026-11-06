@@ -8515,3 +8515,65 @@ R2_R6_NOT_STARTED
 
 candidate自己的完整资格链闭合后最多恢复`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须
 返回CONTROL LOOP，先version/rebind project-state projection，再独立判断implementation freeze；不得直接启动后续runtime seam。
+
+## R1 public project-state projection successor 0.4 contract candidate（2026-11-06）
+
+PR #417以exact
+`base=e0ab9d0679f1706cdde3103ef0e1076baa681b59 / head=d400a738e39c97e743ba7bec7315c68e9f534bb1 /
+tree=f96b396e7bbdb42af9f4f6a75bbc8d730eede7af`受保护合入
+`main@27f0b93eeb5ace7b5428ebc0c07cb1ebe4199f25`。original Public CI `42191635218`、exact-main Public CI
+`42196105120`与Browser Smoke `42196105123`均为attempt 1 SUCCESS（11/11、11/11、1/1）。original qualification、
+protected merge与exact-main gate evidence SHA-256为：
+
+```text
+6d1a2a4b204f098bc3a0b6eef22b45b5f1e063b13586b2846227db5f0b77069d
+9c3da1153bbac562f240a97b2af4d6444abf47fcff17dce02c79c7463bdaa57b
+8840f40fc5225453f4baabc2164dbcde1a4151b9cc18e4e9ad1a6984c2f19c6f
+```
+
+第一次fresh readback root的README formal命中`403 / COLLECTION_BUDGET_EXHAUSTED / remaining=0`，Render仍
+`COMPLETE / 200`，Core Verdict未创建；failure-boundary与57-artifact failed closeout为
+`f6398f3a086f1d463eb7d647049f074840d5fb10dc19054bcca465b5eebd049f`与
+`c01cf59cc90e05f5d27a953c325058f701465fda63ef84a91ad2ccc36d127a35`。第二个fresh root的README formal取得
+API/Render `COMPLETE / 200`，但sealed source中旧marker一次、rendered text零次，产品以`Render Evidence marker drifted`
+fail closed；failure-boundary与56-artifact failed closeout为
+`f72c7a68ff5505baf36f75282349e8b990c6a3a440830f8a8ffb258ec61a719c`与
+`ef25d072f6f8def9f30afb74ae983b90d4e51a54a097071ee06fd1ef4472bd7d`。两次non-success、TLS EOF closeout setup
+error与其他proof-facility setup errors均按原identity保留；subject failure与candidate regression未建立，底层anonymous resource和
+GitHub presentation机制保持`UNKNOWN`。
+
+第三个fresh root只认`27f0b93…`world；README、project-state、doc345、doc346、doc364、doc365各自唯一formal均为
+API/Render `COMPLETE`、HTTP 200、cleanup complete与Core `PASS`，没有重复或复用任何早期PASS。AGENTS/milestones
+raw.githubusercontent、GitHub Contents API与exact Git bytes逐字节一致。pre-observation adapter、preformal validation、
+independent reconciliation、177-artifact closeout、stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+5f9d677de43c8e50074c6f2367cbb41a6c76a8294295eaf39f64073e73498913
+b35eb5ec72123e39ef754ee26b4b51fc158ef3052fa164c32208102d7daa18cf
+b5a02d33ce7423c4173f4196326c5deafdd829f9a0d531cdb36b18cf6a50d448
+d9d69aec5da9baf0dc48a5966ce6595ac85f6d88aa2a4d8edaa7a9f1ea7d04c4
+46ac81de42273097329102a46be88d412084d8ef57b2e531842aa22c86cd8c0a
+e526f7ca23ba0d9ef3d25eb44dd745466efc6fe215f52f58e45ae2ba2f7e478f
+```
+
+因此doc365成为qualified history，#398/doc346现在是`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED /
+NOT_FROZEN`。旧milestones truncation、#399 original gate failure与两次恢复non-success不被回填。这个新状态使projection 0.3
+成为历史投影；fresh CONTROL LOOP从新exact main建立
+[文档366](366-r1-public-project-state-projection-successor-0.4-contract.md)与versioned
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4` candidate，只重绑有界公开投影及final same-candidate milestones bytes。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、doc366、project-state与milestones。自己的完整资格链闭合后最多成为
+`QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立docs-only freeze publication。不得从本文直接冻结
+private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
