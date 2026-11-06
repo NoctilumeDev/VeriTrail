@@ -7094,3 +7094,48 @@ R2_R6_NOT_STARTED
 `R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，
 最多从新exact main建立独立versioned doc350 readback recovery publication。不得回填#405/#406、重跑其formal、复用#412
 产品观察资格、弱化oracle、直接恢复projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection doc350 readback recovery publication 0.2 candidate
+
+doc361由PR #413以candidate `5486c607f7a2aba88547f5c36331a0031d79f50b`、tree
+`6e5d67824b8431b7bbef539faf59b9d7049741a6`精确合入`main@605adc43602422361f52d1f62fc13b089177141a`。
+original Public CI `42125438657`、exact-main Public CI `42129541345`与Browser Smoke `42129541284`均attempt 1
+SUCCESS（11/11、11/11、1/1）。fresh README/doc361各自唯一formal为API/Render `COMPLETE`、Core `PASS`；
+AGENTS/milestones各自唯一raw/API/exact-Git观察逐字节一致。
+
+anonymous rate diagnostic #1/#2与preflight #1/#2的zero-capacity结果、adapter path假设setup error、第一次reconciliation
+allowlist setup error均按原identity保留，qualification effect为NONE。独立reconciliation、112-artifact closeout、expected stdout
+self-capture mismatch与finite integrity为：
+
+```text
+f39cf6c6689bcec2d1a6e5feb7487fbce5585456fb1633f28193bd678e750354
+bea8fdb91f7161c5edbf5ab6ac918036449d87da85e1851db3408d8556570b0c
+9a0c56c99333de45ccb976883809c3b4fef1ba1ff3c73b07aae1ccfd91d501ad
+2246c477b95aabe075991474bc4a3cab2cdcfc7028b855a2093300a2b22aba6b
+```
+
+因此doc361现在是`R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY`；#405/#406、
+doc354旧world与底层`UNKNOWN`均不被回填。fresh CONTROL LOOP建立
+[文档362](docs/362-r1-public-state-projection-doc350-readback-recovery-publication.md)，使用独立0.2身份在新exact world重发
+doc350 failure-boundary audit责任。它保留#402的acceptance-bundle持久化错误、#404的original gate cancellation、#405
+source/render marker contradiction、#406 API exhaustion与全部未运行目标；不修改doc350/doc351/doc353/doc354/doc361、
+project-state、runtime、workflow、tests、Schema、Provider、Collector、P2/Core oracle或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC354_READBACK_RECOVERY_0_1_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_2_READBACK_FAILURE_BOUNDARY_AUDIT_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_1_PR_404_CANCELLED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_2_CANDIDATE_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc362。自己的完整资格链闭合后最多成为
+`R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_2_QUALIFIED_HISTORY`；随后必须返回
+CONTROL LOOP，重新判断projection successor是否仍是最小合法seam。不得回填#402/#404/#405/#406、复用#413产品观察资格、
+弱化oracle、直接恢复projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
