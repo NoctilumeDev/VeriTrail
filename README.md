@@ -37,10 +37,13 @@ proof-facility defect，不把后继 PASS 回填给旧身份，也不恢复公�
 **failure-chain audit recovery 0.1 与 doc354 readback recovery 0.1 均已完成自身资格。**
 [文档361](docs/361-r1-public-state-projection-doc354-readback-recovery.md)只在新的 exact world 重新发布 doc354 的
 marker-drift failure-boundary 责任。它不重跑 #406 formal、不回填旧 ERROR，也不使 doc350 或公开投影获得资格。
-**doc350 readback recovery publication 0.2 仍是候选。**
+**doc350 readback recovery publication 0.2 已完成自身资格。**
 [文档362](docs/362-r1-public-state-projection-doc350-readback-recovery-publication.md)只在新的 exact world 重新发布
 doc350 的 failure-boundary audit 责任；#402 持久化错误、#404 cancellation、#405 marker drift 与 #406 API exhaustion
 继续保持各自身份，公开投影 0.2 仍未恢复。
+**project-state projection recovery successor 0.3 仍是候选。**
+[文档363](docs/363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)把有界公开投影重新绑定到当前
+milestones candidate bytes；它保持[当前有界公开投影](docs/project-state.md)的无权威边界，不回填#401或直接冻结projection。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
