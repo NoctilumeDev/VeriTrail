@@ -7442,3 +7442,44 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与doc370。自己的完整资格链闭合后，projection/contract 0.5才可标记
 `FROZEN`；随后仍必须返回CONTROL LOOP，不能按文档编号自动恢复composition authority或启动
 manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 post-terminal Fact dual-successor 私有实现冻结发布候选
+
+PR #422以candidate `5477578190b17e4391a04d1da5b120ab41f5c792`、tree
+`f11beb78d3262a783f03fc77e26f2fd3e8c23807`精确合入`main@7049de0093f5967ea3dcce65d517b5daeea4123f`。
+original Public CI `42298562890`、exact-main Public CI `42302259402`与Browser Smoke `42302259372`均attempt 1
+SUCCESS（11/11、11/11、1/1）。fresh README/project-state/doc369/doc370各自唯一formal均为API/Render `COMPLETE`、
+HTTP 200与Core `PASS`；AGENTS/milestones raw/API/exact-Git全字节一致。independent reconciliation、137-artifact
+closeout、expected self-capture mismatch与finite integrity为：
+
+```text
+84ad574bc4c899bf79572e7d0ff451d6054a3b32d8bacb7463810eef9b489298
+cb84dac7460e48f409a0a3fa86ed480d5881f0b7688cd2a730e8f1a1e0cd0196
+a958dd02bf784153c792216566a5af429b0e91e697763a33f52a92fc8e668eaf
+45a4ab618dd669a00a94f018a4a2cfbf4f9a705911e698f7ec7c94340a81e2aa
+```
+
+因此projection/contract 0.5现在是`FROZEN`。fresh CONTROL LOOP又证明PR #398的五个implementation/test blob与
+doc340/doc341/doc342/doc345/doc346从merge到当前main均未漂移；PR #417/doc365已经独立使#398成为
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。doc365要求的project-state version/rebind前置也已由
+0.5完整闭合。当前最小合法seam因此是
+[文档371](docs/371-r1-post-terminal-fact-dual-successor-private-implementation-freeze-publication.md)：只发布固定private
+dual-successor实现的冻结状态，不修改runtime/tests/oracle或恢复global composition authority。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本文candidate只允许README、AGENTS、milestones与doc371。自己的完整资格链闭合后最多使fixed private implementation成为
+`FROZEN`；随后必须返回CONTROL LOOP并先version/rebind current project-state。不得把“固定实现已冻结”偷换成“完整工程问题已解决”，
+也不得自动启动manifest/Evidence/persistence/public Review/R2–R6。

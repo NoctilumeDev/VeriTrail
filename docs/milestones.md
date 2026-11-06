@@ -8768,3 +8768,45 @@ R2_R6_NOT_STARTED
 
 publication自己的完整资格链闭合后，projection/contract 0.5才成为`FROZEN`；随后必须返回CONTROL LOOP，不得按文档编号自动
 恢复composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 post-terminal Fact dual-successor 私有实现冻结发布候选（2026-11-07）
+
+PR #422以exact
+`base=e132e422706fa96dfa1882587a726b9b48b072c2 / head=5477578190b17e4391a04d1da5b120ab41f5c792 /
+tree=f11beb78d3262a783f03fc77e26f2fd3e8c23807`受保护合入
+`main@7049de0093f5967ea3dcce65d517b5daeea4123f`。original Public CI `42298562890`、exact-main Public CI
+`42302259402`与Browser Smoke `42302259372`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh README、project-state、
+doc369与doc370各自唯一formal均为API/Render `COMPLETE`、HTTP 200与Core `PASS`；AGENTS与milestones各有唯一
+raw.githubusercontent、GitHub Contents API与exact Git全字节一致观察。independent reconciliation、137-artifact closeout、
+expected stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+84ad574bc4c899bf79572e7d0ff451d6054a3b32d8bacb7463810eef9b489298
+cb84dac7460e48f409a0a3fa86ed480d5881f0b7688cd2a730e8f1a1e0cd0196
+a958dd02bf784153c792216566a5af429b0e91e697763a33f52a92fc8e668eaf
+45a4ab618dd669a00a94f018a4a2cfbf4f9a705911e698f7ec7c94340a81e2aa
+```
+
+因此`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN`已经生效。fresh CONTROL LOOP重新核对PR #398五个
+implementation/test blob、doc340/doc341/doc342/doc345/doc346、PR #417 readback qualification与primary `audit.json`，均未漂移；
+doc365要求的“先version/rebind project-state，再独立判断implementation freeze”前置现在成立。当前最小合法seam是
+[文档371](371-r1-post-terminal-fact-dual-successor-private-implementation-freeze-publication.md)，只发布fixed private
+dual-successor implementation的冻结状态。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多使fixed private implementation成为`FROZEN`。这不证明application-level unified
+Review/Coverage output admission，不恢复global composition authority，也不授权manifest、Evidence、persistence、public Review或
+R2–R6。新状态形成后必须返回CONTROL LOOP并先version/rebind current project-state。
