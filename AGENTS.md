@@ -7139,3 +7139,41 @@ R2_R6_NOT_STARTED
 `R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_2_QUALIFIED_HISTORY`；随后必须返回
 CONTROL LOOP，重新判断projection successor是否仍是最小合法seam。不得回填#402/#404/#405/#406、复用#413产品观察资格、
 弱化oracle、直接恢复projection/private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection recovery successor 0.3 contract candidate
+
+PR #414已经把doc362以candidate`6afe3286bbe34123f0c2bd4d18d2ddbaa83751fb`、tree
+`8848573c63db3561f9e23662a4524f360c0d4480`合入`main@e5e8c8895e811f858850ae5f5094f7595eac9120`。
+original Public CI `42139119249`、exact-main Public CI `42142668773`与Browser Smoke `42142668786`均attempt 1
+SUCCESS；fresh README/doc350/doc361/doc362 formal各有唯一PASS，AGENTS/milestones raw/API/exact-Git逐字节一致。
+首次anonymous rate/preflight的zero-capacity结果与全部proof-facility setup errors按原identity保留。independent reconciliation、
+150-artifact closeout与finite integrity为：
+
+```text
+3cce7fd1a156e78c7c464d03654fac6fbd80cf37da44306a0b5992c53de64b3c
+bb7e8509edaf5051ac3a0a3284ccf04de7970fb21aa1a4469d243175f11450d6
+ba0a432f470bc5015080835a17f5be86ee9a0c16f6660643f895bb91f35646de
+```
+
+doc362因此是qualified history，但doc349/project-state 0.2仍属于#401的readback-not-qualified exact world。其source milestones
+binding也早于后继qualified/retained事实，不能用#414 PASS直接回填。fresh CONTROL LOOP建立
+[文档363](docs/363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)与versioned
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3` candidate；只重开有界公开投影及其readback target identity，不修改runtime、
+tests、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_DOC350_READBACK_RECOVERY_PUBLICATION_0_2_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_2_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_3_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为contract/projection qualified candidate，仍是`NOT_FROZEN`。随后必须返回
+CONTROL LOOP建立独立docs-only freeze publication；不得回填#401/#402/#404/#405/#406、复用旧readback资格、修改primary
+audit或启动manifest/Evidence/persistence/public Review/R2–R6。

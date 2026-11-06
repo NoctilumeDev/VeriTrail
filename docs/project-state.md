@@ -1,23 +1,24 @@
 # VeriTrail 当前项目状态公开投影
 
-> 本页是 bounded current-state 阅读投影，不是事实权威、状态机、roadmap scheduler、qualification record 或施工授权。
-> 完整 append-only 工程历史继续保存在[里程碑索引](milestones.md)；冻结合同、原始 PR attempt、exact-main gates、Artifact、
-> fresh installed-product readback 与 independent reconciliation 继续拥有各自事实。
+> 本页是bounded current-state阅读投影，不是事实权威、状态机、roadmap scheduler、qualification record或施工授权。
+> 完整append-only工程历史继续保存在[里程碑索引](milestones.md)；冻结合同、原始PR attempt、exact-main gates、Artifact、
+> fresh installed-product readback与independent reconciliation继续拥有各自事实。
 
 ## 投影身份
 
 ```text
-projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_2
+projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3
 projection_status: CANDIDATE / NOT_QUALIFIED / NOT_FROZEN
-source_exact_base: 34de9427d64ba8a3c77ac38eefe146fa8d2e2d77
-source_tree: f6edc136e2bd156409fad553c6453ceee73ccd97
-source_milestones_bytes: 568856
-source_milestones_sha256: d468191fcfbbaa8df31f592db35e494a8363ddd4f9c1c735dec26ab41a495ccf
-source_milestones_blob_sha1: 18645a09f3a1f11406b4c54f501dd265eb44c072
+construction_exact_base: e5e8c8895e811f858850ae5f5094f7595eac9120
+construction_tree: 8848573c63db3561f9e23662a4524f360c0d4480
+source_binding_kind: FINAL_SAME_CANDIDATE_MILESTONES_BYTES
+source_milestones_bytes: 599729
+source_milestones_sha256: 4ad66def6e220eca45c334f65222022f5d5ace0ea5ad458873082acd0bd85fec
+source_milestones_blob_sha1: b2b983cacde0a6990d394a1087d92a3b78c83291
 ```
 
-这些坐标只说明本候选由哪组不可变输入起草。候选合入后的 commit/tree 只能由 protected merge 与外部资格证据绑定；本文不创建
-自引用摘要，也不能给自己升级状态。
+这些坐标和摘要只声明本candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；protected merge后的
+exact commit/tree、公开可观察性与资格只能由外部完整资格链绑定。本文不能给自己升级状态。
 
 ## 当前有效事实
 
@@ -25,53 +26,77 @@ source_milestones_blob_sha1: 18645a09f3a1f11406b4c54f501dd265eb44c072
 - `R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY`；
 - `R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY`；
 - `R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_ALLOWED`；
-- PR #398 的 private implementation 已合入 `main@6a30957429c7b6a815608e8355893deb35873f24`，且 original/exact-main
-  Public CI 与 Browser Smoke 均为 attempt 1 SUCCESS；
-- PR #398 的 fresh README/doc345/doc346 formal readback 各有唯一 PASS，但 milestones diagnostic 正确返回
-  `PARTIAL / CONTENT_TRUNCATED`，所以 #398 继续为 `MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED /
-  NOT_FROZEN`；
-- PR #399 original Public CI `41908195831` attempt 1 真实 FAILURE，PR 没有 rerun、已关闭且未合并；
-- PR #400 已把两条失败链的边界审计合入 `main@34de9427d64ba8a3c77ac38eefe146fa8d2e2d77`，并完成自己的
-  original/exact-main gates、fresh changed-target observations、independent reconciliation 与 finite closeout；doc348 现为
-  `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；
-- 本页与 doc349 是新 exact main 上的独立 successor 0.2 candidate；public project-state projection 仍未生效。
+- PR #398 private implementation已经合入，original/exact-main双门成立，但fresh milestones Render正确返回
+  `PARTIAL / CONTENT_TRUNCATED`，所以仍是`MERGED / READBACK_NOT_QUALIFIED / NOT_FROZEN`；
+- PR #399 original Public CI真实失败，未rerun、已关闭且未合并，lower resource cause保持`UNKNOWN`；
+- PR #400/doc348 gate failure-boundary audit已经完成自身完整资格链，是qualified history；
+- PR #401已合入project-state 0.2 candidate并通过exact gates，但唯一README formal发生source/render marker drift，故0.2仍
+  `MERGED / READBACK_NOT_QUALIFIED / NOT_FROZEN`；
+- PR #402/doc350 exact gates通过，但唯一README formal在Acceptance Bundle持久化时触发`FileNotFoundError`，Verdict未创建；
+- PR #403/doc351把该bundle-persistence failure boundary资格化，底层文件系统机制继续`UNKNOWN`；
+- PR #404的doc350 recovery 0.1 original gate在35分钟outer containment budget下`CANCELLED`，已关闭、未合并、未rerun；
+- PR #405/#406分别保留doc353 marker drift与doc354 anonymous API exhaustion；旧formal和未运行目标没有重跑或拼接；
+- PR #407/#408在不同required lane、不同Release asset上各自耗尽60秒HTTP 504恢复预算，均关闭、未合并、未rerun；
+- PR #409只把两个被击中的multi-asset lane显式改为120秒，已完整资格化为
+  `RELEASE_DOWNLOAD_MULTI_ASSET_LANE_RECOVERY_0_2_FROZEN`；
+- PR #410 unique README formal在Render COMPLETE时遭遇anonymous API额度耗尽，Core Verdict未创建；
+- PR #411/doc359、#412/doc360、#413/doc361分别完成自己的failure-boundary/recovery资格链，不回填旧world；
+- PR #414/doc362已完成original/exact-main双门、fresh README/doc350/doc361/doc362 formal、AGENTS/milestones raw观察、
+  independent reconciliation与finite closeout，因此doc362是qualified history；
+- [文档363](363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)与本页是从新的exact base重建的0.3
+  candidate；public project-state projection仍未生效。
 
-## 必须继续可见的 failure boundary
+## 必须继续可见的failure boundary
 
-### #398 readback boundary
+### #398 / #399入口失败
 
-milestones diagnostic 观察到 526260 UTF-8 bytes，超过 frozen 524288-byte Public Render 上限 1972 bytes，故 coverage 为
-`PARTIAL / CONTENT_TRUNCATED`，formal 没有运行。Collector behavior 符合 frozen P2 contract；Collector regression 与 private
-runtime semantic regression 均未建立。后继不能提高上限、把 PARTIAL 改名为 COMPLETE、补跑该 formal 或拼接三个已有 PASS。
+#398 milestones diagnostic观察到526260 UTF-8 bytes，超过frozen 524288-byte Public Render上限1972 bytes，故coverage为
+`PARTIAL / CONTENT_TRUNCATED`；#399 required Python 3.13 fixture `git cat-file`在剩余acquisition budget内超时并正确映射
+`SAFETY_BUDGET_EXHAUSTED`。两者不是同一world，也不能由后继PASS覆盖。
 
-### #399 original gate boundary
+### #401 / #402公开投影读回失败
 
-required Python 3.13 job 中 fixture `git cat-file` 在剩余 `3.1687451000000237` 秒 acquisition budget 内超时，产品正确映射
-`SAFETY_BUDGET_EXHAUSTED`。candidate regression 与 product defect 未建立；runner/subprocess stall 已观察，lower resource cause
-保持 `UNKNOWN`。same-run Python 3.10 PASS 与 prior exact-base Python 3.13 PASS 不能拼成 #399 资格；failed-head doc347 和
-project-state bytes 不在 main 中复用。
+#401 README exact source marker一次、fresh rendered text零次；产品fail closed。#402的新world中marker稳定出现、API/Render
+均COMPLETE且cleanup完成，但Acceptance Core在Verdict前持久化Evidence时对271字符本地目标触发`FileNotFoundError`。legacy
+Windows `MAX_PATH`只保留为hypothesis，底层机制为`UNKNOWN`。0.3不得把这些失败改写成从未发生。
 
-### #400 proof-facility history
+### #404–#410后继失败链
 
-README formal #1 marker drift ERROR、doc348 diagnostic #1 marker multiplicity、worktree/bootstrap/PowerShell/public-bytes setup errors与
-stdout self-capture mismatch继续按原 identity 保留；后继 PASS 不覆盖它们。
+#404 cancellation、#405 marker drift、#406/#410 anonymous API exhaustion以及#407/#408 HTTP 504预算耗尽均保留原run/head/job/
+target identity。#409 maintenance只证明被击中的两个lane在自己的新world资格化；doc359–doc362只证明各自publication。
 
-## 本投影不拥有的权力
+## 权威边界
+
+| 主体 | 权威 | 明确不拥有 |
+| --- | --- | --- |
+| Reality | 现实事实 | 被文档、测试或Verdict创造 |
+| 用户/人类授权者 | 目标、验收前提与必要Seal决定 | 被Business Layer或Core替代 |
+| Provider | 自己实际观察到的事实及来源 | 全局事实或裁决权 |
+| R/Q/O/T | 各自合同规定的分析、观察和调度职责 | 越界扩张或共享隐性权威 |
+| Business Layer | 业务流程组织、能力选择、补证请求 | 证据充分性裁决或PASS宣布 |
+| Core | 证据完整性、绑定、充分性及确定性裁决 | 现实事实的超级所有权 |
+| `docs/milestones.md` | 完整append-only工程历史、链接与provenance | 必须落入Public Render窗口 |
+| 本页 | 当前candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
+
+验迹内部可以有很多插件、Provider、分析器和调度器，但最终优化目标始终是用户提出的工程问题，而不是插件自身的存在价值。
+
+## 本页不能做什么
 
 本页不能：
 
-- 替代、裁剪、重写或删除 `docs/milestones.md`；
-- 把短投影冒充完整历史已被 Public Render 观察；
-- 修改 P2 oracle、Collector coverage 或 Core 充分性规则；
-- 把 #398 升级为 readback qualified/frozen，或把 #399 恢复为 qualified；
-- 决定证据充分性、qualification、state transition 或下一合法 seam；
-- 恢复 global composition authority，或启动 manifest、Evidence、persistence、public Review、R2–R6。
+- 替代、裁剪、重写或删除`docs/milestones.md`；
+- 把短投影冒充完整历史已经被Public Render观察；
+- 修改P2 oracle、Collector coverage或Core充分性规则；
+- 把任何旧FAIL/ERROR/CANCELLED/UNKNOWN升级为PASS；
+- 决定证据充分性、qualification、state transition或下一合法seam；
+- 恢复global composition authority，或启动manifest、Evidence、persistence、public Review、R2–R6。
 
-## 本候选的生效条件
+## 本candidate的生效条件
 
-只有[successor 0.2 contract](349-r1-public-project-state-projection-recovery-successor-contract.md)自己的 local qualification、
-original PR gates、protected merge、新 exact-main Public CI 与 Browser Smoke、fresh anonymous installed-product
-README/本文/contract Public Render、AGENTS/milestones public+API raw-byte observations、independent reconciliation 与 finite closeout
-全部成立后，本投影才可成为 `QUALIFIED_PROJECTION_CANDIDATE / NOT_FROZEN`。
+只有[successor 0.3 contract](363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)自己的local qualification、
+original PR gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product
+README/本页/doc349/doc350/doc362/doc363 Public Render、AGENTS/milestones public+API raw-byte observations、candidate milestones
+binding复算、independent reconciliation与finite closeout全部成立后，本页才可成为
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_QUALIFIED_CANDIDATE_NOT_FROZEN`。
 
-即使这些门全部成立，后继仍须独立 docs-only freeze publication；本文不是 scheduler。
+即使这些门全部成立，后继仍须独立docs-only freeze publication；本页不是scheduler。
