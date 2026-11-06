@@ -7351,3 +7351,51 @@ AGENTS、milestones与自身；自己的readback只对README/本文运行fresh R
 exact-commit public/API/Git raw-byte对账。完整资格链闭合后最多成为dual failure-boundary qualified history；doc366/doc367/
 projection 0.4仍不被回填。随后必须返回CONTROL LOOP，不能直接选择projection successor、test/runtime maintenance或启动
 manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection successor 0.5 contract candidate
+
+PR #420以candidate `9f3220b266da249d28cef8010d7e84752f44ad58`、tree
+`200b9a093d9669ef242f991510530cafcf56afd9`精确合入`main@9b87e61ce3a361abaa3da458f49e43d5c5a1b769`。
+original Public CI `42238105618`、exact-main Public CI `42242907968`与Browser Smoke `42242908069`均attempt 1
+SUCCESS（11/11、11/11、1/1），PR #418 failure没有rerun。
+
+第一个fresh root因proof-facility生成的Plan ID超过64字符而在产品调用前停止，qualification effect为NONE。第二个fresh root的
+README/doc368各有唯一formal PASS，AGENTS/milestones各有唯一raw/API/exact-Git全字节观察；milestones Render没有重复。
+anonymous rate diagnostic/preflight #1–#3的`remaining=0`、后继可用窗口、全部setup error与expected closeout stdout
+self-capture mismatch均按原identity保留。independent reconciliation、122-artifact closeout、self-capture record与finite integrity为：
+
+```text
+509015292fc32d5aa9c1275f3bf89779a4f4730c290f8060da9b8a3098a78990
+79f9be2d2e8450c815a30e87e5e620164c365c59b45bdb77d8dffbf6fc2cebb9
+c2f2b8623b570785210f5ddc99c5e967f1f976ffb12b2d44d4d572811fccee47
+f8ea43a0e10582a017fcd1dc3f2b1d43b9fe6959d1b37d66abae6bd7a5ca5126
+```
+
+因此doc368现在是dual failure-boundary/readback-target correction `AUDITED / QUALIFIED_HISTORY`。doc366/projection 0.4仍是
+`MERGED / NOT_QUALIFIED / NOT_FROZEN`，doc367仍是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED /
+NOT_QUALIFIED_HISTORY`。#418 decisive assertion与lower cause继续为`UNKNOWN`；#419已建立的target regression只要求bounded
+Render与完整raw-byte职责分离，不授权runtime/test maintenance。
+
+fresh CONTROL LOOP从新exact main建立
+[文档369](docs/369-r1-public-project-state-projection-successor-0.5-contract.md)与versioned
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5` candidate。它只重绑final same-candidate milestones bytes与当前有界公开投影；不修改
+runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或frozen semantic bytes。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_4_DUAL_FAILURE_BOUNDARY_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_5_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`，随后必须返回CONTROL LOOP
+建立独立docs-only freeze publication。不得从本文直接冻结private implementation、恢复global composition authority或启动
+manifest/Evidence/persistence/public Review/R2–R6。

@@ -8666,3 +8666,56 @@ R2_R6_NOT_STARTED
 
 candidate自己的完整资格链闭合后最多形成两条失败链的qualified audit history；不回填doc366/doc367/projection 0.4，也不自动
 选择projection successor或test/runtime maintenance。publication形成新事实后必须返回CONTROL LOOP。
+
+## R1 public project-state projection successor 0.5 contract candidate（2026-11-07）
+
+PR #420以exact
+`base=03060eef4f6579c1d187ab2cad9806d2133cfeee / head=9f3220b266da249d28cef8010d7e84752f44ad58 /
+tree=200b9a093d9669ef242f991510530cafcf56afd9`受保护合入
+`main@9b87e61ce3a361abaa3da458f49e43d5c5a1b769`。original Public CI `42238105618`、exact-main Public CI
+`42242907968`与Browser Smoke `42242908069`均attempt 1 SUCCESS（11/11、11/11、1/1）；PR #418 failure没有rerun。
+
+第一个fresh root因生成的Plan ID超过64字符而在产品调用前停止，保留为proof-facility setup error。第二个fresh root的README与
+doc368各有唯一formal PASS；AGENTS与milestones各有唯一raw.githubusercontent、GitHub Contents API与exact Git逐字节一致观察，
+milestones Render没有重复。anonymous rate diagnostic/preflight #1–#3的`remaining=0`与全部setup observations继续保留。
+pre-observation adapter、preformal validation、independent reconciliation、122-artifact closeout、expected stdout self-capture
+mismatch与finite integrity SHA-256为：
+
+```text
+b0a0be393fd662016f3a496bfbc601cf27a3e3b70dd169688d21bb97ec12e5ec
+6471f0be68167197d38ecb993c83acedcb618f2df8fe14814f4674ffe20b2d6b
+509015292fc32d5aa9c1275f3bf89779a4f4730c290f8060da9b8a3098a78990
+79f9be2d2e8450c815a30e87e5e620164c365c59b45bdb77d8dffbf6fc2cebb9
+c2f2b8623b570785210f5ddc99c5e967f1f976ffb12b2d44d4d572811fccee47
+f8ea43a0e10582a017fcd1dc3f2b1d43b9fe6959d1b37d66abae6bd7a5ca5126
+```
+
+因此doc368现在是`DUAL_FAILURE_BOUNDARY_READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`。PR #418 exact-main gate
+failure、decisive assertion `UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`与lower cause `UNKNOWN`继续保留；doc366/projection 0.4仍为
+`MERGED / NOT_QUALIFIED / NOT_FROZEN`，doc367仍为`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED /
+NOT_QUALIFIED_HISTORY`。PR #419建立的反例只击穿milestones Render target seam，不建立P2、Subject或runtime/test defect。
+
+fresh CONTROL LOOP没有发现可授权maintenance的下层反例；同时doc368 qualified history与完整milestones bytes已经改变current
+projection输入。根据versioned projection合同，下一最小seam是
+[文档369](369-r1-public-project-state-projection-successor-0.5-contract.md)与
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5` candidate：只重绑新的bounded current-state projection与final same-candidate
+milestones bytes，并把Render target限定为bounded页面、完整milestones限定为raw/API/Git观察。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_4_DUAL_FAILURE_BOUNDARY_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_5_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、doc369、project-state与milestones。自己的完整资格链闭合后最多成为
+`QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立docs-only freeze publication。不得从本文直接冻结
+private implementation、修改P2/Core oracle或启动manifest/Evidence/persistence/public Review/R2–R6。
