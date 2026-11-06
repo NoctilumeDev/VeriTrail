@@ -8432,3 +8432,46 @@ R2_R6_NOT_STARTED
 
 candidate自己的完整资格链闭合后最多成为contract/projection qualified candidate，仍`NOT_FROZEN`；随后必须返回CONTROL LOOP
 建立独立docs-only freeze publication。不得回填旧failure、复用旧PASS、修改primary audit或启动后续runtime seam。
+
+## R1 public project-state projection 0.3 freeze publication candidate（2026-11-06）
+
+PR #415已经把0.3 candidate `8b60078f9fc90a9a685b843960f33a88a37d1e7e`、tree
+`643974d34df1829d2f4f10a40ffbf774262d6874`精确合入`main@e5af3a0eecf8ef5b3a439bfe7f5948610c3834e6`。
+original Public CI `42154452136`、exact-main Public CI `42158099293`与Browser Smoke `42158099307`均attempt 1
+SUCCESS。local qualification、original qualification、protected merge与exact-main gates分别绑定自己的exact coordinate。
+
+前三个fresh readback root分别保留下列non-success identity：underscore Plan-ID grammar setup error、65-character diagnostic Plan-ID
+length setup error，以及project-state formal的`403 / COLLECTION_BUDGET_EXHAUSTED`；第三项Render仍为`COMPLETE / 200`，API为
+`ERROR`且Core Verdict未创建。第四个fresh root第一次diagnostic/preflight仍观察到later anonymous reset，reset后以新编号继续；
+没有重复或复用任何早期PASS。
+
+第四个root的README/project-state/doc349/doc350/doc362/doc363各唯一formal均为API/Render `COMPLETE`与Core `PASS`；
+AGENTS/milestones raw.githubusercontent、GitHub Contents API与exact Git逐字节一致。pre-observation adapter、独立
+reconciliation、184-artifact closeout、stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+312c82e3c9410f6f6234f25798f0fa6265ff326187a0f9048ad85e856ba4d702
+666383ffc709db2d3a78b0ef613ae6c1df71f010ea0949917a9f95dda9173dbb
+1289a5a9cba5f14b30dc66e03e7bf5d43e7ff2d97ce4e9acf4da5640325b40c4
+674826ee178624be561f9efc9f8c1777966b32661d0706d9931a56900e5ccb0c
+0ff972fde5a1477fd4ec6c35ceb911de4a0ad4661824704870ffb39b277f59d1
+```
+
+因此doc363与`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3`现在是`QUALIFIED_CANDIDATE / NOT_FROZEN`。fresh CONTROL
+LOOP建立[文档364](364-r1-public-project-state-projection-0.3-freeze-publication.md)，只允许README、AGENTS、milestones与
+doc364，发布固定doc363/project-state 0.3 bytes的冻结状态；不修改project-state、runtime、tests、workflow、Schema、Provider、
+Collector、P2/Core oracle、Verdict或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_3_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+publication自己的完整资格链闭合后，projection/contract 0.3才成为`FROZEN`；随后必须返回CONTROL LOOP，不得按文档编号自动
+启动manifest/Evidence/persistence/public Review/R2–R6。

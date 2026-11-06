@@ -7177,3 +7177,39 @@ R2_R6_NOT_STARTED
 candidate自己的完整资格链闭合后最多成为contract/projection qualified candidate，仍是`NOT_FROZEN`。随后必须返回
 CONTROL LOOP建立独立docs-only freeze publication；不得回填#401/#402/#404/#405/#406、复用旧readback资格、修改primary
 audit或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection 0.3 freeze publication candidate
+
+PR #415已经把0.3 candidate `8b60078f9fc90a9a685b843960f33a88a37d1e7e`、tree
+`643974d34df1829d2f4f10a40ffbf774262d6874`精确合入`main@e5af3a0eecf8ef5b3a439bfe7f5948610c3834e6`。
+original Public CI `42154452136`、exact-main Public CI `42158099293`与Browser Smoke `42158099307`均attempt 1
+SUCCESS（11/11、11/11、1/1）。第四个fresh root中的README/project-state/doc349/doc350/doc362/doc363各唯一formal均为
+API/Render `COMPLETE`、Core `PASS`；AGENTS/milestones raw/API/exact-Git逐字节一致。独立reconciliation、184-artifact
+closeout、stdout self-capture mismatch与finite integrity为：
+
+```text
+666383ffc709db2d3a78b0ef613ae6c1df71f010ea0949917a9f95dda9173dbb
+1289a5a9cba5f14b30dc66e03e7bf5d43e7ff2d97ce4e9acf4da5640325b40c4
+674826ee178624be561f9efc9f8c1777966b32661d0706d9931a56900e5ccb0c
+0ff972fde5a1477fd4ec6c35ceb911de4a0ad4661824704870ffb39b277f59d1
+```
+
+前两个root的Plan-ID grammar/length proof-facility错误、第三个root的project-state formal
+`403 / COLLECTION_BUDGET_EXHAUSTED`与第四个root第一次zero-capacity diagnostic/preflight全部保留；任何早期README PASS均未复用。
+因此doc363与projection 0.3现在只是qualified candidate。fresh CONTROL LOOP建立
+[文档364](docs/364-r1-public-project-state-projection-0.3-freeze-publication.md)，只发布固定doc363/project-state 0.3 bytes的
+冻结状态，不修改它们、runtime、tests、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_RECOVERY_SUCCESSOR_0_3_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与doc364。自己的完整资格链闭合后，projection/contract 0.3才可标记
+`FROZEN`；随后仍必须返回CONTROL LOOP，不能按文档编号自动启动manifest/Evidence/persistence/public Review/R2–R6。

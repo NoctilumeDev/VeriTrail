@@ -41,9 +41,11 @@ marker-drift failure-boundary 责任。它不重跑 #406 formal、不回填旧 E
 [文档362](docs/362-r1-public-state-projection-doc350-readback-recovery-publication.md)只在新的 exact world 重新发布
 doc350 的 failure-boundary audit 责任；#402 持久化错误、#404 cancellation、#405 marker drift 与 #406 API exhaustion
 继续保持各自身份，公开投影 0.2 仍未恢复。
-**project-state projection recovery successor 0.3 仍是候选。**
-[文档363](docs/363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)把有界公开投影重新绑定到当前
-milestones candidate bytes；它保持[当前有界公开投影](docs/project-state.md)的无权威边界，不回填#401或直接冻结projection。
+**project-state projection recovery successor 0.3 已成为 qualified candidate，尚未冻结。**
+[文档363](docs/363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)与[当前有界公开投影](docs/project-state.md)
+已经完成自己的exact gates、fresh installed-product readback与独立reconciliation；三个失败readback root仍按原identity保留。
+[冻结发布候选](docs/364-r1-public-project-state-projection-0.3-freeze-publication.md)只在自己的完整资格链闭合后才会使0.3冻结，
+不会回填#401或把projection变成事实权威、scheduler或施工授权。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
