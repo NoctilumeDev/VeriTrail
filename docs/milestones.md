@@ -8719,3 +8719,52 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、doc369、project-state与milestones。自己的完整资格链闭合后最多成为
 `QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立docs-only freeze publication。不得从本文直接冻结
 private implementation、修改P2/Core oracle或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 public project-state projection 0.5 freeze publication candidate（2026-11-07）
+
+PR #421以exact
+`base=9b87e61ce3a361abaa3da458f49e43d5c5a1b769 / head=17f95c93bee1f9ee8208b022eba95494031b2984 /
+tree=76ea275a1253de5c16d64e30aff84356bae981ed`受保护合入
+`main@e132e422706fa96dfa1882587a726b9b48b072c2`。original Public CI `42285479954`、exact-main Public CI
+`42289873310`与Browser Smoke `42289873689`均attempt 1 SUCCESS（11/11、11/11、1/1）。local qualification、
+original qualification、protected merge与exact-main gate evidence分别绑定自己的exact coordinate；PR #418 failure没有rerun。
+
+fresh readback root的README、project-state、doc366、doc367、doc368、doc369各自唯一formal均为API/Render
+`COMPLETE`、HTTP 200与Core `PASS`；AGENTS与milestones各有唯一raw.githubusercontent、GitHub Contents API与exact Git
+逐字节一致观察。milestones保持619569 bytes、SHA-256
+`65c7c362fcfc0c2831bb7e60fc738b0d7278b37a4b4c2c5b8b83ae10425de7bd`与blob SHA-1
+`a0d02fe3d24b855ed9609b0a8ac71bf1af814edc`。anonymous rate diagnostic与preflight均为新的non-qualifying setup
+observations，没有复用旧PASS。
+
+pre-observation adapter、preformal validation、independent reconciliation、178-artifact closeout、stdout self-capture mismatch与
+finite integrity SHA-256为：
+
+```text
+ba78110166a853dbc18f2e6bc05a442d5558ef68478cd52a63be02eea7b45e6c
+72226da9cb590f342f84ada0008f02c52b64a452d656ed8bee196f7dcfb8c56e
+50150e30c42e7a3159881ff0bc305589bade090916f60f4f7a32fe30ca708052
+69396023c244221bcbf41b17683f14c4af1332c873a0bf8bc3eaf361be176297
+eb84799ed5175d78435073769cd0a0be4ccc4c2ba7ca66d20a075227d744c2d7
+712a1d397c6049beac0cbf5513fff17cd3571d2727b0d60b8390c5770eb407e1
+```
+
+因此doc369与`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5`现在是`QUALIFIED_CANDIDATE / NOT_FROZEN`。fresh CONTROL
+LOOP建立[文档370](370-r1-public-project-state-projection-0.5-freeze-publication.md)，只允许README、AGENTS、milestones与
+doc370，发布固定doc369/project-state 0.5 bytes的冻结状态；不修改project-state、runtime、tests、fixtures、workflow、Schema、
+Provider、Collector、P2/Core oracle、Verdict或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_5_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+publication自己的完整资格链闭合后，projection/contract 0.5才成为`FROZEN`；随后必须返回CONTROL LOOP，不得按文档编号自动
+恢复composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。

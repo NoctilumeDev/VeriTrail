@@ -7399,3 +7399,46 @@ R2_R6_NOT_STARTED
 candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`，随后必须返回CONTROL LOOP
 建立独立docs-only freeze publication。不得从本文直接冻结private implementation、恢复global composition authority或启动
 manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection 0.5 freeze publication candidate
+
+PR #421以candidate `17f95c93bee1f9ee8208b022eba95494031b2984`、tree
+`76ea275a1253de5c16d64e30aff84356bae981ed`精确合入`main@e132e422706fa96dfa1882587a726b9b48b072c2`。
+original Public CI `42285479954`、exact-main Public CI `42289873310`与Browser Smoke `42289873689`均attempt 1
+SUCCESS（11/11、11/11、1/1）。candidate local qualification、original qualification、protected merge与exact-main gate
+evidence分别绑定自身坐标；PR #418 failure没有rerun。
+
+fresh readback root只认`e132e42…`world。README、project-state、doc366、doc367、doc368、doc369六项目标各自只运行一次
+diagnostic与唯一formal，formal均为API/Render `COMPLETE`、HTTP 200与Core `PASS`；AGENTS与619569-byte milestones各有唯一
+raw.githubusercontent、GitHub Contents API与exact Git全字节一致观察。anonymous rate diagnostic与preflight各自只运行一次，
+开始时remaining为20/19；没有复用#420 PASS。independent reconciliation、178-artifact closeout、expected stdout
+self-capture mismatch与finite integrity为：
+
+```text
+50150e30c42e7a3159881ff0bc305589bade090916f60f4f7a32fe30ca708052
+69396023c244221bcbf41b17683f14c4af1332c873a0bf8bc3eaf361be176297
+eb84799ed5175d78435073769cd0a0be4ccc4c2ba7ca66d20a075227d744c2d7
+712a1d397c6049beac0cbf5513fff17cd3571d2727b0d60b8390c5770eb407e1
+```
+
+因此doc369与projection 0.5现在是`QUALIFIED_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档370](docs/370-r1-public-project-state-projection-0.5-freeze-publication.md)，只发布固定doc369/project-state 0.5 semantic
+bytes的冻结状态；不修改它们、runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或
+任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_5_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与doc370。自己的完整资格链闭合后，projection/contract 0.5才可标记
+`FROZEN`；随后仍必须返回CONTROL LOOP，不能按文档编号自动恢复composition authority或启动
+manifest/Evidence/persistence/public Review/R2–R6。
