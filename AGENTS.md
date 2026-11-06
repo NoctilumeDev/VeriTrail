@@ -7213,3 +7213,42 @@ R2_R6_NOT_STARTED
 
 本publication只允许README、AGENTS、milestones与doc364。自己的完整资格链闭合后，projection/contract 0.3才可标记
 `FROZEN`；随后仍必须返回CONTROL LOOP，不能按文档编号自动启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 post-terminal Fact dual-successor 私有实现读回资格恢复 0.1 candidate
+
+doc364 publication由PR #416以candidate `af353d0dff3823f3b82594658a8869a2b91d3172`、tree
+`9dbd55b4180eee32abd9cee3fd2533763008e962`精确合入`main@e0ab9d0679f1706cdde3103ef0e1076baa681b59`。
+original Public CI `42170247609`、exact-main Public CI `42173888920`与Browser Smoke `42173888925`均attempt 1
+SUCCESS。前三个fresh root中的两次anonymous API exhaustion与一次Public Render network error全部按原identity保留；第四个root的
+README/project-state/doc363/doc364各唯一formal PASS，AGENTS/milestones raw/API/exact-Git逐字节一致。独立reconciliation、
+136-artifact closeout、stdout self-capture mismatch与finite integrity为：
+
+```text
+caa8a5d564007fd011cfa3fbe050129dfc50062dae38ca1247aac90f14dcda40
+f702c537777d8867906b374bcb583065e22539be3dbff755054dc61e66bea6a3
+ab21a304dacd4f41267907ccfefb5301bc5919b34cffedf36073835ddb8c4537
+8790db05d542f01399aacaab0703c795ccbde7acb936117bcea561ae22b2355f
+```
+
+因此projection/contract 0.3现为`FROZEN`。fresh CONTROL LOOP复算证明PR #398的五个implementation/test blob、
+plugins/review-attention tracked surface及doc340/doc341/doc342/doc345/doc346从merge到当前main均未漂移；旧milestones
+`PARTIAL / CONTENT_TRUNCATED`仍不被回填。现建立
+[文档365](docs/365-r1-post-terminal-fact-dual-successor-private-implementation-readback-qualification-recovery.md)，只version
+readback target：用frozen bounded project-state替代无界milestones Render，同时继续对milestones做完整raw/API/Git观察。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_READBACK_QUALIFICATION_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate只允许README、AGENTS、milestones与doc365。自己的local/original PR/protected merge/exact-main双门、fresh
+README/project-state/doc345/doc346/doc364/doc365 formal、AGENTS/milestones raw observation、independent reconciliation与finite
+closeout全部成立后，最多使#398/doc346成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须
+返回CONTROL LOOP，先version/rebind因新状态而过时的project-state projection，再独立判断implementation freeze；不得直接启动
+manifest/Evidence/persistence/public Review/R2–R6。

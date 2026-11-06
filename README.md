@@ -452,7 +452,15 @@ python -m venv .venv
   却在required Python 3.10 job耗尽`.github/workflows/ci.yml`的35分钟外层预算时被取消。该PR未rerun、已关闭且未合并；
   [文档353](docs/353-r1-public-state-projection-doc350-recovery-original-gate-cancellation-boundary.md)只保存该失败边界，
   candidate semantic regression未建立，底层duration variance原因保持`UNKNOWN`。
-  完整milestones保持原历史责任，投影不拥有事实、资格、调度或施工授权。
+  完整milestones保持原历史责任，投影不拥有事实、资格、调度或施工授权。后继failure-chain recovery、release-download
+  maintenance与projection 0.3 candidate/freeze publication均已各自完成资格链；PR #416合入
+  `main@e0ab9d0679f1706cdde3103ef0e1076baa681b59`后，fresh第四个root的README/project-state/doc363/doc364各有唯一
+  formal PASS，AGENTS/milestones raw/API/Git逐字节一致，因此`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN`现已生效。
+  这不会自动回填#398。fresh CONTROL LOOP确认#398五个implementation/test blob及doc340/doc341/doc342/doc345/doc346从
+  merge到当前main均未漂移，故建立独立
+  [readback qualification recovery 0.1](docs/365-r1-post-terminal-fact-dual-successor-private-implementation-readback-qualification-recovery.md)：
+  它只version旧milestones Render target为frozen bounded projection 0.3，自己的完整链闭合后最多恢复
+  `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`，仍不直接冻结实现或授权后续runtime seam。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
