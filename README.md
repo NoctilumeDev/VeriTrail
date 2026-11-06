@@ -15,37 +15,18 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前工程资格状态的有界公开投影仍是候选。successor 0.2 的 marker readback 与后继 acceptance-bundle
-持久化失败均按原身份保留；[文档351](docs/351-r1-public-state-projection-audit-readback-bundle-persistence-failure-boundary.md)
-已成为 qualified history，但不回填旧失败。PR #404 的 original gate cancellation 也不被后继 PASS 改写；PR #405
-在新 world 通过 original 与 exact-main 双门，却在 fresh README formal 中再次观察到源码 marker 一次、公开渲染零次。
-[文档354](docs/354-r1-public-state-projection-doc353-readback-marker-drift-failure-boundary.md)只归层这条读回失败；
-**doc353 的 README 正式读回失败已按原身份保留。** **#406/#407/#408 的三条失败边界已按原身份保留。**
-其中 #406 是 fresh anonymous formal 的 API 额度耗尽，#407/#408 是不同 required lane、不同 Release asset 的60秒
-恢复预算耗尽；后两者均关闭且未合并。[文档357](docs/357-release-download-multi-asset-lane-budget-correction.md)
-限定的两个120秒 multi-asset lane 已完成自身资格链，下载器默认60秒、完整性门和外层 job budget保持不变；
-[文档358](docs/358-r1-public-state-projection-failure-chain-audit.md)只发布这组分离的失败与修正事实候选，不回填旧world。
-**#410 的 failure-chain audit fresh README formal 也已按原身份停止。** 该唯一formal在同一session内观察到
-Public Render `COMPLETE / HTTP 200 / marker once`，但anonymous API首个repository probe为
-`403 / COLLECTION_BUDGET_EXHAUSTED / remaining 0`，Core Verdict未创建；其余formal/raw目标未运行。
-[文档359](docs/359-r1-public-state-projection-failure-chain-audit-readback-rate-exhaustion-failure-boundary.md)
-只冻结这条新失败边界，不回填#410或恢复公开投影。
-**#410 readback rate-exhaustion failure boundary 已完成自身资格，failure-chain audit recovery 0.1 仍是候选。**
-[文档360](docs/360-r1-public-state-projection-failure-chain-audit-readback-recovery.md)以新的 exact world 重发
-#406/#407/#408 与 #409 的联合审计责任；它保留 #410 的唯一 formal ERROR 和 #411 首次 reconciliation 的 stale-next
-proof-facility defect，不把后继 PASS 回填给旧身份，也不恢复公开投影。
-**failure-chain audit recovery 0.1 与 doc354 readback recovery 0.1 均已完成自身资格。**
-[文档361](docs/361-r1-public-state-projection-doc354-readback-recovery.md)只在新的 exact world 重新发布 doc354 的
-marker-drift failure-boundary 责任。它不重跑 #406 formal、不回填旧 ERROR，也不使 doc350 或公开投影获得资格。
-**doc350 readback recovery publication 0.2 已完成自身资格。**
-[文档362](docs/362-r1-public-state-projection-doc350-readback-recovery-publication.md)只在新的 exact world 重新发布
-doc350 的 failure-boundary audit 责任；#402 持久化错误、#404 cancellation、#405 marker drift 与 #406 API exhaustion
-继续保持各自身份，公开投影 0.2 仍未恢复。
-**project-state projection recovery successor 0.3 已成为 qualified candidate，尚未冻结。**
-[文档363](docs/363-r1-public-project-state-projection-recovery-successor-0.3-contract.md)与[当前有界公开投影](docs/project-state.md)
-已经完成自己的exact gates、fresh installed-product readback与独立reconciliation；三个失败readback root仍按原identity保留。
-[冻结发布候选](docs/364-r1-public-project-state-projection-0.3-freeze-publication.md)只在自己的完整资格链闭合后才会使0.3冻结，
-不会回填#401或把projection变成事实权威、scheduler或施工授权。
+**project-state projection 0.3 已冻结；#398 private implementation 已成为
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。**
+[文档365](docs/365-r1-post-terminal-fact-dual-successor-private-implementation-readback-qualification-recovery.md)的PR #417
+已经完成local、original PR、protected merge、exact-main双门、fresh installed-product readback与independent reconciliation。
+第一次formal的anonymous API额度耗尽与第二次formal的README marker目标选择失败继续按原identity保留；第三个fresh root的
+README/project-state/doc345/doc346/doc364/doc365各有唯一PASS，AGENTS/milestones raw/API/Git逐字节一致。后继PASS不回填
+#398旧milestones truncation、#399原始门失败或两次恢复失败。
+
+这个新事实使0.3成为历史投影。[project-state projection successor 0.4 contract candidate](docs/366-r1-public-project-state-projection-successor-0.4-contract.md)
+正从新的exact main版本化重绑[当前有界公开投影](docs/project-state.md)；0.4在自己的完整资格链闭合以前仍是
+`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。它不冻结#398实现，也不恢复global composition authority、manifest、Evidence、
+persistence、public Review或R2–R6施工权。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
