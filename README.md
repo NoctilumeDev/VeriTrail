@@ -23,10 +23,13 @@ AI说任务完成了。**但是，凭什么相信？**
 README/project-state/doc345/doc346/doc364/doc365各有唯一PASS，AGENTS/milestones raw/API/Git逐字节一致。后继PASS不回填
 #398旧milestones truncation、#399原始门失败或两次恢复失败。
 
-这个新事实使0.3成为历史投影。[project-state projection successor 0.4 contract candidate](docs/366-r1-public-project-state-projection-successor-0.4-contract.md)
-正从新的exact main版本化重绑[当前有界公开投影](docs/project-state.md)；0.4在自己的完整资格链闭合以前仍是
-`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。它不冻结#398实现，也不恢复global composition authority、manifest、Evidence、
-persistence、public Review或R2–R6施工权。
+这个新事实使0.3成为历史投影。[project-state projection successor 0.4 contract](docs/366-r1-public-project-state-projection-successor-0.4-contract.md)
+已经由PR #418合入`main@abf06ecfbd01852c202096a7733165f6cb0f0f70`，但其exact-main Public CI
+`42211661846` attempt 1在required Python 3.10 Core regression中真实失败；没有rerun，也没有启动fresh readback或
+independent reconciliation。因此0.4是`MERGED / NOT_QUALIFIED / NOT_FROZEN`，而不是qualified candidate。
+[文档367](docs/367-r1-public-project-state-projection-0.4-exact-main-qualification-failure-boundary-audit.md)只保存该失败identity、
+`UNKNOWN`归因与后继责任；它不冻结#398实现，也不恢复global composition authority、manifest、Evidence、persistence、
+public Review或R2–R6施工权。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**

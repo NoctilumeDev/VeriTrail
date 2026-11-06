@@ -8577,3 +8577,48 @@ R2_R6_NOT_STARTED
 本candidate只允许README、AGENTS、doc366、project-state与milestones。自己的完整资格链闭合后最多成为
 `QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立docs-only freeze publication。不得从本文直接冻结
 private implementation或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 public project-state projection 0.4 exact-main qualification failure-boundary audit candidate（2026-11-06）
+
+PR #418以exact
+`base=27f0b93eeb5ace7b5428ebc0c07cb1ebe4199f25 / head=bdf5c170817b3b79c4e597d93c76229f36516463 /
+tree=e2c98f48cc0071bd1aa85d8134e155ee55fb3e45`受保护合入
+`main@abf06ecfbd01852c202096a7733165f6cb0f0f70`。original Public CI `42207330233` attempt 1为11/11 SUCCESS；
+exact-main Browser Smoke `42211661825` attempt 1为1/1 SUCCESS；exact-main Public CI `42211661846` attempt 1则在
+required Python 3.10 Core regression真实失败，没有rerun。失败坐标为job `127871513134`、step 12、496 reported / 1 failure /
+1 skipped；test `test_staging_failure_creates_public_error_bundle_after_reverse_cleanup`在`tests/test_bootstrap_run_cli.py:1683`
+观察到expected `PENDING`、actual `FAIL`。
+
+test在失败前已经确认`EVIDENCE_STAGING_FAILED`、`EVIDENCE_ERROR / ERROR`、reverse teardown与cleanup complete，但没有把临时
+Bundle、decisive assertion或Browser attachments输出或上传。现有source audit只能证明至少一个decisive assertion失败；精确
+assertion为`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`，底层Subject/Chromium/socket/port/resource/fixture/timing原因均为`UNKNOWN`。
+相同tree的original gate通过，candidate只修改五个docs文件，故candidate regression未建立；scope disjoint仍不能替代required gate。
+success-lane Artifact在过期前下载固定。failure evidence seal与finite integrity为：
+
+```text
+ced9138ea87e4bd1c3f06b46bb67cb87a99f4ac957a9a7faae3279919ff3eabc
+c663feeac7036c636fe7c2023413584fe9af61dc0a0aadfddec3daae894ed8f7
+```
+
+因此doc366与projection 0.4均为`MERGED / NOT_QUALIFIED / NOT_FROZEN`；fresh readback与reconciliation没有启动。
+fresh CONTROL LOOP建立
+[文档367](367-r1-public-project-state-projection-0.4-exact-main-qualification-failure-boundary-audit.md)，只保存失败identity、
+资格影响、`UNKNOWN`与最小后继责任。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本audit candidate只允许README、AGENTS、milestones与doc367。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，独立判断versioned projection successor或最小
+test/runtime maintenance。不得rerun #418 failure、复用old PASS、修改doc366/project-state/oracle、直接冻结#398或启动后续
+runtime seam。
