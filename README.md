@@ -15,25 +15,17 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.3 已冻结；#398 private implementation 已成为
-`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。**
-[文档365](docs/365-r1-post-terminal-fact-dual-successor-private-implementation-readback-qualification-recovery.md)的PR #417
-已经完成local、original PR、protected merge、exact-main双门、fresh installed-product readback与independent reconciliation。
-第一次formal的anonymous API额度耗尽与第二次formal的README marker目标选择失败继续按原identity保留；第三个fresh root的
-README/project-state/doc345/doc346/doc364/doc365各有唯一PASS，AGENTS/milestones raw/API/Git逐字节一致。后继PASS不回填
-#398旧milestones truncation、#399原始门失败或两次恢复失败。
+**project-state projection 0.3继续是冻结历史；0.4保持失败且未资格化。**
+PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
+decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
+milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
 
-这个新事实使0.3成为历史投影。[project-state projection successor 0.4 contract](docs/366-r1-public-project-state-projection-successor-0.4-contract.md)
-已经由PR #418合入`main@abf06ecfbd01852c202096a7733165f6cb0f0f70`，但其exact-main Public CI
-`42211661846` attempt 1在required Python 3.10 Core regression中真实失败；没有rerun，也没有启动fresh readback或
-independent reconciliation。因此0.4是`MERGED / NOT_QUALIFIED / NOT_FROZEN`，而不是qualified candidate。
-[文档367](docs/367-r1-public-project-state-projection-0.4-exact-main-qualification-failure-boundary-audit.md)只保存该失败identity、
-`UNKNOWN`归因与后继责任；它不冻结#398实现，也不恢复global composition authority、manifest、Evidence、persistence、
-public Review或R2–R6施工权。
-[文档368](docs/368-r1-public-project-state-projection-0.4-failure-boundary-readback-target-correction-audit.md)进一步保留#419自身的
-readback失败：README/doc367各有唯一formal PASS，但milestones Render diagnostic观察到571604 bytes，超过冻结的524288-byte
-上限47316 bytes并正确终结为`PARTIAL / CONTENT_TRUNCATED`，因此formal未运行、doc367仍未资格化。该反例击穿的是doc367把
-milestones重新列为Render target的资格计划，不是Collector oracle；本文候选只恢复bounded Render与完整raw-byte观察的责任划分。
+[文档368](docs/368-r1-public-project-state-projection-0.4-failure-boundary-readback-target-correction-audit.md)已经由PR #420完成
+local、original PR、protected merge、exact-main双门、fresh README/doc368 formal、AGENTS/milestones raw-byte observation、
+independent reconciliation与finite closeout，因此成为dual failure-boundary qualified history。#418/#419失败仍保留，doc366、
+doc367与projection 0.4仍不被回填。Project-state projection 0.5 is a new bounded candidate that rebinds the current facts
+without weakening the oracle or inventing a runtime defect. 新的[successor 0.5 contract](docs/369-r1-public-project-state-projection-successor-0.5-contract.md)
+只重建公开投影与正确readback责任；它尚未资格化或冻结，也不授权manifest、Evidence、persistence、public Review或R2–R6。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
