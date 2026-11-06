@@ -21,11 +21,14 @@ decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的origi
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
 
 [文档368](docs/368-r1-public-project-state-projection-0.4-failure-boundary-readback-target-correction-audit.md)已经由PR #420完成
-local、original PR、protected merge、exact-main双门、fresh README/doc368 formal、AGENTS/milestones raw-byte observation、
-independent reconciliation与finite closeout，因此成为dual failure-boundary qualified history。#418/#419失败仍保留，doc366、
-doc367与projection 0.4仍不被回填。Project-state projection 0.5 is a new bounded candidate that rebinds the current facts
-without weakening the oracle or inventing a runtime defect. 新的[successor 0.5 contract](docs/369-r1-public-project-state-projection-successor-0.5-contract.md)
-只重建公开投影与正确readback责任；它尚未资格化或冻结，也不授权manifest、Evidence、persistence、public Review或R2–R6。
+自己的资格链，因此成为dual failure-boundary qualified history。PR #421又把
+[successor 0.5 contract](docs/369-r1-public-project-state-projection-successor-0.5-contract.md)精确合入
+`main@e132e422706fa96dfa1882587a726b9b48b072c2`；original/exact-main双门、六项fresh Public Render formal、两项
+raw/API/Git全字节观察、independent reconciliation与finite closeout全部成立，因此0.5现在是
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。#418/#419失败仍保留，doc366、doc367与projection 0.4仍不被回填。
+Project-state projection 0.5 freeze is governed by an independent publication chain.
+新的[freeze publication](docs/370-r1-public-project-state-projection-0.5-freeze-publication.md)只条件化发布冻结状态；它自己的最后门
+闭合以前`FROZEN`不生效，也不授权manifest、Evidence、persistence、public Review或R2–R6。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
