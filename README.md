@@ -30,6 +30,10 @@ independent reconciliation。因此0.4是`MERGED / NOT_QUALIFIED / NOT_FROZEN`�
 [文档367](docs/367-r1-public-project-state-projection-0.4-exact-main-qualification-failure-boundary-audit.md)只保存该失败identity、
 `UNKNOWN`归因与后继责任；它不冻结#398实现，也不恢复global composition authority、manifest、Evidence、persistence、
 public Review或R2–R6施工权。
+[文档368](docs/368-r1-public-project-state-projection-0.4-failure-boundary-readback-target-correction-audit.md)进一步保留#419自身的
+readback失败：README/doc367各有唯一formal PASS，但milestones Render diagnostic观察到571604 bytes，超过冻结的524288-byte
+上限47316 bytes并正确终结为`PARTIAL / CONTENT_TRUNCATED`，因此formal未运行、doc367仍未资格化。该反例击穿的是doc367把
+milestones重新列为Render target的资格计划，不是Collector oracle；本文候选只恢复bounded Render与完整raw-byte观察的责任划分。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**

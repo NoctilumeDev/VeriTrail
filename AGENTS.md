@@ -7322,3 +7322,32 @@ AGENTS、milestones与自身；不修改doc366、project-state、runtime、tests
 semantics。自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，
 独立判断versioned projection successor或最小test/runtime maintenance。不得rerun #418 gate、复用original PASS、直接冻结#398或
 启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection 0.4 failure-boundary readback-target correction audit candidate
+
+PR #419把doc367 candidate `f49637a7407953111a89a2290883bab2d51d187d`、tree
+`962ad5312c92c80e3558f36965b290b1ab664d71`精确合入`main@03060eef4f6579c1d187ab2cad9806d2133cfeee`。
+original Public CI `42219624414`、exact-main Public CI `42223794241`与Browser Smoke `42223794592`均attempt 1
+SUCCESS（11/11、11/11、1/1），PR #418 failure没有rerun。
+
+第一个fresh readback root的README formal因Markdown反引号marker在rendered text中不存在而以`Render Evidence marker drifted`
+停止，Core Verdict未创建；这是proof-target selection error。第二个fresh root的README/doc367各有唯一formal PASS；milestones
+唯一diagnostic则观察到571604 UTF-8 bytes，超过frozen 524288-byte上限47316 bytes，正确返回
+`PARTIAL / CONTENT_TRUNCATED`，formal未运行。failure-boundary、118-artifact failed closeout与finite integrity为：
+
+```text
+89dd99142889d40e753a0edb9950f737ceb22544a3a40eaf0afb543d29160b5c
+c328b73d09fd1cd5b070abb4e1533517a516dec1426ebd2e006f151cc36b133d
+9bffbf6c77443a710ed900be392e4975d598f2e42bc840accf0e1db4f2e8efee
+```
+
+因此doc367为`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`。Collector行为符合
+frozen P2；被击穿的是doc367重新把milestones预注册为Render formal target，违反doc349/doc365已经冻结的bounded
+project-state Render + full milestones raw/API/Git责任划分。PR #418 exact-main failure、decisive assertion
+`UNKNOWN_NOT_RETAINED_BY_TEST_OUTPUT`与lower cause `UNKNOWN`继续保持原identity。
+
+[文档368](docs/368-r1-public-project-state-projection-0.4-failure-boundary-readback-target-correction-audit.md)只允许README、
+AGENTS、milestones与自身；自己的readback只对README/本文运行fresh Render diagnostic+formal，对AGENTS/milestones运行
+exact-commit public/API/Git raw-byte对账。完整资格链闭合后最多成为dual failure-boundary qualified history；doc366/doc367/
+projection 0.4仍不被回填。随后必须返回CONTROL LOOP，不能直接选择projection successor、test/runtime maintenance或启动
+manifest/Evidence/persistence/public Review/R2–R6。

@@ -8622,3 +8622,47 @@ R2_R6_NOT_STARTED
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，独立判断versioned projection successor或最小
 test/runtime maintenance。不得rerun #418 failure、复用old PASS、修改doc366/project-state/oracle、直接冻结#398或启动后续
 runtime seam。
+
+## R1 public project-state projection 0.4 failure-boundary readback-target correction audit candidate（2026-11-06）
+
+PR #419以exact
+`base=abf06ecfbd01852c202096a7733165f6cb0f0f70 / head=f49637a7407953111a89a2290883bab2d51d187d /
+tree=962ad5312c92c80e3558f36965b290b1ab664d71`受保护合入
+`main@03060eef4f6579c1d187ab2cad9806d2133cfeee`。original Public CI `42219624414`、exact-main Public CI
+`42223794241`与Browser Smoke `42223794592`均attempt 1 SUCCESS（11/11、11/11、1/1）；PR #418 failed run没有rerun。
+
+第一个fresh readback root中README diagnostic完成，formal的API/Render也完成，但sealed marker包含Markdown反引号而rendered text
+正确去除了定界符，产品以`Render Evidence marker drifted`停止，Core Verdict未创建。第二个fresh root使用reader-visible plain
+marker，README/doc367各自唯一formal均为API/Render COMPLETE与Core PASS；milestones唯一diagnostic观察到571604 UTF-8 bytes，
+超过frozen 524288-byte上限47316 bytes，正确终结为`PARTIAL / CONTENT_TRUNCATED`，formal未运行。
+
+failure-boundary / 118-artifact failed closeout / finite integrity为：
+
+```text
+89dd99142889d40e753a0edb9950f737ceb22544a3a40eaf0afb543d29160b5c
+c328b73d09fd1cd5b070abb4e1533517a516dec1426ebd2e006f151cc36b133d
+9bffbf6c77443a710ed900be392e4975d598f2e42bc840accf0e1db4f2e8efee
+```
+
+该事实证明Collector符合frozen P2；被击穿的是doc367重新把milestones列为Render formal target的qualification seam，与
+doc349/doc365冻结的bounded project-state Render + milestones full raw/API/Git责任分离冲突。因此doc367保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`，PR #418 failure与`UNKNOWN`不被解释。
+
+[文档368](368-r1-public-project-state-projection-0.4-failure-boundary-readback-target-correction-audit.md)只version这条target seam：
+README/本文走fresh Render diagnostic+unique formal，AGENTS/milestones走exact-commit public/API/Git raw-byte对账，既有
+milestones `PARTIAL`不重跑、不改名、不被raw bytes冒充COMPLETE。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_4_DUAL_FAILURE_BOUNDARY_READBACK_TARGET_CORRECTION_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多形成两条失败链的qualified audit history；不回填doc366/doc367/projection 0.4，也不自动
+选择projection successor或test/runtime maintenance。publication形成新事实后必须返回CONTROL LOOP。
