@@ -7292,3 +7292,33 @@ R2_R6_NOT_STARTED
 candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`，随后必须返回CONTROL LOOP
 建立独立docs-only freeze publication。不得从本文直接冻结private implementation、恢复global composition authority或启动
 manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection 0.4 exact-main qualification failure-boundary audit candidate
+
+PR #418以candidate `bdf5c170817b3b79c4e597d93c76229f36516463`、tree
+`e2c98f48cc0071bd1aa85d8134e155ee55fb3e45`精确合入`main@abf06ecfbd01852c202096a7733165f6cb0f0f70`。
+original Public CI `42207330233` attempt 1为11/11 SUCCESS，exact-main Browser Smoke `42211661825` attempt 1为1/1
+SUCCESS；但exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun。失败test
+`test_staging_failure_creates_public_error_bundle_after_reverse_cleanup`已经观察到`EVIDENCE_STAGING_FAILED`、`EVIDENCE_ERROR /
+ERROR`与cleanup complete，却得到public verdict `FAIL`而非预期`PENDING`。failed job没有保留临时Bundle或decisive assertion
+列表；精确assertion与下层原因均保持`UNKNOWN`。相同tree的original gate通过且patch只改docs，candidate regression与Subject failure
+均未建立，但exact-main qualification仍真实失败。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_4_EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+[文档367](docs/367-r1-public-project-state-projection-0.4-exact-main-qualification-failure-boundary-audit.md)只允许README、
+AGENTS、milestones与自身；不修改doc366、project-state、runtime、tests、workflow、Schema、Provider、Collector、oracle或frozen
+semantics。自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，
+独立判断versioned projection successor或最小test/runtime maintenance。不得rerun #418 gate、复用original PASS、直接冻结#398或
+启动manifest/Evidence/persistence/public Review/R2–R6。
