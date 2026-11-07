@@ -7,14 +7,14 @@
 ## 投影身份
 
 ```text
-projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6
+projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7
 projection_status: CANDIDATE / NOT_QUALIFIED / NOT_FROZEN
-construction_exact_base: 12d170633657871985727be6cf68d031534faf16
-construction_tree: 9b2e4420dc6a165dfa94cc4c094059d696a8f267
+construction_exact_base: 3bdf7cfd4d06d95955990f0336e098f5c27958a6
+construction_tree: 4d90d735b7599e166069bd8c2016b008b5ea6645
 source_binding_kind: FINAL_SAME_CANDIDATE_MILESTONES_BYTES
-source_milestones_bytes: 627708
-source_milestones_sha256: b288c3e344e2cbb547bf0619799ae01f55213097550dd8535b8384f9324b6a77
-source_milestones_blob_sha1: e8cf9edd57a2f7935caaa3eedbc627fc81385165
+source_milestones_bytes: 637752
+source_milestones_sha256: 8c393b4e43b473972bcd855aa5e695ce10b84c7749dfbe9da0ffdb23a17d5785
+source_milestones_blob_sha1: be867e83f0eb3ad7205acbc38103c39f1a99b077
 ```
 
 这些坐标和摘要只声明本candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；protected merge后的
@@ -49,12 +49,28 @@ exact commit/tree、公开可观察性与资格只能由外部完整资格链绑
   marker在rendered text中出现零次，唯一formal以proof-target selection error停止且没有Core Verdict；第二个fresh root的六个
   Render formal与两项raw-byte observation全部独立通过。因此固定private `POST_TERMINAL_DUAL_SUCCESSOR_0_1` implementation
   现在是`FROZEN`，首个formal错误与lower cause `UNKNOWN`继续保留；
-- 本页与[文档372](372-r1-public-project-state-projection-successor-0.6-contract.md)是从新的exact base重建的0.6 candidate；
-  projection 0.5只承担冻结历史身份，0.4只承担failed/not-qualified历史身份，0.6尚未资格化或冻结；
+- PR #424/doc372的自动门、fresh marker readback与reconciliation曾记录0.6为qualified candidate；PR #425的README readback
+  反例使doc373保持未资格化，PR #426又在任何产品observation前证明本页自身仍保留0.6的旧未资格化状态；因此0.6的semantic
+  qualification已重开且从未冻结，#424–#426全部exact identity继续保留；
+- 本页与[文档375](375-r1-public-project-state-projection-successor-0.7-contract.md)是从新的exact base重建的0.7 candidate；
+  projection 0.5只承担冻结历史身份，0.4只承担failed/not-qualified历史身份，0.6只承担semantic qualification reopened历史身份，
+  0.7尚未资格化或冻结；
 - Review derivation manifest negative-world successor、same-attempt derivation Evidence continuity、language-support persistence与
   public Review产品继续`NOT_STARTED / NOT_AUTHORIZED / OPEN`；R2–R6继续未启动。
 
 ## 必须继续可见的failure boundary
+
+### #425 / #426 公开状态语义矛盾
+
+#425 exact-main的README diagnostic为`COMPLETE / HTTP 200`，但预注册reader-visible phrase出现零次；exact source inspection随后证明
+README主状态仍把0.6写成未资格化，与#424/doc372的qualified-candidate记录冲突。#425 formal、其他target observation、raw formal与
+Core Verdict均未开始，doc373保持`MERGED / NOT_QUALIFIED / NOT_EFFECTIVE`。
+
+#426只修正README并version freeze-publication responsibility。它的original Public CI `42340071297`、exact-main Public CI
+`42342585325`与Browser Smoke `42342585323`均attempt 1 SUCCESS（11/11、11/11、1/1），但fresh exact-main pre-observation
+source validation又发现本页第11行仍是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，第53行仍称0.6“尚未资格化或冻结”。所以
+#426没有运行任何installed-product diagnostic、formal、raw formal或Core Verdict，doc374保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_EFFECTIVE`。后继0.7不能回填这两个失败world。
 
 ### #398 / #399入口失败
 
@@ -122,7 +138,7 @@ PR #398/#417/#423 exact chain与对应readback identity。局部证明成立不�
 | Business Layer | 业务流程组织、能力选择、补证请求 | 证据充分性裁决或PASS宣布 |
 | Core | 证据完整性、绑定、充分性及确定性裁决 | 现实事实的超级所有权 |
 | `docs/milestones.md` | 完整append-only工程历史、链接与provenance | 必须落入Public Render窗口 |
-| 本页 | 当前0.6 candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
+| 本页 | 当前0.7 candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
 
 验迹内部可以有很多插件、Provider、分析器和调度器，但最终优化目标始终是用户提出的工程问题，而不是插件自身的存在价值。
 
@@ -140,10 +156,10 @@ PR #398/#417/#423 exact chain与对应readback identity。局部证明成立不�
 
 ## 本candidate的生效条件
 
-只有[successor 0.6 contract](372-r1-public-project-state-projection-successor-0.6-contract.md)自己的local qualification、
+只有[successor 0.7 contract](375-r1-public-project-state-projection-successor-0.7-contract.md)自己的local qualification、
 original PR gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product
-README/本页/doc365/doc370/doc371/doc372 Public Render、AGENTS/milestones public+API raw-byte observations、candidate milestones
+README/本页/doc372/doc373/doc374/doc375 Public Render、AGENTS/milestones public+API raw-byte observations、candidate milestones
 binding复算、independent reconciliation与finite closeout全部成立后，本页才可成为
-`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_QUALIFIED_CANDIDATE_NOT_FROZEN`。
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_QUALIFIED_CANDIDATE_NOT_FROZEN`。
 
 即使这些门全部成立，后继仍须独立docs-only freeze publication；本页不是scheduler。

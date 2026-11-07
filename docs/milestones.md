@@ -8941,3 +8941,55 @@ R2_R6_NOT_STARTED
 
 doc374自己的完整资格链闭合后，projection/contract 0.6才可成为`FROZEN`；doc373失败历史不被后继PASS回填。随后仍须返回
 CONTROL LOOP，不得自动施工manifest、Evidence、persistence、public Review或R2–R6。
+
+## R1 public project-state projection successor 0.7 contract candidate（2026-11-07）
+
+PR #426以exact
+`base=46493dc86422a7648d283881239787526b3ea039 / head=7424db6be7cb5e8ddba34c28771e1e6811a6f053 /
+tree=4d90d735b7599e166069bd8c2016b008b5ea6645`受保护合入
+`main@3bdf7cfd4d06d95955990f0336e098f5c27958a6`。original Public CI `42340071297`、exact-main Public CI
+`42342585325`与Browser Smoke `42342585323`均attempt 1 SUCCESS（11/11、11/11、1/1）；original qualification、protected
+merge与exact-main dual-gate evidence SHA-256为：
+
+```text
+6409eb171ed20847d6682fbf838d3b3de551813f8442baf169b7e6cc9a5c2dd2
+619ad0662494fb61619addcca455dec77dff7afff4594e95b05c19a200162534
+e4562fe955c352c9b079c36b6145e950fb9851fd1a5e4742f47c6ba2ee5af399
+```
+
+首次original qualification capture的GitHub GraphQL EOF保留为setup error，后继PASS不覆盖。fresh detached exact-main worktree
+只认`3bdf7cf…`world；Codex侧栏因累计超过100个artifact identity仍无法挂载。任何产品observation前的exact-source validation发现
+`docs/project-state.md`仍把0.6身份写成`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`并称“尚未资格化”，与README、doc372–374
+记录的#424 qualified-candidate事实冲突。
+
+因此该world没有运行installed-product diagnostic、formal、raw formal或Core Verdict。exact contradiction与7-artifact failed
+readback closeout SHA-256为：
+
+```text
+d54994eceeb9ca0148d28bf57fa082037965df06158266c0f759d307bffe5056
+9d5aacd0290a7460fba697c7af57de77e24a1103e2bec4e76633cb54d3cd7c85
+```
+
+doc374保持`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_EFFECTIVE`；0.6的semantic qualification被
+真实反例重开且从未冻结。fresh CONTROL LOOP建立
+[文档375](375-r1-public-project-state-projection-successor-0.7-contract.md)与versioned 0.7 candidate，只修正有界公开投影语义并
+同步README、AGENTS、milestones；doc372–374历史字节、runtime、tests、fixtures、workflow、Schema、Provider、Collector、
+P2/Core oracle、Verdict与frozen semantics保持不变。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_SEMANTIC_QUALIFICATION_REOPENED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_SEMANTIC_QUALIFICATION_REOPENED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_FREEZE_PUBLICATION_MERGED_NOT_QUALIFIED_NOT_EFFECTIVE
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_READBACK_CONTRADICTION_CORRECTION_PUBLICATION_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_EFFECTIVE
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_7_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+0.7 candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回
+CONTROL LOOP建立独立docs-only freeze publication。不得从本文直接恢复global composition authority或启动
+manifest/Evidence/persistence/public Review/R2–R6。

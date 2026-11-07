@@ -7627,3 +7627,49 @@ R2_R6_NOT_STARTED
 
 本文candidate自己的完整资格链闭合后，projection/contract 0.6才可成为`FROZEN`，doc373失败历史仍不回填；随后必须返回
 CONTROL LOOP，不能自动启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection successor 0.7 contract candidate
+
+PR #426以exact
+`base=46493dc86422a7648d283881239787526b3ea039 / head=7424db6be7cb5e8ddba34c28771e1e6811a6f053 /
+tree=4d90d735b7599e166069bd8c2016b008b5ea6645`受保护合入
+`main@3bdf7cfd4d06d95955990f0336e098f5c27958a6`。original Public CI `42340071297`、exact-main Public CI
+`42342585325`与Browser Smoke `42342585323`均attempt 1 SUCCESS（11/11、11/11、1/1）；首次original qualification
+capture的GraphQL EOF、候选与fresh worktree的Codex attachment cap、PowerShell proof-facility setup errors继续按原identity保留。
+
+fresh exact-main在任何installed-product diagnostic、formal、raw formal或Core Verdict前检查原问题连续性，发现
+`docs/project-state.md`第11行仍声明0.6为`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，第53行仍称0.6“尚未资格化或冻结”；
+这与README、doc372、doc373、doc374关于#424 qualified-candidate事实的陈述直接冲突。exact source contradiction与7-artifact
+failed readback closeout SHA-256为：
+
+```text
+d54994eceeb9ca0148d28bf57fa082037965df06158266c0f759d307bffe5056
+9d5aacd0290a7460fba697c7af57de77e24a1103e2bec4e76633cb54d3cd7c85
+```
+
+因此doc374是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_EFFECTIVE`，0.6的semantic qualification被真实
+反例重开且从未冻结。选择另一个marker只能证明字符串存在，不能证明公开投影内部自洽。
+
+fresh CONTROL LOOP从该新exact main建立
+[文档375](docs/375-r1-public-project-state-projection-successor-0.7-contract.md)与versioned
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7` candidate，只重开`project-state.md`语义与必须同步解释该失败的公开状态表面；不修改
+doc372–374历史字节、runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或任何frozen
+semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_SEMANTIC_QUALIFICATION_REOPENED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_SEMANTIC_QUALIFICATION_REOPENED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_FREEZE_PUBLICATION_MERGED_NOT_QUALIFIED_NOT_EFFECTIVE
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_READBACK_CONTRADICTION_CORRECTION_PUBLICATION_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_EFFECTIVE
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_7_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+0.7 candidate自己的完整资格链闭合后最多成为`QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立
+docs-only freeze publication。不得从本文直接恢复global composition authority或启动manifest/Evidence/persistence/public
+Review/R2–R6。
