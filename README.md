@@ -53,7 +53,11 @@ raw/API/Git全字节观察、independent reconciliation与finite closeout，所�
 错误保持未资格化；后继[readback correction](docs/378-r1-application-level-unified-output-admission-audit-readback-target-correction.md)
 与独立[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)
 分别闭合自己的资格链。fresh CONTROL LOOP据此建立[application output admission最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)，
-只冻结private、discriminated、one-shot route/result binding；当前仍是`CONTRACT_CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，runtime未授权。
+只冻结private、discriminated、one-shot route/result binding。PR #432已经闭合该candidate自己的local、original PR、protected merge、
+exact-main双门、fresh README/doc380 Render formal、AGENTS/milestones raw-byte observation、independent reconciliation与finite
+closeout，所以doc380现在是`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。独立
+[合同冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)仍须完成自己的完整资格链；
+在此以前`CONTRACT_FROZEN`不生效，runtime仍未授权。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
