@@ -7751,3 +7751,28 @@ R2_R6_NOT_STARTED
 
 不得把selector proof、局部result qualification或类型union漂移成“共同application output已经成立”，也不得直接施工manifest、
 Evidence、persistence、public Review或R2–R6。
+
+### R1 application-level unified output admission current-state audit readback-target correction candidate
+
+PR #429把doc377 candidate `24463a205fd9ff4d1cdee9b880756c2326fab1e8`、tree
+`ca66fa2cdedba2ea544c0b6786a2375c7b3d096c`精确合入`main@bf139acdc3b2f37c3a34e4a243811b6e7283daa5`。
+original Public CI `42362915372`、exact-main Public CI `42365235101`与Browser Smoke `42365235088`均attempt 1
+SUCCESS（11/11、11/11、1/1）。fresh README/doc377各有唯一formal PASS；milestones唯一diagnostic则观察到600693 UTF-8
+rendered-text bytes，超过frozen 524288-byte上限76405 bytes，正确终结为`PARTIAL / CONTENT_TRUNCATED`，formal没有运行。
+
+failure-boundary、94-artifact failed closeout与finite integrity SHA-256为：
+
+```text
+99614d84fcc8f55a9185d3929f07718239687aba9b65cef59f33dccf6c7e91f5
+d0d0b2074cc2ef72d9cbf7ccd377c104c032db0f5bdac0557fffcc0d3a6da40c
+64bd28b1e0093f369a707e1b8d142023b7036fa43df61fd26777488076dc7187
+```
+
+因此doc377是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`。Collector遵守
+frozen P2；subject、runtime、Collector regression与doc377 semantic conclusion contradiction均未建立。被击穿的是proof facility
+把已知超界的完整milestones重新注册为Render formal target；marker存在不能把`PARTIAL`改写成`COMPLETE`。
+
+[文档378](docs/378-r1-application-level-unified-output-admission-audit-readback-target-correction.md)只允许README、AGENTS、
+milestones与自身；它自己的fresh qualification只对README/本文运行Render diagnostic+formal，对AGENTS/milestones运行
+exact-commit anonymous public/API/Git raw-byte对账。全部闭合后最多成为failure-boundary qualified history；doc377不被回填，
+output admission contract/runtime、manifest、same-attempt Evidence continuity、persistence、public Review与R2–R6仍未授权。
