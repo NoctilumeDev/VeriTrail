@@ -7893,3 +7893,58 @@ R2_R6_NOT_STARTED
 doc381自己的全部最后门闭合后，合同冻结target才成为事实；随后必须返回CONTROL LOOP独立审计private implementation feasibility。
 不得从本文直接施工runtime、manifest、Evidence、persistence、public Review或R2–R6。原工程问题、当前proof obligation与适用world
 继续机械分离；形式PASS不能替代问题解决。
+
+### R1 application-level unified Review / Coverage output admission private implementation feasibility audit 候选
+
+PR #433已把doc381 candidate `e44d134e459517ab97e1df0d65528d5c5003f8e9`、tree
+`b20011da4912601e2b9e8e0b5eb5f23bcecdcab0`精确合入`main@e6af7c9e011ebd672b534505adf92f97ac325e42`。
+original Public CI `42404285460`、exact-main Public CI `42407179236`与Browser Smoke `42407179222`均attempt 1 SUCCESS
+（11/11、11/11、1/1）；没有rerun。fresh README/doc380/doc381各有唯一Render diagnostic与formal PASS；AGENTS/milestones
+各有唯一anonymous raw/API/exact-Git全字节一致观察。independent reconciliation、124-artifact finite closeout、expected
+self-capture mismatch与finite integrity SHA-256为：
+
+```text
+e67bdfd9d8706a81bba15155cb0c99e085bbce0ab1164411cb0cfc87b4facdb2
+b0b7145df273b39eab8f5f2a70c72ff7d3c641df501ea353199cf596692a3b77
+d20e90ff779c849ada24d4f90493703a69eca19b484c80996c4a4ebfe594fffd
+9e02aac6806996c25fc8cb0422c56f39a5c1cd92fdf614a571214b8379b0ec1e
+```
+
+因此`R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN`已经生效；runtime仍
+`NOT_STARTED / NOT_AUTHORIZED`。fresh CONTROL LOOP只授权建立
+[文档382](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)，审计冻结合同
+是否存在bounded private construction，不授权implementation。
+
+exact-source audit确认selector仍total/disjoint/one-shot；normal exact `OwnedReviewSliceCoverageComposition`保留original inputs、live
+context、committed phase与CoverageLedger validator；negative exact `AdmittedNegativeWorldCoverage`保留其carrier、inputs、context、
+claim id与CoverageLedger validator；共同application admission runtime仍不存在。最小construction只需要一个private admission module、
+两类nominal result上的窄private coordinate hooks、一个focused falsifier test module与状态文档；不得修改selector oracle、Fact/Relation/
+Slice/Coverage producer semantics、CoverageLedger Schema/reason、public exports、manifest、Evidence、persistence、public Review或R2–R6。
+
+Python 3.10.6/3.13.13 × normal/`-O` feasibility semantic report四格逐字节一致，canonical SHA-256为
+`97a11641956b263e9a931f8973b559539c47923ed93557f7b86b5bcaa2e56a41`；audit matrix SHA-256为
+`4f30ad7ed0f067d7fbe7f81c164fa59deacc4649eb0ee06905d970d27fab45e2`。focused matrix四格各
+`259 tests / 1 skipped / PASS`，SHA-256为`ccbeed304dd0ab933410ff9bdb50aa7dae1af7edd465df61ac57083001ded291`；
+final docs candidate global/local hygiene 8/8 PASS，SHA-256为
+`26882e5942b4d7796f82c4cb3b6233c867c5ee01197e401f214a86605384117d`。
+attempt 1的proof-target literal fragment setup error及worktree registration、evidence-root creation、PowerShell tree-expression setup errors
+全部按原identity保留，effect `NONE`。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc382自己的完整资格链闭合后最多成为`PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL
+LOOP并建立独立docs-only implementation authorization publication。`proof_is_not_problem_solving = true`：形式可行性不能替代原工程
+问题解决，也不能作为runtime施工权。
