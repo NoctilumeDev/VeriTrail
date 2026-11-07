@@ -8891,3 +8891,53 @@ R2_R6_NOT_STARTED
 
 publication自己的完整资格链闭合后，projection/contract 0.6才成为`FROZEN`；随后必须返回CONTROL LOOP，不能按文档编号自动
 恢复composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 public project-state projection 0.6 readback contradiction correction publication candidate（2026-11-07）
+
+PR #425以exact
+`base=69a17b2da86a2f4d9dd09e5ab5724e5fa0ec82e0 / head=541689bb2f7f715bbe87fd9e7de259efbcf4fa43 /
+tree=8e1046ce3238dd752495dd3b1bd6e0bf89c0d342`受保护合入
+`main@46493dc86422a7648d283881239787526b3ea039`。original Public CI `42331317365`、exact-main Public CI
+`42333719108`与Browser Smoke `42333719103`均attempt 1 SUCCESS（11/11、11/11、1/1）。local qualification、original
+qualification、protected merge与exact-main gate evidence分别绑定自己的exact coordinate；绿门不自动发布freeze target。
+
+第一个fresh root先保留proof-facility identity audit的self-inspection false positive，后因facility仍读取旧`merge/tree`键而在任何
+网络观察前停止。该world为`PROOF_FACILITY_GATE_SCHEMA_ERROR / REJECTED_NON_QUALIFYING`，closeout SHA-256为
+`195d10b08c66f0941f8fc481ccffa9ec1895543d6f46469ee66dfc9d07a5147a`。第二个fresh root只修正facility schema，重新冻结adapter并
+通过preformal。anonymous rate diagnostic #1的remaining为0；reset后diagnostic #2与API preflight分别为60/59。
+
+README diagnostic为API/Render `COMPLETE / HTTP 200`，但目标reader-visible phrase出现0次。这个结果只触发source检查；真正反例是
+exact README主状态仍称0.6“尚未资格化”，而PR #424/doc373已经固定0.6为
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。因此不能靠选择另一个恰好存在的marker把形式PASS冒充原工程问题已经解决。
+
+该diagnostic以`DIAGNOSTIC_ONLY_NON_QUALIFYING_ERROR`永久保留；formal、其他target observation、raw formal与Core Verdict均未开始。
+diagnostic history、Render artifact与failed readback closeout SHA-256为：
+
+```text
+3262d4a3f30bd0bc7aea15560a2abcdf91ad3d032befcf4ef137fbd5d6d4bde4
+5a318bbef37ca735da8f8d3b5288aac47b851a5c2bb853b17c1a1da51d06a602
+828bca82ea701e0fc23e61eee178c80ef6cf9eae1c35ad1d77bbaf458d9517b9
+```
+
+所以doc373是`MERGED / NOT_QUALIFIED / NOT_EFFECTIVE`，doc372/projection 0.6仍是
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档374](374-r1-public-project-state-projection-0.6-readback-contradiction-correction-publication.md)，只修正README public-state并
+version freeze-publication responsibility；project-state、doc372、doc373与全部runtime/test/oracle/frozen bytes保持不变。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_FREEZE_PUBLICATION_MERGED_NOT_QUALIFIED_NOT_EFFECTIVE
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_READBACK_CONTRADICTION_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN_HISTORICAL
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc374自己的完整资格链闭合后，projection/contract 0.6才可成为`FROZEN`；doc373失败历史不被后继PASS回填。随后仍须返回
+CONTROL LOOP，不得自动施工manifest、Evidence、persistence、public Review或R2–R6。

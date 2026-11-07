@@ -15,7 +15,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.5已成为冻结历史；0.6 successor candidate正在重绑新状态，尚未资格化或冻结；0.4保持失败且未资格化。**
+**project-state projection 0.6已经完成candidate资格，但尚未冻结；0.5是冻结历史，0.4保持失败且未资格化。**
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -30,12 +30,15 @@ raw/API/Git全字节观察、independent reconciliation与finite closeout全部�
 README/project-state/doc369/doc370 formal、两项raw-byte observation、independent reconciliation与finite closeout全部成立，
 所以projection/contract 0.5现在是`FROZEN`。#418/#419失败仍保留，doc366、doc367与projection 0.4仍不被回填。
 
-Post-terminal dual-successor implementation freeze is now an independent publication candidate.
-fresh CONTROL LOOP确认#398的五个implementation/test blob与冻结语义到当前main均未漂移，且#417已恢复
-`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。新的
+Post-terminal dual-successor private implementation已经由
 [implementation freeze publication](docs/371-r1-post-terminal-fact-dual-successor-private-implementation-freeze-publication.md)
-只条件化发布该固定private implementation的冻结状态；它自己的最后门闭合以前`FROZEN`不生效，也不恢复global composition
-authority或授权manifest、Evidence、persistence、public Review、R2–R6。
+的完整资格链固定为`FROZEN`；这只覆盖声明world中的private selector与既有downstream，不恢复global composition authority，也不
+授权manifest、Evidence、persistence、public Review或R2–R6。PR #424随后使
+[projection 0.6 contract](docs/372-r1-public-project-state-projection-successor-0.6-contract.md)成为
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。PR #425/doc373虽已合入且original/exact-main双门全绿，但fresh README diagnostic发现本页仍误称
+0.6“尚未资格化”；formal与其他target observation均未开始，因此doc373保持`MERGED / NOT_QUALIFIED / NOT_EFFECTIVE`。
+[readback contradiction correction publication](docs/374-r1-public-project-state-projection-0.6-readback-contradiction-correction-publication.md)
+只重开这条公开状态/冻结发布责任；不能靠更换marker把形式PASS冒充原工程问题已经解决。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
@@ -461,8 +464,9 @@ python -m venv .venv
   新事实使0.5成为历史投影；fresh CONTROL LOOP建立
   [project-state projection successor 0.6 contract](docs/372-r1-public-project-state-projection-successor-0.6-contract.md)，只重绑当前有界公开状态。
   PR #424已经闭合candidate自己的original/exact-main双门、fresh installed-product readback与独立reconciliation；0.6现为
-  `QUALIFIED_CANDIDATE / NOT_FROZEN`。Project-state projection 0.6 freeze is governed by an independent publication chain.
-  见[project-state projection 0.6 freeze publication](docs/373-r1-public-project-state-projection-0.6-freeze-publication.md)。
+  `QUALIFIED_CANDIDATE / NOT_FROZEN`。PR #425/doc373的fresh README diagnostic发现公开状态自相矛盾，故该publication没有资格化或
+  生效。后继只由独立[readback contradiction correction publication](docs/374-r1-public-project-state-projection-0.6-readback-contradiction-correction-publication.md)
+  承担，不能把doc373的绿门或另选marker解释为0.6已经冻结。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
