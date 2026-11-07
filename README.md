@@ -15,7 +15,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.7已完成candidate资格；独立freeze publication仍须完成自己的最后门。其公开状态以doc376的条件规则表达：最后门闭合前是`QUALIFIED_CANDIDATE / NOT_FROZEN`，全部闭合后才是`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。**
+**project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；新的docs-only current-state audit只读审计application-level unified Review / Coverage output admission。**
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -45,7 +45,12 @@ Post-terminal dual-successor private implementation已经由
 semantic boundary；PR #427已经完成local、original PR、protected merge、exact-main双门、六项fresh Render/API/Core formal、
 两项raw/API/Git全字节观察、independent reconciliation与finite closeout，所以doc375/projection 0.7现在是
 `QUALIFIED_CANDIDATE / NOT_FROZEN`。独立[0.7 freeze publication](docs/376-r1-public-project-state-projection-0.7-freeze-publication.md)
-同步更新本页、project-state、AGENTS与milestones的条件状态表达；不能靠更换marker或只改README把形式PASS冒充原工程问题已经解决。
+随后由PR #428完成自己的local、original PR、protected merge、exact-main双门、六项fresh Render/API/Core formal、两项
+raw/API/Git全字节观察、independent reconciliation与finite closeout，所以projection/contract 0.7现在是`FROZEN`。
+[application-level unified Review / Coverage output admission当前状态审计](docs/377-r1-application-level-unified-review-coverage-output-admission-current-state-audit.md)
+从该新exact main证明：selector route与两类private downstream result各自成立，但current runtime仍没有同时消费
+`OwnedReviewSliceCoverageComposition`与`AdmittedNegativeWorldCoverage`的共同application admission。本文目前只是candidate，
+不授权合同、manifest、Evidence、persistence、public Review或R2–R6。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
