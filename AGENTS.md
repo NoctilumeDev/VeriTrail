@@ -7531,3 +7531,53 @@ R2_R6_NOT_STARTED
 candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立
 独立docs-only freeze publication。不得从本文直接恢复global composition authority或启动manifest/Evidence/persistence/public
 Review/R2–R6。
+
+### R1 public project-state projection 0.6 freeze publication candidate
+
+PR #424以candidate `5552df905fc36f6cb1351ee9be2777b92bb14bac`、tree
+`2898a6610e8a0ba05f9a9fe384179dd10d9f7fcf`精确合入`main@69a17b2da86a2f4d9dd09e5ab5724e5fa0ec82e0`。
+original Public CI `42321856710`、exact-main Public CI `42325178086`与Browser Smoke `42325178091`均attempt 1
+SUCCESS（11/11、11/11、1/1）。
+
+第一个fresh readback root在adapter freeze与anonymous preflight之后、任何target diagnostic/formal之前，发现formal Plan的
+`change_scope.owner`仍指向上一轮private implementation freeze问题；observation identity与preflight provenance也保留旧标签。
+该world以`PROOF_FACILITY_IDENTITY_BINDING_ERROR / REJECTED_NON_QUALIFYING`停止，没有target diagnostic、formal或Core Verdict；
+closeout SHA-256为`7c2e00440c72ec7e15b0d5b39b75eedad937b7130e87ce7945ddc0bf4fddb019`。不得用“推导形式正确”替代
+“证明对象仍是原问题”。
+
+第二个fresh root只修正proof-facility identity binding并重建全新installed-product environment。README、project-state、doc365、
+doc370、doc371与doc372各自唯一formal均为API/Render `COMPLETE`、HTTP 200、marker一次与Core `PASS`；AGENTS与627708-byte
+milestones各有唯一raw.githubusercontent、GitHub Contents API与exact Git全字节一致观察。pre-observation adapter、preformal
+validation、independent reconciliation、176-artifact closeout、expected stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+7ce07b41960507a5f5b3634cf86b1328235fe9c9c8568a06ddc67ca3c643953a
+005ec79ce5e5edfb135e1085eb668f85f2425cdfaeb3e3c58fe1d710e5666c94
+4cacba33183de5e6fac2048b4cbe4769ea7e10b695ff23819bbcd9b52fd387e3
+0f219a910409f73c00bb9f6cd18560bd7a81bf4df07427f2b2d7ca178c26395d
+ab930bcee5ff1e7177bc57f336c70f5ac191801ebc4dced94b50da4753d64121
+5c2803d1036c3490172eb231ee856957b918eaabdfbc53d2e28bd1a20db472d5
+```
+
+因此doc372与projection 0.6现在是`QUALIFIED_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档373](docs/373-r1-public-project-state-projection-0.6-freeze-publication.md)，只发布固定doc372/project-state 0.6
+semantic bytes的冻结状态；不修改它们、runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、
+Verdict或任何frozen semantics。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN_HISTORICAL
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、milestones与doc373。自己的完整资格链闭合后，projection/contract 0.6才可标记
+`FROZEN`；随后仍必须返回CONTROL LOOP，不能按文档编号自动恢复composition authority或启动
+manifest/Evidence/persistence/public Review/R2–R6。

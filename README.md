@@ -460,6 +460,9 @@ python -m venv .venv
   dual-successor实现现在是`FROZEN`。这不把局部证明漂移成完整Review产品证明，也不恢复global composition authority。
   新事实使0.5成为历史投影；fresh CONTROL LOOP建立
   [project-state projection successor 0.6 contract](docs/372-r1-public-project-state-projection-successor-0.6-contract.md)，只重绑当前有界公开状态。
+  PR #424已经闭合candidate自己的original/exact-main双门、fresh installed-product readback与独立reconciliation；0.6现为
+  `QUALIFIED_CANDIDATE / NOT_FROZEN`。Project-state projection 0.6 freeze is governed by an independent publication chain.
+  见[project-state projection 0.6 freeze publication](docs/373-r1-public-project-state-projection-0.6-freeze-publication.md)。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。
