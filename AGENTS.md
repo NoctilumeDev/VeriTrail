@@ -7581,3 +7581,49 @@ R2_R6_NOT_STARTED
 本publication只允许README、AGENTS、milestones与doc373。自己的完整资格链闭合后，projection/contract 0.6才可标记
 `FROZEN`；随后仍必须返回CONTROL LOOP，不能按文档编号自动恢复composition authority或启动
 manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection 0.6 readback contradiction correction publication candidate
+
+PR #425以candidate `541689bb2f7f715bbe87fd9e7de259efbcf4fa43`、tree
+`8e1046ce3238dd752495dd3b1bd6e0bf89c0d342`精确合入`main@46493dc86422a7648d283881239787526b3ea039`。
+original Public CI `42331317365`、exact-main Public CI `42333719108`与Browser Smoke `42333719103`均attempt 1
+SUCCESS（11/11、11/11、1/1）。这些门只证明doc373 exact bytes通过自己的自动检查，不自动使freeze target生效。
+
+第一个fresh readback root先保留proof-facility identity自检false positive，后又发现facility仍假定旧`merge/tree`键，而#425
+exact-main gate evidence使用`merge_commit/merge_tree`；该world在任何网络观察前以
+`PROOF_FACILITY_GATE_SCHEMA_ERROR / REJECTED_NON_QUALIFYING`停止，closeout SHA-256为
+`195d10b08c66f0941f8fc481ccffa9ec1895543d6f46469ee66dfc9d07a5147a`。第二个fresh root修正facility schema并完成preformal；
+anonymous rate diagnostic #1的remaining为0，reset后diagnostic #2与API preflight分别观察到60/59。README diagnostic随后为
+API/Render `COMPLETE / HTTP 200`，但目标reader-visible phrase出现0次。对exact source的独立检查证明这不是单纯marker错误：
+README主状态仍称0.6“尚未资格化”，与PR #424/doc373已经固定的`QUALIFIED_CANDIDATE / NOT_FROZEN`事实直接矛盾。
+
+因此该diagnostic按原identity保留为`DIAGNOSTIC_ONLY_NON_QUALIFYING_ERROR`；Core Verdict、formal、其他Render target与raw formal
+均未创建。diagnostic history、Render artifact与failed readback closeout SHA-256为：
+
+```text
+3262d4a3f30bd0bc7aea15560a2abcdf91ad3d032befcf4ef137fbd5d6d4bde4
+5a318bbef37ca735da8f8d3b5288aac47b851a5c2bb853b17c1a1da51d06a602
+828bca82ea701e0fc23e61eee178c80ef6cf9eae1c35ad1d77bbaf458d9517b9
+```
+
+doc373保持`MERGED / NOT_QUALIFIED / NOT_EFFECTIVE`；doc372/projection 0.6保持`QUALIFIED_CANDIDATE / NOT_FROZEN`。
+更换readback marker、重试同一formal或把绿门与另一world拼接起来，都会把形式证明替代原工程问题。
+
+[文档374](docs/374-r1-public-project-state-projection-0.6-readback-contradiction-correction-publication.md)只version被击穿的
+README public-state / freeze-publication responsibility：允许README、AGENTS、milestones与自身，不修改project-state、doc372、
+doc373、runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或frozen semantic bytes。
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_FREEZE_PUBLICATION_MERGED_NOT_QUALIFIED_NOT_EFFECTIVE
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_READBACK_CONTRADICTION_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本文candidate自己的完整资格链闭合后，projection/contract 0.6才可成为`FROZEN`，doc373失败历史仍不回填；随后必须返回
+CONTROL LOOP，不能自动启动manifest/Evidence/persistence/public Review/R2–R6。
