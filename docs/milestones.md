@@ -9142,3 +9142,49 @@ R2_R6_NOT_STARTED
 ```
 
 文档379自己的完整资格链闭合后最多成为qualified audit history；随后必须返回CONTROL LOOP，不能自动开始合同或runtime。
+
+## R1 application-level unified Review / Coverage output admission 合同候选（2026-11-08）
+
+PR #431把doc379 candidate `7485110261ce6cd34178d6dc1e830257b5972530`、tree
+`a5be082641241ccbd81eebac5d6f031a07d9484d`精确合入`main@84d987f1c9a164c04f1b692d7e5872ff555ef2da`。original Public CI
+`42383607012`、exact-main Public CI `42386480443`与Browser Smoke `42386480353`均attempt 1 SUCCESS（11/11、11/11、1/1）。
+fresh README/doc379各有唯一`FORMAL_READBACK_PASS`；AGENTS/milestones各有唯一anonymous raw/Contents API/exact-Git全字节一致
+观察。README diagnostic #1因reader-visible marker含Markdown标点得到0 occurrence，按nonqualifying diagnostic保留；v3 adapter只修正
+proof marker。independent reconciliation、134-artifact closeout、self-capture mismatch与finite integrity为：
+
+```text
+654c26b1bf039698e43390d53fb68ccff074a6ff182b6a54d290297d84103dd0
+976d38d58513b738d28d8bd435d9a7652ca0b0c07b1a5db67ca709f03b5cfe97
+759558ebefe9acee80cbf15b831453cf3979f5b6d0ce596455a5b24baeb29c50
+f35e141a21730b5665512b4d2fa79f6d6d308bfb1482f3073ca6e4cc4f9568ca
+```
+
+所以doc379成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；doc378保持qualified correction history；doc377仍不回填。
+fresh CONTROL LOOP建立
+[文档380](380-r1-application-level-unified-review-coverage-output-admission-contract.md)，只冻结versioned、private、
+discriminated、one-shot application output admission合同0.1，不施工runtime。
+
+合同要求application attempt在downstream执行前绑定frozen selector签发的exact route claim，并在result返回后独立重演terminal
+branch-to-route mapping、same original Fact attempt、DerivationInputSet、live BudgetContext、exact result object、route-specific source与
+CoverageLedger root chain。normal route只接受exact `OwnedReviewSliceCoverageComposition`，四类negative route只接受exact
+`AdmittedNegativeWorldCoverage`；subclass/proxy/copy、foreign attempt、replay、ledger swap、selector/result mismatch与第二次admission
+全部fail closed。Relation-conflict即使`review_slice_set = null`仍保持normal route，artifact presence没有classification authority。
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_AUDIT_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_SUCCESSOR_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate完整资格链闭合后最多成为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。独立docs-only freeze publication未闭合以前
+`CONTRACT_FROZEN`不生效，private implementation feasibility/runtime仍未授权；共同output admission也不补齐same-attempt
+DerivationEvidence continuity。形式PASS只在绑定的exact world内作witness，不能替代原工程问题已经解决。

@@ -7803,3 +7803,51 @@ runtime module同时消费`OwnedReviewSliceCoverageComposition`与`AdmittedNegat
 `ABSENT`。这仍是`UNPROVED_SEAM`，不是frozen implementation contradiction。本文candidate完整资格链闭合后最多成为
 `CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；在此以前合同/runtime、manifest、Evidence、persistence、public Review与
 R2–R6仍未授权。
+
+### R1 application-level unified Review / Coverage output admission 合同候选
+
+PR #431已把doc379精确合入`main@84d987f1c9a164c04f1b692d7e5872ff555ef2da`，tree
+`a5be082641241ccbd81eebac5d6f031a07d9484d`。original Public CI `42383607012`、exact-main Public CI
+`42386480443`与Browser Smoke `42386480353`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh README/doc379各有唯一formal
+PASS；AGENTS/milestones各有唯一anonymous raw/API/exact-Git全字节一致观察。independent reconciliation、134-artifact finite
+closeout、expected self-capture mismatch与finite integrity SHA-256为：
+
+```text
+654c26b1bf039698e43390d53fb68ccff074a6ff182b6a54d290297d84103dd0
+976d38d58513b738d28d8bd435d9a7652ca0b0c07b1a5db67ca709f03b5cfe97
+759558ebefe9acee80cbf15b831453cf3979f5b6d0ce596455a5b24baeb29c50
+f35e141a21730b5665512b4d2fa79f6d6d308bfb1482f3073ca6e4cc4f9568ca
+```
+
+因此doc379是`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；doc378继续是qualified correction history；doc377失败历史
+不回填。fresh CONTROL LOOP只授权建立
+[文档380](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)：versioned、private、discriminated、
+one-shot application output admission合同0.1。
+
+合同把exact selector route claim、original Fact attempt、DerivationInputSet、live BudgetContext、terminal source、exact downstream
+nominal result与CoverageLedger root chain绑定在同一个application attempt。normal route只接受exact
+`OwnedReviewSliceCoverageComposition`；四类negative route只接受exact `AdmittedNegativeWorldCoverage`。wrong type/route、copy、
+foreign attempt、replay、ledger swap、selector/result mismatch、late context stop与第二次admission全部fail closed。normal
+Relation-conflict的`review_slice_set = null`仍是normal-route qualified unknown，不能因artifact absence改写成negative。
+
+本文candidate不修改runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict、doc377–379或任何
+frozen semantic bytes。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_AUDIT_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_SUCCESSOR_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立
+docs-only freeze publication。共同admission不补齐same-attempt DerivationEvidence continuity，也不创建manifest、Evidence、
+persistence、public Review、Core Verdict或R2–R6 authority。形式矩阵全绿不能替代原工程问题、当前proof obligation与适用world连续性。
