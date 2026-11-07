@@ -9029,3 +9029,45 @@ R2_R6_NOT_STARTED
 
 doc376自己的全部最后门闭合后，projection/contract 0.7才成为`FROZEN`；随后必须返回CONTROL LOOP。不得按文档编号自动恢复
 global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+## R1 application-level unified Review / Coverage output admission 当前状态审计候选（2026-11-07）
+
+PR #428以exact
+`base=84f1512b7ac59edcb3f180af1f6816d0dc7c96cb / head=57e481308396ad9a5339b7d22f4bed1577794a85 /
+tree=9430d620fa636c134f700a7e41306ef01a1d9e73`受保护合入
+`main@d7f6008d7898aaa62aa5c6f3f625426d1fcbbf3d`。original Public CI `42353609310`、exact-main Public CI
+`42356106784`与Browser Smoke `42356106790`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh README、project-state、
+doc373–376各有唯一formal PASS；AGENTS/milestones raw-byte observations、independent reconciliation与188-artifact finite closeout
+全部成立。因此`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN`生效；0.6 semantic qualification reopened历史不被回填。
+
+fresh CONTROL LOOP按doc371要求回到共同output proof obligation。[文档377](377-r1-application-level-unified-review-coverage-output-admission-current-state-audit.md)
+从exact current runtime执行normal world与四类negative world：selector route已经total/disjoint/one-shot，normal path产生
+`OwnedReviewSliceCoverageComposition`，negative paths产生`AdmittedNegativeWorldCoverage`，两侧继续绑定original inputs与live
+BudgetContext。但source inventory没有同时消费两种nominal result的第三个runtime module，也没有global/application output admission。
+这属于`UNPROVED_SEAM`，不是上游frozen implementation contradiction。
+
+外置audit facility final source SHA-256为
+`a37993abb3e79c8dc342b6b2c12699da82c33c685ae855d37da2cf560840ee82`；Python 3.10.6/3.13.13 × normal/`-O`
+final attempt 3 canonical stdout均为
+`56456d450334b997e38764dfa114eb4c465a263fcc46a91eaac1036170991cc8`。focused witness四格各90/90 PASS。worktree attachment
+identity cap、PowerShell tree-expression、Windows rg glob与audit attempt 1 field-selection proof-facility errors、attempt 2单格diagnostic
+PASS均继续按原identity保留。
+
+normal Relation-conflict witness证明`review_slice_set = null`仍可属于normal-route qualified unknown；因此未来共同admission必须由
+selector route/result identity判别，不能用artifact presence推断negative branch。本文不创建合同或runtime；自己的完整资格链闭合后
+最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_CANDIDATE
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本文candidate资格链闭合后必须返回CONTROL LOOP；不得把selector proof或局部result资格漂移成共同output admission、manifest、
+Evidence、persistence、public Review或R2–R6已经获得授权。

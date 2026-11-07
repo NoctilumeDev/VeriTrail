@@ -7709,3 +7709,45 @@ R2_R6_NOT_STARTED
 
 doc376自己的全部最后门闭合后，条件化target才成为`FROZEN`；随后必须返回CONTROL LOOP。不得自动恢复global composition
 authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 application-level unified Review / Coverage output admission 当前状态审计候选
+
+PR #428把doc376精确合入`main@d7f6008d7898aaa62aa5c6f3f625426d1fcbbf3d`，tree
+`9430d620fa636c134f700a7e41306ef01a1d9e73`。original Public CI `42353609310`、exact-main Public CI
+`42356106784`与Browser Smoke `42356106790`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh README、project-state、
+doc373–376各有唯一formal PASS；AGENTS与milestones各有唯一raw/API/exact-Git全字节一致观察。independent reconciliation、
+188-artifact closeout、expected self-capture mismatch与finite integrity SHA-256为：
+
+```text
+88b1be37438b77439c32a13d78c344f70256b128450d2228dc53efa914870ffe
+6466b204b2668d80f5a0fdf4b7ad92875a675d9aff64ea8fd09118bd147bdd45
+dda809c2e2cd274fbedfd6412692a227165a8168bd1de18c69e95ef037b4d864
+589c8adc94763669aa9bf2394b5fc74e8677c90fd4caaa769b90f992276fcd00
+```
+
+因此`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN`已经生效；0.6 reopened历史与全部readback/setup failures继续保留。
+
+fresh CONTROL LOOP按doc371要求重新审计共同output seam。[文档377](docs/377-r1-application-level-unified-review-coverage-output-admission-current-state-audit.md)
+在Python 3.10.6/3.13.13 × normal/`-O`四格逐字节一致地证明：post-terminal selector的五分支route已经total/disjoint/one-shot；
+normal path产生`OwnedReviewSliceCoverageComposition`，四个negative branch产生`AdmittedNegativeWorldCoverage`；但current source中
+没有第三个runtime module同时消费两种result type，也没有global/application output admission authority。normal Relation-conflict还会
+产生`review_slice_set = null`的normal-route qualified unknown，所以artifact presence不能替代selector route identity。
+
+当前缺口属于`UNPROVED_SEAM`，不是既有冻结实现的反例。本文candidate自己的完整资格链闭合后最多成为qualified history；随后必须
+返回CONTROL LOOP，才能独立建立versioned docs-only
+`APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT`。在此以前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_CANDIDATE
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+不得把selector proof、局部result qualification或类型union漂移成“共同application output已经成立”，也不得直接施工manifest、
+Evidence、persistence、public Review或R2–R6。
