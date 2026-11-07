@@ -7776,3 +7776,30 @@ frozen P2；subject、runtime、Collector regression与doc377 semantic conclusio
 milestones与自身；它自己的fresh qualification只对README/本文运行Render diagnostic+formal，对AGENTS/milestones运行
 exact-commit anonymous public/API/Git raw-byte对账。全部闭合后最多成为failure-boundary qualified history；doc377不被回填，
 output admission contract/runtime、manifest、same-attempt Evidence continuity、persistence、public Review与R2–R6仍未授权。
+
+### R1 application-level unified output admission current-state audit successor candidate
+
+PR #430已把文档378精确合入`main@9a0b124a2e9eccc4dc39916062e564fdc9591f28`，tree
+`16095f40aeed4655d0ad9afc1089db6f36c54004`。original Public CI `42375653032`、exact-main Public CI
+`42378101947`与Browser Smoke `42378101954`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh README/doc378
+各自唯一formal PASS；AGENTS/milestones各自唯一anonymous raw/Contents API/exact-Git全字节一致观察。v1 proof facility的超长
+`plan_id`在Collector启动前失败并永久保留；v2只version该设施前缀。independent reconciliation、107-artifact closeout、expected
+self-capture mismatch与finite integrity SHA-256为：
+
+```text
+c88c0abe655b2cef950906389e1c1aff01d1b336a3401a653c0caffad78d662d
+8dc371c844b7aeaa11247e927cf84da0801adf96cd6697989890aa1dabd175e3
+69b5a16886ce11cf3ef0ea0db216cd4323aee6e94f4ee5e4c895fcbd43ab38f1
+d41a7a4a00ca1e1d85ec44ed2de435c953423117ed1bd9166cfba65c86236ca7
+```
+
+因此文档378是`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`；文档377保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`。fresh CONTROL LOOP不能据此直接开合同，
+而是从新exact main独立重跑current-state audit。
+
+[文档379](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)在Python
+3.10.6/3.13.13 × normal/`-O`四格重新证明：selector route total/disjoint/one-shot、两类private result各自成立，但没有第三个
+runtime module同时消费`OwnedReviewSliceCoverageComposition`与`AdmittedNegativeWorldCoverage`，共同application admission仍
+`ABSENT`。这仍是`UNPROVED_SEAM`，不是frozen implementation contradiction。本文candidate完整资格链闭合后最多成为
+`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；在此以前合同/runtime、manifest、Evidence、persistence、public Review与
+R2–R6仍未授权。

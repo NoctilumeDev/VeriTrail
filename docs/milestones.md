@@ -9103,3 +9103,42 @@ R2_R6_NOT_STARTED
 ```
 
 本文全部门闭合后最多成为failure-boundary qualified history；不得回填doc377，不得修改P2上限，也不得直接施工合同或runtime。
+
+## R1 application-level unified Review / Coverage output admission 当前状态审计successor候选（2026-11-07）
+
+PR #430把文档378精确合入`main@9a0b124a2e9eccc4dc39916062e564fdc9591f28`。original/exact-main Public CI与
+Browser Smoke均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh README/doc378 formal与AGENTS/milestones raw/API/Git观察全部
+成立。v1超长`plan_id`proof-facility错误按`NON_QUALIFYING / NONE`保留，v2只重开该设施前缀。reconciliation、107-artifact
+closeout、self-capture mismatch与finite integrity为：
+
+```text
+c88c0abe655b2cef950906389e1c1aff01d1b336a3401a653c0caffad78d662d
+8dc371c844b7aeaa11247e927cf84da0801adf96cd6697989890aa1dabd175e3
+69b5a16886ce11cf3ef0ea0db216cd4323aee6e94f4ee5e4c895fcbd43ab38f1
+d41a7a4a00ca1e1d85ec44ed2de435c953423117ed1bd9166cfba65c86236ca7
+```
+
+所以doc378是qualified failure-boundary history；doc377仍未资格化。fresh CONTROL LOOP随后从新exact main重跑审计。外置audit
+source SHA-256为`60e880a1415d719d07d89a05ebc9880e80ab5dd1cc0e8e744a0b5b6a15a3b435`；Python 3.10.6/3.13.13 ×
+normal/`-O`四格canonical report均为`89e49cdb27b2819546d9d7696e1cc47aef2f6ab3eb22d4adba85d520d57fb219`，focused
+witness四格各90/90 PASS。
+
+新[文档379](379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)重新确认：五类route与
+两种private result成立，但共同application output admission仍`ABSENT`；artifact presence不能替代route identity。这是
+`UNPROVED_SEAM_NOT_CONTRADICTION`。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_AUDIT_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_SUCCESSOR_CANDIDATE_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+文档379自己的完整资格链闭合后最多成为qualified audit history；随后必须返回CONTROL LOOP，不能自动开始合同或runtime。
