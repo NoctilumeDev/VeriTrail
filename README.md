@@ -15,7 +15,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；docs-only current-state audit只读审计application-level unified Review / Coverage output admission，但其#429 fresh milestones Render诊断命中冻结截断边界，因此doc377仍未资格化。PR #430已经把readback target correction闭合为qualified failure-boundary history；新的[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)正在新exact-main world重新执行审计，不继承doc377的资格。**
+**project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`，重新确认共同application output admission仍是`UNPROVED_SEAM`。新的[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)当前只是docs-only candidate；未冻结、未实现，也不授权manifest、Evidence、persistence、public Review或R2–R6。**
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -49,8 +49,11 @@ semantic boundary；PR #427已经完成local、original PR、protected merge、e
 raw/API/Git全字节观察、independent reconciliation与finite closeout，所以projection/contract 0.7现在是`FROZEN`。
 [application-level unified Review / Coverage output admission当前状态审计](docs/377-r1-application-level-unified-review-coverage-output-admission-current-state-audit.md)
 从该新exact main证明：selector route与两类private downstream result各自成立，但current runtime仍没有同时消费
-`OwnedReviewSliceCoverageComposition`与`AdmittedNegativeWorldCoverage`的共同application admission。本文目前只是candidate，
-不授权合同、manifest、Evidence、persistence、public Review或R2–R6。
+`OwnedReviewSliceCoverageComposition`与`AdmittedNegativeWorldCoverage`的共同application admission。该首次审计因readback target
+错误保持未资格化；后继[readback correction](docs/378-r1-application-level-unified-output-admission-audit-readback-target-correction.md)
+与独立[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)
+分别闭合自己的资格链。fresh CONTROL LOOP据此建立[application output admission最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)，
+只冻结private、discriminated、one-shot route/result binding；当前仍是`CONTRACT_CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，runtime未授权。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
