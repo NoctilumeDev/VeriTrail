@@ -9071,3 +9071,35 @@ R2_R6_NOT_STARTED
 
 本文candidate资格链闭合后必须返回CONTROL LOOP；不得把selector proof或局部result资格漂移成共同output admission、manifest、
 Evidence、persistence、public Review或R2–R6已经获得授权。
+
+## R1 application-level unified output admission audit readback-target correction candidate（2026-11-07）
+
+PR #429把doc377精确合入`main@bf139acdc3b2f37c3a34e4a243811b6e7283daa5`；original Public CI
+`42362915372`、exact-main Public CI `42365235101`与Browser Smoke `42365235088`均attempt 1 SUCCESS。fresh README/doc377
+各有唯一formal PASS，但milestones唯一diagnostic观察到600693 UTF-8 rendered-text bytes，超过frozen 524288-byte上限，正确返回
+`PARTIAL / CONTENT_TRUNCATED`；formal没有运行。failure-boundary、94-artifact failed closeout与finite integrity为：
+
+```text
+99614d84fcc8f55a9185d3929f07718239687aba9b65cef59f33dccf6c7e91f5
+d0d0b2074cc2ef72d9cbf7ccd377c104c032db0f5bdac0557fffcc0d3a6da40c
+64bd28b1e0093f369a707e1b8d142023b7036fa43df61fd26777488076dc7187
+```
+
+因此doc377保持`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`。新的
+[文档378](378-r1-application-level-unified-output-admission-audit-readback-target-correction.md)只审计并修正readback target责任：
+README/本文使用fresh Render diagnostic+formal，AGENTS/milestones使用exact-commit anonymous public/API/Git raw-byte对账。
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CURRENT_STATE_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_AUDIT_READBACK_TARGET_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本文全部门闭合后最多成为failure-boundary qualified history；不得回填doc377，不得修改P2上限，也不得直接施工合同或runtime。
