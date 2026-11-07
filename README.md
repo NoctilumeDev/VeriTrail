@@ -15,7 +15,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.5已经冻结；0.3保留冻结历史，0.4保持失败且未资格化。**
+**project-state projection 0.5已成为冻结历史；0.6 successor candidate正在重绑新状态，尚未资格化或冻结；0.4保持失败且未资格化。**
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -452,10 +452,14 @@ python -m venv .venv
   它只version旧milestones Render target为frozen bounded projection 0.3，自己的完整链闭合后最多恢复
   `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`，仍不直接冻结实现或授权后续runtime seam。
   PR #417已经使这项readback qualification生效；后继0.4真实失败链经doc368取得qualified history，0.5 successor与PR #422
-  独立freeze publication又完成完整资格链，因此`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN`现在成立。fresh CONTROL LOOP确认
-  #398五个implementation/test blob及doc340–346没有漂移，当前进入独立
-  [private implementation freeze publication](docs/371-r1-post-terminal-fact-dual-successor-private-implementation-freeze-publication.md)。
-  它只发布固定private dual-successor的冻结状态；不把局部实现证明漂移成完整Review产品证明，也不恢复global composition authority。
+  独立freeze publication又完成完整资格链。PR #423随后把
+  [private implementation freeze publication](docs/371-r1-post-terminal-fact-dual-successor-private-implementation-freeze-publication.md)
+  精确合入`main@12d170633657871985727be6cf68d031534faf16`并闭合original/exact-main双门。第一个fresh root的README
+  marker在rendered text中出现零次，formal以proof-target selection error停止且没有Core Verdict；该身份永久保留。第二个fresh
+  root的README/project-state/doc346/doc365/doc370/doc371各自唯一formal PASS，AGENTS/milestones全字节一致，因此固定private
+  dual-successor实现现在是`FROZEN`。这不把局部证明漂移成完整Review产品证明，也不恢复global composition authority。
+  新事实使0.5成为历史投影；fresh CONTROL LOOP建立
+  [project-state projection successor 0.6 contract](docs/372-r1-public-project-state-projection-successor-0.6-contract.md)，只重绑当前有界公开状态。
 - **Quick / Q — 验证调度与 Evidence 安全复用**：`Q0_BLUEPRINT_FROZEN / Q_IMPLEMENTATION_NOT_STARTED / NO_GATE_SKIP_AUTHORITY`。
   缺失或卸载时退回完整串行验证，语义不变。见[Q0 冻结记录](docs/119-q0-verification-scheduling-final-freeze-closure.md)。
 - **Operations Evidence / O — 运行与系统状态观察**：候选只读问题面；没有插件、Provider、Schema、动作权或运行时。

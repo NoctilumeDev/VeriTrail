@@ -7483,3 +7483,51 @@ R2_R6_NOT_STARTED
 本文candidate只允许README、AGENTS、milestones与doc371。自己的完整资格链闭合后最多使fixed private implementation成为
 `FROZEN`；随后必须返回CONTROL LOOP并先version/rebind current project-state。不得把“固定实现已冻结”偷换成“完整工程问题已解决”，
 也不得自动启动manifest/Evidence/persistence/public Review/R2–R6。
+
+### R1 public project-state projection successor 0.6 contract candidate
+
+PR #423以candidate `8b730b8263c5609e3d5cca928fc853b1062918c4`、tree
+`9b2e4420dc6a165dfa94cc4c094059d696a8f267`精确合入`main@12d170633657871985727be6cf68d031534faf16`。
+original Public CI `42310836886`、exact-main Public CI `42314707614`与Browser Smoke `42314707612`均attempt 1
+SUCCESS（11/11、11/11、1/1）。
+
+第一个fresh root的六个Render diagnostic均为`COMPLETE / HTTP 200`，但README marker在rendered text中出现零次；唯一formal
+因此以`FORMAL_READBACK_ERROR / PROOF_TARGET_SELECTION_ERROR / RENDERED_TEXT_OCCURRENCES_ZERO`停止，API/Render仍完整，
+Core Verdict没有创建，lower cause保持`UNKNOWN`。该root与
+82-artifact failed closeout永久保留，formal没有重跑。第二个fresh root加强diagnostic marker precondition并使用reader-visible
+README marker；README/project-state/doc346/doc365/doc370/doc371各有唯一formal `PASS`，AGENTS与625510-byte milestones各有唯一
+raw/API/exact-Git全字节一致观察。independent reconciliation、179-artifact closeout、expected stdout self-capture mismatch与
+finite integrity SHA-256为：
+
+```text
+49cad261d6e27a7a298a305fe0df44c85f85b5bff034ee9e1367dd9343b98f3a
+6f57930d592e659ab711329dc8041512cb445e67a8c902942f68ac4ec17f08b8
+ceeef7d0a3ed6655dbc278696cc80a4daa5c162645f370d94a004e29852cd2a2
+5ac8dc86827b89db999889b0a1fadb56f7542e1aa4ba14aea41980bd1f627a54
+```
+
+因此`R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN`已经生效；这只冻结
+`POST_TERMINAL_DUAL_SUCCESSOR_0_1`声明world中的fixed private selector与既有两个downstream，不证明application-level unified
+Review/Coverage admission、manifest、same-attempt Evidence continuity、persistence或public Review已经存在。
+
+新状态使projection 0.5成为历史投影。fresh CONTROL LOOP建立
+[文档372](docs/372-r1-public-project-state-projection-successor-0.6-contract.md)与versioned
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6` candidate，只重绑final same-candidate milestones bytes与当前有界公开投影；不修改
+runtime、tests、fixtures、workflow、Schema、Provider、Collector、P2/Core oracle、Verdict或任何frozen semantic bytes。
+
+```text
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN_HISTORICAL
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_4_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+candidate自己的完整资格链闭合后最多成为contract/projection `QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立
+独立docs-only freeze publication。不得从本文直接恢复global composition authority或启动manifest/Evidence/persistence/public
+Review/R2–R6。
