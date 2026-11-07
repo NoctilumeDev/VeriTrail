@@ -7,14 +7,14 @@
 ## 投影身份
 
 ```text
-projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5
+projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6
 projection_status: CANDIDATE / NOT_QUALIFIED / NOT_FROZEN
-construction_exact_base: 9b87e61ce3a361abaa3da458f49e43d5c5a1b769
-construction_tree: 200b9a093d9669ef242f991510530cafcf56afd9
+construction_exact_base: 12d170633657871985727be6cf68d031534faf16
+construction_tree: 9b2e4420dc6a165dfa94cc4c094059d696a8f267
 source_binding_kind: FINAL_SAME_CANDIDATE_MILESTONES_BYTES
-source_milestones_bytes: 619569
-source_milestones_sha256: 65c7c362fcfc0c2831bb7e60fc738b0d7278b37a4b4c2c5b8b83ae10425de7bd
-source_milestones_blob_sha1: a0d02fe3d24b855ed9609b0a8ac71bf1af814edc
+source_milestones_bytes: 627708
+source_milestones_sha256: b288c3e344e2cbb547bf0619799ae01f55213097550dd8535b8384f9324b6a77
+source_milestones_blob_sha1: e8cf9edd57a2f7935caaa3eedbc627fc81385165
 ```
 
 这些坐标和摘要只声明本candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；protected merge后的
@@ -34,7 +34,7 @@ exact commit/tree、公开可观察性与资格只能由外部完整资格链绑
   `R1_PROJECT_STATE_PUBLIC_PROJECTION_0_3_FROZEN`已经生效；
 - PR #417/doc365完成local、original PR、protected merge、exact-main双门、fresh六目标formal、两项raw-byte observation、
   independent reconciliation与finite closeout；因此#398/doc346现在是
-  `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；
+  `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；
 - #417第一个fresh root的README formal发生anonymous API budget exhaustion，第二个fresh root发生reader-visible marker target
   selection failure；两次Core Verdict均未创建，后继PASS不覆盖它们，底层原因保持`UNKNOWN`；
 - PR #418/doc366的0.4 candidate已合入，但exact-main Public CI attempt 1真实失败且没有rerun；doc366与projection 0.4继续
@@ -43,8 +43,14 @@ exact commit/tree、公开可观察性与资格只能由外部完整资格链绑
   doc367保持`READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`，它的target regression不被README/doc367 PASS覆盖；
 - PR #420/doc368完成local、original PR、protected merge、exact-main双门、fresh bounded Render、完整raw-byte observation、
   independent reconciliation与finite closeout，因此doc368成为dual failure-boundary qualified history；
-- 本页与[文档369](369-r1-public-project-state-projection-successor-0.5-contract.md)是从新的exact base重建的0.5 candidate；
-  projection 0.3只承担冻结历史身份，0.4只承担failed/not-qualified历史身份，0.5尚未资格化或冻结；
+- PR #421/doc369完成0.5 candidate完整资格链，PR #422/doc370完成独立freeze publication，因此
+  `R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_FROZEN`已生效；
+- PR #423/doc371完成local、original PR、protected merge、exact-main双门与fresh qualification。第一个fresh root的README
+  marker在rendered text中出现零次，唯一formal以proof-target selection error停止且没有Core Verdict；第二个fresh root的六个
+  Render formal与两项raw-byte observation全部独立通过。因此固定private `POST_TERMINAL_DUAL_SUCCESSOR_0_1` implementation
+  现在是`FROZEN`，首个formal错误与lower cause `UNKNOWN`继续保留；
+- 本页与[文档372](372-r1-public-project-state-projection-successor-0.6-contract.md)是从新的exact base重建的0.6 candidate；
+  projection 0.5只承担冻结历史身份，0.4只承担failed/not-qualified历史身份，0.6尚未资格化或冻结；
 - Review derivation manifest negative-world successor、same-attempt derivation Evidence continuity、language-support persistence与
   public Review产品继续`NOT_STARTED / NOT_AUTHORIZED / OPEN`；R2–R6继续未启动。
 
@@ -91,6 +97,20 @@ rate diagnostic/preflight #1–#3观察到`remaining=0`并按原identity保留�
 AGENTS/milestones raw/API/Git观察才各自独立完成。expected closeout stdout self-capture mismatch也以semantic effect NONE保留。
 这些后继PASS只使doc368成为qualified history，不使doc366、doc367或projection 0.4资格化。
 
+### #423 implementation freeze readback中的proof-target error
+
+第一个fresh root的六个Render diagnostic均为`COMPLETE / HTTP 200`，但旧README marker在source中一次、rendered text中零次。
+唯一formal因此以`FORMAL_READBACK_ERROR / PROOF_TARGET_SELECTION_ERROR / RENDERED_TEXT_OCCURRENCES_ZERO`停止；API/Render仍完整，
+Core Verdict未创建，lower cause保持`UNKNOWN`。第二个fresh root只重开marker target boundary，在diagnostic阶段先要求marker出现一次，
+再取得六个唯一formal PASS与两项raw-byte PASS。后继PASS使fixed private implementation获得自己的冻结资格，但不删除、不解释首败，
+也不把证明对象从private selector漂移成完整Review产品。
+
+## 问题连续性边界
+
+本投影把三个身份机械分开：原问题仍是用户提出的工程问题闭环；当前证明义务只覆盖fixed private
+`POST_TERMINAL_DUAL_SUCCESSOR_0_1` implementation frozen；适用world只覆盖doc340–346声明的private 0.1 world、
+PR #398/#417/#423 exact chain与对应readback identity。局部证明成立不等于完整Review产品已经解决原问题。
+
 ## 权威边界
 
 | 主体 | 权威 | 明确不拥有 |
@@ -102,7 +122,7 @@ AGENTS/milestones raw/API/Git观察才各自独立完成。expected closeout std
 | Business Layer | 业务流程组织、能力选择、补证请求 | 证据充分性裁决或PASS宣布 |
 | Core | 证据完整性、绑定、充分性及确定性裁决 | 现实事实的超级所有权 |
 | `docs/milestones.md` | 完整append-only工程历史、链接与provenance | 必须落入Public Render窗口 |
-| 本页 | 当前candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
+| 本页 | 当前0.6 candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
 
 验迹内部可以有很多插件、Provider、分析器和调度器，但最终优化目标始终是用户提出的工程问题，而不是插件自身的存在价值。
 
@@ -115,14 +135,15 @@ AGENTS/milestones raw/API/Git观察才各自独立完成。expected closeout std
 - 修改P2 oracle、Collector coverage或Core充分性规则；
 - 把任何旧FAIL/ERROR/CANCELLED/UNKNOWN升级为PASS；
 - 决定证据充分性、qualification、state transition或下一合法seam；
-- 冻结#398 private implementation、恢复global composition authority，或启动manifest、Evidence、persistence、public Review、R2–R6。
+- 把已经冻结的fixed private implementation扩张解释为完整Review产品、恢复global composition authority，或启动manifest、
+  Evidence、persistence、public Review、R2–R6。
 
 ## 本candidate的生效条件
 
-只有[successor 0.5 contract](369-r1-public-project-state-projection-successor-0.5-contract.md)自己的local qualification、
+只有[successor 0.6 contract](372-r1-public-project-state-projection-successor-0.6-contract.md)自己的local qualification、
 original PR gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product
-README/本页/doc366/doc367/doc368/doc369 Public Render、AGENTS/milestones public+API raw-byte observations、candidate milestones
+README/本页/doc365/doc370/doc371/doc372 Public Render、AGENTS/milestones public+API raw-byte observations、candidate milestones
 binding复算、independent reconciliation与finite closeout全部成立后，本页才可成为
-`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_5_QUALIFIED_CANDIDATE_NOT_FROZEN`。
+`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_QUALIFIED_CANDIDATE_NOT_FROZEN`。
 
 即使这些门全部成立，后继仍须独立docs-only freeze publication；本页不是scheduler。
