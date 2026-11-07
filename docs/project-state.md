@@ -7,18 +7,21 @@
 ## 投影身份
 
 ```text
-projection_contract_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7
-projection_status: CANDIDATE / NOT_QUALIFIED / NOT_FROZEN
-construction_exact_base: 3bdf7cfd4d06d95955990f0336e098f5c27958a6
-construction_tree: 4d90d735b7599e166069bd8c2016b008b5ea6645
+projection_contract: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7
+projection_status_rule: IF_DOC376_ALL_FINAL_GATES_CLOSED_THEN_FROZEN_ELSE_QUALIFIED_CANDIDATE_NOT_FROZEN
+freeze_publication_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FREEZE_PUBLICATION
+construction_exact_base: 84f1512b7ac59edcb3f180af1f6816d0dc7c96cb
+construction_tree: 77bae5ea781419676f3c015d1488ff4548001c0a
 source_binding_kind: FINAL_SAME_CANDIDATE_MILESTONES_BYTES
-source_milestones_bytes: 637752
-source_milestones_sha256: 8c393b4e43b473972bcd855aa5e695ce10b84c7749dfbe9da0ffdb23a17d5785
-source_milestones_blob_sha1: be867e83f0eb3ad7205acbc38103c39f1a99b077
+source_milestones_bytes: 640035
+source_milestones_sha256: 95a8548b812402ae476250f74bcc872eb90a20e9d5a222567c6b6764cf7c2e51
+source_milestones_blob_sha1: 6dd2e6ed6b3fd9cb2c63bc3414b53d7c5afa3390
+upstream_qualified_candidate_closeout_sha256: f3eee941aabbba91dfbc268e0992eef0b08787da1db48aedcb8865d6c89bd859
 ```
 
-这些坐标和摘要只声明本candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；protected merge后的
-exact commit/tree、公开可观察性与资格只能由外部完整资格链绑定。本文不能给自己升级状态。
+这些坐标和摘要只声明本publication candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；
+`projection_status_rule`不是自我认证：只有doc376声明的original PR、protected merge、new exact-main双门、fresh installed-product
+readback、independent reconciliation与finite closeout全部成立，`FROZEN`分支才由外部证据生效。本文不能给自己升级状态。
 
 ## 当前有效事实
 
@@ -52,9 +55,10 @@ exact commit/tree、公开可观察性与资格只能由外部完整资格链绑
 - PR #424/doc372的自动门、fresh marker readback与reconciliation曾记录0.6为qualified candidate；PR #425的README readback
   反例使doc373保持未资格化，PR #426又在任何产品observation前证明本页自身仍保留0.6的旧未资格化状态；因此0.6的semantic
   qualification已重开且从未冻结，#424–#426全部exact identity继续保留；
-- 本页与[文档375](375-r1-public-project-state-projection-successor-0.7-contract.md)是从新的exact base重建的0.7 candidate；
-  projection 0.5只承担冻结历史身份，0.4只承担failed/not-qualified历史身份，0.6只承担semantic qualification reopened历史身份，
-  0.7尚未资格化或冻结；
+- PR #427已经使[文档375](375-r1-public-project-state-projection-successor-0.7-contract.md)与projection 0.7成为
+  `QUALIFIED_CANDIDATE / NOT_FROZEN`；[文档376](376-r1-public-project-state-projection-0.7-freeze-publication.md)是独立
+  freeze publication candidate，全部最后门闭合前不生效；projection 0.5只承担冻结历史身份，0.4只承担failed/not-qualified
+  历史身份，0.6只承担semantic qualification reopened历史身份；
 - Review derivation manifest negative-world successor、same-attempt derivation Evidence continuity、language-support persistence与
   public Review产品继续`NOT_STARTED / NOT_AUTHORIZED / OPEN`；R2–R6继续未启动。
 
@@ -123,9 +127,11 @@ Core Verdict未创建，lower cause保持`UNKNOWN`。第二个fresh root只重�
 
 ## 问题连续性边界
 
-本投影把三个身份机械分开：原问题仍是用户提出的工程问题闭环；当前证明义务只覆盖fixed private
-`POST_TERMINAL_DUAL_SUCCESSOR_0_1` implementation frozen；适用world只覆盖doc340–346声明的private 0.1 world、
-PR #398/#417/#423 exact chain与对应readback identity。局部证明成立不等于完整Review产品已经解决原问题。
+本投影把三层问题身份机械分开：产品原问题仍是用户提出的工程问题闭环；本publication承接的原工程问题是准确、自洽、可公开
+观察的有界project-state projection；当前证明义务只覆盖0.7 frozen-status publication的全部最后门与跨表面一致性；适用world只覆盖
+本candidate的exact base/head/tree、final bytes、attempt与fresh readback identity。上游fixed private
+`POST_TERMINAL_DUAL_SUCCESSOR_0_1` implementation frozen只是本投影必须准确陈述的既有事实，不是本轮被重新证明的对象。局部publication
+成立不等于完整Review产品已经解决产品原问题。
 
 ## 权威边界
 
@@ -138,7 +144,7 @@ PR #398/#417/#423 exact chain与对应readback identity。局部证明成立不�
 | Business Layer | 业务流程组织、能力选择、补证请求 | 证据充分性裁决或PASS宣布 |
 | Core | 证据完整性、绑定、充分性及确定性裁决 | 现实事实的超级所有权 |
 | `docs/milestones.md` | 完整append-only工程历史、链接与provenance | 必须落入Public Render窗口 |
-| 本页 | 当前0.7 candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
+| 本页 | 当前0.7 freeze-publication candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
 
 验迹内部可以有很多插件、Provider、分析器和调度器，但最终优化目标始终是用户提出的工程问题，而不是插件自身的存在价值。
 
@@ -154,12 +160,15 @@ PR #398/#417/#423 exact chain与对应readback identity。局部证明成立不�
 - 把已经冻结的fixed private implementation扩张解释为完整Review产品、恢复global composition authority，或启动manifest、
   Evidence、persistence、public Review、R2–R6。
 
-## 本candidate的生效条件
+## 本publication candidate的生效条件
 
-只有[successor 0.7 contract](375-r1-public-project-state-projection-successor-0.7-contract.md)自己的local qualification、
-original PR gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product
-README/本页/doc372/doc373/doc374/doc375 Public Render、AGENTS/milestones public+API raw-byte observations、candidate milestones
-binding复算、independent reconciliation与finite closeout全部成立后，本页才可成为
-`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_QUALIFIED_CANDIDATE_NOT_FROZEN`。
+PR #427已经完成[successor 0.7 contract](375-r1-public-project-state-projection-successor-0.7-contract.md)的完整candidate资格链；
+independent reconciliation与182-artifact finite closeout SHA-256分别为
+`1cf6c6bea3bbad58f34d9c8dbf173909d73c5c464df176ae5aa7792f4a5ce07f`与
+`f3eee941aabbba91dfbc268e0992eef0b08787da1db48aedcb8865d6c89bd859`。
 
-即使这些门全部成立，后继仍须独立docs-only freeze publication；本页不是scheduler。
+只有[0.7 freeze publication](376-r1-public-project-state-projection-0.7-freeze-publication.md)自己的local qualification、original PR
+gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product
+README/本页/doc373/doc374/doc375/doc376 Public Render、AGENTS/milestones public+API raw-byte observations、final milestones
+binding复算、independent reconciliation与finite closeout全部成立后，`projection_status_rule`的`FROZEN`分支才生效。此前状态严格是
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。本页不是scheduler。

@@ -7673,3 +7673,39 @@ R2_R6_NOT_STARTED
 0.7 candidate自己的完整资格链闭合后最多成为`QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立
 docs-only freeze publication。不得从本文直接恢复global composition authority或启动manifest/Evidence/persistence/public
 Review/R2–R6。
+
+### R1 public project-state projection 0.7 freeze publication candidate
+
+PR #427以candidate `53dce9a4260b6b7f8ddd72c99f1e96ca94f39605`、tree
+`77bae5ea781419676f3c015d1488ff4548001c0a`精确合入`main@84f1512b7ac59edcb3f180af1f6816d0dc7c96cb`。
+original Public CI `42346423327`、exact-main Public CI `42348937241`与Browser Smoke `42348937213`均attempt 1 SUCCESS
+（11/11、11/11、1/1）。fresh README、project-state、doc372–375各有唯一formal `PASS`；AGENTS与637752-byte milestones
+各有唯一raw/API/exact-Git全字节一致观察。independent reconciliation、182-artifact closeout、expected stdout self-capture
+mismatch与finite integrity SHA-256为：
+
+```text
+1cf6c6bea3bbad58f34d9c8dbf173909d73c5c464df176ae5aa7792f4a5ce07f
+f3eee941aabbba91dfbc268e0992eef0b08787da1db48aedcb8865d6c89bd859
+9124c255dd1ebd3f18b1abc27424039a9e6ef3d6d4323250caf92e08af9f853b
+aec6f6073a174cf0e36353a5863f877c5e6060c6a33277d7d03dff86efd61812
+```
+
+因此doc375/projection 0.7是`QUALIFIED_CANDIDATE / NOT_FROZEN`。fresh CONTROL LOOP明确拒绝重演#425/#426：新的
+[文档376](docs/376-r1-public-project-state-projection-0.7-freeze-publication.md)必须同步project-state状态规则与final milestones
+binding，不能只改README并把marker PASS冒充跨表面自洽。当前只允许：
+
+```text
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_7_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_6_SEMANTIC_QUALIFICATION_REOPENED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_6_SEMANTIC_QUALIFICATION_REOPENED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc376自己的全部最后门闭合后，条件化target才成为`FROZEN`；随后必须返回CONTROL LOOP。不得自动恢复global composition
+authority或启动manifest/Evidence/persistence/public Review/R2–R6。
