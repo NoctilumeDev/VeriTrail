@@ -15,7 +15,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.6已经完成candidate资格，但尚未冻结；0.5是冻结历史，0.4保持失败且未资格化。**
+**project-state projection 0.7是未资格化候选；0.6的先前资格主张已由exact-source反例重开且未冻结；0.5是冻结历史，0.4保持失败且未资格化。**
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -38,7 +38,11 @@ Post-terminal dual-successor private implementation已经由
 `QUALIFIED_CANDIDATE / NOT_FROZEN`。PR #425/doc373虽已合入且original/exact-main双门全绿，但fresh README diagnostic发现本页仍误称
 0.6“尚未资格化”；formal与其他target observation均未开始，因此doc373保持`MERGED / NOT_QUALIFIED / NOT_EFFECTIVE`。
 [readback contradiction correction publication](docs/374-r1-public-project-state-projection-0.6-readback-contradiction-correction-publication.md)
-只重开这条公开状态/冻结发布责任；不能靠更换marker把形式PASS冒充原工程问题已经解决。
+随后由PR #426精确合入并取得original/exact-main双门，但fresh exact-main在任何产品observation前又发现
+`docs/project-state.md`本体仍把0.6写成`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`并称“尚未资格化”。因此doc374保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_EFFECTIVE`，0.6的semantic qualification被反例重开。
+新的[projection 0.7 contract](docs/375-r1-public-project-state-projection-successor-0.7-contract.md)只version这个被击穿的公开投影
+semantic boundary；不能靠更换marker把形式PASS冒充原工程问题已经解决。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
