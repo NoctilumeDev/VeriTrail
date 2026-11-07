@@ -15,7 +15,7 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-**project-state projection 0.7是未资格化候选；0.6的先前资格主张已由exact-source反例重开且未冻结；0.5是冻结历史，0.4保持失败且未资格化。**
+**project-state projection 0.7已完成candidate资格；独立freeze publication仍须完成自己的最后门。其公开状态以doc376的条件规则表达：最后门闭合前是`QUALIFIED_CANDIDATE / NOT_FROZEN`，全部闭合后才是`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。**
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -42,7 +42,10 @@ Post-terminal dual-successor private implementation已经由
 `docs/project-state.md`本体仍把0.6写成`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`并称“尚未资格化”。因此doc374保持
 `MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_EFFECTIVE`，0.6的semantic qualification被反例重开。
 新的[projection 0.7 contract](docs/375-r1-public-project-state-projection-successor-0.7-contract.md)只version这个被击穿的公开投影
-semantic boundary；不能靠更换marker把形式PASS冒充原工程问题已经解决。
+semantic boundary；PR #427已经完成local、original PR、protected merge、exact-main双门、六项fresh Render/API/Core formal、
+两项raw/API/Git全字节观察、independent reconciliation与finite closeout，所以doc375/projection 0.7现在是
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。独立[0.7 freeze publication](docs/376-r1-public-project-state-projection-0.7-freeze-publication.md)
+同步更新本页、project-state、AGENTS与milestones的条件状态表达；不能靠更换marker或只改README把形式PASS冒充原工程问题已经解决。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
