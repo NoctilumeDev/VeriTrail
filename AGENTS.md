@@ -8055,3 +8055,49 @@ R2_R6_NOT_STARTED
 doc385自己的完整资格链闭合后最多成为`ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回
 CONTROL LOOP，从新的exact main机械重建implementation candidate，不得cherry-pick旧资格、rerun #436或把后继PASS回填旧失败。
 `proof_is_not_problem_solving = true`继续成立。
+
+### R1 unified Review / Coverage output admission failure-boundary exact-main qualification audit 候选
+
+PR #437把doc385 candidate `997b2bfde1e3d6c9da1cb4ad3ddbab0a5a90343f`、tree
+`a9488dcf7feebe158f4571cdc7778c96ef5df754`精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`。
+original Public CI `42473232190` attempt 1为11/11 SUCCESS，Browser Smoke `42475745159` attempt 1为1/1 SUCCESS；但
+exact-main Public CI `42475745171` attempt 1真实FAILURE，没有rerun。required Python 3.10 job `128716605284`在Core、
+Authoring、GitHub Evidence与Review Attention normal/`-O`步骤全部成功后，下载冻结Core `v0.12.2` wheel时连续三次得到15秒
+`TimeoutError`，有限60秒恢复预算不足以承担下一次bounded retry，下载器正确fail closed。Python 3.13、Workbench与E3 lanes
+SUCCESS，依赖job groups SKIPPED；这些身份不能拼接成11/11。
+
+run JSON、failed log、failure capture与142-artifact failed closeout SHA-256为：
+
+```text
+2bc11476ca2fbc50f9295c893243c47d2a0691af0cdab14cb5278b94121a459d
+5a440d55deabeb3da2d7d0656d5803dd055b1c8c172133557dffd04542180290
+41ba940d0870b6015d630f033aac6e6c31559f90b90e759457adf78be74987dd
+7e7f1388f64f487248efe93678826a5ae5510a2337974c100390640048a2489a
+```
+
+因此doc385保持`MERGED / NOT_QUALIFIED`，installed-product readback与reconciliation没有启动。当前只建立
+`RELEASE_ASSET_TIMEOUT_RECOVERY_BUDGET_EXHAUSTED / DOWNLOAD_TOOL_FAIL_CLOSED`；candidate regression、Subject failure、asset
+digest mismatch与workflow/runtime/test/oracle defect均未建立，底层GitHub/proxy/shared-egress/network原因保持`UNKNOWN`。
+
+fresh CONTROL LOOP只授权建立
+[文档386](docs/386-r1-unified-output-admission-failure-boundary-exact-main-qualification-audit.md)，保存#437自己的exact-main失败、
+qualification effect与最小后继责任；不修改runtime、workflow、tests、下载器、预算、Release资产或oracle。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_CANDIDATE_PR436_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_FAILURE_BOUNDARY_EXACT_MAIN_QUALIFICATION_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc386自己的完整资格链闭合后最多成为`EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc385与#437
+failure不被回填。随后必须返回CONTROL LOOP，从新exact main重新判断能否机械重建implementation candidate；不得按文档编号自动
+施工runtime。`proof_is_not_problem_solving = true`继续成立。
