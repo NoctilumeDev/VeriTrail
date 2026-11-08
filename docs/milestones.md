@@ -9362,3 +9362,41 @@ R2_R6_NOT_STARTED
 
 doc385全部最后门闭合后最多成为qualified failure-boundary history；后继仍须从新的exact main重建candidate并取得自己的完整资格，
 不得rerun或回填#436。`proof_is_not_problem_solving = true`。
+
+## R1 unified Review / Coverage output admission failure-boundary exact-main qualification audit 候选（2026-11-08）
+
+PR #437把doc385 candidate `997b2bfde1e3d6c9da1cb4ad3ddbab0a5a90343f`、tree
+`a9488dcf7feebe158f4571cdc7778c96ef5df754`精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`。
+original Public CI `42473232190` attempt 1为11/11 SUCCESS，Browser Smoke `42475745159` attempt 1为1/1 SUCCESS；
+exact-main Public CI `42475745171` attempt 1则真实FAILURE，没有rerun。required Python 3.10 job `128716605284`在所有此前
+Core/Authoring/GitHub Evidence/Review Attention步骤成功后，下载冻结Core `v0.12.2` wheel时连续三次15秒`TimeoutError`，
+有限60秒恢复预算不足以承担下一次bounded retry，下载器正确fail closed。Python 3.13、Workbench与E3 lanes SUCCESS；依赖job
+groups SKIPPED。
+
+run JSON、failed log、failure capture与142-artifact failed closeout SHA-256为：
+
+```text
+2bc11476ca2fbc50f9295c893243c47d2a0691af0cdab14cb5278b94121a459d
+5a440d55deabeb3da2d7d0656d5803dd055b1c8c172133557dffd04542180290
+41ba940d0870b6015d630f033aac6e6c31559f90b90e759457adf78be74987dd
+7e7f1388f64f487248efe93678826a5ae5510a2337974c100390640048a2489a
+```
+
+因此doc385为`MERGED / NOT_QUALIFIED`；fresh readback与reconciliation没有启动。candidate regression、Subject failure、asset digest
+mismatch与workflow/runtime/test/oracle defect均未建立，lower cause保持`UNKNOWN`。新的
+[文档386](386-r1-unified-output-admission-failure-boundary-exact-main-qualification-audit.md)只保存该exact-main failure与最小后继责任，
+不修改runtime、workflow、tests、下载器、预算、Release资产、required gate或oracle。
+
+```text
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_CANDIDATE_PR436_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_FAILURE_BOUNDARY_EXACT_MAIN_QUALIFICATION_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc386全部最后门闭合后最多成为qualified exact-main failure-boundary history；doc385与#437 failure不回填。随后必须从新exact
+main返回CONTROL LOOP，不能把后继PASS改写成旧attempt PASS，也不能按文档编号自动施工runtime。
