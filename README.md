@@ -21,6 +21,11 @@ PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`�
 15秒`TimeoutError`后耗尽有限恢复预算。因此doc385保持`MERGED / NOT_QUALIFIED`，fresh readback没有启动。新的
 [exact-main qualification failure-boundary audit](docs/386-r1-unified-output-admission-failure-boundary-exact-main-qualification-audit.md)
 只保存#437的新失败identity与最小后继责任；它不回填#436/#437，也不修改下载器、预算、required gate或runtime。
+PR #438已经把doc386精确合入`main@ce9fa08aa62b0ffd3a87c8e4d8f61b9e49ce3d5e`，并完成original/exact-main
+Public CI 11/11、Browser Smoke 1/1、fresh README/doc385/doc386 readback、独立reconciliation与finite closeout；因此doc386现在是
+`EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，而doc385与#437 failure仍不被回填。新的
+[private implementation successor candidate](docs/387-r1-application-level-unified-review-coverage-output-admission-private-implementation-successor-candidate.md)
+只从该exact main机械重建bounded private runtime；它不继承#436的commit、attempt或资格，当前仍是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -78,7 +83,11 @@ PR #437随后以original 11/11通过并精确合入`main@e3c3281…`，但exact-
 3.10下载冻结Core 0.12.2 wheel时三次15秒`TimeoutError`后fail closed；Browser Smoke、Python 3.13、Workbench与E3 lanes均
 SUCCESS。doc385因此是`MERGED / NOT_QUALIFIED`。新的[文档386](docs/386-r1-unified-output-admission-failure-boundary-exact-main-qualification-audit.md)
 只审计这个新exact-main failure；candidate regression、Subject failure、asset digest mismatch与oracle defect均未建立，lower cause
-保持`UNKNOWN`。
+保持`UNKNOWN`。PR #438随后完成自己的11/11 original门、11/11 exact-main门、1/1 Browser门及fresh readback/reconciliation，使doc386成为
+qualified history。新的[文档387](docs/387-r1-application-level-unified-review-coverage-output-admission-private-implementation-successor-candidate.md)
+从`main@ce9fa08…`重建十文件bounded successor；新四格UAO/focused/full/semantic witness均PASS，但这些仍只是local witness。原工程问题、
+当前证明义务与适用世界继续分开；在本候选自己的original PR、protected merge、new exact-main双门、fresh product readback与独立
+reconciliation全部成立以前，不得宣称implementation已经资格化、冻结或解决原工程问题。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
