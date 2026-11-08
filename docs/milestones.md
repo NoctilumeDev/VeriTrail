@@ -9321,3 +9321,44 @@ R2_R6_NOT_STARTED
 
 doc383完整资格链闭合后才允许`PRIVATE_IMPLEMENTATION_ALLOWED`生效；该状态仍不等于runtime已经实现、资格化或冻结，必须从新
 exact main返回CONTROL LOOP。`proof_is_not_problem_solving = true`继续约束后继施工。
+
+## R1 unified Review / Coverage output admission implementation original-gate failure-boundary audit 候选（2026-11-08）
+
+PR #435已经把doc383精确合入`main@5742c979e671e65067085e0303caf9d3506b7d42`，tree
+`e0a6db65861e19166968b6491f9153ba041eb933`。original Public CI `42428584420`、exact-main Public CI
+`42431241189`与Browser Smoke `42431241097`均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh README/doc382/doc383
+Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立。因此bounded A–J
+`PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；它不等于实现已经成立。
+
+首次implementation candidate PR #436绑定`base=5742c979… / head=1caba94e… / tree=907c4dba… / 1 commit / 10 files`。
+candidate local UAO/focused/full/semantic/compile/hygiene/scope门全部PASS，但original Public CI run `42468088782` attempt 1
+真实失败：E3 job `128692177263`在120秒multi-asset lane持续收到HTTP 504；Python 3.13 job `128692177310`下载
+Core `v0.12.2` wheel时在默认60秒预算内持续收到HTTP 504；Python 3.10 job `128692177097`被取消，Workbench job
+`128692177253`成功，下游矩阵跳过。#436没有rerun，已经关闭且未合并。
+
+failure capture、failed log、failure boundary与248-artifact boundary seal SHA-256为：
+
+```text
+66de41a7a3671b6ac6c15d958ede7f9e4a1a350042d97683203331690a2460b7
+01581b75c139cfa34062ab3c8047e9fd731beb82738360651610a7a329aa63e5
+6c3a8a04b56fbbe103aeab8168649bea9b403777e93696d34714ede9975ef662
+2e599f998ba615b4c7dc43a893b4c4191ef33e756a791ab1d29fd0d85c9d0715
+```
+
+只允许归层为`RELEASE_ASSET_HTTP_504_RECOVERY_BUDGET_EXHAUSTED / lower cause UNKNOWN`。candidate regression、subject
+failure、asset digest mismatch与workflow/runtime/test/oracle drift均未建立；冻结下载器正确fail closed。新的
+[文档385](385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保存该边界，不修改runtime、workflow、
+下载器、预算、Release坐标或oracle。
+
+```text
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_CANDIDATE_PR436_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc385全部最后门闭合后最多成为qualified failure-boundary history；后继仍须从新的exact main重建candidate并取得自己的完整资格，
+不得rerun或回填#436。`proof_is_not_problem_solving = true`。
