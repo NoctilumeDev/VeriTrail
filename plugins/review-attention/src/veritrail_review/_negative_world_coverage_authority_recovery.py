@@ -26,6 +26,7 @@ from veritrail_review._review_coverage_ledger_conformance import (
     ROOT_CHAIN_DOMAIN,
     STAGE_ORDER,
     TERMINAL_HISTORY_DOMAIN,
+    CoverageLedgerConformanceSource,
     bind_coverage_ledger_conformance_source,
     validate_review_coverage_ledger,
 )
@@ -430,6 +431,24 @@ class ClaimedNegativeWorldCoverageAttempt:
     def _claim_id(self) -> str:
         return self.__carrier_claim_id
 
+    def _application_output_admission_coordinates(self):
+        """Return the exact negative attempt world to its private owner."""
+
+        with self.__lock:
+            self._validate_live()
+            return (
+                self,
+                self.__carrier,
+                self.__carrier_claim_id,
+                json.loads(self.__source_bytes),
+                self.__inputs,
+                self.__context,
+                self.__closure,
+            )
+
+    def _revoke_from_application_output_admission(self) -> None:
+        self._revoke()
+
     def _admit(
         self,
         candidate: Mapping[str, Any],
@@ -510,6 +529,7 @@ class NegativeWorldCoverageValidation:
         attempt: ClaimedNegativeWorldCoverageAttempt,
         candidate_bytes: bytes,
         source_digest: str,
+        conformance_source: CoverageLedgerConformanceSource | None = None,
         _token: object,
     ) -> None:
         if (
@@ -517,6 +537,7 @@ class NegativeWorldCoverageValidation:
             or type(attempt) is not ClaimedNegativeWorldCoverageAttempt
             or type(candidate_bytes) is not bytes
             or type(source_digest) is not str
+            or type(conformance_source) is not CoverageLedgerConformanceSource
         ):
             raise NegativeWorldCoverageError(
                 NegativeWorldCoverageFailureCode.INDEPENDENT_VALIDATION_REJECTED
@@ -524,6 +545,8 @@ class NegativeWorldCoverageValidation:
         self._attempt = attempt
         self.__candidate_bytes = candidate_bytes
         self.__source_digest = source_digest
+        self.__conformance_source = conformance_source
+        self.__bound_conformance_source = conformance_source
         self.__document_bytes = canonical_json_bytes(
             {
                 "validation_function": VALIDATION_FUNCTION,
@@ -552,10 +575,23 @@ class NegativeWorldCoverageValidation:
         if (
             self.__document_bytes is not self.__bound_document_bytes
             or candidate_bytes != self.__candidate_bytes
+            or self.__conformance_source is not self.__bound_conformance_source
         ):
             raise NegativeWorldCoverageError(
                 NegativeWorldCoverageFailureCode.INDEPENDENT_VALIDATION_REJECTED
             )
+        try:
+            validate_review_coverage_ledger(
+                json.loads(candidate_bytes), self.__conformance_source
+            )
+        except Exception as exc:
+            raise NegativeWorldCoverageError(
+                NegativeWorldCoverageFailureCode.INDEPENDENT_VALIDATION_REJECTED
+            ) from exc
+
+    def _application_output_conformance_source(self):
+        self._validate_binding(self.__candidate_bytes)
+        return self.__conformance_source
 
     def document_copy(self) -> dict[str, Any]:
         self._validate_binding(self.__candidate_bytes)
@@ -624,6 +660,29 @@ class AdmittedNegativeWorldCoverage:
             "persistence": False,
             "public_review": False,
         }
+
+    def _application_output_admission_coordinates(self):
+        """Return the exact admitted negative world to its private owner."""
+
+        self.__attempt._validate_admitted(
+            self.__phase, self.__candidate_bytes, self.__validation
+        )
+        if self.__candidate_bytes is not self.__bound_candidate_bytes:
+            raise NegativeWorldCoverageError(
+                NegativeWorldCoverageFailureCode.SAME_ATTEMPT_ADMISSION_REJECTED
+            )
+        return (
+            self,
+            self.__attempt,
+            self.__validation,
+            self.__phase,
+            self.__candidate_bytes,
+            self.__validation._application_output_conformance_source(),
+            *self.__attempt._application_output_admission_coordinates(),
+        )
+
+    def _revoke_from_application_output_admission(self) -> None:
+        self.__attempt._revoke_from_application_output_admission()
 
 
 def claim_negative_world_coverage_attempt(
@@ -1896,6 +1955,7 @@ def independently_validate_negative_world_coverage_candidate(
             attempt=attempt,
             candidate_bytes=candidate_bytes,
             source_digest=source_digest,
+            conformance_source=conformance_source,
             _token=_VALIDATION_TOKEN,
         )
     except _NegativeWorldDerivationError as exc:

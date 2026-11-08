@@ -490,6 +490,11 @@ class OwnedPostTerminalFactDualSuccessor:
                 )[:3],
                 route_revoker=self._revoke_from_exact_input_handoff,
                 route_replay_revoker=self._revoke_from_exact_input_replay,
+                application_origin_validator=lambda: (
+                    self._application_output_admission_origin(
+                        EXACT_INPUT_ROUTE, claim_id
+                    )
+                ),
             )
         except Exception as exc:
             self.__revoke(DualSuccessorFailureFamily.TERMINAL_SOURCE_REJECTED)
@@ -647,6 +652,27 @@ class OwnedPostTerminalFactDualSuccessor:
                     DualSuccessorFailureFamily.TERMINAL_SOURCE_REJECTED,
                     "claimed route terminal source changed",
                 ) from exc
+
+    def _application_output_admission_origin(
+        self, route: str, claim_id: str
+    ) -> tuple[
+        "OwnedPostTerminalFactDualSuccessor",
+        OwnedProductFactClosure,
+        object,
+        object,
+    ]:
+        self._validate_claimed_route(route, claim_id)
+        if type(self.__terminal_closure) is not OwnedProductFactClosure:
+            raise PostTerminalDualSuccessorError(
+                DualSuccessorFailureFamily.SAME_ATTEMPT_REJECTED,
+                "terminal closure identity is unavailable",
+            )
+        return (
+            self,
+            self.__terminal_closure,
+            self.__attempt,
+            self.__eligibility,
+        )
 
     def __terminal_tuple(self, closure):
         self.__validate_sealed_graph()
@@ -815,6 +841,7 @@ class ClaimedPostTerminalRelationSource:
         self.__bound_cancellation_requested = cancellation_requested
         self.__transition_lock = Lock()
         self.__transition_started = False
+        self.__application_output_bound = False
         self.__document_bytes = canonical_json_bytes(
             {
                 "handoff_domain": HANDOFF_DOMAIN,
@@ -944,6 +971,66 @@ class ClaimedPostTerminalRelationSource:
 
     def _revoke_from_relation_transition(self) -> None:
         self.__selector._revoke_from_relation_transition()
+
+    def _application_output_admission_coordinates(self):
+        """Return the exact live route world to the sibling private owner."""
+
+        if not self.__application_output_bound:
+            raise PostTerminalDualSuccessorError(
+                DualSuccessorFailureFamily.SAME_ATTEMPT_REJECTED,
+                "Relation route has no application output owner",
+            )
+        values = self._validate_relation_claim_for_admission()
+        origin = self.__selector._application_output_admission_origin(
+            RELATION_ROUTE, self.__claim_id
+        )
+        source, context, inputs, classification, limits, cancellation = values
+        return (
+            self,
+            self.__selector,
+            self.__claim_id,
+            source,
+            context,
+            inputs,
+            classification,
+            limits,
+            cancellation,
+            *origin[1:],
+        )
+
+    def _bind_application_output_admission(self):
+        with self.__transition_lock:
+            if self.__application_output_bound or self.__transition_started:
+                self.__selector._revoke_for_failure(
+                    DualSuccessorFailureFamily.ALREADY_CONSUMED
+                )
+                raise PostTerminalDualSuccessorError(
+                    DualSuccessorFailureFamily.ALREADY_CONSUMED,
+                    "Relation route cannot bind another or late application owner",
+                )
+            values = self._validate_relation_claim_for_admission()
+            origin = self.__selector._application_output_admission_origin(
+                RELATION_ROUTE, self.__claim_id
+            )
+            self.__application_output_bound = True
+            source, context, inputs, classification, limits, cancellation = values
+            return (
+                self,
+                self.__selector,
+                self.__claim_id,
+                source,
+                context,
+                inputs,
+                classification,
+                limits,
+                cancellation,
+                *origin[1:],
+            )
+
+    def _revoke_from_application_output_admission(self) -> None:
+        self.__selector._revoke_for_failure(
+            DualSuccessorFailureFamily.SAME_ATTEMPT_REJECTED
+        )
 
 
 def create_post_terminal_fact_dual_successor_consumer(

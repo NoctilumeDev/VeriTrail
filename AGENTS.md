@@ -7998,3 +7998,59 @@ doc383自己的original PR、protected merge、new exact-main双门、fresh READ
 observation、independent reconciliation与finite closeout全部闭合后，才允许
 `R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED`生效；implementation仍保持
 `NOT_STARTED`并返回CONTROL LOOP。`proof_is_not_problem_solving = true`继续成立。
+
+### R1 application-level unified Review / Coverage output admission private implementation 候选
+
+PR #435已经把doc383精确合入`main@5742c979e671e65067085e0303caf9d3506b7d42`，tree
+`e0a6db65861e19166968b6491f9153ba041eb933`。original Public CI `42428584420`、exact-main Public CI
+`42431241189`与Browser Smoke `42431241097`均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh
+README/doc382/doc383 Render与AGENTS/milestones raw/API/exact-Git观察、independent reconciliation、finite closeout与integrity全部闭合。
+reconciliation、closeout与finite integrity SHA-256分别为：
+
+```text
+5f89cf9ba6698cfb99954658e75e1d75a804964198819bb57b0298ca95d60b58
+c0276e9bf3b4479a8ff722dfbc7f1645614cd8ad67b939d875ccf8d89f67c17a
+4e544e5014694daf2349781f1f7a2f2211eabfde09f046805c4b65271af8f446
+```
+
+因此`R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh
+CONTROL LOOP从该exact base建立
+[文档384](docs/384-r1-application-level-unified-review-coverage-output-admission-private-implementation-candidate.md)与独立branch；候选只增加
+private application owner、selector/exact-input/positive/negative上的窄live-coordinate hook与focused UAO tests。selector五分支、
+Fact/Relation/Slice/Coverage producer、CoverageLedger Schema/reason/order、public exports、manifest、Evidence、persistence、public
+Review、Core Verdict与R2–R6不得修改或启动。
+
+prequalification review保留UAO019错误等digest假设、mixed-worktree matrix CANCELLED、normal/Relation eligibility identity误判、
+direct-carrier fixture setup error及两个额外read/copy proof target；所有setup/facility identity继续保留。稳定旧proof-target字节上的
+focused四格各284项、full四格各646项与hygiene 8/8均PASS，但新增proof target以后这些PASS只能作prequalification witness，不能继承为
+final qualification。semantic prequalification四格逐字节一致，canonical SHA-256为
+`e2c476a7c254a4710953656dad247b0b1c0c9e11f8582a866183389c31da4a0b`。
+
+新增proof target后的final UAO四格各27/27 PASS；focused四格各286 reported / 285 passed / 1 skipped；full四格各648
+reported，Python 3.10两格各645 passed / 3 skipped，Python 3.13两格各646 passed / 2 skipped。final semantic四格逐字节
+一致，canonical SHA-256为`a543fa16316ed9570c467451f66c322f063c6665e06b0ddfd58ebf144af599e1`。四格compile、
+global/local hygiene 8/8、Markdown 4文件/850 local links、exact scope、diff、public export与primary audit continuity也已PASS。
+local aggregation attempt 1/2的UAO/focused matrix schema-key errors按原identity保留为proof-facility `NON_QUALIFYING / NONE`；
+后继只修正validator读取，不修改或重跑产品witness。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_CANDIDATE
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_NOT_MERGED_NOT_EXACT_MAIN_VERIFIED_NOT_READBACK_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本candidate的最终十文件local门已经闭合；下一步仍必须经过original PR、protected merge、new exact-main双门、fresh installed-product
+readback与independent reconciliation。闭合后最多成为
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；必须再返回CONTROL LOOP建立独立docs-only freeze
+publication。`proof_is_not_problem_solving = true`继续约束全部后继状态。

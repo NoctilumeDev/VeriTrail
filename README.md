@@ -63,7 +63,12 @@ fresh CONTROL LOOP建立[private implementation feasibility audit](docs/382-r1-a
 PR #434已闭合其local、original PR、protected merge、exact-main双门、fresh README/doc381/doc382与raw AGENTS/milestones、
 independent reconciliation和finite closeout，因此doc382现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。形式可行性仍不等于
 runtime存在或原工程问题已解决。新的[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)
-只条件化发布bounded A–J authority；其完整资格链闭合以前runtime继续`NOT_STARTED / NOT_AUTHORIZED`。
+已由PR #435闭合original/exact-main双门、fresh Render/raw readback、independent reconciliation与finite closeout，所以bounded
+A–J private implementation authority已经生效。fresh CONTROL LOOP据此建立
+[private implementation candidate](docs/384-r1-application-level-unified-review-coverage-output-admission-private-implementation-candidate.md)：
+它只增加private owner、两类exact result的窄live-coordinate hook与UAO falsifiers；final UAO/focused/full/semantic、compile、hygiene、
+Markdown、scope/export/audit local gates已在最终十文件字节上闭合，仍是`NOT_MERGED / NOT_FROZEN`。形式PASS不等于原工程问题已经
+解决，manifest、Evidence、persistence、public Review与R2–R6继续未授权。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
