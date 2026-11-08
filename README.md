@@ -25,7 +25,14 @@ PR #438已经把doc386精确合入`main@ce9fa08aa62b0ffd3a87c8e4d8f61b9e49ce3d5e
 Public CI 11/11、Browser Smoke 1/1、fresh README/doc385/doc386 readback、独立reconciliation与finite closeout；因此doc386现在是
 `EXACT_MAIN_QUALIFICATION_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，而doc385与#437 failure仍不被回填。新的
 [private implementation successor candidate](docs/387-r1-application-level-unified-review-coverage-output-admission-private-implementation-successor-candidate.md)
-只从该exact main机械重建bounded private runtime；它不继承#436的commit、attempt或资格，当前仍是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。
+只从该exact main机械重建bounded private runtime。PR #439的original Public CI为11/11 SUCCESS并精确合入
+`main@1b7350ee0adbd028c97954372e9795d98ffbd487`，但new exact-main Public CI `42505545592` attempt 1命中35分钟
+outer containment而`CANCELLED`；产品assertion failure未观察，candidate regression与Subject failure未建立，lower cause仍为
+`UNKNOWN`，readback/reconciliation没有启动。第一次35→45分钟maintenance PR #440又在Starter观察面真实FAILURE并关闭未合并；
+独立successor PR #441才以自己的original/exact-main双门、fresh workflow raw-byte readback、independent reconciliation与finite closeout
+资格化为`main@6da3fdd10e28162e05a518663b0553fcd11afe00`。三个world均不回填。fresh CONTROL LOOP已建立
+[implementation exact-main qualification recovery 0.1](docs/388-r1-application-level-unified-review-coverage-output-admission-private-implementation-qualification-recovery.md)：
+它只在六个implementation/test blob保持不变的当前exact main上重新取得完整资格，当前仍是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
