@@ -9438,3 +9438,55 @@ R2_R6_NOT_STARTED
 
 完整链闭合后最多升级为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；冻结必须由后继独立docs-only
 publication完成。原工程问题、当前证明义务与适用世界继续分开，不能由local PASS自行宣告解决。
+
+## R1 unified Review / Coverage output admission private implementation exact-main qualification recovery 0.1 候选（2026-11-09）
+
+PR #439的successor implementation以exact
+`base=ce9fa08aa62b0ffd3a87c8e4d8f61b9e49ce3d5e / head=d6a40b5c7fc79f3f420aaa6625c5903face76bc2 /
+tree=a9c3c9676b45f30aeb9ad38d482616ad1394852b`合入`main@1b7350ee0adbd028c97954372e9795d98ffbd487`。
+original Public CI `42502371306`为11/11 SUCCESS，Browser Smoke `42505545660`为1/1 SUCCESS；但exact-main Public CI
+`42505545592` attempt 1在required Python 3.10 job耗尽35分钟outer containment后`CANCELLED`。产品assertion failure未观察，
+candidate regression与Subject failure未建立，lower resource cause保持`UNKNOWN`；没有rerun，也没有启动readback/reconciliation。
+
+第一次35→45分钟maintenance PR #440的original Public CI `42510104584` attempt 1又在required Starter观察面FAILURE，已关闭未合并；
+独立successor PR #441的original Public CI `42514455000`、exact-main Public CI `42518266450`与Browser Smoke
+`42518266390`均attempt 1 SUCCESS，并精确合入当前`main@6da3fdd10e28162e05a518663b0553fcd11afe00`。fresh exact-SHA
+workflow raw-byte readback、independent reconciliation、70-artifact finite closeout与integrity全部成立；这只资格化outer CI containment，
+不回填#439/#440或解释两个`UNKNOWN`。
+
+fresh CONTROL LOOP证明#439 merge到当前main的唯一tracked diff是`.github/workflows/ci.yml`，六个implementation/test blob及
+doc380–383、doc386/doc387全部逐字保持。新的
+[文档388](388-r1-application-level-unified-review-coverage-output-admission-private-implementation-qualification-recovery.md)
+只在当前exact world建立docs-only资格恢复candidate；它不修改runtime、tests、workflow、required lane、inner timeout或oracle。
+
+当前exact base上的local witness已重新完成：private UAO四格各27/27 PASS；focused四格各286 reported / 285 passed /
+1 skipped；full四格各648 reported，Python 3.10.6为645 passed / 3 skipped，Python 3.13.13为646 passed / 2 skipped；
+semantic四格逐字节一致。UAO、focused、full、semantic canonical/matrix与implementation/test blob continuity SHA-256为：
+
+```text
+bc77fc6c45df21a28ce1933726e2e3b893846d8fb321b138fbfd1283beb65261
+c224554c91ba4e0c5f23db9e4f48e562fd6787abeab27865fad4fa6f93c96cbd
+d31e49fb183ad477bded848dbe8c1a47b887a0fefd028a29653ef047ba267149
+1ae2da5ceda24ac65ccc33b4fe84c2e3615c4a37b3ab181f3b9f41fe9a0d5a85
+3ead274aad632ab73dec052f2c9acd0e4c3af4869f04c97619131d943c3d02af
+23bf3c5f46878cc81bd0bde1218b3f8e3044a73a4b23395388089eb3200ed9a2
+```
+
+这些结果只属于当前local candidate world，不能继承#439 exact-main资格，也不能把#440/#441 maintenance事实转换成
+implementation qualification或原工程问题已解决。
+
+```text
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_PR439_MERGED_EXACT_MAIN_PUBLIC_CI_CANCELLED_NOT_READBACK_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CI_HEADROOM_MAINTENANCE_PR440_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CI_HEADROOM_MAINTENANCE_SUCCESSOR_PR441_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_EXACT_MAIN_QUALIFICATION_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc388必须重新取得本层完整local witness、original PR、protected merge、new exact-main双门、fresh README/doc386/doc387/doc388
+installed-product readback、raw AGENTS/milestones观察、independent reconciliation与finite closeout。全部闭合后最多让不变的实现bytes成为
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；冻结必须由后继独立publication完成。

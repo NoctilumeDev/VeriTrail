@@ -8157,3 +8157,65 @@ R2_R6_NOT_STARTED
 本候选自己的完整资格链闭合后最多成为`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；冻结必须由新
 exact main上的独立docs-only publication完成自己的资格链。形式PASS不得代替原工程问题、当前证明义务与适用世界的一致性检查；
 `proof_is_not_problem_solving = true`继续成立。
+
+### R1 application-level unified Review / Coverage output admission 私有实现资格恢复 0.1 候选
+
+PR #439把doc387 candidate `d6a40b5c7fc79f3f420aaa6625c5903face76bc2`、tree
+`a9c3c9676b45f30aeb9ad38d482616ad1394852b`精确合入`main@1b7350ee0adbd028c97954372e9795d98ffbd487`。
+original Public CI `42502371306` attempt 1为11/11 SUCCESS，Browser Smoke `42505545660` attempt 1为1/1 SUCCESS；但
+exact-main Public CI `42505545592` attempt 1在required Python 3.10 job `128807254935`耗尽35分钟outer containment后终结为
+`CANCELLED`。产品assertion failure未观察，candidate regression与Subject failure未建立，lower resource cause保持`UNKNOWN`；
+readback/reconciliation没有启动，PR #439/doc387保持`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
+
+第一次35→45分钟maintenance PR #440的original Public CI `42510104584` attempt 1又在required Starter的Catalog→run-detail观察面
+真实FAILURE，PR关闭未合并；两个长Python job已成功，maintenance/Subject/Workbench regression均未建立，底层原因仍为`UNKNOWN`。
+独立successor PR #441的original Public CI `42514455000`、exact-main Public CI `42518266450`与Browser Smoke
+`42518266390`均attempt 1 SUCCESS（11/11、11/11、1/1），并精确合入当前
+`main@6da3fdd10e28162e05a518663b0553fcd11afe00`。Python 3.10在original与exact-main分别自然运行42分41秒、35分45秒；
+fresh exact-SHA workflow raw bytes、independent reconciliation与70-artifact finite closeout全部成立。因此只有outer CI containment
+maintenance取得资格；#439 `CANCELLED`、#440 `FAILURE`与两个`UNKNOWN`保持原identity。
+
+fresh CONTROL LOOP证明#439 merge到当前main的tracked diff只有`.github/workflows/ci.yml`；六个implementation/test blob及
+doc380–383、doc386/doc387逐一保持不变。新的
+[文档388](docs/388-r1-application-level-unified-review-coverage-output-admission-private-implementation-qualification-recovery.md)
+只建立docs-only资格恢复candidate，要求在当前exact main重新运行实现层完整四格witness，并取得自己的original PR、protected merge、
+new exact-main双门、fresh README/doc386/doc387/doc388 product readback、raw AGENTS/milestones字节观察、independent reconciliation与
+finite closeout。
+
+当前exact base上的local witness已重新完成：private UAO四格各27/27 PASS；focused四格各286 reported / 285 passed /
+1 skipped；full四格各648 reported，Python 3.10.6为645 passed / 3 skipped，Python 3.13.13为646 passed / 2 skipped；
+semantic四格逐字节一致。UAO、focused、full、semantic canonical/matrix与implementation/test blob continuity SHA-256为：
+
+```text
+bc77fc6c45df21a28ce1933726e2e3b893846d8fb321b138fbfd1283beb65261
+c224554c91ba4e0c5f23db9e4f48e562fd6787abeab27865fad4fa6f93c96cbd
+d31e49fb183ad477bded848dbe8c1a47b887a0fefd028a29653ef047ba267149
+1ae2da5ceda24ac65ccc33b4fe84c2e3615c4a37b3ab181f3b9f41fe9a0d5a85
+3ead274aad632ab73dec052f2c9acd0e4c3af4869f04c97619131d943c3d02af
+23bf3c5f46878cc81bd0bde1218b3f8e3044a73a4b23395388089eb3200ed9a2
+```
+
+这些仍只是local witness，不得跳过本candidate自己的original PR、protected merge、exact-main双门、fresh product readback与
+independent reconciliation。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_CANDIDATE_PR436_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_PR439_MERGED_EXACT_MAIN_PUBLIC_CI_CANCELLED_NOT_READBACK_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CI_HEADROOM_MAINTENANCE_PR440_FAILED_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CI_HEADROOM_MAINTENANCE_SUCCESSOR_PR441_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_EXACT_MAIN_QUALIFICATION_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc388自己的完整资格链闭合后最多把不变的implementation bytes升级为
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP；冻结仍需独立docs-only
+publication，不得自动恢复global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
+`proof_is_not_problem_solving = true`继续成立。
