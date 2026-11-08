@@ -7998,3 +7998,60 @@ doc383自己的original PR、protected merge、new exact-main双门、fresh READ
 observation、independent reconciliation与finite closeout全部闭合后，才允许
 `R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED`生效；implementation仍保持
 `NOT_STARTED`并返回CONTROL LOOP。`proof_is_not_problem_solving = true`继续成立。
+
+### R1 unified Review / Coverage output admission implementation original-gate failure-boundary audit 候选
+
+PR #435已经把doc383 candidate `40a2f537e016477afea16eb2a2d84603692faa0f`、tree
+`e0a6db65861e19166968b6491f9153ba041eb933`精确合入`main@5742c979e671e65067085e0303caf9d3506b7d42`。original
+Public CI `42428584420`、exact-main Public CI `42431241189`与Browser Smoke `42431241097`均attempt 1 SUCCESS
+（11/11、11/11、1/1）；没有rerun。fresh README/doc382/doc383各有唯一Render diagnostic/formal PASS；AGENTS/milestones
+各有唯一anonymous raw/API/exact-Git全字节一致观察。independent reconciliation、finite closeout与finite integrity SHA-256为：
+
+```text
+5f89cf9ba6698cfb99954658e75e1d75a804964198819bb57b0298ca95d60b58
+c0276e9bf3b4479a8ff722dfbc7f1645614cd8ad67b939d875ccf8d89f67c17a
+4e544e5014694daf2349781f1f7a2f2211eabfde09f046805c4b65271af8f446
+```
+
+因此`R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；
+implementation当时仍`NOT_STARTED`。fresh CONTROL LOOP从该exact main建立首次runtime candidate PR #436：
+
+```text
+base  5742c979e671e65067085e0303caf9d3506b7d42
+head  1caba94e903ea6151225e96b8ce5dc9d58192be6
+tree  907c4dba7a9eae764627f5484a980fd07ad4dd06
+scope 1 commit / 10 files
+```
+
+本地四格UAO、focused、full、semantic、compile、hygiene、Markdown、scope、public-export与primary-audit门全部PASS；这些
+只属于candidate local world。original Public CI run `42468088782` attempt 1真实终结为`FAILURE`：E3 0.2 job
+`128692177263`在显式120秒multi-asset lane持续收到HTTP 504并耗尽恢复预算；Python 3.13 job `128692177310`
+下载immutable Core `v0.12.2` wheel时同样因持续HTTP 504耗尽默认60秒预算；Python 3.10 job `128692177097`
+被取消，Workbench job `128692177253`成功，下游矩阵被跳过。没有rerun；#436已经关闭且未合并。
+
+当前证据只允许：required original gate failure已经建立；下载器fail-closed行为符合冻结合同；asset digest mismatch没有观察到；
+candidate regression、subject failure、workflow/runtime/test/oracle drift均未建立；GitHub、代理、共享egress或其他底层原因保持
+`UNKNOWN`。一次120秒窗口耗尽不授权无限重试、retry-until-PASS、弱化required gate或静默修改
+[multi-asset lane correction](docs/357-release-download-multi-asset-lane-budget-correction.md)。
+
+fresh CONTROL LOOP只授权建立
+[文档385](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)，保存#436原始失败并恢复从后继
+exact main重建implementation candidate的资格。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_CANDIDATE_PR436_CLOSED_UNMERGED_NOT_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_IMPLEMENTATION_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc385自己的完整资格链闭合后最多成为`ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回
+CONTROL LOOP，从新的exact main机械重建implementation candidate，不得cherry-pick旧资格、rerun #436或把后继PASS回填旧失败。
+`proof_is_not_problem_solving = true`继续成立。
