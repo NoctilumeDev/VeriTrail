@@ -109,6 +109,10 @@ class ClaimedFactToCoverageExactInputHandoff:
         | None = None,
         route_revoker: Callable[[], None] | None = None,
         route_replay_revoker: Callable[[], None] | None = None,
+        application_origin_validator: Callable[
+            [], tuple[object, OwnedProductFactClosure, object, object]
+        ]
+        | None = None,
         _token: object,
     ) -> None:
         if (
@@ -137,6 +141,8 @@ class ClaimedFactToCoverageExactInputHandoff:
         self.__bound_route_revoker = route_revoker
         self.__route_replay_revoker = route_replay_revoker
         self.__bound_route_replay_revoker = route_replay_revoker
+        self.__application_origin_validator = application_origin_validator
+        self.__bound_application_origin_validator = application_origin_validator
         self.__post_terminal_identity_ref = (
             None if route_validator is None else weakref.ref(self)
         )
@@ -157,6 +163,7 @@ class ClaimedFactToCoverageExactInputHandoff:
         self.__bound_document_bytes = self.__document_bytes
         self.__failed = False
         self.__negative_world_consume_state = _NegativeWorldConsumeState()
+        self.__application_output_bound = False
         self.__validate()
 
     def __document(self) -> dict[str, object]:
@@ -207,6 +214,8 @@ class ClaimedFactToCoverageExactInputHandoff:
                 or self.__route_revoker is not self.__bound_route_revoker
                 or self.__route_replay_revoker
                 is not self.__bound_route_replay_revoker
+                or self.__application_origin_validator
+                is not self.__bound_application_origin_validator
                 or (
                     self.__post_terminal_identity_ref is not None
                     and self.__post_terminal_identity_ref() is not self
@@ -286,6 +295,74 @@ class ClaimedFactToCoverageExactInputHandoff:
                 "same_object_graph_proof",
             )
         }
+
+    def _application_output_admission_coordinates(self):
+        """Return the exact live negative route world to its private owner."""
+
+        if not self.__application_output_bound:
+            raise FactToCoverageExactInputHandoffError(
+                "exact-input carrier has no application output owner"
+            )
+        self.__validate()
+        if self.__application_origin_validator is None:
+            raise FactToCoverageExactInputHandoffError(
+                "carrier was not signed by the post-terminal selector"
+            )
+        selector, closure, attempt, eligibility = (
+            self.__application_origin_validator()
+        )
+        if closure is not self.__closure:
+            raise FactToCoverageExactInputHandoffError(
+                "carrier left its original Fact closure"
+            )
+        return (
+            self,
+            self.__claim_id,
+            json.loads(self.__source_bytes),
+            self.__inputs,
+            self.__context,
+            self.__closure,
+            selector,
+            attempt,
+            eligibility,
+        )
+
+    def _bind_application_output_admission(self):
+        state = self.__negative_world_consume_state
+        with state.lock:
+            self.__validate()
+            if (
+                self.__application_origin_validator is None
+                or self.__application_output_bound
+                or state.consumed
+            ):
+                self.__fail(ValueError("application output owner already bound"))
+                raise FactToCoverageExactInputHandoffError(
+                    "exact-input carrier cannot bind another or late application owner"
+                )
+            self.__application_output_bound = True
+            selector, closure, attempt, eligibility = (
+                self.__application_origin_validator()
+            )
+            if closure is not self.__closure:
+                self.__fail(ValueError("application origin closure changed"))
+                raise FactToCoverageExactInputHandoffError(
+                    "application origin closure changed"
+                )
+            return (
+                self,
+                self.__claim_id,
+                json.loads(self.__source_bytes),
+                self.__inputs,
+                self.__context,
+                self.__closure,
+                selector,
+                attempt,
+                eligibility,
+            )
+
+    def _revoke_from_application_output_admission(self) -> None:
+        self.__fail(ValueError("application output admission revoked"))
 
     def _consume_negative_world_authority(self, *, _token: object):
         """Bind one private negative-world attempt to this exact carrier.
@@ -400,6 +477,9 @@ def _claim_fact_to_coverage_exact_input_from_post_terminal(
     ],
     route_revoker: Callable[[], None],
     route_replay_revoker: Callable[[], None],
+    application_origin_validator: Callable[
+        [], tuple[object, OwnedProductFactClosure, object, object]
+    ],
 ) -> ClaimedFactToCoverageExactInputHandoff:
     """Bind the frozen exact-input carrier to the new shared route slot."""
 
@@ -420,6 +500,7 @@ def _claim_fact_to_coverage_exact_input_from_post_terminal(
         or not callable(route_validator)
         or not callable(route_revoker)
         or not callable(route_replay_revoker)
+        or not callable(application_origin_validator)
     ):
         raise FactToCoverageExactInputHandoffError(
             "post-terminal exact-input route is invalid"
@@ -434,6 +515,7 @@ def _claim_fact_to_coverage_exact_input_from_post_terminal(
             route_validator=route_validator,
             route_revoker=route_revoker,
             route_replay_revoker=route_replay_revoker,
+            application_origin_validator=application_origin_validator,
             _token=_CARRIER_TOKEN,
         )
     except Exception:

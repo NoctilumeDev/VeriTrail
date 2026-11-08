@@ -224,6 +224,23 @@ class OwnedReviewSliceCoverageComposition:
     def coverage_ledger_document_copy(self) -> dict[str, object]:
         return copy.deepcopy(self.document_copy()["coverage_ledger"])
 
+    def _application_output_admission_coordinates(self):
+        """Expose only exact live references to the sibling private owner."""
+
+        self.__validate_live()
+        return (
+            self,
+            self.__inputs,
+            self.__context,
+            self.__eligibility,
+            self.__conformance_source,
+            self.__committed_phase,
+            json.loads(self.__bytes),
+        )
+
+    def _revoke_from_application_output_admission(self) -> None:
+        self.__eligibility.revoke()
+
     def __validate_live(self) -> None:
         try:
             if (
