@@ -138,6 +138,12 @@ candidate regression、Subject failure与product assertion failure均未建立�
 [original-gate failure boundary](docs/395-r1-same-attempt-derivation-evidence-continuity-audit-original-gate-failure-boundary.md)
 只检查资格前提、适用域与观察身份；不增加“9/9足够”的例外，不资格化doc394，也不修改workflow或Evidence runtime。
 
+PR #454的完整资格链已经使doc395成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，同时保持PR #453 closed、unmerged、
+original-gate failed、not-qualified与lower cause `UNKNOWN`。fresh CONTROL LOOP因此从新exact main独立建立
+[feasibility recovery audit](docs/396-r1-same-attempt-derivation-evidence-continuity-feasibility-recovery.md)：它重新运行四格semantic
+audit与每格126项focused witness，只发布docs-only recovery candidate；不继承PR #453资格、不解释其失败，也不授权Evidence runtime。
+该局部结论不等于全局正确；R1完成后还必须独立检查各阶段前提、authority、qualification与用户能力能否全局组合。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
