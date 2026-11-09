@@ -8370,3 +8370,53 @@ doc391自己的original PR、protected merge、new exact-main双门、fresh READ
 independent reconciliation与finite closeout全部闭合后，最多成为
 `DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，独立判断projection
 0.8是否仍必要；不得重用旧doc391/doc392 bytes或按编号自动施工。`proof_is_not_problem_solving = true`继续成立。
+
+### R1 public project-state projection successor 0.8 fresh reconstruction候选
+
+PR #450已经把doc391 candidate `fa18ab0a373c9c5773a05a24ec13148ebb3fa5e6`、tree
+`89be58352da8e88e3a316b0c7e85d7b5fcf64866`精确合入`main@69c1832a560dc24e0d4ea06f5bd2d4198518accd`。
+original Public CI `42599405745`、exact-main Public CI `42604418857`与Browser Smoke `42604418779`均attempt 1
+SUCCESS（11/11、11/11、1/1）。fresh README/doc391 formal、AGENTS/milestones raw-byte observation、independent reconciliation与
+finite closeout全部成立；README formal observation 1的anonymous API exhaustion与reconciliation attempts 1/2的TLS EOF按
+原identity保留。independent reconciliation、138-artifact closeout、stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+5d19561a1e566078242974a23e24e57bc0c489024be029b2987c0b00b7d7c0f1
+ef937fab434c700dca09341566727b72cab4998a4f374c5f990a5d8042244ab4
+a5152bc4c40df3a60b9d6a89092a15bf5bc984053bc18b73ab9a2b1982a6546b
+02c9724d08c43fc8158574908efe86919c40619ee7da39810593422c110ff924
+```
+
+因此doc391现在是`DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED / QUALIFIED_HISTORY`；PR #447/#448仍是
+closed/unmerged/original-gate failures，#449只拥有proof-facility maintenance资格，lower cause继续`UNKNOWN`。fresh CONTROL LOOP
+又从exact `main@69c1832… / tree=89be583…`读取AGENTS、working method、hygiene、remote main与primary audit，并证明当前
+`docs/project-state.md`仍停在0.7 world，README也仍把doc391写成candidate。该publication lag只授权新的docs-only 0.8 successor，
+不能把旧PR #447/#448字节或资格复活。
+
+新的
+[文档392](docs/392-r1-public-project-state-projection-successor-0.8-reconstruction-contract.md)
+与同步project-state只从该exact base独立重建，tracked scope严格是README、AGENTS、doc392、milestones与project-state。runtime、tests、
+workflow、release-download recovery、Release资产、oracle、doc375–391及全部frozen semantic bytes必须保持base不变。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN_HISTORICAL
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_PR447_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FAILURE_AUDIT_PR448_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_RELEASE_ASSET_RECOVERY_PROOF_FACILITY_SUCCESSOR_V2_PR449_EXACT_MAIN_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_8_DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc392与projection 0.8必须取得自己的local qualification、original PR、protected exact-head merge、new exact-main Public CI与
+Browser Smoke、fresh README/project-state/doc376/doc390/doc391/doc392 installed-product readback、raw AGENTS/milestones observation、
+independent reconciliation与finite closeout。全部闭合后最多是`QUALIFIED_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP并由
+独立docs-only freeze publication决定是否冻结。不得按文档编号自动恢复global composition authority或启动manifest、Evidence、
+persistence、public Review、R2–R6。`proof_is_not_problem_solving = true`继续成立。
