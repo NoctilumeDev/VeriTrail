@@ -9567,3 +9567,54 @@ R2_R6_NOT_STARTED
 doc390自己的local、original PR、protected merge、new exact-main双门、fresh README/doc389/doc390 Render、raw AGENTS/milestones、
 independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL LOOP，不能由
 形式PASS自动选择manifest、Evidence、persistence、public Review或R2–R6。
+
+## R1 public project-state projection 0.8 dual original-gate failure-boundary recovery audit 候选（2026-11-09）
+
+PR #446/doc390已经在`main@f2ab7b78f86a057431cf5c8f4cbc3b0337338118`完成original/exact-main双门、fresh
+README/doc389/doc390 formal、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout。因此bounded private
+application output admission implementation现在是`FROZEN`；这不恢复global composition authority，也不授权manifest、Evidence、
+persistence、public Review或R2–R6。
+
+后继projection 0.8 candidate PR #447绑定`base=f2ab7b78… / head=1e554754… / tree=521c75df… / 1 commit / 5 docs
+files`。original Public CI `42568657029` attempt 1在E3、Python 3.13与Python 3.10 required lanes的冻结Release资产delivery path
+分别收到7/5/4次HTTP 504并耗尽120/60/60秒恢复预算；#447关闭、未合并、未重跑，readback没有启动。旧doc391与0.8
+project-state bytes只属于closed PR world。
+
+first failure-boundary audit PR #448绑定`base=f2ab7b78… / head=5dd1933f… / tree=bad7b851… / 1 commit / 4 docs
+files`。original Public CI `42576411794` attempt 1在Python 3.10 E1 asset step下载Starter 0.1.0 sdist时记录8个retry outcome，
+并由第9个HTTP 504产生120秒bounded-budget failure；append-only correction保持原record并把总数更正为9。#448也关闭、未合并、
+未重跑，旧doc392没有进入main。两个failure的candidate regression、Subject failure、digest mismatch与单一根因均未建立，lower cause
+保持`UNKNOWN`。
+
+独立PR #449只version proof facility：default absolute recovery 60→120秒，E1/E3 multi-asset lane 120→240秒；per-request
+15秒、retry statuses、backoff、digest、owned partial cleanup、required gates与oracle不变。candidate `4a07cc8e…`、tree
+`fde35861…`精确合入当前`main@6dd0b76184a8739e4930a517f18cb32488c459b3`。original Public CI `42585159817`、
+exact-main Public CI `42590826814`与Browser Smoke `42590826778`均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh raw-byte
+readback、independent reconciliation、102-artifact closeout与finite integrity成立。因此只有maintenance在自己的world取得资格；它不
+回填#447/#448或资格化projection 0.8。
+
+新的
+[文档391](391-r1-public-project-state-projection-0.8-dual-original-gate-failure-boundary-recovery-audit.md)
+只保存两个original-gate failure identity、maintenance recovery effect与最小后继责任。当前main最高已合入文档原为doc390；本次使用
+doc391不覆盖两个closed PR中的旧doc391/doc392。tracked scope只允许README、AGENTS、doc391与milestones：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_PR447_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FAILURE_AUDIT_PR448_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_RELEASE_ASSET_RECOVERY_PROOF_FACILITY_SUCCESSOR_V2_PR449_EXACT_MAIN_QUALIFIED
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_NOT_MAINLINE_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_8_DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc391自己的original PR、protected merge、new exact-main双门、fresh README/doc391 Render、AGENTS/milestones raw-byte observation、
+independent reconciliation与finite closeout全部闭合后，最多成为
+`DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新exact main
+独立判断projection 0.8是否仍必要；旧doc391/doc392 bytes、commit与attempt不得继承资格。

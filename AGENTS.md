@@ -8314,3 +8314,59 @@ R2_R6_NOT_STARTED
 doc390自己的完整资格链闭合后只允许使fixed private implementation成为`PRIVATE_IMPLEMENTATION_FROZEN`；随后必须返回CONTROL LOOP，
 复核project-state projection是否需要version/rebind。不得自动恢复global composition authority或启动manifest/Evidence/persistence/
 public Review/R2–R6。`proof_is_not_problem_solving = true`继续成立。
+
+### R1 public project-state projection 0.8 dual original-gate failure-boundary recovery audit 候选
+
+PR #446已经把doc390精确合入`main@f2ab7b78f86a057431cf5c8f4cbc3b0337338118`。original Public CI
+`42557756555`、exact-main Public CI `42560991201`与Browser Smoke `42560991124`均attempt 1 SUCCESS（11/11、11/11、1/1）；
+fresh README/doc389/doc390 formal、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立。
+因此bounded application-level unified Review / Coverage output admission private implementation现在是`FROZEN`；global composition
+authority、manifest、same-attempt Evidence、persistence、public Review与R2–R6没有因此获得授权。
+
+fresh CONTROL LOOP建立projection 0.8 candidate PR #447，绑定
+`base=f2ab7b78… / head=1e554754… / tree=521c75df… / 1 commit / 5 docs files`。original Public CI
+`42568657029` attempt 1在E3、Python 3.13与Python 3.10三个required job的冻结Release资产delivery path分别收到7/5/4次HTTP
+504并耗尽120/60/60秒恢复预算，run真实`FAILURE`；#447已关闭、未合并、未重跑，readback没有启动。旧doc391与0.8
+project-state bytes只属于该closed PR world，保持`NOT_QUALIFIED / NOT_FROZEN`。
+
+first failure-boundary audit PR #448绑定
+`base=f2ab7b78… / head=5dd1933f… / tree=bad7b851… / 1 commit / 4 docs files`。original Public CI
+`42576411794` attempt 1在required Python 3.10 E1 asset step下载Starter 0.1.0 sdist时记录8个retry outcome，并由第9个HTTP 504
+产生120秒bounded-budget failure；append-only correction保持原record并把总数更正为9。#448同样关闭、未合并、未重跑，旧doc392
+没有进入main。两个failure只允许归层为`FROZEN_RELEASE_ASSET_DELIVERY_PATH / lower cause UNKNOWN`；candidate regression、Subject
+failure、digest mismatch与oracle defect均未建立。
+
+独立proof-facility maintenance PR #449只把default absolute recovery从60提高到120秒，并把E1/E3 multi-asset lane从120提高到
+240秒；per-request 15秒、retry statuses、backoff、digest equality、owned partial cleanup、required gates与product oracle不变。
+candidate `4a07cc8e406e0a20b5e1a38a2659b7a59c237cc0`、tree `fde358619660c7d6d86eaffa1718a9477389bc37`
+精确合入当前`main@6dd0b76184a8739e4930a517f18cb32488c459b3`。original Public CI `42585159817`、exact-main Public CI
+`42590826814`与Browser Smoke `42590826778`均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh三个changed path
+raw/API/Git readback、independent reconciliation、102-artifact closeout与finite integrity全部成立。因此只有
+`MAINTENANCE_EXACT_MAIN_QUALIFIED`，不回填#447/#448或解释`UNKNOWN`。
+
+新的
+[文档391](docs/391-r1-public-project-state-projection-0.8-dual-original-gate-failure-boundary-recovery-audit.md)
+只保存两个original-gate failure identity、#449 recovery effect与最小后继责任。当前main最高已合入文档原为doc390；新doc391不会
+覆盖两个closed PR中的旧doc391/doc392。tracked scope只允许README、AGENTS、doc391与milestones；`docs/project-state.md`、
+doc375–390、runtime、tests、workflow、download policy、Release assets、oracle与frozen semantic bytes必须保持base bytes。
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_PR447_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FAILURE_AUDIT_PR448_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_RELEASE_ASSET_RECOVERY_PROOF_FACILITY_SUCCESSOR_V2_PR449_EXACT_MAIN_QUALIFIED
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_NOT_MAINLINE_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_8_DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc391自己的original PR、protected merge、new exact-main双门、fresh README/doc391 Render、AGENTS/milestones raw-byte observation、
+independent reconciliation与finite closeout全部闭合后，最多成为
+`DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，独立判断projection
+0.8是否仍必要；不得重用旧doc391/doc392 bytes或按编号自动施工。`proof_is_not_problem_solving = true`继续成立。

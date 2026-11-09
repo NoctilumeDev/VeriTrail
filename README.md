@@ -108,6 +108,16 @@ failure与semantic regression未建立，lower cause仍为`UNKNOWN`，doc389保�
 只重建freeze publication资格，不回填#443，也不改变原工程问题、proof obligation或适用world。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
+PR #446已经使doc390完成original/exact-main双门、fresh installed-product readback、independent reconciliation与finite closeout，
+因此bounded private implementation现在是`FROZEN`；global composition authority、manifest、same-attempt Evidence、persistence、
+public Review与R2–R6仍未授权。后继projection 0.8 candidate PR #447与其first failure-boundary audit PR #448分别在自己的
+original Public CI中因冻结Release资产HTTP 504恢复预算耗尽而失败，均已关闭、未合并、未重跑且不具资格。独立PR #449只version
+release-asset recovery proof facility，并在`main@6dd0b76184a8739e4930a517f18cb32488c459b3`完成自己的original/exact-main双门与
+fresh raw-byte reconciliation；它不回填两个失败或资格化0.8。新的
+[dual original-gate failure-boundary recovery audit](docs/391-r1-public-project-state-projection-0.8-dual-original-gate-failure-boundary-recovery-audit.md)
+只保存这两条失败链与#449 recovery effect；其完整资格链闭合以前仍是candidate，projection 0.7继续是current frozen mainline
+projection。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
