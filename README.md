@@ -130,6 +130,14 @@ no Core Verdict与后继postprocessor setup error继续保留；formal observati
 闭合以前仍是`PUBLICATION_CANDIDATE / NOT_FROZEN`。projection 0.7继续是`FROZEN HISTORICAL`，global composition authority、
 manifest、same-attempt Evidence、persistence、public Review与R2–R6仍未授权。
 
+PR #452的完整链已经使projection 0.8与其reconstruction contract成为`FROZEN`。后继same-attempt DerivationEvidence continuity
+feasibility candidate PR #453虽在exact source上得到versioned private owner的有界可行结论，但original Public CI run
+`42666764972` attempt 1最终为`FAILURE`：已实例化9个job全部SUCCESS，`Acceptance Core freeze on Python 3.10`与
+`Starter PASS/FAIL golden path`两个expected job没有形成identity。#453已关闭、未合并、未rerun，lower cause保持`UNKNOWN`；
+candidate regression、Subject failure与product assertion failure均未建立。新的
+[original-gate failure boundary](docs/395-r1-same-attempt-derivation-evidence-continuity-audit-original-gate-failure-boundary.md)
+只检查资格前提、适用域与观察身份；不增加“9/9足够”的例外，不资格化doc394，也不修改workflow或Evidence runtime。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)

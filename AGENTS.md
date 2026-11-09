@@ -8470,3 +8470,48 @@ README/project-state/doc376/doc390/doc391/doc392/doc393 installed-product readba
 reconciliation与finite closeout全部闭合后，`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN`与
 `R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN`才生效。随后必须返回CONTROL LOOP；不得自动
 恢复global composition authority或启动manifest、Evidence、persistence、public Review、R2–R6。`proof_is_not_problem_solving = true`。
+
+### R1 same-attempt DerivationEvidence continuity audit original-gate failure boundary候选
+
+PR #452的original/exact-main双门、fresh installed-product readback、raw AGENTS/milestones observation、independent reconciliation与
+202-artifact finite closeout已经全部闭合，因此projection 0.8与其reconstruction contract现在是`FROZEN`。后继PR #453绑定
+`base=03f3f03b6ad116ccf345041cec6ba393a385cd62 / head=948ba1d80c0da1aabb891efd19b7ebc55d12ae24 /
+tree=af62c70b00ac18ce8b8fc1d2cb4182edfc696148 / 1 commit / 4 docs files`，但original Public CI
+`42666764972` attempt 1终态为`FAILURE`。
+
+失败run只实例化9个job，且9个全部SUCCESS；同一未修改workflow预期的`Acceptance Core freeze on Python 3.10`与
+`Starter PASS/FAIL golden path`没有形成job/check-run identity。`--log-failed`为空，check suite与run仍记录FAILURE。#453已经关闭、
+未合并、未rerun；candidate regression、Subject failure与product assertion failure未建立，lower cause保持`UNKNOWN`。failure
+classification、seal与mechanical boundary audit SHA-256为：
+
+```text
+30c7c3512afae63fd4d16ba9c23e542708f5e2c3790cc74b22d22fa5378b5ae2
+052373a1b96764a1789e10f855db3e68954dc00ae1ca4b3285ef9f367ac3eccb
+dd7e6621b5a77ed301473869acc189b80abc42a757fd750c5e2531377dbbf580
+```
+
+新的[文档395](docs/395-r1-same-attempt-derivation-evidence-continuity-audit-original-gate-failure-boundary.md)只承担docs-only
+failure-boundary责任。控制原则是：理论遇到反例时先检查前提、适用域与观察；不得用增加例外保护失真的前提。本次不能把9/9改写成
+required gate PASS，不能rerun洗白，也不能把另一个PR的后继PASS回填run 42666764972。失败只重开`ORIGINAL_GATE_QUALIFICATION_ONLY`；
+它不反驳semantic feasibility内容，也绝不资格化doc394。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_PR453_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_AUDIT_ORIGINAL_GATE_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc395只允许README、AGENTS、doc395与milestones；project-state、doc318、doc377–394、runtime、tests、fixtures、workflow、Schema、
+Provider、Collector、oracle与全部frozen semantic bytes保持base不变。完整local/original PR/protected merge/exact-main双门/fresh
+readback/independent reconciliation/finite closeout闭合后，最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回
+CONTROL LOOP，从新exact main判断是否独立重建feasibility candidate；不得直接施工Evidence或修改required gate。
