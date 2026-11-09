@@ -8,22 +8,25 @@
 
 ```text
 projection_contract: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8
-projection_status_rule: IF_DOC392_ALL_CANDIDATE_GATES_CLOSED_THEN_QUALIFIED_CANDIDATE_NOT_FROZEN_ELSE_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
-freeze_publication_candidate: NOT_CREATED_NOT_AUTHORIZED
+projection_status_rule: IF_DOC393_ALL_FREEZE_GATES_CLOSED_THEN_FROZEN_ELSE_QUALIFIED_CANDIDATE_NOT_FROZEN
+freeze_publication_candidate: DOC393_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
 construction_exact_base: 69c1832a560dc24e0d4ea06f5bd2d4198518accd
 construction_tree: 89be58352da8e88e3a316b0c7e85d7b5fcf64866
+freeze_publication_exact_base: cae001d1dbd58fb319ddaa45e6270cbb67ffa0f3
+freeze_publication_tree: 8b38acf9b4a6a061dd655fabd68c3353d4b1c50a
 source_binding_kind: FINAL_SAME_CANDIDATE_MILESTONES_BYTES
-source_milestones_bytes: 687142
-source_milestones_sha256: 9280629d8177f5a3ce234dcfe7b75b0fc2ae7b473abb314f74d44d74dd9d42c0
-source_milestones_blob_sha1: c1c7bcff9adfc0a2b42dbd3881c0d31bef745a1f
+source_milestones_bytes: 692175
+source_milestones_sha256: 612c67a3d65f739921d31e0d71c23f0039503acece868d5a22897fd2e824de3e
+source_milestones_blob_sha1: 856459d50516de0244730a3ffd63d6df78fb3525
 upstream_private_implementation_freeze_closeout_sha256: 2bc7ef165aebb24d4a9dc329ab99da5316256828cf4d1a94c571a59b072f420a
 upstream_dual_failure_audit_closeout_sha256: ef937fab434c700dca09341566727b72cab4998a4f374c5f990a5d8042244ab4
+upstream_projection_0_8_candidate_closeout_sha256: a1dddaf6df487c6781a9bd55843bf3115dde338abded3013961f573b13674751
 ```
 
-这些坐标和摘要只声明本candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；
-`projection_status_rule`不是自我认证：只有doc392声明的local qualification、original PR、protected merge、new exact-main双门、
-fresh installed-product readback、independent reconciliation与finite closeout全部成立，`QUALIFIED_CANDIDATE / NOT_FROZEN`分支才由
-外部证据生效。本文不能给自己升级状态；独立freeze publication尚未创建或授权。
+这些坐标和摘要只声明candidate与freeze publication分别从哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；
+`projection_status_rule`不是自我认证。doc392声明的candidate资格链已经闭合，所以本文当前最多是
+`QUALIFIED_CANDIDATE / NOT_FROZEN`；只有doc393声明的local qualification、original PR、protected merge、new exact-main双门、
+fresh installed-product readback、independent reconciliation与finite closeout全部成立，`FROZEN`分支才由外部证据生效。
 
 ## 当前有效事实
 
@@ -52,6 +55,14 @@ fresh installed-product readback、independent reconciliation与finite closeout�
   `UNKNOWN`；#449/#450不能回填两个original failures；
 - 本页与[文档392](392-r1-public-project-state-projection-successor-0.8-reconstruction-contract.md)是从新的exact base独立重建的
   0.8 candidate；旧PR #447/#448的字节、commit、attempt与资格没有被继承；
+- PR #451已经把该fresh candidate精确合入`main@cae001d1dbd58fb319ddaa45e6270cbb67ffa0f3`。original Public CI
+  `42619102447`、exact-main Public CI `42624859116`与Browser Smoke `42624859171`均attempt 1 SUCCESS（11/11、11/11、1/1）；
+  fresh README、本文、doc376、doc390、doc391、doc392 Render与AGENTS/milestones raw-byte observation、independent reconciliation、
+  187-artifact closeout及finite integrity已经使doc392/本文成为`QUALIFIED_CANDIDATE / NOT_FROZEN`；
+- #451 fresh doc391 formal observation 1仍以Render `ERROR`、four coverage reasons、lower cause `UNKNOWN`与no Core Verdict永久保留；
+  postprocessor `AttributeError`是独立setup error，formal observation 2的PASS不覆盖、解释或回填它们；
+- [文档393](393-r1-public-project-state-projection-0.8-freeze-publication.md)只条件化发布0.8 frozen state；自己的全部最后门闭合以前，
+  本页仍是`QUALIFIED_CANDIDATE / NOT_FROZEN`；
 - `R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED`；Review derivation manifest negative-world successor、
   same-attempt derivation Evidence continuity、language-support qualification persistence与public Review产品继续
   `NOT_STARTED / NOT_AUTHORIZED / OPEN`；R2–R6继续未启动。
@@ -83,8 +94,8 @@ per-command remote-main query遇到TLS unexpected EOF；versioned proof facility
 
 ```text
 original engineering problem = 维护准确、自洽、可公开观察且不越权的bounded current-state projection
-current proof obligation      = 只资格化fresh 0.8 successor candidate的final bytes、source binding与跨表面一致性
-applicability world           = exact base 69c1832/tree 89be583、本candidate final bytes、attempt与fresh readback identity
+current proof obligation      = 0.8 frozen-status publication的全部最后门与跨表面一致性
+applicability world           = exact base cae001d/tree 8b38acf、本freeze candidate final bytes、attempt与fresh readback identity
 proof_is_not_problem_solving  = true
 ```
 
@@ -103,7 +114,7 @@ proof_is_not_problem_solving  = true
 | Business Layer | 业务流程组织、能力选择、补证请求 | 证据充分性裁决或PASS宣布 |
 | Core | 证据完整性、绑定、充分性及确定性裁决 | 现实事实的超级所有权 |
 | `docs/milestones.md` | 完整append-only工程历史、链接与provenance | 必须落入Public Render窗口 |
-| 本页 | 当前0.8 candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
+| 本页 | 当前0.8 publication world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
 
 验迹内部可以有很多插件、Provider、分析器和调度器，但最终优化目标始终是用户提出的工程问题，而不是插件自身的存在价值。
 
@@ -119,12 +130,13 @@ proof_is_not_problem_solving  = true
 - 把bounded private implementation freeze扩张解释为完整Review产品；
 - 恢复global composition authority，或启动manifest、Evidence、persistence、public Review、R2–R6。
 
-## 本candidate的生效条件
+## 本projection的冻结生效条件
 
-只有[successor 0.8 reconstruction contract](392-r1-public-project-state-projection-successor-0.8-reconstruction-contract.md)自己的local
-qualification、original PR gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous
-installed-product README/本页/doc376/doc390/doc391/doc392 Public Render、AGENTS/milestones raw+API+exact-Git byte observations、
-final milestones binding复算、independent reconciliation与finite closeout全部成立后，本页才可成为
-`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_QUALIFIED_CANDIDATE_NOT_FROZEN`。
+[successor 0.8 reconstruction contract](392-r1-public-project-state-projection-successor-0.8-reconstruction-contract.md)自己的candidate资格链已经
+闭合；它只使本文成为`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_QUALIFIED_CANDIDATE_NOT_FROZEN`。只有独立
+[freeze publication](393-r1-public-project-state-projection-0.8-freeze-publication.md)自己的local qualification、original PR gates、
+protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product README/本页/doc376/doc390/
+doc391/doc392/doc393 Public Render、AGENTS/milestones raw+API+exact-Git byte observations、final milestones binding复算、independent
+reconciliation与finite closeout全部成立后，本页才可成为`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN`。
 
-即使这些门全部成立，后继仍须独立docs-only freeze publication；本页不是scheduler。
+即使冻结门全部成立，本页仍不是scheduler；后继必须返回CONTROL LOOP重新选择最小合法seam。
