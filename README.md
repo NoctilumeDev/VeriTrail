@@ -130,6 +130,15 @@ no Core Verdict与后继postprocessor setup error继续保留；formal observati
 闭合以前仍是`PUBLICATION_CANDIDATE / NOT_FROZEN`。projection 0.7继续是`FROZEN HISTORICAL`，global composition authority、
 manifest、same-attempt Evidence、persistence、public Review与R2–R6仍未授权。
 
+PR #452已经把doc393精确合入`main@03f3f03b6ad116ccf345041cec6ba393a385cd62`；original Public CI
+`42639396145`、exact-main Public CI `42647202547`与Browser Smoke `42647202476`均attempt 1 SUCCESS（11/11、11/11、1/1），
+fresh七个Render targets、AGENTS/milestones raw-byte observation、independent reconciliation与202-artifact finite closeout全部成立。
+因此projection 0.8与其reconstruction contract现在是`FROZEN`；该状态不恢复global composition authority。fresh CONTROL LOOP选择
+[same-attempt DerivationEvidence continuity feasibility audit](docs/394-r1-same-attempt-derivation-evidence-continuity-feasibility-audit.md)
+作为下一条最小docs-only seam。审计发现legacy Evidence 0.2不能诚实表达normal加四个qualified negative outputs；一个versioned
+private owner与原执行期controller-owned capture additions在exact source上有界可行，但当前final output没有完整Evidence material，
+本文也不授权runtime、manifest或persistence。形式证明继续不得替代原工程问题。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)

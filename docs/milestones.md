@@ -9739,3 +9739,72 @@ README/project-state/doc376/doc390/doc391/doc392/doc393 installed-product readba
 independent reconciliation与finite closeout全部闭合后，`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN`与
 `R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN`才生效。随后必须返回CONTROL LOOP；形式
 PASS不自动恢复global composition authority或启动manifest、Evidence、persistence、public Review、R2–R6。
+
+## R1 same-attempt DerivationEvidence continuity feasibility audit候选（2026-11-10）
+
+PR #452已经把doc393 candidate `42ba9824b7f6b67b40e0c0345c8708ccdffb47e7`、tree
+`cf250d51b1fb5767d2ff648b4d61f4f65b56f73a`精确合入`main@03f3f03b6ad116ccf345041cec6ba393a385cd62`。
+original Public CI `42639396145`、exact-main Public CI `42647202547`与Browser Smoke `42647202476`均attempt 1 SUCCESS
+（11/11、11/11、1/1），没有rerun。fresh README/project-state/doc376/doc390/doc391/doc392/doc393 installed-product readback、
+AGENTS/milestones raw-byte observation、independent reconciliation与202-artifact finite closeout全部成立；reconciliation、closeout、
+expected stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+4b3b0f3737e80699adb092191353addedbd60eb842d795fecff446ad95cfaa5b
+d304a18b1c66fa68e34a0f67ac3a3440746e1f8b510a16adba1e2c2743c328ac
+6faf3d80ee1f689ae34dc60b62aa9f0f12a2f14229726fa59be28bf0ab367a1b
+eb94fbcff98f439aa54490f019f72b2bffb614ae9665b5d472ffb57f096a4db6
+```
+
+因此projection 0.8与其reconstruction contract现在是`FROZEN`。fresh CONTROL LOOP重新绑定exact main/tree、三份控制文件、remote
+main与primary audit，并选择same-attempt DerivationEvidence continuity audit作为下一条最小合法docs-only seam。该选择不自动恢复
+global composition authority，也不授权manifest successor runtime。
+
+新的[文档394](394-r1-same-attempt-derivation-evidence-continuity-feasibility-audit.md)机械核对normal corrected route与
+`ZERO_PARSE_DENOMINATOR / ALL_PARSE_REJECTED / PROJECTION_BLOCKED / REQUIRED_PROVIDER_NON_SUCCESS`四个qualified negative
+Coverage routes。legacy Evidence 0.2不能诚实表达五条输出：`COMPLETED`必须有Relation admission，非成功状态又会改写negative route
+已经合格的application result；legacy projector只接受exact `OwnedRelationSetAdmissionState`，不能被alias。
+
+exact source在known runtime stages中保留same-attempt identity与semantic material，但normal final composition未保留完整transition
+document，Product Fact history未保留controller-owned wall-clock timings，Relation provider lineage也缺少provider/phase finish timings，
+final unified admission没有Evidence continuation owner。因此formal结论严格是：
+
+```text
+FEASIBLE_WITH_VERSIONED_PRIVATE_OWNER_AND_BOUNDED_CONTROLLER_CAPTURE_ADDITIONS
+current_final_output_directly_retains_full_normal_continuity = false
+current_source_retains_complete_final_evidence_material       = false
+existing_same_attempt_identity_and_semantic_material_is_bounded = true
+legacy_shape_can_represent_all_five_qualified_outputs         = false
+versioned_successor_required                                  = true
+implementation_present                                        = false
+implementation_authorized                                     = false
+proof_is_not_problem_solving                                  = true
+```
+
+Python 3.10.6/3.13.13 × normal/`-O`四格formal source audit的semantic digest均为
+`9b705941088715fcbe6765cbba20653a9b4938f8ecb31dacf6b1ae1c1c0e7c56`。focused unchanged-runtime witness覆盖selector、Fact、
+Relation、normal Slice/Coverage、四个negative Coverage routes、unified output admission、Relation admission与legacy projector rejection；
+四格各126 PASS。prequalification attempt 1对retained material的过度表述、worktree attachment cap、nonexistent path、PowerShell parser、
+display truncation与raw Python 3.10无pytest等事实全部保留为`NON_QUALIFYING / NONE`。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc394只允许README、AGENTS、doc394与milestones四个docs paths。自己的local qualification、original PR、protected exact-head merge、
+new exact-main Public CI与Browser Smoke、fresh README/doc393/doc394 installed-product readback、AGENTS/milestones raw-byte observation、
+independent reconciliation与finite closeout全部闭合后，最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，
+另建docs-only versioned Evidence continuity contract；在该合同独立闭合以前，Evidence runtime、manifest successor、persistence、public
+Review与R2–R6继续`NOT_STARTED / NOT_AUTHORIZED`。
