@@ -143,7 +143,12 @@ class ReleaseAssetDownloadTests(unittest.TestCase):
             )
 
             with self.assertRaises(RetryBudgetExceeded):
-                self.run_download(root, runner, clock)
+                self.run_download(
+                    root,
+                    runner,
+                    clock,
+                    retry_budget_seconds=60.0,
+                )
 
             self.assertEqual(runner.calls, 6)
             self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0, 16.0])
@@ -151,18 +156,42 @@ class ReleaseAssetDownloadTests(unittest.TestCase):
             self.assertFalse((root / "asset.bin").exists())
             self.assertEqual(list(root.glob(".*.part")), [])
 
-    def test_explicit_multi_asset_lane_budget_can_cross_the_default_window(self) -> None:
+    def test_default_budget_covers_six_504_responses_then_success(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:
             root = Path(raw_temp)
             clock = FakeClock()
             runner = ScriptedAttemptRunner(
                 [
-                    AttemptFixture(http_result(504), elapsed=11.0),
+                    AttemptFixture(http_result(504), elapsed=11.2),
                     *[
                         AttemptFixture(http_result(504), elapsed=0.2)
                         for _ in range(5)
                     ],
-                    AttemptFixture(success_result(), PAYLOAD),
+                    AttemptFixture(success_result(), PAYLOAD, elapsed=11.2),
+                ],
+                clock,
+            )
+
+            output = self.run_download(root, runner, clock)
+
+            self.assertEqual(DEFAULT_RETRY_BUDGET_SECONDS, 120.0)
+            self.assertEqual(output.read_bytes(), PAYLOAD)
+            self.assertEqual(runner.calls, 7)
+            self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0, 16.0, 16.0])
+            self.assertGreater(clock.now, 60.0)
+
+    def test_explicit_multi_asset_lane_budget_covers_ninth_504_then_success(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:
+            root = Path(raw_temp)
+            clock = FakeClock()
+            runner = ScriptedAttemptRunner(
+                [
+                    AttemptFixture(http_result(504), elapsed=11.2),
+                    *[
+                        AttemptFixture(http_result(504), elapsed=0.2)
+                        for _ in range(8)
+                    ],
+                    AttemptFixture(success_result(), PAYLOAD, elapsed=11.2),
                 ],
                 clock,
             )
@@ -171,13 +200,16 @@ class ReleaseAssetDownloadTests(unittest.TestCase):
                 root,
                 runner,
                 clock,
-                retry_budget_seconds=120.0,
+                retry_budget_seconds=240.0,
             )
 
-            self.assertEqual(DEFAULT_RETRY_BUDGET_SECONDS, 60.0)
+            self.assertEqual(DEFAULT_RETRY_BUDGET_SECONDS, 120.0)
             self.assertEqual(output.read_bytes(), PAYLOAD)
-            self.assertEqual(runner.calls, 7)
-            self.assertEqual(clock.sleeps, [2.0, 4.0, 8.0, 16.0, 16.0, 16.0])
+            self.assertEqual(runner.calls, 10)
+            self.assertEqual(
+                clock.sleeps,
+                [2.0, 4.0, 8.0, 16.0, 16.0, 16.0, 16.0, 16.0, 16.0],
+            )
             self.assertGreater(clock.now, DEFAULT_RETRY_BUDGET_SECONDS)
 
     def test_only_the_two_multi_asset_release_lanes_request_the_larger_budget(self) -> None:
@@ -191,9 +223,9 @@ class ReleaseAssetDownloadTests(unittest.TestCase):
             "- name: Download and verify the frozen Core and E3 release assets", 1
         )[1].split("- name: Run E3 release clean-install acceptance", 1)[0]
 
-        self.assertEqual(workflow.count("--retry-budget-seconds 120"), 2)
-        self.assertEqual(e1.count("--retry-budget-seconds 120"), 1)
-        self.assertEqual(e3.count("--retry-budget-seconds 120"), 1)
+        self.assertEqual(workflow.count("--retry-budget-seconds 240"), 2)
+        self.assertEqual(e1.count("--retry-budget-seconds 240"), 1)
+        self.assertEqual(e3.count("--retry-budget-seconds 240"), 1)
 
     def test_404_fails_immediately_without_retry(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-release-download-") as raw_temp:
