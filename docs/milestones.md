@@ -9670,3 +9670,72 @@ doc392与projection 0.8必须取得自己的local qualification、original PR、
 README/project-state/doc376/doc390/doc391/doc392 installed-product readback、raw AGENTS/milestones observation、independent
 reconciliation与finite closeout。完整链闭合后最多成为`QUALIFIED_CANDIDATE / NOT_FROZEN`；冻结必须由后继独立docs-only
 publication完成。形式证明不能替代原工程问题，candidate PASS也不能自动选择global composition后继。
+
+## R1 public project-state projection 0.8 freeze publication候选（2026-11-09）
+
+PR #451已经把fresh reconstruction candidate `445948db9cb03a5ddc81f3617ad897d303d6dc83`、tree
+`8b38acf9b4a6a061dd655fabd68c3353d4b1c50a`精确合入`main@cae001d1dbd58fb319ddaa45e6270cbb67ffa0f3`。
+original Public CI `42619102447`、exact-main Public CI `42624859116`与Browser Smoke `42624859171`均attempt 1
+SUCCESS（11/11、11/11、1/1），没有rerun。local qualification、precommit seal、postcommit seal、original qualification、
+protected merge与exact-main gate qualification SHA-256为：
+
+```text
+48d9f7988338cd668f9b397acdbcda63a599ac38d3ef1b2e9ce8eb5935c73900
+a908566aad919a41db689031e3dc487a60a123726688462a0e64df981cbaa886
+66ca9abe96fc6fd8c1dfdf4db648e21fe1352819a22caf94620a19bb0e14981f
+bc5af90f30faf5d5e649e091b066eda4cf5a237cffb163e2b8f5db64840ecaa8
+f5c0af6316d2611bb12a317a0a8aa6b40e8bd47367c8a05361dd3431dbab8000
+2f76167e7622fdb599d9b6369f0f1e2fba9f42f00f6d445739f657424767dff6
+```
+
+fresh detached exact-main readback只认`cae001d…`world。README、project-state、doc376、doc390、doc392各自在第一个formal
+observation PASS；doc391 formal observation 1由产品正确保留为Render `ERROR`，原因包含
+`NAVIGATION_NOT_OBSERVED / NAVIGATION_PROJECTION_MISSING / RENDER_NAVIGATION_FAILED /
+RESPONSE_BODY_OBSERVATION_FAILED`，lower cause `UNKNOWN`、cleanup complete且Core Verdict未创建。frozen postprocessor随后又因
+`facts.content=null`产生独立`AttributeError` setup error。doc391 diagnostic 2恢复为COMPLETE后，formal observation 2才独立PASS；
+后继PASS不覆盖、解释或回填observation 1。AGENTS与milestones各自完成raw.githubusercontent、Contents API与exact Git全字节一致
+observation。
+
+independent reconciliation attempt 1只暴露synthetic proof-target token与公开文字表达不一致的setup error；attempt 2重新绑定实际
+`projection/contract 0.7 + FROZEN HISTORICAL`语义后PASS。independent reconciliation、187-artifact finite closeout与finite integrity
+SHA-256为：
+
+```text
+3f7241fbdd0fe60f28c9a8289d61cba38cab3bbd0ddb0da676b76bfa7a8b7a39
+a1dddaf6df487c6781a9bd55843bf3115dde338abded3013961f573b13674751
+179a8f5e5b8f056e5c41677ff0fa02c61d4514375c2cd332561eaf8c8477991f
+```
+
+因此doc392与projection 0.8现在最多是`QUALIFIED_CANDIDATE / NOT_FROZEN`。所有local proof-target、PowerShell parser、API EOF、
+delayed session、output truncation、worktree attachment、Windows glob及readback product/setup errors继续按原identity保留，
+qualification effect为`NONE`。
+
+fresh CONTROL LOOP重新读取exact main的AGENTS、working method、hygiene、remote main、open PR与primary audit，确认没有新反例击穿
+0.8边界；唯一未闭合责任是qualified candidate与frozen public projection之间的publication lag。新的
+[文档393](393-r1-public-project-state-projection-0.8-freeze-publication.md)只条件化发布0.8冻结状态，并同步README、AGENTS、
+milestones与project-state以保持公开投影自洽。tracked scope严格是这五个docs surface；runtime、tests、workflow、Release资产、
+download recovery、oracle、doc375–392与全部frozen semantic bytes保持base不变。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN_HISTORICAL
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_PR447_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FAILURE_AUDIT_PR448_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_RELEASE_ASSET_RECOVERY_PROOF_FACILITY_SUCCESSOR_V2_PR449_EXACT_MAIN_QUALIFIED
+R1_PUBLIC_PROJECT_STATE_PROJECTION_0_8_DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc393自己的local qualification、original PR、protected exact-head merge、new exact-main Public CI与Browser Smoke、fresh
+README/project-state/doc376/doc390/doc391/doc392/doc393 installed-product readback、raw AGENTS/milestones observation、
+independent reconciliation与finite closeout全部闭合后，`R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN`与
+`R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN`才生效。随后必须返回CONTROL LOOP；形式
+PASS不自动恢复global composition authority或启动manifest、Evidence、persistence、public Review、R2–R6。

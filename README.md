@@ -121,8 +121,14 @@ fresh README/doc391 formal、AGENTS/milestones raw-byte observation、independen
 
 fresh CONTROL LOOP确认current bounded projection仍停在0.7 world，不能准确覆盖#446–#450形成的新事实。因此新的
 [projection 0.8 reconstruction contract](docs/392-r1-public-project-state-projection-successor-0.8-reconstruction-contract.md)
-只从exact `main@69c1832…`重建docs-only candidate；它不继承PR #447/#448的字节、commit、attempt或资格。完整candidate资格链闭合
-以前，0.8严格是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，projection 0.7继续承担current frozen mainline历史身份。
+只从exact `main@69c1832…`重建docs-only candidate；它不继承PR #447/#448的字节、commit、attempt或资格。PR #451已经把该fresh
+candidate精确合入`main@cae001d1dbd58fb319ddaa45e6270cbb67ffa0f3`并完成original/exact-main双门、fresh README/project-state/
+doc376/doc390/doc391/doc392 readback、raw AGENTS/milestones observation、independent reconciliation与finite closeout。因此0.8现在是
+`QUALIFIED_CANDIDATE / NOT_FROZEN`。doc391 formal observation 1的Render `ERROR`、four coverage reasons、lower cause `UNKNOWN`、
+no Core Verdict与后继postprocessor setup error继续保留；formal observation 2的PASS不覆盖或解释它们。新的
+[projection 0.8 freeze publication](docs/393-r1-public-project-state-projection-0.8-freeze-publication.md)只条件化发布冻结状态；自己的全部最后门
+闭合以前仍是`PUBLICATION_CANDIDATE / NOT_FROZEN`。projection 0.7继续是`FROZEN HISTORICAL`，global composition authority、
+manifest、same-attempt Evidence、persistence、public Review与R2–R6仍未授权。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
@@ -739,7 +745,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 ### 想复核工程事实
 
 - [里程碑冻结历史与完整文档索引](docs/milestones.md)：集中查询冻结边界、来源坐标和保留失败；
-- [有界当前项目状态公开投影候选](docs/project-state.md)：提供短的current-state阅读面；它不是事实权威、状态机或施工调度器；
+- [有界当前项目状态公开投影](docs/project-state.md)：提供短的current-state阅读面；它不是事实权威、状态机或施工调度器；
 - [首页工程记录保留页](docs/readme-engineering-records.md)：保留从本次候选首页迁出的长篇记录，以及原来的 106 项工程事实入口；
 - [M14 最终验证与发布事实](docs/56-m14-final-validation-and-release-facts.md)与[GitHub Evidence Plugin 发布读回](docs/108-p4-github-evidence-release-readback-facts.md)：复核已交付产品；
 - [Parse → Fact consumer A–J 冻结发布](docs/250-r1-parse-to-fact-consumer-private-implementation-freeze-publication.md)与[Fact 当前状态再审计及条件化后继计划](docs/251-r1-fact-projection-fulfillment-current-state-audit.md)：区分已有 product-use proof 与尚未建立的完整 Fact 履责；
