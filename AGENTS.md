@@ -8263,3 +8263,54 @@ doc389自己的original PR、protected merge、new exact-main双门、fresh READ
 observation、independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL
 LOOP，先复核project-state projection是否需要version/rebind；不得自动恢复global composition authority或启动manifest/Evidence/
 persistence/public Review/R2–R6。`proof_is_not_problem_solving = true`继续成立。
+
+### R1 application-level unified Review / Coverage output admission 私有实现冻结资格恢复 0.1 候选
+
+PR #443把doc389 candidate `c96486f3f572c901bb1c3a074109a35d744f3904`、tree
+`645bb3548976f6fda71c1b6f07b3edbd7c44f48c`精确合入`main@02c09c744571def4f63201acfe0e65f1ee8f7315`。
+original Public CI `42538047126` attempt 1为11/11 SUCCESS，Browser Smoke `42542428407` attempt 1为1/1 SUCCESS；但
+exact-main Public CI `42542428301` attempt 1在required Python 3.10 job `128920115541`耗尽45分钟outer containment后终结为
+`CANCELLED`。取消以前Core、GitHub Evidence与Review Attention normal/optimized均成功，Starter/Authoring亦已发出PASS结果；
+产品assertion failure、candidate semantic regression与Subject failure均未建立，lower resource cause保持`UNKNOWN`。readback与
+reconciliation没有启动，doc389保持`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
+
+独立successor maintenance PR #445只把`.github/workflows/ci.yml`的Python aggregate outer timeout从45提高到55分钟，没有修改产品、
+测试命令、inner timeout、required lane、oracle、合同或状态。candidate `50586d3917373acda0f607892f7dd7929e22ff1f`、tree
+`849278ff559d15c18acf757019cbc9abaf59c648`精确合入`main@58ef15af9bfaec868439820de1b7bf0f5c5f27c7`。
+original Public CI `42547379641`与exact-main Public CI `42550881412`均attempt 1 SUCCESS（11/11），Browser Smoke
+`42550881488` attempt 1为1/1 SUCCESS；Python 3.10分别自然运行2123秒与2586秒。fresh anonymous exact-SHA workflow raw bytes、
+independent reconciliation、71-artifact closeout与finite integrity SHA-256为：
+
+```text
+0293758803e847787c007ed52bcc9849c90719b7ff24ffde1d6c34e212435ea5
+f8f6d9fb2c59bd2951c96b4daf7aa8d21242d91b86969bc458480dc0ec973121
+7972fd44d5f8f07e73a06cca301533e3f959a6bfe6533eb8c14f404368be8336
+1e3aad92267a960eb1baf1309092d9e393978dbb753d48df72d69abcb898c9ab
+```
+
+因此只有outer CI containment maintenance取得资格；#443 `CANCELLED`、`UNKNOWN`、doc389 not-qualified与implementation not-frozen保持
+原identity。fresh CONTROL LOOP证明从doc389 merge到当前main的tracked diff只有workflow的一行45→55，六个implementation/test blob、
+doc380/381/382/383/385/386/387/388/389与全部semantic authority保持不变。新的
+[文档390](docs/390-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-qualification-recovery.md)
+只建立docs-only freeze qualification recovery candidate。上述九个实际存在的semantic document不虚构doc384。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_QUALIFICATION_RECOVERY_0_1_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_PR443_MERGED_EXACT_MAIN_PUBLIC_CI_CANCELLED_NOT_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CI_HEADROOM_MAINTENANCE_SUCCESSOR_V2_PR445_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FREEZE_QUALIFICATION_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc390自己的完整资格链闭合后只允许使fixed private implementation成为`PRIVATE_IMPLEMENTATION_FROZEN`；随后必须返回CONTROL LOOP，
+复核project-state projection是否需要version/rebind。不得自动恢复global composition authority或启动manifest/Evidence/persistence/
+public Review/R2–R6。`proof_is_not_problem_solving = true`继续成立。

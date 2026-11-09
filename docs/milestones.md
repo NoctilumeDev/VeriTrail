@@ -9532,3 +9532,38 @@ R2_R6_NOT_STARTED
 doc389自己的local、original PR、protected merge、new exact-main双门、fresh README/doc388/doc389 Render、raw AGENTS/milestones、
 independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL LOOP，不能由
 形式PASS自动选择manifest、Evidence、persistence、public Review或R2–R6。
+
+## R1 application-level unified Review / Coverage output admission 私有实现冻结资格恢复 0.1 候选（2026-11-09）
+
+PR #443把doc389精确合入`main@02c09c744571def4f63201acfe0e65f1ee8f7315`；original Public CI
+`42538047126`为11/11 SUCCESS、Browser Smoke `42542428407`为1/1 SUCCESS，但exact-main Public CI
+`42542428301` attempt 1在Python 3.10耗尽45分钟outer containment后`CANCELLED`。产品assertion failure、candidate regression与
+Subject failure未建立，lower resource cause保持`UNKNOWN`；doc389 merged/not-qualified，readback没有启动。
+
+独立PR #445只把aggregate outer timeout从45提高到55分钟，candidate `50586d3917373acda0f607892f7dd7929e22ff1f`精确合入
+`main@58ef15af9bfaec868439820de1b7bf0f5c5f27c7`。original Public CI `42547379641`、exact-main Public CI
+`42550881412`与Browser Smoke `42550881488`均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh raw workflow readback、
+independent reconciliation、71-artifact closeout与finite integrity全部成立。因此只有55分钟maintenance取得资格，#443/doc389不回填。
+
+fresh CONTROL LOOP建立
+[文档390](390-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-qualification-recovery.md)，只重建
+固定implementation freeze的资格链，不修改runtime、tests、workflow、Schema、Provider、Coverage reason、Core Verdict或任何frozen
+semantic bytes：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_PR443_MERGED_EXACT_MAIN_PUBLIC_CI_CANCELLED_NOT_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CI_HEADROOM_MAINTENANCE_SUCCESSOR_V2_PR445_QUALIFIED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FREEZE_QUALIFICATION_RECOVERY_0_1_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc390自己的local、original PR、protected merge、new exact-main双门、fresh README/doc389/doc390 Render、raw AGENTS/milestones、
+independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL LOOP，不能由
+形式PASS自动选择manifest、Evidence、persistence、public Review或R2–R6。
