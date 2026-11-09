@@ -100,7 +100,12 @@ qualified history。新的[文档387](docs/387-r1-application-level-unified-revi
 从`main@ce9fa08…`重建十文件bounded successor；新四格UAO/focused/full/semantic witness均PASS，但这些仍只是local witness。原工程问题、
 当前证明义务与适用世界继续分开。PR #439 exact-main取消、PR #440 original失败与两个`UNKNOWN`保持原identity；独立maintenance
 PR #441只资格化45分钟outer containment。PR #442/doc388随后以自己的完整链重新资格化不变实现字节，但不冻结实现，也不解决完整
-Review产品问题。doc389因此只承担新的docs-only freeze publication责任，不自动恢复global composition authority。
+Review产品问题。doc389因此只承担新的docs-only freeze publication责任，不自动恢复global composition authority。PR #443把doc389
+精确合入后，exact-main Public CI `42542428301` attempt 1又在Python 3.10耗尽45分钟outer containment而`CANCELLED`；产品assertion
+failure与semantic regression未建立，lower cause仍为`UNKNOWN`，doc389保持merged/not-qualified。独立PR #445只把outer budget
+从45提高到55分钟，并以自己的original/exact-main双门、fresh raw workflow readback与independent reconciliation取得maintenance资格。
+新的[文档390](docs/390-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-qualification-recovery.md)
+只重建freeze publication资格，不回填#443，也不改变原工程问题、proof obligation或适用world。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
