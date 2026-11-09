@@ -106,6 +106,13 @@ failure与semantic regression未建立，lower cause仍为`UNKNOWN`，doc389保�
 从45提高到55分钟，并以自己的original/exact-main双门、fresh raw workflow readback与independent reconciliation取得maintenance资格。
 新的[文档390](docs/390-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-qualification-recovery.md)
 只重建freeze publication资格，不回填#443，也不改变原工程问题、proof obligation或适用world。
+PR #446随后以自己的original/exact-main双门、fresh README/doc389/doc390 readback、independent reconciliation与finite closeout
+使bounded private implementation成为`FROZEN`，但没有恢复global composition authority。fresh CONTROL LOOP建立的project-state
+projection 0.8 candidate PR #447在original Public CI `42568657029` attempt 1中于E3、Python 3.13和Python 3.10三个required
+Release资产下载路径连续收到HTTP 504并分别耗尽有限恢复预算；下载器正确fail closed。#447没有rerun，已经关闭且未合入，0.8
+仍为`NOT MAINLINE / NOT_QUALIFIED / NOT_FROZEN`，candidate regression、Subject failure与三个job的共同底层原因均未建立。
+新的[original-gate failure-boundary audit](docs/392-r1-public-project-state-projection-0.8-original-gate-failure-boundary-audit.md)
+只保存该失败world与最小后继责任；`docs/project-state.md`继续保持0.7 frozen bytes，下载oracle、预算与Release资产均不修改。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**

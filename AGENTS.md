@@ -8314,3 +8314,44 @@ R2_R6_NOT_STARTED
 doc390自己的完整资格链闭合后只允许使fixed private implementation成为`PRIVATE_IMPLEMENTATION_FROZEN`；随后必须返回CONTROL LOOP，
 复核project-state projection是否需要version/rebind。不得自动恢复global composition authority或启动manifest/Evidence/persistence/
 public Review/R2–R6。`proof_is_not_problem_solving = true`继续成立。
+
+### R1 public project-state projection 0.8 original-gate failure-boundary audit候选
+
+PR #446已经把doc390 candidate精确合入`main@f2ab7b78f86a057431cf5c8f4cbc3b0337338118`，tree
+`280cbc4f54427b86b81854892af8a490559fed7d`。original Public CI `42557756555`、exact-main Public CI
+`42560991201`与Browser Smoke `42560991124`均attempt 1 SUCCESS（11/11、11/11、1/1）；fresh README/doc389/doc390
+Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立。因此bounded application
+output admission private implementation现在是`FROZEN`；这不恢复global composition authority。
+
+fresh CONTROL LOOP从该exact main建立projection 0.8 candidate。PR #447绑定
+`base=f2ab7b78… / head=1e554754… / tree=521c75df… / 1 commit / 5 docs files`；local qualification PASS，但original
+Public CI `42568657029` attempt 1真实FAILURE，没有rerun。required E3 job `129000700153`在Core 0.12.0 wheel与Starter
+0.2.0 wheel摘要验证成功后，Starter 0.2.0 sdist连续七次HTTP 504并耗尽120秒恢复预算；required Python 3.13 job
+`129000700027`与Python 3.10 job `129000700095`均在Core/GitHub Evidence/Review Attention normal/`-O`成功后，分别对冻结
+Core 0.12.2 wheel连续五次、四次HTTP 504并耗尽60秒恢复预算。三个下载器均正确fail closed；Workbench成功，依赖job groups
+skipped。PR #447已经关闭且未合入，fresh readback/reconciliation没有启动。
+
+因此只建立`FROZEN_RELEASE_ASSET_DELIVERY_PATH / BOUNDED_RECOVERY_EXHAUSTED / DOWNLOAD_TOOL_FAIL_CLOSED`；candidate
+regression、Subject failure、asset digest mismatch、workflow/runtime/test/oracle defect与三个job共同根因均未建立，底层
+GitHub/proxy/shared-egress/network原因保持`UNKNOWN`。新的
+[文档392](docs/392-r1-public-project-state-projection-0.8-original-gate-failure-boundary-audit.md)只保存#447自己的失败identity、
+qualification effect与最小后继责任；不修改`docs/project-state.md`、workflow、预算、下载器、Release资产或runtime。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_PR447_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_NOT_MAINLINE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc392自己的完整资格链闭合后最多成为`ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；#447、doc391与0.8
+candidate不被回填。随后必须返回CONTROL LOOP，从新的exact main重新判断是否仍需versioned projection successor；不得cherry-pick
+旧候选、rerun #447、弱化下载oracle或启动manifest/Evidence/persistence/public Review/R2–R6。
+`proof_is_not_problem_solving = true`继续成立。
