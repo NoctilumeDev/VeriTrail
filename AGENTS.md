@@ -8219,3 +8219,47 @@ doc388自己的完整资格链闭合后最多把不变的implementation bytes升
 `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP；冻结仍需独立docs-only
 publication，不得自动恢复global composition authority或启动manifest/Evidence/persistence/public Review/R2–R6。
 `proof_is_not_problem_solving = true`继续成立。
+
+### R1 application-level unified Review / Coverage output admission 私有实现冻结发布候选
+
+PR #442已经把doc388 candidate `9bd88a0eb032ea2d19564461dcd61134fc7ec829`、tree
+`e32697216348f77b9450233ba107290bdf6650f8`精确合入`main@bb878885ec58f5bda7a0dad32977a3c3f02c4295`。original Public CI
+`42526477721`、exact-main Public CI `42529493118`与Browser Smoke `42529493258`均attempt 1 SUCCESS（11/11、11/11、1/1）。
+fresh README/doc386/doc387/doc388各唯一Render formal PASS，AGENTS/milestones各唯一raw/API/exact-Git全字节一致formal。independent
+reconciliation、170-artifact closeout、stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+a52ae9e25eb3b60af3a7be8512f18f08233f2a5ca7d1ad1aaf2c476f4cd091f9
+ee88597483e63771524fcf563ab73590fb9721fad1f55d4df27e38e0fbb2ff6d
+a234b27c027e3aef13287aba15c66abac4cf30df582bd3d7fa9fa3ede681ee66
+bda518d817201830b6cedc50f8511eee4c811bfba75c38d045eafb65ab8a030f
+```
+
+plan ID长度setup error、reconciliation predecessor preflight finding与attempt 1 doc387 proof-target mismatch均按原identity保留；
+successor只version proof facility，没有重复formal PASS或修改产品/oracle。因此doc388现在是
+`QUALIFICATION_RECOVERY_PUBLICATION_QUALIFIED / QUALIFIED_HISTORY`，六个固定implementation/test blob是
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP没有发现新反例击穿doc380冻结边界，建立
+[文档389](docs/389-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-publication.md)，
+只条件化发布bounded private implementation freeze。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_IMPLEMENTED_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_QUALIFICATION_RECOVERY_0_1_QUALIFIED_HISTORY
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc389自己的original PR、protected merge、new exact-main双门、fresh README/doc388/doc389 Render、AGENTS/milestones raw-byte
+observation、independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL
+LOOP，先复核project-state projection是否需要version/rebind；不得自动恢复global composition authority或启动manifest/Evidence/
+persistence/public Review/R2–R6。`proof_is_not_problem_solving = true`继续成立。

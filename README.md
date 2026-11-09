@@ -32,7 +32,12 @@ outer containment而`CANCELLED`；产品assertion failure未观察，candidate r
 独立successor PR #441才以自己的original/exact-main双门、fresh workflow raw-byte readback、independent reconciliation与finite closeout
 资格化为`main@6da3fdd10e28162e05a518663b0553fcd11afe00`。三个world均不回填。fresh CONTROL LOOP已建立
 [implementation exact-main qualification recovery 0.1](docs/388-r1-application-level-unified-review-coverage-output-admission-private-implementation-qualification-recovery.md)：
-它只在六个implementation/test blob保持不变的当前exact main上重新取得完整资格，当前仍是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。
+PR #442已经使它在六个implementation/test blob保持不变的`main@bb878885ec58f5bda7a0dad32977a3c3f02c4295`上完成
+original/exact-main双门、4项fresh Render formal、2项raw-byte formal、independent reconciliation与finite closeout；因此doc388现在是
+`QUALIFICATION_RECOVERY_PUBLICATION_QUALIFIED / QUALIFIED_HISTORY`，固定实现字节是
+`IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。新的
+[implementation freeze publication](docs/389-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-publication.md)
+只条件化发布该bounded private implementation；它自己的完整资格链闭合以前仍是`PUBLICATION_CANDIDATE / NOT_FROZEN`。
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -93,8 +98,9 @@ SUCCESS。doc385因此是`MERGED / NOT_QUALIFIED`。新的[文档386](docs/386-r
 保持`UNKNOWN`。PR #438随后完成自己的11/11 original门、11/11 exact-main门、1/1 Browser门及fresh readback/reconciliation，使doc386成为
 qualified history。新的[文档387](docs/387-r1-application-level-unified-review-coverage-output-admission-private-implementation-successor-candidate.md)
 从`main@ce9fa08…`重建十文件bounded successor；新四格UAO/focused/full/semantic witness均PASS，但这些仍只是local witness。原工程问题、
-当前证明义务与适用世界继续分开；在本候选自己的original PR、protected merge、new exact-main双门、fresh product readback与独立
-reconciliation全部成立以前，不得宣称implementation已经资格化、冻结或解决原工程问题。
+当前证明义务与适用世界继续分开。PR #439 exact-main取消、PR #440 original失败与两个`UNKNOWN`保持原identity；独立maintenance
+PR #441只资格化45分钟outer containment。PR #442/doc388随后以自己的完整链重新资格化不变实现字节，但不冻结实现，也不解决完整
+Review产品问题。doc389因此只承担新的docs-only freeze publication责任，不自动恢复global composition authority。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
