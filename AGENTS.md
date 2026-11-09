@@ -8515,3 +8515,42 @@ doc395只允许README、AGENTS、doc395与milestones；project-state、doc318、
 Provider、Collector、oracle与全部frozen semantic bytes保持base不变。完整local/original PR/protected merge/exact-main双门/fresh
 readback/independent reconciliation/finite closeout闭合后，最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回
 CONTROL LOOP，从新exact main判断是否独立重建feasibility candidate；不得直接施工Evidence或修改required gate。
+
+### R1 same-attempt DerivationEvidence continuity feasibility recovery audit候选
+
+PR #454已经把failure-boundary candidate精确合入
+`main@831c7646c324427d8b582ee6320efa6737406fa2 / tree=9e69965b89348fb674b0c7ae6fd4193f336e66f4`。original
+Public CI `42674693508`、exact-main Public CI `42679344349`与Browser Smoke `42679344175`均attempt 1 SUCCESS
+（11/11、11/11、1/1）；fresh README/doc395 formal、AGENTS/milestones raw-byte observation、independent reconciliation与finite
+closeout全部成立。因此doc395现在只是`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；PR #453仍保持closed、unmerged、
+original Public CI failed、not-qualified与lower cause `UNKNOWN`。
+
+fresh CONTROL LOOP没有把后继PASS回填失败world，而是从新exact main独立建立
+[文档396](docs/396-r1-same-attempt-derivation-evidence-continuity-feasibility-recovery.md)。fresh semantic audit在Python
+3.10.6/3.13.13 × normal/`-O`四格得到同一digest
+`731dc439dcbb07faba0f7a02423cbaf97bb92345769d3827e561026cab34b71f`；fresh focused matrix四格各126项PASS。结论仍只支持
+`FEASIBLE_WITH_VERSIONED_PRIVATE_OWNER_AND_BOUNDED_CONTROLLER_CAPTURE_ADDITIONS`，不表示Evidence、contract或implementation已经存在。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_PR453_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_AUDIT_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_RECOVERY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc396只允许README、AGENTS、doc396与milestones四个docs paths；project-state、doc318、doc377–395、runtime、tests、fixtures、
+workflow、Schema、Provider、Collector、oracle与全部frozen semantic bytes保持base不变。完整local/original PR/protected merge/new
+exact-main双门/fresh README-doc395-doc396 readback/raw AGENTS-milestones observation/independent reconciliation/finite closeout闭合后，
+最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP建立独立docs-only versioned Evidence continuity
+contract。`local_not_global = true`：R1最终完成后必须另做global check，但该未来义务不扩张当前R1 authority。
