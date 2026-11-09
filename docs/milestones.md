@@ -9826,3 +9826,46 @@ doc396只允许README、AGENTS、doc396与milestones四个docs paths。其完整
 fresh installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，最多成为
 `FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立docs-only versioned Evidence continuity contract；
 不得直接施工runtime。局部审计不等于全局正确；R1完成后必须另行检查阶段间前提、authority、qualification与最终用户能力是否可组合。
+
+## R1 same-attempt DerivationEvidence continuity最小合同候选（2026-11-10）
+
+PR #455已经把doc396 candidate `47677502f338401105bacd49ff3ca62177b6228e`、tree
+`15ba0f333d75462aaf246e229810ff3872860271`精确合入
+`main@a1d1ff8eac47506d25a65eae9c8b00a2ba89c3b1`。original Public CI `42700099718`、exact-main Public CI
+`42706462980`与Browser Smoke `42706462959`均attempt 1 SUCCESS（11/11、11/11、1/1），没有rerun。fresh
+README/doc395/doc396各自唯一formal PASS；AGENTS/milestones各自raw/Contents API/exact Git全字节一致。independent reconciliation、
+152-artifact finite closeout与finite integrity SHA-256为：
+
+```text
+2a16256a3a5ef293d62228d78ac174682548a77bdc6786b69867ef7e3ce24a31
+6460e4922121866ab3689054a3cb0d725e45b47f4dac28fef4f7b107cb9ef925
+d8a6ba042cc0c2a24be77a5aa5611fa556a5a5fb6592279e7669db44498bbc7e
+```
+
+所以doc396现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；PR #453的original-gate FAILURE、缺失的两个job/check-run identity、
+closed/unmerged/not-qualified状态与lower cause `UNKNOWN`继续保留，后继PASS不回填。fresh CONTROL LOOP从新exact main独立建立
+[文档397](397-r1-same-attempt-derivation-evidence-continuity-contract.md)，只冻结versioned private continuity owner、normal/四类negative
+branch、原执行期controller capture、same-attempt exact binding、one-shot lifecycle与直接falsifier。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_PR453_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_AUDIT_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc397只允许README、AGENTS、doc397与milestones四个docs paths。完整local/original PR/protected merge/new exact-main双门/fresh
+installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，最多成为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only freeze publication；该publication最后门
+闭合以前contract不生效，runtime继续`NOT_STARTED / NOT_AUTHORIZED`。局部合同不等于全局正确；post-R1 global check仍是独立后验义务。
