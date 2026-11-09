@@ -115,8 +115,14 @@ original Public CI中因冻结Release资产HTTP 504恢复预算耗尽而失败�
 release-asset recovery proof facility，并在`main@6dd0b76184a8739e4930a517f18cb32488c459b3`完成自己的original/exact-main双门与
 fresh raw-byte reconciliation；它不回填两个失败或资格化0.8。新的
 [dual original-gate failure-boundary recovery audit](docs/391-r1-public-project-state-projection-0.8-dual-original-gate-failure-boundary-recovery-audit.md)
-只保存这两条失败链与#449 recovery effect；其完整资格链闭合以前仍是candidate，projection 0.7继续是current frozen mainline
-projection。
+已经由PR #450从独立候选精确合入`main@69c1832a560dc24e0d4ea06f5bd2d4198518accd`，并完成original/exact-main双门、
+fresh README/doc391 formal、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout；因此doc391现在只作为
+`DUAL_ORIGINAL_GATE_FAILURE_BOUNDARY_RECOVERY_AUDITED / QUALIFIED_HISTORY`被消费，两个旧失败及lower cause `UNKNOWN`不被回填。
+
+fresh CONTROL LOOP确认current bounded projection仍停在0.7 world，不能准确覆盖#446–#450形成的新事实。因此新的
+[projection 0.8 reconstruction contract](docs/392-r1-public-project-state-projection-successor-0.8-reconstruction-contract.md)
+只从exact `main@69c1832…`重建docs-only candidate；它不继承PR #447/#448的字节、commit、attempt或资格。完整candidate资格链闭合
+以前，0.8严格是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，projection 0.7继续承担current frozen mainline历史身份。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
