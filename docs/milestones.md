@@ -9567,3 +9567,45 @@ R2_R6_NOT_STARTED
 doc390自己的local、original PR、protected merge、new exact-main双门、fresh README/doc389/doc390 Render、raw AGENTS/milestones、
 independent reconciliation与finite closeout全部闭合后，`PRIVATE_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL LOOP，不能由
 形式PASS自动选择manifest、Evidence、persistence、public Review或R2–R6。
+
+## R1 public project-state projection successor 0.8 contract candidate（2026-11-09）
+
+PR #446已经把doc390 candidate `5cfce74ca85f58373212000d0f6eae219296a068`、tree
+`280cbc4f54427b86b81854892af8a490559fed7d`精确合入`main@f2ab7b78f86a057431cf5c8f4cbc3b0337338118`。original Public CI
+`42557756555`、exact-main Public CI `42560991201`与Browser Smoke `42560991124`均attempt 1 SUCCESS（11/11、11/11、1/1）；
+fresh README/doc389/doc390各唯一formal PASS，AGENTS/milestones各唯一raw/API/Git全字节一致。independent reconciliation、
+144-artifact closeout、stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+b0da3502dcc11b2f6593c31fa15844b59e431930c27176d1fb1a378b3d39593e
+2bc7ef165aebb24d4a9dc329ab99da5316256828cf4d1a94c571a59b072f420a
+cb97897d79c6cdab9b7dc29ff150b418ffb8a0f94d5e56d5596b1752f4a894d2
+685578031f3bf6b4ed8d8f51567ca095424ffce94f0a2b7dc67618384c87b3ee
+```
+
+runner freeze-reference、reconciliation formal-kind proof-target、worktree attachment cap、display truncation、Windows wildcard、cache
+cleanup policy、anonymous diagnostic与preflight setup failures继续按原identity保留，effect为`NONE`。因此fixed private unified Review /
+Coverage output admission implementation现在是`FROZEN`；#443 `CANCELLED`、`UNKNOWN`与doc389 not-qualified不被回填，#445只拥有
+CI containment maintenance资格。
+
+fresh CONTROL LOOP证明projection 0.7的frozen bytes在原world内仍正确，但其公开current-state已落后于#429–#446。新的
+[文档391](391-r1-public-project-state-projection-successor-0.8-contract.md)只version这个bounded projection semantic boundary，不修改
+doc375–390、runtime、tests、workflow、Schema、Provider、Coverage reason、Core Verdict或其他frozen bytes：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FROZEN_HISTORICAL
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc391与projection 0.8必须取得自己的local qualification、original PR、protected merge、new exact-main双门、fresh README/
+project-state/doc376/doc389/doc390/doc391 Render、raw AGENTS/milestones、independent reconciliation与finite closeout。全部闭合后最多成为
+`QUALIFIED_CANDIDATE / NOT_FROZEN`；独立freeze publication尚未创建或授权，不能自动进入manifest、Evidence、persistence、public
+Review或R2–R6。`proof_is_not_problem_solving = true`继续成立。

@@ -7,24 +7,53 @@
 ## 投影身份
 
 ```text
-projection_contract: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7
-projection_status_rule: IF_DOC376_ALL_FINAL_GATES_CLOSED_THEN_FROZEN_ELSE_QUALIFIED_CANDIDATE_NOT_FROZEN
-freeze_publication_candidate: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_7_FREEZE_PUBLICATION
-construction_exact_base: 84f1512b7ac59edcb3f180af1f6816d0dc7c96cb
-construction_tree: 77bae5ea781419676f3c015d1488ff4548001c0a
+projection_contract: R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8
+projection_status_rule: IF_DOC391_ALL_CANDIDATE_GATES_CLOSED_THEN_QUALIFIED_CANDIDATE_NOT_FROZEN_ELSE_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+freeze_publication_candidate: NOT_CREATED_NOT_AUTHORIZED
+construction_exact_base: f2ab7b78f86a057431cf5c8f4cbc3b0337338118
+construction_tree: 280cbc4f54427b86b81854892af8a490559fed7d
 source_binding_kind: FINAL_SAME_CANDIDATE_MILESTONES_BYTES
-source_milestones_bytes: 640035
-source_milestones_sha256: 95a8548b812402ae476250f74bcc872eb90a20e9d5a222567c6b6764cf7c2e51
-source_milestones_blob_sha1: 6dd2e6ed6b3fd9cb2c63bc3414b53d7c5afa3390
-upstream_qualified_candidate_closeout_sha256: f3eee941aabbba91dfbc268e0992eef0b08787da1db48aedcb8865d6c89bd859
+source_milestones_bytes: 682147
+source_milestones_sha256: 2746732b39f502e1e4b0d9bd3b8c97b3dccadaade15bc31b302058f83dd270fc
+source_milestones_blob_sha1: 123e0736ceb4f44c738b3c5dba92863eca5c4149
+upstream_private_implementation_freeze_closeout_sha256: 2bc7ef165aebb24d4a9dc329ab99da5316256828cf4d1a94c571a59b072f420a
 ```
 
 这些坐标和摘要只声明本publication candidate由哪组不可变输入起草。milestones不保存自己的摘要，因而没有自引用；
-`projection_status_rule`不是自我认证：只有doc376声明的original PR、protected merge、new exact-main双门、fresh installed-product
-readback、independent reconciliation与finite closeout全部成立，`FROZEN`分支才由外部证据生效。本文不能给自己升级状态。
+`projection_status_rule`不是自我认证：只有doc391声明的local qualification、original PR、protected merge、new exact-main双门、
+fresh installed-product readback、independent reconciliation与finite closeout全部成立，`QUALIFIED_CANDIDATE / NOT_FROZEN`分支才由
+外部证据生效。本文不能给自己升级状态；独立freeze publication尚未创建或授权。
 
 ## 当前有效事实
 
+- PR #428已经使projection/contract 0.7完成独立freeze publication全部最后门；0.7继续是`FROZEN HISTORICAL`，
+  其exact bytes、source binding与readback identity不被0.8改写；
+- PR #429/doc377证明共同application-level output admission当时不存在，但其fresh milestones Render正确返回
+  `PARTIAL / CONTENT_TRUNCATED`，所以doc377保持`READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`；
+- PR #430/doc378只资格化readback-target correction，PR #431/doc379又从新exact main独立完成current-state audit successor；
+- PR #432/doc380与PR #433/doc381分别完成application-level unified Review / Coverage output admission合同candidate及独立
+  freeze publication，因此`R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_CONTRACT_FROZEN`已经生效；
+- PR #434/doc382完成private implementation feasibility audit，PR #435/doc383完成bounded A–J implementation authority publication，
+  因此`PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`与`PRIVATE_IMPLEMENTATION_ALLOWED`已经成立；
+- 首次implementation PR #436 original gate在两个Release资产下载路径持续HTTP 504后失败，已关闭且未合并；candidate regression、
+  Subject failure与底层网络根因均未建立；
+- PR #437/doc385虽通过original门并合入，但exact-main Public CI在Core 0.12.2 wheel下载连续三次15秒`TimeoutError`后fail closed，
+  因此doc385保持`MERGED / NOT_QUALIFIED`；PR #438/doc386只使该exact-main failure boundary成为qualified history；
+- PR #439合入实现successor后，exact-main Public CI在Python 3.10耗尽35分钟outer containment而`CANCELLED`；PR #440的首次
+  35→45分钟maintenance又在Starter观察面真实`FAILURE`并关闭未合并；PR #441只资格化独立45分钟maintenance successor；
+- PR #442/doc388以自己的完整链重新资格化不变的implementation bytes，使其成为
+  `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；
+- PR #443/doc389的original门与Browser成功，但exact-main Public CI在Python 3.10耗尽45分钟outer containment而`CANCELLED`；
+  产品assertion failure、semantic regression与Subject failure均未建立，lower cause保持`UNKNOWN`，doc389不被后继PASS回填；
+- PR #445只把aggregate outer timeout从45提高到55分钟，并以自己的完整链取得CI containment maintenance资格；它不拥有或传递
+  semantic freeze authority；
+- PR #446/doc390从maintenance后的新exact main重建完整freeze qualification：original/exact-main Public CI与Browser Smoke均attempt 1
+  SUCCESS，fresh README/doc389/doc390各唯一formal PASS，AGENTS/milestones各唯一raw/API/Git全字节一致，independent
+  reconciliation与144-artifact finite closeout成立；因此
+  `R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN`已经生效；
+- `R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED`；Review derivation manifest negative-world successor、
+  same-attempt derivation Evidence continuity、language-support qualification persistence与public Review产品继续
+  `NOT_STARTED / NOT_AUTHORIZED / OPEN`，R2–R6继续未启动；
 - `R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_CONTRACT_FROZEN`；
 - `R1_POST_TERMINAL_FACT_DUAL_SUCCESSOR_AUTHORITY_RECOVERY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY`；
 - `R1_WORKBENCH_DEPENDENCY_AUDIT_RECOVERY_QUALIFIED_HISTORY`；
@@ -55,14 +84,48 @@ readback、independent reconciliation与finite closeout全部成立，`FROZEN`�
 - PR #424/doc372的自动门、fresh marker readback与reconciliation曾记录0.6为qualified candidate；PR #425的README readback
   反例使doc373保持未资格化，PR #426又在任何产品observation前证明本页自身仍保留0.6的旧未资格化状态；因此0.6的semantic
   qualification已重开且从未冻结，#424–#426全部exact identity继续保留；
-- PR #427已经使[文档375](375-r1-public-project-state-projection-successor-0.7-contract.md)与projection 0.7成为
-  `QUALIFIED_CANDIDATE / NOT_FROZEN`；[文档376](376-r1-public-project-state-projection-0.7-freeze-publication.md)是独立
-  freeze publication candidate，全部最后门闭合前不生效；projection 0.5只承担冻结历史身份，0.4只承担failed/not-qualified
-  历史身份，0.6只承担semantic qualification reopened历史身份；
+- PR #427曾使[文档375](375-r1-public-project-state-projection-successor-0.7-contract.md)与projection 0.7成为
+  `QUALIFIED_CANDIDATE / NOT_FROZEN`；PR #428又使独立[文档376](376-r1-public-project-state-projection-0.7-freeze-publication.md)
+  完成全部最后门，因此0.7现在只承担frozen historical身份；projection 0.5承担更早的冻结历史身份，0.4承担failed/not-qualified
+  历史身份，0.6承担semantic qualification reopened历史身份；
 - Review derivation manifest negative-world successor、same-attempt derivation Evidence continuity、language-support persistence与
   public Review产品继续`NOT_STARTED / NOT_AUTHORIZED / OPEN`；R2–R6继续未启动。
 
 ## 必须继续可见的failure boundary
+
+### #443 / #445 / #446 实现冻结资格恢复链
+
+#443/doc389的original Public CI `42538047126`为11/11 SUCCESS，Browser Smoke `42542428407`为1/1 SUCCESS；
+exact-main Public CI `42542428301` attempt 1却在required Python 3.10耗尽45分钟outer containment后`CANCELLED`。取消前
+Core、GitHub Evidence、Review Attention normal/optimized均成功，Starter/Authoring亦已发出PASS结果；但产品assertion failure、
+candidate semantic regression与Subject failure均未建立，lower resource cause保持`UNKNOWN`。readback没有启动，doc389继续
+`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
+
+#445只把aggregate outer timeout从45提高到55分钟；original/exact-main Public CI与Browser Smoke均成功，fresh workflow raw-byte
+readback、independent reconciliation与finite closeout成立。因此只有CI containment maintenance取得资格，不能把#443回填成PASS，也
+不能把maintenance资格继承为semantic freeze。
+
+#446/doc390在新exact main重新取得本层local witness、original PR、protected merge、exact-main双门、fresh README/doc389/doc390
+formal、raw AGENTS/milestones、independent reconciliation与finite closeout。它使固定private implementation在`f2ab7b78…`world内
+成为`FROZEN`，同时保持#443 `CANCELLED`、`UNKNOWN`与doc389 not-qualified原identity。runner freeze-reference、reconciliation
+formal-kind mismatch及其他setup errors继续保留，后继proof facility没有重复formal PASS。
+
+### #436 / #437 / #439 / #440 实现与地基失败
+
+#436 original Public CI在E3 multi-asset与Python 3.13 Core 0.12.2下载路径持续收到HTTP 504并耗尽有限恢复预算；PR已关闭未合并，
+没有rerun。#437的original门成功并合入，但exact-main Public CI又在Python 3.10下载同一冻结wheel时连续三次15秒`TimeoutError`后
+fail closed；doc385因此`MERGED / NOT_QUALIFIED`。#438只把第二个failure boundary资格化为历史，不回填前两者。
+
+#439合入机械重建的successor implementation后，exact-main Public CI耗尽35分钟outer containment而`CANCELLED`；#440第一次
+35→45分钟maintenance又在Starter观察面真实`FAILURE`并关闭未合并。#441只证明自己的45分钟maintenance world，#442只重新资格化
+不变implementation bytes。candidate regression、Subject failure与lower resource cause没有由这些后继PASS反向建立。
+
+### #429 current-state audit readback target failure
+
+#429/doc377的original/exact-main双门与README/doc377 formal成功，但milestones唯一diagnostic观察到600693 UTF-8 rendered-text
+bytes，超过frozen 524288-byte上限76405 bytes，正确终结为`PARTIAL / CONTENT_TRUNCATED`；formal未运行。被击穿的是把已知
+超界完整milestones注册为Render target的proof seam，不是P2 oracle或doc377 semantic conclusion。#430只资格化target correction，
+#431又从新exact main独立重跑current-state audit；它们不回填doc377。
 
 ### #425 / #426 公开状态语义矛盾
 
@@ -127,11 +190,11 @@ Core Verdict未创建，lower cause保持`UNKNOWN`。第二个fresh root只重�
 
 ## 问题连续性边界
 
-本投影把三层问题身份机械分开：产品原问题仍是用户提出的工程问题闭环；本publication承接的原工程问题是准确、自洽、可公开
-观察的有界project-state projection；当前证明义务只覆盖0.7 frozen-status publication的全部最后门与跨表面一致性；适用world只覆盖
-本candidate的exact base/head/tree、final bytes、attempt与fresh readback identity。上游fixed private
-`POST_TERMINAL_DUAL_SUCCESSOR_0_1` implementation frozen只是本投影必须准确陈述的既有事实，不是本轮被重新证明的对象。局部publication
-成立不等于完整Review产品已经解决产品原问题。
+本投影把三层问题身份机械分开：产品原问题仍是用户提出的工程问题闭环；本candidate承接的原工程问题是准确、自洽、可公开
+观察的有界project-state projection；当前证明义务只覆盖0.8 candidate final bytes、source binding与跨表面一致性；适用world只覆盖
+本candidate的exact base/head/tree、final bytes、attempt与fresh readback identity。上游fixed private unified Review / Coverage output
+admission implementation frozen只是本投影必须准确陈述的既有事实，不是本轮被重新证明的对象。局部projection qualification成立不等于
+完整Review产品已经解决产品原问题；`proof_is_not_problem_solving = true`。
 
 ## 权威边界
 
@@ -144,7 +207,7 @@ Core Verdict未创建，lower cause保持`UNKNOWN`。第二个fresh root只重�
 | Business Layer | 业务流程组织、能力选择、补证请求 | 证据充分性裁决或PASS宣布 |
 | Core | 证据完整性、绑定、充分性及确定性裁决 | 现实事实的超级所有权 |
 | `docs/milestones.md` | 完整append-only工程历史、链接与provenance | 必须落入Public Render窗口 |
-| 本页 | 当前0.7 freeze-publication candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
+| 本页 | 当前0.8 candidate world的有界公开阅读投影 | source of truth、scheduler、qualification或施工授权 |
 
 验迹内部可以有很多插件、Provider、分析器和调度器，但最终优化目标始终是用户提出的工程问题，而不是插件自身的存在价值。
 
@@ -160,15 +223,16 @@ Core Verdict未创建，lower cause保持`UNKNOWN`。第二个fresh root只重�
 - 把已经冻结的fixed private implementation扩张解释为完整Review产品、恢复global composition authority，或启动manifest、
   Evidence、persistence、public Review、R2–R6。
 
-## 本publication candidate的生效条件
+## 本candidate的生效条件
 
-PR #427已经完成[successor 0.7 contract](375-r1-public-project-state-projection-successor-0.7-contract.md)的完整candidate资格链；
-independent reconciliation与182-artifact finite closeout SHA-256分别为
-`1cf6c6bea3bbad58f34d9c8dbf173909d73c5c464df176ae5aa7792f4a5ce07f`与
-`f3eee941aabbba91dfbc268e0992eef0b08787da1db48aedcb8865d6c89bd859`。
+PR #446已经使fixed private unified Review / Coverage output admission implementation在自己的exact world内成为`FROZEN`；
+independent reconciliation与144-artifact finite closeout SHA-256分别为
+`b0da3502dcc11b2f6593c31fa15844b59e431930c27176d1fb1a378b3d39593e`与
+`2bc7ef165aebb24d4a9dc329ab99da5316256828cf4d1a94c571a59b072f420a`。这些是0.8必须准确陈述的上游事实，
+不是0.8自己的qualification。
 
-只有[0.7 freeze publication](376-r1-public-project-state-projection-0.7-freeze-publication.md)自己的local qualification、original PR
-gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product
-README/本页/doc373/doc374/doc375/doc376 Public Render、AGENTS/milestones public+API raw-byte observations、final milestones
-binding复算、independent reconciliation与finite closeout全部成立后，`projection_status_rule`的`FROZEN`分支才生效。此前状态严格是
-`QUALIFIED_CANDIDATE / NOT_FROZEN`。本页不是scheduler。
+只有[successor 0.8 contract](391-r1-public-project-state-projection-successor-0.8-contract.md)自己的local qualification、original PR
+gates、protected exact-head merge、新exact-main Public CI与Browser Smoke、fresh anonymous installed-product README/本页/doc376/doc389/
+doc390/doc391 Public Render、AGENTS/milestones public+API raw-byte observations、final milestones binding复算、independent reconciliation与
+finite closeout全部成立后，`projection_status_rule`的`QUALIFIED_CANDIDATE / NOT_FROZEN`分支才生效。此前状态严格是
+`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`。独立freeze publication尚未创建；本页不是scheduler。

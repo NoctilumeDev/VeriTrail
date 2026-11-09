@@ -37,7 +37,7 @@ original/exact-main双门、4项fresh Render formal、2项raw-byte formal、inde
 `QUALIFICATION_RECOVERY_PUBLICATION_QUALIFIED / QUALIFIED_HISTORY`，固定实现字节是
 `IMPLEMENTED / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。新的
 [implementation freeze publication](docs/389-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-publication.md)
-只条件化发布该bounded private implementation；它自己的完整资格链闭合以前仍是`PUBLICATION_CANDIDATE / NOT_FROZEN`。
+在PR #443的exact-main门被`CANCELLED`后继续保持`MERGED / NOT_QUALIFIED / NOT_FROZEN`；后继PASS没有回填它。
 PR #418的exact-main Public CI `42211661846` attempt 1在required Python 3.10 Core regression真实失败，没有rerun；
 decisive assertion与lower cause仍为`UNKNOWN`。PR #419虽完成自己的original/exact-main双门，但fresh readback又证明
 milestones已超过frozen 524288-byte Render window；README/doc367 PASS不能与该`PARTIAL / CONTENT_TRUNCATED`拼成资格。
@@ -105,7 +105,12 @@ Review产品问题。doc389因此只承担新的docs-only freeze publication责�
 failure与semantic regression未建立，lower cause仍为`UNKNOWN`，doc389保持merged/not-qualified。独立PR #445只把outer budget
 从45提高到55分钟，并以自己的original/exact-main双门、fresh raw workflow readback与independent reconciliation取得maintenance资格。
 新的[文档390](docs/390-r1-application-level-unified-review-coverage-output-admission-private-implementation-freeze-qualification-recovery.md)
-只重建freeze publication资格，不回填#443，也不改变原工程问题、proof obligation或适用world。
+只从55分钟maintenance后的新exact main重建freeze publication资格，不回填#443，也不改变原工程问题、proof obligation或适用world。
+PR #446已经以自己的original/exact-main双门、fresh README/doc389/doc390 formal、raw AGENTS/milestones、independent
+reconciliation与finite closeout完成该恢复链；因此bounded private implementation现在是`FROZEN`，而doc389仍未资格化，global
+composition authority仍未恢复。fresh CONTROL LOOP据此建立新的
+[public project-state projection successor 0.8 contract](docs/391-r1-public-project-state-projection-successor-0.8-contract.md)，只version公开状态
+投影；当前仍是`CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，projection 0.7继续只承担frozen historical身份。
 完整施工事实仍以[里程碑索引](docs/milestones.md)及各自 exact evidence 为准。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
