@@ -156,6 +156,12 @@ fresh CONTROL LOOP现从`main@d06c150…`独立建立
 doc398或PR metadata；自己的original PR门、protected merge、new exact-main双门、fresh anonymous installed-product readback、独立
 reconciliation与finite closeout全部成立前，合同仍未冻结，runtime仍未授权。局部合同不等于全局正确；R1完成后仍须独立检查全局可组合性。
 
+PR #459已完成original 11/11、protected merge与new exact-main 11/11 + 1/1，但doc400唯一formal readback得到API `COMPLETE`、
+公开Render HTTP 503 / `PARTIAL`，没有Core Verdict。README、doc397、doc399的formal PASS不能替代该目标，doc400因此保持
+`MERGED / NOT_QUALIFIED / NOT_FROZEN`，底层原因仍为`UNKNOWN`。新的
+[exact-main formal readback failure boundary](docs/401-r1-same-attempt-evidence-continuity-freeze-recovery-formal-readback-failure-boundary.md)
+只保存首败、既有PASS、fail-closed分类与最小恢复边界；不重跑、不弱化oracle、不修改runtime。合同仍未冻结，R1完成后的全局组合检查义务不变。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)

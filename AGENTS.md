@@ -8684,3 +8684,47 @@ workflow、Schema、Provider、Collector、oracle与全部frozen semantic bytes�
 protected exact-head merge/new exact-main双门/fresh README-doc397-doc399-doc400 readback/raw AGENTS-milestones observation/independent
 reconciliation/finite closeout闭合后，`CONTRACT_FROZEN`才生效。PR body必须在创建前完成，original gate终态前禁止任何PR metadata
 edit。随后必须返回CONTROL LOOP；private implementation仍未自动授权。`local_not_global = true`与post-R1 global check继续成立。
+
+### R1 same-attempt Evidence continuity 合同冻结恢复发布 exact-main formal readback failure boundary候选
+
+PR #459已经把doc400精确合入`main@2c80f09c19d6196e6d5f745996e1d22e4a8d72c5 / tree=a5336a3cd1d7be7f694b34200ca3a072455ae4f7`。
+original Public CI `42821799379`、exact-main Public CI `42828992788`与Browser Smoke `42828992853`均attempt 1 SUCCESS
+（11/11、11/11、1/1），没有rerun。fresh readback中README diagnostic #1先得到HTTP 503 / `PARTIAL`，两个proof wrapper又因
+`content/window = null`触发`AttributeError`；底层失败与proof-facility错误均保留。只修正proof facility null handling后，README
+diagnostic #2及doc397/doc399/doc400 diagnostic均`COMPLETE / HTTP 200 / marker=1`。
+
+唯一formal阶段，README、doc397、doc399各自`API COMPLETE / Render COMPLETE / HTTP 200 / marker=1 / Core PASS`；doc400 formal #1
+则为`API COMPLETE / Render PARTIAL / HTTP 503 / marker unknown / no Core Verdict / FORMAL_READBACK_ERROR`。Collector errors与cleanup
+errors均为空，active streams为0，delivered response body为56635 bytes；lower cause保持`UNKNOWN`。candidate regression、Subject
+failure、product classification failure与oracle defect均未建立。failure classification seal SHA-256为
+`6f2bd5f0b1bbd7f6e14a670fe3f3935d6a0e86d41a5713884583167bd3db9f8f`。失败后raw AGENTS/milestones observation没有启动。
+
+因此doc400是`MERGED / NOT_QUALIFIED / NOT_FROZEN`，doc397继续是`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；contract未冻结，
+runtime仍`NOT_STARTED / NOT_AUTHORIZED`。fresh CONTROL LOOP建立
+[文档401](docs/401-r1-same-attempt-evidence-continuity-freeze-recovery-formal-readback-failure-boundary.md)，只审计该readback failure、
+已成立的三个formal PASS、diagnostic/proof-facility事实、未知归因与最小恢复边界。当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_PR453_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_AUDIT_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FREEZE_PUBLICATION_PR457_CLOSED_UNMERGED_ORIGINAL_GATE_CANCELLED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FREEZE_PUBLICATION_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FREEZE_RECOVERY_PUBLICATION_PR459_MERGED_EXACT_MAIN_FORMAL_READBACK_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FREEZE_RECOVERY_PUBLICATION_EXACT_MAIN_FORMAL_READBACK_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc401只允许README、AGENTS、doc401与milestones；doc397、doc399、doc400、失败PR中的doc398、runtime、tests、fixtures、workflow、
+Schema、Provider、Collector、oracle与全部frozen semantic bytes保持base不变。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，从新exact main重新判断是否建立新的docs-only recovery
+publication。不得重跑或覆盖doc400 formal #1，不得直接施工runtime。`local_not_global = true`与post-R1 global check继续成立。
