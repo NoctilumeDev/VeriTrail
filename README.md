@@ -168,6 +168,15 @@ fresh CONTROL LOOP现从`main@07e78c1…`建立
 [合同冻结恢复发布 v2](docs/402-r1-same-attempt-derivation-evidence-continuity-contract-freeze-publication-recovery-v2.md)。新publication
 取得自己的全部最后门以前，合同仍未冻结、runtime仍未授权；局部合同不等于全局正确，post-R1 global check义务继续独立保留。
 
+PR #461已经把doc402精确合入`main@08ac4eff9e14d7c31e09f963105d84a923021225`。original Public CI
+`42887559185`、exact-main Public CI `42893919168`与Browser Smoke `42893919002`均attempt 1 SUCCESS
+（11/11、11/11、1/1）。fresh README/doc397/doc399/doc400/doc401/doc402 formal、AGENTS/milestones raw-byte observation、
+independent reconciliation与199-artifact finite closeout全部成立；PR #459/doc400的HTTP 503首败与`UNKNOWN` lower cause仍按原identity
+保留。因此`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN`现已生效。fresh CONTROL LOOP从新exact main建立
+[private implementation feasibility audit](docs/403-r1-same-attempt-derivation-evidence-continuity-private-implementation-feasibility.md)；
+该candidate自己的全部最后门以前最多只是local feasibility witness，runtime仍`NOT_STARTED / NOT_AUTHORIZED`，global composition
+authority仍未恢复，R1完成后的独立global check义务不变。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)

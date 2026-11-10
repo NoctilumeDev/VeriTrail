@@ -10055,3 +10055,40 @@ doc402只允许README、AGENTS、doc402与milestones。自己的local/original c
 双门/fresh README-doc397-doc399-doc400-doc401-doc402 readback/raw AGENTS-milestones observation/independent reconciliation/finite
 closeout全部闭合后，`CONTRACT_FROZEN`才生效。随后必须返回CONTROL LOOP；private implementation仍未自动授权，post-R1 global check
 继续是R1完成后的独立义务。
+
+## R1 same-attempt Evidence continuity private implementation 可行性审计候选（2026-11-11）
+
+PR #461已经把doc402精确合入`main@08ac4eff9e14d7c31e09f963105d84a923021225 / tree=c60c67f7057547e47b0b915a1807799d3ed6f9c9`。
+original Public CI `42887559185`、exact-main Public CI `42893919168`与Browser Smoke `42893919002`均attempt 1 SUCCESS
+（11/11、11/11、1/1）。fresh README/doc397/doc399/doc400/doc401/doc402 formal与AGENTS/milestones raw-byte observations均PASS；
+independent reconciliation、199-artifact finite closeout与finite integrity SHA-256为：
+
+```text
+4b0a4435230dc58ae5033bd8657c669d3f6addcef6148f562cfc45896cb0c572
+5a7e135b6280d0102ad4b3b97e84e4eda98fc4209306d0674c143bf3d35f9aed
+fc909233d94538219153fbb0d6b6e901f17e14d9860543328cb41df9322f5b9a
+```
+
+因此same-attempt continuity contract现在是`FROZEN`。PR #459/doc400的formal HTTP 503首败、not-qualified历史与`UNKNOWN` lower cause仍
+保持原identity。fresh CONTROL LOOP建立
+[文档403](403-r1-same-attempt-derivation-evidence-continuity-private-implementation-feasibility.md)，只审计versioned private owner与bounded
+controller capture的实现可行性，不创建runtime。
+
+四格semantic digest一致为`b15ab4fc975ea4e63ff2b4dcf6030f6c70004d88be30c9f85d57dbf8f580c39d`；focused witness四格各
+126/126；global/local hygiene 8/8 PASS。managed worktree registration/attachment cap与source-coordinate wrong-workdir probe错误保留为
+`NON_QUALIFYING / NONE`。当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc403只允许README、AGENTS、doc403与milestones。自己的全部资格链闭合后最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；
+随后必须返回CONTROL LOOP建立独立docs-only private implementation authorization publication，不能直接施工runtime。局部可行不等于全局
+正确；post-R1 global check继续是R1完成后的独立义务。

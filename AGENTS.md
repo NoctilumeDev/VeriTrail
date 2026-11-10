@@ -8775,3 +8775,50 @@ doc402只允许README、AGENTS、doc402与milestones四个docs paths。完整loc
 new exact-main双门/fresh README-doc397-doc399-doc400-doc401-doc402 installed-product readback/raw AGENTS-milestones observation/independent
 reconciliation/finite closeout全部闭合后，`CONTRACT_FROZEN`才生效。PR metadata必须在创建前完成，original gate终态前不得编辑。
 随后必须返回CONTROL LOOP；private implementation仍未自动授权。`local_not_global = true`与post-R1 global check继续成立。
+
+## R1 same-attempt Evidence continuity private implementation 可行性审计候选
+
+PR #461已把doc402 candidate `68a986337f1e015c03c0bd07956fed2622bd2e60`、tree
+`c60c67f7057547e47b0b915a1807799d3ed6f9c9`精确合入
+`main@08ac4eff9e14d7c31e09f963105d84a923021225`。original Public CI `42887559185`、exact-main Public CI
+`42893919168`与Browser Smoke `42893919002`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh
+README/doc397/doc399/doc400/doc401/doc402 formal各自唯一PASS，AGENTS/milestones raw-byte observations也PASS；independent
+reconciliation、199-artifact finite closeout与finite integrity SHA-256为：
+
+```text
+4b0a4435230dc58ae5033bd8657c669d3f6addcef6148f562cfc45896cb0c572
+5a7e135b6280d0102ad4b3b97e84e4eda98fc4209306d0674c143bf3d35f9aed
+fc909233d94538219153fbb0d6b6e901f17e14d9860543328cb41df9322f5b9a
+```
+
+所以`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN`已经生效。README diagnostic freeze顺序、过长plan ID、
+reconciliation schema-key与managed-worktree attachment cap setup errors全部按原identity保留；PR #459/doc400的HTTP 503 / `PARTIAL` /
+no Core Verdict、`UNKNOWN` lower cause与not-qualified历史不被后继PASS回填。
+
+fresh CONTROL LOOP从新exact main建立
+[文档403](docs/403-r1-same-attempt-derivation-evidence-continuity-private-implementation-feasibility.md)，只审计doc397冻结边界在当前
+exact source中的私有实现可行性。四格semantic report一致，normal与四类negative route都支持versioned private owner与原执行期
+controller capture的有界construction；focused witness四格各126/126，global/local hygiene 8/8 PASS。legacy Evidence 0.2不能被重解释，
+negative route不能改写成non-success，post-attempt external reread仍禁止。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc403只允许README、AGENTS、doc403与milestones。自己的local/original creation PR gate/protected exact-head merge/new exact-main
+双门/fresh README-doc397-doc402-doc403 installed-product readback/raw AGENTS-milestones observation/independent reconciliation/finite
+closeout全部闭合后，本文最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP并建立独立docs-only private
+implementation authorization publication；在该后继完整资格以前runtime继续`NOT_STARTED / NOT_AUTHORIZED`。`local_not_global = true`，
+post-R1 global check仍是R1完成后的独立义务。
