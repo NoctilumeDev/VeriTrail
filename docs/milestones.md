@@ -9869,3 +9869,48 @@ doc397只允许README、AGENTS、doc397与milestones四个docs paths。完整loc
 installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，最多成为
 `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only freeze publication；该publication最后门
 闭合以前contract不生效，runtime继续`NOT_STARTED / NOT_AUTHORIZED`。局部合同不等于全局正确；post-R1 global check仍是独立后验义务。
+
+## R1 same-attempt DerivationEvidence continuity 合同冻结发布候选（2026-11-10）
+
+PR #456已经把doc397 candidate `a12d433f395108295f1b4b98f46804d129925972`、tree
+`85d095636db341d14eab2758ba8dd181b73f3fec`精确合入
+`main@9578c173a60a7735ec2cb1792a46f6a19eb36c6c`。original Public CI `42723300711`、exact-main Public CI
+`42728102024`与Browser Smoke `42728101444`均attempt 1 SUCCESS（11/11、11/11、1/1），没有rerun。
+
+fresh README/doc396/doc397各有唯一qualifying formal PASS；AGENTS/milestones各有唯一raw/Contents API/exact Git全字节观察。
+README formal #1因anonymous GitHub API rate exhaustion为`FORMAL_READBACK_ERROR / NONE`，public Render COMPLETE不覆盖API ERROR；
+较晚reset后的formal #2是新的qualifying identity。independent reconciliation、220-artifact finite closeout与finite integrity SHA-256为：
+
+```text
+3814da77684be889954ae2f941acd431d03b0f71f46684fae39d3246de514637
+91737bbeef61d19f440d8fccb9ce04a0110afcac9b9e13abf51d70ef8af88cd1
+85baf887bbd6d1b71789d1bdf3b64c740f95d0b3e775daf146e77e4b055aed4d
+```
+
+所以doc397现在是`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；PR #453的original-gate FAILURE、缺失required identities、
+closed/unmerged/not-qualified状态与lower cause `UNKNOWN`继续保留。fresh CONTROL LOOP从新exact main建立
+[文档398](398-r1-same-attempt-derivation-evidence-continuity-contract-freeze-publication.md)，只条件化发布doc397固定semantic bytes为
+frozen contract，不修改合同、runtime、tests、Schema或其他frozen semantics。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_PR453_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_AUDIT_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_QUALIFIED_CANDIDATE_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本publication只允许README、AGENTS、doc398与milestones。自己的完整local/original PR/protected merge/new exact-main双门/fresh
+installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，`CONTRACT_FROZEN`才生效；随后必须返回
+CONTROL LOOP独立审计private implementation feasibility。局部合同不等于全局正确；post-R1 global check仍是独立后验义务。
