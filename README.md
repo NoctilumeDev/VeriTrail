@@ -162,6 +162,12 @@ PR #459已完成original 11/11、protected merge与new exact-main 11/11 + 1/1，
 [exact-main formal readback failure boundary](docs/401-r1-same-attempt-evidence-continuity-freeze-recovery-formal-readback-failure-boundary.md)
 只保存首败、既有PASS、fail-closed分类与最小恢复边界；不重跑、不弱化oracle、不修改runtime。合同仍未冻结，R1完成后的全局组合检查义务不变。
 
+PR #460已经用自己的original/exact-main双门、fresh README/doc401 formal、AGENTS/milestones raw-byte observations、独立
+reconciliation与finite closeout，使doc401成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它没有回填PR #459或解释HTTP 503。
+fresh CONTROL LOOP现从`main@07e78c1…`建立
+[合同冻结恢复发布 v2](docs/402-r1-same-attempt-derivation-evidence-continuity-contract-freeze-publication-recovery-v2.md)。新publication
+取得自己的全部最后门以前，合同仍未冻结、runtime仍未授权；局部合同不等于全局正确，post-R1 global check义务继续独立保留。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
