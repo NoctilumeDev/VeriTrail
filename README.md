@@ -146,10 +146,15 @@ reconciliation与finite closeout，使
 `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；它仍不解释或回填PR #453。
 
 后继freeze publication PR #457因Agent在original gate终态前编辑PR body，触发同head `edited` event run与workflow concurrency，
-original creation run `42740181591` attempt 1最终`CANCELLED`。#457已经关闭、未合并、not-qualified；第二run不能替代original gate，
-product assertion failure没有建立。fresh CONTROL LOOP现只建立
-[original-gate cancellation boundary](docs/399-r1-same-attempt-evidence-continuity-freeze-publication-original-gate-cancellation-boundary.md)，
-不修改workflow或合同，不重用失败commit。局部合同不等于全局正确；R1完成后仍须独立检查全局可组合性。
+original creation run `42740181591` attempt 1最终`CANCELLED`。#457保持关闭、未合并、not-qualified；第二run不能替代original gate，
+product assertion failure没有建立。PR #458已以独立original/exact-main双门、fresh readback、reconciliation与finite closeout使
+[original-gate cancellation boundary](docs/399-r1-same-attempt-evidence-continuity-freeze-publication-original-gate-cancellation-boundary.md)
+成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但不回填#457。
+
+fresh CONTROL LOOP现从`main@d06c150…`独立建立
+[合同冻结恢复发布](docs/400-r1-same-attempt-derivation-evidence-continuity-contract-freeze-publication-recovery.md)。它不复用#457 commit、
+doc398或PR metadata；自己的original PR门、protected merge、new exact-main双门、fresh anonymous installed-product readback、独立
+reconciliation与finite closeout全部成立前，合同仍未冻结，runtime仍未授权。局部合同不等于全局正确；R1完成后仍须独立检查全局可组合性。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
