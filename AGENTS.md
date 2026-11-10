@@ -8554,3 +8554,48 @@ workflow、Schema、Provider、Collector、oracle与全部frozen semantic bytes�
 exact-main双门/fresh README-doc395-doc396 readback/raw AGENTS-milestones observation/independent reconciliation/finite closeout闭合后，
 最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP建立独立docs-only versioned Evidence continuity
 contract。`local_not_global = true`：R1最终完成后必须另做global check，但该未来义务不扩张当前R1 authority。
+
+### R1 same-attempt DerivationEvidence continuity最小合同候选
+
+PR #455已经把doc396 candidate精确合入
+`main@a1d1ff8eac47506d25a65eae9c8b00a2ba89c3b1 / tree=15ba0f333d75462aaf246e229810ff3872860271`。original
+Public CI `42700099718`、exact-main Public CI `42706462980`与Browser Smoke `42706462959`均attempt 1 SUCCESS
+（11/11、11/11、1/1），没有rerun。fresh README/doc395/doc396 formal、AGENTS/milestones raw-byte observation、independent
+reconciliation与152-artifact finite closeout全部成立；关键SHA-256为：
+
+```text
+2a16256a3a5ef293d62228d78ac174682548a77bdc6786b69867ef7e3ce24a31
+6460e4922121866ab3689054a3cb0d725e45b47f4dac28fef4f7b107cb9ef925
+d8a6ba042cc0c2a24be77a5aa5611fa556a5a5fb6592279e7669db44498bbc7e
+```
+
+因此doc396现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；PR #453仍保持closed、unmerged、original Public CI failed、
+not-qualified与lower cause `UNKNOWN`。新的
+[文档397](docs/397-r1-same-attempt-derivation-evidence-continuity-contract.md)只冻结private/versioned continuity owner、原执行期
+controller capture、normal与四类negative branch、exact same-attempt binding、one-shot lifecycle及直接falsifier；不创建runtime、
+public Schema、manifest、persistence、public Review、Core Verdict或R2–R6 authority。
+
+当前只允许：
+
+```text
+R1_PROJECT_STATE_PUBLIC_PROJECTION_0_8_FROZEN
+R1_PUBLIC_PROJECT_STATE_PROJECTION_SUCCESSOR_0_8_RECONSTRUCTION_CONTRACT_FROZEN
+R1_APPLICATION_LEVEL_UNIFIED_REVIEW_COVERAGE_OUTPUT_ADMISSION_PRIVATE_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_AUDIT_PR453_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_AUDIT_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_FEASIBILITY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc397只允许README、AGENTS、doc397与milestones四个docs paths；project-state、doc318、doc377–396、runtime、tests、fixtures、
+workflow、Schema、Provider、Collector、oracle与全部frozen semantic bytes保持base不变。完整local/original PR/protected merge/new
+exact-main双门/fresh README-doc396-doc397 readback/raw AGENTS-milestones observation/independent reconciliation/finite closeout闭合后，
+最多成为`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`；随后必须返回CONTROL LOOP建立独立docs-only contract freeze publication。
+freeze publication自己的完整资格链闭合前，runtime继续`NOT_STARTED / NOT_AUTHORIZED`。`local_not_global = true`与
+`post_r1_global_check_required = true`继续成立，但不扩张当前R1 authority。

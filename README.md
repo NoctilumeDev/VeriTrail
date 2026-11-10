@@ -139,10 +139,16 @@ candidate regression、Subject failure与product assertion failure均未建立�
 只检查资格前提、适用域与观察身份；不增加“9/9足够”的例外，不资格化doc394，也不修改workflow或Evidence runtime。
 
 PR #454的完整资格链已经使doc395成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，同时保持PR #453 closed、unmerged、
-original-gate failed、not-qualified与lower cause `UNKNOWN`。fresh CONTROL LOOP因此从新exact main独立建立
-[feasibility recovery audit](docs/396-r1-same-attempt-derivation-evidence-continuity-feasibility-recovery.md)：它重新运行四格semantic
-audit与每格126项focused witness，只发布docs-only recovery candidate；不继承PR #453资格、不解释其失败，也不授权Evidence runtime。
-该局部结论不等于全局正确；R1完成后还必须独立检查各阶段前提、authority、qualification与用户能力能否全局组合。
+original-gate failed、not-qualified与lower cause `UNKNOWN`。后继PR #455又以自己的original/exact-main双门、fresh installed-product
+readback、raw-byte observation、independent reconciliation与finite closeout，使
+[feasibility recovery audit](docs/396-r1-same-attempt-derivation-evidence-continuity-feasibility-recovery.md)成为
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；它仍不解释或回填PR #453。
+
+fresh CONTROL LOOP现只建立独立的
+[same-attempt Evidence continuity最小合同候选](docs/397-r1-same-attempt-derivation-evidence-continuity-contract.md)：冻结versioned private
+owner、normal/四类negative branch、原执行期controller capture、one-shot lifecycle与直接falsifier；不创建runtime、public Schema、
+manifest、persistence或Core Verdict。局部合同不等于全局正确；R1完成后还必须独立检查各阶段前提、authority、qualification与用户能力
+能否全局组合。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
