@@ -10092,3 +10092,40 @@ R2_R6_NOT_STARTED
 doc403只允许README、AGENTS、doc403与milestones。自己的全部资格链闭合后最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；
 随后必须返回CONTROL LOOP建立独立docs-only private implementation authorization publication，不能直接施工runtime。局部可行不等于全局
 正确；post-R1 global check继续是R1完成后的独立义务。
+
+## R1 same-attempt DerivationEvidence continuity private implementation 授权发布候选（2026-11-11）
+
+PR #462把doc403 candidate `184e6613264d7cc579363ff43dc280eeba1ee09f`、tree
+`d65c8a1b8bd832d3f782e83e67d6a5fd9b7add1e`精确合入
+`main@ffe57f80d3c0eef85dcb5ad39753a0d7a1abbb11`。original Public CI `42911165390`、exact-main Public CI
+`42917309917`与Browser Smoke `42917309911`均attempt 1 SUCCESS（11/11、11/11、1/1）。fresh README/doc397/doc402/doc403
+各有唯一qualifying formal PASS，AGENTS/milestones raw-byte observations也PASS；README formal #1的anonymous API rate exhaustion ERROR继续
+保留。independent reconciliation、172-artifact finite closeout与finite integrity SHA-256为：
+
+```text
+2decaadb089a943346e508fe4c1cb6ad518925234e7acdb2bf3832fe2d69c35c
+104b52d417a5ce4aed5a20137cb95c490ce1009221f4611a09c708fed3c89bba
+7e1bc79e75c3860b2ac2cd41994d40708d591741a5066d4cfbe9aec929f7907c
+```
+
+因此doc403现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；#453/#457/#459与formal #1失败均不被回填。fresh CONTROL LOOP建立
+[文档404](404-r1-same-attempt-derivation-evidence-continuity-private-implementation-authorization-publication.md)，只条件化发布bounded A–J
+private authority，不创建runtime。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc404只允许README、AGENTS、doc404与milestones。自己的完整local/original PR/protected merge/new exact-main双门/fresh
+installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED`才生效；
+implementation仍保持`NOT_STARTED`并返回CONTROL LOOP。局部授权不等于全局正确，post-R1 human+AI global check继续独立保留。
