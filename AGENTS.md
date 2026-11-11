@@ -8905,3 +8905,53 @@ doc405候选只允许README、AGENTS、doc405、milestones及其声明的六个p
 PR gate、protected exact-head merge、新exact-main双门、fresh anonymous installed-product readback与independent reconciliation，最多成为
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；`FROZEN`必须由后继独立docs-only publication取得。随后返回
 CONTROL LOOP重审manifest及剩余R1，不能按文档编号自动施工。`local_not_global = true`，R1完成后的人类+AI全局检查仍是独立义务。
+
+### R1 same-attempt continuity private implementation exact-main Browser Smoke failure boundary候选
+
+PR #464把doc405 implementation candidate从exact base
+`b5ff07e03630d57060384883d28a49dc57bdf0df`、head
+`b4fa42cc16b814f9d23e8c025bc4499dcb412084`、tree
+`c8f0bd16e9e69a0ef7bdea3da8526d8fb0f3f255`精确合入
+`main@a41b8ba3575419e754099725b5e1616af6cd1af4`。original Public CI `43034543495` attempt 1与new exact-main
+Public CI `43040847982` attempt 1均为11/11 SUCCESS；new exact-main Browser Smoke `43040847817` attempt 1在唯一required
+job的`Install Chromium`阶段FAILURE，没有rerun。
+
+失败发生在`python -m playwright install --with-deps chromium`：Ubuntu archive/security域名解析失败，`apt` code 100，production
+Workbench build与bounded product browser smoke均SKIPPED，Artifact API为0。直接证据只建立
+`EXACT_MAIN_BROWSER_SMOKE_CHROMIUM_INSTALL_DNS_SETUP_FAILURE`；subject failure与candidate regression均未建立，lower cause保持
+`UNKNOWN`。failure evidence SHA-256为
+`697ffe7ae94d7f86d8c51bf5194a0f7e4b90e9d4a360566c047875dc4841a75b`。original qualification、protected merge与
+exact-main gate evidence SHA-256分别为：
+
+```text
+f975559bc2c160e2b10ff78d4bf9e41fcf8dd96eb98f372a1063afd2a846affd
+57f7f560610eda027e055d0795ea2d0e5fabab16dd277e710a4cef718618e6b2
+2460a3d70cfd6c1ed2ecc31e1979bf52ac269e30e5a933e4ecccf3389d62da1c
+```
+
+因此doc405保持`MERGED / PUBLIC_CI_PASS / BROWSER_SMOKE_FAILED / NOT_QUALIFIED / NOT_FROZEN`；fresh readback与reconciliation没有
+启动。fresh CONTROL LOOP建立
+[文档406](docs/406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)，只审计失败identity、
+资格影响、authority ceiling与最小recovery顺序，不修改runtime、tests、workflow、Browser oracle、Playwright安装、retry、timeout、
+Schema、manifest、persistence、public Review、Core Verdict、global composition authority或R2–R6。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_MERGED_EXACT_MAIN_PUBLIC_CI_PASS_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc406只允许README、AGENTS、doc406与milestones。它必须取得自己的local/original PR/protected exact-head merge/new exact-main双门/
+fresh README-doc405-doc406-milestones installed-product observation/independent reconciliation/finite closeout，最多成为
+`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。后继PASS不解释或回填run `43040847817`；随后必须返回
+CONTROL LOOP，另建docs-only implementation qualification recovery，不能直接冻结implementation或恢复manifest/global composition。
+`local_not_global = true`，post-R1 human+AI global check继续是R1完成后的独立义务。

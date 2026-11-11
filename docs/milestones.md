@@ -10164,3 +10164,47 @@ R2_R6_NOT_STARTED
 doc405必须完成自己的local/original PR/protected merge/new exact-main双门/fresh installed-product readback/independent reconciliation，才可成为
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；冻结必须另建docs-only publication。随后返回CONTROL LOOP，不得按
 文档编号自动恢复manifest或global composition authority。R1完成后仍需人类+AI共同执行独立全局检查。
+
+## R1 same-attempt continuity private implementation exact-main Browser Smoke failure boundary候选（2026-11-11）
+
+PR #464把implementation candidate exact head `b4fa42cc16b814f9d23e8c025bc4499dcb412084`、tree
+`c8f0bd16e9e69a0ef7bdea3da8526d8fb0f3f255`精确合入
+`main@a41b8ba3575419e754099725b5e1616af6cd1af4`。original Public CI `43034543495`与exact-main Public CI
+`43040847982`均attempt 1取得11/11 SUCCESS；exact-main Browser Smoke `43040847817` attempt 1在`Install Chromium`阶段
+FAILURE，没有rerun。
+
+Ubuntu archive/security域名解析失败导致`apt` code 100与Playwright安装失败；production build和bounded product smoke没有执行，Artifact
+API为0。因此只建立`EXACT_MAIN_BROWSER_SMOKE_CHROMIUM_INSTALL_DNS_SETUP_FAILURE`；subject failure与candidate regression未建立，lower
+cause保持`UNKNOWN`。failure、original qualification、protected merge、exact-main gates evidence SHA-256分别为：
+
+```text
+697ffe7ae94d7f86d8c51bf5194a0f7e4b90e9d4a360566c047875dc4841a75b
+f975559bc2c160e2b10ff78d4bf9e41fcf8dd96eb98f372a1063afd2a846affd
+57f7f560610eda027e055d0795ea2d0e5fabab16dd277e710a4cef718618e6b2
+2460a3d70cfd6c1ed2ecc31e1979bf52ac269e30e5a933e4ecccf3389d62da1c
+```
+
+doc405保持`MERGED / PUBLIC_CI_PASS / BROWSER_SMOKE_FAILED / NOT_QUALIFIED / NOT_FROZEN`；fresh readback与reconciliation没有启动。
+fresh CONTROL LOOP建立
+[文档406](406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)，只审计失败边界，保留
+Browser oracle与workflow，不修改runtime/test/frozen semantic bytes。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_MERGED_EXACT_MAIN_PUBLIC_CI_PASS_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc406只允许README、AGENTS、doc406与milestones。自己的local/original PR/protected merge/new exact-main双门/fresh anonymous
+installed-product observation/independent reconciliation/finite closeout全部成立后，最多成为
+`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。后继PASS不回填run `43040847817`；随后必须返回CONTROL LOOP，
+另建docs-only implementation qualification recovery。R1完成后的独立人类+AI全局检查义务继续保留。

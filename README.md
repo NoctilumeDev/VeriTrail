@@ -192,8 +192,18 @@ observation、independent reconciliation与finite closeout全部闭合。因此b
 composition authority仍未恢复。fresh CONTROL LOOP从该exact main建立
 [same-attempt continuity private implementation candidate](docs/405-r1-same-attempt-derivation-evidence-continuity-private-implementation-candidate.md)：
 四格semantic projection逐字节一致，focused四格各152/152，完整Review Attention四格各674/674；全部预资格缺陷与测试设施失败按
-原identity保留。本文仍只是未合入、未exact-main验证、未readback资格化、未冻结的implementation candidate；R1完成后的独立人类+AI
-全局组合检查义务不变。
+原identity保留。
+
+PR #464随后把该implementation精确合入`main@a41b8ba3575419e754099725b5e1616af6cd1af4`。original Public CI
+`43034543495`与exact-main Public CI `43040847982`均attempt 1取得11/11 SUCCESS；但exact-main Browser Smoke
+`43040847817` attempt 1在`Install Chromium`阶段因Ubuntu域名解析失败而终止，production build与产品browser smoke均未执行，且没有
+有效Artifact。该run没有rerun；当前证据只建立required gate的setup failure，不建立subject failure或candidate regression，lower cause保持
+`UNKNOWN`。因此doc405是`MERGED / PUBLIC_CI_PASS / BROWSER_SMOKE_FAILED / NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP已建立独立docs-only
+[exact-main Browser Smoke failure-boundary audit](docs/406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)。
+它自己的完整资格链闭合以前只是一项`CANDIDATE_NOT_QUALIFIED`；即使后继Browser gate成功，也只证明新world无需弱化门，不解释或回填
+run `43040847817`，更不恢复implementation、manifest或global composition authority。R1完成后的独立人类+AI全局组合检查义务不变。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
