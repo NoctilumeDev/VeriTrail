@@ -88,6 +88,7 @@ class OwnedFactRelationTransitionAdmission:
         fact_handoff_source: Mapping[str, object],
         request_provenance: Mapping[str, object],
         transition_identity: Mapping[str, object],
+        controller_capture: Mapping[str, object],
         route_claim: object | None = None,
         _token: object,
     ) -> None:
@@ -113,6 +114,10 @@ class OwnedFactRelationTransitionAdmission:
             dict(transition_identity)
         )
         self.__bound_transition_identity_bytes = self.__transition_identity_bytes
+        self.__controller_capture_bytes = canonical_json_bytes(
+            dict(controller_capture)
+        )
+        self.__bound_controller_capture_bytes = self.__controller_capture_bytes
         self.__route_claim = route_claim
         self.__bound_route_claim = route_claim
         self.__claimed = False
@@ -149,6 +154,8 @@ class OwnedFactRelationTransitionAdmission:
                 is not self.__bound_request_provenance_bytes
                 or self.__transition_identity_bytes
                 is not self.__bound_transition_identity_bytes
+                or self.__controller_capture_bytes
+                is not self.__bound_controller_capture_bytes
                 or self.__route_claim is not self.__bound_route_claim
                 or self.__context.state is not BudgetState.RUNNING
                 or self.__context.stop_trigger is not None
@@ -203,6 +210,19 @@ class OwnedFactRelationTransitionAdmission:
     def _eligibility_ref(self) -> AttemptEligibility:
         self.__validate_live()
         return self.__eligibility
+
+    def _same_attempt_continuity_capture_coordinates(self):
+        with self.__lock:
+            if self.__claimed:
+                raise FactRelationTransitionError(
+                    "transition continuity capture is too late"
+                )
+            self.__validate_live()
+            return (
+                self,
+                json.loads(self.__bytes),
+                json.loads(self.__controller_capture_bytes),
+            )
 
 
 class ClaimedFactRelationTransitionContinuation:
@@ -451,6 +471,25 @@ def _run_fact_handoff_relation_transition_from_source(
         )
         merged, conflicts = _compose_candidates(phases)
         relation_set = _relation_set_document(inputs, fact_set, merged, conflicts)
+        relation_phase_finished_at = _utc_now()
+        controller_capture = {
+            "function": "r1-derivation-evidence-controller-capture/0.1",
+            "attempt_started_at": attempt_started_at,
+            "provider_runs": [
+                {
+                    "provider_run_id": phase.provider_run_id,
+                    "provider_descriptor": phase.provider_descriptor.document(),
+                    "started_at": phase.provider_run_started_at,
+                    "finished_at": phase.provider_run_finished_at,
+                    "phase_finished_at": phase.phase_finished_at,
+                    "provider_run_status": phase.provider_run_status.value,
+                    "phase_status": phase.phase_status.value,
+                    "release_outcome": phase.release_outcome.value,
+                }
+                for phase in phases
+            ],
+            "phase_finished_at": relation_phase_finished_at,
+        }
         carrier = _carrier_document(
             inputs=inputs,
             source=source,
@@ -504,7 +543,7 @@ def _run_fact_handoff_relation_transition_from_source(
             request_provenance_bytes=canonical_json_bytes(provenance),
             transition_identity_bytes=canonical_json_bytes(transition_identity),
         )
-        return OwnedFactRelationTransitionAdmission(
+        admitted = OwnedFactRelationTransitionAdmission(
             document,
             inputs=inputs,
             context=context,
@@ -512,9 +551,13 @@ def _run_fact_handoff_relation_transition_from_source(
             fact_handoff_source=source,
             request_provenance=provenance,
             transition_identity=transition_identity,
+            controller_capture=controller_capture,
             route_claim=route_claim,
             _token=_RESULT_TOKEN,
         )
+        if route_claim is not None:
+            route_claim._capture_same_attempt_continuity_transition(admitted)
+        return admitted
     except Exception as exc:
         parent.revoke()
         for attempt in attempts:

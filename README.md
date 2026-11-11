@@ -185,6 +185,16 @@ fresh CONTROL LOOP从该exact main建立
 [private implementation authorization publication](docs/404-r1-same-attempt-derivation-evidence-continuity-private-implementation-authorization-publication.md)；
 它自己的全部最后门闭合以前，bounded A–J authority仍未生效，runtime仍未开始，全局composition检查仍只在R1完成后独立进行。
 
+PR #463已经把doc404精确合入`main@b5ff07e03630d57060384883d28a49dc57bdf0df`。original Public CI
+`42981105555`、exact-main Public CI `42986054505`与Browser Smoke `42986054537`均attempt 1 SUCCESS
+（11/11、11/11、1/1）；fresh README/doc397/doc402/doc403/doc404 installed-product readback、AGENTS/milestones raw-byte
+observation、independent reconciliation与finite closeout全部闭合。因此bounded private implementation authority已经生效，但global
+composition authority仍未恢复。fresh CONTROL LOOP从该exact main建立
+[same-attempt continuity private implementation candidate](docs/405-r1-same-attempt-derivation-evidence-continuity-private-implementation-candidate.md)：
+四格semantic projection逐字节一致，focused四格各152/152，完整Review Attention四格各674/674；全部预资格缺陷与测试设施失败按
+原identity保留。本文仍只是未合入、未exact-main验证、未readback资格化、未冻结的implementation candidate；R1完成后的独立人类+AI
+全局组合检查义务不变。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)

@@ -271,6 +271,7 @@ class OwnedPostTerminalFactDualSuccessor:
         consumer: OwnedProductFactConsumer,
         slot: _SharedConsumeSlot,
         sealed: Mapping[str, object],
+        continuity_capture_slot: object,
         *,
         _token: object,
     ) -> None:
@@ -288,6 +289,8 @@ class OwnedPostTerminalFactDualSuccessor:
         self.__bound_consumer = consumer
         self.__slot = slot
         self.__bound_slot = slot
+        self.__continuity_capture_slot = continuity_capture_slot
+        self.__bound_continuity_capture_slot = continuity_capture_slot
         self.__attempt = sealed["attempt"]
         self.__inputs = sealed["inputs"]
         self.__context = sealed["context"]
@@ -347,6 +350,7 @@ class OwnedPostTerminalFactDualSuccessor:
         self.__bound_terminal_source_bytes: bytes | None = None
         self.__branch: str | None = None
         self.__route: str | None = None
+        self.__continuity_capture_slot._bind_selector(self, consumer)
         self.__validate_sealed_graph()
 
     def __copy__(self):
@@ -415,6 +419,13 @@ class OwnedPostTerminalFactDualSuccessor:
                 self.__route = route
                 self.__slot.route = route
                 self.__slot.state = DualSuccessorState.TERMINAL_READY
+                self.__continuity_capture_slot._capture_terminal_source(
+                    selector=self,
+                    closure=closure,
+                    source=source,
+                    branch=branch,
+                    route=route,
+                )
                 return closure
             except PostTerminalDualSuccessorError as exc:
                 self.__revoke_locked(exc.failure_family)
@@ -709,6 +720,8 @@ class OwnedPostTerminalFactDualSuccessor:
             if (
                 self.__consumer is not self.__bound_consumer
                 or self.__slot is not self.__bound_slot
+                or self.__continuity_capture_slot
+                is not self.__bound_continuity_capture_slot
                 or type(self.__inputs) is not DerivationInputSet
                 or type(self.__context) is not BudgetContext
                 or self.__context.state is not BudgetState.RUNNING
@@ -771,6 +784,16 @@ class OwnedPostTerminalFactDualSuccessor:
         if self.__slot.failure_family is None:
             self.__slot.failure_family = family
         self.__slot.state = DualSuccessorState.REVOKED
+        try:
+            from veritrail_review._same_attempt_derivation_evidence_continuity import (
+                EvidenceContinuityFailureFamily,
+            )
+
+            self.__bound_continuity_capture_slot._revoke(
+                EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_SAME_ATTEMPT_REJECTED
+            )
+        except Exception:
+            pass
 
     def __error_locked(self, message: str) -> PostTerminalDualSuccessorError:
         return PostTerminalDualSuccessorError(
@@ -794,6 +817,42 @@ class OwnedPostTerminalFactDualSuccessor:
         if type(family) is not DualSuccessorFailureFamily:
             family = DualSuccessorFailureFamily.TERMINAL_SOURCE_REJECTED
         self.__revoke(family)
+
+    def _bind_same_attempt_continuity_application(
+        self,
+        *,
+        route_claim: object,
+        claim_id: str,
+        source: Mapping[str, object],
+        inputs: DerivationInputSet,
+        context: BudgetContext,
+        closure: OwnedProductFactClosure,
+        fact_attempt: object,
+        eligibility: object,
+        route: str,
+    ):
+        self._validate_claimed_route(route, claim_id)
+        return self.__continuity_capture_slot._bind_application_route(
+            selector=self,
+            route_claim=route_claim,
+            claim_id=claim_id,
+            source=source,
+            inputs=inputs,
+            context=context,
+            closure=closure,
+            fact_attempt=fact_attempt,
+            eligibility=eligibility,
+            route=route,
+        )
+
+    def _capture_same_attempt_continuity_transition(
+        self, route_claim: object, admission: object
+    ) -> None:
+        self.__continuity_capture_slot._capture_normal_transition(
+            selector=self,
+            route_claim=route_claim,
+            admission=admission,
+        )
 
 
 class ClaimedPostTerminalRelationSource:
@@ -972,6 +1031,9 @@ class ClaimedPostTerminalRelationSource:
     def _revoke_from_relation_transition(self) -> None:
         self.__selector._revoke_from_relation_transition()
 
+    def _capture_same_attempt_continuity_transition(self, admission: object) -> None:
+        self.__selector._capture_same_attempt_continuity_transition(self, admission)
+
     def _application_output_admission_coordinates(self):
         """Return the exact live route world to the sibling private owner."""
 
@@ -1043,7 +1105,12 @@ def create_post_terminal_fact_dual_successor_consumer(
 ) -> OwnedPostTerminalFactDualSuccessor:
     """Create the exact new-domain Fact consumer and its sealed shared slot."""
 
+    from veritrail_review._same_attempt_derivation_evidence_continuity import (
+        _create_same_attempt_continuity_capture_slot,
+    )
+
     slot = _SharedConsumeSlot()
+    continuity_capture_slot = _create_same_attempt_continuity_capture_slot()
     consumer = _create_product_fact_consumer(
         closure,
         derivation_id=derivation_id,
@@ -1053,8 +1120,13 @@ def create_post_terminal_fact_dual_successor_consumer(
         applicability_admitter=_admit_relation_transition_fact_applicability,
         handoff_domain=HANDOFF_DOMAIN,
         post_terminal_dual_successor_slot=slot,
+        continuity_capture_slot=continuity_capture_slot,
     )
     sealed = consumer._post_terminal_dual_successor_sealed_state(slot)
     return OwnedPostTerminalFactDualSuccessor(
-        consumer, slot, sealed, _token=_SELECTOR_TOKEN
+        consumer,
+        slot,
+        sealed,
+        continuity_capture_slot,
+        _token=_SELECTOR_TOKEN,
     )

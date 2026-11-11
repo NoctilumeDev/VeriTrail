@@ -10,7 +10,7 @@ from threading import Lock
 from typing import Callable, Mapping, Sequence
 from uuid import uuid4
 
-from veritrail_review._execution_cell import DEFAULT_TRANSPORT_LIMITS
+from veritrail_review._execution_cell import DEFAULT_TRANSPORT_LIMITS, _utc_now
 from veritrail_review._execution_cell_binding import ProviderBinding
 from veritrail_review._execution_cell_protocol import (
     AttemptEligibility,
@@ -197,6 +197,7 @@ class OwnedProductFactConsumer:
         transport_limits: ExecutionCellTransportSafetyLimits,
         cancellation_requested: Callable[[], bool] | None,
         post_terminal_dual_successor_slot: object | None,
+        continuity_capture_slot: object | None,
         _token: object,
     ) -> None:
         if _token is not _PARENT_TOKEN:
@@ -234,6 +235,8 @@ class OwnedProductFactConsumer:
         self.__bound_post_terminal_dual_successor_slot = (
             post_terminal_dual_successor_slot
         )
+        self.__continuity_capture_slot = continuity_capture_slot
+        self.__bound_continuity_capture_slot = continuity_capture_slot
         self.__transport_limits = transport_limits
         self.__cancellation_requested = cancellation_requested
         self.__bound_cancellation_requested = cancellation_requested
@@ -287,6 +290,18 @@ class OwnedProductFactConsumer:
             else ()
         )
         self.__bound_claims = self.__claims
+        if self.__continuity_capture_slot is not None:
+            self.__continuity_capture_slot._admit_fact_attempt(
+                consumer=self,
+                attempt=self.__attempt,
+                inputs=self.__inputs,
+                context=self.__context,
+                eligibility=self.__eligibility,
+                claims=self.__claims,
+                attempt_id=self.__attempt_id,
+                derivation_id=self.__derivation_id,
+                attempt_started_at=_utc_now(),
+            )
         self._validate_live()
 
     @property
@@ -408,6 +423,8 @@ class OwnedProductFactConsumer:
                 is not self.__bound_cancellation_requested
                 or self.__post_terminal_dual_successor_slot
                 is not self.__bound_post_terminal_dual_successor_slot
+                or self.__continuity_capture_slot
+                is not self.__bound_continuity_capture_slot
                 or (
                     self.__handoff_domain
                     == "POST_TERMINAL_DUAL_SUCCESSOR_0_1"
@@ -531,6 +548,38 @@ class OwnedProductFactConsumer:
     def _revoke(self) -> None:
         for eligibility in (self.__bound_eligibility, self.__eligibility):
             eligibility.revoke()
+
+    def _continuity_begin_fact_provider_run(
+        self, claim: "OwnedProductFactClaim"
+    ) -> None:
+        if self.__continuity_capture_slot is not None:
+            self.__continuity_capture_slot._begin_fact_provider_run(
+                self, claim, _utc_now()
+            )
+
+    def _continuity_finish_fact_provider_run(
+        self, claim: "OwnedProductFactClaim", lifecycle: str
+    ) -> None:
+        if self.__continuity_capture_slot is not None:
+            finished_at = _utc_now()
+            phase_finished_at = _utc_now()
+            self.__continuity_capture_slot._finish_fact_provider_run(
+                self,
+                claim,
+                lifecycle=lifecycle,
+                finished_at=finished_at,
+                phase_finished_at=phase_finished_at,
+            )
+
+    def _continuity_close_fact_phase(
+        self,
+        closure: "OwnedProductFactClosure",
+        observations: tuple["OwnedProductFactObservation", ...],
+    ) -> None:
+        if self.__continuity_capture_slot is not None:
+            self.__continuity_capture_slot._close_fact_phase(
+                self, closure, observations, _utc_now()
+            )
 
     def _post_terminal_dual_successor_sealed_state(
         self, slot: object
@@ -904,6 +953,7 @@ class OwnedProductFactConsumer:
                     None,
                     _token=_CLOSURE_TOKEN,
                 )
+                self._continuity_close_fact_phase(self.__closure, ())
                 return self.__closure
             by_claim: dict[OwnedProductFactClaim, OwnedProductFactObservation] = {}
             for observation in observed:
@@ -1027,6 +1077,7 @@ class OwnedProductFactConsumer:
             self.__closure = OwnedProductFactClosure(
                 self, status, ordered, fact_set, _token=_CLOSURE_TOKEN
             )
+            self._continuity_close_fact_phase(self.__closure, ordered)
             return self.__closure
         except Exception as exc:
             self._revoke()
@@ -1438,6 +1489,7 @@ def _create_product_fact_consumer(
     applicability_admitter,
     handoff_domain: str,
     post_terminal_dual_successor_slot: object | None = None,
+    continuity_capture_slot: object | None = None,
 ) -> OwnedProductFactConsumer:
     if type(closure) is not OwnedParseFulfillmentClosure:
         raise ProductFactConsumerError("consumer requires an owned Parse closure")
@@ -1491,6 +1543,7 @@ def _create_product_fact_consumer(
             transport_limits=transport_limits,
             cancellation_requested=cancellation_requested,
             post_terminal_dual_successor_slot=post_terminal_dual_successor_slot,
+            continuity_capture_slot=continuity_capture_slot,
             _token=_PARENT_TOKEN,
         )
     except Exception as exc:
@@ -1509,6 +1562,7 @@ def _observation(
     facts: tuple[bytes, ...] = (),
     execution: bytes | None = None,
 ) -> OwnedProductFactObservation:
+    claim._parent_ref()._continuity_finish_fact_provider_run(claim, lifecycle)
     value = OwnedProductFactObservation(
         claim.binding,
         lifecycle,
@@ -1537,6 +1591,7 @@ def execute_product_fact_claim(
     limits = parent._limits_ref()
     context = parent._context_ref()
     child = claim._eligibility_ref()
+    parent._continuity_begin_fact_provider_run(claim)
     admitted: list[bool] = []
     try:
         frame = encode_frame(request, payload_limit=limits.request_payload_bytes)
