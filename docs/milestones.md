@@ -10129,3 +10129,38 @@ R2_R6_NOT_STARTED
 doc404只允许README、AGENTS、doc404与milestones。自己的完整local/original PR/protected merge/new exact-main双门/fresh
 installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED`才生效；
 implementation仍保持`NOT_STARTED`并返回CONTROL LOOP。局部授权不等于全局正确，post-R1 human+AI global check继续独立保留。
+
+## R1 same-attempt DerivationEvidence continuity private implementation 候选（2026-11-11）
+
+PR #463已经把doc404精确合入`main@b5ff07e03630d57060384883d28a49dc57bdf0df / tree=a1147c811133f9834bf587c5245189f773c474cd`。
+original Public CI `42981105555`、exact-main Public CI `42986054505`与Browser Smoke `42986054537`均attempt 1 SUCCESS
+（11/11、11/11、1/1）；fresh installed-product readback、raw-byte observations、independent reconciliation与finite closeout也全部闭合。
+因此bounded private implementation authority已经生效，global composition authority仍未恢复。
+
+fresh CONTROL LOOP建立
+[文档405](405-r1-same-attempt-derivation-evidence-continuity-private-implementation-candidate.md)。candidate在同一原始attempt内copy-own Fact与
+Relation controller timing、normal transition admission、normal/四类negative exact output与Coverage/root chain，使用versioned private
+owner/binding/profile/wire identity及独立reconciler；旧Schema、public export、manifest、persistence、Review与Core Verdict保持不变。
+
+Python 3.10.6/3.13.13 × normal/`-O`的semantic projection四格一致，canonical SHA-256为
+`dfba622dd81e3b13938c0f4b71b7354a0b3708b5cb4ac420b76b04274a002bd3`；focused四格各152/152，完整Review Attention四格各
+674/674。compile/diff/hygiene/public-export guard/audit continuity PASS。全部预资格实现缺陷、测试设施错误与混合工作字节cancelled run继续
+按原identity保留。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc405必须完成自己的local/original PR/protected merge/new exact-main双门/fresh installed-product readback/independent reconciliation，才可成为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；冻结必须另建docs-only publication。随后返回CONTROL LOOP，不得按
+文档编号自动恢复manifest或global composition authority。R1完成后仍需人类+AI共同执行独立全局检查。

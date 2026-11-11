@@ -17,6 +17,7 @@ from veritrail_review import _fact_to_coverage_exact_input_handoff as handoff
 from veritrail_review import _negative_world_coverage_authority_recovery as negative
 from veritrail_review import _post_terminal_fact_dual_successor as selector
 from veritrail_review import _relation_transition_slice_composition as positive
+from veritrail_review import _same_attempt_derivation_evidence_continuity as continuity
 from veritrail_review._fact_fulfillment import OwnedProductFactClosure
 from veritrail_review._review_coverage_ledger_conformance import (
     CoverageLedgerConformanceSource,
@@ -162,6 +163,8 @@ class BoundUnifiedReviewCoverageOutputAdmission:
         self.__phase: OwnedPhaseResult | None = None
         self.__admission_bytes: bytes | None = None
         self.__admitted: AdmittedUnifiedReviewCoverageOutput | None = None
+        self.__continuity_capture = None
+        self.__continuity_value = None
         self.__route_claim = route_claim
         self.__bound_route_claim = route_claim
         self.__selector: object | None = None
@@ -292,6 +295,17 @@ class BoundUnifiedReviewCoverageOutputAdmission:
             raise _ValidationFailure(
                 UnifiedOutputAdmissionFailureFamily.UNIFIED_OUTPUT_CONTEXT_REVOKED
             )
+        self.__continuity_capture = self.__selector._bind_same_attempt_continuity_application(
+            route_claim=route_claim,
+            claim_id=claim_id,
+            source=source,
+            inputs=inputs,
+            context=context,
+            closure=self.__closure,
+            fact_attempt=self.__fact_attempt,
+            eligibility=self.__eligibility,
+            route=route,
+        )
 
     def __route_coordinates(self) -> tuple[object, ...]:
         if self.__route_claim is not self.__bound_route_claim:
@@ -453,9 +467,16 @@ class BoundUnifiedReviewCoverageOutputAdmission:
                 self.__admitted = admitted
                 self.__state = admitted_state
                 self._validate_admitted(admitted)
+                self.__continuity_value = self.__continuity_capture._commit(admitted)
+                self._validate_admitted(admitted)
                 return admitted
             except _ValidationFailure as exc:
                 self.__fail(exc.family, result=result)
+            except continuity.SameAttemptDerivationEvidenceContinuityError:
+                self.__state = UnifiedOutputAdmissionState.REVOKED
+                self.__revoke_route_claim()
+                self.__revoke_result(result)
+                raise
             except UnifiedOutputAdmissionError:
                 raise
             except Exception as exc:
@@ -708,6 +729,10 @@ class BoundUnifiedReviewCoverageOutputAdmission:
                     raise _ValidationFailure(
                         UnifiedOutputAdmissionFailureFamily.UNIFIED_OUTPUT_RESULT_BINDING_REJECTED
                     )
+                if self.__continuity_value is not None:
+                    self.__continuity_capture._validate_committed_admission(
+                        admitted, self.__result, self.__admission_bytes
+                    )
             except _ValidationFailure as exc:
                 self.__fail(exc.family)
             except UnifiedOutputAdmissionError:
@@ -725,6 +750,46 @@ class BoundUnifiedReviewCoverageOutputAdmission:
             self.__fail(
                 UnifiedOutputAdmissionFailureFamily.UNIFIED_OUTPUT_ROUTE_REJECTED
             )
+
+    def _same_attempt_continuity_commit_coordinates(self, admitted: object):
+        with self.__lock:
+            if (
+                admitted is not self.__admitted
+                or self.__state
+                not in {
+                    UnifiedOutputAdmissionState.ADMITTED_NORMAL,
+                    UnifiedOutputAdmissionState.ADMITTED_NEGATIVE,
+                }
+                or self.__result is None
+                or self.__result_kind is None
+                or type(self.__admission_bytes) is not bytes
+                or self.__route_claim is not self.__bound_route_claim
+            ):
+                raise continuity.SameAttemptDerivationEvidenceContinuityError(
+                    continuity.EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_SAME_ATTEMPT_REJECTED
+                )
+            return (
+                admitted,
+                self.__route_claim,
+                self.__selector,
+                self.__closure,
+                json.loads(self.__source_bytes),
+                self.__inputs,
+                self.__context,
+                self.__fact_attempt,
+                self.__eligibility,
+                self.__result,
+                self.__result_kind,
+                self.__admission_bytes,
+            )
+
+    def _same_attempt_continuity_value(self, admitted: object):
+        with self.__lock:
+            if self.__continuity_value is None:
+                raise continuity.SameAttemptDerivationEvidenceContinuityError(
+                    continuity.EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_CAPTURE_ORDER_REJECTED
+                )
+            return self.__continuity_capture._committed_value(admitted)
 
 
 class AdmittedUnifiedReviewCoverageOutput:
@@ -819,6 +884,13 @@ class AdmittedUnifiedReviewCoverageOutput:
     def authority_ceiling_copy(self) -> dict[str, object]:
         self.__validate()
         return json.loads(self._admission_bytes)["authority_ceiling"]
+
+    def _same_attempt_continuity_commit_coordinates(self):
+        return self.__owner._same_attempt_continuity_commit_coordinates(self)
+
+    def _same_attempt_derivation_evidence_continuity(self):
+        self.__validate()
+        return self.__owner._same_attempt_continuity_value(self)
 
 
 def bind_unified_review_coverage_output_admission(

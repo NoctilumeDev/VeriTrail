@@ -8864,3 +8864,44 @@ doc404只允许README、AGENTS、doc404与milestones。自己的local/original c
 双门/fresh README-doc397-doc402-doc403-doc404 installed-product readback/raw AGENTS-milestones observation/independent reconciliation/finite
 closeout全部闭合后，`PRIVATE_IMPLEMENTATION_ALLOWED`才生效，同时implementation仍保持`NOT_STARTED`并返回CONTROL LOOP。
 `local_not_global = true`，post-R1 human+AI global check继续是R1完成后的独立义务。
+
+### R1 same-attempt DerivationEvidence continuity private implementation 候选
+
+PR #463把doc404 candidate `445e014708a78c16b362951133480193575fc8cf`、tree
+`a1147c811133f9834bf587c5245189f773c474cd`精确合入
+`main@b5ff07e03630d57060384883d28a49dc57bdf0df`。original Public CI `42981105555`、exact-main Public CI
+`42986054505`与Browser Smoke `42986054537`均attempt 1 SUCCESS（11/11、11/11、1/1），没有rerun；fresh
+README/doc397/doc402/doc403/doc404 readback、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部
+成立。因此`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这不恢复global
+composition authority。
+
+fresh CONTROL LOOP从该exact main建立
+[文档405](docs/405-r1-same-attempt-derivation-evidence-continuity-private-implementation-candidate.md)，实现versioned private owner、
+same original attempt/controller capture、normal与四类negative exact binding、one-shot commit、independent reconciliation及
+`DEC-000`至`DEC-029` direct falsifiers。private implementation只改动四个既有private runtime模块，并新增一个private owner模块与一份
+private test；没有public export、Schema、manifest、persistence、public Review或Core Verdict。
+
+final candidate source/test bytes的semantic projection在Python 3.10.6/3.13.13 × normal/`-O`四格逐字节一致，canonical SHA-256为
+`dfba622dd81e3b13938c0f4b71b7354a0b3708b5cb4ac420b76b04274a002bd3`；focused四格各152/152，完整Review Attention四格各
+674/674。compile、diff、global/local hygiene、禁止public export与primary audit continuity也PASS。prequalification期间发现的legacy
+capture order、negative early revoke、Relation denominator不完整、committed live-object mutation漏检，以及proof-facility/fixture/cancelled run
+身份全部保留；后继PASS不覆盖这些历史。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc405候选只允许README、AGENTS、doc405、milestones及其声明的六个private source/test paths。必须完成自己的local qualification、original
+PR gate、protected exact-head merge、新exact-main双门、fresh anonymous installed-product readback与independent reconciliation，最多成为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；`FROZEN`必须由后继独立docs-only publication取得。随后返回
+CONTROL LOOP重审manifest及剩余R1，不能按文档编号自动施工。`local_not_global = true`，R1完成后的人类+AI全局检查仍是独立义务。
