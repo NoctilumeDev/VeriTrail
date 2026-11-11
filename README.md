@@ -177,6 +177,14 @@ independent reconciliation与199-artifact finite closeout全部成立；PR #459/
 该candidate自己的全部最后门以前最多只是local feasibility witness，runtime仍`NOT_STARTED / NOT_AUTHORIZED`，global composition
 authority仍未恢复，R1完成后的独立global check义务不变。
 
+PR #462已经把doc403精确合入`main@ffe57f80d3c0eef85dcb5ad39753a0d7a1abbb11`。original/exact-main Public CI与Browser
+Smoke均attempt 1 SUCCESS；fresh README/doc397/doc402/doc403各有唯一qualifying formal PASS，AGENTS/milestones raw-byte observation、
+independent reconciliation与172-artifact finite closeout也已闭合。README formal #1的anonymous API rate exhaustion ERROR、PR #459/doc400
+HTTP 503与更早的original-gate失败仍保持原identity，不被后继PASS回填。因此doc403现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。
+fresh CONTROL LOOP从该exact main建立
+[private implementation authorization publication](docs/404-r1-same-attempt-derivation-evidence-continuity-private-implementation-authorization-publication.md)；
+它自己的全部最后门闭合以前，bounded A–J authority仍未生效，runtime仍未开始，全局composition检查仍只在R1完成后独立进行。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
