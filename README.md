@@ -207,8 +207,14 @@ timeout而`CANCELLED`；#465已关闭、未合并、未rerun，candidate regress
 PR #465或doc405。fresh CONTROL LOOP进一步确认15→20→25→30→35→45→55的同一aggregate timeout模型已经重复被suite增长或真实variance
 追上，因此新的[Review Attention topology containment maintenance](docs/408-r1-public-ci-review-attention-topology-containment-maintenance.md)
 不再提高55分钟：它把Python 3.10/3.13 × normal/`-O`四个完整Review Attention suites拆成独立45分钟cells，并让名字不变的既有required
-Python checks以`always()`和显式success assertion fail-closed地消费四格结果。所有test/runtime/oracle bytes不变。该maintenance完整资格链闭合前
-仍是`CANDIDATE_NOT_QUALIFIED`，也不授权重建doc406或冻结doc405。
+Python checks以`always()`和显式success assertion fail-closed地消费四格结果。PR #467的original/exact-main Public CI均15/15，Browser
+Smoke 1/1，fresh readback、reconciliation与finite closeout全部闭合，因此该topology maintenance已经`FROZEN`；它仍不资格化doc405。
+
+fresh doc406 recovery PR #468的三格Review Attention成功，但Python 3.10 `-O`在`DEC-001`第四个negative world产生1个ERROR，新的required
+barrier正确fail closed；#468已关闭、未合并、未rerun，lower cause保持`UNKNOWN`。当前
+[semantic fixture clock correction](docs/409-r1-same-attempt-continuity-dec001-semantic-fixture-clock-correction.md)不再提高60秒fixture budget，
+只把`DEC-001`的纯语义证明从host wall time解耦；真实deadline/cancellation oracle与全部runtime bytes不变。该maintenance自己的完整资格链
+闭合以前仍是`CANDIDATE_NOT_QUALIFIED`。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 

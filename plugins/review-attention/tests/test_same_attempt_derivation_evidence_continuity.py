@@ -35,6 +35,7 @@ from veritrail_review import (  # noqa: E402
 from veritrail_review import (  # noqa: E402
     _unified_review_coverage_output_admission as unified,
 )
+from veritrail_review.budget import BudgetContext, ExecutionBudgetLimits  # noqa: E402
 from veritrail_review.canonical import canonical_json_bytes  # noqa: E402
 
 
@@ -44,6 +45,17 @@ class SameAttemptDerivationEvidenceContinuityTests(unittest.TestCase):
     def setUp(self) -> None:
         self.support = post_terminal_support.PostTerminalFactDualSuccessorTests()
         self.support.setUp()
+
+    @staticmethod
+    def _semantic_context() -> BudgetContext:
+        return BudgetContext._admit_for_testing(
+            ExecutionBudgetLimits(
+                wall_clock_ms=60_000,
+                memory_bytes=512 * 1024 * 1024,
+                artifact_bytes=64 * 1024 * 1024,
+            ),
+            clock=lambda: 0.0,
+        )
 
     def _normal(self):
         selector, closure, inputs, context, eligibility = self.support._terminal()
@@ -165,21 +177,35 @@ class SameAttemptDerivationEvidenceContinuityTests(unittest.TestCase):
 
     def test_dec_001_all_four_negative_worlds_commit_without_placeholders(self):
         branches = []
-        for index in range(4):
-            with self.subTest(index=index):
-                expected, value, admitted, _, result, claim, *_ = self._negative(index)
-                document = value._document_copy()
-                branches.append(value.terminal_branch)
-                self.assertEqual(value.terminal_branch, expected)
-                self.assertEqual(value.continuity_variant, continuity.NEGATIVE_VARIANT)
-                self.assertIs(value.negative_result(), result)
-                self.assertIs(admitted.negative_result(), result)
-                self.assertIsNone(document["relation_controller_capture"])
-                self.assertIsNone(document["transition_admission_sha256"])
-                source = claim.fact_terminal_source_copy()
-                self.assertIsNone(source["fact_set"])
-                self.assertFalse(result.authority_ceiling_copy()["relation_set"])
-                self.assertFalse(result.authority_ceiling_copy()["review_slice_set"])
+        # DEC-001 proves the four semantic terminal branches, not deadline
+        # behavior. Keep its sealed limits but isolate the proof from runner
+        # speed; tests that exercise real execution cells retain the real clock.
+        with mock.patch.object(
+            post_terminal_support.parse_support.ParseHelper,
+            "_context",
+            side_effect=self._semantic_context,
+        ):
+            for index in range(4):
+                with self.subTest(index=index):
+                    expected, value, admitted, _, result, claim, *_ = self._negative(
+                        index
+                    )
+                    document = value._document_copy()
+                    branches.append(value.terminal_branch)
+                    self.assertEqual(value.terminal_branch, expected)
+                    self.assertEqual(
+                        value.continuity_variant, continuity.NEGATIVE_VARIANT
+                    )
+                    self.assertIs(value.negative_result(), result)
+                    self.assertIs(admitted.negative_result(), result)
+                    self.assertIsNone(document["relation_controller_capture"])
+                    self.assertIsNone(document["transition_admission_sha256"])
+                    source = claim.fact_terminal_source_copy()
+                    self.assertIsNone(source["fact_set"])
+                    self.assertFalse(result.authority_ceiling_copy()["relation_set"])
+                    self.assertFalse(
+                        result.authority_ceiling_copy()["review_slice_set"]
+                    )
         self.assertEqual(
             branches,
             [

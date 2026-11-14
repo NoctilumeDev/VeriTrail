@@ -8959,3 +8959,45 @@ README/doc407/doc408/milestones readback、AGENTS/workflow raw-byte observation�
 `R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`。随后必须返回CONTROL LOOP，从新的exact main独立重建doc406；
 不得把maintenance解释成doc405已资格化、lower slowdown cause已知或manifest/public Review/R2–R6已授权。`local_not_global = true`，
 post-R1 human+AI global check继续是独立义务。
+
+### R1 doc406 recovery original Public CI failure 与 DEC-001 semantic fixture clock correction
+
+PR #467的topology maintenance已完整闭合于`main@e61b9a2c195633b238ba69884c43315b099ed1a6 / tree=7921b30...`：original
+Public CI `43630464678`与exact-main Public CI `43633875326`均15/15 SUCCESS，Browser Smoke `43633875335`为1/1 SUCCESS；fresh
+README/doc407/doc408 render、AGENTS/workflow/milestones raw-byte observation、reconciliation
+`f12a12741023e87cd3d0b316d0725c7fb9991f7a3805b632ffe3e8901c2ea322`、130-artifact closeout
+`8566ec8d64dcd110add13ea61443bbb0533041efdc375d820abadac1650d132a`与finite integrity
+`8d7864b46afaa2120a31a86c5b0722ae430bc8a567bd74440a30f5d6359063ac`全部成立。因此
+`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`已生效；doc405仍`NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立的doc406 recovery PR #468绑定`base=e61b9a2... / head=6d0e645... / tree=010b71a... / 1 commit /
+4 docs files`。original Public CI `43641391725` attempt 1中三个Review Attention cells成功，Python 3.10 `-O` cell在674 tests后报告
+1 ERROR / 3 skipped：`DEC-001`的index 3 `REQUIRED_PROVIDER_NON_SUCCESS`在later result binding处失去live exact-input carrier。两个required
+Python barriers按新拓扑真实FAIL。#468已关闭、未合并、未rerun；原run/job/log/annotation与closed identity永久保留。
+
+isolated Python 3.10.6 `-O`诊断66.071秒PASS；instrumented四world诊断58.875秒PASS；CI日志支持该test约101秒，但没有记录具体失败的
+liveness predicate。因此slow-runner sufficient-budget premise是leading explanation，deadline unique cause与candidate regression均未建立，
+lower cause保持`UNKNOWN`。
+
+[文档409](docs/409-r1-same-attempt-continuity-dec001-semantic-fixture-clock-correction.md)只重开test fixture proof target：`DEC-001`
+仍构造并断言全部四个negative worlds，保留`60_000ms / 512MiB / 64MiB` limits，仅在该test lexical scope内使用固定test monotonic clock；
+同文件其他tests、真实Windows execution cell、deadline/cancellation oracle与全部runtime bytes保持base。class-wide冻结clock的prequalification
+prototype因真实execution cell正确报`DERIVATION_ADMISSION_DEADLINE`而被否决并保留。当前只允许：
+
+```text
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_DOC406_RECOVERY_PR468_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_CONTINUITY_DEC001_SEMANTIC_FIXTURE_CLOCK_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc409 candidate只允许README、AGENTS、doc409、milestones与一个private test path。必须完成final local四格focused/full matrices、独立
+deadline/cancellation oracles、original PR 15/15、protected exact-head merge、新exact-main 15/15与Browser 1/1、fresh
+README/doc408/doc409/milestones readback、AGENTS/test raw-byte observation、independent reconciliation与finite closeout，最多成为
+`R1_SAME_ATTEMPT_CONTINUITY_DEC001_SEMANTIC_FIXTURE_CLOCK_CORRECTION_FROZEN`。随后必须返回CONTROL LOOP，从新的exact main独立重建
+doc406；不得回填PR #468、冻结doc405或启动manifest/public Review/R2–R6。`local_not_global = true`，post-R1 human+AI global check继续保留。
