@@ -10164,3 +10164,34 @@ R2_R6_NOT_STARTED
 doc405必须完成自己的local/original PR/protected merge/new exact-main双门/fresh installed-product readback/independent reconciliation，才可成为
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；冻结必须另建docs-only publication。随后返回CONTROL LOOP，不得按
 文档编号自动恢复manifest或global composition authority。R1完成后仍需人类+AI共同执行独立全局检查。
+
+## R1 same-attempt continuity original Public CI timeout failure boundary audit 候选（2026-11-14）
+
+PR #464把doc405 candidate精确合入`main@a41b8ba3575419e754099725b5e1616af6cd1af4 / tree=c8f0bd16e9e69a0ef7bdea3da8526d8fb0f3f255`。
+original Public CI `43034543495`与exact-main Public CI `43040847982`均attempt 1 SUCCESS；Browser Smoke `43040847817`
+attempt 1在`Install Chromium`因Ubuntu mirror DNS setup failure失败，产品build/smoke未启动，lower cause保持`UNKNOWN`。所以doc405
+已合入但`NOT_QUALIFIED / NOT_FROZEN`。
+
+后继PR #465的docs-only doc406 audit candidate绑定`base=a41b8ba… / head=ffd09d2… / tree=9ef11a4…`。其original Public CI
+`43056337145` attempt 1在Python 3.10 aggregated lane触到workflow声明的55分钟timeout；check-run annotation明确记录job超过
+`55m0s`，normal Review Attention step 1463秒SUCCESS，`-O` step 1451秒后`CANCELLED`。同runtime在PR #464两个world的Python
+3.10 jobs曾于1958/2215秒SUCCESS；因此containment premise counterexample已建立，candidate regression没有建立，变慢的下层原因仍为
+`UNKNOWN`。#465保持closed/unmerged/no rerun，原始`CANCELLED`不可由后继PASS覆盖。
+
+fresh CONTROL LOOP建立
+[文档407](407-r1-same-attempt-continuity-original-public-ci-timeout-failure-boundary-audit.md)，只重开doc406 original PR qualification与
+Public CI aggregate Windows lane containment premise audit，不修改workflow、runtime、tests、oracle、doc397或doc405。当前状态上限为：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_FAILURE_BOUNDARY_AUDIT_PR465_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_TIMEOUT_CANCELLED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc407只允许四个docs paths。自己的完整qualification pipeline闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须
+返回CONTROL LOOP，不能按文档编号直接提高timeout或重建doc406。R1完成后的独立人类+AI全项目检查义务继续保留。
