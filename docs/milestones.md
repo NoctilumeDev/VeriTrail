@@ -10211,3 +10211,37 @@ contexts、protected merge、新exact-main 15/15与Browser 1/1、fresh installed
 closeout全部成立后，最多成为`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`。随后必须返回CONTROL LOOP，从
 新的exact main独立重建doc406；不能把maintenance误写成doc405资格、known slowdown root cause或manifest/public Review授权。R1完成后的独立
 人类+AI全项目检查义务继续保留。
+
+## R1 doc406 recovery original gate failure与DEC-001 fixture clock correction（2026-11-15）
+
+PR #467已把doc408/workflow candidate精确合入`main@e61b9a2c195633b238ba69884c43315b099ed1a6 / tree=7921b30...`。original
+Public CI `43630464678`与exact-main Public CI `43633875326`均15/15 SUCCESS，Browser Smoke `43633875335`为1/1 SUCCESS；fresh
+installed-product/raw-byte readback、reconciliation `f12a12741023e87cd3d0b316d0725c7fb9991f7a3805b632ffe3e8901c2ea322`、130-artifact
+closeout `8566ec8d64dcd110add13ea61443bbb0533041efdc375d820abadac1650d132a`与finite integrity
+`8d7864b46afaa2120a31a86c5b0722ae430bc8a567bd74440a30f5d6359063ac`全部闭合。topology maintenance因此`FROZEN`，不回填
+doc405、PR #464 Browser或PR #465 CANCELLED。
+
+fresh doc406 recovery PR #468绑定`e61b9a2... / 6d0e645... / 010b71a...`。original Public CI `43641391725` attempt 1的三个
+Review Attention cells成功，Python 3.10 `-O` cell在674 tests后于`DEC-001` index 3报告1个ERROR；两个required Python barriers正确
+fail closed。#468已经closed/unmerged/no rerun，原始失败不由后继诊断覆盖。
+
+独立与instrumented诊断支持slow-runner sufficient-budget fixture premise是leading explanation，但没有证明deadline是唯一失败predicate，lower
+cause继续为`UNKNOWN`。fresh CONTROL LOOP建立
+[文档409](409-r1-same-attempt-continuity-dec001-semantic-fixture-clock-correction.md)：不增加60秒budget，只在`DEC-001`的lexical scope
+内固定test monotonic clock，使四个semantic negative worlds不再由host wall time裁决；真实execution cell、deadline/cancellation oracle与
+runtime bytes不变。class-wide prototype的`DERIVATION_ADMISSION_DEADLINE`失败永久保留。当前状态上限为：
+
+```text
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN
+R1_DOC406_RECOVERY_PR468_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_CONTINUITY_DEC001_SEMANTIC_FIXTURE_CLOCK_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc409只允许一个private test path与四个docs paths。自己的local/original PR/protected merge/new exact-main双门/fresh
+installed-product/raw-byte readback/independent reconciliation/finite closeout闭合后，最多冻结test-fixture correction；随后返回CONTROL LOOP从
+新exact main独立重建doc406。它不回填PR #468，不资格化doc405，也不授权manifest、public Review、global composition或R2–R6。
