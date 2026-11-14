@@ -10165,7 +10165,7 @@ doc405必须完成自己的local/original PR/protected merge/new exact-main双�
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；冻结必须另建docs-only publication。随后返回CONTROL LOOP，不得按
 文档编号自动恢复manifest或global composition authority。R1完成后仍需人类+AI共同执行独立全局检查。
 
-## R1 same-attempt continuity original Public CI timeout failure boundary audit 候选（2026-11-14）
+## R1 same-attempt continuity original Public CI timeout boundary与拓扑维护（2026-11-15）
 
 PR #464把doc405 candidate精确合入`main@a41b8ba3575419e754099725b5e1616af6cd1af4 / tree=c8f0bd16e9e69a0ef7bdea3da8526d8fb0f3f255`。
 original Public CI `43034543495`与exact-main Public CI `43040847982`均attempt 1 SUCCESS；Browser Smoke `43040847817`
@@ -10180,12 +10180,25 @@ attempt 1在`Install Chromium`因Ubuntu mirror DNS setup failure失败，产品b
 
 fresh CONTROL LOOP建立
 [文档407](407-r1-same-attempt-continuity-original-public-ci-timeout-failure-boundary-audit.md)，只重开doc406 original PR qualification与
-Public CI aggregate Windows lane containment premise audit，不修改workflow、runtime、tests、oracle、doc397或doc405。当前状态上限为：
+Public CI aggregate Windows lane containment premise audit，不修改workflow、runtime、tests、oracle、doc397或doc405。PR #466以original
+Public CI `43614699493` 11/11、protected merge `272d581cd8fb5e652ee6cd5d1077c45aaf1d442d`、new exact-main Public CI
+`43618842277` 11/11与Browser `43618842284` 1/1、fresh readback、reconciliation
+`d0483ec482252357e682a986d44c561e99fd8e85f1882a6edf3374b7c74ba309`、116-artifact closeout
+`bd62d911997b28a40c64d136ab1bf550c8cf5847f256a6b8dc39c4076a8aba42`及finite integrity
+`1e8671cd8799306925224fa2abcdce8f92908b97a3b46a5034f8de6c9451c7ed`完整闭合。doc407因此是
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填PR #465或doc405。
+
+fresh CONTROL LOOP再核对workflow历史、PR #465/#466时长与active rulesets后，确认15→20→25→30→35→45→55的同一aggregate timeout
+模型已被真实反例重复击穿；继续提高数字不恢复其前提。新的
+[文档408](408-r1-public-ci-review-attention-topology-containment-maintenance.md)选择结构性最小维护：Python 3.10/3.13 × normal/`-O`四个
+完整Review Attention suites分别进入独立45分钟Windows cells；名字不变的既有required Python checks保留55分钟及所有其他tests/build/
+artifacts，并用`always()`与显式success assertion fail-closed消费四格结果。runtime/test/oracle、ruleset与产品内层timeout不变。当前状态上限为：
 
 ```text
 R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
 R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_FAILURE_BOUNDARY_AUDIT_PR465_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_TIMEOUT_CANCELLED_NOT_QUALIFIED
-R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_CANDIDATE_NOT_QUALIFIED
 R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
 R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
@@ -10193,5 +10206,8 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 R2_R6_NOT_STARTED
 ```
 
-doc407只允许四个docs paths。自己的完整qualification pipeline闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须
-返回CONTROL LOOP，不能按文档编号直接提高timeout或重建doc406。R1完成后的独立人类+AI全项目检查义务继续保留。
+doc408 candidate只允许workflow与四个docs paths。自己的local topology/oracle gates、original Public CI 15/15、既有七个required
+contexts、protected merge、新exact-main 15/15与Browser 1/1、fresh installed-product/raw-byte readback、independent reconciliation及finite
+closeout全部成立后，最多成为`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`。随后必须返回CONTROL LOOP，从
+新的exact main独立重建doc406；不能把maintenance误写成doc405资格、known slowdown root cause或manifest/public Review授权。R1完成后的独立
+人类+AI全项目检查义务继续保留。

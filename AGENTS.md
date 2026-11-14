@@ -8906,7 +8906,7 @@ PR gate、protected exact-head merge、新exact-main双门、fresh anonymous ins
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；`FROZEN`必须由后继独立docs-only publication取得。随后返回
 CONTROL LOOP重审manifest及剩余R1，不能按文档编号自动施工。`local_not_global = true`，R1完成后的人类+AI全局检查仍是独立义务。
 
-### R1 same-attempt continuity PR #465 original Public CI timeout failure boundary audit 候选
+### R1 same-attempt continuity original Public CI timeout failure boundary 与拓扑维护候选
 
 PR #464把doc405 implementation candidate `b4fa42cc16b814f9d23e8c025bc4499dcb412084`、tree
 `c8f0bd16e9e69a0ef7bdea3da8526d8fb0f3f255`精确合入`main@a41b8ba3575419e754099725b5e1616af6cd1af4`。original Public CI
@@ -8923,7 +8923,20 @@ counterexample，但不建立candidate regression；下层变慢原因保持`UNK
 
 fresh CONTROL LOOP从未变化的exact main建立
 [文档407](docs/407-r1-same-attempt-continuity-original-public-ci-timeout-failure-boundary-audit.md)，只审计original qualification与
-Public CI aggregate lane containment premise，不修改workflow、runtime、tests、oracle、doc397或doc405。当前只允许：
+Public CI aggregate lane containment premise，不修改workflow、runtime、tests、oracle、doc397或doc405。PR #466 original Public CI
+`43614699493`、protected merge `272d581cd8fb5e652ee6cd5d1077c45aaf1d442d`、exact-main Public CI `43618842277`与Browser
+Smoke `43618842284`均attempt 1 SUCCESS；fresh README/doc407 readback、AGENTS/milestones raw-byte observation、independent
+reconciliation `d0483ec482252357e682a986d44c561e99fd8e85f1882a6edf3374b7c74ba309`、116-artifact closeout
+`bd62d911997b28a40c64d136ab1bf550c8cf5847f256a6b8dc39c4076a8aba42`及finite integrity
+`1e8671cd8799306925224fa2abcdce8f92908b97a3b46a5034f8de6c9451c7ed`全部成立。因此doc407是
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填PR #465或doc405。
+
+返回CONTROL LOOP后，exact workflow与历史证明同一aggregate timeout已从15逐步扩大至20/25/30/35/45/55分钟，仍被真实55分钟
+counterexample击穿；current ruleset又只要求名字固定的两个Python contexts，单纯添加dependency会因required job被`skipped`而可能错误放行。
+所以[文档408](docs/408-r1-public-ci-review-attention-topology-containment-maintenance.md)与同一candidate的workflow patch选择最小结构维护：
+Python 3.10/3.13 × normal/`-O`四个完整Review Attention suites各自进入独立45分钟Windows cell；既有required Python checks名字、
+55分钟budget、其余tests/build/artifact与下游needs保持不变，并以job-level `always()`加显式success assertion fail-closed消费四格结果。
+runtime/test/oracle bytes、ruleset与产品内层timeout不变。当前只允许：
 
 ```text
 R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
@@ -8931,7 +8944,8 @@ R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILIT
 R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
 R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
 R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_FAILURE_BOUNDARY_AUDIT_PR465_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_TIMEOUT_CANCELLED_NOT_QUALIFIED
-R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_CANDIDATE_NOT_QUALIFIED
 R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
 R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
 R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
@@ -8939,7 +8953,9 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 R2_R6_NOT_STARTED
 ```
 
-doc407只允许README、AGENTS、doc407与milestones。自己的完整local/original PR/protected merge/new exact-main双门/fresh
-installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，最多成为`FAILURE_BOUNDARY_AUDITED /
-QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP审计containment premise；不得直接提高timeout、重建doc406、冻结implementation或启动
-manifest/public Review/R2–R6。`local_not_global = true`，post-R1 human+AI global check继续是独立义务。
+doc408 candidate只允许`.github/workflows/ci.yml`、README、AGENTS、doc408与milestones。必须完成自己的local topology/oracle gates、
+original PR全15 jobs、既有七个required contexts、protected exact-head merge、新exact-main Public CI 15/15与Browser 1/1、fresh
+README/doc407/doc408/milestones readback、AGENTS/workflow raw-byte observation、independent reconciliation与finite closeout，最多成为
+`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`。随后必须返回CONTROL LOOP，从新的exact main独立重建doc406；
+不得把maintenance解释成doc405已资格化、lower slowdown cause已知或manifest/public Review/R2–R6已授权。`local_not_global = true`，
+post-R1 human+AI global check继续是独立义务。
