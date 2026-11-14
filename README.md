@@ -199,10 +199,16 @@ PR #464随后把doc405 private implementation candidate精确合入`main@a41b8ba
 exact-main Public CI均11/11 SUCCESS，但exact-main Browser Smoke `43040847817` attempt 1在安装Chromium时遇到Ubuntu mirror DNS
 setup failure，产品build/smoke没有启动，lower cause保持`UNKNOWN`；doc405因此`MERGED / NOT_QUALIFIED / NOT_FROZEN`。后继PR #465尝试
 建立该Browser failure boundary audit，但其original Public CI `43056337145` attempt 1的Python 3.10 aggregated lane明确超过55分钟job
-timeout而`CANCELLED`；#465已关闭、未合并、未rerun，candidate regression与被取消步骤的产品结果均未建立。新的
+timeout而`CANCELLED`；#465已关闭、未合并、未rerun，candidate regression与被取消步骤的产品结果均未建立。
+
 [original Public CI timeout failure boundary audit](docs/407-r1-same-attempt-continuity-original-public-ci-timeout-failure-boundary-audit.md)
-只审计这次qualification failure与aggregate lane containment premise；不修改workflow、runtime、tests或oracle。它自己的完整资格链闭合以前
-仍是`CANDIDATE_NOT_QUALIFIED`，也不授权直接提高timeout或重建doc406。
+已经由PR #466的original 11/11、protected merge `272d581cd8fb5e652ee6cd5d1077c45aaf1d442d`、new exact-main 11/11与Browser
+1/1、fresh readback、independent reconciliation及finite closeout完整闭合，状态为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；它不回填
+PR #465或doc405。fresh CONTROL LOOP进一步确认15→20→25→30→35→45→55的同一aggregate timeout模型已经重复被suite增长或真实variance
+追上，因此新的[Review Attention topology containment maintenance](docs/408-r1-public-ci-review-attention-topology-containment-maintenance.md)
+不再提高55分钟：它把Python 3.10/3.13 × normal/`-O`四个完整Review Attention suites拆成独立45分钟cells，并让名字不变的既有required
+Python checks以`always()`和显式success assertion fail-closed地消费四格结果。所有test/runtime/oracle bytes不变。该maintenance完整资格链闭合前
+仍是`CANDIDATE_NOT_QUALIFIED`，也不授权重建doc406或冻结doc405。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
