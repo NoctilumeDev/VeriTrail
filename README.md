@@ -195,6 +195,15 @@ composition authority仍未恢复。fresh CONTROL LOOP从该exact main建立
 原identity保留。本文仍只是未合入、未exact-main验证、未readback资格化、未冻结的implementation candidate；R1完成后的独立人类+AI
 全局组合检查义务不变。
 
+PR #464随后把doc405 private implementation candidate精确合入`main@a41b8ba3575419e754099725b5e1616af6cd1af4`。original与
+exact-main Public CI均11/11 SUCCESS，但exact-main Browser Smoke `43040847817` attempt 1在安装Chromium时遇到Ubuntu mirror DNS
+setup failure，产品build/smoke没有启动，lower cause保持`UNKNOWN`；doc405因此`MERGED / NOT_QUALIFIED / NOT_FROZEN`。后继PR #465尝试
+建立该Browser failure boundary audit，但其original Public CI `43056337145` attempt 1的Python 3.10 aggregated lane明确超过55分钟job
+timeout而`CANCELLED`；#465已关闭、未合并、未rerun，candidate regression与被取消步骤的产品结果均未建立。新的
+[original Public CI timeout failure boundary audit](docs/407-r1-same-attempt-continuity-original-public-ci-timeout-failure-boundary-audit.md)
+只审计这次qualification failure与aggregate lane containment premise；不修改workflow、runtime、tests或oracle。它自己的完整资格链闭合以前
+仍是`CANDIDATE_NOT_QUALIFIED`，也不授权直接提高timeout或重建doc406。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)

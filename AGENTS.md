@@ -8905,3 +8905,41 @@ doc405候选只允许README、AGENTS、doc405、milestones及其声明的六个p
 PR gate、protected exact-head merge、新exact-main双门、fresh anonymous installed-product readback与independent reconciliation，最多成为
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；`FROZEN`必须由后继独立docs-only publication取得。随后返回
 CONTROL LOOP重审manifest及剩余R1，不能按文档编号自动施工。`local_not_global = true`，R1完成后的人类+AI全局检查仍是独立义务。
+
+### R1 same-attempt continuity PR #465 original Public CI timeout failure boundary audit 候选
+
+PR #464把doc405 implementation candidate `b4fa42cc16b814f9d23e8c025bc4499dcb412084`、tree
+`c8f0bd16e9e69a0ef7bdea3da8526d8fb0f3f255`精确合入`main@a41b8ba3575419e754099725b5e1616af6cd1af4`。original Public CI
+`43034543495`与exact-main Public CI `43040847982`均attempt 1 SUCCESS（11/11）；exact-main Browser Smoke `43040847817`
+attempt 1在`Install Chromium`因Ubuntu mirror DNS setup failure失败，产品build/smoke未启动，artifact count 0，lower cause保持
+`UNKNOWN`。doc405因此`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
+
+后继docs-only failure-boundary audit PR #465绑定`base=a41b8ba… / head=ffd09d2… / tree=9ef11a4… / 1 commit / 4 docs files`。
+其local final bytes的focused四格各152/152、8/8 hygiene与validation均PASS，但original Public CI `43056337145` attempt 1的Python
+3.10 aggregated Windows job `130646682500`从`16:14:32Z`运行到`17:09:37Z`，check-run annotation明确记录
+`The job has exceeded the maximum execution time of 55m0s`；normal Review Attention step 1463秒SUCCESS，`-O` step 1451秒后
+`CANCELLED`。同runtime在PR #464 original/exact-main的Python 3.10 jobs曾于1958/2215秒完成，因此本证据建立55分钟containment premise
+counterexample，但不建立candidate regression；下层变慢原因保持`UNKNOWN`。#465已关闭、未合并、未rerun，same-head run count为1。
+
+fresh CONTROL LOOP从未变化的exact main建立
+[文档407](docs/407-r1-same-attempt-continuity-original-public-ci-timeout-failure-boundary-audit.md)，只审计original qualification与
+Public CI aggregate lane containment premise，不修改workflow、runtime、tests、oracle、doc397或doc405。当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_FAILURE_BOUNDARY_AUDIT_PR465_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_TIMEOUT_CANCELLED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc407只允许README、AGENTS、doc407与milestones。自己的完整local/original PR/protected merge/new exact-main双门/fresh
+installed-product readback/raw-byte observation/independent reconciliation/finite closeout闭合后，最多成为`FAILURE_BOUNDARY_AUDITED /
+QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP审计containment premise；不得直接提高timeout、重建doc406、冻结implementation或启动
+manifest/public Review/R2–R6。`local_not_global = true`，post-R1 human+AI global check继续是独立义务。
