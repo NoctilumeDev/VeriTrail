@@ -10206,8 +10206,35 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 R2_R6_NOT_STARTED
 ```
 
-doc408 candidate只允许workflow与四个docs paths。自己的local topology/oracle gates、original Public CI 15/15、既有七个required
-contexts、protected merge、新exact-main 15/15与Browser 1/1、fresh installed-product/raw-byte readback、independent reconciliation及finite
-closeout全部成立后，最多成为`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`。随后必须返回CONTROL LOOP，从
-新的exact main独立重建doc406；不能把maintenance误写成doc405资格、known slowdown root cause或manifest/public Review授权。R1完成后的独立
+PR #467已把doc408与最小workflow topology patch以`head=3d2dfb939cd444287bba428b9d8eb0aae1aff84f / tree=7921b30f560959b74b67eb4a189d1e4413f42121`
+精确合入`main@e61b9a2c195633b238ba69884c43315b099ed1a6`。original Public CI `43630464678`与exact-main Public CI
+`43633875326`均attempt 1 15/15 SUCCESS；Browser Smoke `43633875335` attempt 1为1/1 SUCCESS。fresh README/doc407/doc408
+render formal与AGENTS/workflow/milestones raw-byte formal各唯一PASS。milestones render diagnostic的
+`PARTIAL / CONTENT_TRUNCATED`保留为原identity，并在formal前把该目标的证明职责移到raw bytes；没有提高render limit、重跑已知不可满足目标或
+降低oracle。reconciliation `f12a12741023e87cd3d0b316d0725c7fb9991f7a3805b632ffe3e8901c2ea322`、130-artifact closeout
+`8566ec8d64dcd110add13ea61443bbb0533041efdc375d820abadac1650d132a`及finite integrity
+`8d7864b46afaa2120a31a86c5b0722ae430bc8a567bd74440a30f5d6359063ac`成立，因此topology maintenance已经`FROZEN`。
+
+当前状态为：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDIT_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+fresh CONTROL LOOP已从该新exact main独立重建
+[文档406](406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)。旧PR #465候选及其
+`CANCELLED` original gate只作保留历史，不能向新候选传递资格。新候选只允许README、AGENTS、doc406与milestones；自己的local gates、
+original Public CI 15/15、protected merge、新exact-main 15/15与Browser 1/1、fresh installed-product readback、independent reconciliation及
+finite closeout全部成立后，最多成为`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。它不回填PR #464，不使
+doc405资格化或冻结，也不授权manifest、global composition authority、public Review或R2–R6。闭合后必须返回CONTROL LOOP；R1完成后的独立
 人类+AI全项目检查义务继续保留。

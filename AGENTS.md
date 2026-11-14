@@ -8953,9 +8953,42 @@ R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
 R2_R6_NOT_STARTED
 ```
 
-doc408 candidate只允许`.github/workflows/ci.yml`、README、AGENTS、doc408与milestones。必须完成自己的local topology/oracle gates、
-original PR全15 jobs、既有七个required contexts、protected exact-head merge、新exact-main Public CI 15/15与Browser 1/1、fresh
-README/doc407/doc408/milestones readback、AGENTS/workflow raw-byte observation、independent reconciliation与finite closeout，最多成为
-`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`。随后必须返回CONTROL LOOP，从新的exact main独立重建doc406；
-不得把maintenance解释成doc405已资格化、lower slowdown cause已知或manifest/public Review/R2–R6已授权。`local_not_global = true`，
-post-R1 human+AI global check继续是独立义务。
+doc408 candidate已由PR #467以`head=3d2dfb939cd444287bba428b9d8eb0aae1aff84f / tree=7921b30f560959b74b67eb4a189d1e4413f42121`
+完成original Public CI `43630464678` attempt 1的15/15、protected exact-head merge至
+`main@e61b9a2c195633b238ba69884c43315b099ed1a6`、new exact-main Public CI `43633875326` attempt 1的15/15与Browser
+Smoke `43633875335` attempt 1的1/1。fresh README/doc407/doc408各唯一formal render PASS；AGENTS/workflow/milestones各唯一
+raw-byte PASS；milestones完整Render diagnostic因524288字节冻结上限得到`PARTIAL / CONTENT_TRUNCATED`，保留原identity并在formal前把该
+证明职责移至raw-byte observation，没有降低或修改Collector oracle。independent reconciliation
+`f12a12741023e87cd3d0b316d0725c7fb9991f7a3805b632ffe3e8901c2ea322`、130-artifact closeout
+`8566ec8d64dcd110add13ea61443bbb0533041efdc375d820abadac1650d132a`及finite integrity
+`8d7864b46afaa2120a31a86c5b0722ae430bc8a567bd74440a30f5d6359063ac`全部成立。因此
+`R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN`已经生效；它不使doc405资格化，也不解释旧slowdown或Browser
+setup failure的lower cause。
+
+### R1 same-attempt continuity exact-main Browser failure-boundary audit recovery candidate
+
+fresh CONTROL LOOP从新的exact main独立重建
+[文档406](docs/406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)。旧PR #465的
+`ffd09d2… / 9ef11a4…`候选及其original Public CI `43056337145` attempt 1 `CANCELLED`只作保留历史；新候选不得继承其local PASS、
+内容、head、tree或attempt资格。当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDIT_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+本候选只允许README、AGENTS、doc406与milestones，且只审计PR #464 exact-main Browser Smoke setup failure的资格边界。它必须完成自己的
+local gates、original PR Public CI 15/15、protected exact-head merge、新exact-main Public CI 15/15与Browser 1/1、fresh anonymous
+installed-product readback、independent reconciliation及finite closeout，最多成为
+`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。它不得把后来的Browser PASS回填为PR #464 PASS，不得使doc405
+资格化或冻结，也不得授权manifest、global composition authority、public Review或R2–R6。闭合后必须返回CONTROL LOOP。
+`local_not_global = true`，post-R1 human+AI global check继续是独立义务。

@@ -207,8 +207,13 @@ timeout而`CANCELLED`；#465已关闭、未合并、未rerun，candidate regress
 PR #465或doc405。fresh CONTROL LOOP进一步确认15→20→25→30→35→45→55的同一aggregate timeout模型已经重复被suite增长或真实variance
 追上，因此新的[Review Attention topology containment maintenance](docs/408-r1-public-ci-review-attention-topology-containment-maintenance.md)
 不再提高55分钟：它把Python 3.10/3.13 × normal/`-O`四个完整Review Attention suites拆成独立45分钟cells，并让名字不变的既有required
-Python checks以`always()`和显式success assertion fail-closed地消费四格结果。所有test/runtime/oracle bytes不变。该maintenance完整资格链闭合前
-仍是`CANDIDATE_NOT_QUALIFIED`，也不授权重建doc406或冻结doc405。
+Python checks以`always()`和显式success assertion fail-closed地消费四格结果。PR #467 original Public CI `43630464678`与exact-main
+Public CI `43633875326`均15/15 SUCCESS，Browser Smoke `43633875335`为1/1 SUCCESS；fresh README/doc407/doc408 Render与
+AGENTS/workflow/milestones raw-byte readback、independent reconciliation `f12a1274…`、130-artifact closeout `8566ec8d…`及finite
+integrity `8d7864b4…`全部成立，因此该maintenance已`FROZEN`。milestones Render diagnostic的`PARTIAL / CONTENT_TRUNCATED`原identity
+仍保留，不由raw PASS覆盖。fresh CONTROL LOOP现从`main@e61b9a2…`独立重建
+[doc406 Browser failure-boundary audit recovery](docs/406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)；
+它当前仍是`RECOVERY_CANDIDATE_NOT_QUALIFIED`，不回填PR #464/#465，不冻结doc405，也不解释两个`UNKNOWN` lower causes。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
