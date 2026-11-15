@@ -10383,3 +10383,37 @@ doc412完成自己的local/original PR/protected exact-head merge/new exact-main
 finite closeout后，最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`，并允许下一次CONTROL LOOP选择独立docs-only manifest
 implementation feasibility recovery audit。它不直接授权runtime或Schema；`local_not_global = true`，R1完成后的人类+AI全项目检查仍是
 独立义务。
+
+## R1 manifest successor implementation feasibility recovery audit候选（2026-11-15）
+
+PR #473已经把doc412以`base=c018b695... / head=a23e2a66... / tree=0033b39...`精确合入
+`main@b596776cc9e8782ca491f98de0fec8568fecb8b9`。original Public CI `43689394172`、exact-main Public CI
+`43692078761`与Browser Smoke `43692078771`均attempt 1 SUCCESS。fresh README/doc318/doc411/doc412 formal、raw/API/exact-Git
+byte observations、independent reconciliation、162-artifact closeout与finite integrity全部闭合；保留的anonymous rate、worktree fetch、
+marker与proof-facility errors不被后继PASS覆盖。因此doc412现在是`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。
+
+fresh CONTROL LOOP建立
+[文档413](413-r1-review-derivation-manifest-successor-implementation-feasibility-recovery-audit.md)。read-only audit在Python
+3.10.6/3.13.13 normal/`-O`四格逐字节得到同一semantic result；focused regression四格各128/128 PASS。结论是frozen
+manifest 0.2 role/path transport没有被反例击穿，但doc397的private authority ceiling禁止continuity bytes直接成为manifest Evidence，
+legacy Evidence 0.2也不能表达当前normal与四个qualified negative live routes。current owner保留有界构造材料，所以缺口分类为
+`UNPROVED_VERSIONED_EVIDENCE_SUCCESSOR_CARRIER_SEAM`，不是manifest合同失败，也不是manifest runtime授权。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_PREREQUISITE_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_FEASIBILITY_RECOVERY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_NOT_SELECTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc413自己的local/original PR/protected exact-head merge/new exact-main双门/fresh installed-product与raw observations/independent
+reconciliation/finite closeout全部闭合后，最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，下一最小seam
+只能是独立docs-only `R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDIT`；不得直接创建Schema、
+runtime或manifest。`local_not_global = true`，R1完成后的人类+AI全项目检查仍是独立义务。
