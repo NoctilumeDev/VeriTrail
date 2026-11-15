@@ -10525,3 +10525,39 @@ doc417自己的local/original PR/protected exact-head merge/new exact-main双门
 closeout全部闭合后，最多成为`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`；它不回填doc416。随后必须返回CONTROL LOOP
 重建独立failure-boundary audit successor，不得直接修test、重建doc415或启动runtime。`local_not_global = true`，post-R1
 human+AI global check继续成立。
+
+## R1 manifest carrier original-gate failure-boundary audit successor候选（2026-11-16）
+
+PR #478已经把doc417精确合入`main@16889cae4c66da5860de0d06ed5125e7b939ff2d`；original Public CI
+`43744179753`、exact-main Public CI `43747291971`与Browser Smoke `43747292078`均attempt 1 SUCCESS。fresh
+README/doc417各自唯一formal PASS，AGENTS/milestones各自完成anonymous raw/API/exact-Git全字节对账。independent reconciliation、
+102-artifact closeout、expected stdout self-capture mismatch与finite integrity为：
+
+```text
+793e66654cdff50e18e7f5371b275b4d4be2ad722f30d55283433b5bd9f1480f
+d33bb6d109a5b4f01c83656522436ea5e654cc30151b095802cb25d2c514337f
+69497e85e5f13f34568c63c6a636c245ace925700f00541f1d9a4e460fbf95e3
+6536d58d55e831693a64303f2308443c316dfc74fedaf9be0285f02b95b8da8e
+```
+
+所以doc417现在是`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`；doc416保持readback未资格化，PR #476 original failure与
+`UNKNOWN` lower cause保持原identity。fresh CONTROL LOOP建立
+[文档418](418-r1-manifest-carrier-original-gate-failure-boundary-audit-successor.md)，从新exact main独立复核首败、retained errors、当前
+source/test/Verdict continuity、保守oracle与最小M10稳定性边界。
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_FAILURE_BOUNDARY_AUDIT_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_SUCCESSOR_CANDIDATE_NOT_QUALIFIED
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc418自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；它不回填doc416、不修M10、
+不重建doc415。后继只能返回CONTROL LOOP建立独立read-only stability feasibility audit。`local_not_global = true`，post-R1
+human+AI global check继续成立。
