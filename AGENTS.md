@@ -9182,3 +9182,40 @@ doc414只允许README、AGENTS、doc414与milestones。自己的local/original P
 `PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，才可选择独立docs-only最小successor contract；不得从audit
 直接创建Schema、carrier/runtime、manifest、persistence或public Review。`proof_is_not_problem_solving = true`，
 `local_not_global = true`，R1完成后的人类+AI全项目检查继续是独立义务。
+
+### R1 manifest carrier successor original-gate failure-boundary audit候选
+
+PR #475已经把doc414精确合入`main@ce4fe48356a088bee2d2cd12cc0bbaf590980925`。original Public CI
+`43715023036`、exact-main Public CI `43717832528`与Browser Smoke `43717832351`均attempt 1 SUCCESS；fresh readback、
+independent reconciliation `85c82705e91818b1465709bc8b0a3adaf1c199aa801ac0a5068bdfaa2b6ee557`、185-artifact closeout
+`01212800a12d4e8bd3d671e9aee56371fe2e71e670a6568a114887a5c7b069af`与finite integrity
+`1d47fce0d6a6bead52d5c5673a7cef25c1963f8cf85a96357797cf075ce99577`全部闭合。因此doc414现在是
+`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。
+
+fresh CONTROL LOOP建立的docs-only successor contract PR #476绑定
+`base=ce4fe48356a088bee2d2cd12cc0bbaf590980925 / head=4226e51c92adcfdc166e7c5563cc69c35907fa50 /
+tree=a4016d4294def799bac99103d9062f846dbc172b`。它的original Public CI `43728958491` attempt 1在Python 3.10
+job `132864515924`的full Core regression真实FAIL：subject-drift测试预期只有`BOOTSTRAP_SUBJECT_DRIFT`，实际额外观察到
+`BROWSER_STATUS_CONFLICT`；497项为1 failure / 1 skipped。PR已关闭且未合并，没有rerun，doc415没有进入main。
+
+修正harness后的精确测试四格均1/1 PASS，只是`NON_QUALIFYING_DIAGNOSTIC`，不能覆盖原门，lower cause保持`UNKNOWN`。既有
+runtime在`capture_complete=false + execution_status=COMPLETED`时保守加入`BROWSER_STATUS_CONFLICT`，没有理由弱化oracle。
+[文档416](docs/416-r1-manifest-carrier-successor-original-gate-failure-boundary-audit.md)因此只重开M10 subject-drift fixture / Browser
+capture在full-suite load下的稳定性及exact-set proof target，且只允许audit：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_BOUNDARY_REOPENED_AUDIT_ONLY
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc416只允许README、AGENTS、doc416与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+installed-product与raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立基础边界feasibility audit；不得直接修test、
+重建doc415或启动runtime。`proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后的人类+AI全项目检查继续成立。
