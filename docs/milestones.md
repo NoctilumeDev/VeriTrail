@@ -10349,3 +10349,37 @@ R2_R6_NOT_STARTED
 doc411自己的local/original PR/protected exact-head merge/new exact-main双门/fresh installed-product+raw-byte observations/independent
 reconciliation/finite closeout全部闭合后，private implementation才成为`FROZEN`。随后必须返回CONTROL LOOP重新审计剩余R1；R1完成后仍需
 人类+AI共同执行独立全项目检查。
+
+## R1 manifest successor前提当前状态审计候选（2026-11-15）
+
+PR #472已把doc411精确合入`main@c018b695da7d9f2a03a4220858b73542613e8205`。original/exact-main Public CI分别
+15/15 SUCCESS，Browser Smoke为1/1 SUCCESS，fresh installed-product/raw observations、independent reconciliation、151-artifact closeout与
+finite integrity全部闭合。因此same-attempt DerivationEvidence continuity private implementation现在是`FROZEN`。
+
+fresh CONTROL LOOP以只读方式建立[文档412](412-r1-review-derivation-manifest-successor-prerequisite-current-state-audit.md)。四格
+Python 3.10.6/3.13.13 normal/`-O` audit的canonical semantic SHA-256为
+`6535e151cedb81207b5ac29b2c0f99c5e2db184625405cdc8fe5b875d3946e86`，matrix SHA-256为
+`3a4f91647418b1e01be5ccc23dc735d9847ae328017e781ec3daa74da07eaa52`。相关private五路链focused witness四格各
+131/131 PASS，legacy manifest/Evidence/CoverageLedger Schema witness四格各60/60 PASS。首次worktree branch absence probe对空输出
+调用`.Trim()`的PowerShell setup error已按`OPERATOR_PROOF_FACILITY_SETUP_ERROR / EFFECT_NONE`保留，没有被后继通过覆盖。
+
+审计结论是：doc318的negative-world Coverage与same-attempt continuity两个旧upstream gap在当前exact world已关闭，
+selector→unified admission→continuity链已机械连接；但manifest 0.2 Schema、fixtures、producer/consumer、carrier projection与global
+composition authority仍未建立。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_PREREQUISITE_CURRENT_STATE_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc412完成自己的local/original PR/protected exact-head merge/new exact-main双门/fresh observations/independent reconciliation/
+finite closeout后，最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`，并允许下一次CONTROL LOOP选择独立docs-only manifest
+implementation feasibility recovery audit。它不直接授权runtime或Schema；`local_not_global = true`，R1完成后的人类+AI全项目检查仍是
+独立义务。
