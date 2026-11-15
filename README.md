@@ -40,10 +40,14 @@ fresh README、doc414与doc416 formal均PASS；但milestones唯一diagnostic与f
 
 PR #478已经使[readback-target correction](docs/417-r1-manifest-carrier-failure-boundary-audit-readback-target-correction.md)完成
 original/exact-main双门、corrected fresh readback、independent reconciliation与finite closeout；doc417现在是
-`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`。它不回填doc416，也不改变PR #476的`UNKNOWN` lower cause。
-fresh CONTROL LOOP从`main@16889cae4c66da5860de0d06ed5125e7b939ff2d`建立独立
-[failure-boundary audit successor候选](docs/418-r1-manifest-carrier-original-gate-failure-boundary-audit-successor.md)，只重新审计首败、
-保守oracle与最小M10稳定性边界；不得直接修test、重建doc415、启动runtime或R2–R6。
+`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`。PR #479又把
+[failure-boundary audit successor](docs/418-r1-manifest-carrier-original-gate-failure-boundary-audit-successor.md)精确合入
+`main@36ec79c735640066d30aa5a5911e995ddd09f6d1`，并完成original/exact-main双门、fresh README/doc418 Render、
+AGENTS/milestones raw/API/Git byte readback、independent reconciliation与finite closeout。因此doc418现在是
+`FAILURE_BOUNDARY_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；它仍不回填doc416，也不改变PR #476的`UNKNOWN` lower cause。
+fresh CONTROL LOOP从该exact main建立独立
+[M10 subject-drift / Browser capture stability feasibility audit候选](docs/419-r1-m10-subject-drift-browser-capture-stability-feasibility-audit.md)：
+只判断能否在不改runtime、timeout与保守oracle的前提下改善首败留档并分离两个证明责任；不得直接修test、重建doc415、启动carrier runtime或R2–R6。
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
