@@ -10291,3 +10291,22 @@ exact-main 15/15+Browser 1/1/fresh README-doc405-doc406-doc409 render/AGENTS-mil
 reconciliation/finite closeout全部闭合后，最多成为`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后返回
 CONTROL LOOP重审doc404 authority、doc405 exact source hashes与保留首败；不得自动建立implementation recovery、冻结doc405或启动
 manifest/public Review/R2–R6。`local_not_global = true`与post-R1 human+AI global check继续成立。
+
+## R1 doc405 private implementation qualification recovery publication候选（2026-11-15）
+
+PR #470已经把doc406 recovery v2精确合入
+`main@818b64a2bf23cce0ebd821f768652f5b83a6d94b / tree=3f31835d22b170b436b7b4f118e4247a6a32d80e`。original Public CI
+`43660628037`与exact-main Public CI `43663846845`均15/15 SUCCESS，Browser Smoke `43663846915`为1/1 SUCCESS；fresh targets、
+independent reconciliation `00ad45ddfd052bb7c76b6b680f17b1d80bfc076a0ec25008ace8e8640022e22d`、140-artifact closeout
+`a503ac1f751fa1fce439e8b356bb533935bcdc9a908194f1762ec6302b1c5eba`与finite integrity
+`87eb1bae540b401bc3a2a0b91c7d63cd6d88c3bee424f957444c05711adf3ce0`全部成立。因此doc406是qualified history，doc405仍
+`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP证明doc405五个private runtime source与PR #464 candidate逐字节相同；唯一test变化是doc409已冻结的DEC-001 semantic
+fixture clock successor。新的[文档410](410-r1-same-attempt-derivation-evidence-continuity-private-implementation-qualification-recovery-publication.md)
+只从当前exact source/test建立docs-only qualification recovery candidate，不修改runtime、tests、workflow或oracle。
+
+doc410自己的local/original PR 15/15/protected exact-head merge/new exact-main 15/15+Browser 1/1/fresh
+README-doc405-doc406-doc409-doc410 Render/AGENTS-milestones-six source-test raw observation/independent reconciliation/finite closeout全部闭合后，
+doc405最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。`FROZEN`仍必须由后继独立docs-only publication取得；
+所有首败与UNKNOWN lower cause不回填，global composition、manifest/public Review与R2–R6仍未授权。
