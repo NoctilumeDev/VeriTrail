@@ -9300,3 +9300,50 @@ corrected readback/independent reconciliation/finite closeout全部闭合后，�
 `FAILURE_BOUNDARY_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立read-only M10 stability feasibility audit；
 不得直接修test、重建doc415或启动runtime。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI
 global check继续成立。
+
+### R1 M10 subject-drift / Browser capture stability feasibility audit候选
+
+PR #479已经把doc418以
+`base=16889cae4c66da5860de0d06ed5125e7b939ff2d / head=b828e6be28b82315abf11355e59dbe5fdfedd981 /
+tree=f1f424d2a041cde89bd1b346c390a3c40ab5db5f`精确合入
+`main@36ec79c735640066d30aa5a5911e995ddd09f6d1`。original Public CI `43753244377`、exact-main Public CI
+`43756291479`与Browser Smoke `43756291481`均attempt 1 SUCCESS。fresh README/doc418 formal各自唯一PASS，
+AGENTS/milestones各自唯一anonymous raw/API/exact-Git byte observation PASS；independent reconciliation、103-artifact closeout、
+expected stdout self-capture mismatch与finite integrity分别为：
+
+```text
+e40e1aa7310b1697fa07ca8880dc572bd5f511030eab2a5e1e4084898a12dd94
+aa0f050c5bae39595b22ef648ed010733ca44c6764186d920ac8d90770b6891e
+c7587c22a4f7f1408ed8f2e5006b459a63a9ed179f104a843903a966d6f3fd87
+12b3b5a64ac5ed5522e340c55667f8f31a304137df04e61db705587dc3eb7230
+```
+
+因此doc418现在是`FAILURE_BOUNDARY_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`；doc416保持readback未资格化，PR #476的
+original required failure与`UNKNOWN` lower cause保持原identity。fresh CONTROL LOOP建立
+[文档419](docs/419-r1-m10-subject-drift-browser-capture-stability-feasibility-audit.md)，只做read-only feasibility audit。
+
+当前source证明subject-drift exact-set oracle、真实Browser capture完整性与保守`BROWSER_STATUS_CONFLICT`是三个不同责任。fresh
+Python 3.10/3.13 × normal/-O的real integrated exact test四格均1/1 PASS，只证明没有稳定复现；受控complete Browser seam四格也均PASS，
+只证明可以在不修改runtime/oracle/timeout时机械隔离subject-drift semantic proof。原始full-suite failure仍然成立，lower cause仍为
+`UNKNOWN`。任何后继都必须先改善first-failure Browser facts留档；不得以retry、timeout、subset assertion、synthetic PASS或后继绿灯覆盖原失败。
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_FAILURE_BOUNDARY_AUDIT_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_SUCCESSOR_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_PROOF_FACILITY_CORRECTION_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc419只允许README、AGENTS、doc419与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc419 Render与AGENTS/milestones raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`M10_STABILITY_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP再选择独立、test-only的proof-facility correction；
+不得在doc419中修改runtime/test，或直接重建doc415。`proof_is_not_problem_solving = true`、`local_not_global = true`，R1结束后的
+human+AI全项目检查继续是独立义务。
