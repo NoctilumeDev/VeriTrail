@@ -9133,3 +9133,52 @@ composition、manifest、language persistence与剩余R1，不得按编号自动
   `R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDIT`。doc413自己的完整资格链闭合以前仍为
   `CANDIDATE / NOT_QUALIFIED`，不得创建successor Schema/runtime、manifest 0.2、persistence、global composition或public Review；
   `local_not_global = true`，R1完成后仍必须由人类+AI共同执行独立全项目检查。
+
+### R1 same-attempt DerivationEvidence manifest carrier successor precontract audit候选
+
+PR #474已经把doc413以
+`base=b596776cc9e8782ca491f98de0fec8568fecb8b9 / head=f35ae3966c9850b5859cf017e662d9fb0d864005 /
+tree=01844ea351abc59b655305f9fc79a0d4b74c83b7`精确合入
+`main@af39730a4527157cc820d23ad40557f5d2c3de30`。original Public CI `43704551763`与exact-main Public CI
+`43707526555`均15/15 SUCCESS，Browser Smoke `43707526538`为1/1 SUCCESS，全部是attempt 1且没有rerun。fresh
+README/doc316/doc397/doc412/doc413 Render与AGENTS/milestones/三个private source-test raw-byte observations各有唯一qualifying
+PASS；README diagnostic #1 marker selection failure按原identity保留，formal没有重跑。independent reconciliation、175-artifact
+closeout与finite integrity分别为：
+
+```text
+079559aee40ab9bcbe9c7a68fc03065309550a0e831eb92d22419a74c8109096
+0d6302cf034efe8b7d7ed1622b1e7b17808a2d380dfdf9c3ac2a8d4323002236
+7656cab2e882ef9a08b2545c62fae64ae99d847655555a1bcc001110e085e0d4
+```
+
+因此doc413现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP没有把该局部结论自动变成runtime授权；新的
+read-only四格audit发现versioned DerivationEvidence successor本身仍不足以安全构造manifest，因为actual SourceSnapshot、Policy、
+Profile、FactSet、RelationSet、ReviewSliceSet与CoverageLedger bytes仍由同一个one-shot private object graph拥有。若future producer
+从路径重读或从private internals逐项取值，会把manifest绑定的Evidence A与实际child bytes B暴露给snapshot drift或authority inversion。
+
+[文档414](docs/414-r1-same-attempt-derivation-evidence-manifest-carrier-successor-precontract-audit.md)因此只建立
+`BOUNDED_VERSIONED_EVIDENCE_AND_PRIVATE_SNAPSHOT_CARRIER_PRECONTRACT_SEAM` audit candidate：未来最小边界必须把版本化Evidence claim与
+private copy-owned exact snapshot carrier组合，并由不共享producer projector的独立validator/admission先行校验。carrier只交接
+CoverageLedger root bindings允许的exact bytes/digests/topology，不拥有现实事实、stage admission、Manifest、Verdict、persistence或
+global composition authority；normal relation-conflict保持Fact/Relation present与Slice qualified unknown，四条negative route保持
+Fact/Relation/Slice qualified absent，fixture-only Fact-present qualified-unknown不得伪造成live route。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_FEASIBILITY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_NOT_SELECTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc414只允许README、AGENTS、doc414与milestones。自己的local/original PR 15/15/protected exact-head merge/new exact-main
+15/15+Browser 1/1/fresh installed-product与raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，才可选择独立docs-only最小successor contract；不得从audit
+直接创建Schema、carrier/runtime、manifest、persistence或public Review。`proof_is_not_problem_solving = true`，
+`local_not_global = true`，R1完成后的人类+AI全项目检查继续是独立义务。
