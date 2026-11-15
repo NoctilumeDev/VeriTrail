@@ -9219,3 +9219,39 @@ doc416只允许README、AGENTS、doc416与milestones。它自己的local/origina
 installed-product与raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP建立独立基础边界feasibility audit；不得直接修test、
 重建doc415或启动runtime。`proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后的人类+AI全项目检查继续成立。
+
+### R1 doc416 readback-target correction候选
+
+PR #477已把doc416精确合入`main@c645ee7f68537c81023b693274701c465b81ef5d`；original Public CI
+`43733903868`与exact-main Public CI `43737446035`均attempt 1 15/15 SUCCESS，Browser Smoke `43737446011`为1/1 SUCCESS。
+fresh README/doc414/doc416各自唯一formal PASS；milestones唯一diagnostic与唯一formal则都按frozen P2终结为
+`PARTIAL / CONTENT_TRUNCATED`：HTTP 200、marker=1，但699273 UTF-8 rendered-text bytes超过524288-byte上限174985 bytes，
+没有Core PASS。failed boundary、128-artifact failed closeout与finite integrity为：
+
+```text
+37378ff8ca48db8c19350c36e0c5ad82513b241bbeafaddd620ca00c874b15e6
+8fe4f1b0b19cc4eac06b5a8a391c9b3b03a70f8f2828f0c3e006448461e7146e
+bde9ae48a0fdcd1ec92016c1f2b512598ba36b5a8e51453ee8ab93b1d2a9d52d
+```
+
+因此doc416是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`。该反例只击穿
+proof-facility readback-target seam；P2 conformance成立，doc416 semantic contradiction、Subject/runtime/Collector regression均未建立。
+[文档417](docs/417-r1-manifest-carrier-failure-boundary-audit-readback-target-correction.md)只允许README、AGENTS、doc417与milestones，
+并把自身fresh责任固定为README/doc417 Render diagnostic+unique formal、AGENTS/milestones exact-commit anonymous public/API/Git
+raw-byte对账。它的完整资格链闭合后最多成为`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`，不回填doc416；随后返回
+CONTROL LOOP从新exact main重建failure-boundary audit successor。不得直接修M10 test、重建doc415、启动runtime或R2–R6。
+
+当前投影必须保持：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_FAILURE_BOUNDARY_AUDIT_READBACK_TARGET_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```

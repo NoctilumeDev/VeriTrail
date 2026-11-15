@@ -10488,3 +10488,40 @@ R2_R6_NOT_STARTED
 doc416自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP建立独立
 M10基础边界feasibility audit，不得直接修test、重建doc415或启动runtime。`local_not_global = true`，post-R1 human+AI global
 check继续成立。
+
+## R1 doc416 readback-target correction候选（2026-11-16）
+
+PR #477已把doc416精确合入`main@c645ee7f68537c81023b693274701c465b81ef5d`；original/exact-main Public CI均
+15/15 SUCCESS，Browser Smoke为1/1 SUCCESS，全部为attempt 1。fresh README/doc414/doc416各自唯一formal PASS，但milestones
+唯一diagnostic与唯一formal均按frozen P2正确终结为`PARTIAL / CONTENT_TRUNCATED`：HTTP 200、marker=1，699273 UTF-8
+rendered-text bytes超过524288-byte上限174985 bytes，Core PASS没有建立。failed boundary、128-artifact failed closeout与finite
+integrity分别为：
+
+```text
+37378ff8ca48db8c19350c36e0c5ad82513b241bbeafaddd620ca00c874b15e6
+8fe4f1b0b19cc4eac06b5a8a391c9b3b03a70f8f2828f0c3e006448461e7146e
+bde9ae48a0fdcd1ec92016c1f2b512598ba36b5a8e51453ee8ab93b1d2a9d52d
+```
+
+所以doc416保持`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`；PR #476及其
+`UNKNOWN` lower cause继续保持原身份。新[文档417](417-r1-manifest-carrier-failure-boundary-audit-readback-target-correction.md)只修正
+proof-facility readback target责任：README/doc417走fresh Render diagnostic+unique formal，AGENTS/milestones走exact-commit
+anonymous public/API/Git raw-byte对账。P2上限、runtime、tests、fixtures、workflow、Schema、Provider、Collector、Verdict、doc414–416
+均不修改。
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_FAILURE_BOUNDARY_AUDIT_READBACK_TARGET_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc417自己的local/original PR/protected exact-head merge/new exact-main双门/fresh corrected readback/independent reconciliation/finite
+closeout全部闭合后，最多成为`READBACK_TARGET_CORRECTION_AUDITED / QUALIFIED_HISTORY`；它不回填doc416。随后必须返回CONTROL LOOP
+重建独立failure-boundary audit successor，不得直接修test、重建doc415或启动runtime。`local_not_global = true`，post-R1
+human+AI global check继续成立。

@@ -32,10 +32,15 @@ PR #475已使[successor precontract audit](docs/414-r1-same-attempt-derivation-e
 但original Public CI `43728958491` attempt 1在Python 3.10 full Core regression观察到subject-drift world额外
 `BROWSER_STATUS_CONFLICT`，因此PR已关闭且未合并，doc415没有进入main，也没有取得资格。
 
-新的[original-gate failure-boundary audit候选](docs/416-r1-manifest-carrier-successor-original-gate-failure-boundary-audit.md)只保存#476
-的精确失败identity、四格隔离未复现与`UNKNOWN`根因，并把最小审计边界限定为M10 subject-drift fixture / Browser capture在
-full-suite load下的稳定性及其exact-set proof target。它不弱化污染oracle，不修改runtime/test，也不授权重建doc415、Schema、carrier、
-Manifest、persistence、global composition或public Review。doc416自己的完整资格链闭合以前仍是`CANDIDATE / NOT_QUALIFIED`。
+PR #477已把[original-gate failure-boundary audit](docs/416-r1-manifest-carrier-successor-original-gate-failure-boundary-audit.md)精确合入
+`main@c645ee7f68537c81023b693274701c465b81ef5d`，original/exact-main Public CI均15/15 SUCCESS，Browser Smoke为1/1 SUCCESS。
+fresh README、doc414与doc416 formal均PASS；但milestones唯一diagnostic与formal都按frozen P2正确终结为
+`PARTIAL / CONTENT_TRUNCATED`：699273 bytes超过524288-byte上限，marker=1不能冒充完整观察。因此doc416保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_QUALIFIED_HISTORY`。
+
+新的[readback-target correction候选](docs/417-r1-manifest-carrier-failure-boundary-audit-readback-target-correction.md)只保存该失败并恢复
+bounded Render与完整raw-byte observation的职责分界；不重跑旧formal、不提高P2上限、不回填doc416，也不修改runtime/test或授权重建
+doc415。它自己的完整资格链闭合后最多成为correction qualified history；随后仍须从新exact main重建failure-boundary audit successor。
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
