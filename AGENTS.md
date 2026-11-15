@@ -9001,3 +9001,44 @@ deadline/cancellation oracles、original PR 15/15、protected exact-head merge�
 README/doc408/doc409/milestones readback、AGENTS/test raw-byte observation、independent reconciliation与finite closeout，最多成为
 `R1_SAME_ATTEMPT_CONTINUITY_DEC001_SEMANTIC_FIXTURE_CLOCK_CORRECTION_FROZEN`。随后必须返回CONTROL LOOP，从新的exact main独立重建
 doc406；不得回填PR #468、冻结doc405或启动manifest/public Review/R2–R6。`local_not_global = true`，post-R1 human+AI global check继续保留。
+
+### R1 doc406 Browser首败边界审计 recovery v2
+
+PR #469已把doc409/test-fixture candidate精确合入
+`main@e17f7e6f42f715b1a478390cfcce7b5cc3e0a7e7 / tree=eed2f3f5c1ed220c1bdd7688fe5395f0bee47b3e`。
+original Public CI `43651437482`与exact-main Public CI `43654317129`均15/15 SUCCESS，Browser Smoke `43654317045`为1/1
+SUCCESS；fresh render/raw-byte observations、independent reconciliation
+`13e54d9f1f55c68118d2392cc191edf084b344c2e902b78421bf3ff67aa80ea3`、140-artifact closeout
+`9b5cac60266ae8264ca12472aa83d33f9acbb76979897a22a8d1147885e79c64`与finite integrity
+`bd6c6e492768a62a17a8399da94d46083b3e7a6fa112daae865a8540ccd8941f`全部成立，所以
+`R1_SAME_ATTEMPT_CONTINUITY_DEC001_SEMANTIC_FIXTURE_CLOCK_CORRECTION_FROZEN`已经生效。milestones Render truncation diagnostic与
+README formal rate-exhaustion ERROR仍保持原identity；successor没有放宽`COMPLETE`或Collector limit。
+
+fresh CONTROL LOOP从该exact main建立
+[文档406](docs/406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)。它只重建PR #464
+exact-main Browser Smoke `43040847817`的失败边界：Chromium依赖安装阶段的DNS setup failure已建立，产品build/smoke没有执行，subject
+failure与candidate regression未建立，exact lower runner/DNS/network cause保持`UNKNOWN`。PR #465的55分钟`CANCELLED`、PR #468的
+DEC-001 original failure及其closed/unmerged/no-rerun identity都必须保留。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_PR464_MERGED_EXACT_MAIN_BROWSER_SMOKE_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_ORIGINAL_PUBLIC_CI_TIMEOUT_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_PUBLIC_CI_REVIEW_ATTENTION_TOPOLOGY_CONTAINMENT_MAINTENANCE_FROZEN
+R1_SAME_ATTEMPT_CONTINUITY_DEC001_SEMANTIC_FIXTURE_CLOCK_CORRECTION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDIT_RECOVERY_V2_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc406 recovery v2只允许README、AGENTS、doc406与milestones。它必须完成自己的local gates、original Public CI 15/15、protected
+exact-head merge、新exact-main Public CI 15/15与Browser Smoke 1/1、fresh README/doc405/doc406/doc409 render、AGENTS/milestones
+raw-byte observation、independent reconciliation与finite closeout，最多成为
+`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后返回CONTROL LOOP重新复核doc404 authority、doc405 exact
+source hashes与保留首败；不得按文档编号自动建立implementation recovery、冻结doc405或启动manifest/public Review/R2–R6。

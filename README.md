@@ -213,8 +213,18 @@ Smoke 1/1，fresh readback、reconciliation与finite closeout全部闭合，因�
 fresh doc406 recovery PR #468的三格Review Attention成功，但Python 3.10 `-O`在`DEC-001`第四个negative world产生1个ERROR，新的required
 barrier正确fail closed；#468已关闭、未合并、未rerun，lower cause保持`UNKNOWN`。当前
 [semantic fixture clock correction](docs/409-r1-same-attempt-continuity-dec001-semantic-fixture-clock-correction.md)不再提高60秒fixture budget，
-只把`DEC-001`的纯语义证明从host wall time解耦；真实deadline/cancellation oracle与全部runtime bytes不变。该maintenance自己的完整资格链
-闭合以前仍是`CANDIDATE_NOT_QUALIFIED`。
+只把`DEC-001`的纯语义证明从host wall time解耦；真实deadline/cancellation oracle与全部runtime bytes不变。PR #469的original Public CI
+`43651437482`与exact-main Public CI `43654317129`均15/15 SUCCESS，Browser Smoke `43654317045`为1/1 SUCCESS；fresh readback、
+independent reconciliation `13e54d9f1f55c68118d2392cc191edf084b344c2e902b78421bf3ff67aa80ea3`、140-artifact closeout
+`9b5cac60266ae8264ca12472aa83d33f9acbb76979897a22a8d1147885e79c64`与finite integrity
+`bd6c6e492768a62a17a8399da94d46083b3e7a6fa112daae865a8540ccd8941f`全部闭合，因此该correction已经`FROZEN`。milestones
+diagnostic #1的`PARTIAL / CONTENT_TRUNCATED`与README formal #1的anonymous rate exhaustion ERROR保持原identity。
+
+fresh CONTROL LOOP从`main@e17f7e6f42f715b1a478390cfcce7b5cc3e0a7e7`独立重建
+[doc406 Browser首败边界审计 recovery v2](docs/406-r1-same-attempt-continuity-private-implementation-exact-main-browser-smoke-failure-boundary-audit.md)。
+它只条件化发布PR #464 `43040847817`的失败identity、资格影响与`UNKNOWN` lower cause；不得复用PR #465/#468的commit、attempt或资格，
+不得把doc408/doc409的后继成功写成首败已修复。该candidate自己的完整资格链闭合以前仍是`RECOVERY_V2_CANDIDATE / NOT_QUALIFIED`，
+doc405保持`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
 
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
