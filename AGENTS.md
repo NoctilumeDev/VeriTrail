@@ -9064,3 +9064,46 @@ AGENTS/milestones/six source-test raw-byte observation、independent reconciliat
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；`FROZEN`仍须独立docs-only publication。不得回填PR #464/#465/#468、
 解释任何UNKNOWN lower cause、恢复global composition或启动manifest/public Review/R2–R6。`local_not_global = true`，post-R1 human+AI
 global check继续保留。
+
+### R1 doc405 private implementation freeze publication候选
+
+PR #471已经把doc410 candidate `base=818b64a... / head=7da48ac... / tree=b7241ab...`精确合入
+`main@ca4fe8bc7ef8ab47f675efa3adf02f02265cded5`。original Public CI `43672505064`与exact-main Public CI
+`43674952641`均15/15 SUCCESS，Browser Smoke `43674952664`为1/1 SUCCESS，全部是attempt 1且没有rerun。
+
+fresh v2 readback只认该merge world：doc405/doc406/doc409/doc410各有唯一API/Render COMPLETE与Core PASS；README、AGENTS、milestones
+及六个source-test targets各有唯一raw/API/exact-Git全字节一致formal。README diagnostic #1的line 887 marker不在GitHub冻结Render窗口内，
+已按doc410显式停止线移到raw proof，且raw不声称Render completeness。首次classification摘要抄写setup error、worktree attachment cap、
+Windows `rg`与全部旧FAIL/ERROR/CANCELLED/UNKNOWN继续保留。independent reconciliation、159-artifact closeout与finite integrity为：
+
+```text
+551d63206ad24ad182c6cee3bfbe503457b3f81f232e76ce43befff76a08050f
+a9f7b35262b269d41dc6669d0bdbf8fedbb2b1845b927aa00c8bc442d9edf046
+b754403c106bab1f99e357d2eeab339f06decf790f44e37e678add4c9541e098
+```
+
+因此doc405现在是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP没有发现
+新事实击穿doc397/404或固定private runtime/tests，所以下一最小seam是独立docs-only
+[文档411](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_QUALIFICATION_RECOVERY_0_1_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc411只允许README、AGENTS、doc411与milestones。它必须完成自己的final-byte local gates、original Public CI 15/15、protected
+exact-head merge、新exact-main Public CI 15/15与Browser Smoke 1/1、fresh README/doc405/doc410/doc411 Render、AGENTS/milestones/
+六个source-test raw/API/exact-Git observations、independent reconciliation与finite closeout。全部闭合后
+`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FROZEN`才生效；随后返回CONTROL LOOP重新审计global
+composition、manifest、language persistence与剩余R1，不得按编号自动施工。`local_not_global = true`，R1完成后的人类+AI全项目检查仍是
+独立义务。
