@@ -10456,3 +10456,35 @@ R2_R6_NOT_STARTED
 
 doc414自己的完整资格链闭合后最多成为`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP建立独立docs-only
 successor contract，不得直接施工。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI global check继续成立。
+
+## R1 manifest carrier successor original-gate failure-boundary audit候选（2026-11-15）
+
+PR #475已经把doc414精确合入`main@ce4fe48356a088bee2d2cd12cc0bbaf590980925`，并完成original/exact-main
+Public CI 15/15、Browser Smoke 1/1、fresh readback、independent reconciliation、185-artifact closeout与finite integrity。因此doc414现在是
+`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。
+
+fresh CONTROL LOOP建立的docs-only successor contract PR #476绑定
+`base=ce4fe483... / head=4226e51... / tree=a4016d4...`。original Public CI `43728958491` attempt 1在Python 3.10
+full Core regression观察到subject-drift world除`BOOTSTRAP_SUBJECT_DRIFT`外还有`BROWSER_STATUS_CONFLICT`，497项以1 failure /
+1 skipped终结。PR #476已关闭且未合并，没有rerun；doc415没有进入main，也没有资格。精确失败test的修正后四格local diagnostic均
+1/1 PASS，只证明未稳定复现，lower cause仍为`UNKNOWN`。
+
+[文档416](416-r1-manifest-carrier-successor-original-gate-failure-boundary-audit.md)只保存该original failure identity、retained setup
+errors、资格影响和最小后继责任；现有`capture_complete=false + COMPLETED -> BROWSER_STATUS_CONFLICT`保守oracle不被弱化。
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_BOUNDARY_REOPENED_AUDIT_ONLY
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc416自己的完整资格链闭合后最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP建立独立
+M10基础边界feasibility audit，不得直接修test、重建doc415或启动runtime。`local_not_global = true`，post-R1 human+AI global
+check继续成立。
