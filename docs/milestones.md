@@ -10310,3 +10310,42 @@ doc410自己的local/original PR 15/15/protected exact-head merge/new exact-main
 README-doc405-doc406-doc409-doc410 Render/AGENTS-milestones-six source-test raw observation/independent reconciliation/finite closeout全部闭合后，
 doc405最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。`FROZEN`仍必须由后继独立docs-only publication取得；
 所有首败与UNKNOWN lower cause不回填，global composition、manifest/public Review与R2–R6仍未授权。
+
+## R1 doc405 private implementation freeze publication候选（2026-11-15）
+
+PR #471已经以`base=818b64a... / head=7da48ac... / tree=b7241ab...`精确合入
+`main@ca4fe8bc7ef8ab47f675efa3adf02f02265cded5`。original与exact-main Public CI均15/15 SUCCESS，Browser Smoke为1/1
+SUCCESS，全部是attempt 1且没有rerun。fresh doc405/doc406/doc409/doc410 Render与README/AGENTS/milestones/六个source-test
+raw/API/exact-Git observations各有唯一qualifying PASS；independent reconciliation、159-artifact closeout与finite integrity为：
+
+```text
+551d63206ad24ad182c6cee3bfbe503457b3f81f232e76ce43befff76a08050f
+a9f7b35262b269d41dc6669d0bdbf8fedbb2b1845b927aa00c8bc442d9edf046
+b754403c106bab1f99e357d2eeab339f06decf790f44e37e678add4c9541e098
+```
+
+README line 887 marker不在GitHub冻结Render窗口内的diagnostic、首次摘要抄写setup error、PR #464/#465/#468与全部UNKNOWN继续保留；
+raw bytes没有冒充Render completeness。因此doc405现在是
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP没有发现新事实击穿doc397/404或固定private source/test，故建立
+[文档411](411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)。它只条件化发布同一private
+implementation frozen target，不修改runtime、tests、workflow、Schema、manifest、persistence、public Review、Core Verdict或oracle。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_CONTRACT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc411自己的local/original PR/protected exact-head merge/new exact-main双门/fresh installed-product+raw-byte observations/independent
+reconciliation/finite closeout全部闭合后，private implementation才成为`FROZEN`。随后必须返回CONTROL LOOP重新审计剩余R1；R1完成后仍需
+人类+AI共同执行独立全项目检查。

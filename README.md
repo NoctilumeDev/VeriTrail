@@ -226,6 +226,14 @@ fresh CONTROL LOOP从`main@e17f7e6f42f715b1a478390cfcce7b5cc3e0a7e7`独立重建
 不得把doc408/doc409的后继成功写成首败已修复。该candidate自己的完整资格链闭合以前仍是`RECOVERY_V2_CANDIDATE / NOT_QUALIFIED`，
 doc405保持`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
 
+PR #471随后把doc410资格恢复publication精确合入`main@ca4fe8bc7ef8ab47f675efa3adf02f02265cded5`。original与exact-main
+Public CI均15/15 SUCCESS，Browser Smoke为1/1 SUCCESS；fresh doc405/doc406/doc409/doc410 Render与README/AGENTS/milestones/
+六个source-test raw/API/exact-Git observations、independent reconciliation及finite closeout全部闭合。README line 887 marker不在GitHub
+冻结Render窗口内的diagnostic、首次摘要抄写setup error与所有旧失败仍按原identity保留；raw bytes没有冒充Render completeness。因此doc405
+现在是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP建立独立
+[same-attempt DerivationEvidence continuity private implementation freeze publication](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)；
+该publication自己的最后门闭合以前，`FROZEN`不生效，global composition、manifest/public Review与R2–R6仍未授权。
+
 **工程验收 · 证据核验 · 本地优先 · 插件扩展 · 结果可复查**
 
 [![Public CI](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Browser Smoke](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml/badge.svg)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/browser-smoke.yml) [![Python 3.10 and 3.13](https://img.shields.io/badge/Python-3.10%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://github.com/NoctilumeDev/VeriTrail/actions/workflows/ci.yml) [![Core v0.13.0](https://img.shields.io/badge/Core-v0.13.0-0B4B50)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/v0.13.0) [![GitHub Evidence v0.1.0](https://img.shields.io/badge/GitHub%20Evidence-v0.1.0-6F42C1?logo=github)](https://github.com/NoctilumeDev/VeriTrail/releases/tag/github-evidence-v0.1.0) [![License](https://img.shields.io/github/license/NoctilumeDev/VeriTrail)](LICENSE)
@@ -885,6 +893,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [ReviewSliceSet / Coverage composition 私有实现冻结发布](docs/314-r1-review-slice-set-coverage-composition-private-implementation-freeze-publication.md)：保留doc313已资格化实现字节、#359失败identity与#360独立maintenance资格，从维护后的新exact main条件化重建private implementation frozen target；自己的完整资格链闭合前不得声称FROZEN，也不选择manifest/persistence或启动public Review；
 - [Review derivation manifest negative-world successor 可行性审计](docs/315-r1-review-derivation-manifest-negative-world-successor-feasibility-audit.md)：从已冻结composition重验immutable 0.1 COMPLETE/DIAGNOSTIC topology与八个CoverageLedger 0.3 worlds，证明不制造placeholder的versioned transport successor存在有限解；不选择正式版本、Schema、persistence或public product；
 - [same-attempt DerivationEvidence continuity implementation qualification recovery publication](docs/410-r1-same-attempt-derivation-evidence-continuity-private-implementation-qualification-recovery-publication.md)：PR #470已经把doc406 Browser首败边界审计资格化；当前五个private runtime文件与PR #464逐字节相同，唯一test变化是doc409已冻结的DEC-001证明时钟修正。本文从`main@818b64a...`建立独立docs-only资格恢复候选，最多把doc405提升为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；自己的完整门闭合以前doc405仍`NOT_QUALIFIED / NOT_FROZEN`，也不恢复global composition或启动manifest/public Review/R2–R6；
+- [same-attempt DerivationEvidence continuity private implementation freeze publication](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)：保存PR #471已经资格化的doc405 exact source/test与全部首败边界，条件化发布同一private implementation frozen target；自己的完整门闭合以前仍为candidate，不恢复global composition或启动manifest/public Review/R2–R6；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
