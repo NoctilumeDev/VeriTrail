@@ -9122,3 +9122,14 @@ composition、manifest、language persistence与剩余R1，不得按编号自动
   `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`，并允许下一次CONTROL LOOP选择独立manifest implementation feasibility recovery audit。
   它不授权Schema、runtime、persistence、global composition或public Review；`local_not_global = true`，R1完成后仍必须由人类+AI共同执行
   独立全项目检查。
+
+  PR #473已经把doc412精确合入`main@b596776cc9e8782ca491f98de0fec8568fecb8b9`。original/exact-main Public CI与
+  Browser Smoke均attempt 1 SUCCESS；fresh installed-product/raw-byte observations、independent reconciliation、162-artifact
+  closeout与finite integrity全部闭合，因此doc412现在是`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP建立
+  `docs/413-r1-review-derivation-manifest-successor-implementation-feasibility-recovery-audit.md`：read-only四格audit证明manifest
+  0.2的role/path transport合同未被反例击穿，但current private continuity authority ceiling禁止其bytes直接成为
+  `DERIVATION_EVIDENCE`，legacy Evidence 0.2也不能表达normal与四个qualified negative live routes。当前缺口分类为
+  `UNPROVED_VERSIONED_EVIDENCE_SUCCESSOR_CARRIER_SEAM`；下一最小seam只能是独立docs-only
+  `R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDIT`。doc413自己的完整资格链闭合以前仍为
+  `CANDIDATE / NOT_QUALIFIED`，不得创建successor Schema/runtime、manifest 0.2、persistence、global composition或public Review；
+  `local_not_global = true`，R1完成后仍必须由人类+AI共同执行独立全项目检查。
