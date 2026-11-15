@@ -10456,3 +10456,27 @@ R2_R6_NOT_STARTED
 
 doc414自己的完整资格链闭合后最多成为`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP建立独立docs-only
 successor contract，不得直接施工。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI global check继续成立。
+
+## R1 same-attempt DerivationEvidence manifest carrier successor最小合同候选（2026-11-15）
+
+PR #475已经把doc414以`base=af39730a... / head=101fffa... / tree=cd395c9...`精确合入
+`main@ce4fe48356a088bee2d2cd12cc0bbaf590980925`。original Public CI `43715023036`与exact-main Public CI
+`43717832528`均15/15 SUCCESS，Browser Smoke `43717832351`为1/1 SUCCESS，全部是attempt 1且没有rerun。fresh Render与
+raw/API/exact-Git observations、independent reconciliation
+`85c82705e91818b1465709bc8b0a3adaf1c199aa801ac0a5068bdfaa2b6ee557`、185-artifact closeout
+`01212800a12d4e8bd3d671e9aee56371fe2e71e670a6568a114887a5c7b069af`与finite integrity
+`1d47fce0d6a6bead52d5c5673a7cef25c1963f8cf85a96357797cf075ce99577`全部闭合。因此doc414现在是
+`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`；全部保留的setup/error identity继续可见。
+
+fresh CONTROL LOOP建立
+[文档415](415-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract.md)。它只选择版本化
+`DerivationEvidence 0.3`、Evidence application-output binding、private copy-owned exact snapshot carrier、独立conformance/admission与
+one-shot consumption的最小合同边界；legacy Evidence 0.2、Manifest role/path、stage truth与Core authority均不变。八个live world与
+compatibility-only Fact-present qualified-unknown fixture继续分离。
+
+当前是
+`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN`；Schema、carrier/runtime、
+Manifest、persistence、global composition与public Review仍为`NOT_STARTED / NOT_AUTHORIZED`。doc415自己的local/original PR/protected
+exact-head merge/new exact-main双门/fresh observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。合同只有经独立docs-only freeze publication完整闭合才可生效；之后仍须返回CONTROL LOOP，
+不得按编号直接施工。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI global check继续成立。

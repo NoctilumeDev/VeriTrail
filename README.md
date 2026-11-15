@@ -26,10 +26,16 @@ PR #474已经使[implementation feasibility recovery audit](docs/413-r1-review-d
 doc413现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。它证明frozen manifest role/path transport没有被反例击穿，但current private
 continuity bytes不得冒充manifest Evidence，legacy Evidence 0.2也不能表达当前normal与四个qualified negative live routes。
 
-fresh CONTROL LOOP的[successor precontract audit候选](docs/414-r1-same-attempt-derivation-evidence-manifest-carrier-successor-precontract-audit.md)
-进一步区分versioned DerivationEvidence successor与manifest-consumable exact snapshot：未来边界必须同时有版本化Evidence claim和经独立
-校验的private copy-owned carrier，后者只交接CoverageLedger root topology允许的精确child bytes，不取得现实事实、stage admission、
-manifest或Verdict authority。doc414完整资格链闭合以前仍是`CANDIDATE / NOT_QUALIFIED`，不授权Schema、carrier/runtime、manifest、
+PR #475已经使[successor precontract audit](docs/414-r1-same-attempt-derivation-evidence-manifest-carrier-successor-precontract-audit.md)
+完成原始门、保护合并、exact-main双门、fresh installed-product/raw-byte observations、independent reconciliation与finite closeout；
+doc414现在是`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。它区分versioned DerivationEvidence successor与manifest-consumable exact
+snapshot：后继边界必须同时有版本化Evidence claim和经独立校验的private copy-owned carrier，且后者不取得现实事实、stage admission、
+Manifest或Verdict authority。
+
+fresh CONTROL LOOP建立[最小successor合同候选](docs/415-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract.md)：
+它选择`DerivationEvidence 0.3`作为可区分的public claim identity，并选择独立的private one-shot snapshot carrier/conformance/admission；
+Evidence只绑定已admit的application output与Ledger，carrier只copy-own Ledger允许的actual bytes。合同自己的完整资格链与独立freeze
+publication闭合以前仍是`CONTRACT_CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，不授权Schema、fixture、runtime、Manifest producer、
 persistence、global composition状态升级或public Review启动。
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**

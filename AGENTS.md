@@ -9182,3 +9182,47 @@ doc414只允许README、AGENTS、doc414与milestones。自己的local/original P
 `PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，才可选择独立docs-only最小successor contract；不得从audit
 直接创建Schema、carrier/runtime、manifest、persistence或public Review。`proof_is_not_problem_solving = true`，
 `local_not_global = true`，R1完成后的人类+AI全项目检查继续是独立义务。
+
+### R1 same-attempt DerivationEvidence manifest carrier successor最小合同候选
+
+PR #475已经把doc414以
+`base=af39730a4527157cc820d23ad40557f5d2c3de30 / head=101fffa801df1eb6dcd556323b0ca7469987a317 /
+tree=cd395c903b2e9b96d480d7361d035f700023d0d9`精确合入
+`main@ce4fe48356a088bee2d2cd12cc0bbaf590980925`。original Public CI `43715023036`与exact-main Public CI
+`43717832528`均attempt 1 15/15 SUCCESS，Browser Smoke `43717832351`为attempt 1 1/1 SUCCESS，没有rerun。fresh
+README/doc316/doc397/doc413/doc414 Render与AGENTS/milestones/legacy Evidence和Manifest Schema/七个private source-test
+raw、API、exact-Git observations各有唯一qualifying PASS；所有anonymous rate、worktree attachment、marker discovery与PowerShell
+revision query setup errors继续按原identity保留。independent reconciliation、185-artifact closeout与finite integrity分别为：
+
+```text
+85c82705e91818b1465709bc8b0a3adaf1c199aa801ac0a5068bdfaa2b6ee557
+01212800a12d4e8bd3d671e9aee56371fe2e71e670a6568a114887a5c7b069af
+1d47fce0d6a6bead52d5c5673a7cef25c1963f8cf85a96357797cf075ce99577
+```
+
+因此doc414现在是`PRECONTRACT_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP建立
+[文档415](docs/415-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract.md)：它只冻结候选的
+`DerivationEvidence 0.3`、Evidence application-output binding、private projection claim、copy-owned exact snapshot carrier、
+independent conformance/private admission与one-shot consumption identities。legacy Evidence 0.2与Manifest role/path继续immutable；
+carrier只复制Ledger root topology允许的actual bytes，不取得stage truth、Manifest、persistence、Core、Verdict或global composition authority。
+
+当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_CONTINUITY_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_FEASIBILITY_RECOVERY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_NEGATIVE_WORLD_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc415只允许README、AGENTS、doc415与milestones。自己的local/original PR 15/15/protected exact-head merge/new exact-main
+15/15+Browser 1/1/fresh installed-product与raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`。随后必须返回CONTROL LOOP，建立独立docs-only freeze publication；冻结发布完整闭合前
+不得宣称合同生效，也不得创建Schema、carrier/runtime、Manifest、persistence或public Review。`proof_is_not_problem_solving = true`，
+`local_not_global = true`，R1完成后的人类+AI全项目检查继续是独立义务。
