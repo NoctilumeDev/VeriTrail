@@ -9042,3 +9042,25 @@ exact-head merge、新exact-main Public CI 15/15与Browser Smoke 1/1、fresh REA
 raw-byte observation、independent reconciliation与finite closeout，最多成为
 `EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后返回CONTROL LOOP重新复核doc404 authority、doc405 exact
 source hashes与保留首败；不得按文档编号自动建立implementation recovery、冻结doc405或启动manifest/public Review/R2–R6。
+
+### R1 doc405 private implementation qualification recovery publication候选
+
+PR #470已经把doc406 recovery v2精确合入`main@818b64a2bf23cce0ebd821f768652f5b83a6d94b / tree=3f31835...`。
+original Public CI `43660628037`与exact-main Public CI `43663846845`均15/15 SUCCESS，Browser Smoke `43663846915`为1/1
+SUCCESS；fresh README/doc405/doc406/doc409 Render与AGENTS/milestones raw observation、independent reconciliation
+`00ad45ddfd052bb7c76b6b680f17b1d80bfc076a0ec25008ace8e8640022e22d`、140-artifact closeout
+`a503ac1f751fa1fce439e8b356bb533935bcdc9a908194f1762ec6302b1c5eba`及finite integrity
+`87eb1bae540b401bc3a2a0b91c7d63cd6d88c3bee424f957444c05711adf3ce0`全部成立。因此doc406现在是
+`EXACT_MAIN_BROWSER_SMOKE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc405仍`NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP逐字节证明doc405的五个private runtime文件与PR #464 candidate完全相同；唯一触及六文件集合的后继提交是doc409
+已冻结的DEC-001 test proof-clock successor。没有反例要求重开doc397、doc404或runtime。因此
+[文档410](docs/410-r1-same-attempt-derivation-evidence-continuity-private-implementation-qualification-recovery-publication.md)建立新的
+docs-only qualification recovery candidate，只绑定当前exact source/test、已资格化failure boundaries与保留首败。
+
+doc410只允许README、AGENTS、doc410与milestones。它必须完成当前source/test的四格semantic/focused/full local witness、自己的original
+PR 15/15、protected exact-head merge、新exact-main 15/15与Browser 1/1、fresh README/doc405/doc406/doc409/doc410 Render、
+AGENTS/milestones/six source-test raw-byte observation、independent reconciliation与finite closeout。全部闭合后doc405最多成为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`；`FROZEN`仍须独立docs-only publication。不得回填PR #464/#465/#468、
+解释任何UNKNOWN lower cause、恢复global composition或启动manifest/public Review/R2–R6。`local_not_global = true`，post-R1 human+AI
+global check继续保留。
