@@ -10816,3 +10816,39 @@ doc425自己的完整资格链闭合后，只使
 `R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN`成为当前事实。随后必须返回CONTROL LOOP重新审计
 carrier/global composition authority与剩余R1；不得把局部test proof facility冻结解释成旧failure根因已知、原工程问题已解决或全局最优已经
 成立。`proof_is_not_problem_solving = true`、`local_not_global = true`，R1结束后的human+AI全项目检查仍是独立义务。
+
+## R1 same-attempt DerivationEvidence manifest carrier successor最小合同0.1重建候选（2026-11-16）
+
+PR #487已经把doc425精确合入`main@663ca58054f56e8e3eada7ee2347225d0e9484e7`；original Public CI
+`43847054234`、exact-main Public CI `43852767963`与Browser Smoke `43852767838`均attempt 1 SUCCESS，分别15/15、
+15/15与1/1，没有rerun。fresh README/doc424/doc425 Render以及AGENTS/milestones/`tests/test_bootstrap_run_cli.py`
+raw-byte observations各自唯一PASS；全部setup failure保留原identity。independent reconciliation、165-artifact closeout、expected
+stdout self-capture mismatch与finite integrity分别为：
+
+```text
+105c1ae2f27f4835e5688e3c58b03ccb1b6b0d09a74e8b360ad598100c578f2d
+47752aa603822d0ca33cf029c5316b1e4e10556cb32fba6fb8657e6c6138e0db
+5b5d269eb4e4d103371fe420d1cccca1e98442167c1c014f7d6898b567650004
+5fe05067995e3777120dcb858dcd9f9f78324836de640870eba35188c4215545
+```
+
+所以`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN`现已生效；PR #481的失败与
+lower cause `UNKNOWN`不回填。fresh CONTROL LOOP确认旧PR #476仍为原始Public CI失败、关闭、未合并、未资格化；其合同内容
+只能从新exact main独立重建。当前建立
+[文档426](426-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract-recovery.md)：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc426只重建docs-only合同内容，不继承旧head、tree、attempt、qualification或authority。它自己的完整资格链闭合后最多成为
+`QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`，合同冻结还必须由后继独立docs-only publication完成；不得直接施工runtime。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，R1结束后的human+AI全项目检查仍是独立义务。

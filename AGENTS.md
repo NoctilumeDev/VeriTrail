@@ -9515,6 +9515,45 @@ assertion diagnostics。runtime、public payload、timeout、retry、rerun、ski
 global composition authority均不得修改或恢复。实现仍须从新exact main返回CONTROL LOOP另建test-only candidate；
 `proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
 
+### R1 same-attempt DerivationEvidence manifest carrier successor最小合同0.1重建候选
+
+PR #487已经把doc425精确合入`main@663ca58054f56e8e3eada7ee2347225d0e9484e7`；original Public CI
+`43847054234`、exact-main Public CI `43852767963`与Browser Smoke `43852767838`均attempt 1 SUCCESS，分别15/15、
+15/15与1/1，没有rerun。fresh README/doc424/doc425 Render以及AGENTS/milestones/`tests/test_bootstrap_run_cli.py`
+raw-byte observations各自唯一PASS。两次marker proof-target setup error、Windows glob、wrong-workdir与unquoted revision setup error均按
+原identity保留。independent reconciliation、165-artifact closeout、expected stdout self-capture mismatch与finite integrity分别为：
+
+```text
+105c1ae2f27f4835e5688e3c58b03ccb1b6b0d09a74e8b360ad598100c578f2d
+47752aa603822d0ca33cf029c5316b1e4e10556cb32fba6fb8657e6c6138e0db
+5b5d269eb4e4d103371fe420d1cccca1e98442167c1c014f7d6898b567650004
+5fe05067995e3777120dcb858dcd9f9f78324836de640870eba35188c4215545
+```
+
+因此`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN`已经生效；PR #481的失败、
+doc420资格状态与lower cause `UNKNOWN`不回填。fresh CONTROL LOOP确认旧PR #476的manifest carrier successor合同候选仍是
+`CLOSED / UNMERGED / ORIGINAL_PUBLIC_CI_FAILED / NOT_QUALIFIED`，但docs416–425已经把击穿它的最小test proof-facility边界
+分别修正并资格化，且从旧base到当前exact main没有`src/`或Schema语义变化。因此从新exact main独立建立
+[文档426](docs/426-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract-recovery.md)，只重建旧候选的合同内容，不继承
+旧坐标、attempt、资格或authority。
+
+```text
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc426只允许README、AGENTS、doc426与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+installed-product readback/independent reconciliation/finite closeout全部闭合后，最多成为`QUALIFIED_CONTRACT_CANDIDATE /
+NOT_FROZEN`；随后必须返回CONTROL LOOP另建独立docs-only freeze publication。不得直接创建Schema、carrier、Manifest runtime，
+不得恢复global composition authority或启动R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
 ### R1 M10 repeatability failure-observation correction 0.1 implementation候选
 
 PR #485已经把doc423以
