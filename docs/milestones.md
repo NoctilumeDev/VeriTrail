@@ -11018,3 +11018,32 @@ R2_R6_NOT_STARTED
 
 doc430自己的完整资格链闭合后最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建独立docs-only
 implementation authorization publication；不得从本审计直接施工runtime、恢复global composition或启动R2–R6。
+
+### R1 manifest carrier authorization original-gate cancellation boundary候选（2026-11-17）
+
+PR #492已经把doc430精确合入`main@2b747deb7fdf4edc51668e02365da817e55c5e60`并闭合original/exact-main双门、fresh
+4+6 installed-product observations、independent reconciliation与finite closeout，所以doc430是`FEASIBILITY_AUDITED /
+QUALIFIED_HISTORY`。
+
+后继authorization publication PR #493绑定`head=4dcc1a1f631e92b5c6430e0e17d7fe29726ee76d / tree=
+f5eb52d09837f7700f2b4327e45c5c91566b5a01`。本地资格PASS；但首次PR body手工转录local qualification SHA错误，修正body的
+`gh pr edit`触发`pull_request: edited`新run与同ref`cancel-in-progress`。original Public CI `43974353022` attempt 1因此
+`CANCELLED`，两个Windows aggregator因prerequisite为`cancelled`而FAIL；第二run `43974456082`不继承original资格。PR #493已关闭、
+未合并、未资格化，没有rerun。
+
+fresh CONTROL LOOP建立[文档432](432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)的独立docs-only candidate：
+
+```text
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_PR493_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_ORIGINAL_GATE_CANCELLATION_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc432自己的完整资格链闭合后最多成为`ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回
+CONTROL LOOP从新exact main重建authorization publication。不得修改workflow/concurrency来绕过反例，也不得从本audit直接施工runtime。

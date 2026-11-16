@@ -9828,3 +9828,47 @@ R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`，po
 三项matrix SHA-256依次为`9826a801c4c93ff1104b21141f6a4db2a13ad4e08c9754158ef8ff2e122029a1`、
 `4f9d458c7ca9b1bc49a18415d47a8d55044f1eb37750510c7f754ff615e6cbdf`与
 `cd6086480fbe31e9b55ab1927196c9e09868023c9b8de515cd95a21da70dda33`；它们不替代remote qualification。
+
+### R1 manifest carrier authorization original-gate cancellation boundary候选
+
+PR #492已经把doc430精确合入`main@2b747deb7fdf4edc51668e02365da817e55c5e60`；original Public CI
+`43956270989`、exact-main Public CI `43962198744`与Browser Smoke `43962198868`均attempt 1 SUCCESS（15/15、15/15、1/1）。
+fresh 4项Render与6项raw-byte observation各自唯一PASS；independent reconciliation、185-artifact closeout、expected stdout
+self-capture mismatch与finite integrity SHA-256依次为：
+
+```text
+e4038eedd5a020f3e098a51b050626d15fdcde48da3843a5f45b6ef74439e2db
+c6175dced041de46b8383d91f165474b6025cf5beac2928c1f2b84331f8458a6
+da7d855bd88aa2580a39b9e0ef903196aa178d63337a819644b6751e2422735f
+71d481cbd7408aa969e9ca735ebb07d273bd2a9ee44a28716b16c23487f7b862
+```
+
+因此doc430是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。后继PR #493试图发布bounded A–J private implementation authority，
+candidate为`base=2b747deb7fdf4edc51668e02365da817e55c5e60 / head=4dcc1a1f631e92b5c6430e0e17d7fe29726ee76d /
+tree=f5eb52d09837f7700f2b4327e45c5c91566b5a01`、1 commit/4 docs files。本地semantic、focused、Markdown、hygiene、scope与
+primary audit continuity均PASS，但PR body首次手工转录local qualification SHA错误。修正文案的`gh pr edit`触发workflow声明的
+`pull_request: edited`与同ref `cancel-in-progress`；original creation run `43974353022` attempt 1被第二run `43974456082`取消，
+两个Windows aggregator因Review Attention prerequisite为`cancelled`而FAIL。没有rerun。
+
+PR #493已经关闭、未合并、未资格化；第二run不继承original gate。fresh CONTROL LOOP建立
+[文档432](docs/432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)的独立docs-only audit candidate，只保存并
+归层qualification procedure failure：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_PR493_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_ORIGINAL_GATE_CANCELLATION_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc432只允许README、AGENTS、doc432与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc430/doc432 Render、AGENTS/milestones/workflow raw-byte observation、independent reconciliation与finite closeout全部闭合后，
+最多成为`ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建独立authorization
+publication；不得修改workflow来绕过反例，不得复用#493 commit/run/qualification，亦不得直接创建Evidence 0.3、carrier、Manifest runtime、
+global composition或R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
