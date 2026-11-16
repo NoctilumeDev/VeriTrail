@@ -10665,3 +10665,34 @@ R2_R6_NOT_STARTED
 doc421自己的完整资格链闭合后最多成为`M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc420与run
 `43783429314`继续保持原identity。随后必须返回CONTROL LOOP独立审计repeatability failure-observation feasibility，不能直接修test/runtime、
 重跑失败run、重建carrier或启动R2-R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+PR #483随后把doc421精确合入`main@5b15c715f6da16153a37025d5477bcf53b4b4c8c`。original Public CI
+`43788645830`、exact-main Public CI `43792414561`与Browser Smoke `43792414586`均attempt 1 SUCCESS。fresh
+README/doc420/doc421 Render与AGENTS/milestones raw-byte observations各自唯一PASS；independent reconciliation
+`d55e5a2915665da5d9fe1e651b18860b8b5f0046dbb37fb49f09ac265f90d5b5`、125-artifact closeout
+`dc1271add62bff0dd6cf9dcb7754c100c512c51f42290862687d7df45418d7ca`与finite integrity
+`a5b646a94f453eef5ba8dc294d59fe8576d3bb145e3974bd663a90b3bb23d3a0`成立。因此doc421现在是
+`M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc420、旧run与`UNKNOWN`不回填。
+
+fresh CONTROL LOOP建立[文档422](422-r1-m10-repeatability-failure-observation-feasibility-audit.md)的独立docs-only read-only candidate。
+exact source与四格受控probe证明test-only transparent wrapper可以在不改变original result/exception、runtime、oracle、timeout或retry时区分
+Browser private exception、Browser formed failure facts、resource sampling failure及其他lifecycle/node边界；16-row summary SHA-256为
+`99389be0116c2b04b95c78f660b5cbb2f09743ab842ad8626ec6b9894b95dda4`。原repeatability test四格各1/1 PASS只证明没有稳定隔离复现，
+不解释旧full-suite failure。
+
+```text
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_PR481_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc422自己的完整资格链闭合后最多成为`M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；随后必须返回
+CONTROL LOOP另建versioned test-only correction/authorization publication。不得在本文中修改test/runtime、增加timeout/retry、重跑失败run、
+回填doc420、重建carrier或启动R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
