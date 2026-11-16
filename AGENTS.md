@@ -9485,3 +9485,32 @@ README/doc421/doc422 Render与AGENTS/milestones raw-byte observations/independen
 `M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建versioned test-only
 correction/authorization publication；不得在doc422中修改test/runtime、增加timeout/retry、重跑`43783429314`、回填doc420、重建carrier或启动
 R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+### R1 M10 repeatability failure-observation correction 0.1授权发布候选
+
+PR #484已把doc422以
+`base=5b15c715f6da16153a37025d5477bcf53b4b4c8c / head=c4bdd43aa6afc2507c8ba7e85c17780855e88e7e /
+tree=8c0422d4c888659516d652d8c240401bf3dffce5`精确合入
+`main@c76fc0dd71de281b21a4486bd68b2aebd3375c70`。original Public CI `43803646543`、exact-main Public CI
+`43806889221`与Browser Smoke `43806889217`均attempt 1 SUCCESS。fresh README/doc421/doc422 Render及AGENTS/milestones raw-byte
+observations各自唯一PASS；reset前anonymous rate diagnostic的`remaining=0`按原identity保留，reset后才运行preflight与产品观察。
+reconciliation、125-artifact closeout、expected stdout self-capture mismatch与finite integrity分别为：
+
+```text
+ef88665edccb4066afd1ccddb41f61c77c3d7313360839ba7c50f62758112602
+f50f9b65d509514d7e9eff8944484ee0be1748918b719fef0673446a17c5ff59
+e896da496bc07224469fd9144c1e021f12d1ac3f2a06bc53832e25b80eb21376
+2e44bcb2f4b2fc48616df8c086731f8644143eb48a501a89a9cf1c9aa043b083
+```
+
+因此doc422现在是`M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；doc420、旧run与`UNKNOWN`
+保持原identity。fresh CONTROL LOOP从新exact main建立
+[文档423](docs/423-r1-m10-repeatability-failure-observation-correction-authorization-publication.md)的独立docs-only authorization
+candidate。本文只允许README、AGENTS、doc423与milestones；完整资格链闭合前
+`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED`不生效。
+
+本文最后门闭合后也只允许在`tests/test_bootstrap_run_cli.py`中透明包住同一个
+`veritrail.cli.run_bootstrap_bundle`调用、保留同一result/exception、投影bounded same-attempt lower facts并把它们附加到原exact
+assertion diagnostics。runtime、public payload、timeout、retry、rerun、skip、workflow、Schema、Verdict、doc420、carrier、Manifest与
+global composition authority均不得修改或恢复。实现仍须从新exact main返回CONTROL LOOP另建test-only candidate；
+`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。

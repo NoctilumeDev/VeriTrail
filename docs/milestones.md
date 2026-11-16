@@ -10696,3 +10696,42 @@ R2_R6_NOT_STARTED
 doc422自己的完整资格链闭合后最多成为`M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；随后必须返回
 CONTROL LOOP另建versioned test-only correction/authorization publication。不得在本文中修改test/runtime、增加timeout/retry、重跑失败run、
 回填doc420、重建carrier或启动R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+## R1 M10 repeatability failure-observation correction 0.1授权发布候选（2026-11-16）
+
+PR #484已把doc422精确合入`main@c76fc0dd71de281b21a4486bd68b2aebd3375c70`；original Public CI `43803646543`、
+exact-main Public CI `43806889221`与Browser Smoke `43806889217`均attempt 1 SUCCESS。fresh README/doc421/doc422 Render与
+AGENTS/milestones raw/API/exact-Git byte observations各自唯一PASS；reset前anonymous rate diagnostic #1的`remaining=0`、
+worktree attachment cap与expected closeout stdout self-capture mismatch都按原identity保留。independent reconciliation、125-artifact
+closeout与finite integrity为：
+
+```text
+ef88665edccb4066afd1ccddb41f61c77c3d7313360839ba7c50f62758112602
+f50f9b65d509514d7e9eff8944484ee0be1748918b719fef0673446a17c5ff59
+2e44bcb2f4b2fc48616df8c086731f8644143eb48a501a89a9cf1c9aa043b083
+```
+
+因此doc422现在是`M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；doc420、run
+`43783429314`与lower cause `UNKNOWN`不回填。fresh CONTROL LOOP建立
+[文档423](423-r1-m10-repeatability-failure-observation-correction-authorization-publication.md)的独立docs-only候选。它只条件化发布
+test-only correction 0.1 A–J authority：未来candidate仅可修改`tests/test_bootstrap_run_cli.py`，透明保存同一attempt already-observed的
+bounded lifecycle/node/resource/subject/workspace/Browser facts，返回同一result或重抛同一exception，并只把projection附加到原exact
+assertion failure diagnostics。
+
+```text
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_AUTHORIZATION_PUBLICATION_0_1_CANDIDATE_NOT_QUALIFIED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc423自己的local/original PR/protected exact-head merge/new exact-main双门/fresh README/doc421/doc422/doc423 Render与
+AGENTS/milestones raw-byte observations/independent reconciliation/finite closeout全部闭合后，
+`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED`才生效，同时implementation仍`NOT_STARTED`。随后必须返回
+CONTROL LOOP另建test-only implementation candidate；不得把authorization、形式矩阵或doc422 probe当成correction已经存在。runtime、
+timeout、retry、workflow、oracle、carrier与R2–R6继续禁止。`proof_is_not_problem_solving = true`、`local_not_global = true`。
