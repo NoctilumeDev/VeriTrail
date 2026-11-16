@@ -17,6 +17,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 from veritrail.bootstrap_preview import build_bootstrap_preview, resolve_bootstrap
@@ -25,7 +26,7 @@ from veritrail.bootstrap_browser import (
     ObservedBrowserEvidence,
     collect_observed_browser_evidence,
 )
-from veritrail.bootstrap_public_run import run_bootstrap_bundle
+from veritrail.bootstrap_public_run import BootstrapPublicRunResult, run_bootstrap_bundle
 from veritrail.bootstrap_run import run_observed_bootstrap
 from veritrail.catalog import build_catalog, validate_bundle
 from veritrail.cli import _bootstrap_interrupt_cancellation, main
@@ -134,6 +135,295 @@ def _subject_drift_failure_diagnostic(
             "lifecycle_events": bootstrap.get("lifecycle_events"),
         },
     }
+
+
+_MAX_ATTEMPT_EVENTS = 64
+_MAX_ATTEMPT_NODES = 16
+_MAX_BROWSER_RECORDS = 64
+_MAX_DIAGNOSTIC_BYTES = 65_536
+_MAX_DIAGNOSTIC_TEXT = 1_024
+
+
+def _bounded_sequence(value: object, *, label: str, limit: int) -> tuple[object, ...]:
+    if not isinstance(value, (list, tuple)):
+        raise AssertionError(f"{label} must be a list or tuple")
+    if len(value) > limit:
+        raise AssertionError(f"{label} exceeds the diagnostic bound {limit}")
+    return tuple(value)
+
+
+def _bounded_text(value: object, *, label: str) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise AssertionError(f"{label} must be text or None")
+    if len(value) > _MAX_DIAGNOSTIC_TEXT:
+        raise AssertionError(f"{label} exceeds the diagnostic text bound")
+    return value
+
+
+def _bounded_mapping_projection(
+    value: object, *, label: str, keys: tuple[str, ...]
+) -> dict[str, object]:
+    if not isinstance(value, dict):
+        raise AssertionError(f"{label} must be a mapping")
+    return {key: value.get(key) for key in keys}
+
+
+def _bootstrap_node_projection(node: object) -> dict[str, object]:
+    start = getattr(node, "start")
+    readiness = getattr(node, "readiness")
+    teardown = getattr(node, "teardown")
+    readiness_attempts = ()
+    if readiness is not None:
+        readiness_attempts = _bounded_sequence(
+            getattr(readiness, "attempts"),
+            label="readiness attempts",
+            limit=_MAX_BROWSER_RECORDS,
+        )
+    return {
+        "node_id": _bounded_text(getattr(node, "node_id"), label="node id"),
+        "role": _bounded_text(getattr(node, "role"), label="node role"),
+        "start": None
+        if start is None
+        else {
+            "error_type": _bounded_text(start.error_type, label="start error type"),
+            "cleanup_complete": start.cleanup_complete,
+            "process_created": start.process_created,
+            "target_assigned": start.target_assigned,
+            "target_resumed": start.target_resumed,
+        },
+        "readiness": None
+        if readiness is None
+        else {
+            "ready": readiness.ready,
+            "error_type": _bounded_text(
+                readiness.error_type, label="readiness error type"
+            ),
+            "attempt_count": len(readiness_attempts),
+        },
+        "teardown": None
+        if teardown is None
+        else {
+            "error_type": _bounded_text(
+                teardown.error_type, label="teardown error type"
+            ),
+            "termination_reason": _bounded_text(
+                teardown.termination_reason, label="termination reason"
+            ),
+            "cleanup_complete": teardown.cleanup_complete,
+            "port_free": teardown.port_free,
+            "handles_released": teardown.handles_released,
+            "readers_released": teardown.readers_released,
+        },
+    }
+
+
+def _bootstrap_attempt_projection(
+    result: BootstrapPublicRunResult,
+) -> dict[str, object]:
+    report = result.report
+    if not isinstance(report, dict):
+        raise AssertionError("bootstrap report must be a mapping")
+    projection: dict[str, object] = {
+        "report": {
+            "execution_status": report.get("execution_status"),
+            "verdict": report.get("verdict"),
+        },
+        "observed": None,
+    }
+    observed = result.observed
+    if observed is None:
+        return projection
+
+    lifecycle = observed.lifecycle
+    events = _bounded_sequence(
+        lifecycle.events,
+        label="lifecycle events",
+        limit=_MAX_ATTEMPT_EVENTS,
+    )
+    nodes = _bounded_sequence(
+        lifecycle.nodes,
+        label="lifecycle nodes",
+        limit=_MAX_ATTEMPT_NODES,
+    )
+    browser_facts = None
+    if observed.browser is not None:
+        document = observed.browser.document
+        if not isinstance(document, dict) or not isinstance(document.get("facts"), dict):
+            raise AssertionError("browser Evidence facts must be a mapping")
+        browser_facts = document["facts"]
+
+    browser_projection = None
+    if browser_facts is not None:
+        failed_network = []
+        for item in _bounded_sequence(
+            browser_facts.get("network", []),
+            label="browser network facts",
+            limit=_MAX_BROWSER_RECORDS,
+        ):
+            if not isinstance(item, dict):
+                raise AssertionError("browser network fact must be a mapping")
+            status = item.get("status")
+            if (
+                item.get("finished") is not True
+                or item.get("failure") is not None
+                or status is None
+                or (isinstance(status, int) and status >= 400)
+            ):
+                failed_network.append(
+                    {
+                        key: item.get(key)
+                        for key in (
+                            "sequence",
+                            "viewport",
+                            "method",
+                            "url",
+                            "resource_type",
+                            "status",
+                            "finished",
+                            "failure",
+                        )
+                    }
+                )
+        collection_errors = []
+        for item in _bounded_sequence(
+            browser_facts.get("collection_errors", []),
+            label="browser collection errors",
+            limit=_MAX_BROWSER_RECORDS,
+        ):
+            if not isinstance(item, dict):
+                raise AssertionError("browser collection error must be a mapping")
+            collection_errors.append(
+                {
+                    "collector": item.get("collector"),
+                    "error_type": item.get("error_type"),
+                }
+            )
+        browser_projection = {
+            "capture_complete": browser_facts.get("capture_complete"),
+            "all_steps_passed": browser_facts.get("all_steps_passed"),
+            "cleanup_complete": browser_facts.get("cleanup_complete"),
+            "collection_errors": collection_errors,
+            "failed_request_count": browser_facts.get("failed_request_count"),
+            "failed_network": failed_network,
+        }
+
+    projection["observed"] = {
+        "events": [
+            {
+                "ordinal": event.ordinal,
+                "stage": _bounded_text(event.stage, label="lifecycle stage"),
+                "result": _bounded_text(event.result, label="lifecycle result"),
+            }
+            for event in events
+        ],
+        "nodes": [_bootstrap_node_projection(node) for node in nodes],
+        "services_ready": lifecycle.services_ready,
+        "ready_callback_started": lifecycle.ready_callback_started,
+        "ready_callback_completed": lifecycle.ready_callback_completed,
+        "trigger_reason": _bounded_text(
+            lifecycle.trigger_reason, label="lifecycle trigger reason"
+        ),
+        "stop_reason": _bounded_text(
+            lifecycle.stop_reason, label="lifecycle stop reason"
+        ),
+        "cleanup_complete": lifecycle.cleanup_complete,
+        "error_type": _bounded_text(observed.error_type, label="observed error type"),
+        "resource_observation": _bounded_mapping_projection(
+            observed.resource_observation,
+            label="resource observation",
+            keys=(
+                "core_peak_rss_mb",
+                "dependency_peak_rss_mb",
+                "application_peak_rss_mb",
+                "browser_peak_rss_mb",
+                "host_available_memory_min_mb",
+                "limit_trigger_reason",
+                "sampling_complete",
+            ),
+        ),
+        "subject_observation": _bounded_mapping_projection(
+            observed.subject_observation,
+            label="subject observation",
+            keys=("changed", "scan_complete"),
+        ),
+        "run_work_released": observed.run_work_released,
+        "staging_released": observed.staging_released,
+        "owned_root_released": observed.owned_root_released,
+        "browser_present": observed.browser is not None,
+        "browser": browser_projection,
+    }
+    return projection
+
+
+class _BootstrapAttemptObserver:
+    """Capture one same-attempt diagnostic without changing product control flow."""
+
+    def __init__(self, original=run_bootstrap_bundle, *, projector=None) -> None:
+        self._original = original
+        self._projector = projector or _bootstrap_attempt_projection
+        self._call_count = 0
+        self._result: object | None = None
+        self._exception: BaseException | None = None
+        self._projection: dict[str, object] | None = None
+        self._diagnostic_error: BaseException | None = None
+
+    def __call__(self, *args, **kwargs):
+        if self._call_count != 0:
+            raise AssertionError("bootstrap attempt observer must wrap exactly one call")
+        self._call_count = 1
+        try:
+            result = self._original(*args, **kwargs)
+        except Exception as exc:
+            self._exception = exc
+            try:
+                self._projection = {
+                    "exception": {
+                        "type": type(exc).__name__,
+                        "message": _bounded_text(
+                            str(exc), label="bootstrap exception message"
+                        ),
+                    }
+                }
+            except Exception as diagnostic_exc:
+                self._diagnostic_error = diagnostic_exc
+            raise
+
+        self._result = result
+        if not isinstance(result, BootstrapPublicRunResult):
+            self._diagnostic_error = AssertionError(
+                "bootstrap attempt returned a foreign result type"
+            )
+            return result
+        try:
+            self._projection = {"result": self._projector(result)}
+        except Exception as diagnostic_exc:
+            self._diagnostic_error = diagnostic_exc
+        return result
+
+    def diagnostic(self, *, returned: object | None = None) -> dict[str, object]:
+        if self._call_count != 1:
+            raise AssertionError("bootstrap attempt observer did not wrap exactly one call")
+        captured = self._exception if self._exception is not None else self._result
+        if returned is not None and returned is not captured:
+            raise AssertionError("bootstrap attempt observer detected result replacement")
+        if self._diagnostic_error is not None:
+            raise AssertionError("bootstrap attempt diagnostic failed") from self._diagnostic_error
+        if self._projection is None:
+            raise AssertionError("bootstrap attempt diagnostic is missing")
+        try:
+            encoded = json.dumps(
+                self._projection,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        except Exception as exc:
+            raise AssertionError("bootstrap attempt diagnostic is not JSON-safe") from exc
+        if len(encoded) > _MAX_DIAGNOSTIC_BYTES:
+            raise AssertionError("bootstrap attempt diagnostic exceeds its byte bound")
+        return self._projection
 
 
 @unittest.skipUnless(os.name == "nt", "M10 public bootstrap Run is Windows-only")
@@ -509,6 +799,198 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual([], list(fixture.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
+    def test_same_attempt_failure_observer_is_bounded_and_fail_closed(self) -> None:
+        def controlled_result(
+            *,
+            execution_status: str = "COMPLETED",
+            verdict: str = "PASS",
+            browser_facts: dict | None = None,
+            resource_sampling_complete: bool = True,
+        ) -> BootstrapPublicRunResult:
+            lifecycle = SimpleNamespace(
+                events=(
+                    SimpleNamespace(
+                        ordinal=1,
+                        stage="EXERCISED",
+                        result=(
+                            "COMPLETE"
+                            if execution_status == "COMPLETED"
+                            else "COLLECTOR_ERROR"
+                        ),
+                    ),
+                ),
+                nodes=(),
+                services_ready=True,
+                ready_callback_started=True,
+                ready_callback_completed=execution_status == "COMPLETED",
+                trigger_reason="NONE",
+                stop_reason=(
+                    "NONE"
+                    if execution_status == "COMPLETED"
+                    else "COLLECTOR_ERROR"
+                ),
+                cleanup_complete=True,
+            )
+            browser = (
+                None
+                if browser_facts is None
+                else SimpleNamespace(document={"facts": browser_facts})
+            )
+            observed = SimpleNamespace(
+                lifecycle=lifecycle,
+                evidence=object(),
+                browser=browser,
+                resource_observation={
+                    "core_peak_rss_mb": 1.0,
+                    "dependency_peak_rss_mb": 1.0,
+                    "application_peak_rss_mb": 1.0,
+                    "browser_peak_rss_mb": 1.0,
+                    "host_available_memory_min_mb": 1_024.0,
+                    "limit_trigger_reason": None,
+                    "sampling_complete": resource_sampling_complete,
+                },
+                subject_observation={"changed": False, "scan_complete": True},
+                run_work_released=True,
+                staging_released=True,
+                owned_root_released=True,
+                staged_sha256="0" * 64,
+                error_type=(
+                    None if execution_status == "COMPLETED" else "BROWSER_INCOMPLETE"
+                ),
+            )
+            return BootstrapPublicRunResult(
+                report={"execution_status": execution_status, "verdict": verdict},
+                preflight=None,
+                observed=observed,
+                preview_sha256="1" * 64,
+            )
+
+        success = controlled_result()
+        success_observer = _BootstrapAttemptObserver(lambda: success)
+        returned = success_observer()
+        self.assertIs(success, returned)
+        success_diagnostic = success_observer.diagnostic(returned=returned)
+        self.assertEqual(
+            ("COMPLETED", "PASS"),
+            (
+                success_diagnostic["result"]["report"]["execution_status"],
+                success_diagnostic["result"]["report"]["verdict"],
+            ),
+        )
+
+        browser_exception = ObservedBrowserCollectionError(
+            "DiagnosticSentinel",
+            peak_rss_mb=0.0,
+            resource_sampling_complete=True,
+            process_cleanup_complete=True,
+            job_memory_limit_mb=1,
+            job_memory_limit_enforced=True,
+        )
+
+        def raise_browser_exception():
+            raise browser_exception
+
+        exception_observer = _BootstrapAttemptObserver(raise_browser_exception)
+        with self.assertRaises(ObservedBrowserCollectionError) as caught:
+            exception_observer()
+        self.assertIs(browser_exception, caught.exception)
+        self.assertEqual(
+            "ObservedBrowserCollectionError",
+            exception_observer.diagnostic(returned=caught.exception)["exception"][
+                "type"
+            ],
+        )
+
+        formed_failure = controlled_result(
+            execution_status="ERROR",
+            verdict="PENDING",
+            browser_facts={
+                "capture_complete": False,
+                "all_steps_passed": False,
+                "cleanup_complete": True,
+                "collection_errors": [
+                    {
+                        "collector": "network:desktop",
+                        "error_type": "HostSocketNoBufferSpace",
+                    }
+                ],
+                "failed_request_count": 1,
+                "network": [
+                    {
+                        "sequence": 1,
+                        "viewport": "desktop",
+                        "method": "GET",
+                        "url": "http://127.0.0.1/",
+                        "resource_type": "document",
+                        "status": None,
+                        "finished": False,
+                        "failure": "net::ERR_NO_BUFFER_SPACE",
+                    }
+                ],
+            },
+        )
+        formed_observer = _BootstrapAttemptObserver(lambda: formed_failure)
+        self.assertIs(formed_failure, formed_observer())
+        formed_projection = formed_observer.diagnostic()["result"]["observed"]
+        self.assertEqual(
+            "net::ERR_NO_BUFFER_SPACE",
+            formed_projection["browser"]["failed_network"][0]["failure"],
+        )
+
+        incomplete_resource = controlled_result(resource_sampling_complete=False)
+        resource_observer = _BootstrapAttemptObserver(lambda: incomplete_resource)
+        self.assertIs(incomplete_resource, resource_observer())
+        self.assertFalse(
+            resource_observer.diagnostic()["result"]["observed"][
+                "resource_observation"
+            ]["sampling_complete"]
+        )
+
+        call_count = 0
+
+        def counted_result():
+            nonlocal call_count
+            call_count += 1
+            return success
+
+        duplicate_observer = _BootstrapAttemptObserver(counted_result)
+        self.assertIs(success, duplicate_observer())
+        with self.assertRaises(AssertionError):
+            duplicate_observer()
+        self.assertEqual(1, call_count)
+
+        foreign = object()
+        foreign_observer = _BootstrapAttemptObserver(lambda: foreign)
+        self.assertIs(foreign, foreign_observer())
+        with self.assertRaises(AssertionError):
+            foreign_observer.diagnostic()
+
+        replacement_observer = _BootstrapAttemptObserver(lambda: success)
+        self.assertIs(success, replacement_observer())
+        with self.assertRaises(AssertionError):
+            replacement_observer.diagnostic(returned=object())
+
+        unbounded = controlled_result()
+        unbounded.observed.lifecycle.events = tuple(
+            SimpleNamespace(ordinal=index, stage="EXERCISED", result="COMPLETE")
+            for index in range(_MAX_ATTEMPT_EVENTS + 1)
+        )
+        unbounded_observer = _BootstrapAttemptObserver(lambda: unbounded)
+        self.assertIs(unbounded, unbounded_observer())
+        with self.assertRaises(AssertionError):
+            unbounded_observer.diagnostic()
+
+        def fail_diagnostic(_result):
+            raise RuntimeError("diagnostic sentinel")
+
+        diagnostic_failure_observer = _BootstrapAttemptObserver(
+            lambda: success,
+            projector=fail_diagnostic,
+        )
+        self.assertIs(success, diagnostic_failure_observer())
+        with self.assertRaises(AssertionError):
+            diagnostic_failure_observer.diagnostic()
+
     def test_same_sealed_authorities_repeat_without_residual_contamination(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -517,20 +999,26 @@ class BootstrapRunCliTests(unittest.TestCase):
             first_manifest: bytes | None = None
 
             for ordinal, output in enumerate(outputs, start=1):
-                code, payload, stderr, browser_error_types = (
-                    self._run_with_browser_error_trace(
-                        subject=subject,
-                        plan=plan,
-                        profile=profile,
-                        bindings=bindings,
-                        approval=preview["preview_sha256"],
-                        output=output,
-                        run_id=f"m10-public-repeat-{ordinal}",
+                attempt_observer = _BootstrapAttemptObserver()
+                with patch(
+                    "veritrail.cli.run_bootstrap_bundle",
+                    side_effect=attempt_observer,
+                ):
+                    code, payload, stderr, browser_error_types = (
+                        self._run_with_browser_error_trace(
+                            subject=subject,
+                            plan=plan,
+                            profile=profile,
+                            bindings=bindings,
+                            approval=preview["preview_sha256"],
+                            output=output,
+                            run_id=f"m10-public-repeat-{ordinal}",
+                        )
                     )
-                )
                 diagnostic = {
                     "payload": payload,
                     "browser_error_types": browser_error_types,
+                    "same_attempt": attempt_observer.diagnostic(),
                 }
                 self.assertEqual("", stderr)
                 self.assertEqual(0, code)
