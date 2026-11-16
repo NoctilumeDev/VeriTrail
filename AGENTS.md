@@ -9828,3 +9828,48 @@ R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`，po
 三项matrix SHA-256依次为`9826a801c4c93ff1104b21141f6a4db2a13ad4e08c9754158ef8ff2e122029a1`、
 `4f9d458c7ca9b1bc49a18415d47a8d55044f1eb37750510c7f754ff615e6cbdf`与
 `cd6086480fbe31e9b55ab1927196c9e09868023c9b8de515cd95a21da70dda33`；它们不替代remote qualification。
+
+### R1 manifest carrier successor private implementation授权发布候选
+
+PR #492已经把doc430以
+`base=adb1fe7e454c7538ed828a12fe79aa4b43441207 / head=391528c611ea83ffb0a78263e247cf7c973f9a4d /
+tree=f1189b0eb018cea4de8643c557980d705644ba97`精确合入
+`main@2b747deb7fdf4edc51668e02365da817e55c5e60`。original Public CI `43956270989`、exact-main Public CI
+`43962198744`与Browser Smoke `43962198868`均attempt 1 SUCCESS（15/15、15/15、1/1），没有rerun。fresh README/doc426/
+doc429/doc430 Render与AGENTS/milestones/两份legacy Schema/两份private source raw-byte observations各自唯一PASS。
+
+independent reconciliation attempt 1因proof facility把append-only setup history错误要求为初始record的严格等长而fail closed；v2只改为
+初始record的逐项保留超集，没有重跑产品观察。reconciliation、185-artifact closeout、expected stdout self-capture mismatch与finite
+integrity SHA-256依次为：
+
+```text
+e4038eedd5a020f3e098a51b050626d15fdcde48da3843a5f45b6ef74439e2db
+c6175dced041de46b8383d91f165474b6025cf5beac2928c1f2b84331f8458a6
+da7d855bd88aa2580a39b9e0ef903196aa178d63337a819644b6751e2422735f
+71d481cbd7408aa969e9ca735ebb07d273bd2a9ee44a28716b16c23487f7b862
+```
+
+因此doc430现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。fresh CONTROL LOOP从新exact main建立
+[文档431](docs/431-r1-manifest-carrier-successor-private-implementation-authorization.md)的独立docs-only authority publication
+candidate。本文只条件化允许doc426/doc429冻结合同与doc430 qualified feasibility共同限定的bounded A–J：显式Evidence 0.3 dispatch、
+narrow continuity coordinate、private projection/carrier、独立conformance、八个live-world topology、one-shot validation/admission/future
+consumption、typed failure与`DEMC-000..019`四格proof。Manifest 0.2 runtime、persistence、global composition、public Review与R2–R6
+继续禁止。
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc431只允许README、AGENTS、doc431与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc430/doc431 Render、AGENTS/milestones raw-byte observations/independent reconciliation/finite closeout全部闭合后，
+`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`才生效，同时implementation仍`NOT_STARTED`。
+随后必须返回CONTROL LOOP另建private implementation candidate；不得把authorization publication算作runtime证据。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
