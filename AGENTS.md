@@ -9514,3 +9514,49 @@ candidate。本文只允许README、AGENTS、doc423与milestones；完整资格�
 assertion diagnostics。runtime、public payload、timeout、retry、rerun、skip、workflow、Schema、Verdict、doc420、carrier、Manifest与
 global composition authority均不得修改或恢复。实现仍须从新exact main返回CONTROL LOOP另建test-only candidate；
 `proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
+
+### R1 M10 repeatability failure-observation correction 0.1 implementation候选
+
+PR #485已经把doc423以
+`base=c76fc0dd71de281b21a4486bd68b2aebd3375c70 / head=385a07f5a16e0d893cff4de04a2f7a4932d768fa /
+tree=f6a46404abef9c9f4903f61743dd3129883517e3`精确合入
+`main@e9191b14bfc9d5848b30ee07f6765fcebfb23adc`。original Public CI `43814684449`、exact-main Public CI
+`43818850121`与Browser Smoke `43818850080`均attempt 1 SUCCESS。fresh README/doc421/doc422/doc423 Render与
+AGENTS/milestones raw-byte observations各自唯一PASS；长路径readback setup failure、reconciliation attempt 1空白计数proof-target
+error与错误doc路径lookup均按原identity保留。independent reconciliation、146-artifact closeout、expected self-capture mismatch与finite
+integrity分别为：
+
+```text
+32836b09f2de86f267d457d7ca1d30fe551143288a99b86412c2aaf0798cd15d
+0638cb066d4c4287b37fc30c110f5ca76001eff46ea5670d3dbdf0d54f9fc36d
+42bcc3022342142d42da7da6f34036c450bee0fe64a6152826275bd68a5b5292
+5fb596206f62d2a7347dabf22d87080c3d2875313bc40cc0010c6c6e1ad7d7f4
+```
+
+所以`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED`已经生效；doc420、run `43783429314`与lower
+cause `UNKNOWN`不回填。fresh CONTROL LOOP从新exact main建立
+[文档424](docs/424-r1-m10-repeatability-failure-observation-correction-implementation-candidate.md)的独立test-only候选。
+
+该候选只修改`tests/test_bootstrap_run_cli.py`：透明exactly-once包住原`veritrail.cli.run_bootstrap_bundle`，同一result或exception
+身份保持不变，bounded projection只进入原assertion diagnostics；controlled witness覆盖success、Browser private exception、formed
+Browser failure facts、resource incomplete与fail-closed边界，真实repeatability/subject-drift witnesses继续执行。focused四格各3/3 PASS，
+complete current-source四格各499/499 PASS。pytest缺失与source-root缺失两次prequalification setup errors、worktree attachment cap及
+历史错误模块路径只读probe都永久保留，effect `NONE`。
+
+```text
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc424只允许README、AGENTS、doc424、milestones与`tests/test_bootstrap_run_cli.py`。它自己的local/original PR/protected
+exact-head merge/new exact-main双门/fresh README/doc423/doc424 Render与AGENTS/milestones raw-byte observations/independent
+reconciliation/finite closeout全部闭合后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED /
+NOT_FROZEN`。随后必须返回CONTROL LOOP另建docs-only freeze publication；不得直接重建carrier、恢复global composition authority或
+启动R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。

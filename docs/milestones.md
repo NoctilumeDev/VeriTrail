@@ -10735,3 +10735,46 @@ AGENTS/milestones raw-byte observations/independent reconciliation/finite closeo
 `R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED`才生效，同时implementation仍`NOT_STARTED`。随后必须返回
 CONTROL LOOP另建test-only implementation candidate；不得把authorization、形式矩阵或doc422 probe当成correction已经存在。runtime、
 timeout、retry、workflow、oracle、carrier与R2–R6继续禁止。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+## R1 M10 repeatability failure-observation correction 0.1 implementation候选（2026-11-16）
+
+PR #485已经把doc423精确合入`main@e9191b14bfc9d5848b30ee07f6765fcebfb23adc`。original Public CI `43814684449`、
+exact-main Public CI `43818850121`与Browser Smoke `43818850080`均attempt 1 SUCCESS。fresh README/doc421/doc422/doc423
+Render与AGENTS/milestones raw/API/exact-Git byte observations各自唯一PASS；长路径readback、reconciliation attempt 1空白计数与错误
+doc路径lookup setup failures均按原identity保留。independent reconciliation、146-artifact closeout、expected self-capture mismatch与finite
+integrity分别为：
+
+```text
+32836b09f2de86f267d457d7ca1d30fe551143288a99b86412c2aaf0798cd15d
+0638cb066d4c4287b37fc30c110f5ca76001eff46ea5670d3dbdf0d54f9fc36d
+42bcc3022342142d42da7da6f34036c450bee0fe64a6152826275bd68a5b5292
+5fb596206f62d2a7347dabf22d87080c3d2875313bc40cc0010c6c6e1ad7d7f4
+```
+
+所以`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED`已经生效；doc420、旧run与`UNKNOWN`不回填。
+fresh CONTROL LOOP建立
+[文档424](424-r1-m10-repeatability-failure-observation-correction-implementation-candidate.md)的独立test-only candidate。
+
+本候选只修改`tests/test_bootstrap_run_cli.py`，透明保存same-attempt bounded lower-fact projection，同时保持original result/exception、
+exact assertions、status、Verdict与cleanup不变。controlled witness覆盖success、Browser private exception、formed failure facts、resource
+incomplete及fail-closed边界；真实repeatability与subject-drift witnesses继续执行。focused四格各3/3 PASS，完整current-source regression
+四格各499/499 PASS。pytest缺失与source-root缺失prequalification setup errors、managed worktree attachment cap与历史错误模块路径只读
+probe均永久保留，effect `NONE`。
+
+```text
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc424自己的local/original PR/protected exact-head merge/new exact-main双门/fresh README/doc423/doc424 Render与
+AGENTS/milestones raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only
+freeze publication；不得直接重建carrier或恢复global composition authority。`proof_is_not_problem_solving = true`、
+`local_not_global = true`。
