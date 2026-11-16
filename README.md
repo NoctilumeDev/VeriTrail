@@ -129,13 +129,15 @@ doc426不变合同语义为冻结对象，不回填doc426历史资格，也不�
 Reader-visible freeze candidate: doc428 is qualified history; doc426 remains not qualified in its failed world; doc429 can freeze the unchanged contract only after its own complete qualification chain.
 
 PR #491 已使[manifest carrier successor 合同恢复冻结发布](docs/429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)
-完成 original/exact-main 双门、fresh installed-product readback、independent reconciliation 与 finite closeout；所以
-`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN`已经生效，PR #488/doc426 的失败 world
-仍不被回填。fresh CONTROL LOOP 现在只建立
-[private implementation feasibility audit](docs/430-r1-manifest-carrier-successor-private-implementation-feasibility-audit.md)：当前 source
-能够从 copy-owned exact material 有界形成八个 live-world projection，不需要回读 path 或重调 Provider；但本文仍只是
-`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED`，
-Evidence 0.3、carrier、Manifest runtime 与 global composition authority 均未创建或授权。
+完成完整资格链并冻结合同；PR #492 随后使
+[private implementation feasibility audit](docs/430-r1-manifest-carrier-successor-private-implementation-feasibility-audit.md)完成original/exact-main
+双门、fresh 4+6 installed-product readback、independent reconciliation与finite closeout，所以doc430是
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。后继authorization publication PR #493因Agent在original gate终态前修正PR body的一条SHA
+转录错误，触发`pull_request: edited`新run与`cancel-in-progress`，original Public CI `43974353022` attempt 1永久保持
+`CANCELLED`，两个Windows aggregator随之FAIL；PR已关闭、未合并、未资格化。fresh CONTROL LOOP只建立
+[original-gate cancellation boundary audit](docs/432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)；
+当前只是`R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_ORIGINAL_GATE_CANCELLATION_BOUNDARY_CANDIDATE_NOT_QUALIFIED`。
+第二run不得替代original gate，Evidence 0.3、carrier、Manifest runtime与global composition authority仍未创建或授权。
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1023,7 +1025,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [manifest carrier contract recovery reader-visible failure-boundary audit](docs/427-r1-manifest-carrier-contract-recovery-reader-visible-failure-boundary-audit.md)：保存PR #488双门通过后README reader-visible diagnostic的0次命中、默认折叠details边界与有限失败closeout；不回填doc426，也不在同一刀修正或冻结合同；
 - [manifest carrier contract recovery reader-visible public-projection correction](docs/428-r1-manifest-carrier-contract-recovery-reader-visible-public-projection-correction.md)：资格化reader-visible失败的最小公开投影修正；doc426的失败world继续保持未资格化，carrier runtime与global composition authority仍未授权；
 - [manifest carrier successor合同恢复冻结发布](docs/429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)：PR #491已闭合自己的完整资格链并冻结doc426不变合同语义；PR #488失败历史继续保留，该冻结不直接启动实现；
-- [manifest carrier successor private implementation feasibility audit](docs/430-r1-manifest-carrier-successor-private-implementation-feasibility-audit.md)：从合同冻结后的新exact main只读审计八个live worlds、copy-owned object graph、独立conformance与one-shot边界；当前只是candidate，不创建Evidence 0.3、carrier或Manifest runtime；
+- [manifest carrier successor private implementation feasibility audit](docs/430-r1-manifest-carrier-successor-private-implementation-feasibility-audit.md)：PR #492已闭合完整资格链并成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；该历史不创建Evidence 0.3、carrier或Manifest runtime，也不自动授权实现；
+- [manifest carrier successor implementation authorization original-gate cancellation boundary](docs/432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)：保存PR #493 original creation run被PR body `edited` event并发取消、两个Windows aggregator failure与关闭未合并身份；不使用第二run回填，也不在同一刀重建authorization；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
