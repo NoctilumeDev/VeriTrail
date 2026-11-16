@@ -9727,3 +9727,55 @@ README/doc426/doc427/doc428 Render与AGENTS/milestones raw/API/exact-Git observa
 报告均成功，focused四格各131项与hygiene 8/8均PASS。失败identity永久保留；v2只对已生成报告应用既有semantic projection，
 没有重跑semantic/focused/hygiene，最终三项matrix均PASS。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
+
+### R1 same-attempt DerivationEvidence manifest carrier successor合同恢复冻结发布候选
+
+PR #490已经把doc428以
+`base=a8e7b096ac1820b254706ffd649957c10bdbcb27 / head=bf78c8f983f3d8b2040623e63ee0db16eff2cab6 /
+tree=6bc307922a1f9b7d408d71e8d4631f3defb9089f`精确合入
+`main@4b507edad080334a3958b1fc0f156f6ddd036d99`。original Public CI `43909428334`、exact-main Public CI
+`43915289318`与Browser Smoke `43915289124`均attempt 1 SUCCESS，分别15/15、15/15与1/1，没有rerun。
+
+fresh README/doc426/doc427/doc428各自唯一formal均为API/Render `COMPLETE`、marker一次、cleanup complete与Core `PASS`；
+AGENTS/milestones各自唯一raw.githubusercontent、GitHub Contents API与exact Git观察逐字节一致。preformal三次schema/world
+proof-target setup error、worktree attachment cap与anonymous rate exhaustion均按原identity保留。independent reconciliation、176-artifact
+closeout、expected stdout self-capture mismatch与finite integrity SHA-256为：
+
+```text
+9adfb9752cbd34435b9e0e60ab178b07882b076dd20a535b18fe5ac42daecc80
+a4570eef406f66292cb6fff910c2e63c65868cb49d06541c408f6fa8c77ad36f
+6b0c09b610486e6cbe04e830ce1b25ea5a55f933371fbd9ce5d1863314aca007
+6987bbce27205e698a354f8b55c6173743f266ea3831664cc528532c67a718c0
+```
+
+因此doc428现在是`PUBLIC_PROJECTION_CORRECTION / QUALIFIED_HISTORY`；doc426的PR #488 exact world仍是
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`，没有被后继PASS回填。fresh CONTROL LOOP从
+新exact main建立[文档429](docs/429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)的独立docs-only freeze
+publication candidate。它只以SHA-256
+`93e7033276e35890b8a390ec041e6bb64cc770ba0e3684900ee08f5d6a260800`的doc426不变合同语义为冻结对象；doc426失败身份继续
+保留，本文不会把“合同经新publication冻结”改写成“PR #488曾经资格化”。
+
+```text
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_PUBLIC_PROJECTION_CORRECTION_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_PR488_WORLD_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FREEZE_PUBLICATION_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc429只允许README、AGENTS、doc429与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc316/doc397/doc414/doc419/doc425/doc426/doc427/doc428/doc429 Render、AGENTS/milestones与精确Schema/source raw-byte
+observations、independent reconciliation及finite closeout全部闭合后，
+`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN`才生效。随后必须返回CONTROL LOOP独立审计
+implementation feasibility；不得直接创建Schema 0.3、carrier、Manifest runtime，恢复global composition authority或启动R2–R6。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
+
+本candidate local semantic四格一致，canonical semantic SHA-256为
+`0f2e1586fbe77c7c186a7d73a66d3b5a19f7bd951d5706ef7991fccfaddd0cc7`；focused四格各131/131 PASS，hygiene 8/8 PASS。
+三项matrix SHA-256依次为`42cafbe5682a2fccf6c8f74d408764fd0639be9c75eb2fe2a2f23f3e3a4f5615`、
+`1d7231c99cff380d5c52601e2f3d7bdce2f2521ddf2c926598d4d702f52f0563`与
+`a114ad7a1aa70ef1780e462cc6787c7e49aeaee60020d6c3d0dc9c57247f1553`；它们不替代remote qualification。

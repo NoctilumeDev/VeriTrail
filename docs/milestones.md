@@ -10931,3 +10931,52 @@ candidate local semantic comparator attempt 1只移除顶层runtime，却保留r
 报告并应用既有semantic projection，没有重跑semantic cell、focused test或hygiene；最终semantic matrix PASS、focused四格各
 131项PASS、hygiene 8/8 PASS。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后仍需人类+AI独立全项目检查。
+
+## R1 same-attempt DerivationEvidence manifest carrier successor合同恢复冻结发布候选（2026-11-17）
+
+PR #490以candidate
+`base=a8e7b096ac1820b254706ffd649957c10bdbcb27 / head=bf78c8f983f3d8b2040623e63ee0db16eff2cab6 /
+tree=6bc307922a1f9b7d408d71e8d4631f3defb9089f`精确合入
+`main@4b507edad080334a3958b1fc0f156f6ddd036d99`。original Public CI `43909428334`、exact-main Public CI
+`43915289318`与Browser Smoke `43915289124`均attempt 1 SUCCESS（15/15、15/15、1/1），没有rerun。
+
+fresh README/doc426/doc427/doc428各自唯一formal均为API/Render `COMPLETE`与Core `PASS`；AGENTS/milestones各自唯一
+raw/API/exact-Git逐字节一致。independent reconciliation、176-artifact closeout、expected stdout self-capture mismatch与finite integrity
+SHA-256为：
+
+```text
+9adfb9752cbd34435b9e0e60ab178b07882b076dd20a535b18fe5ac42daecc80
+a4570eef406f66292cb6fff910c2e63c65868cb49d06541c408f6fa8c77ad36f
+6b0c09b610486e6cbe04e830ce1b25ea5a55f933371fbd9ce5d1863314aca007
+6987bbce27205e698a354f8b55c6173743f266ea3831664cc528532c67a718c0
+```
+
+全部preformal proof-target setup error、worktree attachment cap与anonymous rate exhaustion均按原identity保留；没有重复任何产品PASS。
+doc428因此成为`PUBLIC_PROJECTION_CORRECTION / QUALIFIED_HISTORY`，doc426的PR #488 world仍保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP从新exact main建立
+[文档429](429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)的独立docs-only candidate：
+
+```text
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_PUBLIC_PROJECTION_CORRECTION_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_PR488_WORLD_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FREEZE_PUBLICATION_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc429自己的完整资格链闭合后，只使
+`R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN`生效；它不会回填PR #488，也不授权直接实现。
+随后必须从新exact main返回CONTROL LOOP独立审计implementation feasibility。`proof_is_not_problem_solving = true`、
+`local_not_global = true`，R1完成后仍需人类+AI独立全项目检查。
+
+本candidate local semantic四格一致，canonical semantic SHA-256为
+`0f2e1586fbe77c7c186a7d73a66d3b5a19f7bd951d5706ef7991fccfaddd0cc7`；focused四格各131/131 PASS，hygiene 8/8 PASS。
+三项matrix SHA-256依次为`42cafbe5682a2fccf6c8f74d408764fd0639be9c75eb2fe2a2f23f3e3a4f5615`、
+`1d7231c99cff380d5c52601e2f3d7bdce2f2521ddf2c926598d4d702f52f0563`与
+`a114ad7a1aa70ef1780e462cc6787c7e49aeaee60020d6c3d0dc9c57247f1553`；它们不替代remote qualification。
