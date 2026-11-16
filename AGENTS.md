@@ -9397,3 +9397,42 @@ raw-byte observations/independent reconciliation/finite closeout全部闭合后�
 `M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_QUALIFIED`。随后必须返回CONTROL LOOP，从新exact main独立重建
 manifest carrier successor contract；不得复用PR #476 head、回填首败或直接启动runtime。`proof_is_not_problem_solving = true`、
 `local_not_global = true`，R1结束后的human+AI全项目检查继续是独立义务。
+
+PR #481把doc420候选`base=f298b042ccb5124d117f6a82d76dbf93624a861d`、
+`head=46e0ec07997c0d083c3db9cb14f96d3382a6e787`、tree
+`4e86702a4d1c1618bd9b0951f0c16bcbbdc8dbf4`精确合入
+`main@2a9a2af4221175064ba4e9cd7a424472804df985`。original Public CI `43780269329` attempt 1为15/15 SUCCESS，
+exact-main Browser Smoke `43783429308` attempt 1为1/1 SUCCESS；但exact-main Public CI `43783429314` attempt 1在
+Python 3.13 on Windows job `133034359378`的Core regression中FAIL，没有rerun。唯一unittest failure为
+`test_same_sealed_authorities_repeat_without_residual_contamination`：public payload为
+`execution_status=ERROR / stop_reason=COLLECTOR_ERROR / verdict=FAIL`，Browser capture未完成、cleanup完成，而既有
+`browser_error_types` trace为空。failed job log SHA-256为
+`302e8a372493ba0ba19280d62991d621c760d2478e2686f6a2cdf2d2b3bbb95f`，结构化failure record SHA-256为
+`44f98e2280e8732913b3d8e8e08f6420405bf86b2c66b61144f0641575d9117c`。该run只产生四份成功Python 3.10 distribution
+Artifact，没有failed evidence Artifact；lower cause保持`UNKNOWN`。
+
+因此doc420固定为`MERGED / NOT_QUALIFIED`，fresh installed-product readback没有启动。Browser Smoke、original gate、Python 3.10
+SUCCESS或本地隔离PASS均不能覆盖required exact-main failure。fresh CONTROL LOOP从该exact main建立
+[文档421](docs/421-r1-m10-repeatability-exact-main-failure-boundary-audit.md)的独立docs-only审计；它只保存失败identity、
+资格影响、repeatability failure observation gap与最小后继责任，不修改runtime、tests、fixture、timeout、retry、workflow、oracle、
+Schema、Verdict、doc420或carrier。
+
+当前投影为：
+
+```text
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_PR481_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc421自己的local/original PR/protected exact-head merge/new exact-main双门/fresh README/doc420/doc421 Render与AGENTS/milestones
+raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。doc420仍不回填。随后必须返回CONTROL LOOP，独立建立
+read-only repeatability failure-observation feasibility audit；不得直接修test/runtime、增加timeout/retry、重跑`43783429314`、重建carrier
+或启动R2-R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。

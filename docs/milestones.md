@@ -10638,3 +10638,30 @@ original PR、protected merge、new exact-main双门、fresh corrected readback�
 `M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_QUALIFIED`；随后必须返回CONTROL LOOP独立重建manifest carrier successor
 contract。不得增加timeout/retry、弱化exact-set、删除`BROWSER_STATUS_CONFLICT`、回填PR #476或直接启动carrier runtime。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI global check继续成立。
+
+PR #481随后把doc420候选精确合入`main@2a9a2af4221175064ba4e9cd7a424472804df985`。original Public CI
+`43780269329` attempt 1为15/15 SUCCESS，exact-main Browser Smoke `43783429308` attempt 1为1/1 SUCCESS；但required
+exact-main Public CI `43783429314` attempt 1在Python 3.13 Core regression的
+`test_same_sealed_authorities_repeat_without_residual_contamination`中FAIL，没有rerun。payload只证明
+`ERROR / COLLECTOR_ERROR / FAIL`、Browser未完成且cleanup完成，既有Browser error trace为空；failed evidence Artifact不存在，lower
+cause继续是`UNKNOWN`。因此doc420保持`MERGED / NOT_QUALIFIED`，fresh readback没有启动。
+
+fresh CONTROL LOOP建立[文档421](421-r1-m10-repeatability-exact-main-failure-boundary-audit.md)的独立docs-only failure-boundary
+candidate。它不修改test/runtime/fixture/timeout/retry/workflow/oracle/Schema/Verdict/doc420/carrier，只冻结失败identity、资格影响、
+diagnostic gap与最小后继责任。
+
+```text
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_PR481_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc421自己的完整资格链闭合后最多成为`M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc420与run
+`43783429314`继续保持原identity。随后必须返回CONTROL LOOP独立审计repeatability failure-observation feasibility，不能直接修test/runtime、
+重跑失败run、重建carrier或启动R2-R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
