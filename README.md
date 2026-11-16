@@ -115,6 +115,19 @@ README/doc426/doc427 Render及AGENTS/milestones raw-byte observations、independ
 
 Reader-visible correction: doc427 is qualified history; doc426 remains readback not qualified and not frozen.
 
+PR #490已经把doc428以
+`base=a8e7b096ac1820b254706ffd649957c10bdbcb27 / head=bf78c8f983f3d8b2040623e63ee0db16eff2cab6 /
+tree=6bc307922a1f9b7d408d71e8d4631f3defb9089f`精确合入
+`main@4b507edad080334a3958b1fc0f156f6ddd036d99`。original Public CI `43909428334`、exact-main Public CI
+`43915289318`与Browser Smoke `43915289124`均为attempt 1 SUCCESS（15/15、15/15、1/1），没有rerun。fresh
+README/doc426/doc427/doc428 Render及AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立；
+所以doc428现在是`PUBLIC_PROJECTION_CORRECTION / QUALIFIED_HISTORY`，doc426的PR #488失败world仍保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP建立独立
+[manifest carrier successor合同恢复冻结发布](docs/429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)：它只以
+doc426不变合同语义为冻结对象，不回填doc426历史资格，也不授权Schema、carrier或Manifest runtime。
+
+Reader-visible freeze candidate: doc428 is qualified history; doc426 remains not qualified in its failed world; doc429 can freeze the unchanged contract only after its own complete qualification chain.
+
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
 11/11、1/1 SUCCESS，但new exact-main Public CI `42475745171` attempt 1在Python 3.10冻结Core 0.12.2 wheel下载连续三次
@@ -999,6 +1012,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [M10 repeatability failure-observation correction 0.1 implementation冻结发布](docs/425-r1-m10-repeatability-failure-observation-correction-implementation-freeze-publication.md)：PR #487已完成original/exact-main双门、fresh installed-product readback、independent reconciliation与finite closeout，因此该有界test proof-facility correction现已`FROZEN`；PR #481的产品失败与lower cause `UNKNOWN`保持不变；
 - [same-attempt DerivationEvidence manifest carrier successor最小合同0.1重建](docs/426-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract-recovery.md)：在旧PR #476原始Public CI失败且关闭未合并后，从新的exact main独立重建同一最小合同内容；当前只是一份`CONTRACT_RECOVERY_CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，不继承旧候选资格，也不授权Schema、carrier、Manifest runtime或global composition；
 - [manifest carrier contract recovery reader-visible failure-boundary audit](docs/427-r1-manifest-carrier-contract-recovery-reader-visible-failure-boundary-audit.md)：保存PR #488双门通过后README reader-visible diagnostic的0次命中、默认折叠details边界与有限失败closeout；不回填doc426，也不在同一刀修正或冻结合同；
+- [manifest carrier contract recovery reader-visible public-projection correction](docs/428-r1-manifest-carrier-contract-recovery-reader-visible-public-projection-correction.md)：资格化reader-visible失败的最小公开投影修正；doc426的失败world继续保持未资格化，carrier runtime与global composition authority仍未授权；
+- [manifest carrier successor合同恢复冻结发布](docs/429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)：从doc428闭合后的新exact main建立独立docs-only freeze publication candidate；只在自己的完整资格链闭合后条件化冻结doc426的不变合同语义，不改写PR #488历史，也不直接启动实现；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
