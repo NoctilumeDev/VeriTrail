@@ -10886,3 +10886,48 @@ R2_R6_NOT_STARTED
 doc427自己的完整资格链闭合后，最多把本次reader-visible failure boundary固定为qualified history。随后必须返回CONTROL LOOP
 另建最小public-projection correction/recovery candidate；不得重试旧diagnostic、用替代marker拼接另一world、直接冻结doc426、
 创建Schema/carrier/Manifest runtime或启动R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+## R1 manifest carrier contract recovery reader-visible public-projection correction候选（2026-11-17）
+
+PR #489以candidate
+`base=72b5e95ae30933d139967c94dc50f5c11c6c8a5b / head=63f6219b144cb108b47766ec9041d519eca4c269 /
+tree=462fc80e948de5dca5b35f84e6abdcb87a33ba5f`精确合入
+`main@a8e7b096ac1820b254706ffd649957c10bdbcb27`。original Public CI `43885662766`、exact-main Public CI
+`43892540882`与Browser Smoke `43892540898`均attempt 1 SUCCESS（15/15、15/15、1/1），没有rerun。
+
+fresh README/doc426/doc427各自唯一formal均为API/Render `COMPLETE`与Core `PASS`；AGENTS/milestones各自唯一raw/API/exact-Git
+逐字节一致。independent reconciliation、134-artifact closeout与finite integrity SHA-256为：
+
+```text
+50ac845b3cb442adc8c177ac7259f51569b9e9961b4a09e680207d9d1572a007
+745f1d0713defae1d74b0940847d4767c3646750e1b0825d737873bbda5f857d
+f71b742d7b13c89d4396b2171f90b21bc8a55d97ffded8756b8c7a01214fe8f0
+```
+
+第一次reconciliation proof-target setup error、worktree attachment cap、PowerShell revision与Windows glob setup errors均按原identity
+保留；没有重复任何产品PASS。doc427因此成为`READER_VISIBLE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，但doc426仍保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立
+[文档428](428-r1-manifest-carrier-contract-recovery-reader-visible-public-projection-correction.md)的独立docs-only候选：
+
+```text
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_PUBLIC_PROJECTION_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc428只校正README默认读者可见区并重新绑定fresh readback；不修改doc426或任何runtime/Schema/test/oracle。它自己的完整资格链
+闭合后最多成为`PUBLIC_PROJECTION_CORRECTION / QUALIFIED_HISTORY`，随后必须返回CONTROL LOOP判断下一最小seam。不得把公开投影
+正确偷换成doc426已资格化、carrier已实现、global composition authority已恢复或R1全局问题已经解决。
+
+candidate local semantic comparator attempt 1只移除顶层runtime，却保留runtime-specific digest与exact-absence provenance，四个
+单格报告成功但摘要不一致，candidate validation因此fail closed；该proof-facility failure原样保留。versioned v2只复用四个既有
+报告并应用既有semantic projection，没有重跑semantic cell、focused test或hygiene；最终semantic matrix PASS、focused四格各
+131项PASS、hygiene 8/8 PASS。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后仍需人类+AI独立全项目检查。
