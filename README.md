@@ -54,6 +54,13 @@ AGENTS/milestones raw/API/Git byte readback、independent reconciliation与finit
 [test-only first-failure observation correction候选](docs/420-r1-m10-subject-drift-browser-first-failure-observation-correction.md)：
 只在原exact-set断言前投影有界Browser/bootstrap现场，并保留真实Chromium witness；不改runtime、timeout、retry、Verdict、doc415或carrier。
 
+PR #481随后以original Public CI `43780269329` attempt 1的15/15 SUCCESS精确合并该候选；但new exact-main
+Public CI `43783429314` attempt 1在Python 3.13 Core regression的M10 repeatability witness中得到
+`ERROR / COLLECTOR_ERROR / FAIL`，Browser error trace却为空。Browser Smoke `43783429308`仍为1/1 SUCCESS，不能覆盖required
+Public CI failure；该run没有rerun，doc420保持`MERGED / NOT_QUALIFIED`且未启动fresh readback。fresh CONTROL LOOP因此建立
+[repeatability exact-main failure-boundary audit](docs/421-r1-m10-repeatability-exact-main-failure-boundary-audit.md)，只保留失败identity、
+`UNKNOWN` lower cause、diagnostic gap与最小后继责任，不改test、runtime、timeout、retry、workflow、oracle或carrier。
+
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
 11/11、1/1 SUCCESS，但new exact-main Public CI `42475745171` attempt 1在Python 3.10冻结Core 0.12.2 wheel下载连续三次
