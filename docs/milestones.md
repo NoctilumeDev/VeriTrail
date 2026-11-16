@@ -10778,3 +10778,41 @@ AGENTS/milestones raw-byte observations/independent reconciliation/finite closeo
 `IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP建立独立docs-only
 freeze publication；不得直接重建carrier或恢复global composition authority。`proof_is_not_problem_solving = true`、
 `local_not_global = true`。
+
+## R1 M10 repeatability failure-observation correction 0.1 implementation冻结发布候选（2026-11-16）
+
+PR #486已经把doc424精确合入`main@bb2e43701315d464a49ed84471e2aa967dbd77d2`；original Public CI
+`43832893740`、exact-main Public CI `43838439457`与Browser Smoke `43838439528`均attempt 1 SUCCESS，分别15/15、15/15与
+1/1，没有rerun。fresh README/doc423/doc424 Render与AGENTS/milestones raw/API/exact-Git byte observations各自唯一PASS；
+target-marker PowerShell parser setup error与expected closeout stdout self-capture mismatch都按原identity保留。independent
+reconciliation、116-artifact closeout、self-capture mismatch与finite integrity分别为：
+
+```text
+f2a66155968ff435ad03c502f820a09d676690bcb85b1ced1319ad97781971c8
+92e69a33e0eb8aadd2d4c149584287ba9c455043e80b97de96907979a4da5466
+e92e37832e2dea76a41464ad668c8cdb64031476cc91689627a1304f3f6a081f
+a4888fd6f8f92ad09d5c39babe08f2903d382032dd84352db3e4aceb97256e9e
+```
+
+所以doc424现在是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；doc420、旧run与
+`UNKNOWN`不回填。fresh CONTROL LOOP建立
+[文档425](425-r1-m10-repeatability-failure-observation-correction-implementation-freeze-publication.md)的独立docs-only freeze
+publication candidate。
+
+```text
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_ALLOWED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc425自己的完整资格链闭合后，只使
+`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN`成为当前事实。随后必须返回CONTROL LOOP重新审计
+carrier/global composition authority与剩余R1；不得把局部test proof facility冻结解释成旧failure根因已知、原工程问题已解决或全局最优已经
+成立。`proof_is_not_problem_solving = true`、`local_not_global = true`，R1结束后的human+AI全项目检查仍是独立义务。
