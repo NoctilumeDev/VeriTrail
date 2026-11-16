@@ -9347,3 +9347,53 @@ README/doc419 Render与AGENTS/milestones raw-byte observations/independent recon
 `M10_STABILITY_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP再选择独立、test-only的proof-facility correction；
 不得在doc419中修改runtime/test，或直接重建doc415。`proof_is_not_problem_solving = true`、`local_not_global = true`，R1结束后的
 human+AI全项目检查继续是独立义务。
+
+### R1 M10 subject-drift Browser first-failure observation correction候选
+
+PR #480已经把doc419以
+`base=36ec79c735640066d30aa5a5911e995ddd09f6d1 / head=eae8e8ee94f4d0521c0c6b1a787e521bd76fc65a /
+tree=430aad6b50898ae54e6e7013dcf52ed4669c524f`精确合入
+`main@f298b042ccb5124d117f6a82d76dbf93624a861d`。original Public CI `43768756904`、exact-main Public CI
+`43772262297`与Browser Smoke `43772262310`均attempt 1 SUCCESS。fresh README/doc419 formal与AGENTS/milestones raw-byte
+observations各自唯一PASS；independent reconciliation attempt 1的`local_not_global` multiplicity proof-target error保持
+`qualification_effect=NONE`，attempt 2 PASS。reconciliation、113-artifact closeout、expected stdout self-capture mismatch与finite
+integrity分别为：
+
+```text
+ca643e0ce7828bff50e2cc53fc49b2e4847c7ebb59cffa345cf13c9fb9fd3be8
+6cca37f17df02f4ee86a4edc02ba90ba47d701505cf93c3363a373b5079dc096
+cbf8b91ccae6cbe4e36abc0a89c2b5cd21583cd369bcc329817f0548c2e337ae
+32c380e62a678763f1ee8e427906175c64a0059b5f19571a4e152f13b8f978b2
+```
+
+因此doc419现在是`M10_STABILITY_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；PR #476首败、doc416未资格化与lower cause
+`UNKNOWN`保持原identity。fresh CONTROL LOOP从新exact main建立
+[文档420](docs/420-r1-m10-subject-drift-browser-first-failure-observation-correction.md)的独立test-only候选。
+
+本候选只允许README、AGENTS、doc420、milestones与`tests/test_bootstrap_run_cli.py`。test-only helper在原exact-set
+assertion以前投影bounded Browser/bootstrap cause facts；controlled witness只证明这些facts不会被proof facility丢失，不能替代保留的
+real Chromium subject-drift测试。runtime、timeout、retry、workflow、Schema、Collector、Verdict、`BROWSER_STATUS_CONFLICT`、doc415与carrier
+均不修改。
+
+当前投影为：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRECONTRACT_AUDITED_QUALIFIED_HISTORY
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_PR476_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_MERGED_READBACK_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_FAILURE_BOUNDARY_AUDIT_READBACK_TARGET_CORRECTION_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_ORIGINAL_GATE_FAILURE_BOUNDARY_AUDIT_SUCCESSOR_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc420自己的local/original PR/protected exact-head merge/new exact-main双门/fresh README/doc420 Render与AGENTS/milestones
+raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_QUALIFIED`。随后必须返回CONTROL LOOP，从新exact main独立重建
+manifest carrier successor contract；不得复用PR #476 head、回填首败或直接启动runtime。`proof_is_not_problem_solving = true`、
+`local_not_global = true`，R1结束后的human+AI全项目检查继续是独立义务。

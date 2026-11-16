@@ -58,6 +58,84 @@ def _port_is_free(port: int) -> bool:
         return client.connect_ex(("127.0.0.1", port)) != 0
 
 
+def _subject_drift_failure_diagnostic(
+    *, report: dict, browser: dict, bootstrap: dict
+) -> dict:
+    """Project bounded first-failure facts without changing product semantics."""
+
+    failed_network = []
+    for item in browser.get("network", []):
+        status = item.get("status")
+        if (
+            item.get("finished") is not True
+            or item.get("failure") is not None
+            or status is None
+            or (isinstance(status, int) and status >= 400)
+        ):
+            failed_network.append(
+                {
+                    key: item.get(key)
+                    for key in (
+                        "sequence",
+                        "viewport",
+                        "method",
+                        "url",
+                        "resource_type",
+                        "status",
+                        "finished",
+                        "failure",
+                    )
+                }
+            )
+    return {
+        "report": {
+            "execution_status": report.get("execution_status"),
+            "verdict": report.get("verdict"),
+            "contamination_codes": [
+                item.get("code") for item in report.get("contamination", [])
+            ],
+        },
+        "browser": {
+            "capture_complete": browser.get("capture_complete"),
+            "all_steps_passed": browser.get("all_steps_passed"),
+            "cleanup_complete": browser.get("cleanup_complete"),
+            "collection_errors": browser.get("collection_errors"),
+            "failed_request_count": browser.get("failed_request_count"),
+            "failed_network": failed_network,
+            "viewport_statuses": [
+                {
+                    "name": item.get("name"),
+                    "status": item.get("status"),
+                    "is_mobile": item.get("is_mobile"),
+                }
+                for item in browser.get("viewport_runs", [])
+            ],
+            "step_statuses": [
+                {
+                    key: item.get(key)
+                    for key in (
+                        "viewport",
+                        "step_id",
+                        "action",
+                        "status",
+                        "error_type",
+                        "error",
+                    )
+                }
+                for item in browser.get("steps", [])
+            ],
+        },
+        "bootstrap": {
+            "stop": bootstrap.get("stop"),
+            "subject_observation": bootstrap.get("subject_observation"),
+            "browser_exercise": bootstrap.get("browser_exercise"),
+            "cleanup": bootstrap.get("cleanup"),
+            "cleanup_complete": bootstrap.get("cleanup_complete"),
+            "lifecycle_events": bootstrap.get("lifecycle_events"),
+        },
+    }
+
+
 @unittest.skipUnless(os.name == "nt", "M10 public bootstrap Run is Windows-only")
 class BootstrapRunCliTests(unittest.TestCase):
     def _fixture(
@@ -1222,6 +1300,77 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertEqual([], list(root.glob(".veritrail-*")))
             self.assertTrue(all(_port_is_free(port) for port in ports))
 
+    def test_subject_drift_failure_diagnostic_retains_browser_cause_facts(self) -> None:
+        # Proof-facility witness only; the real Chromium test below remains authoritative.
+        browser = copy.deepcopy(_browser_artifact(bootstrap_plan()).document["facts"])
+        browser["capture_complete"] = False
+        browser["all_steps_passed"] = False
+        browser["cleanup_complete"] = True
+        browser["failed_request_count"] = 1
+        browser["viewport_runs"][0]["status"] = "FAILED"
+        browser["steps"][0].update(
+            status="FAILED",
+            error_type="TimeoutError",
+            error="selector timeout",
+        )
+        browser["network"][0].update(
+            status=None,
+            finished=False,
+            failure="net::ERR_NO_BUFFER_SPACE",
+        )
+        browser["collection_errors"] = [
+            {
+                "collector": "network:desktop",
+                "error_type": "HostSocketNoBufferSpace",
+            }
+        ]
+        bootstrap = {
+            "stop": {"reason": "SUBJECT_DRIFT", "stage": "subject"},
+            "subject_observation": {"changed": True},
+            "browser_exercise": {
+                "started": True,
+                "completed": True,
+                "process_cleanup_complete": True,
+            },
+            "cleanup": {"run_work_released": True, "staging_released": True},
+            "cleanup_complete": True,
+            "lifecycle_events": [
+                {"ordinal": 1, "stage": "browser", "result": "COMPLETED"}
+            ],
+        }
+        report = {
+            "execution_status": "COMPLETED",
+            "verdict": "INCONCLUSIVE",
+            "contamination": [
+                {"code": "BOOTSTRAP_SUBJECT_DRIFT"},
+                {"code": "BROWSER_STATUS_CONFLICT"},
+            ],
+        }
+
+        diagnostic = _subject_drift_failure_diagnostic(
+            report=report,
+            browser=browser,
+            bootstrap=bootstrap,
+        )
+
+        self.assertEqual(
+            ["BOOTSTRAP_SUBJECT_DRIFT", "BROWSER_STATUS_CONFLICT"],
+            diagnostic["report"]["contamination_codes"],
+        )
+        self.assertFalse(diagnostic["browser"]["capture_complete"])
+        self.assertEqual("FAILED", diagnostic["browser"]["viewport_statuses"][0]["status"])
+        self.assertEqual("TimeoutError", diagnostic["browser"]["step_statuses"][0]["error_type"])
+        self.assertEqual(
+            "net::ERR_NO_BUFFER_SPACE",
+            diagnostic["browser"]["failed_network"][0]["failure"],
+        )
+        self.assertEqual(
+            [{"collector": "network:desktop", "error_type": "HostSocketNoBufferSpace"}],
+            diagnostic["browser"]["collection_errors"],
+        )
+        self.assertTrue(diagnostic["bootstrap"]["subject_observation"]["changed"])
+        self.assertTrue(diagnostic["bootstrap"]["cleanup_complete"])
+
     def test_subject_drift_is_preserved_and_makes_public_verdict_inconclusive(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -1275,11 +1424,28 @@ class BootstrapRunCliTests(unittest.TestCase):
             self.assertTrue(result.observed.lifecycle.cleanup_complete)
             self.assertEqual("COMPLETED", result.report["execution_status"])
             self.assertEqual("INCONCLUSIVE", result.report["verdict"])
+            browser = self._evidence_document(output, "browser.session")["facts"]
+            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            diagnostic = _subject_drift_failure_diagnostic(
+                report=result.report,
+                browser=browser,
+                bootstrap=bootstrap,
+            )
+            diagnostic_message = json.dumps(
+                diagnostic,
+                ensure_ascii=True,
+                sort_keys=True,
+            )
             self.assertEqual(
                 {"BOOTSTRAP_SUBJECT_DRIFT"},
                 {item["code"] for item in result.report["contamination"]},
+                msg=diagnostic_message,
             )
-            bootstrap = self._evidence_document(output, "runtime.bootstrap")["facts"]
+            self.assertTrue(browser["capture_complete"], msg=diagnostic_message)
+            self.assertTrue(browser["all_steps_passed"], msg=diagnostic_message)
+            self.assertTrue(browser["cleanup_complete"], msg=diagnostic_message)
+            self.assertEqual([], browser["collection_errors"], msg=diagnostic_message)
+            self.assertEqual([], diagnostic["browser"]["failed_network"], msg=diagnostic_message)
             self.assertEqual("SUBJECT_DRIFT", bootstrap["stop"]["reason"])
             self.assertTrue(bootstrap["subject_observation"]["changed"])
             self.assertNotEqual(
