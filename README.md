@@ -96,6 +96,15 @@ cause `UNKNOWN`仍不回填。fresh CONTROL LOOP从该exact main建立独立
 本文自己的全部最后门闭合以前，`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN`不生效，carrier、
 global composition authority与R2–R6仍未授权。
 
+PR #488已经把[same-attempt DerivationEvidence manifest carrier successor合同重建](docs/426-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract-recovery.md)
+精确合入`main@72b5e95ae30933d139967c94dc50f5c11c6c8a5b`；original Public CI `43866121290`、exact-main
+Public CI `43872002039`与Browser Smoke `43872002011`均为attempt 1 SUCCESS。fresh README diagnostic的API/Render为
+`COMPLETE / HTTP 200`，但预注册reader-visible phrase出现0次；exact source复核证明doc426入口只在默认折叠的
+`<details>`第895–998行内，顶部读者可见状态没有该候选。formal与其他target均未启动，doc426因此保持
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP只建立独立
+[manifest carrier contract recovery reader-visible failure-boundary audit](docs/427-r1-manifest-carrier-contract-recovery-reader-visible-failure-boundary-audit.md)，
+保存该公开投影反例与最小后继责任；不重试readback、不替换marker，也不授权Schema、carrier或Manifest runtime。
+
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
 11/11、1/1 SUCCESS，但new exact-main Public CI `42475745171` attempt 1在Python 3.10冻结Core 0.12.2 wheel下载连续三次
@@ -979,6 +988,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [same-attempt DerivationEvidence continuity private implementation freeze publication](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)：保存PR #471已经资格化的doc405 exact source/test与全部首败边界，条件化发布同一private implementation frozen target；自己的完整门闭合以前仍为candidate，不恢复global composition或启动manifest/public Review/R2–R6；
 - [M10 repeatability failure-observation correction 0.1 implementation冻结发布](docs/425-r1-m10-repeatability-failure-observation-correction-implementation-freeze-publication.md)：PR #487已完成original/exact-main双门、fresh installed-product readback、independent reconciliation与finite closeout，因此该有界test proof-facility correction现已`FROZEN`；PR #481的产品失败与lower cause `UNKNOWN`保持不变；
 - [same-attempt DerivationEvidence manifest carrier successor最小合同0.1重建](docs/426-r1-same-attempt-derivation-evidence-manifest-carrier-successor-contract-recovery.md)：在旧PR #476原始Public CI失败且关闭未合并后，从新的exact main独立重建同一最小合同内容；当前只是一份`CONTRACT_RECOVERY_CANDIDATE / NOT_QUALIFIED / NOT_FROZEN`，不继承旧候选资格，也不授权Schema、carrier、Manifest runtime或global composition；
+- [manifest carrier contract recovery reader-visible failure-boundary audit](docs/427-r1-manifest-carrier-contract-recovery-reader-visible-failure-boundary-audit.md)：保存PR #488双门通过后README reader-visible diagnostic的0次命中、默认折叠details边界与有限失败closeout；不回填doc426，也不在同一刀修正或冻结合同；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

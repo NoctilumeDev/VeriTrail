@@ -9641,3 +9641,42 @@ README/doc424/doc425 Render与AGENTS/milestones及`tests/test_bootstrap_run_cli.
 closeout全部闭合后，`R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_0_1_IMPLEMENTATION_FROZEN`才生效。随后必须返回CONTROL
 LOOP重新审计carrier/global composition authority与剩余R1；不得按文档编号自动重建carrier或启动R2–R6。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
+
+### R1 manifest carrier contract recovery reader-visible failure-boundary audit候选
+
+PR #488已经把doc426以
+`base=663ca58054f56e8e3eada7ee2347225d0e9484e7 / head=c0fe7a218d1f60be9a1075c5837785b4ed1465db /
+tree=7f87e0e0624328168363db105237f0e84a27cad6`精确合入
+`main@72b5e95ae30933d139967c94dc50f5c11c6c8a5b`。original Public CI `43866121290`、exact-main Public CI
+`43872002039`与Browser Smoke `43872002011`均attempt 1 SUCCESS，分别15/15、15/15与1/1，没有rerun。
+
+fresh exact-main world的preformal validation与adapter freeze均PASS；reset前anonymous rate diagnostic #1与preflight #1的
+remaining 0永久保留，reset后diagnostic #2与preflight #2分别观察到60与58。README diagnostic identity
+`r1d426-diagnostic-readme-1-72b5e95`的Render为`COMPLETE / HTTP 200`，但reader-visible marker出现0次。
+exact source证明marker唯一出现在README第981行，并被第895–998行默认折叠`<details>`包围；顶部读者可见状态没有doc426。
+formal、其他Render target与raw target均未启动。source/readback contradiction record与64-artifact failed closeout SHA-256为：
+
+```text
+cb5a22d7a970f2a5bde22b2f9b21808cfd0a814092956a0e9f465bd158668991
+bccf9b2ba20793628b3d583ea135538a5c14a55302029a1b85ab3d6882035ef6
+```
+
+因此doc426只能是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`；PR #476与#481
+旧失败及其`UNKNOWN`继续保留。fresh CONTROL LOOP建立
+[文档427](docs/427-r1-manifest-carrier-contract-recovery-reader-visible-failure-boundary-audit.md)的独立docs-only audit candidate。
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc427只允许README、AGENTS、doc427与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc426/doc427 Render与AGENTS/milestones raw/API/exact-Git observations/independent reconciliation/finite closeout全部闭合后，
+最多成为`READER_VISIBLE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建最小public-projection
+correction/recovery candidate；不得回填doc426、重试旧diagnostic、换marker绕过反例、直接冻结合同或创建runtime。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
