@@ -10852,3 +10852,37 @@ R2_R6_NOT_STARTED
 doc426只重建docs-only合同内容，不继承旧head、tree、attempt、qualification或authority。它自己的完整资格链闭合后最多成为
 `QUALIFIED_CONTRACT_CANDIDATE / NOT_FROZEN`，合同冻结还必须由后继独立docs-only publication完成；不得直接施工runtime。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，R1结束后的human+AI全项目检查仍是独立义务。
+
+## R1 manifest carrier contract recovery reader-visible failure-boundary audit候选（2026-11-16）
+
+PR #488已经把doc426精确合入`main@72b5e95ae30933d139967c94dc50f5c11c6c8a5b`，tree
+`7f87e0e0624328168363db105237f0e84a27cad6`；original Public CI `43866121290`、exact-main Public CI
+`43872002039`与Browser Smoke `43872002011`均attempt 1 SUCCESS（15/15、15/15、1/1），没有rerun。
+
+fresh exact-main world的README diagnostic为`COMPLETE / HTTP 200`，但reader-visible marker出现0次。exact source复核证明
+doc426入口唯一位于README第981行，并被第895–998行默认折叠`<details>`包围；顶部读者可见状态没有该候选。这是
+`PUBLIC_READER_VISIBLE_PROJECTION_DEFECT`，不是网络、Collector或可换marker绕过的proof-target错误。formal、其他Render target与
+raw target均未启动。source/readback contradiction record与64-artifact failed closeout SHA-256为：
+
+```text
+cb5a22d7a970f2a5bde22b2f9b21808cfd0a814092956a0e9f465bd158668991
+bccf9b2ba20793628b3d583ea135538a5c14a55302029a1b85ab3d6882035ef6
+```
+
+因此doc426固定为`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED / NOT_FROZEN`，不继承另一world的资格。
+fresh CONTROL LOOP建立
+[文档427](427-r1-manifest-carrier-contract-recovery-reader-visible-failure-boundary-audit.md)的独立docs-only候选：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED_NOT_FROZEN
+R1_MANIFEST_CARRIER_CONTRACT_RECOVERY_READER_VISIBLE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc427自己的完整资格链闭合后，最多把本次reader-visible failure boundary固定为qualified history。随后必须返回CONTROL LOOP
+另建最小public-projection correction/recovery candidate；不得重试旧diagnostic、用替代marker拼接另一world、直接冻结doc426、
+创建Schema/carrier/Manifest runtime或启动R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
