@@ -9436,3 +9436,52 @@ raw-byte observations/independent reconciliation/finite closeout全部闭合后�
 `M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。doc420仍不回填。随后必须返回CONTROL LOOP，独立建立
 read-only repeatability failure-observation feasibility audit；不得直接修test/runtime、增加timeout/retry、重跑`43783429314`、重建carrier
 或启动R2-R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+### R1 M10 repeatability failure-observation feasibility audit候选
+
+PR #483已把doc421以
+`base=2a9a2af4221175064ba4e9cd7a424472804df985 / head=26154d3153c8e141392b78f2ea8b2fbe79010b3c /
+tree=ddac2c0f17094aed9300b73f6ea599879ee51a72`精确合入
+`main@5b15c715f6da16153a37025d5477bcf53b4b4c8c`。original Public CI `43788645830`、exact-main Public CI
+`43792414561`与Browser Smoke `43792414586`均attempt 1 SUCCESS。fresh README/doc420/doc421 Render及AGENTS/milestones raw-byte
+observations各自唯一PASS；readback plan-ID setup error与reconciliation marker-count setup error均保留，effect `NONE`。reconciliation、
+125-artifact closeout、expected stdout self-capture mismatch与finite integrity分别为：
+
+```text
+d55e5a2915665da5d9fe1e651b18860b8b5f0046dbb37fb49f09ac265f90d5b5
+dc1271add62bff0dd6cf9dcb7754c100c512c51f42290862687d7df45418d7ca
+68f7555a7d62b5c65f61727a7b788b13a3f1f6c95679bb958c05f1aafb13147b
+a5b646a94f453eef5ba8dc294d59fe8576d3bb145e3974bd663a90b3bb23d3a0
+```
+
+因此doc421现在是`M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc420、run
+`43783429314`与lower cause `UNKNOWN`保持原identity。fresh CONTROL LOOP从新exact main建立
+[文档422](docs/422-r1-m10-repeatability-failure-observation-feasibility-audit.md)的独立docs-only read-only candidate。
+
+exact source证明CLI在public summary以前已经持有完整`BootstrapPublicRunResult.observed`，包括lifecycle event/node、resource/subject、
+workspace release、Browser Evidence与post-lifecycle error type；既有Browser wrapper只捕获
+`ObservedBrowserCollectionError.error_type`。外置transparent probe在CPython 3.10.6 / 3.13.13 × normal / `-O`四格机械区分success、
+Browser private exception、Browser formed failure facts与resource sampling failure，而原result/exception保持不变。16-row summary SHA-256为
+`99389be0116c2b04b95c78f660b5cbb2f09743ab842ad8626ec6b9894b95dda4`。原repeatability test四格各1/1 PASS只证明稳定隔离复现未被
+观察到；old failure lower cause仍是`UNKNOWN`。
+
+当前投影为：
+
+```text
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_STABILITY_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_M10_SUBJECT_DRIFT_BROWSER_CAPTURE_PROOF_FACILITY_CORRECTION_PR481_MERGED_EXACT_MAIN_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_M10_REPEATABILITY_EXACT_MAIN_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_M10_REPEATABILITY_FAILURE_OBSERVATION_CORRECTION_NOT_STARTED_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc422只允许README、AGENTS、doc422与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc421/doc422 Render与AGENTS/milestones raw-byte observations/independent reconciliation/finite closeout全部闭合后，最多成为
+`M10_REPEATABILITY_FAILURE_OBSERVATION_FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建versioned test-only
+correction/authorization publication；不得在doc422中修改test/runtime、增加timeout/retry、重跑`43783429314`、回填doc420、重建carrier或启动
+R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`。
