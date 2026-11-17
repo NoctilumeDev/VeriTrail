@@ -200,6 +200,7 @@ class _SameAttemptContinuityCaptureSlot:
         self.__attempt_started_at = None
         self.__fact_phase_finished_at = None
         self.__terminal_source_bytes = None
+        self.__request_provenance_bytes = None
         self.__branch = None
         self.__route = None
         self.__claim_id = None
@@ -283,6 +284,18 @@ class _SameAttemptContinuityCaptureSlot:
             )
             self.__input_digests = tuple(
                 getattr(inputs, name) for name in _INPUT_DIGEST_FIELDS
+            )
+            # Freeze one exact request-provenance coordinate at the original
+            # Fact attempt boundary.  Negative terminal branches never create
+            # a Relation request, so borrowing Relation provenance would make
+            # the eight live worlds describe different attempts.  The helper
+            # is the already-frozen exact-oid projection used by the execution
+            # cells; this owner copy is immutable and creates no new source
+            # observation authority.
+            from veritrail_review._execution_cell import _owned_request_provenance
+
+            self.__request_provenance_bytes = canonical_json_bytes(
+                _owned_request_provenance(inputs)
             )
             self.__expected_claims = claims
             self.__state = EvidenceContinuityState.CAPTURING_FACT
@@ -1078,6 +1091,140 @@ class _SameAttemptContinuityCaptureSlot:
                 self.__admitted, self.__result, self.__application_admission_bytes
             )
 
+    def _manifest_carrier_successor_coordinates(
+        self, value: object, result: object, encoded: bytes
+    ) -> dict[str, object]:
+        """Copy-own the exact committed material for the bounded successor.
+
+        This is a sibling-private coordinate, not a public serializer.  It
+        does not reread a path, invoke a Provider, create a Manifest, or grant
+        persistence/Review/Core authority.  Calling it revalidates the live
+        same-attempt graph before returning newly owned byte snapshots.
+        """
+
+        from veritrail_review import (
+            _negative_world_coverage_authority_recovery as negative,
+        )
+        from veritrail_review import (
+            _relation_transition_slice_composition as positive,
+        )
+        from veritrail_review._review_coverage_ledger_conformance import (
+            CoverageLedgerConformanceSource,
+        )
+
+        with self.__lock:
+            self._validate_value(value, result, encoded)
+            if type(self.__request_provenance_bytes) is not bytes:
+                self._fail(
+                    EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_RESULT_BINDING_REJECTED
+                )
+            if self.__result_kind == "NORMAL_REVIEW_SLICE_COVERAGE":
+                if type(result) is not positive.OwnedReviewSliceCoverageComposition:
+                    self._fail(
+                        EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_RESULT_BINDING_REJECTED
+                    )
+                coordinates = result._application_output_admission_coordinates()
+                if (
+                    len(coordinates) != 7
+                    or coordinates[0] is not result
+                    or coordinates[1] is not self.__inputs
+                    or coordinates[2] is not self.__context
+                    or getattr(getattr(coordinates[3], "state", None), "value", None)
+                    != "ADMITTED"
+                    or type(coordinates[4]) is not CoverageLedgerConformanceSource
+                ):
+                    self._fail(
+                        EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_RESULT_BINDING_REJECTED
+                    )
+                conformance_source = coordinates[4]
+                result_document = coordinates[6]
+            elif self.__result_kind == "NEGATIVE_WORLD_COVERAGE":
+                if type(result) is not negative.AdmittedNegativeWorldCoverage:
+                    self._fail(
+                        EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_RESULT_BINDING_REJECTED
+                    )
+                coordinates = result._application_output_admission_coordinates()
+                if (
+                    len(coordinates) != 13
+                    or coordinates[0] is not result
+                    or coordinates[1] is not coordinates[6]
+                    or type(coordinates[5]) is not CoverageLedgerConformanceSource
+                    or coordinates[10] is not self.__inputs
+                    or coordinates[11] is not self.__context
+                ):
+                    self._fail(
+                        EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_RESULT_BINDING_REJECTED
+                    )
+                conformance_source = coordinates[5]
+                result_document = result.coverage_ledger_document_copy()
+            else:
+                self._fail(
+                    EvidenceContinuityFailureFamily.EVIDENCE_CONTINUITY_RESULT_BINDING_REJECTED
+                )
+
+            context_payload = {
+                "budget_limits": {
+                    "wall_clock_ms": self.__context.limits.wall_clock_ms,
+                    "memory_bytes": self.__context.limits.memory_bytes,
+                    "artifact_bytes": self.__context.limits.artifact_bytes,
+                },
+                "started_at_monotonic": self.__context.started_at_monotonic,
+                "execution_deadline_monotonic": (
+                    self.__context.execution_deadline_monotonic
+                ),
+            }
+            attempt_binding = {
+                "binding_function": (
+                    "r1-manifest-carrier-successor-attempt-binding/0.1"
+                ),
+                "fact_consumer_attempt_id": self.__attempt_id,
+                "selector_claim_id": self.__claim_id,
+                "derivation_id": self.__derivation_id,
+                "context_identity": semantic_digest(
+                    "veritrail.review.manifest-carrier-context/0.1",
+                    context_payload,
+                ),
+                "context": context_payload,
+                "budget_state": "RUNNING",
+                "stop_trigger": None,
+                "parent_eligibility": "ADMITTED",
+                "application_result_status": "ADMITTED",
+                "continuity_state": "COMMITTED",
+            }
+
+            def owned(raw: bytes) -> bytes:
+                return bytes(bytearray(raw))
+
+            transition_bytes = (
+                None
+                if self.__transition is None
+                else owned(self.__transition["document_bytes"])
+            )
+            return {
+                "continuity_bytes": owned(self.__committed_bytes),
+                "source_snapshot_bytes": owned(
+                    self.__inputs.source_snapshot_canonical_bytes
+                ),
+                "review_policy_bytes": owned(
+                    self.__inputs.review_policy_canonical_bytes
+                ),
+                "derivation_profile_bytes": owned(
+                    self.__inputs.derivation_profile_canonical_bytes
+                ),
+                "request_provenance_bytes": owned(
+                    self.__request_provenance_bytes
+                ),
+                "terminal_source_bytes": owned(self.__terminal_source_bytes),
+                "transition_bytes": transition_bytes,
+                "result_bytes": canonical_json_bytes(result_document),
+                "application_admission_bytes": owned(
+                    self.__application_admission_bytes
+                ),
+                "attempt_binding_bytes": canonical_json_bytes(attempt_binding),
+                "coverage_ledger_conformance_source": conformance_source,
+                "result_kind": self.__result_kind,
+            }
+
     def _wrong_accessor(self) -> None:
         with self.__lock:
             self._fail(
@@ -1178,6 +1325,12 @@ class CommittedSameAttemptDerivationEvidenceContinuity:
     def _document_copy(self) -> dict[str, object]:
         self.__validate()
         return json.loads(self.__encoded)
+
+    def _manifest_carrier_successor_coordinates(self) -> dict[str, object]:
+        self.__validate()
+        return self.__owner._manifest_carrier_successor_coordinates(
+            self, self.__result, self.__encoded
+        )
 
 
 def _create_same_attempt_continuity_capture_slot() -> _SameAttemptContinuityCaptureSlot:

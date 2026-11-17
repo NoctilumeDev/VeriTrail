@@ -136,10 +136,16 @@ PR #491 已使[manifest carrier successor 合同恢复冻结发布](docs/429-r1-
 `CANCELLED`，两个Windows aggregator随之FAIL，PR已关闭、未合并、未资格化。PR #494只把
 [original-gate cancellation boundary audit](docs/432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)资格化为
 `ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，没有回填#493。fresh CONTROL LOOP现建立独立
-[private implementation authorization successor](docs/433-r1-manifest-carrier-successor-private-implementation-authorization-successor.md)；
-当前仍是`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_SUCCESSOR_CANDIDATE_NOT_QUALIFIED`。
-它的全部最后门闭合以前，Evidence 0.3、carrier、Manifest runtime与
-global composition authority仍未创建或授权。
+[private implementation authorization successor](docs/433-r1-manifest-carrier-successor-private-implementation-authorization-successor.md)。
+PR #495已把它精确合入`main@cc8097eb2c71981802ad987f75ce07e1c3bc2d30`；original Public CI
+`43995899179`、exact-main Public CI `44000762240`与Browser Smoke `44000762356`均attempt 1 SUCCESS（15/15、15/15、1/1）。
+fresh README/doc430/doc432/doc433 Render与AGENTS/milestones/workflow raw-byte observations、independent reconciliation和finite closeout
+全部成立，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。fresh CONTROL LOOP从该exact main建立
+[private implementation candidate](docs/434-r1-manifest-carrier-successor-private-implementation-candidate.md)：新增explicit Evidence 0.3
+Schema、same-attempt private coordinate、copy-owned one-shot carrier、独立conformance与`DEMC-000..019`八世界falsifiers；旧Evidence 0.2、
+Manifest 0.1与public/default composition保持不变。四格focused各20/20，完整Review Attention为694 reported，Schema/payload各26/26；
+全部prequalification与setup failures按原identity保留。本文仍是未合入、未exact-main验证、未readback资格化、未冻结的candidate；Manifest
+runtime、persistence与global composition authority仍未授权。
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1029,7 +1035,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [manifest carrier successor合同恢复冻结发布](docs/429-r1-manifest-carrier-successor-contract-recovery-freeze-publication.md)：PR #491已闭合自己的完整资格链并冻结doc426不变合同语义；PR #488失败历史继续保留，该冻结不直接启动实现；
 - [manifest carrier successor private implementation feasibility audit](docs/430-r1-manifest-carrier-successor-private-implementation-feasibility-audit.md)：PR #492已闭合完整资格链并成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；该历史不创建Evidence 0.3、carrier或Manifest runtime，也不自动授权实现；
 - [manifest carrier successor implementation authorization original-gate cancellation boundary](docs/432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)：保存PR #493 original creation run被PR body `edited` event并发取消、两个Windows aggregator failure与关闭未合并身份；不使用第二run回填，也不在同一刀重建authorization；
-- [manifest carrier successor private implementation authorization successor](docs/433-r1-manifest-carrier-successor-private-implementation-authorization-successor.md)：在doc432资格化后从新exact main独立重建bounded A–J authority；不复用PR #493 commit/run/qualification，完整最后门闭合前`PRIVATE_IMPLEMENTATION_ALLOWED`不生效；
+- [manifest carrier successor private implementation authorization successor](docs/433-r1-manifest-carrier-successor-private-implementation-authorization-successor.md)：PR #495已完成完整资格链，使bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`生效；PR #493 retained CANCELLED/FAILURE world不回填；
+- [manifest carrier successor private implementation candidate](docs/434-r1-manifest-carrier-successor-private-implementation-candidate.md)：实现explicit Evidence 0.3、same-attempt exact coordinate、copy-owned one-shot carrier、独立conformance与八个live-world falsifiers；当前只具local candidate witness，完整资格链与独立freeze publication尚未闭合；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

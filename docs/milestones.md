@@ -11085,3 +11085,39 @@ doc433自己的完整资格链闭合前`PRIVATE_IMPLEMENTATION_ALLOWED`不生效
 PR #493 commit/run/qualification，不修改workflow/concurrency/runtime/tests/fixtures/legacy Schema。新PR body必须在创建前封存且original
 gate终态前不得触发metadata edit。完整门闭合后仍须返回CONTROL LOOP另建private implementation candidate；
 `proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后的human+AI全项目检查继续是独立义务。
+
+## R1 manifest carrier successor private implementation候选（2026-11-17）
+
+PR #495已把doc433精确合入`main@cc8097eb2c71981802ad987f75ce07e1c3bc2d30 / tree=992bc9c85f90a7aeaddffa39925d14f049f52772`。
+original Public CI `43995899179`、exact-main Public CI `44000762240`与Browser Smoke `44000762356`均attempt 1 SUCCESS
+（15/15、15/15、1/1）。fresh README/doc430/doc432/doc433 Render与AGENTS/milestones/workflow raw-byte observations、independent
+reconciliation、160-artifact closeout与166-artifact finite integrity全部闭合；所有setup/proof-facility failure继续保留。因此bounded A–J
+`PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。
+
+fresh CONTROL LOOP从该exact main建立
+[文档434](434-r1-manifest-carrier-successor-private-implementation-candidate.md)。candidate新增explicit Evidence 0.3 Schema、same-attempt
+private coordinate、copy-owned non-restorable one-shot carrier、独立conformance owner、八个live worlds与`DEMC-000..019` falsifiers；不创建
+Manifest runtime，不恢复global composition。final local qualification：
+
+- focused四格各20/20 PASS；
+- full Review Attention四格各694 reported，3.10为691 passed/3 skipped，3.13为692 passed/2 skipped；
+- Schema/payload四格各26/26 PASS；
+- double compile、diff、global/local hygiene、forbidden public export guard与primary audit continuity PASS；
+- 48-artifact local seal SHA-256为`a626aca4a4df63079dd67254c6f49c8c97d2731a2e1fca7e7c7aeff805322f3e`。
+
+`DEMC-005` proof-target error、independent binding closure prequalification review、duplicate discovery proof-facility error以及全部setup errors按
+原identity保留。当前只允许：
+
+```text
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc434必须完成自己的original PR、protected exact-head merge、new exact-main Public CI/Browser Smoke、fresh anonymous installed-product
+README/doc434/milestones readback、independent reconciliation与finite closeout，才可成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED /
+READBACK_QUALIFIED`。冻结必须另建docs-only publication；不得按文档编号自动施工Manifest、恢复global composition或启动R2–R6。
+R1完成后仍须人类与AI共同执行独立全项目检查。

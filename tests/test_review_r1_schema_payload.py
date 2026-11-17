@@ -48,6 +48,7 @@ ADMISSION_SCHEMA_FILES = {
 
 AUTHORIZED_SUCCESSOR_SCHEMA_FILES = {
     "review-coverage-ledger-0.3.schema.json",
+    "review-derivation-evidence-0.3.schema.json",
 }
 
 EXPECTED_SCHEMA_FILES = (
