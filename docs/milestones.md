@@ -11121,3 +11121,30 @@ doc434必须完成自己的original PR、protected exact-head merge、new exact-
 README/doc434/milestones readback、independent reconciliation与finite closeout，才可成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED /
 READBACK_QUALIFIED`。冻结必须另建docs-only publication；不得按文档编号自动施工Manifest、恢复global composition或启动R2–R6。
 R1完成后仍须人类与AI共同执行独立全项目检查。
+
+## R1 manifest carrier successor private implementation冻结发布候选（2026-11-17）
+
+PR #496已把doc434 candidate以
+`base=cc8097eb2c71981802ad987f75ce07e1c3bc2d30 / head=dff716873dffb12a8647f6f8336950e7f70c5325 /
+tree=c26d1cc4b8c794a11fce92a6895191cea8f2865e`精确合入
+`main@d9d4d9ae0ae8de8ab263845e1b9c7eb744882ad3`。original Public CI `44040991136`、exact-main Public CI
+`44046327896`与Browser Smoke `44046327995`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc434 Render formal各自唯一
+PASS；milestones Render diagnostic的`PARTIAL / CONTENT_TRUNCATED`与raw formal attempt 1/2 anonymous Contents API rate exhaustion
+`ERROR`全部保留，attempt 3才取得唯一raw/API/exact-Git byte PASS。
+
+fresh exact-source `DEMC-000..019`为20/20 PASS；independent reconciliation、155-artifact closeout、expected stdout self-capture
+mismatch与158-artifact finite integrity SHA-256依次为：
+
+```text
+a451e7b290424e00c1d44a8c59b4616c3eb3179ae703b83203f93f5588e27f53
+968c0463af3c2c111a6ea292df0b2029cd322ab8bb8aee743f9c1ce57d6a6b21
+8a1ef2288f0965332f9f9c466b89a723841c3af0f27fbf18d4e00258ed2e914b
+86decb0d94b1e08b090181bc8701841bdfa31114fd82345e22a1cfd16d7645db
+```
+
+所以doc434现在最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档435](435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)的独立docs-only候选，只条件化发布同一exact
+implementation的`PRIVATE_IMPLEMENTATION_FROZEN` target。本文自己的完整local/original PR/protected merge/new exact-main双门/fresh
+README/doc434/doc435 Render、milestones raw-byte observation、independent reconciliation与finite closeout闭合以前，该target不生效。
+Manifest runtime、persistence、global composition、public Review与R2–R6继续未授权。`proof_is_not_problem_solving = true`、
+`local_not_global = true`；R1完成后仍须由人类与AI共同执行独立全项目检查。
