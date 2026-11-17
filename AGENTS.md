@@ -9955,3 +9955,44 @@ doc434自己的original PR、protected exact-head merge、new exact-main双门�
 reconciliation与finite closeout全部闭合后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。冻结必须
 另建docs-only publication；不得从本candidate直接创建Manifest runtime、恢复global composition或启动R2–R6。R1完成后的human+AI
 全项目检查继续是独立义务。
+
+### R1 manifest carrier successor private implementation冻结发布候选
+
+PR #496已把doc434 implementation candidate以
+`base=cc8097eb2c71981802ad987f75ce07e1c3bc2d30 / head=dff716873dffb12a8647f6f8336950e7f70c5325 /
+tree=c26d1cc4b8c794a11fce92a6895191cea8f2865e`精确合入
+`main@d9d4d9ae0ae8de8ab263845e1b9c7eb744882ad3`。original Public CI `44040991136`、exact-main Public CI
+`44046327896`与Browser Smoke `44046327995`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc434 Render formal各有
+唯一PASS；milestones Render diagnostic真实终结为`PARTIAL / CONTENT_TRUNCATED`，raw formal attempt 1/2又因anonymous Contents API
+rate exhaustion `ERROR`，reset后的attempt 3才取得唯一raw/API/exact-Git byte PASS。全部non-success按原identity保留。
+
+fresh exact-source `DEMC-000..019`为20/20 PASS；independent reconciliation、155-artifact closeout、expected self-capture mismatch与
+158-artifact finite integrity SHA-256依次为：
+
+```text
+a451e7b290424e00c1d44a8c59b4616c3eb3179ae703b83203f93f5588e27f53
+968c0463af3c2c111a6ea292df0b2029cd322ab8bb8aee743f9c1ce57d6a6b21
+8a1ef2288f0965332f9f9c466b89a723841c3af0f27fbf18d4e00258ed2e914b
+86decb0d94b1e08b090181bc8701841bdfa31114fd82345e22a1cfd16d7645db
+```
+
+因此doc434现在是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP建立
+[文档435](docs/435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)的独立docs-only候选，只条件化发布同一
+bounded A–J exact implementation的`PRIVATE_IMPLEMENTATION_FROZEN` target：
+
+```text
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc435只允许README、AGENTS、doc435与milestones。它自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+README/doc434/doc435 Render与milestones raw/API/exact-Git observation/independent reconciliation/finite closeout全部闭合后，
+`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`才生效。已知会截断的milestones Render diagnostic
+不得重复制造；raw observation也不得冒充Render completeness。随后必须返回CONTROL LOOP重审Manifest role、persistence、global
+composition与剩余R1；不得直接施工。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查
+继续是独立义务。
