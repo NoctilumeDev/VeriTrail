@@ -9872,3 +9872,45 @@ README/doc430/doc432 Render、AGENTS/milestones/workflow raw-byte observation、
 最多成为`ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建独立authorization
 publication；不得修改workflow来绕过反例，不得复用#493 commit/run/qualification，亦不得直接创建Evidence 0.3、carrier、Manifest runtime、
 global composition或R2–R6。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
+
+### R1 manifest carrier successor private implementation authorization successor候选
+
+PR #494已经把doc432精确合入`main@f21f310c1e99d5e7fa8b4f944d545f3163c9d627`。original Public CI
+`43978322915`、exact-main Public CI `43983345552`与Browser Smoke `43983345564`均attempt 1 SUCCESS（15/15、15/15、1/1）。
+fresh README/doc430/doc432 Render formal与AGENTS/milestones/workflow raw-byte observations各自唯一PASS；README diagnostic #1的
+`COMPLETE / HTTP 200 / marker 0 / ERROR`、proof-target correction与所有setup failure保持原identity。independent reconciliation
+attempt 1的adapter v2/v3 supersession proof-facility错误也永久保留，v2没有重复产品观察。最终reconciliation、173-artifact closeout、
+expected stdout self-capture mismatch与finite integrity SHA-256依次为：
+
+```text
+f0972144aecd7942c03b2ee048f18492b6fbdffd13b2707676e8a17a180c92c0
+060830aceeccd6c0f962e908a11e0f13cee2ea56ed63ea16d0d660210f3eee1d
+44a23fcc8c80b921959ec4125bdf1481c975c657b5d444fb68db629f12b43ba9
+52a61f4611821ab604ab5a7d8e224c47821b1a349c9d6455e86bd4bcc28d6a33
+```
+
+因此doc432现在是`ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；PR #493仍是
+`CLOSED / UNMERGED / ORIGINAL_PUBLIC_CI_CANCELLED / NOT_QUALIFIED`。fresh CONTROL LOOP从新exact main建立
+[文档433](docs/433-r1-manifest-carrier-successor-private-implementation-authorization-successor.md)的独立docs-only successor：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_PR493_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_AUTHORIZATION_SUCCESSOR_CANDIDATE_NOT_QUALIFIED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_AUTHORIZED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_NOT_STARTED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc433只允许README、AGENTS、doc433与milestones。它条件化重建doc426/doc429/doc430允许的bounded A–J authority，但不继承
+PR #493任何commit/run/qualification。新PR body必须在创建前逐字节封存；original gate终态前不得执行触发`edited` event的metadata修改。
+本文自己的local/original PR/protected exact-head merge/new exact-main双门/fresh README/doc430/doc432/doc433 Render与AGENTS/milestones/
+workflow raw-byte observations/independent reconciliation/finite closeout全部闭合后，
+`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`才生效。随后必须返回CONTROL LOOP另建
+private implementation candidate；不得直接把publication当runtime证据、恢复global composition或启动R2–R6。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
