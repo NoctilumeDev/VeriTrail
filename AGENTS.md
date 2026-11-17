@@ -9914,3 +9914,44 @@ workflow raw-byte observations/independent reconciliation/finite closeout全部�
 `R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED`才生效。随后必须返回CONTROL LOOP另建
 private implementation candidate；不得直接把publication当runtime证据、恢复global composition或启动R2–R6。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查继续是独立义务。
+
+### R1 manifest carrier successor private implementation候选
+
+PR #495已把doc433以`base=f21f310c1e99d5e7fa8b4f944d545f3163c9d627 / head=f95b1276b3f3ebae4910c3fabc4eb84f83d851b1 /
+tree=992bc9c85f90a7aeaddffa39925d14f049f52772`精确合入
+`main@cc8097eb2c71981802ad987f75ce07e1c3bc2d30`。original Public CI `43995899179`、exact-main Public CI
+`44000762240`与Browser Smoke `44000762356`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc430/doc432/doc433
+Render与AGENTS/milestones/workflow raw-byte observations各自唯一PASS；independent reconciliation、160-artifact closeout、expected
+self-capture mismatch与166-artifact finite integrity全部闭合。因此：
+
+```text
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+```
+
+fresh CONTROL LOOP从该exact main建立
+[文档434](docs/434-r1-manifest-carrier-successor-private-implementation-candidate.md)的独立candidate。它新增explicit
+`review-derivation-evidence-0.3` Schema、same-attempt private coordinate、copy-owned non-restorable one-shot carrier、独立conformance owner、
+八个live worlds与`DEMC-000..019` direct falsifiers；旧Evidence 0.2、Manifest 0.1、public export与default composition保持base不变。
+
+final focused四格各20/20 PASS；完整Review Attention四格各694 reported（3.10为691 passed/3 skipped，3.13为692 passed/2 skipped）；
+Schema/payload四格各26/26 PASS。double compile、diff、global/local hygiene、forbidden public export guard与primary audit continuity均PASS。
+`DEMC-005` proof-target error、independent binding closure prequalification review、duplicate discovery proof-facility error与全部setup failures保持
+原identity。当前只允许：
+
+```text
+R1_SAME_ATTEMPT_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_CONTRACT_FROZEN
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_PR493_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED
+R1_MANIFEST_CARRIER_SUCCESSOR_IMPLEMENTATION_AUTHORIZATION_ORIGINAL_GATE_CANCELLATION_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc434自己的original PR、protected exact-head merge、new exact-main双门、fresh README/doc434/milestones installed-product readback、independent
+reconciliation与finite closeout全部闭合后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED`。冻结必须
+另建docs-only publication；不得从本candidate直接创建Manifest runtime、恢复global composition或启动R2–R6。R1完成后的human+AI
+全项目检查继续是独立义务。

@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-derivation-evidence-0.3.schema.json",
+  "title": "VeriTrail Review DerivationEvidence 0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_kind",
+    "schema_version",
+    "canonicalization_profile",
+    "derivation_id",
+    "request_provenance",
+    "source_snapshot_digest",
+    "policy_digest",
+    "analysis_scope_digest",
+    "slice_policy_digest",
+    "derivation_profile_digest",
+    "terminal_branch",
+    "selector_route",
+    "continuity_variant",
+    "continuity_digest",
+    "application_admission_digest",
+    "coverage_ledger_digest",
+    "root_chain_digest",
+    "derivation_evidence_digest"
+  ],
+  "properties": {
+    "artifact_kind": {
+      "const": "DERIVATION_EVIDENCE"
+    },
+    "schema_version": {
+      "const": "0.3"
+    },
+    "canonicalization_profile": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/CanonicalizationProfile"
+    },
+    "derivation_id": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText"
+    },
+    "request_provenance": {
+      "$ref": "#/$defs/RequestProvenance"
+    },
+    "source_snapshot_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "policy_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "analysis_scope_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "slice_policy_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "derivation_profile_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "terminal_branch": {
+      "enum": [
+        "NORMAL_FULFILLED",
+        "ZERO_PARSE_DENOMINATOR",
+        "ALL_PARSE_REJECTED",
+        "PROJECTION_BLOCKED",
+        "REQUIRED_PROVIDER_NON_SUCCESS"
+      ]
+    },
+    "selector_route": {
+      "enum": [
+        "RELATION_HANDOFF",
+        "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2"
+      ]
+    },
+    "continuity_variant": {
+      "enum": [
+        "NORMAL_REVIEW_SLICE_COVERAGE_CONTINUITY",
+        "NEGATIVE_WORLD_COVERAGE_CONTINUITY"
+      ]
+    },
+    "continuity_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "application_admission_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "coverage_ledger_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "root_chain_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    },
+    "derivation_evidence_digest": {
+      "$ref": "review-r1-common-0.1.schema.json#/$defs/SemanticDigest"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "terminal_branch": {
+          "const": "NORMAL_FULFILLED"
+        },
+        "selector_route": {
+          "const": "RELATION_HANDOFF"
+        },
+        "continuity_variant": {
+          "const": "NORMAL_REVIEW_SLICE_COVERAGE_CONTINUITY"
+        }
+      }
+    },
+    {
+      "properties": {
+        "terminal_branch": {
+          "enum": [
+            "ZERO_PARSE_DENOMINATOR",
+            "ALL_PARSE_REJECTED",
+            "PROJECTION_BLOCKED",
+            "REQUIRED_PROVIDER_NON_SUCCESS"
+          ]
+        },
+        "selector_route": {
+          "const": "FACT_TO_COVERAGE_EXACT_INPUT_SUCCESSOR_0_2"
+        },
+        "continuity_variant": {
+          "const": "NEGATIVE_WORLD_COVERAGE_CONTINUITY"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "RequestProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested_repository_id",
+        "requested_ref",
+        "resolver_id",
+        "resolver_version",
+        "resolved_at"
+      ],
+      "properties": {
+        "requested_repository_id": {
+          "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText"
+        },
+        "requested_ref": {
+          "$ref": "review-r1-common-0.1.schema.json#/$defs/NonEmptyText"
+        },
+        "resolver_id": {
+          "const": "veritrail-r1-owned-snapshot-exact-oid"
+        },
+        "resolver_version": {
+          "const": "0.1"
+        },
+        "resolved_at": {
+          "$ref": "review-r1-common-0.1.schema.json#/$defs/UtcTimestamp"
+        }
+      }
+    }
+  }
+}
