@@ -160,7 +160,16 @@ official npm audit-provider对同一exact lock的第一次观察仍返回advisor
 [picomatch公告撤回与Workbench审计源恢复候选](docs/437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)：只保存
 外部裁决变化与审计源恢复，不修改依赖、lock、workflow、audit level或oracle，也不回填#498。
 
-**External audit-source recovery candidate: the carrier implementation is frozen; PR #498 remains failed and unqualified, while doc437 must qualify the later advisory-withdrawal/audit-provider recovery before any Manifest 0.2 successor is rebuilt.**
+PR #499随后已把doc437精确合入`main@24d728065b1d165eb3e241c872606c8356fabd10`并通过original/exact-main
+Public CI与Browser Smoke；但fresh installed-product formal在P1 COMPLETE后暴露P2 owned-browser cleanup阻塞：frozen 45秒窗口
+过期约25分钟仍无terminal event，只有外部终止本session的Playwright driver才形成ERROR。该失败永久保留，doc437是
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`。fresh CONTROL LOOP只reopen
+`P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_AND_CLEANUP`，建立独立
+[修正合同0.2](docs/438-r1-public-render-owned-browser-lifecycle-correction-contract.md)：不提高采集预算、不改fact/coverage/Core/R1
+oracle或已发布0.1.0，只冻结同一绝对deadline的owned driver containment与5秒cleanup-only release envelope。合同资格链闭合以前
+runtime仍未获授权；后继source修正与GitHub Evidence 0.1.1 public release也必须分别取得自己的资格，不能从本合同自动继承。
+
+**Public Render lifecycle correction candidate: the carrier implementation remains frozen and PR #498 remains failed/unqualified; doc437 merged with green dual gates but its installed-product readback is not qualified. Doc438 now owns the minimal P2 lifecycle correction contract, and Manifest 0.2 remains stopped.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1054,6 +1063,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [manifest carrier successor private implementation candidate](docs/434-r1-manifest-carrier-successor-private-implementation-candidate.md)：实现explicit Evidence 0.3、same-attempt exact coordinate、copy-owned one-shot carrier、独立conformance与八个live-world falsifiers；PR #496已使它成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`，所有readback non-success继续保留；
 - [manifest carrier successor private implementation freeze publication](docs/435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)：PR #497已完成original/exact-main双门、fresh readback、independent reconciliation与finite closeout，因此bounded private implementation现已`FROZEN`；
 - [picomatch公告撤回与Workbench审计源恢复](docs/437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)：保留PR #498 required audit失败与关闭未合并identity，记录同一exact lock在公告撤回后先继续返回advisory、后恢复为空集合的外部审计源变化；不修改依赖、lock、audit oracle或回填旧失败；
+- [Public Render owned-browser生命周期修正合同0.2](docs/438-r1-public-render-owned-browser-lifecycle-correction-contract.md)：保留PR #499 fresh formal超出45秒窗口后cleanup长期阻塞与外部containment identity，只reopen P2 owned lifecycle/cleanup；合同冻结以前runtime未获授权，已发布0.1.0保持不可移动；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
