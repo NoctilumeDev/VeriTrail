@@ -152,7 +152,15 @@ READBACK_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP建立独立
 [private implementation freeze publication](docs/435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)；本文自己的
 完整资格链闭合以前，Manifest runtime、persistence与global composition authority仍未授权。
 
-**Manifest carrier implementation freeze publication candidate: doc434 is exact-main/readback qualified; the private implementation is not frozen until doc435 completes its own qualification chain.**
+PR #497随后使doc435完成original/exact-main双门、fresh readback、independent reconciliation与finite closeout，因此
+`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`已经生效。第一次Manifest 0.2 feasibility
+候选PR #498的original Public CI `44148053612` attempt 1却在未改写的required Workbench dependency audit观察到
+`GHSA-fc5q-39xc-vjpf / picomatch`而失败；PR已关闭、未合并、未rerun，doc436不进入main也不取得资格。GitHub随后撤回该公告，
+official npm audit-provider对同一exact lock的第一次观察仍返回advisory，第二次相同request才返回空集合。fresh CONTROL LOOP现建立
+[picomatch公告撤回与Workbench审计源恢复候选](docs/437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)：只保存
+外部裁决变化与审计源恢复，不修改依赖、lock、workflow、audit level或oracle，也不回填#498。
+
+**External audit-source recovery candidate: the carrier implementation is frozen; PR #498 remains failed and unqualified, while doc437 must qualify the later advisory-withdrawal/audit-provider recovery before any Manifest 0.2 successor is rebuilt.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1044,7 +1052,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [manifest carrier successor implementation authorization original-gate cancellation boundary](docs/432-r1-manifest-carrier-authorization-original-gate-cancellation-boundary.md)：保存PR #493 original creation run被PR body `edited` event并发取消、两个Windows aggregator failure与关闭未合并身份；不使用第二run回填，也不在同一刀重建authorization；
 - [manifest carrier successor private implementation authorization successor](docs/433-r1-manifest-carrier-successor-private-implementation-authorization-successor.md)：PR #495已完成完整资格链，使bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`生效；PR #493 retained CANCELLED/FAILURE world不回填；
 - [manifest carrier successor private implementation candidate](docs/434-r1-manifest-carrier-successor-private-implementation-candidate.md)：实现explicit Evidence 0.3、same-attempt exact coordinate、copy-owned one-shot carrier、独立conformance与八个live-world falsifiers；PR #496已使它成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`，所有readback non-success继续保留；
-- [manifest carrier successor private implementation freeze publication](docs/435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)：只条件化发布doc434 exact implementation frozen target；自己的original PR、protected merge、new exact-main双门、fresh readback、independent reconciliation与finite closeout全部成立以前仍为candidate；
+- [manifest carrier successor private implementation freeze publication](docs/435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)：PR #497已完成original/exact-main双门、fresh readback、independent reconciliation与finite closeout，因此bounded private implementation现已`FROZEN`；
+- [picomatch公告撤回与Workbench审计源恢复](docs/437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)：保留PR #498 required audit失败与关闭未合并identity，记录同一exact lock在公告撤回后先继续返回advisory、后恢复为空集合的外部审计源变化；不修改依赖、lock、audit oracle或回填旧失败；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

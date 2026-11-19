@@ -9996,3 +9996,38 @@ README/doc434/doc435 Render与milestones raw/API/exact-Git observation/independe
 不得重复制造；raw observation也不得冒充Render completeness。随后必须返回CONTROL LOOP重审Manifest role、persistence、global
 composition与剩余R1；不得直接施工。`proof_is_not_problem_solving = true`、`local_not_global = true`，post-R1 human+AI全项目检查
 继续是独立义务。
+
+### R1 picomatch公告撤回与Workbench审计源恢复候选
+
+PR #497已经把doc435精确合入`main@8a9233582a519760e2c3008e6d8e1324442ba687 / tree=
+18624af19890d064f7b11a184a124023fccdc70a`；original Public CI `44067075447`、exact-main Public CI
+`44072793203`与Browser Smoke `44072793191`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh四项目标readback、independent
+reconciliation与finite closeout均成立，所以bounded carrier private implementation已经`FROZEN`。
+
+第一次后继Manifest 0.2 feasibility PR #498绑定
+`base=8a923358... / head=574c1fd1... / tree=a2bf714c... / 1 commit / 4 docs files`；original Public CI
+`44148053612` attempt 1在required Workbench audit观察到13 high `GHSA-fc5q-39xc-vjpf / picomatch <=4.0.7`而FAIL，
+其余Workbench test/lint/build成功，dependent Starter为SKIPPED。same exact-main lock也复现；PR未rerun，已关闭且未合并，doc436不进入main、
+不取得资格。
+
+GitHub Advisory Database随后把该条目标为`Withdrawn on Nov 18, 2026`且没有patched version。official npm bulk advisory对同一request与
+同一lock的第一次fresh observation仍返回该条目，第二次相同request才返回`{}`；source、lock、audit level与registry都没有变化，内部
+传播原因保持`UNKNOWN`。fresh CONTROL LOOP建立
+[文档437](docs/437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)的独立docs-only候选：
+
+```text
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FEASIBILITY_PR498_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc437只允许README、AGENTS、doc437与milestones；不得修改dependency/lock/workflow/audit oracle、rerun #498、dismiss advisory或把withdrawal
+写成库的普遍安全证明。它自己的original PR、protected exact-head merge、new exact-main双门、fresh anonymous installed-product
+readback、independent reconciliation与finite closeout全部闭合后，最多成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`。
+随后必须返回CONTROL LOOP，从新的exact main重建versioned Manifest 0.2 feasibility successor；不得直接施工runtime或启动R2–R6。
+`proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后的human+AI全项目检查继续是独立义务。

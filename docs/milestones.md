@@ -11148,3 +11148,39 @@ implementation的`PRIVATE_IMPLEMENTATION_FROZEN` target。本文自己的完整l
 README/doc434/doc435 Render、milestones raw-byte observation、independent reconciliation与finite closeout闭合以前，该target不生效。
 Manifest runtime、persistence、global composition、public Review与R2–R6继续未授权。`proof_is_not_problem_solving = true`、
 `local_not_global = true`；R1完成后仍须由人类与AI共同执行独立全项目检查。
+
+## R1 picomatch公告撤回与Workbench审计源恢复候选（2026-11-19）
+
+PR #497已经把doc435以
+`base=d9d4d9ae0ae8de8ab263845e1b9c7eb744882ad3 / head=ffbe1c993e5ea6016ce4a9b7cbc1835161256358 /
+tree=18624af19890d064f7b11a184a124023fccdc70a`精确合入
+`main@8a9233582a519760e2c3008e6d8e1324442ba687`。original Public CI `44067075447`、exact-main Public CI
+`44072793203`与Browser Smoke `44072793191`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc434/doc435/milestones
+各有唯一qualifying formal PASS；independent reconciliation、206-artifact closeout、expected self-capture mismatch与209-artifact finite
+integrity全部闭合。因此`R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN`已经生效。
+
+后继PR #498绑定`base=8a923358... / head=574c1fd1... / tree=a2bf714c... / 1 commit / 4 docs files`。其original
+Public CI `44148053612` attempt 1在required Workbench dependency audit观察到13 high
+`GHSA-fc5q-39xc-vjpf / picomatch <=4.0.7`而FAIL；test/lint/type-check/build成功，dependent Starter为SKIPPED。same exact-main
+lock也复现；PR没有rerun，已关闭且未合并，doc436不进入main、不取得资格。
+
+GitHub随后撤回该advisory且没有patched version。official npm bulk advisory对同一exact lock/request的第一次fresh observation仍返回条目，
+第二次相同request才返回`{}`；内部传播原因保持`UNKNOWN`，source、lock、audit level与registry不变。fresh CONTROL LOOP建立
+[文档437](437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)的独立docs-only候选：
+
+```text
+R1_DERIVATION_EVIDENCE_MANIFEST_CARRIER_SUCCESSOR_PRIVATE_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FEASIBILITY_PR498_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc437只保存外部公告裁决与audit-provider恢复历史，不修改依赖、lock、workflow、audit oracle或#498 identity。自己的original PR、
+protected exact-head merge、new exact-main双门、fresh anonymous installed-product readback、independent reconciliation与finite closeout全部闭合后，
+最多成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新exact main重建Manifest 0.2 feasibility
+successor；不得复用doc436或直接施工runtime。`proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后仍须人类与AI
+共同执行独立全项目检查。
