@@ -176,9 +176,14 @@ closeout全部闭合。因此合同0.2已`FROZEN`且私有source实现获准。f
 无条件绑定自己的Playwright driver与原绝对deadline，normal cleanup取消guard，阻塞cleanup由driver containment释放；identity、
 termination与guard residue全部fail closed。双Python normal/`-O` plugin full suite各189/189 PASS，wheel-only真实Chromium
 5秒负向链在10秒上限内返回且owned process-tree零残留；proof脚本的`poll()`与过窄cleanup oracle错误按原attempt保留。
-该候选仍未合入、未资格化、未冻结；公开0.1.0不含修正，0.1.1 Release尚未授权。
+PR #501现已把该候选精确合入`main@36edc5119a41573be95cc3fd7c4fd0e8ff307cc7`；original/exact-main Public CI与
+Browser Smoke均为attempt 1 SUCCESS，fresh exact-source wheel负生命周期、P1 API、五个raw/API/exact-Git目标、independent
+reconciliation与finite closeout全部闭合。因此doc439最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED /
+READBACK_QUALIFIED / NOT_FROZEN`。fresh CONTROL LOOP已建立独立
+[source冻结发布候选](docs/440-r1-public-render-owned-browser-lifecycle-correction-implementation-freeze-publication.md)；它自己的完整门闭合以前
+`IMPLEMENTATION_FROZEN`不生效。公开0.1.0不含修正，0.1.1 Release仍未授权。
 
-**Public Render lifecycle correction implementation candidate: doc438 is frozen and authorizes the bounded source repair, but doc439 is not yet merged or qualified. Public 0.1.0 remains immutable and uncorrected; 0.1.1, doc437 recovery, Manifest 0.2, and global composition remain stopped.**
+**Public Render lifecycle correction source-freeze candidate: doc439 is merged, exact-main verified, and readback-qualified but not frozen. Doc440 is a conditional docs-only freeze publication; public 0.1.0 remains immutable and uncorrected, while 0.1.1, doc437 recovery, Manifest 0.2, and global composition remain stopped.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1073,7 +1078,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [manifest carrier successor private implementation freeze publication](docs/435-r1-manifest-carrier-successor-private-implementation-freeze-publication.md)：PR #497已完成original/exact-main双门、fresh readback、independent reconciliation与finite closeout，因此bounded private implementation现已`FROZEN`；
 - [picomatch公告撤回与Workbench审计源恢复](docs/437-r1-picomatch-advisory-withdrawal-and-workbench-audit-recovery.md)：保留PR #498 required audit失败与关闭未合并identity，记录同一exact lock在公告撤回后先继续返回advisory、后恢复为空集合的外部审计源变化；不修改依赖、lock、audit oracle或回填旧失败；
 - [Public Render owned-browser生命周期修正合同0.2](docs/438-r1-public-render-owned-browser-lifecycle-correction-contract.md)：保留PR #499 fresh formal超出45秒窗口后cleanup长期阻塞与外部containment identity，只reopen P2 owned lifecycle/cleanup；合同冻结以前runtime未获授权，已发布0.1.0保持不可移动；
-- [Public Render owned-browser生命周期修正实现候选](docs/439-r1-public-render-owned-browser-lifecycle-correction-implementation-candidate.md)：从doc438冻结后的exact main重建同deadline driver guard、五类同步cleanup阻塞与真实wheel-only零残留witness；候选未合入、未资格化、未冻结，不能冒充public 0.1.1或恢复doc437/Manifest 0.2；
+- [Public Render owned-browser生命周期修正实现候选](docs/439-r1-public-render-owned-browser-lifecycle-correction-implementation-candidate.md)：从doc438冻结后的exact main重建同deadline driver guard、五类同步cleanup阻塞与真实wheel-only零残留witness；PR #501已使它成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`，不能冒充public 0.1.1或恢复doc437/Manifest 0.2；
+- [Public Render owned-browser生命周期修正实现冻结发布](docs/440-r1-public-render-owned-browser-lifecycle-correction-implementation-freeze-publication.md)：只条件化发布doc439已资格化exact source的`FROZEN`状态；自己的完整资格链闭合以前仍是publication candidate，不创建0.1.1 Release或恢复后继authority；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

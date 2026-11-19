@@ -11260,3 +11260,52 @@ doc439候选必须以final bytes重新完成local qualification、original PR、
 negative lifecycle、README/doc437/doc438/doc439/milestones P1/raw-byte readback、independent reconciliation与finite closeout；闭合后
 最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。之后必须返回CONTROL LOOP另判
 source freeze与public 0.1.1 release，不能按文档编号恢复doc437、Manifest 0.2、global composition或启动R2–R6。
+
+## R1 Public Render owned-browser生命周期修正实现冻结发布候选（2026-11-20）
+
+PR #501已把doc439与source候选精确合入`main@36edc5119a41573be95cc3fd7c4fd0e8ff307cc7 / tree=
+3a693542b9fb98ed6e5ab1c974fb9a4d937b51cc`。original Public CI `44599738492`、exact-main Public CI
+`44608036656`与Browser Smoke `44608036720`均attempt 1 SUCCESS（15/15、15/15、1/1）。original qualification、
+protected merge与exact-main gate qualification SHA-256依次为：
+
+```text
+2a8e8f610474bdaf7d9b5843ad0cd4694e0b10be7d12c24141173e782ab4f136
+3d7b076b8a1ab80be68ada2b27fda206c6c4ef3ba7641c09ec442c48238ff5ed
+f9783e689eadcc8221a21856e444ff1f6ee787d6bc25a8e45a1836a9117a2e80
+```
+
+fresh exact-main Python 3.13.13 installed exact-source wheel negative lifecycle在5.030秒内返回；driver terminal、owned process
+tree零残留，transport-close failures与deadline termination全部可见且不声称Render内容成功。P1 API及README/doc437/doc438/
+doc439/milestones raw/API/exact-Git bytes各有唯一PASS。independent reconciliation、56-artifact closeout与post-closeout
+integrity SHA-256为：
+
+```text
+ba8a15332bfe999aa9567dfaac0710e55137f093401a99897ec8a8a7bc5837d0
+4effcbaa82948119b3baa11ec4f0f5867a813d3475a71768d5d58cae8580dd3d
+2e122c885b1c066880d4119c94eb106ae671c7ecaf19e447cd6e6d5fe65efef9
+```
+
+因此doc439现在最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。
+fresh CONTROL LOOP建立独立docs-only
+[文档440](440-r1-public-render-owned-browser-lifecycle-correction-implementation-freeze-publication.md)，只条件化发布同一exact
+source的`IMPLEMENTATION_FROZEN`状态。first fresh root的Python bootstrap/build-module失败，以及PowerShell tree、错误相对
+`audit.json`路径、错误closeout文件名与quoting setup errors全部保留，effect NONE。
+
+当前状态为：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_CONTRACT_0_2_FROZEN
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED_NOT_AUTHORIZED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc440自己的final-byte local gates、original PR、protected merge、新exact-main双门、fresh exact-source negative lifecycle、
+installed P1 API与六目标raw exact bytes、independent reconciliation与finite closeout全部闭合后，source frozen target才生效。
+public 0.1.1、doc437恢复、Manifest 0.2与global composition仍须各自返回CONTROL LOOP重建，不能从source PASS继承。
