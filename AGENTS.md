@@ -10152,3 +10152,55 @@ negative lifecycle、installed P1 API与README/doc437/doc438/doc439/doc440/miles
 reconciliation与finite closeout，才可使source `IMPLEMENTATION_FROZEN`生效。随后必须返回CONTROL LOOP独立决定GitHub Evidence
 0.1.1 public release contract、doc437恢复与Manifest 0.2 successor；不得直接恢复global composition或启动R2–R6。
 `proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后的human+AI全项目检查仍是独立后续目标。
+
+### R1 GitHub Evidence 0.1.1维护发行与P2 provenance对齐合同候选
+
+PR #502已经把doc440以
+`base=36edc5119a41573be95cc3fd7c4fd0e8ff307cc7 / head=824e8bccc310b1a02d2b887aba8a12d0a157a688 /
+tree=427c4400dd0e65d1e65fb38f3e2b6093a5be85f6`精确合入
+`main@75dd9a5a77fc171420d78f2a90c86ecc3bfebc88`。original Public CI `44618225861`、exact-main Public CI
+`44625769930`与Browser Smoke `44625769739`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh exact-source negative
+lifecycle在5.029秒内返回，driver terminal且owned process residue为空；P1 API与README/doc437/doc438/doc439/doc440/milestones
+raw/API/exact-Git bytes各有唯一PASS。independent reconciliation、59-artifact finite closeout与post-closeout integrity SHA-256为：
+
+```text
+5a0334b0a742b302815dd0dd54096f482ab38363a4466009434b2a296e8834bd
+4b07b2930e53ff1a3699e9aef3ca155e1adab3d52b97c9566120358c47f3e8d5
+4a59af90de34e82082ea908680b206f3dce5d61b6a9be7939165aec993fe3ce0
+```
+
+所以`P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN`已经生效。公开0.1.0保持不可移动且
+不含修正；source PASS不能冒充public installed-product恢复。
+
+fresh CONTROL LOOP还发现一个发行前真实边界：P2 production implementation已经改变，但
+`PUBLIC_RENDER_COLLECTOR_IMPLEMENTATION_VERSION`仍为0.1.0，distribution/package/P1 implementation provenance则已进入
+0.1.1.dev0。P0/P2 frozen contract明确规定implementation version属于provenance；只有normalization semantics进入facts identity。
+因此不能直接发布0.1.1或重做doc437。新的docs-only
+[文档441](docs/441-r1-github-evidence-0-1-1-maintenance-release-and-p2-provenance-contract.md)只条件化冻结：
+
+```text
+distribution/import/API/P2 implementation provenance = 0.1.1
+normalization semantics / facts / coverage / Core / P3 / R1 semantics unchanged
+four fixed assets + active protected annotated tag + non-Latest Release
+fresh anonymous downloads + dual-Python installed-product positive/negative lifecycle
+```
+
+当前只允许：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_RELEASE_AND_P2_PROVENANCE_ALIGNMENT_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED_NOT_AUTHORIZED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc441自己的local/original PR/protected merge/new exact-main双门/fresh installed P1与README/doc440/doc441/milestones raw/API/
+exact-Git observations/independent reconciliation/finite closeout全部闭合后，最多使合同FROZEN并允许从新exact main另建
+release-preparation candidate。合同PR不得修改版本、runtime、tests、scripts、tag、Release或资产；发行闭合后doc437仍须自己的fresh
+Plan/session/formal，Manifest 0.2与global composition不能继承发行PASS。`proof_is_not_problem_solving = true`、
+`local_not_global = true`；R1完成后的human+AI全项目检查仍是独立后续目标。
