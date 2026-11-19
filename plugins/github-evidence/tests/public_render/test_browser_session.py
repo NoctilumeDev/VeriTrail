@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import threading
+import time
 import unittest
 from dataclasses import dataclass
 from types import SimpleNamespace
@@ -7,6 +9,7 @@ from types import SimpleNamespace
 from veritrail_github.public_render_browser import (
     FreshContextRejected,
     PublicRenderBrowserError,
+    _PlaywrightDriverDeadlineGuard,
     RenderDeadlineExceeded,
     RenderBrowserSession,
 )
@@ -196,6 +199,13 @@ class _FakePlaywright:
     def __init__(self, browser: _FakeBrowser) -> None:
         self.chromium = _FakeChromium(browser)
         self.stopped = False
+        self._impl_obj = SimpleNamespace(
+            _connection=SimpleNamespace(
+                _transport=SimpleNamespace(
+                    _proc=SimpleNamespace(pid=12344, kill=lambda: None)
+                )
+            )
+        )
 
     def stop(self) -> None:
         self.stopped = True
@@ -516,6 +526,228 @@ class RenderBrowserSessionTests(unittest.TestCase):
         self.assertTrue(context.cdp.detached)
         self.assertTrue(context.closed)
         self.assertTrue(playwright.stopped)
+
+    def test_deadline_guard_finishes_without_terminating_after_normal_cleanup(self) -> None:
+        manager, _browser, _context, playwright = _fakes()
+        terminated = threading.Event()
+        playwright._impl_obj = SimpleNamespace(
+            _connection=SimpleNamespace(
+                _transport=SimpleNamespace(
+                    _proc=SimpleNamespace(pid=12345, kill=terminated.set)
+                )
+            )
+        )
+        session = RenderBrowserSession(
+            _request(),
+            playwright_factory=lambda: manager,
+            deadline_guard_factory=_PlaywrightDriverDeadlineGuard,
+            runtime_preflight=_FakePreflight,
+        ).open()
+
+        session.close()
+
+        self.assertFalse(terminated.is_set())
+        self.assertEqual((), session.snapshot().cleanup_errors)
+
+    def test_deadline_guard_rejects_missing_or_invalid_owned_driver_identity(self) -> None:
+        with self.assertRaisesRegex(
+            PublicRenderBrowserError,
+            "driver identity is unavailable",
+        ):
+            _PlaywrightDriverDeadlineGuard(
+                SimpleNamespace(),
+                deadline=time.monotonic() + 1.0,
+            )
+        for process in (
+            SimpleNamespace(pid=0, kill=lambda: None),
+            SimpleNamespace(pid=True, kill=lambda: None),
+            SimpleNamespace(pid=12345, kill=None),
+        ):
+            with self.subTest(process=process), self.assertRaisesRegex(
+                PublicRenderBrowserError,
+                "driver identity is invalid",
+            ):
+                _PlaywrightDriverDeadlineGuard(
+                    SimpleNamespace(
+                        _impl_obj=SimpleNamespace(
+                            _connection=SimpleNamespace(
+                                _transport=SimpleNamespace(_proc=process)
+                            )
+                        )
+                    ),
+                    deadline=time.monotonic() + 1.0,
+                )
+
+    def test_invalid_driver_identity_fails_before_browser_launch(self) -> None:
+        manager, _browser, _context, playwright = _fakes()
+        playwright._impl_obj = SimpleNamespace(
+            _connection=SimpleNamespace(
+                _transport=SimpleNamespace(
+                    _proc=SimpleNamespace(pid=0, kill=lambda: None)
+                )
+            )
+        )
+
+        with self.assertRaisesRegex(
+            PublicRenderBrowserError,
+            "driver identity is invalid",
+        ):
+            RenderBrowserSession(
+                _request(),
+                playwright_factory=lambda: manager,
+                deadline_guard_factory=_PlaywrightDriverDeadlineGuard,
+                runtime_preflight=_FakePreflight,
+            ).open()
+
+        self.assertIsNone(playwright.chromium.launch_options)
+        self.assertTrue(playwright.stopped)
+
+    def test_deadline_guard_records_owned_driver_termination_failure(self) -> None:
+        invoked = threading.Event()
+
+        def fail_to_terminate() -> None:
+            invoked.set()
+            raise RuntimeError("synthetic termination failure")
+
+        guard = _PlaywrightDriverDeadlineGuard(
+            SimpleNamespace(
+                _impl_obj=SimpleNamespace(
+                    _connection=SimpleNamespace(
+                        _transport=SimpleNamespace(
+                            _proc=SimpleNamespace(
+                                pid=12347,
+                                kill=fail_to_terminate,
+                            )
+                        )
+                    )
+                )
+            ),
+            deadline=time.monotonic(),
+        )
+
+        guard.start()
+        self.assertTrue(invoked.wait(1.0))
+
+        self.assertEqual(
+            ("playwright-driver:deadline-termination-failed",),
+            guard.finish(),
+        )
+
+    def test_deadline_guard_records_guard_thread_residue(self) -> None:
+        release = threading.Event()
+        invoked = threading.Event()
+
+        def block_termination() -> None:
+            invoked.set()
+            release.wait()
+
+        class _FastJoinGuard(_PlaywrightDriverDeadlineGuard):
+            _RELEASE_ENVELOPE_SECONDS = 0.01
+
+        guard = _FastJoinGuard(
+            SimpleNamespace(
+                _impl_obj=SimpleNamespace(
+                    _connection=SimpleNamespace(
+                        _transport=SimpleNamespace(
+                            _proc=SimpleNamespace(
+                                pid=12348,
+                                kill=block_termination,
+                            )
+                        )
+                    )
+                )
+            ),
+            deadline=time.monotonic(),
+        )
+        guard.start()
+        self.assertTrue(invoked.wait(1.0))
+        errors = guard.finish()
+        release.set()
+        guard._thread.join(timeout=1.0)
+
+        self.assertEqual(
+            ("playwright-driver:deadline-guard-stuck",),
+            errors,
+        )
+
+    def test_deadline_guard_start_failure_is_retained_without_masking_open_error(self) -> None:
+        manager, _browser, _context, playwright = _fakes()
+
+        class _StartFailGuard(_PlaywrightDriverDeadlineGuard):
+            def start(self) -> None:
+                raise RuntimeError("synthetic thread start failure")
+
+        session = RenderBrowserSession(
+            _request(),
+            playwright_factory=lambda: manager,
+            deadline_guard_factory=_StartFailGuard,
+            runtime_preflight=_FakePreflight,
+        )
+
+        with self.assertRaisesRegex(
+            PublicRenderBrowserError,
+            "deadline guard failed to start",
+        ):
+            session.open()
+
+        self.assertTrue(playwright.stopped)
+        self.assertIn(
+            "playwright-driver:deadline-guard-not-started",
+            session.snapshot().cleanup_errors,
+        )
+
+    def test_absolute_deadline_releases_each_synchronous_cleanup_step(self) -> None:
+        for label in (
+            "response-body-controller",
+            "cdp-session",
+            "browser-context",
+            "browser",
+            "playwright",
+        ):
+            with self.subTest(label=label):
+                manager, browser, context, playwright = _fakes()
+                released = threading.Event()
+                playwright._impl_obj = SimpleNamespace(
+                    _connection=SimpleNamespace(
+                        _transport=SimpleNamespace(
+                            _proc=SimpleNamespace(pid=12349, kill=released.set)
+                        )
+                    )
+                )
+                request = _request()
+                request["render_policy"]["max_elapsed_ms"] = 50
+                session = RenderBrowserSession(
+                    request,
+                    playwright_factory=lambda: manager,
+                    deadline_guard_factory=_PlaywrightDriverDeadlineGuard,
+                    runtime_preflight=_FakePreflight,
+                ).open()
+                if label == "response-body-controller":
+                    resource = session._body_controller
+                    method = "close"
+                elif label == "cdp-session":
+                    resource = context.cdp
+                    method = "detach"
+                elif label == "browser-context":
+                    resource = context
+                    method = "close"
+                elif label == "browser":
+                    resource = browser
+                    method = "close"
+                else:
+                    resource = playwright
+                    method = "stop"
+                setattr(resource, method, lambda: released.wait(2.0))
+                started = time.monotonic()
+
+                session.close()
+
+                self.assertLess(time.monotonic() - started, 1.0)
+                self.assertTrue(released.is_set())
+                self.assertIn(
+                    "playwright-driver:deadline-terminated",
+                    session.snapshot().cleanup_errors,
+                )
 
     def test_browser_routes_enforce_read_only_and_coverage_semantics(self) -> None:
         manager, _browser, context, _playwright = _fakes()

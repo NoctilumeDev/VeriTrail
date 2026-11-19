@@ -10059,3 +10059,47 @@ reconciliation/finite closeout全部成立后，才可成为`CONTRACT_0_2_FROZEN
 冒充本合同的Render完整性门。随后必须返回CONTROL LOOP从新exact main重建implementation；source修正闭合后还要独立决定
 GitHub Evidence 0.1.1公开发行，不能把exact-source PASS写成public installed-product已恢复。Manifest 0.2、global composition、public Review与
 R2–R6继续未授权；`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
+### R1 Public Render owned-browser生命周期修正实现候选
+
+PR #500已经把doc438以`base=24d728065b1d165eb3e241c872606c8356fabd10 / head=
+8aef9dd009a4d81f9998c10706d3cf764e908e63 / tree=6b5a794087054cd9a7af054172afbd238e55e4f8`精确合入
+`main@5fee88a3ff4d3803288c3c79e4c38498336b39ed`。original Public CI `44575160885`、exact-main Public CI
+`44583241629`与Browser Smoke `44583241839`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh exact-main
+readback只用installed P1 API与README/doc437/doc438/milestones raw/API/exact-Git bytes；没有把待修P2冒充门。independent
+reconciliation、44-artifact closeout与post-closeout integrity SHA-256依次为：
+
+```text
+831dd635446415591162ab6cf16e019e3d17a2dbd70804c15bdc7247dcff39a9
+7e1570220cc2962b6bef1c0fc5b9cb3f0fcc498761bd9aab0f31a3f2beb1eb8f
+c772337e967170b796cc1aac712d4b399b24cc40a6a339dedd65630ececfd420
+```
+
+所以`P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_CONTRACT_0_2_FROZEN / IMPLEMENTATION_ALLOWED`
+已经生效。fresh CONTROL LOOP从该exact main另建
+[文档439](docs/439-r1-public-render-owned-browser-lifecycle-correction-implementation-candidate.md)与bounded source候选：每个production
+session无条件绑定自己的Playwright driver与原绝对deadline；normal cleanup取消guard，五类同步cleanup阻塞由owned driver
+containment释放；missing/invalid identity、termination failure与guard residue都fail closed。fact/coverage/Core/P3/R1语义、45秒窗口与
+公开0.1.0字节不变。
+
+当前local witness为GitHub Evidence full suite四格各189/189 PASS；两个installed source wheel的5秒真实Chromium负向链均在
+约5.03秒返回，driver terminal且完整owned process tree零残留；插件卸载后的Core-only P1/P2 Evidence复算也在双Python PASS。
+wheel probe attempt 1的async Process `poll()`假设错误与attempt 2的过窄cleanup oracle FAIL均保留为proof-facility identity，effect NONE。
+当前只允许：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NOT_FROZEN
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED_NOT_AUTHORIZED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc439与source候选必须完成final local qualification、original PR、protected exact-head merge、新exact-main双门、fresh exact-source
+wheel negative lifecycle、README/doc437/doc438/doc439/milestones P1/raw-byte readback、independent reconciliation与finite closeout，
+才可成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP，
+独立决定source freeze与GitHub Evidence 0.1.1 public release；不得从source PASS恢复doc437、Manifest 0.2、global composition或R2–R6。
+`proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后的human+AI全项目检查仍是独立后续目标。

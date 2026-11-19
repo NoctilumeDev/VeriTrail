@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import time
 import unittest
 from dataclasses import dataclass
 
@@ -127,6 +128,32 @@ class RealChromiumFixtureTests(unittest.TestCase):
                     "github_public_render_collection"
                 ]["errors"]
             )
+        )
+
+    def test_absolute_deadline_interrupts_owned_playwright_driver(self) -> None:
+        request = derive_public_render_request(
+            self._navigation_plan(),
+            "github-public-render",
+            "chromium-owned-driver-deadline",
+        )
+        request["render_policy"]["max_elapsed_ms"] = 5000
+        session = RenderBrowserSession(
+            request,
+            runtime_preflight=lambda: _FixtureRuntime(),
+        )
+        started = time.monotonic()
+
+        try:
+            session.open()
+            with self.assertRaises(Exception):
+                session.page.wait_for_timeout(60_000)
+        finally:
+            session.close()
+
+        self.assertLess(time.monotonic() - started, 10.0)
+        self.assertIn(
+            "playwright-driver:deadline-terminated",
+            session.snapshot().cleanup_errors,
         )
 
     def test_full_collector_observes_bounded_synthetic_surface(self) -> None:
