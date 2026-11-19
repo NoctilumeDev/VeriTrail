@@ -10031,3 +10031,31 @@ doc437只允许README、AGENTS、doc437与milestones；不得修改dependency/lo
 readback、independent reconciliation与finite closeout全部闭合后，最多成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`。
 随后必须返回CONTROL LOOP，从新的exact main重建versioned Manifest 0.2 feasibility successor；不得直接施工runtime或启动R2–R6。
 `proof_is_not_problem_solving = true`、`local_not_global = true`，R1完成后的human+AI全项目检查继续是独立义务。
+
+### R1 Public Render owned-browser生命周期修正合同候选
+
+PR #499已把doc437精确合入`main@24d728065b1d165eb3e241c872606c8356fabd10 / tree=
+2a0b7933849d8f6be99abac307d9ad463a78fb66`；original Public CI `44539372086`、exact-main Public CI
+`44549026856`与Browser Smoke `44549026705`均attempt 1 SUCCESS（15/15、15/15、1/1）。但fresh formal
+`r1d437-formal-doc437-1-24d7280`在P1 API COMPLETE后，P2 navigation约30秒ERROR；frozen 45秒窗口到期后cleanup仍阻塞，
+约25分钟仍无terminal event。外部先终止owned Chromium仍未释放，随后终止本session的owned Playwright driver才形成
+`FORMAL_READBACK_ERROR`；Core Verdict未创建，lower external trigger保持`UNKNOWN`。pre-containment、containment与render SHA-256依次为：
+
+```text
+24de3f51ac99c5dcf2e4c8c67313efbcc7c00bf2e640f80edeb25c56b407522b
+e30e87eafa76585c355f9e58ca50dcb9c79bf31419671a57ddb5c8909b43d399
+999b8e115dbc8d8417e69527f0954a715af055febc622dbb3f18e88a699d3154
+```
+
+因此doc437只能是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`。fresh CONTROL LOOP只reopen
+`P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_AND_CLEANUP`，建立
+[文档438](docs/438-r1-public-render-owned-browser-lifecycle-correction-contract.md)的独立docs-only合同候选。它不提高45秒采集窗口，
+只允许一个绑定原绝对deadline的owned driver interrupt owner和最多5秒cleanup-only release envelope；不修改fact/coverage/Core/R1语义，
+也不改写已发布`github-evidence-v0.1.0`。隔离真实Chromium feasibility SHA
+`19ebf6fcea883871f173ce49d4b37b737df1174d0b3e9d5e120286543ecdce47`只作witness，未提交runtime草案不取得授权。
+
+doc438自己的local/original PR/protected merge/new exact-main双门/fresh installed P1 API + exact-Git byte readback/independent
+reconciliation/finite closeout全部成立后，才可成为`CONTRACT_0_2_FROZEN / IMPLEMENTATION_ALLOWED`。P2当前是被修正对象，不在修正前
+冒充本合同的Render完整性门。随后必须返回CONTROL LOOP从新exact main重建implementation；source修正闭合后还要独立决定
+GitHub Evidence 0.1.1公开发行，不能把exact-source PASS写成public installed-product已恢复。Manifest 0.2、global composition、public Review与
+R2–R6继续未授权；`proof_is_not_problem_solving = true`、`local_not_global = true`。

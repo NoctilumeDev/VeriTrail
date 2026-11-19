@@ -11184,3 +11184,36 @@ protected exact-head merge、new exact-main双门、fresh anonymous installed-pr
 最多成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，从新exact main重建Manifest 0.2 feasibility
 successor；不得复用doc436或直接施工runtime。`proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后仍须人类与AI
 共同执行独立全项目检查。
+
+## R1 Public Render owned-browser生命周期修正合同候选（2026-11-20）
+
+PR #499已把doc437以`base=8a923358... / head=f22824a... / tree=2a0b793...`精确合入
+`main@24d728065b1d165eb3e241c872606c8356fabd10`；original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS。
+fresh formal `r1d437-formal-doc437-1-24d7280`却在P1 COMPLETE后暴露产品级生命周期反例：P2 navigation约30秒ERROR，
+45秒采集窗口后cleanup继续阻塞；约25分钟仍无terminal event。外部先终止owned Chromium无效，终止本session owned Playwright
+driver后才形成`FORMAL_READBACK_ERROR`，Core Verdict未创建，lower external trigger为`UNKNOWN`。旧记录与setup errors均保持原identity，
+doc437因此是`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`，不能用绿门或P1 COMPLETE回填。
+
+fresh CONTROL LOOP只reopen `P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_AND_CLEANUP`，建立
+[文档438](438-r1-public-render-owned-browser-lifecycle-correction-contract.md)。合同保留45秒语义窗口、fact/coverage/Core/R1 oracle与
+已发布0.1.0字节，只新增同deadline的owned driver interrupt owner和最多5秒cleanup-only release envelope；normal cleanup不得误杀，
+identity/termination/residue异常必须fail closed。真实Playwright/Chromium feasibility已证明driver termination能释放完整owned tree，
+SHA-256为`19ebf6fcea883871f173ce49d4b37b737df1174d0b3e9d5e120286543ecdce47`，但只作witness。
+
+当前状态：
+
+```text
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_CONTRACT_CANDIDATE_NOT_QUALIFIED
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_NON_QUALIFYING_FEASIBILITY_DRAFT_EXISTS
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc438自己的完整资格链闭合后才允许从新exact main重建implementation。P2在修正前不能再充当本合同的完整性门，所以本
+docs-only链使用fresh installed P1 API与exact-Git raw bytes；后继runtime仍必须完成双Python normal/`-O`、真实Chromium blocked-cleanup、
+process-tree release、wheel-only与全远端门。source修正闭合后还须独立决定0.1.1 public release；不得直接恢复doc437或Manifest 0.2。
