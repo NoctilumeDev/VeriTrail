@@ -11217,3 +11217,46 @@ R2_R6_NOT_STARTED
 doc438自己的完整资格链闭合后才允许从新exact main重建implementation。P2在修正前不能再充当本合同的完整性门，所以本
 docs-only链使用fresh installed P1 API与exact-Git raw bytes；后继runtime仍必须完成双Python normal/`-O`、真实Chromium blocked-cleanup、
 process-tree release、wheel-only与全远端门。source修正闭合后还须独立决定0.1.1 public release；不得直接恢复doc437或Manifest 0.2。
+
+## R1 Public Render owned-browser生命周期修正实现候选（2026-11-20）
+
+PR #500已把doc438精确合入`main@5fee88a3ff4d3803288c3c79e4c38498336b39ed / tree=
+6b5a794087054cd9a7af054172afbd238e55e4f8`。original Public CI `44575160885`、exact-main Public CI
+`44583241629`与Browser Smoke `44583241839`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh readback只使用P1 API
+及README/doc437/doc438/milestones raw/API/exact-Git bytes；四目标各唯一PASS，没有把被修正的P2拼成完整性门。independent
+reconciliation、44-artifact closeout与post-closeout integrity SHA-256为：
+
+```text
+831dd635446415591162ab6cf16e019e3d17a2dbd70804c15bdc7247dcff39a9
+7e1570220cc2962b6bef1c0fc5b9cb3f0fcc498761bd9aab0f31a3f2beb1eb8f
+c772337e967170b796cc1aac712d4b399b24cc40a6a339dedd65630ececfd420
+```
+
+因此doc438合同0.2已`FROZEN`，bounded source implementation获准。fresh CONTROL LOOP从该exact main建立
+[文档439](439-r1-public-render-owned-browser-lifecycle-correction-implementation-candidate.md)：production session在Playwright启动后
+无条件取得自身driver identity并绑定原45秒绝对deadline；normal cleanup取消guard，response-body/CDP/context/browser/Playwright
+任一同步cleanup阻塞都由同一driver containment释放；invalid identity、termination failure与guard residue均fail closed。实现不修改
+fact/coverage/Core/P3/R1语义、网络/body预算或公开0.1.0字节。
+
+本地四格GitHub Evidence full suite各189/189 PASS。两个final source-wheel-only真实Chromium负向链在5.016秒与5.023秒返回，
+driver terminal且各自完整owned process tree零残留；双Python插件卸载后的Core-only P1/P2 retained Evidence验证也PASS。第一次
+wheel probe错误调用async Process不存在的`poll()`而ERROR；第二次把必须保留的CDP/context/browser close-failed误写为禁止项而
+FAIL，均保留为proof-facility identity，effect NONE。当前状态为：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_CONTRACT_0_2_FROZEN
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_ALLOWED
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NOT_FROZEN
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED_NOT_AUTHORIZED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc439候选必须以final bytes重新完成local qualification、original PR、protected merge、新exact-main双门、fresh exact-source wheel
+negative lifecycle、README/doc437/doc438/doc439/milestones P1/raw-byte readback、independent reconciliation与finite closeout；闭合后
+最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。之后必须返回CONTROL LOOP另判
+source freeze与public 0.1.1 release，不能按文档编号恢复doc437、Manifest 0.2、global composition或启动R2–R6。

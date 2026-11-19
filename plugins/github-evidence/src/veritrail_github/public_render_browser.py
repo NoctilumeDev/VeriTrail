@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import math
 import re
+import threading
 import time
 from dataclasses import asdict, dataclass
 from typing import Any, Mapping
@@ -41,6 +42,81 @@ class RenderDeadlineExceeded(PublicRenderBrowserError):
 
 class RenderNavigationFailed(PublicRenderBrowserError):
     """No trustworthy final main-document response was produced."""
+
+
+class _PlaywrightDriverDeadlineGuard:
+    """Interrupt this session's owned Playwright driver at the absolute deadline."""
+
+    _RELEASE_ENVELOPE_SECONDS = 5.0
+
+    def __init__(
+        self,
+        playwright: Any,
+        *,
+        deadline: float,
+        monotonic: Any = time.monotonic,
+    ) -> None:
+        try:
+            process = playwright._impl_obj._connection._transport._proc
+            process_id = process.pid
+            terminate = process.kill
+        except (AttributeError, TypeError) as error:
+            raise PublicRenderBrowserError(
+                "P2 Playwright driver identity is unavailable"
+            ) from error
+        if (
+            isinstance(process_id, bool)
+            or not isinstance(process_id, int)
+            or process_id <= 0
+            or not callable(terminate)
+        ):
+            raise PublicRenderBrowserError(
+                "P2 Playwright driver identity is invalid"
+            )
+        self._process_id = process_id
+        self._terminate = terminate
+        self._deadline = deadline
+        self._monotonic = monotonic
+        self._done = threading.Event()
+        self._thread = threading.Thread(
+            target=self._watch,
+            name=f"veritrail-p2-driver-deadline-{process_id}",
+            daemon=True,
+        )
+        self._started = False
+        self._terminated = False
+        self._termination_failed = False
+
+    def start(self) -> None:
+        self._thread.start()
+        self._started = True
+
+    def finish(self) -> tuple[str, ...]:
+        self._done.set()
+        if not self._started:
+            return ("playwright-driver:deadline-guard-not-started",)
+        self._thread.join(timeout=self._RELEASE_ENVELOPE_SECONDS)
+        errors: list[str] = []
+        if self._thread.is_alive():
+            errors.append("playwright-driver:deadline-guard-stuck")
+        if self._terminated:
+            errors.append("playwright-driver:deadline-terminated")
+        elif self._termination_failed:
+            errors.append("playwright-driver:deadline-termination-failed")
+        return tuple(errors)
+
+    def _watch(self) -> None:
+        remaining = max(0.0, self._deadline - float(self._monotonic()))
+        if self._done.wait(remaining):
+            return
+        try:
+            self._terminate()
+        except ProcessLookupError:
+            return
+        except Exception:
+            self._termination_failed = True
+        else:
+            self._terminated = True
 
 
 @dataclass(frozen=True)
@@ -176,6 +252,7 @@ class RenderBrowserSession:
         verified_request: Mapping[str, Any],
         *,
         playwright_factory: Any | None = None,
+        deadline_guard_factory: Any | None = None,
         runtime_preflight: Any = preflight_render_runtime,
         monotonic: Any = time.monotonic,
     ) -> None:
@@ -191,11 +268,13 @@ class RenderBrowserSession:
                 "P2 browser session requires a validated Render request"
             ) from error
         self._playwright_factory = playwright_factory
+        self._deadline_guard_factory = deadline_guard_factory
         self._runtime_preflight = runtime_preflight
         self._monotonic = monotonic
         self._deadline: float | None = None
         self._playwright_manager = None
         self._playwright = None
+        self._deadline_guard = None
         self._browser = None
         self._context = None
         self._page = None
@@ -251,6 +330,20 @@ class RenderBrowserSession:
             factory = self._playwright_factory or _default_playwright_factory
             self._playwright_manager = factory()
             self._playwright = self._playwright_manager.start()
+            guard_factory = (
+                self._deadline_guard_factory or _PlaywrightDriverDeadlineGuard
+            )
+            self._deadline_guard = guard_factory(
+                self._playwright,
+                deadline=self._deadline,
+                monotonic=self._monotonic,
+            )
+            try:
+                self._deadline_guard.start()
+            except Exception as error:
+                raise PublicRenderBrowserError(
+                    "P2 Playwright driver deadline guard failed to start"
+                ) from error
             self._browser = self._playwright.chromium.launch(
                 headless=self._policy["headless"],
                 timeout=self.bounded_timeout_ms(
@@ -527,6 +620,10 @@ class RenderBrowserSession:
                 getattr(resource, method)()
             except Exception:
                 self._cleanup_errors.append(f"{label}:close-failed")
+        if self._deadline_guard is not None:
+            for error in self._deadline_guard.finish():
+                if error not in self._cleanup_errors:
+                    self._cleanup_errors.append(error)
 
     def _check_deadline(self) -> None:
         if self._deadline is not None and self._monotonic() >= self._deadline:
