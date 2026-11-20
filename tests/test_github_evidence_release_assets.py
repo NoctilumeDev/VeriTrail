@@ -36,7 +36,7 @@ SOURCE_COMMIT = "a" * 40
 SOURCE_DATE_EPOCH = 1_788_891_310
 METADATA = b"""Metadata-Version: 2.4
 Name: veritrail-github-evidence
-Version: 0.1.0
+Version: 0.1.1
 Requires-Python: >=3.10
 Requires-Dist: veritrail==0.13.0
 Provides-Extra: render
@@ -50,7 +50,9 @@ def write_wheel(path: Path) -> None:
         f"veritrail_github_evidence-{VERSION}.dist-info/METADATA"
     )
     with zipfile.ZipFile(path, mode="w") as archive:
-        archive.writestr("veritrail_github/__init__.py", "__version__ = '0.1.0'\n")
+        archive.writestr(
+            "veritrail_github/__init__.py", f"__version__ = '{VERSION}'\n"
+        )
         archive.writestr(metadata_path, METADATA)
 
 

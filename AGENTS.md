@@ -10204,3 +10204,46 @@ exact-Git observations/independent reconciliation/finite closeout全部闭合后
 release-preparation candidate。合同PR不得修改版本、runtime、tests、scripts、tag、Release或资产；发行闭合后doc437仍须自己的fresh
 Plan/session/formal，Manifest 0.2与global composition不能继承发行PASS。`proof_is_not_problem_solving = true`、
 `local_not_global = true`；R1完成后的human+AI全项目检查仍是独立后续目标。
+
+### R1 GitHub Evidence 0.1.1维护发行准备候选
+
+PR #503已经把doc441以
+`base=75dd9a5a77fc171420d78f2a90c86ecc3bfebc88 / head=4cb0c760a1b607fa6067291ff8cd7fa9852b1fc5 /
+tree=33eb2966daf2f65272be964b4bb5ddf51eb35689`精确合入
+`main@8493c6240fda4c6435198fe37d39ab51a56a95cd`。original Public CI `44638243231`、exact-main Public CI
+`44643445192`与Browser Smoke `44643445263`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh installed P1 API及
+README/doc440/doc441/milestones raw/API/exact-Git bytes各有唯一PASS。不同代理出口的anonymous rate/preflight failure与本轮
+PowerShell setup errors均按原identity保留。independent reconciliation、62-artifact closeout与post-closeout integrity SHA-256为：
+
+```text
+7251cc136abe593792068974b1a2d7bfdfc324cf2ea5b500a3ebe16b4314f2d0
+a46b59e2e1a116c18eb52f085e7fbb260495cf86ccc106b3d48ca86f8643b7d4
+82eb2ffa5934ffe5d8626fd5f385cce133487cfab8d53e85d03218589f74dbb8
+```
+
+所以`GITHUB_EVIDENCE_0_1_1_MAINTENANCE_RELEASE_AND_P2_PROVENANCE_ALIGNMENT_CONTRACT_0_1_FROZEN /
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_ALLOWED`已经生效。fresh CONTROL LOOP从该exact main建立
+[文档442](docs/442-r1-github-evidence-0-1-1-maintenance-release-preparation-candidate.md)与bounded source候选：只把
+distribution/import/P1/P2 implementation provenance同步为0.1.1，升级固定发行资产工具与直接回归向量；P1/P2 normalization、
+facts/coverage/Core/P3/R1语义及browser lifecycle保持不变。
+
+当前只允许：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_RELEASE_AND_P2_PROVENANCE_ALIGNMENT_CONTRACT_0_1_FROZEN
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NO_TAG_NO_RELEASE
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc442与source候选必须完成final local qualification、original PR、protected exact-head merge、新exact-main双门、fresh final
+source-wheel/sdist + render extra + matching Chromium正负产品矩阵、P1 -> P2 -> P3真实链、pre-tag public coordinate核账与finite
+closeout，才允许从新exact main重建最终四项资产并启动受保护non-Latest发行。候选字节不得复用为最终资产；发行PASS也不得回填
+doc437、#498、Manifest 0.2、global composition或R2–R6。`proof_is_not_problem_solving = true`、
+`local_not_global = true`；R1完成后的human+AI全项目检查仍是独立后续目标。

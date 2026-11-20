@@ -20,12 +20,12 @@ from typing import Any, Mapping, Sequence
 
 DISTRIBUTION = "veritrail-github-evidence"
 IMPORT_PACKAGE = "veritrail_github"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 CORE_REQUIREMENT = "veritrail==0.13.0"
 RENDER_REQUIREMENT = "playwright==1.62.0"
-WHEEL_NAME = "veritrail_github_evidence-0.1.0-py3-none-any.whl"
-SDIST_NAME = "veritrail_github_evidence-0.1.0.tar.gz"
-SUMMARY_NAME = "github-evidence-v0.1.0-validation-summary.json"
+WHEEL_NAME = "veritrail_github_evidence-0.1.1-py3-none-any.whl"
+SDIST_NAME = "veritrail_github_evidence-0.1.1.tar.gz"
+SUMMARY_NAME = "github-evidence-v0.1.1-validation-summary.json"
 CHECKSUM_NAME = "SHA256SUMS-github-evidence.txt"
 PAYLOAD_NAMES = (WHEEL_NAME, SDIST_NAME)
 ASSET_NAMES = (*PAYLOAD_NAMES, SUMMARY_NAME, CHECKSUM_NAME)
@@ -882,7 +882,7 @@ def verify_assets(assets: Path) -> dict[str, Any]:
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build, finalize, or verify the frozen GitHub Evidence 0.1.0 release assets."
+        description="Build, finalize, or verify the frozen GitHub Evidence 0.1.1 release assets."
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     build = subparsers.add_parser("build")
