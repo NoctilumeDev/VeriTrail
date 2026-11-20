@@ -11353,3 +11353,108 @@ P1及四目标raw/API/exact-Git readback/independent reconciliation/finite close
 随后仍须返回CONTROL LOOP独立施工release-preparation；不得在合同PR中改版本、脚本、runtime或创建tag/Release，也不得把后继发行PASS
 复用成doc437、Manifest 0.2或global composition资格。`proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后仍须
 人类与AI共同执行独立全项目检查。
+
+## R1 GitHub Evidence 0.1.1维护发行准备候选（2026-11-20）
+
+PR #503已经把doc441以
+`base=75dd9a5a77fc171420d78f2a90c86ecc3bfebc88 / head=4cb0c760a1b607fa6067291ff8cd7fa9852b1fc5 /
+tree=33eb2966daf2f65272be964b4bb5ddf51eb35689`精确合入
+`main@8493c6240fda4c6435198fe37d39ab51a56a95cd`。original/exact-main Public CI与Browser Smoke均attempt 1
+SUCCESS（15/15、15/15、1/1）。fresh installed P1与README/doc440/doc441/milestones各唯一PASS；不同代理出口的anonymous
+rate/preflight failures与PowerShell setup errors全部保留。independent reconciliation、62-artifact closeout与finite integrity为：
+
+```text
+7251cc136abe593792068974b1a2d7bfdfc324cf2ea5b500a3ebe16b4314f2d0
+a46b59e2e1a116c18eb52f085e7fbb260495cf86ccc106b3d48ca86f8643b7d4
+82eb2ffa5934ffe5d8626fd5f385cce133487cfab8d53e85d03218589f74dbb8
+```
+
+因此doc441合同0.1已`FROZEN`，release-preparation获准但尚未完成。fresh CONTROL LOOP建立
+[文档442](442-r1-github-evidence-0-1-1-maintenance-release-preparation-candidate.md)与bounded source候选：
+
+```text
+distribution/import/P1/P2 implementation provenance = 0.1.1
+P1 normalization                                     = github-rest-facts/0.3
+P2 normalization                                     = github-public-render-facts/0.1
+fixed candidate asset set                            = wheel + sdist + summary + checksum
+tag / Release / public download claim                = ABSENT
+```
+
+P1/P2 direct vectors要求implementation provenance变化改变Evidence artifact identity而不改变`facts_digest`；发行工具固定0.1.1
+asset names与non-self-referential summary/checksum顺序。browser lifecycle、45秒/5秒窗口、facts/coverage/Core/P3/R1语义不改。
+
+当前状态为：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_RELEASE_AND_P2_PROVENANCE_ALIGNMENT_CONTRACT_0_1_FROZEN
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NO_TAG_NO_RELEASE
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+候选必须完成双Python normal/`-O`、双构建/metadata、base/sdist/render/uninstall、真实P1 -> P2 -> P3、negative lifecycle、
+original PR、protected merge、new exact-main双门与pre-tag coordinate核账。闭合后才允许从新exact main重建最终资产；候选字节
+不得复用为公开资产，任何PASS也不得回填doc437、#498、Manifest 0.2、global composition或R2–R6。
+
+## R1 GitHub Evidence 0.1.1维护发行准备successor（2026-11-20）
+
+首次候选PR #504的exact identity为
+`base=8493c6240fda4c6435198fe37d39ab51a56a95cd / head=e3eb07ab67e047939be5f3d01ea711f4f458f44f /
+tree=51f878fb7771120144a4f8405c2885227b52134a`，1 commit/15 files。original Public CI
+`44674570733` attempt 1有13/15 job成功，但双Python wheel-only job在成功安装0.1.1 wheel后仍按旧
+`__version__ == '0.1.1.dev0'` binding退出1。失败job及日志SHA-256为：
+
+```text
+136098185965 a292a91cf502cdd10b7678a1801f04eb1c54a77579efbf8f80475831e3cf9912
+136098186028 e84c4768735da63333a791f00c650a894473b247a039434bb3f042b3970d147a
+```
+
+#504已关闭、未合并、禁止rerun。失败归层为candidate scope completeness / CI acceptance binding defect，不回填为runtime反例。
+successor从同一exact main重建原bounded source，并新增workflow exact `0.1.1` binding与直接回归；oracle不泛化，frozen semantic bytes不变。
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_RELEASE_AND_P2_PROVENANCE_ALIGNMENT_CONTRACT_0_1_FROZEN
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_ORIGINAL_PR_504_FAILED_CLOSED_UNMERGED
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_SUCCESSOR_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NO_TAG_NO_RELEASE
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+successor不得继承#504的13个PASS，必须从final bytes重做全部本地、original PR、protected merge、new exact-main、fresh product与
+reconciliation/closeout资格链；闭合前不创建tag、Release或公开资产。
+
+## R1 GitHub Evidence 0.1.1维护发行准备final successor（2026-11-20）
+
+首个本地successor已固定为
+`base=8493c6240fda4c6435198fe37d39ab51a56a95cd / head=2f61c0051c3a87320bd6804ebf62e17502fc9b3d /
+tree=77b20b8d7c9d736742fe1f378fecd0084f39fa52`，1 commit/16 files。其本地source、双构建、base/sdist/render与
+negative lifecycle witness通过，但pre-PR独立复核发现release asset validator仍只接受历史Public CI `jobs=11`，会拒绝
+doc441/doc442/current workflow要求的`15/15` exact-main事实。因此该commit没有推送、没有PR且不具资格；所有本地PASS按原身份保留。
+
+final successor从同一exact main重建，只增加exact `jobs=15` validator与fixture、旧11拒绝回归，不放宽门也不改变runtime、
+normalization、facts、coverage、Core、P3或R1语义。当前状态为：
+
+```text
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_ORIGINAL_PR_504_FAILED_CLOSED_UNMERGED
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_LOCAL_SUCCESSOR_2F61_STOPPED_PRE_PR_NOT_QUALIFIED
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_FINAL_SUCCESSOR_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NO_TAG_NO_RELEASE
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+final successor必须重新完成全部local、original PR、protected merge、new exact-main、fresh product、pre-tag与finite closeout门；
+#504与`2f61c005...`的PASS均不得继承。

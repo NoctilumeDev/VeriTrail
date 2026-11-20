@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import unittest
 from datetime import datetime, timezone
+from unittest.mock import patch
 
 from veritrail.acceptance_evaluation import evaluate_acceptance
 from veritrail.evidence import verify_imported_evidence
@@ -63,6 +64,47 @@ class CollectorPositiveTests(unittest.TestCase):
         second_meta = second.artifact.document["metadata"]["veritrail_observation"]
         self.assertEqual(first_meta["facts_digest"], second_meta["facts_digest"])
         self.assertNotEqual(first.artifact.sha256, second.artifact.sha256)
+
+    def test_implementation_provenance_changes_artifact_not_facts_identity(self) -> None:
+        plan = acceptance_plan(["commit.identity", "repository.identity"])
+        with patch(
+            "veritrail_github.collector.COLLECTOR_IMPLEMENTATION_VERSION",
+            "0.1.0",
+        ):
+            previous = collect(plan, base_transport())
+        with patch(
+            "veritrail_github.collector.COLLECTOR_IMPLEMENTATION_VERSION",
+            "0.1.1",
+        ):
+            current = collect(plan, base_transport())
+
+        previous_observation = previous.artifact.document["metadata"][
+            "veritrail_observation"
+        ]
+        current_observation = current.artifact.document["metadata"][
+            "veritrail_observation"
+        ]
+        self.assertEqual(
+            previous_observation["normalization_semantics_version"],
+            current_observation["normalization_semantics_version"],
+        )
+        self.assertEqual(
+            previous_observation["facts_digest"],
+            current_observation["facts_digest"],
+        )
+        self.assertNotEqual(previous.artifact.sha256, current.artifact.sha256)
+        self.assertEqual(
+            previous.artifact.document["metadata"]["github_collection"][
+                "collector_version"
+            ],
+            "0.1.0",
+        )
+        self.assertEqual(
+            current.artifact.document["metadata"]["github_collection"][
+                "collector_version"
+            ],
+            "0.1.1",
+        )
 
     def test_read_only_headers_are_sent_but_token_is_not_retained(self) -> None:
         token = "test-read-only-credential"

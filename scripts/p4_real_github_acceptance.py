@@ -28,7 +28,7 @@ from veritrail_github.transport import UrllibTransport
 
 
 CORE_VERSION = "0.13.0"
-PLUGIN_VERSION = "0.1.0"
+PLUGIN_VERSION = "0.1.1"
 COLLECTION_ORDER = ("github-api", "github-public-render")
 
 

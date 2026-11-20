@@ -43,7 +43,7 @@ from veritrail_github.public_render_runtime import (
 )
 
 
-PUBLIC_RENDER_COLLECTOR_IMPLEMENTATION_VERSION = "0.1.0"
+PUBLIC_RENDER_COLLECTOR_IMPLEMENTATION_VERSION = "0.1.1"
 PUBLIC_RENDER_PARSER_IMPLEMENTATION_VERSION = "github-public-render-parser/0.1"
 _SESSION_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$")
 
