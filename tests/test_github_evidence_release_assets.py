@@ -36,7 +36,7 @@ SOURCE_COMMIT = "a" * 40
 SOURCE_DATE_EPOCH = 1_788_891_310
 METADATA = b"""Metadata-Version: 2.4
 Name: veritrail-github-evidence
-Version: 0.1.0
+Version: 0.1.1
 Requires-Python: >=3.10
 Requires-Dist: veritrail==0.13.0
 Provides-Extra: render
@@ -50,7 +50,9 @@ def write_wheel(path: Path) -> None:
         f"veritrail_github_evidence-{VERSION}.dist-info/METADATA"
     )
     with zipfile.ZipFile(path, mode="w") as archive:
-        archive.writestr("veritrail_github/__init__.py", "__version__ = '0.1.0'\n")
+        archive.writestr(
+            "veritrail_github/__init__.py", f"__version__ = '{VERSION}'\n"
+        )
         archive.writestr(metadata_path, METADATA)
 
 
@@ -85,7 +87,7 @@ def validation_facts(*, attempt: int = 1) -> dict[str, object]:
             "run_id": 101,
             "head_sha": SOURCE_COMMIT,
             "attempt": attempt,
-            "jobs": 11,
+            "jobs": 15,
             "status": "SUCCESS",
         },
         "browser_smoke": {
@@ -230,6 +232,12 @@ class GitHubEvidenceReleaseAssetTests(unittest.TestCase):
         drifted["public_ci"]["head_sha"] = "b" * 40  # type: ignore[index]
         with self.assertRaisesRegex(ReleaseAssetError, "source drifted"):
             validate_validation_facts(drifted, SOURCE_COMMIT)
+
+    def test_validation_facts_reject_historical_public_ci_job_count(self) -> None:
+        historical = validation_facts()
+        historical["public_ci"]["jobs"] = 11  # type: ignore[index]
+        with self.assertRaisesRegex(ReleaseAssetError, "job count drifted"):
+            validate_validation_facts(historical, SOURCE_COMMIT)
 
     def test_build_facts_reject_unknown_fields_before_summary_publication(self) -> None:
         with tempfile.TemporaryDirectory(prefix="veritrail-p4-build-facts-") as raw_temp:

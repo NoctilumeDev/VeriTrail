@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from veritrail.evidence import import_evidence_document
 from veritrail_github.errors import CollectionError, ContractError
@@ -253,6 +254,48 @@ class PublicRenderEvidenceTests(unittest.TestCase):
         )
         self.assertNotEqual(first.sha256, second.sha256)
         verify_public_render_evidence(plan, request, first)
+
+    def test_implementation_provenance_changes_artifact_not_facts_identity(self) -> None:
+        with patch(
+            "veritrail_github.public_render_collector."
+            "PUBLIC_RENDER_COLLECTOR_IMPLEMENTATION_VERSION",
+            "0.1.0",
+        ):
+            _plan, _request, previous = _assemble()
+        with patch(
+            "veritrail_github.public_render_collector."
+            "PUBLIC_RENDER_COLLECTOR_IMPLEMENTATION_VERSION",
+            "0.1.1",
+        ):
+            _plan, _request, current = _assemble()
+
+        previous_observation = previous.document["metadata"][
+            "veritrail_observation"
+        ]
+        current_observation = current.document["metadata"][
+            "veritrail_observation"
+        ]
+        self.assertEqual(
+            previous_observation["normalization_semantics_version"],
+            current_observation["normalization_semantics_version"],
+        )
+        self.assertEqual(
+            previous_observation["facts_digest"],
+            current_observation["facts_digest"],
+        )
+        self.assertNotEqual(previous.sha256, current.sha256)
+        self.assertEqual(
+            previous.document["metadata"]["github_public_render_collection"][
+                "collector_version"
+            ],
+            "0.1.0",
+        )
+        self.assertEqual(
+            current.document["metadata"]["github_public_render_collection"][
+                "collector_version"
+            ],
+            "0.1.1",
+        )
 
     def test_policy_and_browser_versions_do_not_pollute_fact_identity(self) -> None:
         plan = public_render_plan()

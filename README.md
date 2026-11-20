@@ -186,12 +186,22 @@ fresh negative lifecycle、P1与六目标raw-byte readback、independent reconci
 
 fresh CONTROL LOOP没有把source freeze外推成public-product恢复：公开0.1.0不含修正，doc437仍未资格化。发行前复核还发现
 修正后的P2 Evidence继续写`collector_version=0.1.0`，而distribution/API provenance已进入`0.1.1.dev0`；这违反“实现版本属于
-provenance、规范化语义才进入facts digest”的冻结边界。新的
+provenance、规范化语义才进入facts digest”的冻结边界。PR #503已经使
 [0.1.1维护发行与P2 provenance对齐合同](docs/441-r1-github-evidence-0-1-1-maintenance-release-and-p2-provenance-contract.md)
-只冻结最终版本/实现identity对齐、四项资产、受保护annotated tag、non-Latest Release、公开下载与installed-product门。本文自己的完整
-资格链闭合以前，版本源码、release scripts、tag、Release和资产均不得创建，doc437 recovery、Manifest 0.2与global composition继续停止。
+完成original/exact-main双门、fresh installed P1与四目标raw-byte readback、independent reconciliation及finite closeout；合同0.1现已
+`FROZEN`，只授权从新的exact main另建release-preparation candidate。首次候选PR #504的original Public CI
+`44674570733` attempt 1有13/15 job成功，但双Python wheel-only门发现candidate wheel已是0.1.1、CI仍要求
+`__version__ == '0.1.1.dev0'`，因此PR已关闭且未合并，不允许rerun洗白。fresh CONTROL LOOP现从未变化的exact main重建
+[0.1.1维护发行准备successor](docs/442-r1-github-evidence-0-1-1-maintenance-release-preparation-candidate.md)：除既有
+distribution/import/P1/P2 provenance、发行工具与直接回归外，只把wheel-only exact acceptance binding同步到0.1.1；
+normalization/facts/coverage/Core/P3/R1语义和已冻结browser lifecycle不变。当前仍无0.1.1 tag、Release或公开资产，doc437
+recovery、Manifest 0.2与global composition继续停止。
 
-**Public Render lifecycle correction source is frozen at exact main. Public 0.1.0 remains immutable and uncorrected; 0.1.1 now has only a docs-only release/provenance contract candidate. No public release, doc437 recovery, Manifest 0.2 authority, or global composition authority exists yet.**
+首个本地successor随后固定为`2f61c0051c3a87320bd6804ebf62e17502fc9b3d`，但pre-PR复核发现发行工具仍只接受历史
+Public CI `jobs=11`，会拒绝当前冻结门要求的`15/15` exact-main事实；该commit已停止、未推送且不具资格。final successor
+只新增精确`jobs=15` validator、fixture与旧11拒绝回归，仍须从头重做全部资格门，不能继承`2f61c005...`的本地PASS。
+
+**Public Render lifecycle correction source and the 0.1.1 release/provenance contract are frozen. The first 0.1.1 release-preparation PR failed its original wheel-only gates and remains closed/unmerged; the first local successor was also stopped pre-PR by an exact Public CI cardinality binding defect. Only a rebuilt bounded final successor exists locally. Public 0.1.0 remains immutable and uncorrected, and no 0.1.1 tag, Release, public download claim, doc437 recovery, Manifest 0.2 authority, or global composition authority exists yet.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
