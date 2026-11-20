@@ -201,7 +201,15 @@ recovery、Manifest 0.2与global composition继续停止。
 Public CI `jobs=11`，会拒绝当前冻结门要求的`15/15` exact-main事实；该commit已停止、未推送且不具资格。final successor
 只新增精确`jobs=15` validator、fixture与旧11拒绝回归，仍须从头重做全部资格门，不能继承`2f61c005...`的本地PASS。
 
-**Public Render lifecycle correction source and the 0.1.1 release/provenance contract are frozen. The first 0.1.1 release-preparation PR failed its original wheel-only gates and remains closed/unmerged; the first local successor was also stopped pre-PR by an exact Public CI cardinality binding defect. Only a rebuilt bounded final successor exists locally. Public 0.1.0 remains immutable and uncorrected, and no 0.1.1 tag, Release, public download claim, doc437 recovery, Manifest 0.2 authority, or global composition authority exists yet.**
+PR #505随后使final successor完成original Public CI 15/15并精确合入`main@8075d61352b8f4719e625b0c48be3b6e941da6d8`；
+new exact-main Public CI与Browser Smoke也为attempt 1 SUCCESS（15/15、1/1）。fresh exact-main双Python base/sdist/render
+矩阵与blocked-cleanup负链均PASS，但Python 3.10唯一formal attempt 1的P1 repository probe三次均为
+`NETWORK_ERROR / coverage=ERROR`；同session P2 Render为`COMPLETE`仍不能替代paired P1完整性，P3/Core未执行，Python 3.13
+formal未启动。底层原因保持`UNKNOWN`，没有rerun、tag、Release或公开资产。fresh CONTROL LOOP现建立独立
+[exact-main formal失败边界](docs/443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)，只保存并
+归层失败；它自己的完整资格链闭合以前不启动recovery successor。
+
+**Public Render lifecycle correction source and the 0.1.1 release/provenance contract are frozen. PR #505 merged the bounded final successor and passed both exact-main public gates, but its fresh installed-product Python 3.10 formal failed because P1 API coverage was ERROR after three NETWORK_ERROR observations; the lower cause remains UNKNOWN. The failure is retained without rerun, and no 0.1.1 tag, Release, public download claim, doc437 recovery, Manifest 0.2 authority, or global composition authority exists yet.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1099,6 +1107,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Public Render owned-browser生命周期修正实现候选](docs/439-r1-public-render-owned-browser-lifecycle-correction-implementation-candidate.md)：从doc438冻结后的exact main重建同deadline driver guard、五类同步cleanup阻塞与真实wheel-only零残留witness；PR #501已使它成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`，不能冒充public 0.1.1或恢复doc437/Manifest 0.2；
 - [Public Render owned-browser生命周期修正实现冻结发布](docs/440-r1-public-render-owned-browser-lifecycle-correction-implementation-freeze-publication.md)：自己的完整资格链已经闭合，doc439 exact source现为`IMPLEMENTATION_FROZEN`；该冻结不创建0.1.1 Release，也不恢复doc437、Manifest 0.2或global composition authority；
 - [GitHub Evidence 0.1.1维护发行与P2 provenance对齐合同](docs/441-r1-github-evidence-0-1-1-maintenance-release-and-p2-provenance-contract.md)：从#502已冻结source重新执行CONTROL LOOP，保存P2 implementation provenance仍为0.1.0的发行前缺口，并条件化冻结0.1.1版本/资产/tag/Release/installed-product边界；合同闭合以前不改源码、不创建发行物；
+- [GitHub Evidence 0.1.1维护发行准备候选](docs/442-r1-github-evidence-0-1-1-maintenance-release-preparation-candidate.md)：保存#504 original失败、首个local successor停止事实与final successor的bounded source/product/pre-tag资格边界；不创建tag或Release；
+- [GitHub Evidence 0.1.1发行准备exact-main formal失败边界](docs/443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)：保存PR #505双门通过后Python 3.10 fresh formal的P1三次`NETWORK_ERROR / ERROR`、同session P2 COMPLETE与未执行P3/Core；底层原因保持UNKNOWN，不rerun或修改runtime；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

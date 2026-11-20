@@ -11458,3 +11458,43 @@ R2_R6_NOT_STARTED
 
 final successor必须重新完成全部local、original PR、protected merge、new exact-main、fresh product、pre-tag与finite closeout门；
 #504与`2f61c005...`的PASS均不得继承。
+
+## R1 GitHub Evidence 0.1.1发行准备exact-main formal失败边界候选（2026-11-21）
+
+PR #505以
+`base=8493c6240fda4c6435198fe37d39ab51a56a95cd / head=c1c8783041e864331ab07a167455930de757506e /
+tree=7cf77597aac5b9e10149a5d614281c6c88fdd2a2`完成original Public CI `44804624282` attempt 1的15/15并精确合入
+`main@8075d61352b8f4719e625b0c48be3b6e941da6d8`。新exact-main Public CI `44811437374`与Browser Smoke
+`44811437593`也均为attempt 1 SUCCESS（15/15、1/1）。fresh exact-main双Python base/sdist/render矩阵与blocked-cleanup
+负链全部PASS。
+
+Python 3.10 fresh installed-product formal attempt 1随后观察到P1 repository probe三次`NETWORK_ERROR`，均没有HTTP status、
+request ID或rate metadata，P1 coverage为ERROR；同一paired session的P2 exact README Render为HTTP 200 / COMPLETE且cleanup
+errors为空。冻结runner正确拒绝不完整pair，P3 handoff/Core没有执行，Python 3.13 formal没有启动。相邻rate/preflight、remote Git
+与P2 Render并存，不能证明单一下层根因，故`underlying_cause=UNKNOWN`。failure record与integrity SHA-256为：
+
+```text
+a5cc817bbbad6724a672e8bf54a73597d69b438fddcdbed5aeb3a406d3572b86
+dfe10dbb9ae9aeb4f623d44d229034f10316a23fc21376dbbd9f2b70177a1fe5
+```
+
+没有rerun、pre-tag核账、tag、Release或公开资产。fresh CONTROL LOOP建立
+[文档443](443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)，只保存失败边界，
+不修改runtime、Schema、workflow、重试预算、代理或oracle。当前状态为：
+
+```text
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_PR_505_MERGED_EXACT_MAIN_DUAL_GATES_PASS_FORMAL_FAILED_NOT_QUALIFIED
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_EXACT_MAIN_FORMAL_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc443只有在自己的final-byte local gates、original PR、protected merge、新exact-main双门、fresh installed P1与四目标
+raw/API/exact-Git readback、independent reconciliation和finite closeout全部闭合后，才能成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP；recovery successor必须从新的exact main和新的
+formal identity重建，不能覆盖本次失败。
