@@ -11309,3 +11309,47 @@ R2_R6_NOT_STARTED
 doc440自己的final-byte local gates、original PR、protected merge、新exact-main双门、fresh exact-source negative lifecycle、
 installed P1 API与六目标raw exact bytes、independent reconciliation与finite closeout全部闭合后，source frozen target才生效。
 public 0.1.1、doc437恢复、Manifest 0.2与global composition仍须各自返回CONTROL LOOP重建，不能从source PASS继承。
+
+## R1 GitHub Evidence 0.1.1维护发行与P2 provenance对齐合同候选（2026-11-20）
+
+PR #502已经把doc440以
+`base=36edc5119a41573be95cc3fd7c4fd0e8ff307cc7 / head=824e8bccc310b1a02d2b887aba8a12d0a157a688 /
+tree=427c4400dd0e65d1e65fb38f3e2b6093a5be85f6`精确合入
+`main@75dd9a5a77fc171420d78f2a90c86ecc3bfebc88`。original Public CI `44618225861`、exact-main Public CI
+`44625769930`与Browser Smoke `44625769739`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh exact-source
+negative lifecycle在5.029秒内返回，driver terminal且owned process residue为空；P1与六个raw/API/exact-Git目标各唯一PASS。
+independent reconciliation、59-artifact closeout与post-closeout integrity SHA-256为：
+
+```text
+5a0334b0a742b302815dd0dd54096f482ab38363a4466009434b2a296e8834bd
+4b07b2930e53ff1a3699e9aef3ca155e1adab3d52b97c9566120358c47f3e8d5
+4a59af90de34e82082ea908680b206f3dce5d61b6a9be7939165aec993fe3ce0
+```
+
+因此`P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN`已经生效。公开0.1.0仍是
+immutable historical product identity且不含修正。发行前复核又发现P2 production implementation已改变，但新Evidence仍写
+`collector_version=0.1.0`；distribution、package `__version__`与P1 implementation provenance则为`0.1.1.dev0`。P0/P2冻结边界要求
+实现版本属于provenance、规范化语义才进入facts digest，所以这是真实的bounded release precondition，不得靠发布说明掩盖。
+
+fresh CONTROL LOOP建立
+[文档441](441-r1-github-evidence-0-1-1-maintenance-release-and-p2-provenance-contract.md)的独立docs-only合同候选。它只允许后继
+release-preparation把distribution/import/API/P2 implementation provenance同步为0.1.1，并重建四项资产、受保护annotated tag、
+non-Latest Release、匿名下载与双Python installed-product矩阵；normalization/fact/coverage/Core/P3/R1语义保持不变。当前状态为：
+
+```text
+P2_PUBLIC_RENDER_OWNED_BROWSER_LIFECYCLE_CORRECTION_IMPLEMENTATION_FROZEN
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_RELEASE_AND_P2_PROVENANCE_ALIGNMENT_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED_NOT_AUTHORIZED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_LANGUAGE_SUPPORT_QUALIFICATION_PERSISTENCE_OPEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc441只允许README、AGENTS、doc441与milestones。自己的local/original PR/protected exact-head merge/new exact-main双门/fresh
+P1及四目标raw/API/exact-Git readback/independent reconciliation/finite closeout全部闭合后，合同与release-preparation authority才可生效。
+随后仍须返回CONTROL LOOP独立施工release-preparation；不得在合同PR中改版本、脚本、runtime或创建tag/Release，也不得把后继发行PASS
+复用成doc437、Manifest 0.2或global composition资格。`proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后仍须
+人类与AI共同执行独立全项目检查。
