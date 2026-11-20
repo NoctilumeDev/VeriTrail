@@ -10267,6 +10267,40 @@ R2_R6_NOT_STARTED
 final successor必须重做全部local/original PR/protected merge/new exact-main/fresh product/reconciliation门；不得继承#504或
 `2f61c005...`的PASS。`proof_is_not_problem_solving = true`、`local_not_global = true`。
 
+### R1 GitHub Evidence 0.1.1发行准备exact-main formal失败边界
+
+PR #505已经把final successor以
+`base=8493c6240fda4c6435198fe37d39ab51a56a95cd / head=c1c8783041e864331ab07a167455930de757506e /
+tree=7cf77597aac5b9e10149a5d614281c6c88fdd2a2`精确合入
+`main@8075d61352b8f4719e625b0c48be3b6e941da6d8`。original Public CI `44804624282`、exact-main Public CI
+`44811437374`与Browser Smoke `44811437593`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh exact-main双Python
+base/sdist/render矩阵与blocked-cleanup负链PASS。
+
+Python 3.10 installed-product formal attempt 1随后形成真实失败：P1 repository probe三次均为`NETWORK_ERROR`，没有HTTP status、
+request ID或rate metadata，coverage为ERROR；同一paired session的P2 README Render为HTTP 200 / COMPLETE / clean cleanup，不能
+替代P1完整性。runner按冻结oracle退出，P3/Core未执行，Python 3.13 formal未启动。相邻anonymous preflight、remote Git与P2
+Render成功，故底层根因保持`UNKNOWN`；不得解释为单一GitHub、代理、DNS、TLS、Python或插件缺陷。失败Evidence、stderr、failure
+record与integrity identity全部保留，没有rerun、pre-tag、tag、Release或公开资产。
+
+fresh CONTROL LOOP建立
+[文档443](docs/443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)，只允许README、AGENTS、
+doc443与milestones四个docs-only文件，条件化资格化failure boundary。当前只允许：
+
+```text
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_PR_505_MERGED_EXACT_MAIN_DUAL_GATES_PASS_FORMAL_FAILED_NOT_QUALIFIED
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_EXACT_MAIN_FORMAL_FAILURE_BOUNDARY_CANDIDATE_NOT_QUALIFIED
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+doc443自己的local/original PR/protected merge/new exact-main双门/fresh installed P1与README/doc442/doc443/milestones
+raw/API/exact-Git readback/independent reconciliation/finite closeout全部闭合后，最多使failure boundary成为
+`AUDITED / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP；若前提仍成立，只能从新的exact main、fresh build与新
+Plan/request/session/output identity重建release-preparation recovery successor，不能rerun或回填`8075d613...`的失败。
+`proof_is_not_problem_solving = true`、`local_not_global = true`。
+
 ### R1 GitHub Evidence 0.1.1维护发行准备首次候选与失败边界
 
 PR #503已经把doc441以
