@@ -236,15 +236,17 @@ Core 0.13.0与GitHub Evidence 0.1.1 installed-product P1/P2 formal、六目标ra
 reconciliation与finite closeout全部PASS。因此doc437现在是`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；
 #498 original Workbench失败、公告撤回后的首个stale observation与doc437 first formal lifecycle失败继续保持原identity。
 
-fresh CONTROL LOOP从该exact main重新核对冻结Manifest 0.2合同、当前carrier source与八个live world，得到
-[Manifest 0.2 private implementation feasibility successor审计候选](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)。
-四格语义审计只在内存中投影Manifest 0.2并拒绝六类变异；没有创建Schema、fixture或Manifest product bytes。本文自己的
-完整资格链闭合以前只能记为
-`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FEASIBILITY_SUCCESSOR_AUDIT_CANDIDATE_NOT_QUALIFIED`，
-private implementation仍是
-`NOT_STARTED / NOT_AUTHORIZED`，global composition与R2–R6继续停止。
+fresh CONTROL LOOP从该exact main重新核对冻结Manifest 0.2合同、当前carrier source与八个live world，并使
+[Manifest 0.2 private implementation feasibility successor审计](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)
+完成original PR、protected merge、new exact-main双门、fresh public installed-product readback、independent reconciliation与finite
+closeout；doc447现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。新的
+[Manifest 0.2 private implementation授权发布候选](docs/448-r1-review-derivation-manifest-0-2-private-implementation-authorization-publication.md)
+只条件化发布bounded private Schema/fixture/version dispatch/conformance/projector/consumer/publisher施工权，不创建任何产品字节。该publication
+自己的完整资格链闭合以前，状态是
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED`，private
+implementation仍是`NOT_STARTED / NOT_AUTHORIZED`，global composition与R2–R6继续停止。
 
-**Public Render lifecycle correction source and GitHub Evidence 0.1.1 are frozen. PR #509 independently qualified doc437 as `AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY` without rewriting #498 or the first readback failure. A new docs-only Manifest 0.2 feasibility successor audit is now the only active candidate; it creates no product bytes and grants no implementation, global-composition, or R2–R6 authority.**
+**Public Render lifecycle correction source and GitHub Evidence 0.1.1 are frozen. PR #509 independently qualified doc437 without rewriting #498 or the first readback failure; PR #510 independently qualified the Manifest 0.2 feasibility successor. A new docs-only bounded private implementation authorization publication is now the only active candidate. Until its own last gate closes, no Schema, fixture, Manifest runtime, global-composition, public-Review, or R2–R6 authority exists.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1147,7 +1149,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [GitHub Evidence 0.1.1发行准备资格恢复发布](docs/444-r1-github-evidence-0-1-1-release-preparation-qualification-recovery.md)：保存PR #506已资格化的failure boundary，并条件化发布fresh exact-main recovery的双Python formal、Core-only、candidate asset与pre-tag闭环；自身资格链闭合以前仍不创建tag、Release或公开资产；
 - [GitHub Evidence 0.1.1公开发行与读回事实](docs/445-r1-github-evidence-0-1-1-public-release-readback-facts.md)：记录PR #507闭合后的final asset重建、protected annotated tag、non-Latest Release、四项匿名下载、双Python installed-product lifecycle、独立reconciliation与finite closeout；自身资格链闭合以前不把Release存在偷换成项目状态已冻结；
 - [picomatch公告撤回与Workbench审计恢复读回资格恢复](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)：记录PR #509已以新的public installed-product P1/P2 formal、六目标readback与独立reconciliation使doc437成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；#498与doc437 first formal失败继续保持原identity；
-- [Review Derivation Manifest 0.2 private implementation feasibility successor审计](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)：从doc437资格恢复后的exact main重新核对冻结合同、carrier source与八个live world；当前只发布docs-only feasibility候选，不创建Schema、fixture、Manifest runtime，不授权global composition或R2–R6；
+- [Review Derivation Manifest 0.2 private implementation feasibility successor审计](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)：从doc437资格恢复后的exact main重新核对冻结合同、carrier source与八个live world；PR #510完整资格链闭合后已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，仍不创建Schema、fixture、Manifest runtime或授予后续权力；
+- [Review Derivation Manifest 0.2 private implementation授权发布](docs/448-r1-review-derivation-manifest-0-2-private-implementation-authorization-publication.md)：记录doc447已成为qualified history，并条件化发布bounded A–J private implementation authority；自身完整资格链闭合以前仍是candidate，不创建产品字节或授权global composition、public Review、R2–R6；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
