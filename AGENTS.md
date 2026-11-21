@@ -10447,3 +10447,39 @@ README/doc441/doc442/doc443/doc444/doc445/milestones raw/API/exact-Git readback�
 全部成立后才使`GITHUB_EVIDENCE_0_1_1_RELEASED / GITHUB_EVIDENCE_0_1_1_PUBLIC_READBACK_COMPLETE /
 GITHUB_EVIDENCE_0_1_1_MAINTENANCE_FROZEN`生效。之后必须返回CONTROL LOOP重新审计doc437与下一条最小seam；不得自动恢复
 Manifest 0.2、global composition或启动R2–R6。
+
+### R1 picomatch公告撤回与Workbench审计恢复读回资格恢复
+
+PR #508已把doc445以
+`base=f65b611749fe668c1dbba4d5b972c1221d76bf60 / head=82e5facb8a1aa15d08e297688aeb132a19d2cf57 /
+tree=71e859aaaef307c05f52bd393a271864407dfaff`精确合入
+`main@844385457663dc95fc310a1b961aa6f4ec218d84`。original Public CI `44860527517`、exact-main Public CI
+`44864299522`与Browser Smoke `44864299506`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh first P1
+`coverage=ERROR / facts.commit=null`与old adapter retention `AttributeError`按原identity保留；successor使用新formal identity完成P1、
+七目标raw/API/exact-Git readback、independent reconciliation、62-artifact finite closeout与integrity。因此：
+
+```text
+GITHUB_EVIDENCE_0_1_1_RELEASED
+GITHUB_EVIDENCE_0_1_1_PUBLIC_READBACK_COMPLETE
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_FROZEN
+```
+
+fresh CONTROL LOOP重新核对doc437 first formal、doc440 source freeze、公开0.1.1产品、same lock与primary audit。doc437仍为
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`；后来的source/public PASS不回填其P2 navigation ERROR、45秒后约
+25分钟cleanup block、external containment、无Core Verdict与lower cause `UNKNOWN`。新的docs-only
+[文档446](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)只允许README、AGENTS、
+doc446与milestones四个文件，当前状态为：
+
+```text
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_RECOVERY_MERGED_EXACT_MAIN_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_READBACK_QUALIFICATION_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+doc446必须完成自己的local/original PR/protected merge/new exact-main双门，从公开Core 0.13.0与GitHub Evidence 0.1.1建立
+fresh anonymous installed-product P1/P2 formal，并对README/doc437/doc440/doc445/doc446/milestones各执行唯一raw-byte
+observation，最后完成independent reconciliation与finite closeout。全部成立后只使doc437成为
+`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，不能自动施工Manifest 0.2、恢复global
+composition或启动R2–R6。
