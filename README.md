@@ -209,7 +209,14 @@ formal未启动。底层原因保持`UNKNOWN`，没有rerun、tag、Release或�
 [exact-main formal失败边界](docs/443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)，只保存并
 归层失败；它自己的完整资格链闭合以前不启动recovery successor。
 
-**Public Render lifecycle correction source and the 0.1.1 release/provenance contract are frozen. PR #505 merged the bounded final successor and passed both exact-main public gates, but its fresh installed-product Python 3.10 formal failed because P1 API coverage was ERROR after three NETWORK_ERROR observations; the lower cause remains UNKNOWN. The failure is retained without rerun, and no 0.1.1 tag, Release, public download claim, doc437 recovery, Manifest 0.2 authority, or global composition authority exists yet.**
+PR #506随后使该failure boundary完成original/exact-main双门、fresh installed P1、README/doc442/doc443/milestones
+raw/API/exact-Git readback、独立reconciliation与finite closeout，因此doc443现在是`AUDITED / QUALIFIED_HISTORY`；PR #505的
+formal失败与`underlying_cause=UNKNOWN`保持不变。fresh CONTROL LOOP从新exact main建立
+[发行准备资格恢复发布](docs/444-r1-github-evidence-0-1-1-release-preparation-qualification-recovery.md)：不修改runtime或oracle，
+而是以fresh build、新Plan、两个独立collection session重新完成双Python installed-product formal、Core-only复算、candidate asset与
+pre-tag核账。当前只有docs-only recovery publication candidate；仍无0.1.1 tag、Release或公开资产。
+
+**Public Render lifecycle correction source and the 0.1.1 release/provenance contract are frozen. PR #505's exact-main formal failure remains retained with an UNKNOWN lower cause, while PR #506 qualified that failure boundary as history. A fresh exact-main recovery world has now passed its local dual-Python product/formal, Core-only, candidate-asset, pre-tag, reconciliation, and finite-closeout gates, but its docs-only recovery publication is not yet qualified. No 0.1.1 tag, Release, public download claim, doc437 recovery, Manifest 0.2 authority, or global composition authority exists yet.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1109,6 +1116,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [GitHub Evidence 0.1.1维护发行与P2 provenance对齐合同](docs/441-r1-github-evidence-0-1-1-maintenance-release-and-p2-provenance-contract.md)：从#502已冻结source重新执行CONTROL LOOP，保存P2 implementation provenance仍为0.1.0的发行前缺口，并条件化冻结0.1.1版本/资产/tag/Release/installed-product边界；合同闭合以前不改源码、不创建发行物；
 - [GitHub Evidence 0.1.1维护发行准备候选](docs/442-r1-github-evidence-0-1-1-maintenance-release-preparation-candidate.md)：保存#504 original失败、首个local successor停止事实与final successor的bounded source/product/pre-tag资格边界；不创建tag或Release；
 - [GitHub Evidence 0.1.1发行准备exact-main formal失败边界](docs/443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)：保存PR #505双门通过后Python 3.10 fresh formal的P1三次`NETWORK_ERROR / ERROR`、同session P2 COMPLETE与未执行P3/Core；底层原因保持UNKNOWN，不rerun或修改runtime；
+- [GitHub Evidence 0.1.1发行准备资格恢复发布](docs/444-r1-github-evidence-0-1-1-release-preparation-qualification-recovery.md)：保存PR #506已资格化的failure boundary，并条件化发布fresh exact-main recovery的双Python formal、Core-only、candidate asset与pre-tag闭环；自身资格链闭合以前仍不创建tag、Release或公开资产；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

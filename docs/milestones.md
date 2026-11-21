@@ -11498,3 +11498,41 @@ doc443只有在自己的final-byte local gates、original PR、protected merge�
 raw/API/exact-Git readback、independent reconciliation和finite closeout全部闭合后，才能成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。之后必须返回CONTROL LOOP；recovery successor必须从新的exact main和新的
 formal identity重建，不能覆盖本次失败。
+
+## R1 GitHub Evidence 0.1.1发行准备资格恢复发布候选（2026-11-21）
+
+PR #506以
+`base=8075d61352b8f4719e625b0c48be3b6e941da6d8 / head=265bae9ff190211e9af006586ee6f58a1da78dec /
+tree=f59a27da3fd23203e3d15bbd6efedb12849e31a0`完成original Public CI `44822033360`并精确合入
+`main@3fdfdc25628637eed6d81360d7b2eea81c1ff3d0`。new exact-main Public CI `44828488193`与Browser Smoke
+`44828488313`也均attempt 1 SUCCESS（15/15、1/1）；fresh installed P1、README/doc442/doc443/milestones raw/API/exact-Git
+readback、independent reconciliation与47-artifact finite closeout全部成立。因此doc443现为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，PR #505失败与`underlying_cause=UNKNOWN`保持原状。
+
+fresh recovery从该新exact main重建Core 0.13.0与GitHub Evidence 0.1.1：双Python source矩阵、double build、
+base/sdist/render、blocked-cleanup负链、新Plan与两个独立formal session、P1/P2/P3/Core、plugin uninstall后Core-only复算、
+candidate四资产与pre-tag坐标均PASS。首次anonymous diagnostic CA路径setup failure与其余proof-facility failures全部保留；
+attempt 3 global/local hygiene 8/8 PASS。local qualification、independent reconciliation、223-artifact closeout与post-integrity为：
+
+```text
+afe2f7436dfe1a162de8bac262793f5743701792fd795e85879da5b2733d97ec
+345868d034c8a0b6af8e3bfd548a0e79edd061cdba0983b29edcbe6dd6ebe969
+479c3cea708cf39afa79d3dc89844d89c41627565c0edeb22d7288015d039748
+332206d90f5fa33c1e3903effcc1c898b1c2a1103998f47da9605b42cba44fe5
+```
+
+新的docs-only
+[文档444](444-r1-github-evidence-0-1-1-release-preparation-qualification-recovery.md)只发布该恢复事实，当前状态为：
+
+```text
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_EXACT_MAIN_FORMAL_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_QUALIFICATION_RECOVERY_CANDIDATE_NOT_QUALIFIED
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_NOT_STARTED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+doc444自己的local/original PR/protected merge/new exact-main双门、fresh installed P1与五目标raw readback、independent
+reconciliation和finite closeout全部成立后，才允许从届时新的exact main重建最终四项资产并启动受保护non-Latest publication。
+当前candidate bytes不得复用；tag、Release与public download仍不存在。
