@@ -11581,3 +11581,28 @@ R2_R6_NOT_STARTED
 doc445自己的local/original PR/protected merge/new exact-main双门、fresh installed P1与七目标raw readback、independent reconciliation
 和finite closeout全部成立后，0.1.1才可标记`RELEASED / PUBLIC_READBACK_COMPLETE / MAINTENANCE_FROZEN`。随后仍须返回
 CONTROL LOOP；doc437、Manifest 0.2与global composition不得自动恢复。
+
+## R1 picomatch公告撤回与Workbench审计恢复读回资格恢复候选（2026-11-21）
+
+PR #508以`base=f65b611749fe668c1dbba4d5b972c1221d76bf60 /
+head=82e5facb8a1aa15d08e297688aeb132a19d2cf57 / tree=71e859aaaef307c05f52bd393a271864407dfaff`
+精确合入`main@844385457663dc95fc310a1b961aa6f4ec218d84`。original/exact-main Public CI与Browser Smoke均在
+attempt 1取得15/15、15/15、1/1 SUCCESS。first fresh P1的`coverage=ERROR / facts.commit=null`与old adapter保存failure时的
+`AttributeError`保留；successor以新formal identity完成P1、七目标raw readback、independent reconciliation、62-artifact closeout与
+integrity。因此GitHub Evidence 0.1.1现在是`RELEASED / PUBLIC_READBACK_COMPLETE / MAINTENANCE_FROZEN`。
+
+doc437仍保留PR #498 required audit失败与自己的first formal P2 lifecycle失败，当前为
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`。fresh CONTROL LOOP建立新的docs-only
+[文档446](446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)，要求在新的exact world使用公开
+Core 0.13.0与GitHub Evidence 0.1.1运行fresh P1/P2 formal，并完成六目标raw observation、independent reconciliation与finite
+closeout。当前状态为：
+
+```text
+R1_PICOMATCH_ADVISORY_WITHDRAWAL_WORKBENCH_AUDIT_READBACK_QUALIFICATION_RECOVERY_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+doc446自己的完整资格链闭合后，只允许把doc437升级为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；#498与first
+readback failure保持原identity。之后必须返回CONTROL LOOP，不能自动开始Manifest 0.2、global composition或R2–R6。
