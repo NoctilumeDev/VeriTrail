@@ -224,14 +224,27 @@ fresh anonymous下载、双Python base/sdist/render、normal P2、blocked-cleanu
 PR #508随后使doc445完成original/exact-main双门、fresh P1与七目标raw/API/exact-Git readback、independent
 reconciliation、62-artifact finite closeout与post-closeout integrity。第一次fresh P1的
 `coverage=ERROR / facts.commit=null`和旧adapter保存failure时的`AttributeError`永久保留；successor使用新的formal identity闭合，
-因此`GITHUB_EVIDENCE_0_1_1_RELEASED / PUBLIC_READBACK_COMPLETE / MAINTENANCE_FROZEN`现已生效。fresh
-CONTROL LOOP没有把该public-product事实回填到doc437；它只确认被击穿的P2 lifecycle seam已有独立source freeze和公开0.1.1
-产品坐标。新的
-[doc437读回资格恢复候选](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)
-必须在自己的original PR、protected merge、新exact-main双门以及fresh public 0.1.1 installed-product P1/P2 formal与独立
-reconciliation中重新取得资格；闭合以前doc437仍是`READBACK_NOT_QUALIFIED`，Manifest 0.2与global composition没有授权。
+因此`GITHUB_EVIDENCE_0_1_1_RELEASED / PUBLIC_READBACK_COMPLETE / MAINTENANCE_FROZEN`现已生效。
 
-**Public Render lifecycle correction source and the 0.1.1 release/provenance contract are frozen. PR #505's exact-main formal failure remains retained with an UNKNOWN lower cause, while PR #506 qualified that failure boundary as history, PR #507 qualified the recovery publication, and PR #508 qualified the public-release facts publication. GitHub Evidence 0.1.1 is now `RELEASED / PUBLIC_READBACK_COMPLETE / MAINTENANCE_FROZEN`. A new docs-only publication must still requalify doc437 with fresh public-product P1/P2 evidence; until that chain closes, doc437 remains `READBACK_NOT_QUALIFIED`, and Manifest 0.2 plus global composition authority remain absent.**
+PR #509又把
+[doc437读回资格恢复](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)
+以`base=844385457663dc95fc310a1b961aa6f4ec218d84 / head=2f180b6fba3f0016bc5a060bb9692268a59156cb /
+tree=5647a18ff1322bde7f0a0698ad5b545a257dfafd`精确合入
+`main@0dcfc3ac2728740bd3bf5dc3835ee2dc812ba299`。original Public CI `44873023942`、exact-main Public CI
+`44876605904`与Browser Smoke `44876605956`均为attempt 1 SUCCESS（15/15、15/15、1/1）；fresh public
+Core 0.13.0与GitHub Evidence 0.1.1 installed-product P1/P2 formal、六目标raw-byte observation、independent
+reconciliation与finite closeout全部PASS。因此doc437现在是`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；
+#498 original Workbench失败、公告撤回后的首个stale observation与doc437 first formal lifecycle失败继续保持原identity。
+
+fresh CONTROL LOOP从该exact main重新核对冻结Manifest 0.2合同、当前carrier source与八个live world，得到
+[Manifest 0.2 private implementation feasibility successor审计候选](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)。
+四格语义审计只在内存中投影Manifest 0.2并拒绝六类变异；没有创建Schema、fixture或Manifest product bytes。本文自己的
+完整资格链闭合以前只能记为
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FEASIBILITY_SUCCESSOR_AUDIT_CANDIDATE_NOT_QUALIFIED`，
+private implementation仍是
+`NOT_STARTED / NOT_AUTHORIZED`，global composition与R2–R6继续停止。
+
+**Public Render lifecycle correction source and GitHub Evidence 0.1.1 are frozen. PR #509 independently qualified doc437 as `AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY` without rewriting #498 or the first readback failure. A new docs-only Manifest 0.2 feasibility successor audit is now the only active candidate; it creates no product bytes and grants no implementation, global-composition, or R2–R6 authority.**
 
 **project-state projection 0.7的独立freeze publication已完成全部最后门，当前状态为`FROZEN`。0.6的先前资格主张仍由exact-source反例重开且未冻结。fresh CONTROL LOOP没有把公开投影冻结偷换成完整Review产品已经成立；doc377因fresh milestones Render截断保持未资格化，doc378只成为readback target correction qualified history。PR #431已使[current-state audit successor](docs/379-r1-application-level-unified-review-coverage-output-admission-current-state-audit-successor.md)成为`CURRENT_STATE_AUDITED_SUCCESSOR / QUALIFIED_HISTORY`。PR #432与#433又分别闭合[最小合同0.1](docs/380-r1-application-level-unified-review-coverage-output-admission-contract.md)及其[冻结发布](docs/381-r1-application-level-unified-review-coverage-output-admission-contract-freeze-publication.md)，因此合同现在是`FROZEN`。PR #434随后使[private implementation feasibility audit](docs/382-r1-application-level-unified-review-coverage-output-admission-private-implementation-feasibility-audit.md)成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #435又使[private implementation authorization publication](docs/383-r1-application-level-unified-review-coverage-output-admission-private-implementation-authorization-publication.md)完成全部最后门，因此bounded A–J `PRIVATE_IMPLEMENTATION_ALLOWED`已经生效；这仍不等于实现存在或原工程问题已经解决。首次implementation candidate PR #436的original Public CI在两个Release资产下载路径持续收到HTTP 504后失败，已关闭且未合并；新的[original-gate failure-boundary audit](docs/385-r1-unified-output-admission-implementation-original-gate-failure-boundary-audit.md)只保留并归层该失败，不回填候选资格，也不修改下载恢复oracle。**
 PR #437已把doc385精确合入`main@e3c3281cb00f4bcef54ea9512e49d38064305fe6`；original Public CI与Browser Smoke分别
@@ -1133,7 +1146,8 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [GitHub Evidence 0.1.1发行准备exact-main formal失败边界](docs/443-r1-github-evidence-0-1-1-release-preparation-exact-main-formal-failure-boundary.md)：保存PR #505双门通过后Python 3.10 fresh formal的P1三次`NETWORK_ERROR / ERROR`、同session P2 COMPLETE与未执行P3/Core；底层原因保持UNKNOWN，不rerun或修改runtime；
 - [GitHub Evidence 0.1.1发行准备资格恢复发布](docs/444-r1-github-evidence-0-1-1-release-preparation-qualification-recovery.md)：保存PR #506已资格化的failure boundary，并条件化发布fresh exact-main recovery的双Python formal、Core-only、candidate asset与pre-tag闭环；自身资格链闭合以前仍不创建tag、Release或公开资产；
 - [GitHub Evidence 0.1.1公开发行与读回事实](docs/445-r1-github-evidence-0-1-1-public-release-readback-facts.md)：记录PR #507闭合后的final asset重建、protected annotated tag、non-Latest Release、四项匿名下载、双Python installed-product lifecycle、独立reconciliation与finite closeout；自身资格链闭合以前不把Release存在偷换成项目状态已冻结；
-- [picomatch公告撤回与Workbench审计恢复读回资格恢复](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)：记录PR #508已使GitHub Evidence 0.1.1 public-product状态生效，并要求以新的public installed-product P1/P2 formal恢复doc437自己的读回资格；#498与doc437 first formal失败继续保持原identity，闭合前不授权Manifest 0.2或global composition；
+- [picomatch公告撤回与Workbench审计恢复读回资格恢复](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)：记录PR #509已以新的public installed-product P1/P2 formal、六目标readback与独立reconciliation使doc437成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；#498与doc437 first formal失败继续保持原identity；
+- [Review Derivation Manifest 0.2 private implementation feasibility successor审计](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)：从doc437资格恢复后的exact main重新核对冻结合同、carrier source与八个live world；当前只发布docs-only feasibility候选，不创建Schema、fixture、Manifest runtime，不授权global composition或R2–R6；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
