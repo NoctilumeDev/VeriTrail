@@ -11536,3 +11536,48 @@ R2_R6_NOT_STARTED
 doc444自己的local/original PR/protected merge/new exact-main双门、fresh installed P1与五目标raw readback、independent
 reconciliation和finite closeout全部成立后，才允许从届时新的exact main重建最终四项资产并启动受保护non-Latest publication。
 当前candidate bytes不得复用；tag、Release与public download仍不存在。
+
+## R1 GitHub Evidence 0.1.1公开发行与读回事实发布候选（2026-11-21）
+
+PR #507以`base=3fdfdc25628637eed6d81360d7b2eea81c1ff3d0 /
+head=0275634d393c379cdebda5c45259422c6c7ab9b9 / tree=88d3e2479c4cbe0d213b67f57d48270b294d0b79`
+精确合入`main@f65b611749fe668c1dbba4d5b972c1221d76bf60`。original/exact-main Public CI与Browser Smoke均在
+attempt 1取得15/15、15/15、1/1 SUCCESS；fresh installed P1、五目标raw/API/exact-Git readback、independent reconciliation、
+68-artifact closeout与integrity全部成立。因此doc444已授权从新exact main重建final assets并执行protected publication。
+
+final wheel、sdist、validation summary与checksum没有复用candidate bytes，摘要分别为：
+
+```text
+2f152cf40e3e705ffa9453b64c5446bd4da8e17e6ea7052d792af1349b3366d5
+585306788c522ddfba169e1a19a15dd0f0b715a8c2f00c30b13b24e70a986131
+fd11b64bed8f8c8317545deb1bdd5c09d6f004d0b455261767e3884526e7164e
+603e5ce9e1cc7eadd7d02ccda1d56661f2eea9dec3c1333faa83aeec9b997ff9
+```
+
+ruleset `22613490`核账后，受保护annotated tag `github-evidence-v0.1.1`固定到tag object
+`132a01320fb06f991a6825bb6307ba06d94bd8f8`并解引用到该exact main；non-Latest Release `453384323`已经公开，
+Latest仍为Core `v0.13.0`。fresh anonymous API/四项下载、公开Core wheel、双Python base/sdist/render、normal P2、
+blocked-cleanup negative与uninstall/Core-only矩阵均PASS。downloaded-product matrix、independent reconciliation、271-artifact
+closeout与post-integrity为：
+
+```text
+afe60f39b05ce3bf496a2bedb6166a21477f431ded7e097674e256aba1b881a4
+d0e1a9597da9b08c9abd21d6fbc253482481637cecece96bb7805d1a80b8c995
+792a7df8126f8d5b633109b85aa461d79ce315d4d446f750a3ef4f54c4c6062f
+9c9fde092d3114e35f49c780a111994680ad3c160452c1be93a275386f7924be
+```
+
+全部draft/API/body/anonymous-path/negative-probe/PowerShell/preformal setup failures继续保留且qualification effect为NONE。新的
+[文档445](445-r1-github-evidence-0-1-1-public-release-readback-facts.md)只发布上述事实，当前状态为：
+
+```text
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_EXISTS_READBACK_QUALIFIED_PENDING_STATE_PUBLICATION
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_FACTS_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+doc445自己的local/original PR/protected merge/new exact-main双门、fresh installed P1与七目标raw readback、independent reconciliation
+和finite closeout全部成立后，0.1.1才可标记`RELEASED / PUBLIC_READBACK_COMPLETE / MAINTENANCE_FROZEN`。随后仍须返回
+CONTROL LOOP；doc437、Manifest 0.2与global composition不得自动恢复。

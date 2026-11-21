@@ -10388,3 +10388,62 @@ README/doc442/doc443/doc444/milestones raw/API/exact-Git readback、independent 
 `GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_CANDIDATE_EXACT_MAIN_VERIFIED /
 GITHUB_EVIDENCE_0_1_1_FINAL_ASSET_REBUILD_AND_PROTECTED_PUBLICATION_ALLOWED`生效。当前candidate bytes不得复用为final；
 tag、Release与public download仍未开始，doc437、#498、Manifest 0.2、global composition及R2–R6继续没有授权。
+
+### R1 GitHub Evidence 0.1.1公开发行与读回事实发布
+
+PR #507随后以`base=3fdfdc25628637eed6d81360d7b2eea81c1ff3d0 /
+head=0275634d393c379cdebda5c45259422c6c7ab9b9 / tree=88d3e2479c4cbe0d213b67f57d48270b294d0b79`
+精确合入`main@f65b611749fe668c1dbba4d5b972c1221d76bf60`。original Public CI `44842512006`、exact-main
+Public CI `44847680442`与Browser Smoke `44847680412`均attempt 1 SUCCESS（15/15、15/15、1/1）；fresh installed P1、
+README/doc442/doc443/doc444/milestones raw/API/exact-Git readback、independent reconciliation、68-artifact closeout与
+post-closeout integrity全部PASS。因此：
+
+```text
+GITHUB_EVIDENCE_0_1_1_RELEASE_PREPARATION_CANDIDATE_EXACT_MAIN_VERIFIED
+GITHUB_EVIDENCE_0_1_1_FINAL_ASSET_REBUILD_AND_PROTECTED_PUBLICATION_ALLOWED
+```
+
+从该exact main重新构建的final assets没有复用旧candidate bytes。ruleset `22613490`核账后，先创建受保护annotated tag
+`github-evidence-v0.1.1`（tag object `132a01320fb06f991a6825bb6307ba06d94bd8f8`，peeled commit为该exact main），
+再发布non-Latest Release `453384323`；Latest继续是Core `v0.13.0`。四项公开asset SHA-256为：
+
+```text
+wheel       2f152cf40e3e705ffa9453b64c5446bd4da8e17e6ea7052d792af1349b3366d5
+sdist       585306788c522ddfba169e1a19a15dd0f0b715a8c2f00c30b13b24e70a986131
+summary     fd11b64bed8f8c8317545deb1bdd5c09d6f004d0b455261767e3884526e7164e
+checksum    603e5ce9e1cc7eadd7d02ccda1d56661f2eea9dec3c1333faa83aeec9b997ff9
+```
+
+fresh anonymous API与下载读回逐项匹配；公开Core 0.13.0与插件wheel/sdist在Python 3.10.6/3.13.13中完成
+base、sdist、render、normal public Release P2、blocked-cleanup negative lifecycle与plugin uninstall/Core-only矩阵。两个normal
+P2 facts digest均为`ea6c5f5a6af5f097cdf9a3525ed86631d849fb485321c5db503cfc210b6606fc`；两个negative均bounded
+return、driver terminal、zero residue。downloaded-product matrix、independent reconciliation、271-artifact closeout与integrity为：
+
+```text
+afe60f39b05ce3bf496a2bedb6166a21477f431ded7e097674e256aba1b881a4
+d0e1a9597da9b08c9abd21d6fbc253482481637cecece96bb7805d1a80b8c995
+792a7df8126f8d5b633109b85aa461d79ce315d4d446f750a3ef4f54c4c6062f
+9c9fde092d3114e35f49c780a111994680ad3c160452c1be93a275386f7924be
+```
+
+draft endpoint 404、unsupported `gh` field、body newline comparison、draft/published URL comparison、anonymous summary路径、
+negative attempt 1/v2、PowerShell syntax与tree revision setup errors以及preformal reconciliation finding均按原identity保留。
+successor没有重新下载已有PASS、没有重传asset或重发Release；这些non-success的qualification effect均为NONE。
+
+fresh CONTROL LOOP现建立
+[文档445](docs/445-r1-github-evidence-0-1-1-public-release-readback-facts.md)，只允许README、AGENTS、doc445与milestones
+四个docs-only文件。当前只能声明：
+
+```text
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_EXISTS_READBACK_QUALIFIED_PENDING_STATE_PUBLICATION
+GITHUB_EVIDENCE_0_1_1_PUBLIC_RELEASE_FACTS_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R2_R6_NOT_STARTED
+```
+
+doc445必须完成自己的local/original PR/protected merge/new exact-main双门、fresh installed P1与
+README/doc441/doc442/doc443/doc444/doc445/milestones raw/API/exact-Git readback、independent reconciliation和finite closeout。
+全部成立后才使`GITHUB_EVIDENCE_0_1_1_RELEASED / GITHUB_EVIDENCE_0_1_1_PUBLIC_READBACK_COMPLETE /
+GITHUB_EVIDENCE_0_1_1_MAINTENANCE_FROZEN`生效。之后必须返回CONTROL LOOP重新审计doc437与下一条最小seam；不得自动恢复
+Manifest 0.2、global composition或启动R2–R6。
