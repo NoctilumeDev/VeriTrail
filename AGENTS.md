@@ -10582,3 +10582,36 @@ Public CI 15/15与Browser Smoke 1/1、fresh public installed-product P1/P2 forma
 milestones unique raw-byte readback、independent reconciliation与finite closeout。全部成立后才使
 `R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED`生效，同时implementation仍为`NOT_STARTED`；随后必须返回
 CONTROL LOOP，不能自动恢复global composition、启动public Review或R2–R6。
+
+### R1 Review Derivation Manifest 0.2 original Public CI budget failure boundary
+
+PR #511已把doc448精确合入`main@50819b8ab16800a415439285dc9fcf909d5b435a`；original Public CI
+`44905508551`、exact-main Public CI `44909682401`与Browser Smoke `44909682395`均attempt 1 SUCCESS（15/15、15/15、1/1），
+fresh installed-product formal、七目标readback、independent reconciliation与finite closeout全部成立。因此bounded
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。
+
+后继PR #512绑定`base=50819b8ab16800a415439285dc9fcf909d5b435a / head=a9c60eea76aad5e0801e76be639dc620388ce492 /
+tree=04629a631652ac5a75faf42b313a5d64bd2b9563`，1 commit / 11 files。其local final candidate四格矩阵曾PASS，但original
+Public CI `44969144404` attempt 1中Python 3.10 normal job `137044844539`与optimized job `137044844604`都在45分钟
+outer budget处收到`KeyboardInterrupt / The operation was canceled.`；check-run annotation均为
+`The job has exceeded the maximum execution time of 45m0s`。两个Python 3.13 cells SUCCESS，required Python aggregators仍按设计
+FAILURE，其余下游SKIPPED。run终态CANCELLED，PR已关闭、未合并、未rerun；candidate product result与lower slowdown cause保持
+`NOT_ESTABLISHED / UNKNOWN`。
+
+fresh CONTROL LOOP现建立docs-only
+[文档450](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)，只允许README、AGENTS、doc450与
+milestones。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_PR512_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_ORIGINAL_PUBLIC_CI_BUDGET_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc450必须完成自己的local/original PR/protected merge/new exact-main双门、fresh README/doc450/milestones readback、AGENTS raw-byte
+observation、independent reconciliation与finite closeout，才最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回
+CONTROL LOOP重新比较test topology、candidate runtime/test成本与恢复余量；本文不预选提高timeout、拆分suite、优化测试或runtime中的
+任一方案。任何后继修正与implementation successor都必须从新的exact main独立资格化，不回填PR #512。

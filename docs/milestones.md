@@ -11666,3 +11666,31 @@ doc448只条件化发布Schema 0.2、compatibility fixture、exact-version dispa
 exact-main双门、fresh anonymous installed-product readback、independent reconciliation与finite closeout全部成立后，才使
 `R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED`生效，同时implementation仍为`NOT_STARTED`。随后必须返回
 CONTROL LOOP，不能自动恢复global composition、启动public Review或R2–R6。
+
+## R1 Review Derivation Manifest 0.2 original CI budget failure boundary（2026-11-22）
+
+PR #511已使doc448完成original/exact-main双门、fresh installed-product readback、independent reconciliation与finite closeout，
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。后继PR #512绑定
+`base=50819b8ab16800a415439285dc9fcf909d5b435a / head=a9c60eea76aad5e0801e76be639dc620388ce492 /
+tree=04629a631652ac5a75faf42b313a5d64bd2b9563`，本地final candidate四格witness曾PASS。
+
+但original Public CI `44969144404` attempt 1在Python 3.10 normal/optimized两个独立Review Attention jobs中都触及配置的
+45分钟上限。两个check-run明确记录`The job has exceeded the maximum execution time of 45m0s`，测试在不同位置收到
+`KeyboardInterrupt`后被取消；没有完成的`Ran N tests / OK / FAILED`摘要。Python 3.13两格SUCCESS，required aggregators仍真实
+FAILURE，其余下游SKIPPED。PR #512已关闭、未合并、未rerun；product regression未建立，lower slowdown cause保持`UNKNOWN`。
+
+新的docs-only
+[文档450](450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)当前只能声明：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_PR512_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_ORIGINAL_PUBLIC_CI_BUDGET_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc450只保存失败边界，不修改workflow/runtime/tests/Schema/fixture/oracle。其完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，才能判断最小合法修正。后继PASS不能回填
+PR #512，Manifest implementation successor也必须从修正后的新exact main独立重建。
