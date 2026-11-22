@@ -11722,3 +11722,30 @@ R2_R6_NOT_STARTED
 doc451不修改workflow/runtime/tests/Schema/fixture/oracle。自己的完整资格链闭合后最多成为
 `RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，另建独立docs-only correction
 publication。该publication资格化以前不得重建Manifest implementation successor，后继PASS也不能回填PR #512。
+
+## R1 Review Derivation Manifest 0.2测试支撑构造拓扑修正发布候选（2026-11-22）
+
+PR #514已把doc451精确合入`main@68cfba79009671adce59b66e366db95f3a9aa2f6`；original/exact-main Public CI与
+Browser Smoke均在attempt 1取得15/15、15/15、1/1 SUCCESS。第一次fresh readback把832401-byte milestones错误放入bounded
+Public Render target集合，得到`PARTIAL / CONTENT_TRUNCATED`并按83-artifact closeout永久保留。fresh successor把
+README/doc450/doc451保留为Render目标，把AGENTS/milestones预注册为raw/API/exact-Git byte目标；三项formal Render与两项raw
+observation各唯一PASS。independent reconciliation、123-artifact finite closeout和integrity分别为
+`fc128185c71a474ac007cba57c213b743f6516b86a9647ab58d72186906b53ef`、
+`0e19553b634f259cd228fada1ec1262481ca5b98fe864be87872ee5e3664deef`与
+`334430c6ce8264cf206331f38183d355957ba70db835be66024b95536f51e64c`。因此doc451现在是
+`RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED / QUALIFIED_HISTORY`；PR #512及全部readback/reconciliation non-success保持原identity。
+
+新的docs-only
+[文档452](452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)当前只能声明：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_REBUILD_NOT_AUTHORIZED_BY_CORRECTION_PUBLICATION
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc452只条件化冻结candidate-only test按需构造所选world的边界；45分钟workflow、21个test identities、全部assertion/subTest、
+完整八world主测试与runtime/Schema/fixture/oracle不变。自己的完整资格链闭合后才使correction生效；随后必须返回CONTROL LOOP，
+从新的exact main重建implementation successor。不得把doc451审计PASS直接解释成runtime施工已经恢复。

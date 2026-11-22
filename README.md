@@ -18,10 +18,12 @@ AI说任务完成了。**但是，凭什么相信？**
 当前R1边界：PR #511已经使Manifest 0.2 bounded private implementation authority生效；后继PR #512的original Public CI
 `44969144404` attempt 1中，两个Python 3.10 Review Attention cells都在45分钟上限处`CANCELLED`，PR已关闭、未合并、
 未rerun。[failure-boundary audit](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)已完成独立资格链并保留
-该失败历史。新的[测试支撑拓扑恢复审计](docs/451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)
-把新增21个plugin tests中的重复四world构造定位为可机械消除的test-support成本；不可资格化原型保持全部测试名、断言与八world
-denominator，3.10 normal从722.14秒降到284.27秒。本文仍是candidate，不修改timeout/runtime/oracle，也不恢复global composition或
-启动public Review/R2–R6。
+该失败历史。[测试支撑拓扑恢复审计](docs/451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)
+已经通过PR #514、exact-main双门、fresh successor readback与独立reconciliation成为qualified history；第一次把超大milestones
+错误预注册为bounded Render target而得到`PARTIAL / CONTENT_TRUNCATED`的readback world仍单独保留。新的
+[测试支撑构造拓扑修正发布](docs/452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)
+只条件化冻结“按需构造被测试消费的world”这一后继边界，保持45分钟、21个测试、全部断言、八world denominator及
+runtime/Schema/fixture/oracle不变。该publication仍是candidate，不恢复global composition或启动public Review/R2–R6。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
@@ -1161,6 +1163,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Review Derivation Manifest 0.2 private implementation授权发布](docs/448-r1-review-derivation-manifest-0-2-private-implementation-authorization-publication.md)：记录doc447已成为qualified history，并条件化发布bounded A–J private implementation authority；自身完整资格链闭合以前仍是candidate，不创建产品字节或授权global composition、public Review、R2–R6；
 - [Review Derivation Manifest 0.2 original CI budget failure boundary](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)：保存PR #512两个Python 3.10 cells在45分钟outer budget处被取消、required aggregators fail closed与关闭未合并identity；不重跑、不修改workflow/runtime/tests，也不预选后继修正；
 - [Review Derivation Manifest 0.2 CI预算恢复测试支撑拓扑审计](docs/451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)：在doc450资格化后比较original job steps、逐测试成本与不可资格化原型，选择只消除candidate test未消费world的最小后继边界；不提高timeout、不改runtime/Schema/oracle，也不直接授权implementation successor；
+- [Review Derivation Manifest 0.2测试支撑构造拓扑修正发布](docs/452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)：在doc451资格化后条件化冻结candidate-only test按需构造world的唯一修正边界；不删除测试、不缩小八world denominator、不改变workflow/runtime/Schema/fixture/oracle；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
