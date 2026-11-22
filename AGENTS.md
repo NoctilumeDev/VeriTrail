@@ -10777,3 +10777,30 @@ doc454自己的local/original PR/protected merge/new exact-main双门、fresh in
 closeout全部成立后，才使`R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_FROZEN`生效。随后必须返回
 CONTROL LOOP，从新的exact main重建Manifest 0.2 implementation successor；不得复用旧候选qualification、恢复global composition
 或启动public Review/R2–R6。R1完成后的human+AI全项目检查仍是独立后续目标。
+
+### R1 Review Derivation Manifest 0.2 private implementation successor v2候选
+
+PR #518已经把doc454精确合入`main@9d2a76e6edb3237946dd56806602a894fc70e028`；original Public CI
+`45050642889`、exact-main Public CI `45054044651`与Browser Smoke `45054044645`均为attempt 1 SUCCESS。fresh
+README/doc453/doc454 Render和AGENTS/milestones raw-byte readback、independent reconciliation与154-artifact finite closeout全部闭合，
+因此SourceSnapshot test-environment correction已经`FROZEN`。README第一次diagnostic因marker在bounded Render窗口外得到marker=0，
+该non-qualifying identity继续保留，后继formal没有覆盖它。
+
+fresh CONTROL LOOP从该exact main重建[文档455](docs/455-r1-review-derivation-manifest-0-2-private-implementation-successor-v2-candidate.md)
+及其Manifest 0.2 candidate bytes。candidate只认doc448 bounded A–J、doc452按需world构造与doc454已冻结环境修正；旧#512
+`CANCELLED`、旧pre-commit successor四格setup failure和全部`UNKNOWN`均不续期。当前只允许：
+
+```text
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_V2_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+四格focused各26/26、root payload各27/27；full Review Attention四格各715 reported，3.10为712 passed/3 skipped，
+3.13为713 passed/2 skipped。compile attempt1因长`PYTHONPYCACHEPREFIX`临时路径无法创建而四格setup失败并保留，平坦
+evidence-owned output的versioned attempt2四格PASS。上述都只是local witness；文档455自己的original PR、受保护精确合并、
+new exact-main双门、fresh installed-product readback与独立reconciliation全部闭合以前，不得写成qualified或frozen。闭合后仍须返回
+CONTROL LOOP建立独立docs-only freeze publication，不能直接恢复global composition、public Review、persistence或R2–R6。
