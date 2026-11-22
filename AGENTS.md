@@ -10615,3 +10615,37 @@ doc450必须完成自己的local/original PR/protected merge/new exact-main双�
 observation、independent reconciliation与finite closeout，才最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。随后必须返回
 CONTROL LOOP重新比较test topology、candidate runtime/test成本与恢复余量；本文不预选提高timeout、拆分suite、优化测试或runtime中的
 任一方案。任何后继修正与implementation successor都必须从新的exact main独立资格化，不回填PR #512。
+
+### R1 Review Derivation Manifest 0.2 CI预算恢复测试支撑拓扑审计候选
+
+PR #513已把doc450精确合入`main@dd734631a335b075aaef534c539177f1d9204e5d`；original Public CI
+`44974179853`、exact-main Public CI `44977819504`与Browser Smoke `44977819583`均attempt 1 SUCCESS（15/15、15/15、1/1）。
+fresh installed-product README/doc450/milestones formal、AGENTS/milestones raw-byte observation、independent reconciliation、
+97-artifact finite closeout与integrity全部成立。因此doc450现在是`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；PR #512仍为
+closed/unmerged/CANCELLED/not qualified/not frozen/no-rerun。
+
+fresh CONTROL LOOP比较原run step、当前workflow、失败候选本地矩阵和逐测试成本。两个3.10 original test steps分别在2626秒与
+2625秒后被45分钟outer budget取消；新增Manifest plugin tests的3.10 normal逐项诊断为21/21 PASS、722.135202秒。多数falsifier
+只取`_normal_worlds()[0]`或`[1]`，helper却每次构造四个完整world。独立不可资格化原型只按需构造所选world，保持21个test names、
+全部assertion/subTest与完整八world主测试；3.10 normal/`-O`仍21/21 PASS，分别为284.273858秒与281.004309秒。AST equivalence和
+timing probe summary SHA-256为`be4a412f073152c188d043aeaa7d922ce22a80a0441bb543bdd0a212cc8cb9e4`。
+
+新的docs-only
+[文档451](docs/451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)只允许README、AGENTS、
+doc451与milestones。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_PR512_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_ORIGINAL_PUBLIC_CI_BUDGET_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_REVIEW_DERIVATION_MANIFEST_0_2_CI_BUDGET_RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc451自己的local/original PR/protected merge/new exact-main双门、fresh README/doc450/doc451/milestones formal、AGENTS raw-byte
+observation、independent reconciliation与finite closeout全部成立后，最多成为
+`RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，另建独立docs-only test-support
+construction-topology correction publication；在该publication资格化以前不得重建Manifest implementation successor。不得提高timeout、
+拆分suite、修改runtime/Schema/fixture、删除测试、缩小八world denominator、恢复global composition或启动public Review/R2–R6。
