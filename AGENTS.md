@@ -10693,3 +10693,56 @@ installed-product readback、independent reconciliation与finite closeout全部�
 `R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_FROZEN`生效。随后必须返回CONTROL LOOP，
 从新的exact main独立重建implementation successor；不得复用PR #512 qualification、提高timeout、恢复global composition或启动
 public Review/R2–R6。
+
+### R1 SourceSnapshot 测试环境模拟机制反例与最小修正发布候选
+
+PR #515已经把doc452精确合入`main@2a078fc69be89ca38b733c80700ccc98fc0b0576`，tree
+`ce725f3c8efc01477fb045ee0b04b972e6cdaadb`；original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS，fresh
+successor readback与独立reconciliation也已经闭合。因此
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_FROZEN`已经生效。
+
+从该exact main重建的Manifest 0.2 implementation successor在formal full Review Attention matrix attempt 1四格中全部失败；
+每格的Manifest tests没有产品断言失败，而`test_source_snapshot_runtime`各有20个repo setup error。3.10 normal独立serial v2仍
+复现20个错误，control loop随即取消已启动的3.10 `-O`并没有启动3.13两格；候选在提交前停止，没有PR、没有original gate、
+没有rerun或PASS回填。formal summary、serial log、cancellation与failure-boundary SHA-256为：
+
+```text
+ff640a3e1ceb4595170cf895fc582f5ba99d474b9858c10057373834074a9593
+df7f0ac8529aa09dab63b1526d8aa5c564b503d367fd5279a4ff2a276169305a
+4cc93618a5b7a4b131480fd6e7b92deb4265fc855402db146d2ee46eee1c6e1f
+eb9ca12f320fd6eb273cdd146c70f3aca1675c0753cb836875a1245045e3c9a2
+```
+
+非资格诊断证明SourceSnapshot runtime单模块四格PASS，Manifest后接runtime同进程46/46 PASS；只有
+`test_source_snapshot_contracts`后接runtime时稳定得到：
+
+```text
+error: missing config value GIT_CONFIG_VALUE_0
+fatal: unable to parse command-line config
+```
+
+既有`mock.patch.dict(os.environ, inherited, clear=False)`稳定复现该失败；只把
+`veritrail_review.git_objects.os.environ`临时替换为独立Python mapping时，blocked/safe-value断言完全相同且后继真实
+`git init`成功。该反例归层为`TEST_SUPPORT_ENVIRONMENT_PATCH_MECHANISM`，不建立SourceSnapshot或Manifest产品缺陷。
+
+新的docs-only
+[文档453](docs/453-r1-source-snapshot-test-environment-patch-correction-publication.md)只允许README、AGENTS、doc453与
+milestones。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_STOPPED_PRE_COMMIT_FULL_MATRIX_FAILED_NOT_QUALIFIED
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc453只条件化授权后继独立候选把
+`plugins/review-attention/tests/test_source_snapshot_contracts.py`中的环境模拟改为独立Python mapping，并增加同进程真实
+`git init`连续性证明；runtime、workflow、Schema、fixture、oracle、Manifest产品与其测试denominator全部不变。自己的
+local/original PR/protected merge/new exact-main双门、fresh installed-product readback、independent reconciliation与finite
+closeout全部成立后，才使`R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_ALLOWED`生效。随后必须返回CONTROL LOOP，
+从新的exact main另建并资格化该单文件修正；修正闭合后仍须再次返回CONTROL LOOP重建Manifest successor，不得恢复global
+composition或启动public Review/R2–R6。

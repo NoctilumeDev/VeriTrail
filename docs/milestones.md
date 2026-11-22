@@ -11749,3 +11749,42 @@ R2_R6_NOT_STARTED
 doc452只条件化冻结candidate-only test按需构造所选world的边界；45分钟workflow、21个test identities、全部assertion/subTest、
 完整八world主测试与runtime/Schema/fixture/oracle不变。自己的完整资格链闭合后才使correction生效；随后必须返回CONTROL LOOP，
 从新的exact main重建implementation successor。不得把doc451审计PASS直接解释成runtime施工已经恢复。
+
+## R1 SourceSnapshot 测试环境模拟机制反例与最小修正发布候选（2026-11-22）
+
+PR #515已经使doc452完成original/exact-main双门、fresh installed-product readback、independent reconciliation与finite
+closeout；因此candidate-only world按需构造边界已`FROZEN`。新的Manifest 0.2 successor从
+`main@2a078fc69be89ca38b733c80700ccc98fc0b0576`重建，focused与root/payload四格都PASS，但formal full Review
+Attention matrix attempt 1四格均由`test_source_snapshot_runtime`的20个repo setup errors失败。3.10 normal serial v2仍复现，
+control loop随后取消余下cell；候选在提交前停止，未创建PR或original gate，失败没有被重跑或改写。
+
+非资格诊断证明SourceSnapshot runtime单模块四格PASS、Manifest后接runtime同进程46/46 PASS；只有contracts后接runtime
+稳定得到`missing config value GIT_CONFIG_VALUE_0`。原`mock.patch.dict(os.environ, ...)`稳定复现，同语义的独立module
+environment mapping保持断言且使后继真实`git init`成功。formal summary、serial log、cancellation、failure boundary与patch
+boundary diagnostic SHA-256为：
+
+```text
+ff640a3e1ceb4595170cf895fc582f5ba99d474b9858c10057373834074a9593
+df7f0ac8529aa09dab63b1526d8aa5c564b503d367fd5279a4ff2a276169305a
+4cc93618a5b7a4b131480fd6e7b92deb4265fc855402db146d2ee46eee1c6e1f
+eb9ca12f320fd6eb273cdd146c70f3aca1675c0753cb836875a1245045e3c9a2
+34a6a04b70565283ae5e935ceee90f08c19207ac23fd23c9aef3e71ffdb82547
+```
+
+新的docs-only
+[文档453](453-r1-source-snapshot-test-environment-patch-correction-publication.md)当前只能声明：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_STOPPED_PRE_COMMIT_FULL_MATRIX_FAILED_NOT_QUALIFIED
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_NOT_STARTED_NOT_AUTHORIZED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc453只条件化授权独立后继修改`test_source_snapshot_contracts.py`的环境模拟机制，并增加同进程真实`git init`
+连续性证明；runtime、workflow、Schema、fixture、oracle与Manifest产品不变。自己的完整资格链闭合后才使correction
+`ALLOWED`；随后必须返回CONTROL LOOP另建并资格化单文件test-support correction。该修正完成后仍须返回CONTROL LOOP，
+从新的exact main重建Manifest successor。
