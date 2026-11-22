@@ -11788,3 +11788,36 @@ doc453只条件化授权独立后继修改`test_source_snapshot_contracts.py`的
 连续性证明；runtime、workflow、Schema、fixture、oracle与Manifest产品不变。自己的完整资格链闭合后才使correction
 `ALLOWED`；随后必须返回CONTROL LOOP另建并资格化单文件test-support correction。该修正完成后仍须返回CONTROL LOOP，
 从新的exact main重建Manifest successor。
+
+### R1 SourceSnapshot 测试环境模拟修正实现冻结发布候选
+
+PR #516已经使doc453的授权发布完整闭合。PR #517随后把单文件修正以
+`base=6668b45403b885d30ffe52cfc17ad1cb25ae1518 / head=fa8d688baa41724373e96333e4e2511e5b070af3 /
+tree=80a9d812e3d967bae851cb3e22c41aec10f09d78`精确合入`main@72b9936c4cd2c0463401a19fc629babed5068a27`。
+original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；fresh README/doc452/doc453 Render和AGENTS/milestones raw-byte
+readback各有唯一PASS。README gate-schema setup error、doc452 observation1匿名额度耗尽`ERROR / UNKNOWN`与旧Manifest候选失败全部保留。
+
+independent reconciliation、163-artifact finite closeout与post-integrity SHA-256为：
+
+```text
+39dc58d48e6ca48c423bb7e3e7cb614f6d5b65131b98552384dff953488b38c2
+1e181cc6bcb418a9b6c934172c0f1118c5731c31257e3a357e13cf1301979fb7
+d69b118f157aa467a0e911393349b777c8be7a6b9168de9c3a42f42f2f3f7a8c
+```
+
+新的docs-only
+[文档454](454-r1-source-snapshot-test-environment-correction-implementation-freeze-publication.md)当前只允许：
+
+```text
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_ALLOWED
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_STOPPED_PRE_COMMIT_FULL_MATRIX_FAILED_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc454只发布同一单文件实现的条件化`FROZEN`状态，不增加runtime、workflow、Schema、fixture、oracle或Manifest产品字节。
+自己的完整资格链闭合后必须返回CONTROL LOOP，从新的exact main重建Manifest 0.2 successor；不得复用旧候选资格或越过
+global composition/public Review/R2–R6停止线。
