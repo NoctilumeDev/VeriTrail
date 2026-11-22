@@ -11821,3 +11821,28 @@ R2_R6_NOT_STARTED
 doc454只发布同一单文件实现的条件化`FROZEN`状态，不增加runtime、workflow、Schema、fixture、oracle或Manifest产品字节。
 自己的完整资格链闭合后必须返回CONTROL LOOP，从新的exact main重建Manifest 0.2 successor；不得复用旧候选资格或越过
 global composition/public Review/R2–R6停止线。
+
+## R1 Review Derivation Manifest 0.2 Core regression binding failure boundary（2026-11-23）
+
+PR #518已使doc454完整资格化。PR #519随后从`main@9d2a76e6edb3237946dd56806602a894fc70e028`建立Manifest 0.2
+implementation successor v2，head `f5eff36f3a0d37a97b0d0d1e8a39f64cce76d2d6`，tree
+`36620b3471acb72a224321af83d2ee5496697380`，1 commit / 11 files。四个Review Attention jobs、Workbench与E3均SUCCESS，
+但original Public CI `45068502183` attempt 1的required Python 3.10/3.13 jobs各在509项Core regression中出现同一个失败：
+RAE-016/017 test仍精确要求Schema目录只有Manifest 0.1，拒绝了doc316已冻结的独立versioned Manifest 0.2 Schema。后继四门
+SKIPPED；PR #519已关闭、未合并、未rerun。
+
+0.1 historical byte guard继续存在且PR #519未修改0.1；当前证据只建立candidate scope completeness / versioned schema set
+acceptance binding失败，不建立Manifest 0.2产品算法缺陷。新的docs-only
+[文档456](456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)当前只能声明：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PR519_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PR519_CORE_REGRESSION_BINDING_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc456只保存失败边界，不修改runtime/tests/Schema/fixture/workflow/oracle。自己的完整资格链闭合后最多成为
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，另行审计并发布最小test-support correction边界。
+后继PASS不得回填PR #519，也不得直接恢复global composition或启动public Review/R2–R6。

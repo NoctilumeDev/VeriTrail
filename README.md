@@ -1168,6 +1168,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Review Derivation Manifest 0.2测试支撑构造拓扑修正发布](docs/452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)：在doc451资格化后条件化冻结candidate-only test按需构造world的唯一修正边界；不删除测试、不缩小八world denominator、不改变workflow/runtime/Schema/fixture/oracle；
 - [SourceSnapshot测试环境模拟机制反例与最小修正发布](docs/453-r1-source-snapshot-test-environment-patch-correction-publication.md)：保存Manifest successor full matrix四格与serial v2的真实`git init`失败，归层既有合同测试对Windows进程环境的恢复交互，并条件化授权只替换该环境模拟机制；不修改runtime、workflow、Schema、fixture、oracle或Manifest产品字节；
 - [SourceSnapshot测试环境模拟修正实现冻结发布](docs/454-r1-source-snapshot-test-environment-correction-implementation-freeze-publication.md)：记录PR #517单文件实现的local/original/exact-main双门、fresh readback与独立reconciliation已经成立，并条件化发布同一实现的`FROZEN`状态；publication本身不增加产品字节或Manifest/global composition/public Review/R2–R6 authority；
+- [Review Derivation Manifest 0.2 Core regression binding failure boundary](docs/456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)：保存PR #519两套required Python Core regression因RAE-017仍假设Schema目录永远只有0.1而失败、四个downstream门SKIPPED与关闭未合并identity；不重跑、不修改测试或产品，并把最小重开边界限制为versioned schema set acceptance binding；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

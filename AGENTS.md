@@ -10777,3 +10777,45 @@ doc454自己的local/original PR/protected merge/new exact-main双门、fresh in
 closeout全部成立后，才使`R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_FROZEN`生效。随后必须返回
 CONTROL LOOP，从新的exact main重建Manifest 0.2 implementation successor；不得复用旧候选qualification、恢复global composition
 或启动public Review/R2–R6。R1完成后的human+AI全项目检查仍是独立后续目标。
+
+### R1 Review Derivation Manifest 0.2 Core regression binding失败边界候选
+
+PR #518已使doc454完整资格化，`R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_FROZEN`生效。
+后继PR #519绑定`base=9d2a76e6edb3237946dd56806602a894fc70e028 / head=f5eff36f3a0d37a97b0d0d1e8a39f64cce76d2d6 /
+tree=36620b3471acb72a224321af83d2ee5496697380`，1 commit / 11 files。其四个Review Attention jobs、Workbench与E3均
+SUCCESS；Python 3.10 `-O`在43m31s内完成，没有重现PR #512 budget cancellation。
+
+original Public CI `45068502183` attempt 1随后在required Python 3.10 job `137362752919`与Python 3.13 job
+`137362752917`中重现同一个Core regression失败：
+
+```text
+test_rae_016_017_identity_is_acyclic_and_manifest_topology_is_unchanged
+actual   = manifest 0.1 + versioned manifest 0.2 schemas
+expected = manifest 0.1 schema only
+```
+
+两格各为509项中1 failure / 1 skipped，后继Acceptance Core、GitHub Evidence、Core wheel-only与Starter jobs全部SKIPPED。
+PR #519已关闭、未合并、未rerun；local PASS、六个前置SUCCESS与后继任何PASS均不得回填required gate FAILURE。
+
+fresh CONTROL LOOP核对doc183的`RAE-017`与doc316冻结合同：旧义务保护Manifest 0.1 bytes并禁止把8-file topology静默改成
+9-file shortcut；doc316另行明确授权独立`review-derivation-manifest-0.2.schema.json`。0.1 SHA guard仍存在且PR #519未修改0.1，
+因此当前反例归层为candidate scope completeness / versioned schema set Core acceptance binding；Manifest 0.2产品算法缺陷未建立。
+
+新的docs-only
+[文档456](docs/456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)只允许README、AGENTS、doc456与
+milestones。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_SOURCE_SNAPSHOT_TEST_ENVIRONMENT_PATCH_CORRECTION_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PR519_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_FAILED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PR519_CORE_REGRESSION_BINDING_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc456自己的local/original PR/protected merge/new exact-main双门、fresh README/doc454/doc456 Render、AGENTS/milestones raw-byte
+observation、independent reconciliation与finite closeout全部成立后，最多成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`。
+随后必须返回CONTROL LOOP，独立审计RAE-017 historical 0.1 guard与doc316 versioned roster的最小test-support表达；本文不授权直接
+修改测试、重建Manifest successor、恢复global composition或启动public Review/R2–R6。
