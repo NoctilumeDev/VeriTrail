@@ -11694,3 +11694,31 @@ R2_R6_NOT_STARTED
 doc450只保存失败边界，不修改workflow/runtime/tests/Schema/fixture/oracle。其完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，才能判断最小合法修正。后继PASS不能回填
 PR #512，Manifest implementation successor也必须从修正后的新exact main独立重建。
+
+## R1 Review Derivation Manifest 0.2 CI预算恢复测试支撑拓扑审计候选（2026-11-22）
+
+PR #513已使doc450完成original/exact-main双门、fresh installed-product readback、independent reconciliation与finite closeout；
+doc450现在是`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，而PR #512的CANCELLED、closed/unmerged/no-rerun identity保持不变。
+
+fresh CONTROL LOOP证明两个3.10 original test steps分别在2626秒与2625秒后触及45分钟outer budget；失败候选新增的21个
+Manifest plugin tests在3.10 normal本地逐测试诊断中PASS但耗时722.135202秒。candidate-only helper为多数只需要一个world的
+falsifier先构造四个完整world。独立不可资格化原型只把该helper改为按需构造，保持21个test names、全部assertion/subTest和
+完整八world主测试；3.10 normal/`-O`仍21/21 PASS，分别为284.273858秒与281.004309秒。probe summary为
+`be4a412f073152c188d043aeaa7d922ce22a80a0441bb543bdd0a212cc8cb9e4`。
+
+新的docs-only
+[文档451](451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)当前只能声明：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_PR512_CLOSED_UNMERGED_ORIGINAL_PUBLIC_CI_CANCELLED_NOT_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_ORIGINAL_PUBLIC_CI_BUDGET_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_REVIEW_DERIVATION_MANIFEST_0_2_CI_BUDGET_RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc451不修改workflow/runtime/tests/Schema/fixture/oracle。自己的完整资格链闭合后最多成为
+`RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，另建独立docs-only correction
+publication。该publication资格化以前不得重建Manifest implementation successor，后继PASS也不能回填PR #512。
