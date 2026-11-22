@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -23,8 +25,8 @@ from veritrail_review.contracts import (
     validate_source_snapshot_spec,
 )
 from veritrail_review.errors import SourceSnapshotError, SourceSnapshotFailureCode
+from veritrail_review import git_objects
 from veritrail_review.git_objects import (
-    _controlled_git_environment,
     verify_git_object_bytes,
 )
 
@@ -154,13 +156,25 @@ class SourceSnapshotContractTests(unittest.TestCase):
             "GIT_CONFIG_KEY_0": "url.bad.insteadOf",
             "GIT_CONFIG_VALUE_0": "https://example.invalid/",
         }
-        with mock.patch.dict(os.environ, inherited, clear=False):
-            controlled = _controlled_git_environment()
+        original_environment = os.environ
+        isolated_environment = {**os.environ, **inherited}
+        with mock.patch.object(git_objects.os, "environ", isolated_environment):
+            controlled = git_objects._controlled_git_environment()
         for key in inherited:
             self.assertNotIn(key, controlled)
         self.assertEqual(controlled["GIT_NO_REPLACE_OBJECTS"], "1")
         self.assertEqual(controlled["GIT_NO_LAZY_FETCH"], "1")
         self.assertEqual(controlled["GIT_OPTIONAL_LOCKS"], "0")
+        self.assertIs(os.environ, original_environment)
+        with tempfile.TemporaryDirectory() as directory:
+            completed = subprocess.run(
+                ["git", "init", "--quiet", directory],
+                check=False,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=os.environ.copy(),
+            )
+        self.assertEqual(completed.returncode, 0, completed.stderr.decode(errors="replace"))
 
     def test_typed_diagnostics_do_not_expose_local_paths(self) -> None:
         local_path = r"C:\Users\example\secret-repository"
