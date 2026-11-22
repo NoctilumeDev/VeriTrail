@@ -11846,3 +11846,18 @@ R2_R6_NOT_STARTED
 doc456只保存失败边界，不修改runtime/tests/Schema/fixture/workflow/oracle。自己的完整资格链闭合后最多成为
 `FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP，另行审计并发布最小test-support correction边界。
 后继PASS不得回填PR #519，也不得直接恢复global composition或启动public Review/R2–R6。
+
+## R1 Review Derivation Manifest 0.2 versioned schema roster binding可行性审计（2026-11-23）
+
+PR #520已把doc456精确合入`main@0348f4b42840565538ea831a20d74e4d57e78afd`并完成original/exact-main双门、fresh
+README/doc454/doc456 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout；doc456现在是
+`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，PR #519失败历史不回填。
+
+新的docs-only
+[文档457](457-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-feasibility-audit.md)证明精确roster
+`[0.1]`与`[0.1,0.2]`可在保留0.1 byte guard和0.2冻结identity的同时被唯一允许，0.1+0.3及任意额外版本继续拒绝；四格
+read-only semantic audit SHA-256均为
+`d790b240bedc199f8cf879dbecaa266e3d99dec4c5b8f98509fa956780215d94`。本文当前仍是
+`FEASIBILITY_AUDIT_CANDIDATE / NOT_QUALIFIED`，不授权改测试、重建Manifest、恢复global composition或启动public Review/R2–R6。
+自己的完整资格链闭合后也最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，随后必须返回CONTROL LOOP另建docs-only
+correction publication。
