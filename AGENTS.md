@@ -10649,3 +10649,47 @@ observation、independent reconciliation与finite closeout全部成立后，最�
 `RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP，另建独立docs-only test-support
 construction-topology correction publication；在该publication资格化以前不得重建Manifest implementation successor。不得提高timeout、
 拆分suite、修改runtime/Schema/fixture、删除测试、缩小八world denominator、恢复global composition或启动public Review/R2–R6。
+
+### R1 Review Derivation Manifest 0.2测试支撑构造拓扑修正发布候选
+
+PR #514已把doc451以`base=dd734631a335b075aaef534c539177f1d9204e5d /
+head=1f78923e966cdb293be3bb2353abb13b4d69aa2c / tree=9c1e220ada9afbbef7036180718265dc426d5923`精确合入
+`main@68cfba79009671adce59b66e366db95f3a9aa2f6`。original Public CI `44987173486`、exact-main Public CI
+`44990531002`与Browser Smoke `44990530953`均attempt 1 SUCCESS（15/15、15/15、1/1）。第一次fresh readback将
+832401-byte milestones预注册为bounded Public Render target，得到`PARTIAL / CONTENT_TRUNCATED`并停止；该world已按
+83-artifact closeout永久保留，没有重跑。fresh successor只对README/doc450/doc451使用Render，并对AGENTS/milestones使用
+raw/API/exact-Git byte observation；三项formal Render与两项raw observation各唯一PASS。independent reconciliation、
+123-artifact finite closeout与integrity为：
+
+```text
+reconciliation  fc128185c71a474ac007cba57c213b743f6516b86a9647ab58d72186906b53ef
+finite closeout  0e19553b634f259cd228fada1ec1262481ca5b98fe864be87872ee5e3664deef
+integrity        334430c6ce8264cf206331f38183d355957ba70db835be66024b95536f51e64c
+```
+
+reconciliation attempt 1的raw-history `exit_code` schema-key setup error也以
+`2bee7a8f2409db1c5d39dc7f46b5dc9b5811c997c9628cc02ad8ebdb4c6f6c1d`保留；v2没有覆盖它。因此doc451现在是
+`RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED / QUALIFIED_HISTORY`，PR #512仍为closed/unmerged/CANCELLED/not qualified/no-rerun，
+lower slowdown cause仍为`UNKNOWN`。
+
+fresh CONTROL LOOP没有发现击穿doc448 bounded implementation authority、doc450 failure boundary或doc451结论的新反例。新的docs-only
+[文档452](docs/452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)只允许README、AGENTS、
+doc452与milestones。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_ORIGINAL_PUBLIC_CI_BUDGET_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_REVIEW_DERIVATION_MANIFEST_0_2_CI_BUDGET_RECOVERY_TEST_SUPPORT_TOPOLOGY_AUDITED_QUALIFIED_HISTORY
+R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_REBUILD_NOT_AUTHORIZED_BY_CORRECTION_PUBLICATION
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc452只条件化冻结candidate-only test按需构造所选world的修正；workflow 45分钟、21个test identities、全部assertion/subTest、
+完整八world主测试以及runtime/Schema/fixture/oracle必须保持不变。自己的local/original PR/protected merge/new exact-main双门、fresh
+installed-product readback、independent reconciliation与finite closeout全部成立后，才使
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_TEST_SUPPORT_CONSTRUCTION_TOPOLOGY_CORRECTION_FROZEN`生效。随后必须返回CONTROL LOOP，
+从新的exact main独立重建implementation successor；不得复用PR #512 qualification、提高timeout、恢复global composition或启动
+public Review/R2–R6。
