@@ -15,15 +15,15 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #511已经使Manifest 0.2 bounded private implementation authority生效；后继PR #512的original Public CI
-`44969144404` attempt 1中，两个Python 3.10 Review Attention cells都在45分钟上限处`CANCELLED`，PR已关闭、未合并、
-未rerun。[failure-boundary audit](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)已完成独立资格链并保留
-该失败历史。[测试支撑拓扑恢复审计](docs/451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)
-已经通过PR #514、exact-main双门、fresh successor readback与独立reconciliation成为qualified history；第一次把超大milestones
-错误预注册为bounded Render target而得到`PARTIAL / CONTENT_TRUNCATED`的readback world仍单独保留。新的
+当前R1边界：PR #515已经使
 [测试支撑构造拓扑修正发布](docs/452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)
-只条件化冻结“按需构造被测试消费的world”这一后继边界，保持45分钟、21个测试、全部断言、八world denominator及
-runtime/Schema/fixture/oracle不变。该publication仍是candidate，不恢复global composition或启动public Review/R2–R6。
+完成original/exact-main双门、fresh successor readback与独立reconciliation，因此“按需构造被测试消费的world”边界已经
+`FROZEN`。从该exact main重建的Manifest 0.2 successor在formal full matrix四格中，均由既有SourceSnapshot合同测试对
+Windows进程环境的恢复交互触发20个`git init` setup errors；serial v2复现后候选已在提交前停止，失败与取消identity全部保留。
+新的docs-only
+[SourceSnapshot测试环境模拟机制反例与最小修正发布](docs/453-r1-source-snapshot-test-environment-patch-correction-publication.md)
+只条件化授权把该合同测试的环境模拟改为独立Python mapping；它不修改runtime、workflow、Schema、fixture、oracle或Manifest
+产品字节，当前仍是candidate，不恢复global composition或启动public Review/R2–R6。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
@@ -1164,6 +1164,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Review Derivation Manifest 0.2 original CI budget failure boundary](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)：保存PR #512两个Python 3.10 cells在45分钟outer budget处被取消、required aggregators fail closed与关闭未合并identity；不重跑、不修改workflow/runtime/tests，也不预选后继修正；
 - [Review Derivation Manifest 0.2 CI预算恢复测试支撑拓扑审计](docs/451-r1-review-derivation-manifest-0-2-ci-budget-recovery-test-support-topology-audit.md)：在doc450资格化后比较original job steps、逐测试成本与不可资格化原型，选择只消除candidate test未消费world的最小后继边界；不提高timeout、不改runtime/Schema/oracle，也不直接授权implementation successor；
 - [Review Derivation Manifest 0.2测试支撑构造拓扑修正发布](docs/452-r1-review-derivation-manifest-0-2-test-support-construction-topology-correction-publication.md)：在doc451资格化后条件化冻结candidate-only test按需构造world的唯一修正边界；不删除测试、不缩小八world denominator、不改变workflow/runtime/Schema/fixture/oracle；
+- [SourceSnapshot测试环境模拟机制反例与最小修正发布](docs/453-r1-source-snapshot-test-environment-patch-correction-publication.md)：保存Manifest successor full matrix四格与serial v2的真实`git init`失败，归层既有合同测试对Windows进程环境的恢复交互，并条件化授权只替换该环境模拟机制；不修改runtime、workflow、Schema、fixture、oracle或Manifest产品字节；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
