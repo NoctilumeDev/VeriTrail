@@ -1,0 +1,89 @@
+{
+  "corpus_identity": "r1-review-derivation-manifest-0.2-compatibility/0.1",
+  "schema_version": "0.2",
+  "conformance_identity": "r1-review-derivation-manifest-coverage-topology/0.1",
+  "fixed_prefix": [
+    "SOURCE_SNAPSHOT",
+    "REVIEW_POLICY",
+    "DERIVATION_PROFILE",
+    "DERIVATION_EVIDENCE"
+  ],
+  "ledger_role": "COVERAGE_LEDGER",
+  "positive_cases": [
+    {
+      "case_id": "normal",
+      "root_states": ["ARTIFACT_PRESENT", "ARTIFACT_PRESENT", "ARTIFACT_PRESENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "FACT_SET", "RELATION_SET", "REVIEW_SLICE_SET", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "branch-empty",
+      "root_states": ["ARTIFACT_PRESENT", "ARTIFACT_PRESENT", "ARTIFACT_PRESENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "FACT_SET", "RELATION_SET", "REVIEW_SLICE_SET", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "slice-partial",
+      "root_states": ["ARTIFACT_PRESENT", "ARTIFACT_PRESENT", "ARTIFACT_PRESENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "FACT_SET", "RELATION_SET", "REVIEW_SLICE_SET", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "zero-parse-denominator",
+      "root_states": ["QUALIFIED_ABSENT", "QUALIFIED_ABSENT", "QUALIFIED_ABSENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "all-parse-rejected",
+      "root_states": ["QUALIFIED_ABSENT", "QUALIFIED_ABSENT", "QUALIFIED_ABSENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "projection-blocked",
+      "root_states": ["QUALIFIED_ABSENT", "QUALIFIED_ABSENT", "QUALIFIED_ABSENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "required-provider-non-success",
+      "root_states": ["QUALIFIED_ABSENT", "QUALIFIED_ABSENT", "QUALIFIED_ABSENT"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "COVERAGE_LEDGER"]
+    },
+    {
+      "case_id": "qualified-unknown-fact-only",
+      "root_states": ["ARTIFACT_PRESENT", "QUALIFIED_UNKNOWN", "QUALIFIED_UNKNOWN"],
+      "expected_roles": ["SOURCE_SNAPSHOT", "REVIEW_POLICY", "DERIVATION_PROFILE", "DERIVATION_EVIDENCE", "FACT_SET", "COVERAGE_LEDGER"]
+    }
+  ],
+  "live_worlds": [
+    "NORMAL_CONSISTENT",
+    "NORMAL_BRANCH_EMPTY",
+    "NORMAL_SLICE_PARTIAL",
+    "NORMAL_RELATION_CONFLICT",
+    "ZERO_PARSE_DENOMINATOR",
+    "ALL_PARSE_REJECTED",
+    "PROJECTION_BLOCKED",
+    "REQUIRED_PROVIDER_NON_SUCCESS"
+  ],
+  "live_relation_conflict_roles": [
+    "SOURCE_SNAPSHOT",
+    "REVIEW_POLICY",
+    "DERIVATION_PROFILE",
+    "DERIVATION_EVIDENCE",
+    "FACT_SET",
+    "RELATION_SET",
+    "COVERAGE_LEDGER"
+  ],
+  "falsifiers": [
+    {"id": "RDMC-000", "mutation": "legacy-bytes-or-0.2-to-0.1-fallback"},
+    {"id": "RDMC-001", "mutation": "unknown-version-or-conformance-identity"},
+    {"id": "RDMC-002", "mutation": "coverage-ledger-missing"},
+    {"id": "RDMC-003", "mutation": "duplicate-role-or-path"},
+    {"id": "RDMC-004", "mutation": "role-path-swap-custom-or-traversal-path"},
+    {"id": "RDMC-005", "mutation": "coverage-ledger-not-last"},
+    {"id": "RDMC-006", "mutation": "absence-or-unknown-placeholder"},
+    {"id": "RDMC-007", "mutation": "present-root-carrier-missing"},
+    {"id": "RDMC-008", "mutation": "set-entry-root-digest-mismatch"},
+    {"id": "RDMC-009", "mutation": "raw-sha256-mismatch"},
+    {"id": "RDMC-010", "mutation": "size-bytes-mismatch"},
+    {"id": "RDMC-011", "mutation": "ledger-entry-digest-mismatch"},
+    {"id": "RDMC-012", "mutation": "ledger-0.3-prior-conformance-invalid"},
+    {"id": "RDMC-013", "mutation": "foreign-attempt-unsafe-or-interrupted-publication"}
+  ]
+}

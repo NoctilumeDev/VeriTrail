@@ -10582,3 +10582,34 @@ Public CI 15/15与Browser Smoke 1/1、fresh public installed-product P1/P2 forma
 milestones unique raw-byte readback、independent reconciliation与finite closeout。全部成立后才使
 `R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED`生效，同时implementation仍为`NOT_STARTED`；随后必须返回
 CONTROL LOOP，不能自动恢复global composition、启动public Review或R2–R6。
+
+## R1 Review Derivation Manifest 0.2 private implementation候选（2026-11-22）
+
+PR #511已把doc448以`base=f2394bdbb2910d5cc14bd1296d7ef503d2b60e66 /
+head=59c05a002562fa77c887c81dab49302f5efb04dc / tree=42f4337bb1b49957929c15fedf207e1aecfa5c06`精确合入
+`main@50819b8ab16800a415439285dc9fcf909d5b435a`。original Public CI `44905508551`、exact-main Public CI
+`44909682401`与Browser Smoke `44909682395`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh anonymous public
+installed-product formal attempt 1/2 non-success继续保留；attempt 3及README/doc316/doc317/doc435/doc447/doc448/milestones各自唯一
+raw readback、independent reconciliation、110-artifact closeout与integrity全部PASS。因此
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效。
+
+fresh CONTROL LOOP从上述exact main建立独立implementation worktree。新的private candidate新增Manifest 0.2 closed Schema、compatibility
+fixture、exact-version dispatch、一次性carrier consumption/candidate validation/admission/private staging与独立conformance owner；八个live
+world、`RDMC-000..013`、失败消耗和race witnesses均已本地执行。prequalification三项发现均在formal前修正；post-formal review又发现
+direct constructor可绕过carrier one-shot claim的真实阻断反例，已用private construction token最小修正，并对修正后的final bytes重新运行
+全部四格矩阵。精确事实见
+[文档449](docs/449-r1-review-derivation-manifest-0-2-private-implementation-candidate.md)。当前只能声明：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_CANDIDATE_NOT_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc449必须完成自己的final-byte local gates、original PR Public CI 15/15 attempt 1、protected exact-head merge、新exact-main Public CI
+15/15与Browser Smoke 1/1、fresh anonymous installed-product README/doc449/milestones readback、independent reconciliation及finite closeout。
+全部成立后最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；随后必须返回CONTROL LOOP，
+另建独立docs-only implementation freeze publication。不得把local PASS、后继OSS组合设想或相同source hash解释为global composition、public
+Review或R2–R6 authority。`proof_is_not_problem_solving = true`、`local_not_global = true`；R1完成后的human+AI全项目检查仍是独立后续目标。

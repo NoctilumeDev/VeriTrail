@@ -49,6 +49,7 @@ ADMISSION_SCHEMA_FILES = {
 AUTHORIZED_SUCCESSOR_SCHEMA_FILES = {
     "review-coverage-ledger-0.3.schema.json",
     "review-derivation-evidence-0.3.schema.json",
+    "review-derivation-manifest-0.2.schema.json",
 }
 
 EXPECTED_SCHEMA_FILES = (
@@ -306,6 +307,7 @@ class ReviewR1SchemaPayloadTests(unittest.TestCase):
             actual,
             {
                 "review-derivation-manifest-0.1.schema.json:OPEN_ARRAY:/properties/files",
+                "review-derivation-manifest-0.2.schema.json:OPEN_ARRAY:/properties/files",
                 "review-fact-set-0.1.schema.json:OPEN_OBJECT:/$defs/Fact/properties/semantic_attributes",
                 "review-relation-set-0.1.schema.json:OPEN_OBJECT:/$defs/Relation/properties/target",
             },

@@ -1151,6 +1151,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [picomatch公告撤回与Workbench审计恢复读回资格恢复](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)：记录PR #509已以新的public installed-product P1/P2 formal、六目标readback与独立reconciliation使doc437成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；#498与doc437 first formal失败继续保持原identity；
 - [Review Derivation Manifest 0.2 private implementation feasibility successor审计](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)：从doc437资格恢复后的exact main重新核对冻结合同、carrier source与八个live world；PR #510完整资格链闭合后已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，仍不创建Schema、fixture、Manifest runtime或授予后续权力；
 - [Review Derivation Manifest 0.2 private implementation授权发布](docs/448-r1-review-derivation-manifest-0-2-private-implementation-authorization-publication.md)：记录doc447已成为qualified history，并条件化发布bounded A–J private implementation authority；自身完整资格链闭合以前仍是candidate，不创建产品字节或授权global composition、public Review、R2–R6；
+- [Review Derivation Manifest 0.2 private implementation候选](docs/449-r1-review-derivation-manifest-0-2-private-implementation-candidate.md)：实现versioned Schema/fixture、一次性private projector/admission/staging与独立conformance，覆盖八个live world和`RDMC-000..013`；当前仍是`NOT_MERGED / NOT_QUALIFIED / NOT_FROZEN`，后继完整资格链与独立docs-only冻结发布以前不恢复global composition、public Review或R2–R6；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
