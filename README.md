@@ -15,6 +15,12 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
+当前R1边界：PR #511已经使Manifest 0.2 bounded private implementation authority生效；后继PR #512的本地final candidate
+没有进入main。其original Public CI `44969144404` attempt 1中，两个Python 3.10 Review Attention cells都在配置的45分钟上限处
+`CANCELLED`，required aggregators因此fail closed，PR已关闭、未合并、未rerun。Python 3.13两格与本地PASS不能拼接成资格。
+[failure-boundary audit](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)只保存该反例与
+`UNKNOWN`下层原因；它不提高timeout、不修改runtime/test/oracle，也不恢复global composition或启动R2–R6。
+
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
 implementation现在是`FROZEN`。PR #473又使[当前状态审计](docs/412-r1-review-derivation-manifest-successor-prerequisite-current-state-audit.md)
@@ -1151,6 +1157,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [picomatch公告撤回与Workbench审计恢复读回资格恢复](docs/446-r1-picomatch-advisory-withdrawal-workbench-audit-readback-qualification-recovery.md)：记录PR #509已以新的public installed-product P1/P2 formal、六目标readback与独立reconciliation使doc437成为`AUDIT_SOURCE_RECOVERY_AUDITED / QUALIFIED_HISTORY`；#498与doc437 first formal失败继续保持原identity；
 - [Review Derivation Manifest 0.2 private implementation feasibility successor审计](docs/447-r1-review-derivation-manifest-0-2-private-implementation-feasibility-successor-audit.md)：从doc437资格恢复后的exact main重新核对冻结合同、carrier source与八个live world；PR #510完整资格链闭合后已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，仍不创建Schema、fixture、Manifest runtime或授予后续权力；
 - [Review Derivation Manifest 0.2 private implementation授权发布](docs/448-r1-review-derivation-manifest-0-2-private-implementation-authorization-publication.md)：记录doc447已成为qualified history，并条件化发布bounded A–J private implementation authority；自身完整资格链闭合以前仍是candidate，不创建产品字节或授权global composition、public Review、R2–R6；
+- [Review Derivation Manifest 0.2 original CI budget failure boundary](docs/450-r1-review-derivation-manifest-0-2-original-ci-budget-failure-boundary.md)：保存PR #512两个Python 3.10 cells在45分钟outer budget处被取消、required aggregators fail closed与关闭未合并identity；不重跑、不修改workflow/runtime/tests，也不预选后继修正；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
