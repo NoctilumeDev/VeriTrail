@@ -11861,3 +11861,20 @@ read-only semantic audit SHA-256均为
 `FEASIBILITY_AUDIT_CANDIDATE / NOT_QUALIFIED`，不授权改测试、重建Manifest、恢复global composition或启动public Review/R2–R6。
 自己的完整资格链闭合后也最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，随后必须返回CONTROL LOOP另建docs-only
 correction publication。
+
+## R1 Review Derivation Manifest 0.2 versioned schema roster binding修正发布（2026-11-23）
+
+PR #521已把doc457精确合入`main@982a269e5bcd54733e0960d065f46d852aeb5aa9`。original/exact-main Public CI与
+Browser Smoke均attempt 1 SUCCESS；fresh README/doc456/doc457 Render、AGENTS/milestones raw-byte observations各有唯一
+qualifying PASS。README formal #1的匿名rate exhaustion ERROR永久保留，#2才是PASS。independent reconciliation、148-artifact
+closeout与finite integrity分别为`5ba6bb2f1613ff4a8d367cca108edd6f015c3baed38dda426e1ed463769ab704`、
+`4862f6288a7ccdb0d9a4e74d8434a9e9db23783b51cc7cb1e276d1d736d3091e`与
+`54834c680107d7c37bbd5b7a1f373ccbe169add38d82c7bea6357088b6d4132c`。doc457因此是
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。
+
+新的docs-only
+[文档458](458-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-publication.md)只条件化冻结一个
+`tests/test_review_r1_admission_evidence_schema.py`修正：0.1历史SHA始终复算，roster只允许`[0.1]`或`[0.1,0.2]`，0.2存在时核对
+冻结identity/closed shape，任意额外版本继续拒绝。本文当前是publication candidate，不授权修改测试或重建Manifest；自己的完整
+资格链闭合后才可成为`VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_FROZEN`并只解除独立单文件implementation入口。随后必须返回
+CONTROL LOOP，global composition、public Review与R2–R6仍未授权。

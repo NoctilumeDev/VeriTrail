@@ -10846,3 +10846,32 @@ R2_R6_NOT_STARTED
 doc457自己的local/original PR/protected merge/new exact-main双门、fresh README/doc456/doc457 Render、AGENTS/milestones raw-byte
 observation、independent reconciliation与finite closeout全部成立后，最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。
 随后必须返回CONTROL LOOP，另建独立docs-only correction publication；在其资格化以前不得改测试或重建Manifest successor。
+
+### R1 Review Derivation Manifest 0.2 versioned schema roster binding修正发布候选
+
+PR #521已经把doc457精确合入`main@982a269e5bcd54733e0960d065f46d852aeb5aa9`；original Public CI
+`45084517912`、exact-main Public CI `45088700138`与Browser Smoke `45088700115`均attempt 1 SUCCESS。fresh
+README/doc456/doc457 Render与AGENTS/milestones raw-byte observations各有唯一qualifying PASS；README formal #1的匿名GitHub
+API rate exhaustion ERROR永久保留，formal #2才是PASS。independent reconciliation、148-artifact closeout与finite integrity分别为
+`5ba6bb2f1613ff4a8d367cca108edd6f015c3baed38dda426e1ed463769ab704`、
+`4862f6288a7ccdb0d9a4e74d8434a9e9db23783b51cc7cb1e276d1d736d3091e`与
+`54834c680107d7c37bbd5b7a1f373ccbe169add38d82c7bea6357088b6d4132c`。因此doc457现在是
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。
+
+fresh CONTROL LOOP建立独立docs-only
+[文档458](docs/458-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-publication.md)。它只允许README、AGENTS、
+doc458与milestones，并且只条件化授权后继单文件`tests/test_review_r1_admission_evidence_schema.py`修正：无条件保留0.1历史SHA、
+roster只允许`[0.1]`或`[0.1,0.2]`、0.2存在时核对冻结identity/closed shape、任意额外版本继续拒绝。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_VERSIONED_SCHEMA_ROSTER_BINDING_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_REVIEW_DERIVATION_MANIFEST_0_2_VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_NOT_REBUILT
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc458自己的完整资格链闭合后才条件化成为`VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_FROZEN`并只解除单文件test-support
+implementation入口；随后必须返回CONTROL LOOP。它不让PR #519续期，不授权Manifest rebuild、global composition、public Review或R2–R6。

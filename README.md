@@ -20,10 +20,12 @@ AI说任务完成了。**但是，凭什么相信？**
 完整资格化。后继Manifest 0.2 implementation PR #519的四个Review Attention jobs、Workbench与E3均SUCCESS，但两个required
 Python Core jobs同时重现旧`RAE-017`目录roster断言失败；PR已关闭、未合并、未rerun。PR #520随后使
 [original-gate失败边界](docs/456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)
-成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，不回填#519。新的docs-only
+成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，不回填#519。PR #521又使
 [versioned schema roster binding feasibility audit](docs/457-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-feasibility-audit.md)
-只审计如何同时保留0.1 byte guard、允许精确0.2 successor并拒绝任意新版本；它尚未资格化，不授权改测试、重建Manifest、
-恢复global composition或启动public Review/R2–R6。
+成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`：0.1 byte guard、精确`[0.1] / [0.1,0.2]` roster与任意额外版本拒绝可以同时成立。
+新的docs-only
+[versioned schema roster binding correction publication](docs/458-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-publication.md)
+当前只冻结单文件test-support修正边界；它尚未资格化，不授权改测试、重建Manifest、恢复global composition或启动public Review/R2–R6。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
