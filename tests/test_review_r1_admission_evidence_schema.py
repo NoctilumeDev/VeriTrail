@@ -24,6 +24,21 @@ HISTORICAL_BYTE_GUARDS = {
     "tests/fixtures/review-r1-derivation-evidence-0.1.1/compatibility-cases.json": "b202f0063b1d94a6edc7bf5c9e8aa30e24a76ff6584638bf416c7739ce1283df",
 }
 
+MANIFEST_SCHEMA_0_1 = "review-derivation-manifest-0.1.schema.json"
+MANIFEST_SCHEMA_0_2 = "review-derivation-manifest-0.2.schema.json"
+ALLOWED_MANIFEST_SCHEMA_ROSTERS = (
+    (MANIFEST_SCHEMA_0_1,),
+    (MANIFEST_SCHEMA_0_1, MANIFEST_SCHEMA_0_2),
+)
+MANIFEST_SCHEMA_0_2_IDENTITY = {
+    "filename": MANIFEST_SCHEMA_0_2,
+    "$id": "https://github.com/NoctilumeDev/VeriTrail/schemas/review-derivation-manifest-0.2.schema.json",
+    "title": "VeriTrail Review R1 Derivation Manifest 0.2",
+    "schema_version": "0.2",
+    "bundle_kind": "R1_DERIVATION",
+    "additionalProperties": False,
+}
+
 
 def load_json(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -43,6 +58,24 @@ def semantic_digest(domain: str, payload: object) -> str:
     return hashlib.sha256(
         canonical_json_bytes({"domain": domain, "payload": payload})
     ).hexdigest()
+
+
+def manifest_schema_roster_allowed(roster: tuple[str, ...]) -> bool:
+    return roster in ALLOWED_MANIFEST_SCHEMA_ROSTERS
+
+
+def manifest_schema_0_2_identity(
+    filename: str, schema: dict[str, object]
+) -> dict[str, object]:
+    properties = schema["properties"]
+    return {
+        "filename": filename,
+        "$id": schema["$id"],
+        "title": schema["title"],
+        "schema_version": properties["schema_version"]["const"],
+        "bundle_kind": properties["bundle_kind"]["const"],
+        "additionalProperties": schema["additionalProperties"],
+    }
 
 
 def set_json_pointer(document: object, pointer: str, value: object) -> None:
@@ -375,9 +408,80 @@ class ReviewR1AdmissionEvidenceSchemaTests(unittest.TestCase):
             path.name
             for path in SCHEMA_ROOT.glob("review-derivation-manifest-*.schema.json")
         )
+        self.assertTrue(manifest_schema_roster_allowed(tuple(manifest_schemas)))
+
+        for accepted in (
+            (MANIFEST_SCHEMA_0_1,),
+            (MANIFEST_SCHEMA_0_1, MANIFEST_SCHEMA_0_2),
+        ):
+            with self.subTest(accepted_roster=accepted):
+                self.assertTrue(manifest_schema_roster_allowed(accepted))
+        for rejected in (
+            (MANIFEST_SCHEMA_0_2,),
+            (MANIFEST_SCHEMA_0_1, "review-derivation-manifest-0.3.schema.json"),
+            (
+                MANIFEST_SCHEMA_0_1,
+                MANIFEST_SCHEMA_0_2,
+                "review-derivation-manifest-0.3.schema.json",
+            ),
+            (
+                MANIFEST_SCHEMA_0_1,
+                MANIFEST_SCHEMA_0_2,
+                "review-derivation-manifest-9.9.schema.json",
+            ),
+        ):
+            with self.subTest(rejected_roster=rejected):
+                self.assertFalse(manifest_schema_roster_allowed(rejected))
+
+        frozen_0_2_shape = {
+            "$id": MANIFEST_SCHEMA_0_2_IDENTITY["$id"],
+            "title": MANIFEST_SCHEMA_0_2_IDENTITY["title"],
+            "properties": {
+                "schema_version": {
+                    "const": MANIFEST_SCHEMA_0_2_IDENTITY["schema_version"]
+                },
+                "bundle_kind": {
+                    "const": MANIFEST_SCHEMA_0_2_IDENTITY["bundle_kind"]
+                },
+            },
+            "additionalProperties": MANIFEST_SCHEMA_0_2_IDENTITY[
+                "additionalProperties"
+            ],
+        }
         self.assertEqual(
-            manifest_schemas, ["review-derivation-manifest-0.1.schema.json"]
+            manifest_schema_0_2_identity(MANIFEST_SCHEMA_0_2, frozen_0_2_shape),
+            MANIFEST_SCHEMA_0_2_IDENTITY,
         )
+        for filename, pointer, drift in (
+            ("review-derivation-manifest-0.2-drift.schema.json", (), None),
+            (MANIFEST_SCHEMA_0_2, ("$id",), "https://example.invalid/manifest-0.2.schema.json"),
+            (MANIFEST_SCHEMA_0_2, ("title",), "drifted manifest title"),
+            (MANIFEST_SCHEMA_0_2, ("properties", "schema_version", "const"), "0.3"),
+            (MANIFEST_SCHEMA_0_2, ("properties", "bundle_kind", "const"), "OTHER"),
+            (MANIFEST_SCHEMA_0_2, ("additionalProperties",), True),
+        ):
+            drifted = copy.deepcopy(frozen_0_2_shape)
+            if pointer:
+                target = drifted
+                for part in pointer[:-1]:
+                    target = target[part]
+                target[pointer[-1]] = drift
+            with self.subTest(drifted_identity=(filename, pointer)):
+                self.assertNotEqual(
+                    manifest_schema_0_2_identity(filename, drifted),
+                    MANIFEST_SCHEMA_0_2_IDENTITY,
+                )
+
+        manifest_0_2_path = SCHEMA_ROOT / MANIFEST_SCHEMA_0_2
+        if MANIFEST_SCHEMA_0_2 in manifest_schemas:
+            self.assertEqual(
+                manifest_schema_0_2_identity(
+                    manifest_0_2_path.name, load_json(manifest_0_2_path)
+                ),
+                MANIFEST_SCHEMA_0_2_IDENTITY,
+            )
+        else:
+            self.assertFalse(manifest_0_2_path.exists())
 
 
 if __name__ == "__main__":
