@@ -11008,3 +11008,34 @@ doc462只允许README、AGENTS、doc462与milestones。自己的local/original P
 README/doc461/doc462 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，最多成为
 `CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建docs-only versioned global composition authority contract；
 不得直接施工runtime、公开private chain、启动public Review/R2–R6或R1后的human+AI全项目检查。
+
+### R1 versioned global composition authority contract候选
+
+PR #527已经把doc462精确合入`main@49a07ed029c15c5312a29aa0ef5f194ae3252489`，tree
+`7d8ba538886abfa4fe7d326bbbfd9bd634a61b64`；original Public CI `46041949597`、exact-main Public CI
+`46048835183`与Browser Smoke `46048835207`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README formal #1因
+anonymous rate exhaustion得到ERROR且底层出口桶差异保持`UNKNOWN`，reset后的formal #2才是唯一qualifying PASS；doc461/doc462
+Render与AGENTS/milestones raw-byte observations、independent reconciliation、135-artifact closeout与finite integrity全部成立。因此doc462现在是
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`，但finding不变：global application owner与authority仍不存在。
+
+fresh CONTROL LOOP从该exact main建立
+[文档463](docs/463-r1-versioned-global-composition-authority-contract.md)。合同候选冻结
+`R1_GLOBAL_REVIEW_COMPOSITION_AUTHORITY_0_1`：唯一private owner只能绑定sealed input/Policy/Profile/Provider roster、一个live
+`BudgetContext`与同attempt capture slot，按八个live worlds调用已冻结private successor，传播最早failure，闭合resource lifecycle，并由独立
+admission签发one-shot private result。Reality/Provider继续拥有事实；Core继续独占binding、integrity、sufficiency、determinacy与Verdict；
+Manifest只运输role/path/digest。qualified negative worlds是完整成功结果，unsafe/interrupted/cleanup-failed attempt不得冒充negative success。
+
+当前只能记录：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc463只允许README、AGENTS、doc463与milestones。自己的local/original PR/protected merge/new exact-main双门、fresh
+README/doc462/doc463 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，最多成为
+`CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP另建独立docs-only freeze publication；不得直接施工runtime、
+公开private chain、启动public Review/R2–R6或R1后的human+AI全项目检查。

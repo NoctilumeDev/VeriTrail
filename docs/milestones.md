@@ -11994,3 +11994,30 @@ R2_R6_NOT_STARTED
 doc462自己的完整资格链闭合后最多成为`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须从新的exact main返回CONTROL LOOP，
 另建docs-only versioned global composition authority contract；不得由审计直接施工runtime或启动public Review、R2–R6与R1后的
 human+AI全项目检查。
+
+## R1 versioned global composition authority contract（2026-11-28）
+
+PR #527已经把[文档462](462-r1-global-composition-authority-current-state-audit.md)精确合入
+`main@49a07ed029c15c5312a29aa0ef5f194ae3252489`，tree `7d8ba538886abfa4fe7d326bbbfd9bd634a61b64`。original/exact-main
+Public CI与Browser Smoke均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README formal #1的anonymous rate exhaustion ERROR、
+preflight/formal出口桶差异与底层原因`UNKNOWN`继续保留，formal #2才是唯一qualifying PASS；doc461/doc462 Render、AGENTS/milestones
+raw-byte observations、independent reconciliation、135-artifact closeout与finite integrity全部成立。因此doc462现在是
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`，但global application owner与authority仍不存在。
+
+fresh CONTROL LOOP从该exact main建立
+[文档463](463-r1-versioned-global-composition-authority-contract.md)。合同候选冻结唯一private global owner、exact frozen input/Provider
+roster、八个live worlds的same-attempt顺序、qualified negative成功语义、failure/resource closure、Manifest 0.2 private staging与independent
+global admission。Reality/Provider继续拥有事实，Core继续独占binding/integrity/sufficiency/determinacy/Verdict，业务编排不能宣布PASS。
+
+当前状态只能记录为：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc463完整资格化后也只成为`CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`，必须返回CONTROL LOOP另建独立docs-only freeze
+publication。runtime、public export/CLI/publisher/persistence、Core integration、public Review、R2–R6与R1后的human+AI全项目检查均未授权。
