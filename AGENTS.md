@@ -10974,3 +10974,37 @@ milestones。它自己的local/original PR/protected merge/new exact-main双门�
 raw-byte observation、independent reconciliation与finite closeout全部成立后，才使
 `R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FROZEN`生效。随后必须返回CONTROL LOOP，独立审计global
 composition的下一最小合法seam；不得按编号自动恢复composition、启动public Review/R2–R6或R1后的human+AI全项目检查。
+
+### R1 global composition authority当前状态审计候选
+
+PR #526已经把[文档461](docs/461-r1-review-derivation-manifest-0-2-private-implementation-freeze-publication.md)精确合入
+`main@f0d7651ff1f03330a5d058c3ea2fa535369c5c36`，tree `c9da1e9453fcb05b41f415eed20c99f14ead1571`；candidate
+base/head为`8b6be3a51a6ff35da9239906297be34696fce47a`与`4cf12505ee6a7b7ec3661d3174141628e5f148ec`。original Public CI
+`46019810121`、exact-main Public CI `46027836695`与Browser Smoke `46027836748`均attempt 1 SUCCESS（15/15、15/15、1/1）。
+fresh README/doc460/doc461 Render与AGENTS/milestones raw-byte observations各有唯一qualifying PASS；independent reconciliation、
+125-artifact closeout与finite integrity分别为`589965decf5e8e4e738e3da9abb09225a872798caa56837c30fa87dc0839816f`、
+`641c7f60b6afd72c5851e57f97e61538b95e4e6e8c343c31156c83fbb3dc399e`与
+`43fae87a7f17a9cfbd75ca7ffa9bdcfd7b972db6a1071527625656ed4e5225f6`。因此
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FROZEN`已经生效。
+
+fresh CONTROL LOOP从该exact main建立
+[文档462](docs/462-r1-global-composition-authority-current-state-audit.md)。audit attempt 3以双Python普通/`-O`重建八个live worlds，
+共同semantic projection SHA-256为`501fb8d39b2b4857f7c3eed5a618823d47dcf90118c1b5210a71b1e3b2d46146`；carrier replay、
+candidate mutation、admitted copy、unknown version与staging replay均fail closed。静态source核对同时证明public export、应用级script、
+Manifest publisher、完整production owner与global composition authority不存在。attempt 1的`assert`/`-O` false-PASS-shaped facility缺陷、
+attempt 2缺少跨格semantic projection的proof-target gap、attachment cap及PowerShell setup errors全部保留，effect NONE。
+
+当前只能记录：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_CURRENT_STATE_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc462只允许README、AGENTS、doc462与milestones。自己的local/original PR/protected merge/new exact-main双门、fresh
+README/doc461/doc462 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，最多成为
+`CURRENT_STATE_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建docs-only versioned global composition authority contract；
+不得直接施工runtime、公开private chain、启动public Review/R2–R6或R1后的human+AI全项目检查。
