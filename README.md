@@ -15,16 +15,15 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #524已经使
-[versioned schema roster binding修正实现冻结发布](docs/459-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-implementation-freeze-publication.md)
-完成自己的original/exact-main双门、fresh installed-product readback、independent reconciliation与finite closeout，因此该单文件
-test-support修正已`FROZEN`。PR #519的required Core regression FAILURE、关闭未合并与no-rerun历史不回填。fresh CONTROL LOOP从
-`main@5c784b0994db00b9ee9e4807855f4c05a9e5fee6`重建
-[Manifest 0.2 private implementation successor v3候选](docs/460-r1-review-derivation-manifest-0-2-private-implementation-successor-v3-candidate.md)：
-它实现冻结A–J并在formal前修复三项真实binding/conformance反例；最终双Python普通/`-O`的compile、Core roster、root/payload、focused与
-full Review Attention矩阵均PASS。当前仍只是`CANDIDATE_NOT_QUALIFIED_NOT_FROZEN`；必须完成自己的原始PR门、保护合并、new exact-main
-双门、fresh readback与independent reconciliation，之后还要另建docs-only freeze publication。global composition、public Review与
-R2–R6继续未授权。
+当前R1边界：PR #525已经把
+[Manifest 0.2 private implementation successor v3候选](docs/460-r1-review-derivation-manifest-0-2-private-implementation-successor-v3-candidate.md)
+精确合入`main@8b6be3a51a6ff35da9239906297be34696fce47a`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；
+fresh README/doc460 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。第一套readback
+误把大文件milestones注册为bounded Render target而得到的ERROR/PARTIAL、README 503及所有setup/proof-facility failure继续保留。因此该
+实现现在最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。新的docs-only
+[Manifest 0.2 private implementation冻结发布](docs/461-r1-review-derivation-manifest-0-2-private-implementation-freeze-publication.md)
+只条件化发布同一bounded A–J实现的`FROZEN`状态；自己的local/original PR/protected merge/new exact-main双门/fresh readback/
+independent reconciliation/finite closeout全部成立以前，冻结不生效。global composition、public Review、R2–R6与R1后的全项目检查继续未授权。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
