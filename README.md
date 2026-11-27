@@ -15,15 +15,17 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #525已经把
-[Manifest 0.2 private implementation successor v3候选](docs/460-r1-review-derivation-manifest-0-2-private-implementation-successor-v3-candidate.md)
-精确合入`main@8b6be3a51a6ff35da9239906297be34696fce47a`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；
-fresh README/doc460 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。第一套readback
-误把大文件milestones注册为bounded Render target而得到的ERROR/PARTIAL、README 503及所有setup/proof-facility failure继续保留。因此该
-实现现在最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。新的docs-only
+当前R1边界：PR #526已经使
 [Manifest 0.2 private implementation冻结发布](docs/461-r1-review-derivation-manifest-0-2-private-implementation-freeze-publication.md)
-只条件化发布同一bounded A–J实现的`FROZEN`状态；自己的local/original PR/protected merge/new exact-main双门/fresh readback/
-independent reconciliation/finite closeout全部成立以前，冻结不生效。global composition、public Review、R2–R6与R1后的全项目检查继续未授权。
+在`main@f0d7651ff1f03330a5d058c3ea2fa535369c5c36`完成original/exact-main Public CI、Browser Smoke、fresh
+README/doc460/doc461 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout。因此
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FROZEN`已经生效；全部保留失败仍维持原identity。
+
+fresh CONTROL LOOP又从该exact main建立
+[global composition authority当前状态审计](docs/462-r1-global-composition-authority-current-state-audit.md)。八个live worlds证明当前冻结private
+组件可以机械组合，但public export、应用级CLI、Manifest publisher、production owner与global authority均不存在。本文目前只是
+`CURRENT_STATE_AUDIT_CANDIDATE / NOT_QUALIFIED`；自己的完整资格链闭合后也只成为qualified history，下一步仍须另建docs-only
+versioned global composition authority contract。public Review、R2–R6与R1后的全项目检查继续未授权。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
@@ -1167,6 +1169,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [SourceSnapshot测试环境模拟机制反例与最小修正发布](docs/453-r1-source-snapshot-test-environment-patch-correction-publication.md)：保存Manifest successor full matrix四格与serial v2的真实`git init`失败，归层既有合同测试对Windows进程环境的恢复交互，并条件化授权只替换该环境模拟机制；不修改runtime、workflow、Schema、fixture、oracle或Manifest产品字节；
 - [SourceSnapshot测试环境模拟修正实现冻结发布](docs/454-r1-source-snapshot-test-environment-correction-implementation-freeze-publication.md)：记录PR #517单文件实现的local/original/exact-main双门、fresh readback与独立reconciliation已经成立，并条件化发布同一实现的`FROZEN`状态；publication本身不增加产品字节或Manifest/global composition/public Review/R2–R6 authority；
 - [Review Derivation Manifest 0.2 Core regression binding failure boundary](docs/456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)：保存PR #519两套required Python Core regression因RAE-017仍假设Schema目录永远只有0.1而失败、四个downstream门SKIPPED与关闭未合并identity；不重跑、不修改测试或产品，并把最小重开边界限制为versioned schema set acceptance binding；
+- [R1 global composition authority当前状态审计](docs/462-r1-global-composition-authority-current-state-audit.md)：从Manifest 0.2 private implementation冻结后的exact main核对八个live worlds与完整private chain；局部组件可机械组合，但global application owner、public export/CLI/publisher与global authority不存在；候选资格化以后也只允许另建versioned docs-only authority contract；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
