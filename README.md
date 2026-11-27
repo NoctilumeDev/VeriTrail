@@ -15,17 +15,19 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #518已经使
-[SourceSnapshot测试环境模拟修正实现冻结发布](docs/454-r1-source-snapshot-test-environment-correction-implementation-freeze-publication.md)
-完整资格化。后继Manifest 0.2 implementation PR #519的四个Review Attention jobs、Workbench与E3均SUCCESS，但两个required
-Python Core jobs同时重现旧`RAE-017`目录roster断言失败；PR已关闭、未合并、未rerun。PR #520随后使
+当前R1边界：Manifest 0.2 implementation PR #519的四个Review Attention jobs、Workbench与E3均SUCCESS，但两个required
+Python Core jobs同时重现旧`RAE-017`目录roster断言失败；PR已关闭、未合并、未rerun。PR #520使
 [original-gate失败边界](docs/456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)
-成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，不回填#519。PR #521又使
+成为`FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`，不回填#519；PR #521又使
 [versioned schema roster binding feasibility audit](docs/457-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-feasibility-audit.md)
-成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`：0.1 byte guard、精确`[0.1] / [0.1,0.2]` roster与任意额外版本拒绝可以同时成立。
-新的docs-only
-[versioned schema roster binding correction publication](docs/458-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-publication.md)
-当前只冻结单文件test-support修正边界；它尚未资格化，不授权改测试、重建Manifest、恢复global composition或启动public Review/R2–R6。
+成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。PR #522随后完整资格化
+[versioned schema roster binding correction publication](docs/458-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-publication.md)，
+只授权单文件test-support修正。PR #523已把该修正精确合入`main@9e7f998899cd5c7e87ad201c7a41047a66fc8dc3`；original/exact-main
+Public CI与Browser Smoke均attempt 1 SUCCESS，fresh README/doc457/doc458 Render、AGENTS/milestones raw-byte readback、独立
+reconciliation与finite closeout全部成立，所以实现目前是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED /
+NOT_FROZEN`。新的docs-only
+[implementation freeze publication](docs/459-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-implementation-freeze-publication.md)
+只条件化发布同一实现的`FROZEN`状态；它完整资格化以前不得重建Manifest、恢复global composition或启动public Review/R2–R6。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
