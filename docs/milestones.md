@@ -11909,3 +11909,30 @@ R2_R6_NOT_STARTED
 
 doc459完整资格化后必须返回CONTROL LOOP，从新的exact main重建Manifest 0.2 implementation successor；不得复用旧候选资格或越过
 global composition/public Review/R2–R6停止线。
+
+## R1 Review Derivation Manifest 0.2 private implementation successor v3候选（2026-11-27）
+
+PR #524已经使[文档459](459-r1-review-derivation-manifest-0-2-versioned-schema-roster-binding-correction-implementation-freeze-publication.md)
+完成自己的完整资格链，`VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_IMPLEMENTATION_FROZEN`生效。PR #519 original required
+Core regression FAILURE、关闭未合并与no-rerun历史继续保留。
+
+fresh CONTROL LOOP从`main@5c784b0994db00b9ee9e4807855f4c05a9e5fee6`重建
+[文档460](460-r1-review-derivation-manifest-0-2-private-implementation-successor-v3-candidate.md)及bounded A–J private implementation。
+final scope为11 files，保留Manifest 0.1、carrier、Provider、public/default composition与Core Verdict不变。formal以前的完整diff review发现并
+修正DerivationEvidence actual-byte binding、CoverageLedger 0.3 closed child conformance、SourceSnapshot/ReviewPolicy/DerivationProfile
+internal digest binding三项反例；attempt 1/2 cancellation与全部diagnostic identity均保留。
+
+attempt 3 input seal SHA-256为`f1465e847f99f56afc15005cdf2f87fe270be6e08f5228655ae3143f113b436e`。双Python普通/`-O`下：
+compile四格PASS；Core roster各9/9；root/payload各27/27；focused各26/26；full各715 reported，3.10为712 passed/3 skipped，
+3.13为713 passed/2 skipped。当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_V3_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc460完整资格化以后最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；必须返回
+CONTROL LOOP另建docs-only freeze publication。它不能直接恢复global composition、启动public Review/R2–R6或R1后的human+AI全项目检查。
