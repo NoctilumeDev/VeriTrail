@@ -11936,3 +11936,31 @@ R2_R6_NOT_STARTED
 
 doc460完整资格化以后最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；必须返回
 CONTROL LOOP另建docs-only freeze publication。它不能直接恢复global composition、启动public Review/R2–R6或R1后的human+AI全项目检查。
+
+## R1 Review Derivation Manifest 0.2 private implementation冻结发布（2026-11-27）
+
+PR #525已经把[文档460](460-r1-review-derivation-manifest-0-2-private-implementation-successor-v3-candidate.md)及bounded A–J
+implementation精确合入`main@8b6be3a51a6ff35da9239906297be34696fce47a`，tree
+`a4f1abb45c673fa4ed29e403a2f40fb739547944`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS（15/15、15/15、1/1）。
+fresh README/doc460 Render与AGENTS/milestones raw-byte observations各有唯一qualifying PASS；independent reconciliation、120-artifact
+closeout与finite integrity分别为`d0c0ca18da6b76f414848810aef9a8ffe387d79177951a884e9872a37a78c8c3`、
+`5e257e68eef7c96eddc18d8f85430b74c4541ee90fb59ab67be2493ccfc638aa`与
+`6a676b6949eb7b0dc8ec0d316d3ec14739312a4aa59abcb5796a8b9ad95712a1`。第一套错误选择milestones Render target的
+ERROR/PARTIAL、README 503、80-artifact aborted closeout及全部setup/proof-facility failure继续按原identity保留。
+
+当前实现最多是`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。新的docs-only
+[文档461](461-r1-review-derivation-manifest-0-2-private-implementation-freeze-publication.md)只条件化发布同一实现的`FROZEN`状态。
+本文自己的完整资格链闭合以前只能记录：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_V3_IMPLEMENTATION_CANDIDATE_EXACT_MAIN_VERIFIED_READBACK_QUALIFIED_NOT_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FREEZE_PUBLICATION_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc461完成local/original PR/protected merge/new exact-main双门、fresh README/doc460/doc461 Render、AGENTS/milestones raw-byte
+observation、independent reconciliation与finite closeout后，才使
+`R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_FROZEN`生效。随后必须返回CONTROL LOOP审计global composition，
+不得自动启动public Review、R2–R6或R1后的human+AI全项目检查。
