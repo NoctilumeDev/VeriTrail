@@ -10911,3 +10911,33 @@ Render、AGENTS/milestones raw-byte observation、independent reconciliation与f
 `R1_REVIEW_DERIVATION_MANIFEST_0_2_VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_IMPLEMENTATION_FROZEN`生效。随后必须返回
 CONTROL LOOP，从新的exact main重建Manifest 0.2 implementation successor；不得复用#519或#523 qualification，不得恢复global
 composition或启动public Review/R2–R6。
+
+### R1 Review Derivation Manifest 0.2 private implementation successor v3候选
+
+PR #524已经把doc459精确合入`main@5c784b0994db00b9ee9e4807855f4c05a9e5fee6`；original Public CI
+`45960488588`、exact-main Public CI `45966330464`与Browser Smoke `45966330476`均attempt 1 SUCCESS，fresh
+README/doc458/doc459/AGENTS/milestones readback、independent reconciliation与finite closeout全部成立。因此versioned schema roster
+binding test-support修正已经`FROZEN`，但#519 required failure/closed/unmerged/no-rerun历史不回填。
+
+fresh CONTROL LOOP从该exact main重建
+[文档460](docs/460-r1-review-derivation-manifest-0-2-private-implementation-successor-v3-candidate.md)及bounded A–J implementation。
+prequalification review得到并修正三个真实反例：DerivationEvidence actual bytes未绑定validation report；CoverageLedger 0.3没有独立
+closed-shape验证；SourceSnapshot/ReviewPolicy/DerivationProfile内部digest没有独立复算。formal full matrix attempt 1与attempt 2分别在
+反例审查期间取消并保留；attempt 3 final input seal SHA-256为
+`f1465e847f99f56afc15005cdf2f87fe270be6e08f5228655ae3143f113b436e`。compile、Core roster、root/payload、focused与full
+Review Attention四格均PASS；full每格715 reported，3.10为712 passed/3 skipped，3.13为713 passed/2 skipped。
+
+当前只允许：
+
+```text
+R1_REVIEW_DERIVATION_MANIFEST_0_2_VERSIONED_SCHEMA_ROSTER_BINDING_CORRECTION_IMPLEMENTATION_FROZEN
+R1_REVIEW_DERIVATION_MANIFEST_0_2_PRIVATE_IMPLEMENTATION_SUCCESSOR_V3_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc460候选自己的local/original PR/protected merge/new exact-main双门、fresh installed-product readback、independent reconciliation与finite
+closeout全部成立后，最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`。随后必须返回
+CONTROL LOOP另建独立docs-only implementation freeze publication；其完整资格链闭合前不得宣称Manifest 0.2 implementation frozen，
+也不得恢复global composition、启动public Review/R2–R6或R1后的全项目检查。
