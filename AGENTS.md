@@ -11136,3 +11136,34 @@ README/doc465/doc466 Render、AGENTS/milestones raw-byte observation、independe
 `R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_ALLOWED`生效，同时implementation仍为`NOT_STARTED`。随后必须返回
 CONTROL LOOP，从新的exact main独立建立bounded private implementation candidate；不得在authorization publication内顺带创建runtime/test、
 启动public Review/R2–R6、外部开源系统集成或R1后的human+AI全项目检查。
+
+### R1 global composition authority private implementation候选
+
+PR #531已经把doc466精确合入`main@fc3345f032aa4df558cdb86b39284c22b5d99505`，tree
+`79b0507047bd74d53cc23bae93767b55ad7ad591`。original Public CI `46125384012`、exact-main Public CI
+`46128932412`与Browser Smoke `46128932318`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc465/doc466
+Render、AGENTS/milestones raw-byte observation、independent reconciliation、135-artifact closeout与finite integrity全部成立。因此
+`R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_ALLOWED`已经生效，但public Review与R2–R6仍未授权。
+
+fresh CONTROL LOOP从该exact main建立
+[文档467](docs/467-r1-global-composition-authority-private-implementation-candidate.md)与bounded A–J private implementation。final
+source/test SHA-256分别为`ed2cb31b5186aa71bb0da0fc6f02fc4d20e90888ae81376cc4e3a036ccccc9bf`与
+`1a70d1fc6b1a4a0911390766871ddb19adc21ab09177d7e2c2c7f5a3d6686352`。prequalification发现并修正并发revoke、independent
+downstream recomputation、Carrier envelope与continuity/cleanup/result admission四项边界；全部首败与setup identity保留。
+
+final focused四格各10/10 PASS；full Review Attention四格各725 reported，3.10为722 passed/3 skipped、3.13为723 passed/2 skipped。
+semantic attempt 1错误要求fresh attempt artifact digest跨run相同，矩阵`NON_SUCCESS`永久保留；corrected attempt 2四格共同
+semantic SHA-256为`953f762c737f7ea5edc661953a08ddc1134fb241e21c664c8cef5e208e530b8c`。compile 4/4、global/local
+hygiene 8/8 PASS。当前只允许：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_ALLOWED
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc467候选只允许README、AGENTS、doc467、milestones、一个private production模块与一个focused test模块。自己的完整资格链闭合后最多
+成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；随后必须返回CONTROL LOOP另建独立
+docs-only freeze publication。不得自动启动public Review、外部开源系统集成、R2–R6或R1后的human+AI全项目检查。
