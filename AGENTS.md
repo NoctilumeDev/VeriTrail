@@ -11104,3 +11104,35 @@ doc465只允许README、AGENTS、doc465与milestones。自己的local/original P
 README/doc464/doc465 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，最多成为
 `FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回CONTROL LOOP另建独立docs-only private implementation authorization
 publication；不得直接施工runtime、启动public Review/R2–R6、外部开源系统集成或R1后的human+AI全项目检查。
+
+### R1 global composition authority private implementation授权发布候选
+
+PR #530已经把doc465从base`3ddf67e400fc91e8e2cad0d83bbe168bef32f94c`、head
+`3a2f74d17e358ab24f10cc94d15e2433ec7d224e`精确合入`main@47dde07519034191ba1cf7f1f7f36eeae1ee362f`，tree
+`69f2867310f55430c71bfec0f4cc5c02fbd822ea`。original Public CI`46109506308`、exact-main Public CI`46113674276`与
+Browser Smoke`46113674307`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc464/doc465 Render与
+AGENTS/milestones raw-byte observations各有唯一qualifying PASS；independent reconciliation、120-artifact closeout与finite integrity分别为
+`34ce904fff88d63dc7dcb783616e8bc3c6af080782b252f57165ca009ca1b848`、
+`5d237aefdaed1840e94d2dc0a7d9009db1b6bd9d25a9b24e94c97f40d32382d0`与
+`a907609965ffd75bb265c47943105f788d09fb97922aa96ea7a8a40b039c94f7`。因此doc465现在是
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；pre-formal owner-string proof-target setup failure、sidebar attachment cap及全部更早
+non-success保持原identity，runtime仍未开始、未授权。
+
+fresh CONTROL LOOP建立新的docs-only
+[文档466](docs/466-r1-global-composition-authority-private-implementation-authorization-publication.md)，只条件化发布
+`R1_GLOBAL_REVIEW_COMPOSITION_AUTHORITY_0_1`与doc465允许的bounded A–J private implementation authority。当前只允许：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc466只允许README、AGENTS、doc466与milestones。自己的local/original PR/protected merge/new exact-main双门、fresh
+README/doc465/doc466 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，才使
+`R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_ALLOWED`生效，同时implementation仍为`NOT_STARTED`。随后必须返回
+CONTROL LOOP，从新的exact main独立建立bounded private implementation candidate；不得在authorization publication内顺带创建runtime/test、
+启动public Review/R2–R6、外部开源系统集成或R1后的human+AI全项目检查。

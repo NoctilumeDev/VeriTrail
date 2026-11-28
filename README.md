@@ -15,19 +15,21 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #529已经把
-[global composition authority contract冻结发布](docs/464-r1-global-composition-authority-contract-freeze-publication.md)精确合入
-`main@3ddf67e400fc91e8e2cad0d83bbe168bef32f94c`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；fresh
-README/doc463/doc464 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。README
-proof-facility error、doc464第一次formal的HTTP 503/PARTIAL/ERROR/UNKNOWN与全部setup failure继续按原identity保留。因此
-`R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN`已经生效，但runtime仍`NOT_STARTED / NOT_AUTHORIZED`。
+当前R1边界：PR #530已经把
+[private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)精确合入
+`main@47dde07519034191ba1cf7f1f7f36eeae1ee362f`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；fresh
+README/doc464/doc465 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。pre-formal
+owner-string proof-target setup failure与全部更早non-success继续按原identity保留。因此doc465现在是
+`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，而runtime仍`NOT_STARTED / NOT_AUTHORIZED`。
 
 fresh CONTROL LOOP建立独立docs-only
-[private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)。四格semantic audit
-逐字节共同投影为`fc91e59b7f2a2b46af9f388872c7f0c0b674273dee2a821a7e834f3df12a7541`；修正test-root后的focused
-matrix四格各115 tests PASS。本文当前只是audit candidate；完整资格化后最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，随后仍须
-独立docs-only implementation authorization publication，不能直接施工runtime或启动public Review、R2–R6、外部开源系统集成与R1后的
-全项目检查。
+[private implementation authorization publication](docs/466-r1-global-composition-authority-private-implementation-authorization-publication.md)。它只条件化
+发布doc463/464冻结合同与doc465 qualified feasibility允许的bounded A–J施工权；完整资格化以前仍是candidate，不创建runtime/test，不能启动
+public Review、R2–R6、外部开源系统集成或R1后的全项目检查。
+
+当前精确状态为
+`R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED`；
+implementation仍为`NOT_STARTED / NOT_AUTHORIZED`。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
@@ -1173,6 +1175,9 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [Review Derivation Manifest 0.2 Core regression binding failure boundary](docs/456-r1-review-derivation-manifest-0-2-core-regression-binding-failure-boundary.md)：保存PR #519两套required Python Core regression因RAE-017仍假设Schema目录永远只有0.1而失败、四个downstream门SKIPPED与关闭未合并identity；不重跑、不修改测试或产品，并把最小重开边界限制为versioned schema set acceptance binding；
 - [R1 global composition authority当前状态审计](docs/462-r1-global-composition-authority-current-state-audit.md)：从Manifest 0.2 private implementation冻结后的exact main核对八个live worlds与完整private chain；局部组件可机械组合，但global application owner、public export/CLI/publisher与global authority不存在；候选资格化以后也只允许另建versioned docs-only authority contract；
 - [R1 versioned global composition authority contract](docs/463-r1-versioned-global-composition-authority-contract.md)：条件化冻结唯一private global owner、exact frozen input denominator、八world同attempt顺序、failure/resource closure、private result admission与Core/public停止线；候选未资格化、未冻结且不授权runtime；
+- [R1 global composition authority contract冻结发布](docs/464-r1-global-composition-authority-contract-freeze-publication.md)：PR #529完整资格链闭合后已经使`R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN`生效；不把合同冻结解释成runtime存在或实现授权；
+- [R1 global composition authority private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)：PR #530完整资格链闭合后已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；只证明一个private owner模块和一个focused test模块在冻结边界内可行；
+- [R1 global composition authority private implementation授权发布](docs/466-r1-global-composition-authority-private-implementation-authorization-publication.md)：条件化发布doc463/464与doc465允许的bounded A–J施工权；自身最后门闭合前仍为candidate且implementation保持未开始、未授权；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
