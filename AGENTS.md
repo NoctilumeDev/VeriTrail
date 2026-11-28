@@ -11167,3 +11167,31 @@ R2_R6_NOT_STARTED
 doc467候选只允许README、AGENTS、doc467、milestones、一个private production模块与一个focused test模块。自己的完整资格链闭合后最多
 成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；随后必须返回CONTROL LOOP另建独立
 docs-only freeze publication。不得自动启动public Review、外部开源系统集成、R2–R6或R1后的human+AI全项目检查。
+
+### R1 global composition authority exact-main CI budget修正候选
+
+PR #532已经以original Public CI `46154246322` attempt 1的15/15 SUCCESS把候选head
+`3e06107453aff5e4ff32d6e03c003ef9fbaf37a9`精确合入`main@2d56c97db41a208d999bad017cb00cf99c48f66e`，tree
+`a9fe9b9672e830991d03c8ac00e3671ea5818a58`。exact-main Browser Smoke `46158724268` attempt 1为1/1 SUCCESS，但
+exact-main Public CI `46158724296` attempt 1在Python 3.10 optimized Review Attention job运行约45分钟后被外层job预算取消；两个
+Windows barrier jobs随后按设计拒绝`cancelled` prerequisite，四个后续jobs被跳过。该CANCELLED/FAILURE/SKIPPED链永久保留，禁止rerun
+回填，因此doc467仍`NOT_QUALIFIED / NOT_FROZEN`，且没有启动fresh installed-product readback。
+
+fresh CONTROL LOOP建立
+[文档468](docs/468-r1-global-composition-authority-exact-main-ci-budget-correction.md)。同一候选在original PR的3.10 optimized格约
+40分32秒PASS；exact-main取消日志显示测试仍正常推进，本地同一新增focused模块3.10 `-O`为10/10 PASS、约299秒。当前最小修正只把
+Review Attention job独立外层预算从45分钟对齐到60分钟；725项完整测试、inner deadline、required barrier、job名称、fail-closed顺序与
+产品字节全部不变。当前只能记录：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_CANDIDATE_MERGED_NOT_EXACT_MAIN_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_EXACT_MAIN_CI_BUDGET_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc468只允许`.github/workflows/ci.yml`、README、AGENTS、doc468与milestones。它自己的local/original PR/protected merge/new exact-main
+双门、fresh README/doc467/doc468 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，
+只使proof-facility correction资格化；不得回填#532或自动资格化doc467。随后必须返回CONTROL LOOP，从新的exact main独立重建
+implementation qualification recovery；不得直接冻结实现、启动public Review、外部开源系统集成、R2–R6或R1后的human+AI全项目检查。

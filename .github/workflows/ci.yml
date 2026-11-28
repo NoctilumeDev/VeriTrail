@@ -24,7 +24,7 @@ jobs:
     # Each full Review Attention mode owns an independent outer budget. The
     # required Python checks below fail closed unless every matrix cell passes;
     # no required lane serializes the normal and optimized suites anymore.
-    timeout-minutes: 45
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
