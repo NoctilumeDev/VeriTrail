@@ -12021,3 +12021,33 @@ R2_R6_NOT_STARTED
 
 doc463完整资格化后也只成为`CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`，必须返回CONTROL LOOP另建独立docs-only freeze
 publication。runtime、public export/CLI/publisher/persistence、Core integration、public Review、R2–R6与R1后的human+AI全项目检查均未授权。
+
+## R1 global composition authority contract冻结发布（2026-11-28）
+
+PR #528已经把[文档463](463-r1-versioned-global-composition-authority-contract.md)精确合入
+`main@5d06cbe831015aff56cde6b6263c1de2bf780d64`，tree `bcc74c41c140dc34a70e6a5a1839a3d743fe9ac2`。original/exact-main
+Public CI与Browser Smoke均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc462/doc463 Render、AGENTS/milestones
+raw-byte observations各有唯一qualifying PASS；independent reconciliation、144-artifact closeout与finite integrity分别为
+`80b62eba0e59bfbf8de1b16122b4757cafa7a643a0a97d6a43014bb0fb606c95`、
+`f86d8d897155c34e0b908e16568128b5fd63f32d8a40dac38fe4e70d292ae071`与
+`267c044d2e416b95eb0e33a0603ca43018fca8a975c48b4f092dbcbd2f9033cd`。README两次和doc462一次marker-shape
+diagnostic ERROR、worktree attachment cap及全部setup failures继续按原identity保留。因此doc463现在是
+`CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立独立docs-only
+[文档464](464-r1-global-composition-authority-contract-freeze-publication.md)，只条件化发布doc463中同一
+`R1_GLOBAL_REVIEW_COMPOSITION_AUTHORITY_0_1`合同的`FROZEN`状态。本文自己的完整资格链闭合以前只能记录：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_CANDIDATE_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FREEZE_PUBLICATION_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc464完成local/original PR/protected merge/new exact-main双门、fresh README/doc463/doc464 Render、AGENTS/milestones raw-byte
+observation、independent reconciliation与finite closeout后，才使`R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN`生效。随后必须返回
+CONTROL LOOP独立审计private implementation feasibility；不得自动施工runtime、启动public Review、R2–R6、外部开源系统集成或
+R1后的human+AI全项目检查。
