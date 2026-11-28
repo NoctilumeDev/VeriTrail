@@ -12135,3 +12135,29 @@ R2_R6_NOT_STARTED
 
 doc467自己的完整资格链闭合后最多成为`IMPLEMENTATION_CANDIDATE / EXACT_MAIN_VERIFIED / READBACK_QUALIFIED / NOT_FROZEN`；必须返回
 CONTROL LOOP另建docs-only freeze publication。本文不授权直接启动public Review、外部开源系统集成、R2–R6或R1后的human+AI全项目检查。
+
+## R1 global composition authority exact-main CI budget修正（2026-11-29）
+
+PR #532 original Public CI `46154246322` attempt 1为15/15 SUCCESS，并把head
+`3e06107453aff5e4ff32d6e03c003ef9fbaf37a9`精确合入`main@2d56c97db41a208d999bad017cb00cf99c48f66e`，tree
+`a9fe9b9672e830991d03c8ac00e3671ea5818a58`。exact-main Browser Smoke `46158724268` attempt 1为1/1 SUCCESS；但
+exact-main Public CI `46158724296` attempt 1在Python 3.10 optimized Review Attention job耗尽45分钟外层预算后被取消，两个Windows
+barrier jobs随后FAIL，四个下游jobs SKIPPED。该首败链与gate SHA-256
+`90cd4da3963429ac479f54d44edc648fce3539a32b2d272ec8a0ece8615e1ba1`永久保留，不rerun、不回填；doc467仍未资格化，readback未开始。
+
+fresh CONTROL LOOP建立
+[文档468](468-r1-global-composition-authority-exact-main-ci-budget-correction.md)。original同格约40分32秒PASS，取消日志显示exact-main
+同格仍在正常测试路径中，本地新增focused模块3.10 `-O`为10/10 PASS并耗时约299秒。最小修正只把Review Attention job独立外层预算
+从45分钟改为60分钟；不删除725项完整测试，不修改inner deadline、required barrier、job identity、产品源码或冻结语义。当前只能记录：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_CANDIDATE_MERGED_NOT_EXACT_MAIN_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_EXACT_MAIN_CI_BUDGET_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_NOT_FROZEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc468完成自己的完整资格链后只资格化该proof-facility correction，不覆盖#532，也不自动资格化doc467。必须从新的exact main返回
+CONTROL LOOP另建implementation qualification recovery；不得直接冻结实现或启动public Review、外部开源系统集成、R2–R6及R1后的
+human+AI全项目检查。
