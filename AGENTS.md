@@ -11195,3 +11195,31 @@ doc468只允许`.github/workflows/ci.yml`、README、AGENTS、doc468与milestone
 双门、fresh README/doc467/doc468 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，
 只使proof-facility correction资格化；不得回填#532或自动资格化doc467。随后必须返回CONTROL LOOP，从新的exact main独立重建
 implementation qualification recovery；不得直接冻结实现、启动public Review、外部开源系统集成、R2–R6或R1后的human+AI全项目检查。
+
+### R1 global composition CI budget correction reader-visible failure-boundary audit候选
+
+PR #533已经把外层job预算修正精确合入`main@c53082451a69a544703bd5b28ec03257b6727c32`，tree
+`67a2332a5116f6341a679399f5cea1f4f4ee0077`。original Public CI `46164727472`、exact-main Public CI
+`46170029735`与Browser Smoke `46170029613`均attempt 1 SUCCESS（15/15、15/15、1/1），没有rerun。
+
+fresh installed-product README diagnostic为`COMPLETE / HTTP 200`，但预注册的doc468 reader-visible marker出现0次；exact source中该入口
+唯一存在于第1182行。doc467与doc468 diagnostic各自为`COMPLETE / marker=1`，不能覆盖README反例。formal与raw observations均未启动，
+20-artifact non-success capture SHA-256为`a2cb7b4c7e446f36282f7db0e9bcba697c584194241f04d82e9594ef0135b334`。因此doc468仍
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`，doc467仍`NOT_QUALIFIED / NOT_FROZEN`；PR #532首败不回填。
+candidate milestones append anchor与local scope parser setup failures继续保留；versioned local validation v2已PASS，但仍只作local witness。
+
+fresh CONTROL LOOP建立
+[文档469](docs/469-r1-global-composition-ci-budget-correction-reader-visible-failure-boundary-audit.md)，只保存reader-visible failure、
+qualification ceiling与最小public-projection successor责任。当前只允许：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CI_BUDGET_CORRECTION_READER_VISIBLE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_EXACT_MAIN_CI_BUDGET_CORRECTION_MERGED_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_CANDIDATE_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc469只允许README、AGENTS、doc469与milestones。自己的完整资格链闭合后最多成为
+`READER_VISIBLE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP独立建立public-projection correction，再从新
+exact main重建implementation qualification recovery。不得换无关marker、重跑PR #533 README diagnostic、拼接不同world或直接冻结实现。

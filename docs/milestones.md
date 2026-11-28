@@ -12161,3 +12161,22 @@ R2_R6_NOT_STARTED
 doc468完成自己的完整资格链后只资格化该proof-facility correction，不覆盖#532，也不自动资格化doc467。必须从新的exact main返回
 CONTROL LOOP另建implementation qualification recovery；不得直接冻结实现或启动public Review、外部开源系统集成、R2–R6及R1后的
 human+AI全项目检查。
+
+## R1 global composition CI budget correction reader-visible failure-boundary audit（2026-11-29）
+
+- PR #533已把唯一workflow变化`timeout-minutes: 45 -> 60`精确合入
+  `main@c53082451a69a544703bd5b28ec03257b6727c32`；original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS，
+  分别为15/15、15/15与1/1。
+- fresh README diagnostic为`COMPLETE / HTTP 200`，但预注册doc468 reader-visible marker出现0次；doc467/doc468 diagnostic各marker=1。
+  formal与raw observation均未启动，non-success capture SHA-256为
+  `a2cb7b4c7e446f36282f7db0e9bcba697c584194241f04d82e9594ef0135b334`。
+- 该反例只支持`README_CORRECTION_PROJECTION_OUTSIDE_PUBLIC_RENDER_VISIBLE_WINDOW`，lower platform mechanism仍`UNKNOWN`；不得换无关
+  marker、重跑失败diagnostic或用局部PASS覆盖全局readback失败。
+- candidate的milestones append anchor与porcelain scope parser setup failures均保留；versioned local validation v2 PASS SHA-256为
+  `b415c5aaa7d90710703b035226b17c2d50664fd6a7d207820b7d55227cf467e9`，只作local witness。
+- fresh CONTROL LOOP建立
+  [文档469](469-r1-global-composition-ci-budget-correction-reader-visible-failure-boundary-audit.md)。当前为
+  `READER_VISIBLE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED`；doc468仍`READBACK_NOT_QUALIFIED`，doc467仍
+  `NOT_QUALIFIED / NOT_FROZEN`，PR #532首败不回填。
+- doc469自己的完整资格链闭合后，下一步仍只能独立建立reader-visible public-projection correction；不得直接冻结实现、启动public
+  Review、外部开源系统集成、R2–R6或R1后的human+AI全项目检查。

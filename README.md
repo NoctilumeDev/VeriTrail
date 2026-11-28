@@ -15,21 +15,25 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #530已经把
-[private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)精确合入
-`main@47dde07519034191ba1cf7f1f7f36eeae1ee362f`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；fresh
-README/doc464/doc465 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。pre-formal
-owner-string proof-target setup failure与全部更早non-success继续按原identity保留。因此doc465现在是
-`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，而runtime仍`NOT_STARTED / NOT_AUTHORIZED`。
+当前R1边界：PR #531已经使bounded A–J private implementation authority生效；PR #532随后把
+[global composition authority private implementation候选](docs/467-r1-global-composition-authority-private-implementation-candidate.md)
+合入主线，但exact-main Public CI `46158724296` attempt 1在45分钟外层job预算处被取消。该CANCELLED/FAILURE/SKIPPED链没有
+rerun，也没有被后继PASS覆盖，所以doc467仍为`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
 
-fresh CONTROL LOOP建立独立docs-only
-[private implementation authorization publication](docs/466-r1-global-composition-authority-private-implementation-authorization-publication.md)。它只条件化
-发布doc463/464冻结合同与doc465 qualified feasibility允许的bounded A–J施工权；完整资格化以前仍是candidate，不创建runtime/test，不能启动
-public Review、R2–R6、外部开源系统集成或R1后的全项目检查。
+PR #533只把Review Attention job外层预算从45分钟修正为60分钟，并精确合入
+`main@c53082451a69a544703bd5b28ec03257b6727c32`；original Public CI `46164727472`、exact-main Public CI
+`46170029735`与Browser Smoke `46170029613`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh installed-product diagnostic随后证明
+[CI budget correction](docs/468-r1-global-composition-authority-exact-main-ci-budget-correction.md)入口虽然在exact README source中唯一存在，
+但默认GitHub Public Render的reader-visible窗口中出现0次；doc467与doc468各自Render marker为1。formal与raw observation均未启动，
+因此doc468仍为`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`，doc467也没有取得资格。
+
+fresh CONTROL LOOP现建立独立docs-only
+[CI budget correction reader-visible failure-boundary audit](docs/469-r1-global-composition-ci-budget-correction-reader-visible-failure-boundary-audit.md)。
+它只保存PR #533的dual-gate成功、README公开投影反例、资格上限与最小后继责任；不修改workflow、runtime、test、oracle或doc467实现，
+也不授权public Review、外部开源系统集成、R2–R6或R1后的全项目检查。
 
 当前精确状态为
-`R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED`；
-implementation仍为`NOT_STARTED / NOT_AUTHORIZED`。
+`R1_GLOBAL_COMPOSITION_AUTHORITY_CI_BUDGET_CORRECTION_READER_VISIBLE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED`。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
