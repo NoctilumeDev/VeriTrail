@@ -1178,6 +1178,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [R1 global composition authority contract冻结发布](docs/464-r1-global-composition-authority-contract-freeze-publication.md)：PR #529完整资格链闭合后已经使`R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN`生效；不把合同冻结解释成runtime存在或实现授权；
 - [R1 global composition authority private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)：PR #530完整资格链闭合后已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；只证明一个private owner模块和一个focused test模块在冻结边界内可行；
 - [R1 global composition authority private implementation授权发布](docs/466-r1-global-composition-authority-private-implementation-authorization-publication.md)：条件化发布doc463/464与doc465允许的bounded A–J施工权；自身最后门闭合前仍为candidate且implementation保持未开始、未授权；
+- [R1 global composition authority private implementation候选](docs/467-r1-global-composition-authority-private-implementation-candidate.md)：PR #531完整资格链闭合后bounded A–J施工权已经生效；候选新增唯一private global owner与focused witness，保持public/Core/persistence停止线，当前仍`NOT_QUALIFIED / NOT_FROZEN`；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标
