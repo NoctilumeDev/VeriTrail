@@ -15,16 +15,19 @@ AI说任务完成了。**但是，凭什么相信？**
 
 源码审查辅助、运行与测试证据采集、验证调度仍处于不同研究或开发阶段，具体进度见[扩展构想与研究状态](#系统家族与未来边界)。
 
-当前R1边界：PR #528已经把
-[versioned global composition authority contract](docs/463-r1-versioned-global-composition-authority-contract.md)精确合入
-`main@5d06cbe831015aff56cde6b6263c1de2bf780d64`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；fresh
-README/doc462/doc463 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。三个
-marker-shape diagnostic ERROR与全部setup failure继续按原identity保留。因此doc463现在是`CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`。
+当前R1边界：PR #529已经把
+[global composition authority contract冻结发布](docs/464-r1-global-composition-authority-contract-freeze-publication.md)精确合入
+`main@3ddf67e400fc91e8e2cad0d83bbe168bef32f94c`。original/exact-main Public CI与Browser Smoke均attempt 1 SUCCESS；fresh
+README/doc463/doc464 Render、AGENTS/milestones raw-byte observations、independent reconciliation与finite closeout全部成立。README
+proof-facility error、doc464第一次formal的HTTP 503/PARTIAL/ERROR/UNKNOWN与全部setup failure继续按原identity保留。因此
+`R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN`已经生效，但runtime仍`NOT_STARTED / NOT_AUTHORIZED`。
 
 fresh CONTROL LOOP建立独立docs-only
-[global composition authority contract冻结发布](docs/464-r1-global-composition-authority-contract-freeze-publication.md)。它只条件化发布
-doc463中同一`R1_GLOBAL_REVIEW_COMPOSITION_AUTHORITY_0_1`合同的`FROZEN`状态；本文当前仍是publication candidate，未授权runtime、
-public Review、R2–R6、外部开源系统集成或R1后的全项目检查。
+[private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)。四格semantic audit
+逐字节共同投影为`fc91e59b7f2a2b46af9f388872c7f0c0b674273dee2a821a7e834f3df12a7541`；修正test-root后的focused
+matrix四格各115 tests PASS。本文当前只是audit candidate；完整资格化后最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，随后仍须
+独立docs-only implementation authorization publication，不能直接施工runtime或启动public Review、R2–R6、外部开源系统集成与R1后的
+全项目检查。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
