@@ -12083,3 +12083,29 @@ doc465完成local/original PR/protected merge/new exact-main双门、fresh READM
 observation、independent reconciliation与finite closeout后，最多成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`。随后必须返回
 CONTROL LOOP另建docs-only private implementation authorization publication；不得直接施工runtime、启动public Review、R2–R6、
 外部开源系统集成或R1后的human+AI全项目检查。
+
+## R1 global composition authority private implementation授权发布（2026-11-28）
+
+PR #530已经把[文档465](465-r1-global-composition-authority-private-implementation-feasibility-audit.md)精确合入
+`main@47dde07519034191ba1cf7f1f7f36eeae1ee362f`，tree `69f2867310f55430c71bfec0f4cc5c02fbd822ea`。original/exact-main
+Public CI与Browser Smoke均attempt 1 SUCCESS（15/15、15/15、1/1）；fresh README/doc464/doc465 Render、AGENTS/milestones
+raw-byte observations、independent reconciliation与finite closeout全部成立。pre-formal owner-string proof-target setup failure及更早全部
+non-success继续按原identity保留。因此doc465现在是`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`，runtime仍未开始、未授权。
+
+fresh CONTROL LOOP建立独立docs-only
+[文档466](466-r1-global-composition-authority-private-implementation-authorization-publication.md)。它只条件化发布
+`R1_GLOBAL_REVIEW_COMPOSITION_AUTHORITY_0_1`与doc465允许的bounded A–J施工权；不创建runtime、test、public export、CLI、publisher、
+persistence、Core Verdict或公开Review产品。当前只能记录：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_FEASIBILITY_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_AUTHORIZATION_PUBLICATION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_IMPLEMENTATION_NOT_STARTED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc466自己的完整资格链闭合后，才使`R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_ALLOWED`生效，同时implementation保持
+`NOT_STARTED`。随后必须返回CONTROL LOOP，从新的exact main建立独立bounded implementation candidate；不得自动启动public Review、R2–R6、
+外部开源系统集成或R1后的human+AI全项目检查。
