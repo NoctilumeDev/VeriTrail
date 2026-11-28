@@ -11039,3 +11039,33 @@ doc463只允许README、AGENTS、doc463与milestones。自己的local/original P
 README/doc462/doc463 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，最多成为
 `CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`。随后必须返回CONTROL LOOP另建独立docs-only freeze publication；不得直接施工runtime、
 公开private chain、启动public Review/R2–R6或R1后的human+AI全项目检查。
+
+### R1 global composition authority contract冻结发布候选
+
+PR #528已经把doc463精确合入`main@5d06cbe831015aff56cde6b6263c1de2bf780d64`，tree
+`bcc74c41c140dc34a70e6a5a1839a3d743fe9ac2`；candidate base/head为`49a07ed029c15c5312a29aa0ef5f194ae3252489`与
+`03e4375969077c625c8b4b72a19ae64f46a3e6f2`。original Public CI `46077691048`、exact-main Public CI
+`46082842779`与Browser Smoke `46082842666`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc462/doc463 Render与
+AGENTS/milestones raw-byte observations各有唯一qualifying PASS；independent reconciliation、144-artifact closeout与finite integrity分别为
+`80b62eba0e59bfbf8de1b16122b4757cafa7a643a0a97d6a43014bb0fb606c95`、
+`f86d8d897155c34e0b908e16568128b5fd63f32d8a40dac38fe4e70d292ae071`与
+`267c044d2e416b95eb0e33a0603ca43018fca8a975c48b4f092dbcbd2f9033cd`。README两次与doc462一次marker-shape
+diagnostic ERROR、attachment cap及其余setup errors均保留，effect NONE。因此doc463现在是
+`CONTRACT_CANDIDATE / QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立新的docs-only
+[文档464](docs/464-r1-global-composition-authority-contract-freeze-publication.md)。当前只允许：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CURRENT_STATE_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_CANDIDATE_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FREEZE_PUBLICATION_CANDIDATE_NOT_QUALIFIED_NOT_FROZEN
+R1_GLOBAL_COMPOSITION_AUTHORITY_NOT_RESTORED_NOT_AUTHORIZED
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc464只允许README、AGENTS、doc464与milestones。它自己的local/original PR/protected merge/new exact-main双门、fresh
+README/doc463/doc464 Render、AGENTS/milestones raw-byte observation、independent reconciliation与finite closeout全部成立后，才使
+`R1_GLOBAL_COMPOSITION_AUTHORITY_CONTRACT_FROZEN`生效。随后必须返回CONTROL LOOP独立审计private implementation feasibility；不得
+直接施工runtime、启动public Review/R2–R6、外部开源系统集成或R1后的human+AI全项目检查。
