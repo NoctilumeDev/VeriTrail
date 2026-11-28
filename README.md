@@ -20,20 +20,26 @@ AI说任务完成了。**但是，凭什么相信？**
 合入主线，但exact-main Public CI `46158724296` attempt 1在45分钟外层job预算处被取消。该CANCELLED/FAILURE/SKIPPED链没有
 rerun，也没有被后继PASS覆盖，所以doc467仍为`MERGED / NOT_QUALIFIED / NOT_FROZEN`。
 
-PR #533只把Review Attention job外层预算从45分钟修正为60分钟，并精确合入
-`main@c53082451a69a544703bd5b28ec03257b6727c32`；original Public CI `46164727472`、exact-main Public CI
-`46170029735`与Browser Smoke `46170029613`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh installed-product diagnostic随后证明
-[CI budget correction](docs/468-r1-global-composition-authority-exact-main-ci-budget-correction.md)入口虽然在exact README source中唯一存在，
-但默认GitHub Public Render的reader-visible窗口中出现0次；doc467与doc468各自Render marker为1。formal与raw observation均未启动，
-因此doc468仍为`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`，doc467也没有取得资格。
+PR #533只把Review Attention job外层预算从45分钟修正为60分钟；original与exact-main双门均成功，但fresh installed-product
+diagnostic证明预注册的
+[R1 global composition authority exact-main CI budget correction](docs/468-r1-global-composition-authority-exact-main-ci-budget-correction.md)
+reader-visible marker在当时README默认Public Render窗口中出现0次。因此doc468仍为
+`MERGED / EXACT_MAIN_DUAL_GATES_PASS / READBACK_NOT_QUALIFIED`，不能用其源码链接或doc467/doc468局部marker=1替代README反例。
+
+PR #534已经把
+[reader-visible failure-boundary audit](docs/469-r1-global-composition-ci-budget-correction-reader-visible-failure-boundary-audit.md)
+精确合入`main@1809f291b23b7ae4a6a1c4db711548e43873bc8a`；original Public CI `46176382601`、exact-main Public CI
+`46181535692`与Browser Smoke `46181535691`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh README/doc467/doc468/doc469
+Render与AGENTS/milestones raw observations全部唯一PASS，独立reconciliation和finite closeout也成立，所以doc469现在只作为
+`READER_VISIBLE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`生效；它没有资格化doc468或doc467。
 
 fresh CONTROL LOOP现建立独立docs-only
-[CI budget correction reader-visible failure-boundary audit](docs/469-r1-global-composition-ci-budget-correction-reader-visible-failure-boundary-audit.md)。
-它只保存PR #533的dual-gate成功、README公开投影反例、资格上限与最小后继责任；不修改workflow、runtime、test、oracle或doc467实现，
-也不授权public Review、外部开源系统集成、R2–R6或R1后的全项目检查。
+[reader-visible public-projection correction](docs/470-r1-global-composition-ci-budget-correction-reader-visible-public-projection-correction.md)。
+它只把上述原始doc468 marker及其未资格状态、doc467未冻结状态和doc469边界放进README默认读者可见区，并重新取得自己的完整资格；
+不修改workflow、runtime、test、oracle或doc467实现，也不授权public Review、外部开源系统集成、R2–R6或R1后的全项目检查。
 
 当前精确状态为
-`R1_GLOBAL_COMPOSITION_AUTHORITY_CI_BUDGET_CORRECTION_READER_VISIBLE_FAILURE_BOUNDARY_AUDIT_CANDIDATE_NOT_QUALIFIED`。
+`R1_GLOBAL_COMPOSITION_AUTHORITY_CI_BUDGET_CORRECTION_READER_VISIBLE_PUBLIC_PROJECTION_CORRECTION_CANDIDATE_NOT_QUALIFIED`。
 
 PR #472已使[same-attempt DerivationEvidence continuity private implementation](docs/411-r1-same-attempt-derivation-evidence-continuity-private-implementation-freeze-publication.md)
 完成原始门、保护合并、exact-main双门、fresh installed-product读回与独立reconciliation，所以该有界private
@@ -1183,7 +1189,7 @@ Not responsible for Truth != Not responsible for Uncertainty
 - [R1 global composition authority private implementation feasibility audit](docs/465-r1-global-composition-authority-private-implementation-feasibility-audit.md)：PR #530完整资格链闭合后已成为`FEASIBILITY_AUDITED / QUALIFIED_HISTORY`；只证明一个private owner模块和一个focused test模块在冻结边界内可行；
 - [R1 global composition authority private implementation授权发布](docs/466-r1-global-composition-authority-private-implementation-authorization-publication.md)：条件化发布doc463/464与doc465允许的bounded A–J施工权；自身最后门闭合前仍为candidate且implementation保持未开始、未授权；
 - [R1 global composition authority private implementation候选](docs/467-r1-global-composition-authority-private-implementation-candidate.md)：PR #531完整资格链闭合后bounded A–J施工权已经生效；候选新增唯一private global owner与focused witness，保持public/Core/persistence停止线，当前仍`NOT_QUALIFIED / NOT_FROZEN`；
-- [R1 global composition authority exact-main CI budget correction](docs/468-r1-global-composition-authority-exact-main-ci-budget-correction.md)：保留PR #532 original 15/15 SUCCESS、protected merge与exact-main Public CI attempt 1在45分钟外层预算被取消的独立身份；只把Review Attention job外层预算对齐到当前725-test suite，不删测试、不改inner deadline或required barrier，也不回填doc467资格；
+- [CI budget correction history](docs/468-r1-global-composition-authority-exact-main-ci-budget-correction.md)：保留PR #532 original 15/15 SUCCESS、protected merge与exact-main Public CI attempt 1在45分钟外层预算被取消的独立身份；只把Review Attention job外层预算对齐到当前725-test suite，不删测试、不改inner deadline或required barrier，也不回填doc467资格；
 - [Parse authorization exact-main CI 夹具观察修正](docs/242-r1-parse-authorization-ci-fixture-observation-correction.md)：保留独立失败观察与维护入口，不用后继成功覆盖历史。
 
 ## 发布坐标

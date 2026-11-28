@@ -11223,3 +11223,30 @@ R2_R6_NOT_STARTED
 doc469只允许README、AGENTS、doc469与milestones。自己的完整资格链闭合后最多成为
 `READER_VISIBLE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；随后必须返回CONTROL LOOP独立建立public-projection correction，再从新
 exact main重建implementation qualification recovery。不得换无关marker、重跑PR #533 README diagnostic、拼接不同world或直接冻结实现。
+
+### R1 global composition CI budget correction reader-visible public-projection correction候选
+
+PR #534已把前述failure-boundary audit精确合入`main@1809f291b23b7ae4a6a1c4db711548e43873bc8a`，tree
+`db9fb1b4ef971258d5447e85464df33fe6a9bfb5`。original Public CI `46176382601`、exact-main Public CI
+`46181535692`与Browser Smoke `46181535691`均attempt 1 SUCCESS（15/15、15/15、1/1）。fresh四个Render与两个raw目标各唯一PASS，
+independent reconciliation SHA-256为`583af0de7571483ad953e6cb04b109582686366d6f73da7f89fce1cd3e348989`，140-artifact
+closeout SHA-256为`8a5e032d8780cd80caf408198b9575abf1d575b87b3d3341e57746965034e6de`。因此doc469是
+`READER_VISIBLE_FAILURE_BOUNDARY_AUDITED / QUALIFIED_HISTORY`；doc468仍`READBACK_NOT_QUALIFIED`，doc467仍`NOT_QUALIFIED / NOT_FROZEN`。
+
+fresh CONTROL LOOP建立
+[文档470](docs/470-r1-global-composition-ci-budget-correction-reader-visible-public-projection-correction.md)。它只在README默认可见区使用PR #533
+预注册的doc468精确reader marker，并同步公开doc468未资格、doc467未冻结与doc469 qualified history；不修改workflow、runtime、test、
+oracle、doc467、doc468或doc469。当前只允许：
+
+```text
+R1_GLOBAL_COMPOSITION_AUTHORITY_CI_BUDGET_CORRECTION_READER_VISIBLE_FAILURE_BOUNDARY_AUDITED_QUALIFIED_HISTORY
+R1_GLOBAL_COMPOSITION_AUTHORITY_CI_BUDGET_CORRECTION_READER_VISIBLE_PUBLIC_PROJECTION_CORRECTION_CANDIDATE_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_EXACT_MAIN_CI_BUDGET_CORRECTION_MERGED_DUAL_GATES_PASS_READBACK_NOT_QUALIFIED
+R1_GLOBAL_COMPOSITION_AUTHORITY_PRIVATE_IMPLEMENTATION_CANDIDATE_MERGED_NOT_QUALIFIED_NOT_FROZEN
+R1_PUBLIC_REVIEW_PRODUCT_NOT_STARTED
+R2_R6_NOT_STARTED
+```
+
+doc470只允许README、AGENTS、doc470与milestones。自己的完整资格链闭合后才可使reader-visible projection correction与doc468 bounded
+CI correction取得资格；仍不得自动资格化或冻结doc467。随后必须返回CONTROL LOOP，从新exact main独立重建implementation qualification
+recovery。不得重跑PR #533 failed diagnostic、改变marker、拼接不同world或启动public Review、外部开源系统集成、R2–R6及R1后全局检查。
